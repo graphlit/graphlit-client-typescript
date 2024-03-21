@@ -1,0 +1,16 @@
+# Source TypeScript files
+src/
+
+# Tests and examples
+tests/
+examples/
+
+# Configuration files
+tsconfig.json
+.jest/
+.nyc_output/
+coverage/
+
+# Environment files
+.env.example
+.env

@@ -1,0 +1,8 @@
+# Dependency directories
+node_modules/
+
+# TypeScript compiled JavaScript output
+dist/
+
+# Environment configuration files
+.env
