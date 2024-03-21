@@ -1,2 +1,1 @@
-# graphlit-client-typescript
-TypeScript client for Graphlit Platform
+# TypeScript Client for Graphlit Platform
