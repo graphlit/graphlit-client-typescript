@@ -37,10 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import the Graphlit class from your package
-var index_1 = require("../src/index");
+var graphlit_client_1 = require("graphlit-client");
 // Assuming your environment variables are set,
 // Initialize the Graphlit client
-var client = new index_1.default(process.env.ENVIRONMENT_ID, process.env.ORGANIZATION_ID, process.env.SECRET_KEY);
+var client = new graphlit_client_1.default(process.env.ENVIRONMENT_ID, process.env.ORGANIZATION_ID, process.env.SECRET_KEY);
 // Define your GraphQL query (mutation in this case) and variables
 var query = "\nmutation CreateFeed($feed: FeedInput!) {\n  createFeed(feed: $feed) {\n    id\n    name\n    state\n    type\n  }\n}";
 var variables = {

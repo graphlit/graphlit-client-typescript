@@ -1,5 +1,5 @@
 // Import the Graphlit class from your package
-import Graphlit from '../src/index';
+import Graphlit from 'graphlit-client';
 
 // Assuming your environment variables are set,
 // Initialize the Graphlit client
