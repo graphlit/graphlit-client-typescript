@@ -34,7 +34,9 @@ steps:
       TargetFolder: "$(Build.ArtifactStagingDirectory)/dist"
 
   - task: Npm@1
+    displayName: "Publish npm package"
     inputs:
-      command: publish
+      command: custom
+      customCommand: "publish --access public"
       publishRegistry: useExternalRegistry
       publishEndpoint: "NPM"
