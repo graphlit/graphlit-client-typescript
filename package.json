@@ -1,5 +1,5 @@
 {
-  "name": "@graphlit/graphlit-client",
+  "name": "graphlit-client",
   "version": "1.0.0",
   "description": "Graphlit API TypeScript Client",
   "main": "dist/client.js",
