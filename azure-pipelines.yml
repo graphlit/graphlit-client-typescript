@@ -3,7 +3,7 @@ trigger:
     include:
       - main
 
-name: $(Date:yyyyMMdd)$(Rev:.r)
+name: $(Date:yyyyMMdd)$(Rev:r)
 
 pool:
   vmImage: "ubuntu-latest"
@@ -17,8 +17,8 @@ steps:
   - script: |
       npm install
       npm run generate
-      npm version 1.0.$(Build.BuildNumber) --no-git-tag-version --allow-same-version
       npm run build
+      npm version 1.0.$(Build.BuildNumber) --no-git-tag-version --allow-same-version
     displayName: "Install dependencies and build"
 
   - task: CopyFiles@2
