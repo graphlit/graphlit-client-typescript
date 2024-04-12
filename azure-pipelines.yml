@@ -17,8 +17,8 @@ steps:
   - script: |
       npm install
       npm run generate
-      npm run build
       npm version 1.0.$(Build.BuildNumber) --no-git-tag-version --allow-same-version
+      npm run build
     displayName: "Install dependencies and build"
 
   - task: CopyFiles@2
