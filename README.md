@@ -7,7 +7,7 @@ The Graphlit Client for Node.js enables straightforward interactions with the Gr
 
 Before you begin, ensure you have the following:
 
-- Node.js installed on your system (recommended version 12.x or higher).
+- Node.js installed on your system (recommended version 20.x or higher).
 - An active account on the [Graphlit Platform](https://portal.graphlit.dev) with access to the API settings dashboard.
 
 ## Installation
@@ -15,20 +15,22 @@ Before you begin, ensure you have the following:
 To install the Graphlit Client, use npm or yarn:
 
 ```bash
-npm install graphlit-client
+npm install graphlit
 ```
 or
 ```bash
-yarn add graphlit-client
+yarn add graphlit
 ```
 
 ## Configuration
 
-The Graphlit Client requires certain environment variables to be set for authentication and configuration:
+The Graphlit Client supports environment variables to be set for authentication and configuration:
 
-- `ENVIRONMENT_ID`: Your environment ID.
-- `ORGANIZATION_ID`: Your organization ID.
-- `SECRET_KEY`: Your secret key for API access.
+- `GRAPHLIT_ENVIRONMENT_ID`: Your environment ID.
+- `GRAPHLIT_ORGANIZATION_ID`: Your organization ID.
+- `GRAPHLIT_JWT_SECRET`: Your JWT secret for signing the JWT token.
+
+Alternately, you can pass these values with the constructor of the Graphlit client.
 
 You can find these values in the API settings dashboard on the [Graphlit Platform](https://portal.graphlit.dev).
 
@@ -37,74 +39,15 @@ You can find these values in the API settings dashboard on the [Graphlit Platfor
 To set these environment variables on your system, you can place them in a `.env` file at the root of your project:
 
 ```env
-ENVIRONMENT_ID=your_environment_id_value
-ORGANIZATION_ID=your_organization_id_value
-SECRET_KEY=your_secret_key_value
-```
-
-Ensure your project uses the `dotenv` package to load these variables:
-
-```bash
-npm install dotenv
-```
-
-Then, at the start of your application, add:
-
-```javascript
-require('dotenv').config();
-```
-
-## Usage Example
-
-Here's a simple example of how to use the Graphlit Client to make a query.
-
-```typescript
-// Import the Graphlit class from your package
-import Graphlit from 'graphlit-client';
-
-// Assuming your environment variables are set,
-// Initialize the Graphlit client
-const client = new Graphlit(process.env.ENVIRONMENT_ID, process.env.ORGANIZATION_ID, process.env.SECRET_KEY);
-
-// Define your GraphQL query (mutation in this case) and variables
-const query = `
-mutation CreateFeed($feed: FeedInput!) {
-  createFeed(feed: $feed) {
-    id
-    name
-    state
-    type
-  }
-}`;
-
-const variables = {
-  feed: {
-    type: "WEB",
-    web: {
-      uri: "https://openai.com/blog"
-    },
-    name: "OpenAI Blog"
-  }
-};
-
-// Use an async function to send the request, as the `request` method returns a Promise
-async function createFeed() {
-  try {
-    const response = await client.request(query, variables);
-    console.log("Response:", response);
-  } catch (error) {
-    console.error("Error creating feed:", error);
-  }
-}
-
-// Call the function
-createFeed();
+GRAPHLIT_ENVIRONMENT_ID=your_environment_id_value
+GRAPHLIT_ORGANIZATION_ID=your_organization_id_value
+GRAPHLIT_JWT_SECRET=your_jwt_secret_value
 ```
 
 ## Support
 
 Please refer to the [Graphlit API Documentation](https://docs.graphlit.dev/).
 
-For support with the Graphlit Client, please submit a [GitHub Issue](https://github.com/graphlit/graphlit-client-python/issues).  
+For support with the Graphlit Client, please submit a [GitHub Issue](https://github.com/graphlit/graphlit-client-typescript/issues).  
 
 For further support with the Graphlit Platform, please join our [Discord](https://discord.gg/ygFmfjy3Qx) community.

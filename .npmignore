@@ -14,3 +14,6 @@ coverage/
 # Environment files
 .env.example
 .env
+
+codegen.yml
+azure-pipelines.yml

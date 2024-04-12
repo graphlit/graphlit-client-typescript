@@ -1,0 +1,47 @@
+mutation PromptConversation($prompt: String!, $id: ID, $correlationId: String) {
+  promptConversation(prompt: $prompt, id: $id, correlationId: $correlationId) {
+    conversation {
+      id
+    }
+    message {
+      role
+      author
+      message
+      citations {
+        content {
+          id
+        }
+        index
+        text
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+      tokens
+      throughput
+      completionTime
+      timestamp
+      modelService
+      model
+    }
+    messageCount
+    facets {
+      type
+      value
+      range {
+        from
+        to
+      }
+      count
+      facet
+      observable {
+        type
+        observable {
+          id
+          name
+        }
+      }
+    }
+  }
+}

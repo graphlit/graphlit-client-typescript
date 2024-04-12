@@ -1,29 +1,28 @@
 {
-    "name": "graphlit-client",
-    "version": "0.1.0",
-    "description": "A client for interacting with Graphlit API",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc",
-        "prepublishOnly": "npm run build",
-        "test": "jest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/graphlit/graphlit-client-typescript.git"
-    },
-    "author": "Graphlit",
-    "license": "ISC",
-    "dependencies": {
-        "axios": "^0.21.1",
-        "dotenv": "^8.2.0",
-        "graphlit-client": "^0.1.0",
-        "jsonwebtoken": "^8.5.1"
-    },
-    "devDependencies": {
-        "@types/dotenv": "^8.2.0",
-        "@types/node": "^14.14.37",
-        "typescript": "^4.2.4"
-    }
+  "name": "graphlit",
+  "version": "1.0.0",
+  "description": "Graphlit API TypeScript Client",
+  "main": "dist/client.js",
+  "types": "dist/client.d.ts",
+  "scripts": {
+    "generate": "graphql-codegen --config codegen.yml",
+    "build": "tsc -p tsconfig.json"
+  },
+  "keywords": [ "Graphlit", "API", "LLM", "AI", "RAG", "parsing", "preprocessing" ],
+  "author": "Unstruk Data Inc.",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/client": "^3.9.11",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.6",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/typescript-document-nodes": "^4.0.6",
+    "@types/jsonwebtoken": "^9.0.6",
+    "typescript": "^5.4.5"
+  }
 }

@@ -1,0 +1,15 @@
+overwrite: true
+schema: "https://data-scus-dev.graphlit.io/api/v1/graphql"
+documents: "./src/documents/**/*.graphql"
+generates:
+  ./src/generated/graphql-types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations" # Generates types for operations based on documents
+    config:
+      withComponent: false
+      withHOC: false
+      withHooks: false
+  ./src/generated/graphql-documents.ts:
+    plugins:
+      - "typescript-document-nodes" # Generates TypeScript constants for your GraphQL documents

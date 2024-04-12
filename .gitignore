@@ -1,8 +1,24 @@
 # Dependency directories
 node_modules/
 
-# TypeScript compiled JavaScript output
-dist/
+# TypeScript build output
+/dist/
+*.js
+*.js.map
 
-# Environment configuration files
-.env
+# NPM package files
+npm-debug.log
+*.tgz
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+Thumbs.db

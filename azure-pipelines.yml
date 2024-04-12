@@ -1,0 +1,38 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Install Node.js"
+
+  - script: |
+      npm install
+      npm run generate
+      npm run build
+      npm version 1.0.$(build.buildnumber) --no-git-tag-version
+    displayName: "Install dependencies and build"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)"
+      Contents: "README.md"
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/dist"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)"
+      Contents: "LICENSE"
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/dist"
+
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishRegistry: useExternalRegistry
+      publishEndpoint: "NPM"
