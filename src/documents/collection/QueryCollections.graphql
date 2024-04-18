@@ -1,4 +1,4 @@
-query QueryCollections($filter: CollectionFilter!) {
+query QueryCollections($filter: CollectionFilter) {
   collections(filter: $filter) {
     results {
       id

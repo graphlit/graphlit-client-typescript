@@ -1,4 +1,4 @@
-query QueryFeeds($filter: FeedFilter!) {
+query QueryFeeds($filter: FeedFilter) {
   feeds(filter: $filter) {
     results {
       id

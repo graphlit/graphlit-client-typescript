@@ -121,7 +121,7 @@ export const GetAlert = gql`
 }
     `;
 export const QueryAlerts = gql`
-    query QueryAlerts($filter: AlertFilter!) {
+    query QueryAlerts($filter: AlertFilter) {
   alerts(filter: $filter) {
     results {
       id
@@ -261,7 +261,7 @@ export const GetCollection = gql`
 }
     `;
 export const QueryCollections = gql`
-    query QueryCollections($filter: CollectionFilter!) {
+    query QueryCollections($filter: CollectionFilter) {
   collections(filter: $filter) {
     results {
       id
@@ -374,10 +374,143 @@ export const GetContent = gql`
     textUri
     audioUri
     transcriptUri
+    video {
+      width
+      height
+      duration
+      software
+      make
+      model
+    }
+    audio {
+      keywords
+      author
+      series
+      episode
+      episodeType
+      season
+      publisher
+      copyright
+      language
+      genre
+      title
+      bitrate
+      channels
+      sampleRate
+      bitsPerSample
+      duration
+    }
+    image {
+      width
+      height
+      description
+      software
+      identifier
+      make
+      model
+    }
+    document {
+      title
+      subject
+      author
+      software
+      publisher
+      description
+      summary
+      keywords
+      pageCount
+      worksheetCount
+      slideCount
+      wordCount
+      lineCount
+      paragraphCount
+      characterCount
+      isEncrypted
+      hasDigitalSignature
+    }
+    email {
+      subject
+      identifier
+      sensitivity
+      priority
+      importance
+      labels
+      from {
+        name
+        familyName
+        givenName
+        email
+      }
+      to {
+        name
+        familyName
+        givenName
+        email
+      }
+      cc {
+        name
+        familyName
+        givenName
+        email
+      }
+      bcc {
+        name
+        familyName
+        givenName
+        email
+      }
+    }
+    issue {
+      title
+      project
+      team
+      status
+      priority
+      type
+      identifier
+      labels
+    }
+    observations {
+      type
+      observable {
+        id
+        name
+      }
+      occurrences {
+        type
+        confidence
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+        pageIndex
+        startTime
+        endTime
+      }
+    }
+    parent {
+      id
+    }
+    children {
+      id
+    }
+    collections {
+      id
+    }
+    feed {
+      id
+    }
+    workflow {
+      id
+    }
+    markdown
     links {
       uri
       linkType
     }
+    error
   }
 }
     `;
@@ -471,11 +604,32 @@ export const PublishContents = gql`
     fileType
     mimeType
     uri
+    textUri
+    audioUri
+    markdown
+  }
+}
+    `;
+export const QueryContentFacets = gql`
+    query QueryContentFacets($filter: ContentFilter, $facets: [ContentFacetInput!]) {
+  contents(filter: $filter, facets: $facets) {
+    facets {
+      facet
+      type
+      observable {
+        type
+        observable {
+          id
+          name
+        }
+      }
+      count
+    }
   }
 }
     `;
 export const QueryContents = gql`
-    query QueryContents($filter: ContentFilter!) {
+    query QueryContents($filter: ContentFilter) {
   contents(filter: $filter) {
     results {
       id
@@ -499,10 +653,143 @@ export const QueryContents = gql`
       textUri
       audioUri
       transcriptUri
+      video {
+        width
+        height
+        duration
+        software
+        make
+        model
+      }
+      audio {
+        keywords
+        author
+        series
+        episode
+        episodeType
+        season
+        publisher
+        copyright
+        language
+        genre
+        title
+        bitrate
+        channels
+        sampleRate
+        bitsPerSample
+        duration
+      }
+      image {
+        width
+        height
+        description
+        software
+        identifier
+        make
+        model
+      }
+      document {
+        title
+        subject
+        author
+        software
+        publisher
+        description
+        summary
+        keywords
+        pageCount
+        worksheetCount
+        slideCount
+        wordCount
+        lineCount
+        paragraphCount
+        characterCount
+        isEncrypted
+        hasDigitalSignature
+      }
+      email {
+        subject
+        identifier
+        sensitivity
+        priority
+        importance
+        labels
+        from {
+          name
+          familyName
+          givenName
+          email
+        }
+        to {
+          name
+          familyName
+          givenName
+          email
+        }
+        cc {
+          name
+          familyName
+          givenName
+          email
+        }
+        bcc {
+          name
+          familyName
+          givenName
+          email
+        }
+      }
+      issue {
+        title
+        project
+        team
+        status
+        priority
+        type
+        identifier
+        labels
+      }
+      observations {
+        type
+        observable {
+          id
+          name
+        }
+        occurrences {
+          type
+          confidence
+          boundingBox {
+            left
+            top
+            width
+            height
+          }
+          pageIndex
+          startTime
+          endTime
+        }
+      }
+      parent {
+        id
+      }
+      children {
+        id
+      }
+      collections {
+        id
+      }
+      feed {
+        id
+      }
+      workflow {
+        id
+      }
+      markdown
       links {
         uri
         linkType
       }
+      error
     }
   }
 }
@@ -682,6 +969,9 @@ export const PromptConversation = gql`
       citations {
         content {
           id
+          type
+          fileType
+          fileName
         }
         index
         text
@@ -734,11 +1024,14 @@ export const PublishConversation = gql`
     fileType
     mimeType
     uri
+    textUri
+    audioUri
+    markdown
   }
 }
     `;
 export const QueryConversations = gql`
-    query QueryConversations($filter: ConversationFilter!) {
+    query QueryConversations($filter: ConversationFilter) {
   conversations(filter: $filter) {
     results {
       id
@@ -1032,7 +1325,7 @@ export const IsFeedDone = gql`
 }
     `;
 export const QueryFeeds = gql`
-    query QueryFeeds($filter: FeedFilter!) {
+    query QueryFeeds($filter: FeedFilter) {
   feeds(filter: $filter) {
     results {
       id
@@ -1457,7 +1750,7 @@ export const PromptSpecifications = gql`
 }
     `;
 export const QuerySpecifications = gql`
-    query QuerySpecifications($filter: SpecificationFilter!) {
+    query QuerySpecifications($filter: SpecificationFilter) {
   specifications(filter: $filter) {
     results {
       id
@@ -1786,7 +2079,7 @@ export const GetWorkflow = gql`
 }
     `;
 export const QueryWorkflows = gql`
-    query QueryWorkflows($filter: WorkflowFilter!) {
+    query QueryWorkflows($filter: WorkflowFilter) {
   workflows(filter: $filter) {
     results {
       id

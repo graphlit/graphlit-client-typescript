@@ -122,7 +122,7 @@ export type AlertFilter = {
   /** Filter alert(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter alert(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by alert types. */
   types?: InputMaybe<Array<InputMaybe<AlertTypes>>>;
 };
@@ -760,7 +760,7 @@ export type CategoryFilter = {
   /** Filter category(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter category(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a category. */
@@ -834,15 +834,15 @@ export type CollectionFilter = {
   /** Filter collection(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter collection(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by collection types. */
-  types?: InputMaybe<Array<InputMaybe<CollectionTypes>>>;
+  types?: InputMaybe<Array<CollectionTypes>>;
 };
 
 /** Represents a collection. */
 export type CollectionInput = {
   /** The contents contained by the collection. */
-  contents?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  contents?: InputMaybe<Array<EntityReferenceInput>>;
   /** The expected contents count of the collection. */
   expectedCount?: InputMaybe<Scalars['Int']['input']>;
   /** The name of the collection. */
@@ -867,7 +867,7 @@ export enum CollectionTypes {
 /** Represents a collection. */
 export type CollectionUpdateInput = {
   /** The contents contained by the collection. */
-  contents?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  contents?: InputMaybe<Array<EntityReferenceInput>>;
   /** The expected contents count of the collection. */
   expectedCount?: InputMaybe<Scalars['Int']['input']>;
   /** The ID of the collection to update. */
@@ -890,11 +890,11 @@ export type Content = {
   /** The geo-boundary of the content, as GeoJSON Feature with Polygon geometry. */
   boundary?: Maybe<Scalars['JSON']['output']>;
   /** The summarized content bullet points. */
-  bullets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  bullets?: Maybe<Array<Scalars['String']['output']>>;
   /** The C4ID hash of the content. */
   c4id?: Maybe<Scalars['String']['output']>;
   /** The timestamped chapters summarized from the content transcript. */
-  chapters?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  chapters?: Maybe<Array<Scalars['String']['output']>>;
   /** The child contents linked to this content. For unpacked contents, i.e. from ZIP file or PDF document, this will be a list of linked content, such as images in PDF document. For crawled links, this will be a list of crawled web pages or files. */
   children?: Maybe<Array<Maybe<Content>>>;
   /** The collections this content is contained within. */
@@ -934,13 +934,13 @@ export type Content = {
   /** The content file format name. */
   formatName?: Maybe<Scalars['String']['output']>;
   /** The similar image frames, when using similarity search. */
-  frames?: Maybe<Array<Maybe<TextFrame>>>;
+  frames?: Maybe<Array<TextFrame>>;
   /** The content geometry metadata. */
   geometry?: Maybe<GeometryMetadata>;
   /** The H3 index of the content. */
   h3?: Maybe<H3>;
   /** The summarized content headlines. */
-  headlines?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  headlines?: Maybe<Array<Scalars['String']['output']>>;
   /** The ID of the content. */
   id: Scalars['ID']['output'];
   /** The content image metadata. */
@@ -950,7 +950,7 @@ export type Content = {
   /** The content issue metadata. */
   issue?: Maybe<IssueMetadata>;
   /** The extracted hyperlinks. */
-  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  links?: Maybe<Array<LinkReferenceType>>;
   /** The geo-location of the content. */
   location?: Maybe<Point>;
   /** The content text formatted as Markdown.  Contains either the extracted text for files, posts, etc., or the raw text for messages, emails, etc. */
@@ -979,7 +979,7 @@ export type Content = {
   /** The content package metadata. */
   package?: Maybe<PackageMetadata>;
   /** The similar text pages, when using similarity search. */
-  pages?: Maybe<Array<Maybe<TextPage>>>;
+  pages?: Maybe<Array<TextPage>>;
   /** The parent content linked to this content. For unpacked contents, i.e. from ZIP file or PDF document, this will be the originating content. For crawled links, this will be the web page which originally contained the hyperlinks. */
   parent?: Maybe<Content>;
   /** The geo-path of the content, as GeoJSON Feature with Polygon geometry. */
@@ -987,13 +987,13 @@ export type Content = {
   /** The content point cloud metadata. */
   pointCloud?: Maybe<PointCloudMetadata>;
   /** The summarized content social media posts. */
-  posts?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  posts?: Maybe<Array<Scalars['String']['output']>>;
   /** The followup questions which can be asked about the content. */
-  questions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  questions?: Maybe<Array<Scalars['String']['output']>>;
   /** The renditions generated from this content. */
   renditions?: Maybe<Array<Maybe<Rendition>>>;
   /** The similar text transcript segments, when using similarity search. */
-  segments?: Maybe<Array<Maybe<TextSegment>>>;
+  segments?: Maybe<Array<TextSegment>>;
   /** The content shape metadata. */
   shape?: Maybe<ShapeMetadata>;
   /** The started date of the content workflow. */
@@ -1023,45 +1023,45 @@ export type Content = {
 export type ContentCriteria = {
   __typename?: 'ContentCriteria';
   /** Filter by collections. */
-  collections?: Maybe<Array<Maybe<EntityReference>>>;
+  collections?: Maybe<Array<EntityReference>>;
   /** Filter by similar contents. */
-  contents?: Maybe<Array<Maybe<EntityReference>>>;
+  contents?: Maybe<Array<EntityReference>>;
   /** Filter by creation date range. */
   creationDateRange?: Maybe<DateRange>;
   /** Filter by original date range. */
   dateRange?: Maybe<DateRange>;
   /** Filter by feeds. */
-  feeds?: Maybe<Array<Maybe<EntityReference>>>;
+  feeds?: Maybe<Array<EntityReference>>;
   /** Filter by file types. */
   fileTypes?: Maybe<Array<Maybe<FileTypes>>>;
   /** Filter by observations. */
-  observations?: Maybe<Array<Maybe<ObservationCriteria>>>;
+  observations?: Maybe<Array<ObservationCriteria>>;
   /** Filter by content types. */
-  types?: Maybe<Array<Maybe<ContentTypes>>>;
+  types?: Maybe<Array<ContentTypes>>;
   /** Filter by workflows. */
-  workflows?: Maybe<Array<Maybe<EntityReference>>>;
+  workflows?: Maybe<Array<EntityReference>>;
 };
 
 /** Represents a content filter. */
 export type ContentCriteriaInput = {
   /** Filter by collections. */
-  collections?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
   /** Filter by similar contents. */
-  contents?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  contents?: InputMaybe<Array<EntityReferenceInput>>;
   /** Filter by creation date range. */
   creationDateRange?: InputMaybe<DateRangeInput>;
   /** Filter by original date range. */
   dateRange?: InputMaybe<DateRangeInput>;
   /** Filter by feeds. */
-  feeds?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  feeds?: InputMaybe<Array<EntityReferenceInput>>;
   /** Filter by file types. */
-  fileTypes?: InputMaybe<Array<InputMaybe<FileTypes>>>;
+  fileTypes?: InputMaybe<Array<FileTypes>>;
   /** Filter by observations. */
-  observations?: InputMaybe<Array<InputMaybe<ObservationCriteriaInput>>>;
+  observations?: InputMaybe<Array<ObservationCriteriaInput>>;
   /** Filter by content types. */
-  types?: InputMaybe<Array<InputMaybe<ContentTypes>>>;
+  types?: InputMaybe<Array<ContentTypes>>;
   /** Filter by workflows. */
-  workflows?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  workflows?: InputMaybe<Array<EntityReferenceInput>>;
 };
 
 /** Represents a content facet. */
@@ -1160,21 +1160,21 @@ export type ContentFilter = {
   /** Filter by geo-boundaries, as GeoJSON Feature with Polygon geometry. */
   boundaries?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Filter by collections. */
-  collections?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
+  collections?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by similar contents. */
-  contents?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
+  contents?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter content(s) by their creation date range. */
   creationDateRange?: InputMaybe<DateRangeFilter>;
   /** The sort direction for query results. */
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter by feeds. */
-  feeds?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
+  feeds?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by file extensions. */
-  fileExtensions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  fileExtensions?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Filter by file size range. */
   fileSizeRange?: InputMaybe<Int64RangeFilter>;
   /** Filter by file types. */
-  fileTypes?: InputMaybe<Array<InputMaybe<FileTypes>>>;
+  fileTypes?: InputMaybe<Array<FileTypes>>;
   /** Filter by file formats. */
   formats?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Filter by H3 index. */
@@ -1190,7 +1190,7 @@ export type ContentFilter = {
   /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observations. */
-  observations?: InputMaybe<Array<InputMaybe<ObservationReferenceFilter>>>;
+  observations?: InputMaybe<Array<ObservationReferenceFilter>>;
   /** Skip the specified number of content(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
@@ -1204,13 +1204,13 @@ export type ContentFilter = {
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
   /** Filter content(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by content types. */
-  types?: InputMaybe<Array<InputMaybe<ContentTypes>>>;
+  types?: InputMaybe<Array<ContentTypes>>;
   /** The content URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
   /** Filter by workflows. */
-  workflows?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
+  workflows?: InputMaybe<Array<EntityReferenceFilter>>;
 };
 
 /** Represents content. */
@@ -1371,7 +1371,7 @@ export type ConversationCitation = {
 /** Represents a filter for conversations. */
 export type ConversationFilter = {
   /** Filter by similar conversations. */
-  conversations?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
+  conversations?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter conversation(s) by their creation date range. */
   creationDateRange?: InputMaybe<DateRangeFilter>;
   /** The sort direction for query results. */
@@ -1395,9 +1395,9 @@ export type ConversationFilter = {
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
   /** Filter conversation(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by conversation types. */
-  types?: InputMaybe<Array<InputMaybe<ConversationTypes>>>;
+  types?: InputMaybe<Array<ConversationTypes>>;
 };
 
 /** Represents a conversation. */
@@ -1477,7 +1477,7 @@ export type ConversationStrategy = {
   /** The weight of conversation messages within prompt context, in range [0.0 - 1.0]. */
   messagesWeight?: Maybe<Scalars['Float']['output']>;
   /** The conversation strategy type. */
-  type: ConversationStrategyTypes;
+  type?: Maybe<ConversationStrategyTypes>;
 };
 
 /** Represents a conversation strategy. */
@@ -2289,7 +2289,7 @@ export type EventFilter = {
   /** Filter by event start date range. */
   startDateRange?: InputMaybe<DateRangeFilter>;
   /** Filter event(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by the event typical age range. */
   typicalAgeRange?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2539,7 +2539,7 @@ export type FeedFilter = {
   /** Filter feed(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter feed(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by feed types. */
   types?: InputMaybe<Array<InputMaybe<FeedTypes>>>;
 };
@@ -3037,13 +3037,13 @@ export type H3Facets = {
   /** The facet count. */
   count?: Maybe<Scalars['Long']['output']>;
   /** The H3 facets. */
-  facets?: Maybe<Array<Maybe<H3Facet>>>;
+  facets?: Maybe<Array<H3Facet>>;
 };
 
 /** Represents an H3 geospatial filter. */
 export type H3Filter = {
   /** The H3 indexes. */
-  indexes?: InputMaybe<Array<InputMaybe<H3IndexFilter>>>;
+  indexes?: InputMaybe<Array<H3IndexFilter>>;
 };
 
 /** Represents an H3 geospatial index filter. */
@@ -3372,7 +3372,7 @@ export type LabelFilter = {
   /** Filter label(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter label(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a label. */
@@ -3667,7 +3667,7 @@ export type MetadataFilter = {
   /** Filter metadata(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter metadata(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents metadata. */
@@ -4766,7 +4766,7 @@ export type ObservationInput = {
   /** The observed entity. */
   observable: NamedEntityReferenceInput;
   /** The observation occurrences. */
-  occurrences: Array<InputMaybe<ObservationOccurrenceInput>>;
+  occurrences: Array<ObservationOccurrenceInput>;
   /** The observed entity type. */
   type: ObservableTypes;
 };
@@ -4821,7 +4821,7 @@ export type ObservationUpdateInput = {
   /** The observed entity. */
   observable?: InputMaybe<NamedEntityReferenceInput>;
   /** The observation occurrences. */
-  occurrences?: InputMaybe<Array<InputMaybe<ObservationOccurrenceInput>>>;
+  occurrences?: InputMaybe<Array<ObservationOccurrenceInput>>;
   /** The observed entity type. */
   type?: InputMaybe<ObservableTypes>;
 };
@@ -5106,7 +5106,7 @@ export type OrganizationFilter = {
   /** Filter organization(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter organization(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents an organization. */
@@ -5337,7 +5337,7 @@ export type PersonFilter = {
   /** Filter person(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter person(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a person. */
@@ -5527,7 +5527,7 @@ export type PlaceFilter = {
   /** Filter place(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter place(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a place. */
@@ -5782,7 +5782,7 @@ export type ProductFilter = {
   /** Filter by product SKU. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** Filter product(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by product UPC. */
   upc?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5945,7 +5945,7 @@ export type ProjectFilter = {
   /** Filter project(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter project(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a project. */
@@ -6250,7 +6250,7 @@ export type PromptSummarization = {
   /** If summarization failed, the error message. */
   error?: Maybe<Scalars['String']['output']>;
   /** The summarized items. */
-  items: Array<Maybe<Summarized>>;
+  items?: Maybe<Array<Summarized>>;
   /** The LLM specification. */
   specification?: Maybe<EntityReference>;
   /** The summarization type. */
@@ -6415,7 +6415,7 @@ export type QueryContentArgs = {
 
 export type QueryContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<ContentFacetInput>>>;
+  facets?: InputMaybe<Array<ContentFacetInput>>;
   filter?: InputMaybe<ContentFilter>;
 };
 
@@ -6506,7 +6506,7 @@ export type QueryEventArgs = {
 
 export type QueryEventsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<EventFacetInput>>>;
+  facets?: InputMaybe<Array<EventFacetInput>>;
   filter?: InputMaybe<EventFilter>;
 };
 
@@ -6543,7 +6543,7 @@ export type QueryLabelArgs = {
 
 export type QueryLabelsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<LabelFacetInput>>>;
+  facets?: InputMaybe<Array<LabelFacetInput>>;
   filter?: InputMaybe<LabelFilter>;
 };
 
@@ -6578,7 +6578,7 @@ export type QueryOrganizationArgs = {
 
 export type QueryOrganizationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<OrganizationFacetInput>>>;
+  facets?: InputMaybe<Array<OrganizationFacetInput>>;
   filter?: InputMaybe<OrganizationFilter>;
 };
 
@@ -6591,7 +6591,7 @@ export type QueryPersonArgs = {
 
 export type QueryPersonsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<PersonFacetInput>>>;
+  facets?: InputMaybe<Array<PersonFacetInput>>;
   filter?: InputMaybe<PersonFilter>;
 };
 
@@ -6604,7 +6604,7 @@ export type QueryPlaceArgs = {
 
 export type QueryPlacesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<PlaceFacetInput>>>;
+  facets?: InputMaybe<Array<PlaceFacetInput>>;
   filter?: InputMaybe<PlaceFilter>;
 };
 
@@ -6617,7 +6617,7 @@ export type QueryProductArgs = {
 
 export type QueryProductsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<ProductFacetInput>>>;
+  facets?: InputMaybe<Array<ProductFacetInput>>;
   filter?: InputMaybe<ProductFilter>;
 };
 
@@ -6641,7 +6641,7 @@ export type QueryRepoArgs = {
 
 export type QueryReposArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<RepoFacetInput>>>;
+  facets?: InputMaybe<Array<RepoFacetInput>>;
   filter?: InputMaybe<RepoFilter>;
 };
 
@@ -6664,7 +6664,7 @@ export type QuerySoftwareArgs = {
 
 export type QuerySoftwaresArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
-  facets?: InputMaybe<Array<InputMaybe<SoftwareFacetInput>>>;
+  facets?: InputMaybe<Array<SoftwareFacetInput>>;
   filter?: InputMaybe<SoftwareFilter>;
 };
 
@@ -6957,7 +6957,7 @@ export type RepoFilter = {
   /** Filter repo(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter repo(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a code repository. */
@@ -7400,7 +7400,7 @@ export type SoftwareFilter = {
   /** Filter software(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter software(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents software. */
@@ -7457,6 +7457,8 @@ export type Specification = {
   creationDate: Scalars['DateTime']['output'];
   /** Custom guidance which is injected into the LLM conversation prompt. */
   customGuidance?: Maybe<Scalars['String']['output']>;
+  /** Custom instructions which are injected into the LLM conversation prompt. */
+  customInstructions?: Maybe<Scalars['String']['output']>;
   /** The Groq model properties. */
   groq?: Maybe<GroqModelProperties>;
   /** The ID of the specification. */
@@ -7492,7 +7494,7 @@ export type Specification = {
   /** The LLM system prompt. */
   systemPrompt?: Maybe<Scalars['String']['output']>;
   /** The tool definitions. */
-  tools?: Maybe<Array<Maybe<ToolDefinition>>>;
+  tools?: Maybe<Array<ToolDefinition>>;
   /** The specification type. */
   type?: Maybe<SpecificationTypes>;
 };
@@ -7518,7 +7520,7 @@ export type SpecificationFilter = {
   /** Filter by LLM service types. */
   serviceTypes?: InputMaybe<Array<InputMaybe<ModelServiceTypes>>>;
   /** Filter specification(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
   /** Filter by LLM specification types. */
   types?: InputMaybe<Array<InputMaybe<SpecificationTypes>>>;
 };
@@ -7531,6 +7533,8 @@ export type SpecificationInput = {
   azureOpenAI?: InputMaybe<AzureOpenAiModelPropertiesInput>;
   /** Custom guidance which is injected into the LLM conversation prompt. */
   customGuidance?: InputMaybe<Scalars['String']['input']>;
+  /** Custom instructions which are injected into the LLM conversation prompt. */
+  customInstructions?: InputMaybe<Scalars['String']['input']>;
   /** The Groq model properties. */
   groq?: InputMaybe<GroqModelPropertiesInput>;
   /** The Mistral model properties. */
@@ -7558,7 +7562,7 @@ export type SpecificationInput = {
   /** The LLM system prompt. */
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
   /** The tool definitions. */
-  tools?: InputMaybe<Array<InputMaybe<ToolDefinitionInput>>>;
+  tools?: InputMaybe<Array<ToolDefinitionInput>>;
   /** The specification type. */
   type?: InputMaybe<SpecificationTypes>;
 };
@@ -7586,6 +7590,8 @@ export type SpecificationUpdateInput = {
   azureOpenAI?: InputMaybe<AzureOpenAiModelPropertiesUpdateInput>;
   /** Custom guidance which is injected into the LLM conversation prompt. */
   customGuidance?: InputMaybe<Scalars['String']['input']>;
+  /** Custom instructions which are injected into the LLM conversation prompt. */
+  customInstructions?: InputMaybe<Scalars['String']['input']>;
   /** The Groq model properties. */
   groq?: InputMaybe<GroqModelPropertiesUpdateInput>;
   /** The ID of the specification to update. */
@@ -7615,7 +7621,7 @@ export type SpecificationUpdateInput = {
   /** The LLM system prompt. */
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
   /** The tool definitions. */
-  tools?: InputMaybe<Array<InputMaybe<ToolDefinitionUpdateInput>>>;
+  tools?: InputMaybe<Array<ToolDefinitionUpdateInput>>;
   /** The specification type. */
   type?: InputMaybe<SpecificationTypes>;
 };
@@ -7633,7 +7639,7 @@ export type StringRange = {
 export type StringResults = {
   __typename?: 'StringResults';
   /** The list of strings result. */
-  results?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  results?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 /** Represents the summarization strategy. */
@@ -8035,7 +8041,7 @@ export type WorkflowFilter = {
   /** Filter workflow(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter workflow(s) by their states. */
-  states?: InputMaybe<Array<InputMaybe<EntityState>>>;
+  states?: InputMaybe<Array<EntityState>>;
 };
 
 /** Represents a workflow. */
@@ -8185,14 +8191,14 @@ export type GetAlertQueryVariables = Exact<{
 }>;
 
 
-export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } } | null> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null };
+export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null };
 
 export type QueryAlertsQueryVariables = Exact<{
-  filter: AlertFilter;
+  filter?: InputMaybe<AlertFilter>;
 }>;
 
 
-export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } } | null> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
+export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
 
 export type UpdateAlertMutationVariables = Exact<{
   alert: AlertUpdateInput;
@@ -8238,7 +8244,7 @@ export type GetCollectionQueryVariables = Exact<{
 export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, name: string, creationDate: any, state: EntityState, type?: CollectionTypes | null, owner: { __typename?: 'Owner', id: string }, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
 
 export type QueryCollectionsQueryVariables = Exact<{
-  filter: CollectionFilter;
+  filter?: InputMaybe<CollectionFilter>;
 }>;
 
 
@@ -8293,7 +8299,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, owner: { __typename?: 'Owner', id: string }, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null } | null> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, markdown?: string | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, software?: string | null, make?: string | null, model?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, description?: string | null, software?: string | null, identifier?: string | null, make?: string | null, model?: string | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, author?: string | null, software?: string | null, publisher?: string | null, description?: string | null, summary?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, characterCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', subject?: string | null, identifier?: string | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, labels?: Array<string | null> | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, identifier?: string | null, labels?: Array<string | null> | null } | null, observations?: Array<{ __typename?: 'Observation', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, pageIndex?: number | null, startTime?: any | null, endTime?: any | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, parent?: { __typename?: 'Content', id: string } | null, children?: Array<{ __typename?: 'Content', id: string } | null> | null, collections?: Array<{ __typename?: 'Collection', id: string } | null> | null, feed?: { __typename?: 'Feed', id: string } | null, workflow?: { __typename?: 'Workflow', id: string } | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null } | null };
 
 export type IngestEncodedFileMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -8354,14 +8360,22 @@ export type PublishContentsMutationVariables = Exact<{
 }>;
 
 
-export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null } | null };
 
-export type QueryContentsQueryVariables = Exact<{
-  filter: ContentFilter;
+export type QueryContentFacetsQueryVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+  facets?: InputMaybe<Array<ContentFacetInput> | ContentFacetInput>;
 }>;
 
 
-export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, owner: { __typename?: 'Owner', id: string }, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null } | null> | null } | null> | null } | null };
+export type QueryContentFacetsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', facets?: Array<{ __typename?: 'ContentFacet', facet?: ContentFacetTypes | null, type?: FacetValueTypes | null, count?: any | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
+
+export type QueryContentsQueryVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+}>;
+
+
+export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, markdown?: string | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, software?: string | null, make?: string | null, model?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, description?: string | null, software?: string | null, identifier?: string | null, make?: string | null, model?: string | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, author?: string | null, software?: string | null, publisher?: string | null, description?: string | null, summary?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, characterCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', subject?: string | null, identifier?: string | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, labels?: Array<string | null> | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, identifier?: string | null, labels?: Array<string | null> | null } | null, observations?: Array<{ __typename?: 'Observation', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, pageIndex?: number | null, startTime?: any | null, endTime?: any | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, parent?: { __typename?: 'Content', id: string } | null, children?: Array<{ __typename?: 'Content', id: string } | null> | null, collections?: Array<{ __typename?: 'Collection', id: string } | null> | null, feed?: { __typename?: 'Feed', id: string } | null, workflow?: { __typename?: 'Workflow', id: string } | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null } | null> | null } | null };
 
 export type SummarizeContentsMutationVariables = Exact<{
   summarizations: Array<SummarizationStrategyInput> | SummarizationStrategyInput;
@@ -8370,7 +8384,7 @@ export type SummarizeContentsMutationVariables = Exact<{
 }>;
 
 
-export type SummarizeContentsMutation = { __typename?: 'Mutation', summarizeContents?: Array<{ __typename?: 'PromptSummarization', type: SummarizationTypes, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content: { __typename?: 'EntityReference', id: string }, items: Array<{ __typename?: 'Summarized', text?: string | null, tokens: number, summarizationTime?: any | null } | null> } | null> | null };
+export type SummarizeContentsMutation = { __typename?: 'Mutation', summarizeContents?: Array<{ __typename?: 'PromptSummarization', type: SummarizationTypes, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content: { __typename?: 'EntityReference', id: string }, items?: Array<{ __typename?: 'Summarized', text?: string | null, tokens: number, summarizationTime?: any | null }> | null } | null> | null };
 
 export type UpdateContentMutationVariables = Exact<{
   content: ContentUpdateInput;
@@ -8425,7 +8439,7 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } } | null> | null } | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null };
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -8434,7 +8448,7 @@ export type PromptConversationMutationVariables = Exact<{
 }>;
 
 
-export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
+export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
 
 export type PublishConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -8445,14 +8459,14 @@ export type PublishConversationMutationVariables = Exact<{
 }>;
 
 
-export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null } | null };
 
 export type QueryConversationsQueryVariables = Exact<{
-  filter: ConversationFilter;
+  filter?: InputMaybe<ConversationFilter>;
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } } | null> | null } | null } | null> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null> | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -8526,7 +8540,7 @@ export type IsFeedDoneQueryVariables = Exact<{
 export type IsFeedDoneQuery = { __typename?: 'Query', isFeedDone?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
 
 export type QueryFeedsQueryVariables = Exact<{
-  filter: FeedFilter;
+  filter?: InputMaybe<FeedFilter>;
 }>;
 
 
@@ -8600,7 +8614,7 @@ export type GetSpecificationQueryVariables = Exact<{
 }>;
 
 
-export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type: ConversationStrategyTypes, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: ModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null } | null> | null } | null };
+export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: ModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null };
 
 export type PromptSpecificationsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -8611,11 +8625,11 @@ export type PromptSpecificationsMutationVariables = Exact<{
 export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null } | null> | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
-  filter: SpecificationFilter;
+  filter?: InputMaybe<SpecificationFilter>;
 }>;
 
 
-export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type: ConversationStrategyTypes, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: ModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null } | null> | null } | null> | null } | null };
+export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: ModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null> | null } | null };
 
 export type UpdateSpecificationMutationVariables = Exact<{
   specification: SpecificationUpdateInput;
@@ -8658,7 +8672,7 @@ export type GetWorkflowQueryVariables = Exact<{
 export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
-  filter: WorkflowFilter;
+  filter?: InputMaybe<WorkflowFilter>;
 }>;
 
 

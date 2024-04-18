@@ -1,4 +1,4 @@
-query QuerySpecifications($filter: SpecificationFilter!) {
+query QuerySpecifications($filter: SpecificationFilter) {
   specifications(filter: $filter) {
     results {
       id

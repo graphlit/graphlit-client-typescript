@@ -3,7 +3,7 @@ trigger:
     include:
       - main
 
-name: $(Date:yyyyMMdd)$(Rev:r)
+name: $(Date:yyyyMMdd)$(Rev:rrr)
 
 pool:
   vmImage: "ubuntu-latest"

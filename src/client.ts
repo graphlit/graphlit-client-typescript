@@ -241,6 +241,10 @@ class Graphlit {
     }
   }
 
+  public project() {
+    // TODO: credits, usage, etc.
+  }
+
   public specification() {
     return {
       create: async (specification: Types.SpecificationInput) => {

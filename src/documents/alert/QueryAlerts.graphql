@@ -1,4 +1,4 @@
-query QueryAlerts($filter: AlertFilter!) {
+query QueryAlerts($filter: AlertFilter) {
   alerts(filter: $filter) {
     results {
       id

@@ -1,4 +1,4 @@
-query QueryWorkflows($filter: WorkflowFilter!) {
+query QueryWorkflows($filter: WorkflowFilter) {
   workflows(filter: $filter) {
     results {
       id

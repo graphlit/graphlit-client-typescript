@@ -1,4 +1,4 @@
-query QueryConversations($filter: ConversationFilter!) {
+query QueryConversations($filter: ConversationFilter) {
   conversations(filter: $filter) {
     results {
       id
