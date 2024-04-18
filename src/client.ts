@@ -20,64 +20,65 @@ class Graphlit {
   private token: string;
 
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
-      this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
+    this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
 
-      this.organizationId = organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
-      this.environmentId = environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
-      this.jwtSecret = jwtSecret || process.env.GRAPHLIT_JWT_SECRET;
+    this.organizationId = organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
+    this.environmentId = environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
+    this.jwtSecret = jwtSecret || process.env.GRAPHLIT_JWT_SECRET;
 
-      // optional: for multi-tenant support
-      this.ownerId = ownerId || process.env.GRAPHLIT_OWNER_ID;
+    // optional: for multi-tenant support
+    this.ownerId = ownerId || process.env.GRAPHLIT_OWNER_ID;
 
-      // optional: for billing correlation of multiple operations
-      this.correlationId = correlationId || undefined
+    // optional: for billing correlation of multiple operations
+    this.correlationId = correlationId || undefined
 
-      // Set token expiration to one hour from now
-      const expiration = Math.floor(Date.now() / 1000) + (60 * 60);
+    // Set token expiration to one hour from now
+    const expiration = Math.floor(Date.now() / 1000) + (60 * 60);
 
-      const payload: any = {
-        "https://graphlit.io/jwt/claims": {
-          "x-graphlit-environment-id": this.environmentId,
-          "x-graphlit-organization-id": this.organizationId,
-          ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
-          "x-graphlit-role": "Owner",
-        },
-        exp: expiration,
-        iss: "graphlit",
-        aud: "https://portal.graphlit.io",
-      };      
+    const payload: any = {
+      "https://graphlit.io/jwt/claims": {
+        "x-graphlit-environment-id": this.environmentId,
+        "x-graphlit-organization-id": this.organizationId,
+        ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
+        "x-graphlit-role": "Owner",
+      },
+      exp: expiration,
+      iss: "graphlit",
+      aud: "https://portal.graphlit.io",
+    };
 
-      if (!this.jwtSecret) {
-          throw new Error("JWT secret is required.");
-      }
+    if (!this.jwtSecret) {
+      throw new Error("JWT secret is required.");
+    }
 
-      this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
+    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
 
-      const httpLink = createHttpLink({
-        uri: this.apiUri,
+    const httpLink = createHttpLink({
+      uri: this.apiUri,
+    });
+
+    const authLink = new ApolloLink((operation, forward) => {
+      operation.setContext({
+        headers: {
+          Authorization: this.token ? `Bearer ${this.token}` : "",
+        }
       });
 
-      const authLink = new ApolloLink((operation, forward) => {
-        operation.setContext({
-          headers: {
-            Authorization: this.token ? `Bearer ${this.token}` : "",
-          }
-        });
+      return forward(operation);
+    });
 
-        return forward(operation);
-      });
+    this.client = new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache(),
+    });
+  }
 
-      this.client = new ApolloClient({
-        link: authLink.concat(httpLink),
-        cache: new InMemoryCache(),
-      });
+  public async createAlert(alert: Types.AlertInput) {
+    return this.mutateAndCheckError(Documents.CreateAlert, { alert: alert, correlationId: this.correlationId });
   }
 
   public alert() {
     return {
-      create: async (alert: Types.AlertInput) => {
-        return this.mutateAndCheckError(Documents.CreateAlert, { alert: alert, correlationId: this.correlationId });
-      },
       update: async (alert: Types.AlertUpdateInput) => {
         return this.mutateAndCheckError(Documents.UpdateAlert, { alert: alert });
       },
@@ -97,7 +98,7 @@ class Graphlit {
         return this.queryAndCheckError(Documents.GetAlert, { id: id });
       },
       query: async (filter: Types.AlertFilter) => {
-        return this.queryAndCheckError(Documents.QueryAlerts, { filter: filter } );
+        return this.queryAndCheckError(Documents.QueryAlerts, { filter: filter });
       },
     }
   }
@@ -159,10 +160,10 @@ class Graphlit {
       extract: async (prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput) => {
         return this.mutateAndCheckError(Documents.ExtractContents, { prompt: prompt, filter: filter, specification: specification, correlationId: this.correlationId });
       },
-      publish: async (summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, 
+      publish: async (summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput,
         publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
         name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput) => {
-        return this.mutateAndCheckError(Documents.PublishContents, 
+        return this.mutateAndCheckError(Documents.PublishContents,
           { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, correlationId: this.correlationId });
       },
       get: async (id: string) => {
@@ -325,4 +326,4 @@ class Graphlit {
   }
 }
 
-export { Graphlit };
+export { Graphlit, Types };
