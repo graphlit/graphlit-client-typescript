@@ -57,7 +57,7 @@ class Graphlit {
       uri: this.apiUri,
     });
 
-    const authLink = new ApolloLink((operation, forward) {
+    const authLink = new ApolloLink((operation, forward) => {
       operation.setContext({
         headers: {
           Authorization: this.token ? `Bearer ${this.token}` : "",
