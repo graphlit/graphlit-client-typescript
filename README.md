@@ -15,11 +15,11 @@ Before you begin, ensure you have the following:
 To install the Graphlit Client, use npm or yarn:
 
 ```bash
-npm install graphlit
+npm install graphlit-client
 ```
 or
 ```bash
-yarn add graphlit
+yarn add graphlit-client
 ```
 
 ## Configuration
