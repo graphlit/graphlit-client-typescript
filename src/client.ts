@@ -19,11 +19,11 @@ class Graphlit {
   private correlationId: string | undefined;
   private token: string;
 
-  constructor(environmentId?: string, organizationId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
+  constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
       this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
 
-      this.environmentId = environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
       this.organizationId = organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
+      this.environmentId = environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
       this.jwtSecret = jwtSecret || process.env.GRAPHLIT_JWT_SECRET;
 
       // optional: for multi-tenant support
