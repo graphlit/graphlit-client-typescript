@@ -11,8 +11,8 @@ class Graphlit {
   public token: string | undefined;
 
   private apiUri: string;
-  private environmentId: string | undefined;
   private organizationId: string | undefined;
+  private environmentId: string | undefined;
   private ownerId: string | undefined;
   private jwtSecret: string | undefined;
   private correlationId: string | undefined;
@@ -62,8 +62,8 @@ class Graphlit {
 
     const payload = {
       "https://graphlit.io/jwt/claims": {
-        "x-graphlit-environment-id": this.environmentId,
         "x-graphlit-organization-id": this.organizationId,
+        "x-graphlit-environment-id": this.environmentId,
         ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
         "x-graphlit-role": "Owner",
       },
