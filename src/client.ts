@@ -55,8 +55,6 @@ class Graphlit {
     }
 
     this.initializeJWT().then(() => {
-      console.log(this.token)
-
       const httpLink = createHttpLink({
         uri: this.apiUri,
       });
@@ -75,8 +73,6 @@ class Graphlit {
         link: authLink.concat(httpLink),
         cache: new InMemoryCache(),
       });
-
-      console.log("Apollo client has been initialized.")
     });
   }
 
