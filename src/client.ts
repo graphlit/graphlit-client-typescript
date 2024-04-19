@@ -90,168 +90,168 @@ class Graphlit {
     });
   }
 
-  public async createAlert(alert: Types.AlertInput): Promise<Types.Alert> {
-    return this.mutateAndCheckError<Types.Alert, { alert: Types.AlertInput, correlationId?: string }>(
+  public async createAlert(alert: Types.AlertInput): Promise<Types.CreateAlertMutation> {
+    return this.mutateAndCheckError<Types.CreateAlertMutation, { alert: Types.AlertInput, correlationId?: string }>(
       Documents.CreateAlert,
       { alert: alert, correlationId: this.correlationId }
     );
   }
 
-  public async updateAlert(alert: Types.AlertUpdateInput): Promise<Types.Alert> {
-    return this.mutateAndCheckError<Types.Alert, { alert: Types.AlertUpdateInput }>(
+  public async updateAlert(alert: Types.AlertUpdateInput): Promise<Types.UpdateAlertMutation> {
+    return this.mutateAndCheckError<Types.UpdateAlertMutation, { alert: Types.AlertUpdateInput }>(
       Documents.UpdateAlert,
       { alert: alert }
     );
   }
 
-  public async deleteAlert(id: string): Promise<Types.Alert> {
-    return this.mutateAndCheckError<Types.Alert, { id: string }>(
+  public async deleteAlert(id: string): Promise<Types.DeleteAlertMutation> {
+    return this.mutateAndCheckError<Types.DeleteAlertMutation, { id: string }>(
       Documents.DeleteAlert,
       { id: id }
     );
   }
 
-  public async deleteAllAlerts(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllAlerts(): Promise<Types.DeleteAllAlertsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllAlertsMutation>(
       Documents.DeleteAllAlerts
     );
   }
 
-  public async enableAlert(id: string): Promise<Types.Alert> {
-    return this.mutateAndCheckError<Types.Alert, { id: string }>(
+  public async enableAlert(id: string): Promise<Types.EnableAlertMutation> {
+    return this.mutateAndCheckError<Types.EnableAlertMutation, { id: string }>(
       Documents.EnableAlert,
       { id: id }
     );
   }
 
-  public async disableAlert(id: string): Promise<Types.Alert> {
-    return this.mutateAndCheckError<Types.Alert, { id: string }>(
+  public async disableAlert(id: string): Promise<Types.DisableAlertMutation> {
+    return this.mutateAndCheckError<Types.DisableAlertMutation, { id: string }>(
       Documents.DisableAlert,
       { id: id }
     );
   }
 
-  public async getAlert(id: string): Promise<Types.Alert> {
-    return this.queryAndCheckError<Types.Alert, { id: string }>(
+  public async getAlert(id: string): Promise<Types.GetAlertQuery> {
+    return this.queryAndCheckError<Types.GetAlertQuery, { id: string }>(
       Documents.GetAlert,
       { id: id }
     );
   }
 
-  public async queryAlerts(filter: Types.AlertFilter): Promise<Types.AlertResults> {
-    return this.queryAndCheckError<Types.AlertResults, { filter: Types.AlertFilter }>(
+  public async queryAlerts(filter?: Types.AlertFilter): Promise<Types.QueryAlertsQuery> {
+    return this.queryAndCheckError<Types.QueryAlertsQuery, { filter?: Types.AlertFilter }>(
       Documents.QueryAlerts,
       { filter: filter }
     );
   }
 
-  public async createCollection(Collection: Types.CollectionInput): Promise<Types.Collection> {
-    return this.mutateAndCheckError<Types.Collection, { Collection: Types.CollectionInput }>(
+  public async createCollection(Collection: Types.CollectionInput): Promise<Types.CreateCollectionMutation> {
+    return this.mutateAndCheckError<Types.CreateCollectionMutation, { Collection: Types.CollectionInput }>(
       Documents.CreateCollection,
       { Collection: Collection }
     );
   }
 
-  public async updateCollection(Collection: Types.CollectionUpdateInput): Promise<Types.Collection> {
-    return this.mutateAndCheckError<Types.Collection, { Collection: Types.CollectionUpdateInput }>(
+  public async updateCollection(Collection: Types.CollectionUpdateInput): Promise<Types.UpdateCollectionMutation> {
+    return this.mutateAndCheckError<Types.UpdateCollectionMutation, { Collection: Types.CollectionUpdateInput }>(
       Documents.UpdateCollection,
       { Collection: Collection }
     );
   }
 
-  public async deleteCollection(id: string): Promise<Types.Collection> {
-    return this.mutateAndCheckError<Types.Collection, { id: string }>(
+  public async deleteCollection(id: string): Promise<Types.DeleteCollectionMutation> {
+    return this.mutateAndCheckError<Types.DeleteCollectionMutation, { id: string }>(
       Documents.DeleteCollection,
       { id: id }
     );
   }
 
   /*
-  public async deleteAllCollections(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllCollections(): Promise<Types.DeleteAllCollectionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllCollectionsMutation>(
       Documents.DeleteAllCollections
     );
   }
   */
 
-  public async addContentsToCollections(contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[]): Promise<Types.Collection[]> {
-    return this.mutateAndCheckError<Types.Collection[], { contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[] }>(
+  public async addContentsToCollections(contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[]): Promise<Types.AddContentsToCollectionsMutation> {
+    return this.mutateAndCheckError<Types.AddContentsToCollectionsMutation, { contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[] }>(
       Documents.AddContentsToCollections,
       { contents: contents, collections: collections }
     );
   }
 
-  public async removeContentsFromCollection(contents: Types.EntityReferenceInput[], collection: Types.EntityReferenceInput): Promise<Types.Collection> {
-    return this.mutateAndCheckError<Types.Collection, { contents: Types.EntityReferenceInput[], collection: Types.EntityReferenceInput }>(
+  public async removeContentsFromCollection(contents: Types.EntityReferenceInput[], collection: Types.EntityReferenceInput): Promise<Types.RemoveContentsFromCollectionMutation> {
+    return this.mutateAndCheckError<Types.RemoveContentsFromCollectionMutation, { contents: Types.EntityReferenceInput[], collection: Types.EntityReferenceInput }>(
       Documents.RemoveContentsFromCollection,
       { contents: contents, collection: collection }
     );
   }
 
-  public async getCollection(id: string): Promise<Types.Collection> {
-    return this.queryAndCheckError<Types.Collection, { id: string }>(
+  public async getCollection(id: string): Promise<Types.GetCollectionQuery> {
+    return this.queryAndCheckError<Types.GetCollectionQuery, { id: string }>(
       Documents.GetCollection,
       { id: id }
     );
   }
 
-  public async queryCollections(filter: Types.CollectionFilter): Promise<Types.CollectionResults> {
-    return this.queryAndCheckError<Types.CollectionResults, { filter: Types.CollectionFilter }>(
+  public async queryCollections(filter?: Types.CollectionFilter): Promise<Types.QueryCollectionsQuery> {
+    return this.queryAndCheckError<Types.QueryCollectionsQuery, { filter?: Types.CollectionFilter }>(
       Documents.QueryCollections,
       { filter: filter }
     );
   }
 
-  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestUriMutation> {
+    return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestUri,
       { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
     );
   }
 
-  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestTextMutation> {
+    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestText,
       { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
     );
   }
 
-  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestEncodedFileMutation> {
+    return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestEncodedFile,
       { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
     );
   }
 
-  public async updateContent(content: Types.ContentUpdateInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { content: Types.ContentUpdateInput }>(
+  public async updateContent(content: Types.ContentUpdateInput): Promise<Types.UpdateContentMutation> {
+    return this.mutateAndCheckError<Types.UpdateContentMutation, { content: Types.ContentUpdateInput }>(
       Documents.UpdateContent,
       { content: content }
     );
   }
 
-  public async deleteContent(id: string): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { id: string }>(
+  public async deleteContent(id: string): Promise<Types.DeleteContentMutation> {
+    return this.mutateAndCheckError<Types.DeleteContentMutation, { id: string }>(
       Documents.DeleteContent,
       { id: id }
     );
   }
 
-  public async deleteAllContents(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllContents(): Promise<Types.DeleteAllContentsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllContentsMutation>(
       Documents.DeleteAllContents
     );
   }
 
-  public async summarizeContents(summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter): Promise<Types.PromptSummarization[]> {
-    return this.mutateAndCheckError<Types.PromptSummarization[], { summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter, correlationId?: string }>(
+  public async summarizeContents(summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter): Promise<Types.SummarizeContentsMutation> {
+    return this.mutateAndCheckError<Types.SummarizeContentsMutation, { summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter, correlationId?: string }>(
       Documents.SummarizeContents,
       { summarizations: summarizations, filter: filter, correlationId: this.correlationId }
     );
   }
 
-  public async extractContents(prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput): Promise<Types.ExtractCompletion[]> {
-    return this.mutateAndCheckError<Types.ExtractCompletion[], { prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async extractContents(prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput): Promise<Types.ExtractContentsMutation> {
+    return this.mutateAndCheckError<Types.ExtractContentsMutation, { prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.ExtractContents,
       { prompt: prompt, filter: filter, specification: specification, correlationId: this.correlationId }
     );
@@ -259,8 +259,8 @@ class Graphlit {
 
   public async publishContents(summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput,
     publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
-    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, {
+    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput): Promise<Types.PublishContentsMutation> {
+    return this.mutateAndCheckError<Types.PublishContentsMutation, {
       summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
       name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, correlationId?: string
     }>(
@@ -269,146 +269,146 @@ class Graphlit {
     );
   }
 
-  public async getContent(id: string): Promise<Types.Content> {
-    return this.queryAndCheckError<Types.Content, { id: string }>(
+  public async getContent(id: string): Promise<Types.GetContentQuery> {
+    return this.queryAndCheckError<Types.GetContentQuery, { id: string }>(
       Documents.GetContent,
       { id: id }
     );
   }
 
-  public async queryContents(filter: Types.ContentFilter): Promise<Types.ContentResults> {
-    return this.queryAndCheckError<Types.ContentResults, { filter: Types.ContentFilter }>(
+  public async queryContents(filter?: Types.ContentFilter): Promise<Types.QueryContentsQuery> {
+    return this.queryAndCheckError<Types.QueryContentsQuery, { filter?: Types.ContentFilter }>(
       Documents.QueryContents,
       { filter: filter }
     );
   }
 
-  public async createConversation(conversation: Types.ConversationInput): Promise<Types.Conversation> {
-    return this.mutateAndCheckError<Types.Conversation, { conversation: Types.ConversationInput, correlationId?: string }>(
+  public async createConversation(conversation: Types.ConversationInput): Promise<Types.CreateConversationMutation> {
+    return this.mutateAndCheckError<Types.CreateConversationMutation, { conversation: Types.ConversationInput, correlationId?: string }>(
       Documents.CreateConversation,
       { conversation: conversation, correlationId: this.correlationId }
     );
   }
 
-  public async updateConversation(conversation: Types.ConversationUpdateInput): Promise<Types.Conversation> {
-    return this.mutateAndCheckError<Types.Conversation, { conversation: Types.ConversationUpdateInput }>(
+  public async updateConversation(conversation: Types.ConversationUpdateInput): Promise<Types.UpdateConversationMutation> {
+    return this.mutateAndCheckError<Types.UpdateConversationMutation, { conversation: Types.ConversationUpdateInput }>(
       Documents.UpdateConversation,
       { conversation: conversation }
     );
   }
 
-  public async deleteConversation(id: string): Promise<Types.Conversation> {
-    return this.mutateAndCheckError<Types.Conversation, { id: string }>(
+  public async deleteConversation(id: string): Promise<Types.DeleteConversationMutation> {
+    return this.mutateAndCheckError<Types.DeleteConversationMutation, { id: string }>(
       Documents.DeleteConversation,
       { id: id }
     );
   }
 
-  public async deleteAllConversations(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllConversations(): Promise<Types.DeleteAllConversationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllConversationsMutation>(
       Documents.DeleteAllConversations
     );
   }
 
-  public async clearConversation(id: string): Promise<Types.Conversation> {
-    return this.mutateAndCheckError<Types.Conversation, { id: string }>(
+  public async clearConversation(id: string): Promise<Types.ClearConversationMutation> {
+    return this.mutateAndCheckError<Types.ClearConversationMutation, { id: string }>(
       Documents.ClearConversation,
       { id: id }
     );
   }
 
-  public async closeConversation(id: string): Promise<Types.Conversation> {
-    return this.mutateAndCheckError<Types.Conversation, { id: string }>(
+  public async closeConversation(id: string): Promise<Types.CloseConversationMutation> {
+    return this.mutateAndCheckError<Types.CloseConversationMutation, { id: string }>(
       Documents.CloseConversation,
       { id: id }
     );
   }
 
-  public async getConversation(id: string): Promise<Types.Conversation> {
-    return this.queryAndCheckError<Types.Conversation, { id: string }>(
+  public async getConversation(id: string): Promise<Types.GetConversationQuery> {
+    return this.queryAndCheckError<Types.GetConversationQuery, { id: string }>(
       Documents.GetConversation,
       { id: id }
     );
   }
 
-  public async queryConversations(filter: Types.ConversationFilter): Promise<Types.ConversationResults> {
-    return this.queryAndCheckError<Types.ConversationResults, { filter: Types.ConversationFilter }>(
+  public async queryConversations(filter?: Types.ConversationFilter): Promise<Types.QueryConversationsQuery> {
+    return this.queryAndCheckError<Types.QueryConversationsQuery, { filter?: Types.ConversationFilter }>(
       Documents.QueryConversations,
       { filter: filter }
     );
   }
 
-  public async promptConversation(prompt: string, id?: string): Promise<Types.PromptConversation> {
-    return this.mutateAndCheckError<Types.PromptConversation, { prompt: string, id?: string, correlationId?: string }>(
+  public async promptConversation(prompt: string, id?: string): Promise<Types.PromptConversationMutation> {
+    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, correlationId?: string }>(
       Documents.PromptConversation,
       { prompt: prompt, id: id, correlationId: this.correlationId }
     );
   }
 
-  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput): Promise<Types.Content> {
-    return this.mutateAndCheckError<Types.Content, { id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput): Promise<Types.PublishConversationMutation> {
+    return this.mutateAndCheckError<Types.PublishConversationMutation, { id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.PublishConversation,
       { id: id, connector: connector, name: name, workflow: workflow, correlationId: this.correlationId }
     );
   }
 
-  public async suggestConversation(id: string, count?: number): Promise<Types.PromptSuggestion> {
-    return this.mutateAndCheckError<Types.PromptSuggestion, { id: string, count?: number, correlationId?: string }>(
+  public async suggestConversation(id: string, count?: number): Promise<Types.SuggestConversationMutation> {
+    return this.mutateAndCheckError<Types.SuggestConversationMutation, { id: string, count?: number, correlationId?: string }>(
       Documents.SuggestConversation,
       { id: id, count: count, correlationId: this.correlationId }
     );
   }
 
-  public async createFeed(feed: Types.FeedInput): Promise<Types.Feed> {
-    return this.mutateAndCheckError<Types.Feed, { feed: Types.FeedInput, correlationId?: string }>(
+  public async createFeed(feed: Types.FeedInput): Promise<Types.CreateFeedMutation> {
+    return this.mutateAndCheckError<Types.CreateFeedMutation, { feed: Types.FeedInput, correlationId?: string }>(
       Documents.CreateFeed,
       { feed: feed, correlationId: this.correlationId }
     );
   }
 
-  public async updateFeed(feed: Types.FeedUpdateInput): Promise<Types.Feed> {
-    return this.mutateAndCheckError<Types.Feed, { feed: Types.FeedUpdateInput }>(
+  public async updateFeed(feed: Types.FeedUpdateInput): Promise<Types.UpdateFeedMutation> {
+    return this.mutateAndCheckError<Types.UpdateFeedMutation, { feed: Types.FeedUpdateInput }>(
       Documents.UpdateFeed,
       { feed: feed }
     );
   }
 
-  public async deleteFeed(id: string): Promise<Types.Feed> {
-    return this.mutateAndCheckError<Types.Feed, { id: string }>(
+  public async deleteFeed(id: string): Promise<Types.DeleteFeedMutation> {
+    return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
       Documents.DeleteFeed,
       { id: id }
     );
   }
 
-  public async deleteAllFeeds(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllFeeds(): Promise<Types.DeleteAllFeedsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllFeedsMutation>(
       Documents.DeleteAllFeeds
     );
   }
 
-  public async enableFeed(id: string): Promise<Types.Feed> {
-    return this.mutateAndCheckError<Types.Feed, { id: string }>(
+  public async enableFeed(id: string): Promise<Types.EnableFeedMutation> {
+    return this.mutateAndCheckError<Types.EnableFeedMutation, { id: string }>(
       Documents.EnableFeed,
       { id: id }
     );
   }
 
-  public async disableFeed(id: string): Promise<Types.Feed> {
-    return this.mutateAndCheckError<Types.Feed, { id: string }>(
+  public async disableFeed(id: string): Promise<Types.DeleteFeedMutation> {
+    return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
       Documents.DisableFeed,
       { id: id }
     );
   }
 
-  public async getFeed(id: string): Promise<Types.Feed> {
-    return this.queryAndCheckError<Types.Feed, { id: string }>(
+  public async getFeed(id: string): Promise<Types.GetFeedQuery> {
+    return this.queryAndCheckError<Types.GetFeedQuery, { id: string }>(
       Documents.GetFeed,
       { id: id }
     );
   }
 
-  public async queryFeeds(filter: Types.FeedFilter): Promise<Types.FeedResults> {
-    return this.queryAndCheckError<Types.FeedResults, { filter: Types.FeedFilter }>(
+  public async queryFeeds(filter?: Types.FeedFilter): Promise<Types.QueryFeedsQuery> {
+    return this.queryAndCheckError<Types.QueryFeedsQuery, { filter?: Types.FeedFilter }>(
       Documents.QueryFeeds,
       { filter: filter }
     );
@@ -416,92 +416,92 @@ class Graphlit {
 
   // TODO: project credits, usage, etc.
 
-  public async promptSpecifications(prompt: string, ids: [string]): Promise<Types.PromptCompletion[]> {
-    return this.mutateAndCheckError<Types.PromptCompletion[], { prompt: string, ids: [string] }>(
+  public async promptSpecifications(prompt: string, ids: [string]): Promise<Types.PromptSpecificationsMutation> {
+    return this.mutateAndCheckError<Types.PromptSpecificationsMutation, { prompt: string, ids: [string] }>(
       Documents.PromptSpecifications,
       { prompt: prompt, ids: ids }
     );
   }
 
-  public async createSpecification(specification: Types.SpecificationInput): Promise<Types.Specification> {
-    return this.mutateAndCheckError<Types.Specification, { specification: Types.SpecificationInput }>(
+  public async createSpecification(specification: Types.SpecificationInput): Promise<Types.CreateSpecificationMutation> {
+    return this.mutateAndCheckError<Types.CreateSpecificationMutation, { specification: Types.SpecificationInput }>(
       Documents.CreateSpecification,
       { specification: specification }
     );
   }
 
-  public async updateSpecification(specification: Types.SpecificationUpdateInput): Promise<Types.Specification> {
-    return this.mutateAndCheckError<Types.Specification, { specification: Types.SpecificationUpdateInput }>(
+  public async updateSpecification(specification: Types.SpecificationUpdateInput): Promise<Types.UpdateSpecificationMutation> {
+    return this.mutateAndCheckError<Types.UpdateSpecificationMutation, { specification: Types.SpecificationUpdateInput }>(
       Documents.UpdateSpecification,
       { specification: specification }
     );
   }
 
-  public async deleteSpecification(id: string): Promise<Types.Specification> {
-    return this.mutateAndCheckError<Types.Specification, { id: string }>(
+  public async deleteSpecification(id: string): Promise<Types.DeleteSpecificationMutation> {
+    return this.mutateAndCheckError<Types.DeleteSpecificationMutation, { id: string }>(
       Documents.DeleteSpecification,
       { id: id }
     );
   }
 
   /*
-  public async deleteAllSpecifications(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllSpecifications(): Promise<Types.DeleteAllSpecificationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllSpecificationsMutation>(
       Documents.DeleteAllSpecifications
     );
   }
   */
 
-  public async getSpecification(id: string): Promise<Types.Specification> {
-    return this.queryAndCheckError<Types.Specification, { id: string }>(
+  public async getSpecification(id: string): Promise<Types.GetSpecificationQuery> {
+    return this.queryAndCheckError<Types.GetSpecificationQuery, { id: string }>(
       Documents.GetSpecification,
       { id: id }
     );
   }
 
-  public async querySpecifications(filter: Types.SpecificationFilter): Promise<Types.SpecificationResults> {
-    return this.queryAndCheckError<Types.SpecificationResults, { filter: Types.SpecificationFilter }>(
+  public async querySpecifications(filter?: Types.SpecificationFilter): Promise<Types.QuerySpecificationsQuery> {
+    return this.queryAndCheckError<Types.QuerySpecificationsQuery, { filter?: Types.SpecificationFilter }>(
       Documents.QuerySpecifications,
       { filter: filter }
     );
   }
 
-  public async createWorkflow(workflow: Types.WorkflowInput): Promise<Types.Workflow> {
-    return this.mutateAndCheckError<Types.Workflow, { workflow: Types.WorkflowInput }>(
+  public async createWorkflow(workflow: Types.WorkflowInput): Promise<Types.CreateWorkflowMutation> {
+    return this.mutateAndCheckError<Types.CreateWorkflowMutation, { workflow: Types.WorkflowInput }>(
       Documents.CreateWorkflow,
       { workflow: workflow }
     );
   }
 
-  public async updateWorkflow(workflow: Types.WorkflowUpdateInput): Promise<Types.Workflow> {
-    return this.mutateAndCheckError<Types.Workflow, { workflow: Types.WorkflowUpdateInput }>(
+  public async updateWorkflow(workflow: Types.WorkflowUpdateInput): Promise<Types.UpdateWorkflowMutation> {
+    return this.mutateAndCheckError<Types.UpdateWorkflowMutation, { workflow: Types.WorkflowUpdateInput }>(
       Documents.UpdateWorkflow,
       { workflow: workflow }
     );
   }
 
-  public async deleteWorkflow(id: string): Promise<Types.Workflow> {
-    return this.mutateAndCheckError<Types.Workflow, { id: string }>(
+  public async deleteWorkflow(id: string): Promise<Types.DeleteWorkflowMutation> {
+    return this.mutateAndCheckError<Types.DeleteWorkflowMutation, { id: string }>(
       Documents.DeleteWorkflow,
       { id: id }
     );
   }
 
-  public async deleteAllWorkflows(): Promise<void> {
-    return this.mutateAndCheckError<void>(
+  public async deleteAllWorkflows(): Promise<Types.DeleteAllWorkflowsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllWorkflowsMutation>(
       Documents.DeleteAllWorkflows
     );
   }
 
-  public async getWorkflow(id: string): Promise<Types.Workflow> {
-    return this.queryAndCheckError<Types.Workflow, { id: string }>(
+  public async getWorkflow(id: string): Promise<Types.GetWorkflowQuery> {
+    return this.queryAndCheckError<Types.GetWorkflowQuery, { id: string }>(
       Documents.GetWorkflow,
       { id: id }
     );
   }
 
-  public async queryWorkflows(filter: Types.WorkflowFilter): Promise<Types.WorkflowResults> {
-    return this.queryAndCheckError<Types.WorkflowResults, { filter: Types.WorkflowFilter }>(
+  public async queryWorkflows(filter?: Types.WorkflowFilter): Promise<Types.QueryWorkflowsQuery> {
+    return this.queryAndCheckError<Types.QueryWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
       Documents.QueryWorkflows,
       { filter: filter }
     );
