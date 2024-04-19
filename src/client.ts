@@ -87,6 +87,19 @@ class Graphlit {
     this.client = new ApolloClient({
       link: authLink.concat(httpLink),
       cache: new InMemoryCache(),
+      defaultOptions: {
+        watchQuery: {
+          fetchPolicy: 'cache-and-network',
+          errorPolicy: 'ignore',
+        },
+        query: {
+          fetchPolicy: 'network-only',
+          errorPolicy: 'all',
+        },
+        mutate: {
+          errorPolicy: 'all',
+        }
+      }
     });
   }
 
@@ -521,6 +534,11 @@ class Graphlit {
         variables: variables || {} as TVariables
       });
 
+      if (result.errors) {
+        const errorMessage = result.errors.map(err => err.message).join("\n");
+        throw new Error(errorMessage);
+      }
+
       if (!result.data) {
         throw new Error('No data returned from mutation.');
       }
@@ -548,6 +566,17 @@ class Graphlit {
         query,
         variables: variables || {} as TVariables
       });
+
+      if (result.error?.graphQLErrors) {
+        const errorMessage = result.error.graphQLErrors.map(err => err.message).join("\n");
+        throw new Error(errorMessage);
+      }
+
+
+      if (result.error?.clientErrors) {
+        const errorMessage = result.error.clientErrors.map(err => err.message).join("\n");
+        throw new Error(errorMessage);
+      }
 
       if (!result.data) {
         throw new Error('No data returned from query');
