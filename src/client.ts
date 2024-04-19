@@ -18,7 +18,7 @@ class Graphlit {
   private token: string | undefined;
 
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
-    this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
+    this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
 
     if (typeof process !== 'undefined') {
       dotenv.config();
