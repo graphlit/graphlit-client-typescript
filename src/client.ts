@@ -9,13 +9,13 @@ import * as dotenv from 'dotenv';
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
   public token: string | undefined;
+  public correlationId: string | undefined;
 
   private apiUri: string;
   private organizationId: string | undefined;
   private environmentId: string | undefined;
   private ownerId: string | undefined;
   private jwtSecret: string | undefined;
-  private correlationId: string | undefined;
 
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
