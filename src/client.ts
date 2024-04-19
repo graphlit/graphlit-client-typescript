@@ -89,11 +89,9 @@ class Graphlit {
       cache: new InMemoryCache(),
       defaultOptions: {
         watchQuery: {
-          fetchPolicy: 'cache-and-network',
-          errorPolicy: 'ignore',
+          errorPolicy: 'all',
         },
         query: {
-          fetchPolicy: 'network-only',
           errorPolicy: 'all',
         },
         mutate: {
@@ -567,14 +565,8 @@ class Graphlit {
         variables: variables || {} as TVariables
       });
 
-      if (result.error?.graphQLErrors) {
-        const errorMessage = result.error.graphQLErrors.map(err => err.message).join("\n");
-        throw new Error(errorMessage);
-      }
-
-
-      if (result.error?.clientErrors) {
-        const errorMessage = result.error.clientErrors.map(err => err.message).join("\n");
+      if (result.errors) {
+        const errorMessage = result.errors.map(err => err.message).join("\n");
         throw new Error(errorMessage);
       }
 
