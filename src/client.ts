@@ -94,9 +94,20 @@ class Graphlit {
       aud: "https://portal.graphlit.io",
     };
 
+    function uint8ArrayToBase64(buffer: Uint8Array) {
+      var binary = '';
+      var bytes = new Uint8Array(buffer);
+      var len = bytes.byteLength;
+      for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+
+    // NOTE: not using Buffer, so we don't require Node.js
     const secretKeyJWK = await importJWK({
       kty: 'oct',
-      k: Buffer.from(this.jwtSecret).toString('base64'),
+      k: uint8ArrayToBase64(new TextEncoder().encode(this.jwtSecret)),
       alg: 'HS256'
     }, 'HS256');
 
