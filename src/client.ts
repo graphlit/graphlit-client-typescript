@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
 import { DocumentNode } from 'graphql';
 import * as Types from './generated/graphql-types';
 import * as Documents from './generated/graphql-documents';
