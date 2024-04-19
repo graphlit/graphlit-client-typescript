@@ -54,10 +54,6 @@ class Graphlit {
       throw new Error("Graphlit environment JWT secret is required.");
     }
 
-    if (!this.jwtSecret) {
-      throw new Error("JWT secret is required.");
-    }
-
     const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // one hour from now
 
     const payload = {
