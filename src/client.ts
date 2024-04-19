@@ -9,7 +9,6 @@ import * as dotenv from 'dotenv';
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
   public token: string | undefined;
-  public correlationId: string | undefined;
 
   private apiUri: string;
   private organizationId: string | undefined;
@@ -17,7 +16,7 @@ class Graphlit {
   private ownerId: string | undefined;
   private jwtSecret: string | undefined;
 
-  constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
+  constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
 
     if (typeof process !== 'undefined') {
@@ -38,9 +37,6 @@ class Graphlit {
       // optional: for multi-tenant support
       this.ownerId = ownerId;
     }
-
-    // optional: for billing correlation of multiple operations
-    this.correlationId = correlationId || undefined
 
     if (!this.organizationId) {
       throw new Error("Graphlit organization identifier is required.");
@@ -101,10 +97,10 @@ class Graphlit {
     });
   }
 
-  public async createAlert(alert: Types.AlertInput): Promise<Types.CreateAlertMutation> {
+  public async createAlert(alert: Types.AlertInput, correlationId?: string): Promise<Types.CreateAlertMutation> {
     return this.mutateAndCheckError<Types.CreateAlertMutation, { alert: Types.AlertInput, correlationId?: string }>(
       Documents.CreateAlert,
-      { alert: alert, correlationId: this.correlationId }
+      { alert: alert, correlationId: correlationId }
     );
   }
 
@@ -213,24 +209,24 @@ class Graphlit {
     );
   }
 
-  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestUriMutation> {
+  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestUriMutation> {
     return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestUri,
-      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
+      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
     );
   }
 
-  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestTextMutation> {
+  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestTextMutation> {
     return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestText,
-      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
+      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
     );
   }
 
-  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput): Promise<Types.IngestEncodedFileMutation> {
+  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestEncodedFileMutation> {
     return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.IngestEncodedFile,
-      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: this.correlationId }
+      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
     );
   }
 
@@ -254,29 +250,29 @@ class Graphlit {
     );
   }
 
-  public async summarizeContents(summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter): Promise<Types.SummarizeContentsMutation> {
+  public async summarizeContents(summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter, correlationId?: string): Promise<Types.SummarizeContentsMutation> {
     return this.mutateAndCheckError<Types.SummarizeContentsMutation, { summarizations: [Types.SummarizationStrategyInput], filter?: Types.ContentFilter, correlationId?: string }>(
       Documents.SummarizeContents,
-      { summarizations: summarizations, filter: filter, correlationId: this.correlationId }
+      { summarizations: summarizations, filter: filter, correlationId: correlationId }
     );
   }
 
-  public async extractContents(prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput): Promise<Types.ExtractContentsMutation> {
+  public async extractContents(prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ExtractContentsMutation> {
     return this.mutateAndCheckError<Types.ExtractContentsMutation, { prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.ExtractContents,
-      { prompt: prompt, filter: filter, specification: specification, correlationId: this.correlationId }
+      { prompt: prompt, filter: filter, specification: specification, correlationId: correlationId }
     );
   }
 
   public async publishContents(summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput,
     publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
-    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput): Promise<Types.PublishContentsMutation> {
+    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishContentsMutation> {
     return this.mutateAndCheckError<Types.PublishContentsMutation, {
       summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
       name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, correlationId?: string
     }>(
       Documents.PublishContents,
-      { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, correlationId: this.correlationId }
+      { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, correlationId: correlationId }
     );
   }
 
@@ -294,10 +290,10 @@ class Graphlit {
     );
   }
 
-  public async createConversation(conversation: Types.ConversationInput): Promise<Types.CreateConversationMutation> {
+  public async createConversation(conversation: Types.ConversationInput, correlationId?: string): Promise<Types.CreateConversationMutation> {
     return this.mutateAndCheckError<Types.CreateConversationMutation, { conversation: Types.ConversationInput, correlationId?: string }>(
       Documents.CreateConversation,
-      { conversation: conversation, correlationId: this.correlationId }
+      { conversation: conversation, correlationId: correlationId }
     );
   }
 
@@ -349,31 +345,31 @@ class Graphlit {
     );
   }
 
-  public async promptConversation(prompt: string, id?: string): Promise<Types.PromptConversationMutation> {
+  public async promptConversation(prompt: string, id?: string, correlationId?: string): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, correlationId?: string }>(
       Documents.PromptConversation,
-      { prompt: prompt, id: id, correlationId: this.correlationId }
+      { prompt: prompt, id: id, correlationId: correlationId }
     );
   }
 
-  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput): Promise<Types.PublishConversationMutation> {
+  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishConversationMutation> {
     return this.mutateAndCheckError<Types.PublishConversationMutation, { id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.PublishConversation,
-      { id: id, connector: connector, name: name, workflow: workflow, correlationId: this.correlationId }
+      { id: id, connector: connector, name: name, workflow: workflow, correlationId: correlationId }
     );
   }
 
-  public async suggestConversation(id: string, count?: number): Promise<Types.SuggestConversationMutation> {
+  public async suggestConversation(id: string, count?: number, correlationId?: string): Promise<Types.SuggestConversationMutation> {
     return this.mutateAndCheckError<Types.SuggestConversationMutation, { id: string, count?: number, correlationId?: string }>(
       Documents.SuggestConversation,
-      { id: id, count: count, correlationId: this.correlationId }
+      { id: id, count: count, correlationId: correlationId }
     );
   }
 
-  public async createFeed(feed: Types.FeedInput): Promise<Types.CreateFeedMutation> {
+  public async createFeed(feed: Types.FeedInput, correlationId?: string): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<Types.CreateFeedMutation, { feed: Types.FeedInput, correlationId?: string }>(
       Documents.CreateFeed,
-      { feed: feed, correlationId: this.correlationId }
+      { feed: feed, correlationId: correlationId }
     );
   }
 
