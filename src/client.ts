@@ -5,10 +5,6 @@ import * as Types from './generated/graphql-types';
 import * as Documents from './generated/graphql-documents';
 import * as dotenv from 'dotenv';
 
-// Initialize dotenv to use environment variables
-if (process)
-  dotenv.config();
-
 // Define the Graphlit class
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
@@ -24,12 +20,24 @@ class Graphlit {
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
 
-    this.organizationId = organizationId || process?.env?.GRAPHLIT_ORGANIZATION_ID;
-    this.environmentId = environmentId || process?.env?.GRAPHLIT_ENVIRONMENT_ID;
-    this.jwtSecret = jwtSecret || process?.env?.GRAPHLIT_JWT_SECRET;
+    if (typeof process !== 'undefined') {
+      dotenv.config();
 
-    // optional: for multi-tenant support
-    this.ownerId = ownerId || process?.env?.GRAPHLIT_OWNER_ID;
+      this.organizationId = organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
+      this.environmentId = environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
+      this.jwtSecret = jwtSecret || process.env.GRAPHLIT_JWT_SECRET;
+
+      // optional: for multi-tenant support
+      this.ownerId = ownerId || process.env.GRAPHLIT_OWNER_ID;
+    }
+    else {
+      this.organizationId = organizationId;
+      this.environmentId = environmentId;
+      this.jwtSecret = jwtSecret;
+
+      // optional: for multi-tenant support
+      this.ownerId = ownerId;
+    }
 
     // optional: for billing correlation of multiple operations
     this.correlationId = correlationId || undefined
