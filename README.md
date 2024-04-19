@@ -1,13 +1,12 @@
-# TypeScript Client for Graphlit Platform
+# JavaScript Client for Graphlit Platform
 ## Overview
 
-The Graphlit Client for Node.js enables straightforward interactions with the Graphlit API, allowing developers to execute GraphQL queries and mutations against the Graphlit service. This document outlines the setup process and provides a basic example of using the client.
+The Graphlit Client for JavaScript enables straightforward interactions with the Graphlit API, allowing developers to execute GraphQL queries and mutations against the Graphlit service. This document outlines the setup process and provides a basic example of using the client.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following:
 
-- Node.js installed on your system (recommended version 20.x or higher).
 - An active account on the [Graphlit Platform](https://portal.graphlit.dev) with access to the API settings dashboard.
 
 ## Installation
