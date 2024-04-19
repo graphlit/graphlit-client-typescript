@@ -534,12 +534,10 @@ class Graphlit {
 
       if (result.errors) {
         const errorMessage = result.errors.map(err => err.message).join("\n");
-        console.log(errorMessage);
         throw new Error(errorMessage);
       }
 
       if (!result.data) {
-        console.log('No data returned from mutation.');
         throw new Error('No data returned from mutation.');
       }
 
@@ -547,14 +545,13 @@ class Graphlit {
     } catch (error) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
         const errorMessage = error.graphQLErrors.map(err => err.message).join("\n");
-        console.log(errorMessage);
+        console.error(errorMessage);
         throw new Error(errorMessage);
       } if (error instanceof Error) {
         console.error(error.message);
         throw error;
       }
       else {
-        console.error('An unexpected error occurred');
         throw error;
       }
     }
@@ -575,27 +572,24 @@ class Graphlit {
 
       if (result.errors) {
         const errorMessage = result.errors.map(err => err.message).join("\n");
-        console.log(errorMessage);
         throw new Error(errorMessage);
       }
 
       if (!result.data) {
-        console.log('No data returned from mutation.');
-        throw new Error('No data returned from query');
+        throw new Error('No data returned from query.');
       }
 
       return result.data;
     } catch (error: unknown) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
         const errorMessage = error.graphQLErrors.map(err => err.message).join("\n");
-        console.log(errorMessage);
+        console.error(errorMessage);
         throw new Error(errorMessage);
       } if (error instanceof Error) {
         console.error(error.message);
         throw error;
       }
       else {
-        console.error('An unexpected error occurred');
         throw error;
       }
     }
