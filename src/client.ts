@@ -55,6 +55,8 @@ class Graphlit {
     }
 
     this.initializeJWT().then(() => {
+      console.log(this.token)
+
       const httpLink = createHttpLink({
         uri: this.apiUri,
       });
@@ -73,6 +75,8 @@ class Graphlit {
         link: authLink.concat(httpLink),
         cache: new InMemoryCache(),
       });
+
+      console.log("Apollo client has been initialized.")
     });
   }
 
@@ -540,7 +544,7 @@ class Graphlit {
     mutation: DocumentNode,
     variables?: TVariables
   ): Promise<TData> {
-    if (!this.client)
+    if (this.client === undefined)
       throw new Error("Apollo Client not configured.");
 
     try {
@@ -568,7 +572,7 @@ class Graphlit {
     query: DocumentNode,
     variables?: TVariables
   ): Promise<TData> {
-    if (!this.client)
+    if (this.client === undefined)
       throw new Error("Apollo Client not configured.");
 
     try {
