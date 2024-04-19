@@ -1,4 +1,4 @@
-import { SignJWT, importJWK } from 'jose';
+import * as jwt from 'jsonwebtoken';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
 import { DocumentNode } from 'graphql';
 import * as Types from './generated/graphql-types';
@@ -54,31 +54,9 @@ class Graphlit {
       throw new Error("Graphlit environment JWT secret is required.");
     }
 
-    this.initializeJWT().then(() => {
-      const httpLink = createHttpLink({
-        uri: this.apiUri,
-      });
-
-      const authLink = new ApolloLink((operation, forward) => {
-        operation.setContext({
-          headers: {
-            Authorization: this.token ? `Bearer ${this.token}` : "",
-          }
-        });
-
-        return forward(operation);
-      });
-
-      this.client = new ApolloClient({
-        link: authLink.concat(httpLink),
-        cache: new InMemoryCache(),
-      });
-    });
-  }
-
-  private async initializeJWT() {
-    if (!this.jwtSecret)
-      return;
+    if (!this.jwtSecret) {
+      throw new Error("JWT secret is required.");
+    }
 
     const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // one hour from now
 
@@ -94,28 +72,26 @@ class Graphlit {
       aud: "https://portal.graphlit.io",
     };
 
-    function uint8ArrayToBase64(buffer: Uint8Array) {
-      var binary = '';
-      var bytes = new Uint8Array(buffer);
-      var len = bytes.byteLength;
-      for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-      return window.btoa(binary);
-    }
+    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
 
-    // NOTE: not using Buffer, so we don't require Node.js
-    const secretKeyJWK = await importJWK({
-      kty: 'oct',
-      k: uint8ArrayToBase64(new TextEncoder().encode(this.jwtSecret)),
-      alg: 'HS256'
-    }, 'HS256');
+    const httpLink = createHttpLink({
+      uri: this.apiUri,
+    });
 
-    this.token = await new SignJWT(payload)
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('1h')
-      .sign(secretKeyJWK);
+    const authLink = new ApolloLink((operation, forward) => {
+      operation.setContext({
+        headers: {
+          Authorization: this.token ? `Bearer ${this.token}` : "",
+        }
+      });
+
+      return forward(operation);
+    });
+
+    this.client = new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache(),
+    });
   }
 
   public async createAlert(alert: Types.AlertInput): Promise<Types.Alert> {

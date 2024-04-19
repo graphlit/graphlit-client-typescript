@@ -4,6 +4,16 @@
   "description": "Graphlit API TypeScript Client",
   "main": "dist/client.js",
   "types": "dist/client.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphlit/graphlit-client-typescript"
+  },
+  "contributors": [
+    "Kirk Marple (https://github.com/kirk-marple)"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "generate": "graphql-codegen --config codegen.yml",
     "build": "tsc -p tsconfig.json"
@@ -27,10 +37,11 @@
     "@graphql-codegen/typescript": "^4.0.6",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "graphql": "^16.8.1",
-    "jose": "^5.2.4"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@graphql-codegen/typescript-document-nodes": "^4.0.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "typescript": "^5.4.5"
   }
 }
