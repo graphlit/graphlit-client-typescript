@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 // Define the Graphlit class
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
+  public token: string | undefined;
 
   private apiUri: string;
   private environmentId: string | undefined;
@@ -15,7 +16,6 @@ class Graphlit {
   private ownerId: string | undefined;
   private jwtSecret: string | undefined;
   private correlationId: string | undefined;
-  private token: string | undefined;
 
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
