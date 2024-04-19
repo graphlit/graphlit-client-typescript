@@ -27,11 +27,10 @@
     "@graphql-codegen/typescript": "^4.0.6",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "graphql": "^16.8.1",
-    "jsonwebtoken": "^9.0.2"
+    "jose": "^5.2.4"
   },
   "devDependencies": {
     "@graphql-codegen/typescript-document-nodes": "^4.0.6",
-    "@types/jsonwebtoken": "^9.0.6",
     "typescript": "^5.4.5"
   }
 }

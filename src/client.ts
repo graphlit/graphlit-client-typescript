@@ -1,8 +1,8 @@
+import { SignJWT, importJWK } from 'jose';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
 import { DocumentNode } from 'graphql';
 import * as Types from './generated/graphql-types';
 import * as Documents from './generated/graphql-documents';
-import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 
 // Initialize dotenv to use environment variables
@@ -10,7 +10,7 @@ dotenv.config();
 
 // Define the Graphlit class
 class Graphlit {
-  public client: ApolloClient<NormalizedCacheObject>;
+  public client: ApolloClient<NormalizedCacheObject> | undefined;
 
   private apiUri: string;
   private environmentId: string | undefined;
@@ -18,7 +18,7 @@ class Graphlit {
   private ownerId: string | undefined;
   private jwtSecret: string | undefined;
   private correlationId: string | undefined;
-  private token: string;
+  private token: string | undefined;
 
   constructor(organizationId?: string, environmentId?: string, jwtSecret?: string, ownerId?: string, apiUri?: string, correlationId?: string) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1";
@@ -33,10 +33,47 @@ class Graphlit {
     // optional: for billing correlation of multiple operations
     this.correlationId = correlationId || undefined
 
-    // Set token expiration to one hour from now
-    const expiration = Math.floor(Date.now() / 1000) + (60 * 60);
+    if (!this.organizationId) {
+      throw new Error("Graphlit organization identifier is required.");
+    }
 
-    const payload: any = {
+    if (!this.environmentId) {
+      throw new Error("Graphlit environment identifier is required.");
+    }
+
+    if (!this.jwtSecret) {
+      throw new Error("Graphlit environment JWT secret is required.");
+    }
+
+    this.initializeJWT().then(() => {
+      const httpLink = createHttpLink({
+        uri: this.apiUri,
+      });
+
+      const authLink = new ApolloLink((operation, forward) => {
+        operation.setContext({
+          headers: {
+            Authorization: this.token ? `Bearer ${this.token}` : "",
+          }
+        });
+
+        return forward(operation);
+      });
+
+      this.client = new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache: new InMemoryCache(),
+      });
+    });
+  }
+
+  private async initializeJWT() {
+    if (!this.jwtSecret)
+      return;
+
+    const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // one hour from now
+
+    const payload = {
       "https://graphlit.io/jwt/claims": {
         "x-graphlit-environment-id": this.environmentId,
         "x-graphlit-organization-id": this.organizationId,
@@ -48,30 +85,17 @@ class Graphlit {
       aud: "https://portal.graphlit.io",
     };
 
-    if (!this.jwtSecret) {
-      throw new Error("JWT secret is required.");
-    }
+    const secretKeyJWK = await importJWK({
+      kty: 'oct',
+      k: Buffer.from(this.jwtSecret).toString('base64'),
+      alg: 'HS256'
+    }, 'HS256');
 
-    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
-
-    const httpLink = createHttpLink({
-      uri: this.apiUri,
-    });
-
-    const authLink = new ApolloLink((operation, forward) => {
-      operation.setContext({
-        headers: {
-          Authorization: this.token ? `Bearer ${this.token}` : "",
-        }
-      });
-
-      return forward(operation);
-    });
-
-    this.client = new ApolloClient({
-      link: authLink.concat(httpLink),
-      cache: new InMemoryCache(),
-    });
+    this.token = await new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('1h')
+      .sign(secretKeyJWK);
   }
 
   public async createAlert(alert: Types.AlertInput): Promise<Types.Alert> {
@@ -496,6 +520,9 @@ class Graphlit {
     mutation: DocumentNode,
     variables?: TVariables
   ): Promise<TData> {
+    if (!this.client)
+      throw new Error("Apollo Client not configured.");
+
     try {
       const result: FetchResult<TData> = await this.client.mutate<TData, TVariables>({
         mutation,
@@ -521,6 +548,9 @@ class Graphlit {
     query: DocumentNode,
     variables?: TVariables
   ): Promise<TData> {
+    if (!this.client)
+      throw new Error("Apollo Client not configured.");
+
     try {
       const result: ApolloQueryResult<TData> = await this.client.query<TData, TVariables>({
         query,
