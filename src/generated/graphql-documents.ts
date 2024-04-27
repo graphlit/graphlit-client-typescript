@@ -202,6 +202,68 @@ export const UpdateAlert = gql`
   }
 }
     `;
+export const CreateCategory = gql`
+    mutation CreateCategory($category: CategoryInput!) {
+  createCategory(category: $category) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllCategories = gql`
+    mutation DeleteAllCategories($filter: CategoryFilter!) {
+  deleteAllCategories(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteCategories = gql`
+    mutation DeleteCategories($ids: [ID!]!) {
+  deleteCategories(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteCategory = gql`
+    mutation DeleteCategory($id: ID!) {
+  deleteCategory(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetCategory = gql`
+    query GetCategory($id: ID!) {
+  category(id: $id) {
+    id
+    name
+    description
+    creationDate
+  }
+}
+    `;
+export const QueryCategories = gql`
+    query QueryCategories($filter: CategoryFilter!) {
+  categories(filter: $filter) {
+    results {
+      id
+      name
+      description
+      creationDate
+    }
+  }
+}
+    `;
+export const UpdateCategory = gql`
+    mutation UpdateCategory($category: CategoryUpdateInput!) {
+  updateCategory(category: $category) {
+    id
+    name
+  }
+}
+    `;
 export const AddContentsToCollections = gql`
     mutation AddContentsToCollections($contents: [EntityReferenceInput!]!, $collections: [EntityReferenceInput!]!) {
   addContentsToCollections(contents: $contents, collections: $collections) {
@@ -223,6 +285,14 @@ export const CreateCollection = gql`
     name
     state
     type
+  }
+}
+    `;
+export const DeleteAllCollections = gql`
+    mutation DeleteAllCollections {
+  deleteAllCollections {
+    id
+    state
   }
 }
     `;
@@ -355,6 +425,7 @@ export const GetContent = gql`
   content(id: $id) {
     id
     name
+    description
     creationDate
     owner {
       id
@@ -515,13 +586,14 @@ export const GetContent = gql`
 }
     `;
 export const IngestEncodedFile = gql`
-    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
   ingestEncodedFile(
     name: $name
     data: $data
     mimeType: $mimeType
     id: $id
     isSynchronous: $isSynchronous
+    collections: $collections
     workflow: $workflow
     correlationId: $correlationId
   ) {
@@ -536,7 +608,7 @@ export const IngestEncodedFile = gql`
 }
     `;
 export const IngestText = gql`
-    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
   ingestText(
     name: $name
     text: $text
@@ -544,6 +616,7 @@ export const IngestText = gql`
     uri: $uri
     id: $id
     isSynchronous: $isSynchronous
+    collections: $collections
     workflow: $workflow
     correlationId: $correlationId
   ) {
@@ -558,11 +631,12 @@ export const IngestText = gql`
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
     id: $id
+    collections: $collections
     workflow: $workflow
     isSynchronous: $isSynchronous
     correlationId: $correlationId
@@ -585,7 +659,7 @@ export const IsContentDone = gql`
 }
     `;
 export const PublishContents = gql`
-    mutation PublishContents($summaryPrompt: String, $publishPrompt: String!, $connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $correlationId: String, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput) {
+    mutation PublishContents($summaryPrompt: String, $publishPrompt: String!, $connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $correlationId: String, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput, $isSynchronous: Boolean!) {
   publishContents(
     summaryPrompt: $summaryPrompt
     publishPrompt: $publishPrompt
@@ -596,6 +670,31 @@ export const PublishContents = gql`
     summarySpecification: $summarySpecification
     publishSpecification: $publishSpecification
     workflow: $workflow
+    isSynchronous: $isSynchronous
+  ) {
+    id
+    name
+    state
+    type
+    fileType
+    mimeType
+    uri
+    textUri
+    audioUri
+    markdown
+  }
+}
+    `;
+export const PublishText = gql`
+    mutation PublishText($text: String!, $textType: TextTypes, $connector: ContentPublishingConnectorInput!, $correlationId: String, $name: String, $workflow: EntityReferenceInput, $isSynchronous: Boolean!) {
+  publishText(
+    text: $text
+    textType: $textType
+    connector: $connector
+    correlationId: $correlationId
+    name: $name
+    workflow: $workflow
+    isSynchronous: $isSynchronous
   ) {
     id
     name
@@ -653,6 +752,25 @@ export const QueryContents = gql`
       textUri
       audioUri
       transcriptUri
+      pages {
+        index
+        chunks {
+          index
+          pageIndex
+          rowIndex
+          columnIndex
+          confidence
+          text
+          role
+          relevance
+        }
+      }
+      segments {
+        startTime
+        endTime
+        text
+        relevance
+      }
       video {
         width
         height
@@ -969,6 +1087,7 @@ export const PromptConversation = gql`
       citations {
         content {
           id
+          name
           type
           fileType
           fileName
@@ -1118,6 +1237,102 @@ export const UpdateConversation = gql`
     name
     state
     type
+  }
+}
+    `;
+export const CreateEvent = gql`
+    mutation CreateEvent($event: EventInput!) {
+  createEvent(event: $event) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllEvents = gql`
+    mutation DeleteAllEvents($filter: EventFilter!) {
+  deleteAllEvents(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteEvent = gql`
+    mutation DeleteEvent($id: ID!) {
+  deleteEvent(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteEvents = gql`
+    mutation DeleteEvents($ids: [ID!]!) {
+  deleteEvents(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetEvent = gql`
+    query GetEvent($id: ID!) {
+  event(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+    startDate
+    endDate
+    availabilityStartDate
+    availabilityEndDate
+    price
+    minPrice
+    maxPrice
+    priceCurrency
+    isAccessibleForFree
+    typicalAgeRange
+  }
+}
+    `;
+export const QueryEvents = gql`
+    query QueryEvents($filter: EventFilter!) {
+  events(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      startDate
+      endDate
+      availabilityStartDate
+      availabilityEndDate
+      price
+      minPrice
+      maxPrice
+      priceCurrency
+      isAccessibleForFree
+      typicalAgeRange
+    }
+  }
+}
+    `;
+export const UpdateEvent = gql`
+    mutation UpdateEvent($event: EventUpdateInput!) {
+  updateEvent(event: $event) {
+    id
+    name
   }
 }
     `;
@@ -1482,6 +1697,438 @@ export const UpdateFeed = gql`
   }
 }
     `;
+export const CreateLabel = gql`
+    mutation CreateLabel($label: LabelInput!) {
+  createLabel(label: $label) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllLabels = gql`
+    mutation DeleteAllLabels($filter: LabelFilter!) {
+  deleteAllLabels(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteLabel = gql`
+    mutation DeleteLabel($id: ID!) {
+  deleteLabel(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteLabels = gql`
+    mutation DeleteLabels($ids: [ID!]!) {
+  deleteLabels(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetLabel = gql`
+    query GetLabel($id: ID!) {
+  label(id: $id) {
+    id
+    name
+    description
+    creationDate
+  }
+}
+    `;
+export const QueryLabels = gql`
+    query QueryLabels($filter: LabelFilter!) {
+  labels(filter: $filter) {
+    results {
+      id
+      name
+      description
+      creationDate
+    }
+  }
+}
+    `;
+export const UpdateLabel = gql`
+    mutation UpdateLabel($label: LabelUpdateInput!) {
+  updateLabel(label: $label) {
+    id
+    name
+  }
+}
+    `;
+export const CreateObservation = gql`
+    mutation CreateObservation($observation: ObservationInput!) {
+  createObservation(observation: $observation) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteObservation = gql`
+    mutation DeleteObservation($id: ID!) {
+  deleteObservation(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const UpdateObservation = gql`
+    mutation UpdateObservation($observation: ObservationUpdateInput!) {
+  updateObservation(observation: $observation) {
+    id
+    state
+  }
+}
+    `;
+export const CreateOrganization = gql`
+    mutation CreateOrganization($organization: OrganizationInput!) {
+  createOrganization(organization: $organization) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllOrganizations = gql`
+    mutation DeleteAllOrganizations($filter: OrganizationFilter!) {
+  deleteAllOrganizations(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteOrganization = gql`
+    mutation DeleteOrganization($id: ID!) {
+  deleteOrganization(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteOrganizations = gql`
+    mutation DeleteOrganizations($ids: [ID!]!) {
+  deleteOrganizations(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetOrganization = gql`
+    query GetOrganization($id: ID!) {
+  organization(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+    foundingDate
+    industries
+    revenue
+    revenueCurrency
+    investment
+    investmentCurrency
+  }
+}
+    `;
+export const QueryOrganizations = gql`
+    query QueryOrganizations($filter: OrganizationFilter!) {
+  organizations(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      foundingDate
+      industries
+      revenue
+      revenueCurrency
+      investment
+      investmentCurrency
+    }
+  }
+}
+    `;
+export const UpdateOrganization = gql`
+    mutation UpdateOrganization($organization: OrganizationUpdateInput!) {
+  updateOrganization(organization: $organization) {
+    id
+    name
+  }
+}
+    `;
+export const CreatePerson = gql`
+    mutation CreatePerson($person: PersonInput!) {
+  createPerson(person: $person) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllPersons = gql`
+    mutation DeleteAllPersons($filter: PersonFilter!) {
+  deleteAllPersons(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePerson = gql`
+    mutation DeletePerson($id: ID!) {
+  deletePerson(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePersons = gql`
+    mutation DeletePersons($ids: [ID!]!) {
+  deletePersons(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetPerson = gql`
+    query GetPerson($id: ID!) {
+  person(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+    email
+    givenName
+    familyName
+    phoneNumber
+    birthDate
+    title
+    occupation
+    education
+  }
+}
+    `;
+export const QueryPersons = gql`
+    query QueryPersons($filter: PersonFilter!) {
+  persons(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      email
+      givenName
+      familyName
+      phoneNumber
+      birthDate
+      title
+      occupation
+      education
+    }
+  }
+}
+    `;
+export const UpdatePerson = gql`
+    mutation UpdatePerson($person: PersonUpdateInput!) {
+  updatePerson(person: $person) {
+    id
+    name
+  }
+}
+    `;
+export const CreatePlace = gql`
+    mutation CreatePlace($place: PlaceInput!) {
+  createPlace(place: $place) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllPlaces = gql`
+    mutation DeleteAllPlaces($filter: PlaceFilter!) {
+  deleteAllPlaces(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePlace = gql`
+    mutation DeletePlace($id: ID!) {
+  deletePlace(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePlaces = gql`
+    mutation DeletePlaces($ids: [ID!]!) {
+  deletePlaces(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetPlace = gql`
+    query GetPlace($id: ID!) {
+  place(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+  }
+}
+    `;
+export const QueryPlaces = gql`
+    query QueryPlaces($filter: PlaceFilter!) {
+  places(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+    }
+  }
+}
+    `;
+export const UpdatePlace = gql`
+    mutation UpdatePlace($place: PlaceUpdateInput!) {
+  updatePlace(place: $place) {
+    id
+    name
+  }
+}
+    `;
+export const CreateProduct = gql`
+    mutation CreateProduct($product: ProductInput!) {
+  createProduct(product: $product) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllProducts = gql`
+    mutation DeleteAllProducts($filter: ProductFilter!) {
+  deleteAllProducts(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteProduct = gql`
+    mutation DeleteProduct($id: ID!) {
+  deleteProduct(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteProducts = gql`
+    mutation DeleteProducts($ids: [ID!]!) {
+  deleteProducts(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetProduct = gql`
+    query GetProduct($id: ID!) {
+  product(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+    manufacturer
+    model
+    brand
+    upc
+    sku
+    releaseDate
+    productionDate
+  }
+}
+    `;
+export const QueryProducts = gql`
+    query QueryProducts($filter: ProductFilter!) {
+  products(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      manufacturer
+      model
+      brand
+      upc
+      sku
+      releaseDate
+      productionDate
+    }
+  }
+}
+    `;
+export const UpdateProduct = gql`
+    mutation UpdateProduct($product: ProductUpdateInput!) {
+  updateProduct(product: $product) {
+    id
+    name
+  }
+}
+    `;
 export const Credits = gql`
     query Credits($startDate: DateTime!, $duration: TimeSpan!) {
   credits(startDate: $startDate, duration: $duration) {
@@ -1496,6 +2143,36 @@ export const Credits = gql`
     publishingRatio
     searchRatio
     conversationRatio
+  }
+}
+    `;
+export const GetProject = gql`
+    query GetProject {
+  project {
+    id
+    name
+    creationDate
+    modifiedDate
+    state
+    environmentType
+    platform
+    region
+    workflow {
+      id
+      name
+    }
+    specification {
+      id
+      name
+    }
+    quota {
+      storage
+      contents
+      feeds
+      posts
+      conversations
+    }
+    callbackUri
   }
 }
     `;
@@ -1549,36 +2226,6 @@ export const LookupUsage = gql`
   }
 }
     `;
-export const Project = gql`
-    query Project {
-  project {
-    id
-    name
-    creationDate
-    modifiedDate
-    state
-    environmentType
-    platform
-    region
-    workflow {
-      id
-      name
-    }
-    specification {
-      id
-      name
-    }
-    quota {
-      storage
-      contents
-      feeds
-      posts
-      conversations
-    }
-    callbackUri
-  }
-}
-    `;
 export const UpdateProject = gql`
     mutation UpdateProject($project: ProjectUpdateInput!) {
   updateProject(project: $project) {
@@ -1617,6 +2264,134 @@ export const Usage = gql`
     request
     variables
     response
+  }
+}
+    `;
+export const CreateRepo = gql`
+    mutation CreateRepo($repo: RepoInput!) {
+  createRepo(repo: $repo) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllRepos = gql`
+    mutation DeleteAllRepos($filter: RepoFilter!) {
+  deleteAllRepos(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteRepo = gql`
+    mutation DeleteRepo($id: ID!) {
+  deleteRepo(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteRepos = gql`
+    mutation DeleteRepos($ids: [ID!]!) {
+  deleteRepos(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetRepo = gql`
+    query GetRepo($id: ID!) {
+  repo(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+  }
+}
+    `;
+export const QueryRepos = gql`
+    query QueryRepos($filter: RepoFilter!) {
+  repos(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+    }
+  }
+}
+    `;
+export const UpdateRepo = gql`
+    mutation UpdateRepo($repo: RepoUpdateInput!) {
+  updateRepo(repo: $repo) {
+    id
+    name
+  }
+}
+    `;
+export const CreateSoftware = gql`
+    mutation CreateSoftware($software: SoftwareInput!) {
+  createSoftware(software: $software) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllSoftwares = gql`
+    mutation DeleteAllSoftwares($filter: SoftwareFilter!) {
+  deleteAllSoftwares(filter: $filter) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteSoftware = gql`
+    mutation DeleteSoftware($id: ID!) {
+  deleteSoftware(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteSoftwares = gql`
+    mutation DeleteSoftwares($ids: [ID!]!) {
+  deleteSoftwares(ids: $ids) {
+    id
+    state
+  }
+}
+    `;
+export const GetSoftware = gql`
+    query GetSoftware($id: ID!) {
+  software(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    releaseDate
+    developer
+  }
+}
+    `;
+export const QuerySoftwares = gql`
+    query QuerySoftwares($filter: SoftwareFilter!) {
+  softwares(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      releaseDate
+      developer
+    }
+  }
+}
+    `;
+export const UpdateSoftware = gql`
+    mutation UpdateSoftware($software: SoftwareUpdateInput!) {
+  updateSoftware(software: $software) {
+    id
+    name
   }
 }
     `;
