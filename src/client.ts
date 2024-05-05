@@ -50,21 +50,12 @@ class Graphlit {
       throw new Error("Graphlit environment JWT secret is required.");
     }
 
-    const expiration = Math.floor(Date.now() / 1000) + (60 * 60); // one hour from now
+    this.refreshClient();
+  }
 
-    const payload = {
-      "https://graphlit.io/jwt/claims": {
-        "x-graphlit-organization-id": this.organizationId,
-        "x-graphlit-environment-id": this.environmentId,
-        ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
-        "x-graphlit-role": "Owner",
-      },
-      exp: expiration,
-      iss: "graphlit",
-      aud: "https://portal.graphlit.io",
-    };
-
-    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
+  public refreshClient() {
+    this.client = undefined;
+    this.generateToken();
 
     const httpLink = createHttpLink({
       uri: this.apiUri,
@@ -97,6 +88,70 @@ class Graphlit {
     });
   }
 
+  private generateToken() {
+    if (!this.jwtSecret) {
+      throw new Error("Graphlit environment JWT secret is required.");
+    }
+
+    const expiration = Math.floor(Date.now() / 1000) + (24 * 60 * 60); // one day from now
+
+    const payload = {
+      "https://graphlit.io/jwt/claims": {
+        "x-graphlit-organization-id": this.organizationId,
+        "x-graphlit-environment-id": this.environmentId,
+        ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
+        "x-graphlit-role": "Owner",
+      },
+      exp: expiration,
+      iss: "graphlit",
+      aud: "https://portal.graphlit.io",
+    };
+
+    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: 'HS256' });
+  }
+
+  public async getProject(): Promise<Types.GetProjectQuery> {
+    return this.queryAndCheckError<Types.GetProjectQuery, {}>(
+      Documents.GetProject,
+      {}
+    );
+  }
+
+  public async updateProject(project: Types.ProjectUpdateInput): Promise<Types.UpdateProjectMutation> {
+    return this.mutateAndCheckError<Types.UpdateProjectMutation, { project: Types.ProjectUpdateInput }>(
+      Documents.UpdateProject,
+      { project: project }
+    );
+  }
+
+  public async lookupProjectUsage(correlationId: string): Promise<Types.LookupUsageQuery> {
+    return this.queryAndCheckError<Types.LookupUsageQuery, { correlationId: string }>(
+      Documents.LookupUsage,
+      { correlationId: correlationId }
+    );
+  }
+
+  public async lookupProjectCredits(correlationId: string): Promise<Types.LookupCreditsQuery> {
+    return this.queryAndCheckError<Types.LookupCreditsQuery, { correlationId: string }>(
+      Documents.LookupCredits,
+      { correlationId: correlationId }
+    );
+  }
+
+  public async queryProjectUsage(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryUsageQuery> {
+    return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+      Documents.QueryUsage,
+      { startDate: startDate, duration: duration }
+    );
+  }
+
+  public async queryProjectCredits(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryCreditsQuery> {
+    return this.queryAndCheckError<Types.QueryCreditsQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+      Documents.QueryCredits,
+      { startDate: startDate, duration: duration }
+    );
+  }
+
   public async createAlert(alert: Types.AlertInput, correlationId?: string): Promise<Types.CreateAlertMutation> {
     return this.mutateAndCheckError<Types.CreateAlertMutation, { alert: Types.AlertInput, correlationId?: string }>(
       Documents.CreateAlert,
@@ -115,6 +170,12 @@ class Graphlit {
     return this.mutateAndCheckError<Types.DeleteAlertMutation, { id: string }>(
       Documents.DeleteAlert,
       { id: id }
+    );
+  }
+
+  public async deleteAlerts(): Promise<Types.DeleteAlertsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAlertsMutation>(
+      Documents.DeleteAlerts
     );
   }
 
@@ -173,13 +234,17 @@ class Graphlit {
     );
   }
 
-  /*
+  public async deleteCollections(): Promise<Types.DeleteCollectionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteCollectionsMutation>(
+      Documents.DeleteCollections
+    );
+  }
+
   public async deleteAllCollections(): Promise<Types.DeleteAllCollectionsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllCollectionsMutation>(
       Documents.DeleteAllCollections
     );
   }
-  */
 
   public async addContentsToCollections(contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[]): Promise<Types.AddContentsToCollectionsMutation> {
     return this.mutateAndCheckError<Types.AddContentsToCollectionsMutation, { contents: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[] }>(
@@ -244,6 +309,12 @@ class Graphlit {
     );
   }
 
+  public async deleteContents(): Promise<Types.DeleteContentsMutation> {
+    return this.mutateAndCheckError<Types.DeleteContentsMutation>(
+      Documents.DeleteContents
+    );
+  }
+
   public async deleteAllContents(): Promise<Types.DeleteAllContentsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllContentsMutation>(
       Documents.DeleteAllContents
@@ -276,6 +347,17 @@ class Graphlit {
     );
   }
 
+  public async publishText(text: string, textType: Types.TextTypes, connector: Types.ContentPublishingConnectorInput,
+    name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishTextMutation> {
+    return this.mutateAndCheckError<Types.PublishTextMutation, {
+      text: string, textType: Types.TextTypes, connector: Types.ContentPublishingConnectorInput,
+      name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string
+    }>(
+      Documents.PublishText,
+      { text: text, textType: textType, connector: connector, name: name, workflow: workflow, correlationId: correlationId }
+    );
+  }
+
   public async getContent(id: string): Promise<Types.GetContentQuery> {
     return this.queryAndCheckError<Types.GetContentQuery, { id: string }>(
       Documents.GetContent,
@@ -286,6 +368,20 @@ class Graphlit {
   public async queryContents(filter?: Types.ContentFilter): Promise<Types.QueryContentsQuery> {
     return this.queryAndCheckError<Types.QueryContentsQuery, { filter?: Types.ContentFilter }>(
       Documents.QueryContents,
+      { filter: filter }
+    );
+  }
+
+  public async queryContentsFacets(filter?: Types.ContentFilter): Promise<Types.QueryContentsFacetsQuery> {
+    return this.queryAndCheckError<Types.QueryContentsFacetsQuery, { filter?: Types.ContentFilter }>(
+      Documents.QueryContentsFacets,
+      { filter: filter }
+    );
+  }
+
+  public async queryContentsGraph(filter?: Types.ContentFilter): Promise<Types.QueryContentsGraphQuery> {
+    return this.queryAndCheckError<Types.QueryContentsGraphQuery, { filter?: Types.ContentFilter }>(
+      Documents.QueryContentsGraph,
       { filter: filter }
     );
   }
@@ -308,6 +404,12 @@ class Graphlit {
     return this.mutateAndCheckError<Types.DeleteConversationMutation, { id: string }>(
       Documents.DeleteConversation,
       { id: id }
+    );
+  }
+
+  public async deleteConversations(): Promise<Types.DeleteConversationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteConversationsMutation>(
+      Documents.DeleteConversations
     );
   }
 
@@ -387,6 +489,12 @@ class Graphlit {
     );
   }
 
+  public async deleteFeeds(): Promise<Types.DeleteFeedsMutation> {
+    return this.mutateAndCheckError<Types.DeleteFeedsMutation>(
+      Documents.DeleteFeeds
+    );
+  }
+
   public async deleteAllFeeds(): Promise<Types.DeleteAllFeedsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllFeedsMutation>(
       Documents.DeleteAllFeeds
@@ -421,8 +529,6 @@ class Graphlit {
     );
   }
 
-  // TODO: project credits, usage, etc.
-
   public async promptSpecifications(prompt: string, ids: [string]): Promise<Types.PromptSpecificationsMutation> {
     return this.mutateAndCheckError<Types.PromptSpecificationsMutation, { prompt: string, ids: [string] }>(
       Documents.PromptSpecifications,
@@ -451,13 +557,17 @@ class Graphlit {
     );
   }
 
-  /*
+  public async deleteSpecifications(): Promise<Types.DeleteSpecificationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteSpecificationsMutation>(
+      Documents.DeleteSpecifications
+    );
+  }
+
   public async deleteAllSpecifications(): Promise<Types.DeleteAllSpecificationsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllSpecificationsMutation>(
       Documents.DeleteAllSpecifications
     );
   }
-  */
 
   public async getSpecification(id: string): Promise<Types.GetSpecificationQuery> {
     return this.queryAndCheckError<Types.GetSpecificationQuery, { id: string }>(
@@ -494,6 +604,12 @@ class Graphlit {
     );
   }
 
+  public async deleteWorkflows(): Promise<Types.DeleteWorkflowsMutation> {
+    return this.mutateAndCheckError<Types.DeleteWorkflowsMutation>(
+      Documents.DeleteWorkflows
+    );
+  }
+
   public async deleteAllWorkflows(): Promise<Types.DeleteAllWorkflowsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllWorkflowsMutation>(
       Documents.DeleteAllWorkflows
@@ -511,6 +627,450 @@ class Graphlit {
     return this.queryAndCheckError<Types.QueryWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
       Documents.QueryWorkflows,
       { filter: filter }
+    );
+  }
+
+  public async createCategory(category: Types.CategoryInput): Promise<Types.CreateCategoryMutation> {
+    return this.mutateAndCheckError<Types.CreateCategoryMutation, { category: Types.CategoryInput }>(
+      Documents.CreateCategory,
+      { category: category }
+    );
+  }
+
+  public async updateCategory(category: Types.CategoryUpdateInput): Promise<Types.UpdateCategoryMutation> {
+    return this.mutateAndCheckError<Types.UpdateCategoryMutation, { category: Types.CategoryUpdateInput }>(
+      Documents.UpdateCategory,
+      { category: category }
+    );
+  }
+
+  public async deleteCategory(id: string): Promise<Types.DeleteCategoryMutation> {
+    return this.mutateAndCheckError<Types.DeleteCategoryMutation, { id: string }>(
+      Documents.DeleteCategory,
+      { id: id }
+    );
+  }
+
+  public async deleteCategories(): Promise<Types.DeleteCategoriesMutation> {
+    return this.mutateAndCheckError<Types.DeleteCategoriesMutation>(
+      Documents.DeleteCategories
+    );
+  }
+
+  public async deleteAllCategories(): Promise<Types.DeleteAllCategoriesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllCategoriesMutation>(
+      Documents.DeleteAllCategories
+    );
+  }
+
+  public async getCategory(id: string): Promise<Types.GetCategoryQuery> {
+    return this.queryAndCheckError<Types.GetCategoryQuery, { id: string }>(
+      Documents.GetCategory,
+      { id: id }
+    );
+  }
+
+  public async queryCategories(filter?: Types.CategoryFilter): Promise<Types.QueryCategoriesQuery> {
+    return this.queryAndCheckError<Types.QueryCategoriesQuery, { filter?: Types.CategoryFilter }>(
+      Documents.QueryCategories,
+      { filter: filter }
+    );
+  }
+
+  public async createLabel(label: Types.LabelInput): Promise<Types.CreateLabelMutation> {
+    return this.mutateAndCheckError<Types.CreateLabelMutation, { label: Types.LabelInput }>(
+      Documents.CreateLabel,
+      { label: label }
+    );
+  }
+
+  public async updateLabel(label: Types.LabelUpdateInput): Promise<Types.UpdateLabelMutation> {
+    return this.mutateAndCheckError<Types.UpdateLabelMutation, { label: Types.LabelUpdateInput }>(
+      Documents.UpdateLabel,
+      { label: label }
+    );
+  }
+
+  public async deleteLabel(id: string): Promise<Types.DeleteLabelMutation> {
+    return this.mutateAndCheckError<Types.DeleteLabelMutation, { id: string }>(
+      Documents.DeleteLabel,
+      { id: id }
+    );
+  }
+
+  public async deleteLabels(): Promise<Types.DeleteLabelsMutation> {
+    return this.mutateAndCheckError<Types.DeleteLabelsMutation>(
+      Documents.DeleteLabels
+    );
+  }
+
+  public async deleteAllLabels(): Promise<Types.DeleteAllLabelsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllLabelsMutation>(
+      Documents.DeleteAllLabels
+    );
+  }
+
+  public async getLabel(id: string): Promise<Types.GetLabelQuery> {
+    return this.queryAndCheckError<Types.GetLabelQuery, { id: string }>(
+      Documents.GetLabel,
+      { id: id }
+    );
+  }
+
+  public async queryLabels(filter?: Types.LabelFilter): Promise<Types.QueryLabelsQuery> {
+    return this.queryAndCheckError<Types.QueryLabelsQuery, { filter?: Types.LabelFilter }>(
+      Documents.QueryLabels,
+      { filter: filter }
+    );
+  }
+
+  public async createPerson(person: Types.PersonInput): Promise<Types.CreatePersonMutation> {
+    return this.mutateAndCheckError<Types.CreatePersonMutation, { person: Types.PersonInput }>(
+      Documents.CreatePerson,
+      { person: person }
+    );
+  }
+
+  public async updatePerson(person: Types.PersonUpdateInput): Promise<Types.UpdatePersonMutation> {
+    return this.mutateAndCheckError<Types.UpdatePersonMutation, { person: Types.PersonUpdateInput }>(
+      Documents.UpdatePerson,
+      { person: person }
+    );
+  }
+
+  public async deletePerson(id: string): Promise<Types.DeletePersonMutation> {
+    return this.mutateAndCheckError<Types.DeletePersonMutation, { id: string }>(
+      Documents.DeletePerson,
+      { id: id }
+    );
+  }
+
+  public async deletePersons(): Promise<Types.DeletePersonsMutation> {
+    return this.mutateAndCheckError<Types.DeletePersonsMutation>(
+      Documents.DeletePersons
+    );
+  }
+
+  public async deleteAllPersons(): Promise<Types.DeleteAllPersonsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllPersonsMutation>(
+      Documents.DeleteAllPersons
+    );
+  }
+
+  public async getPerson(id: string): Promise<Types.GetPersonQuery> {
+    return this.queryAndCheckError<Types.GetPersonQuery, { id: string }>(
+      Documents.GetPerson,
+      { id: id }
+    );
+  }
+
+  public async queryPersons(filter?: Types.PersonFilter): Promise<Types.QueryPersonsQuery> {
+    return this.queryAndCheckError<Types.QueryPersonsQuery, { filter?: Types.PersonFilter }>(
+      Documents.QueryPersons,
+      { filter: filter }
+    );
+  }
+
+  public async createOrganization(organization: Types.OrganizationInput): Promise<Types.CreateOrganizationMutation> {
+    return this.mutateAndCheckError<Types.CreateOrganizationMutation, { organization: Types.OrganizationInput }>(
+      Documents.CreateOrganization,
+      { organization: organization }
+    );
+  }
+
+  public async updateOrganization(organization: Types.OrganizationUpdateInput): Promise<Types.UpdateOrganizationMutation> {
+    return this.mutateAndCheckError<Types.UpdateOrganizationMutation, { organization: Types.OrganizationUpdateInput }>(
+      Documents.UpdateOrganization,
+      { organization: organization }
+    );
+  }
+
+  public async deleteOrganization(id: string): Promise<Types.DeleteOrganizationMutation> {
+    return this.mutateAndCheckError<Types.DeleteOrganizationMutation, { id: string }>(
+      Documents.DeleteOrganization,
+      { id: id }
+    );
+  }
+
+  public async deleteOrganizations(): Promise<Types.DeleteOrganizationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteOrganizationsMutation>(
+      Documents.DeleteOrganizations
+    );
+  }
+
+  public async deleteAllOrganizations(): Promise<Types.DeleteAllOrganizationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllOrganizationsMutation>(
+      Documents.DeleteAllOrganizations
+    );
+  }
+
+  public async getOrganization(id: string): Promise<Types.GetOrganizationQuery> {
+    return this.queryAndCheckError<Types.GetOrganizationQuery, { id: string }>(
+      Documents.GetOrganization,
+      { id: id }
+    );
+  }
+
+  public async queryOrganizations(filter?: Types.OrganizationFilter): Promise<Types.QueryOrganizationsQuery> {
+    return this.queryAndCheckError<Types.QueryOrganizationsQuery, { filter?: Types.OrganizationFilter }>(
+      Documents.QueryOrganizations,
+      { filter: filter }
+    );
+  }
+
+  public async createPlace(place: Types.PlaceInput): Promise<Types.CreatePlaceMutation> {
+    return this.mutateAndCheckError<Types.CreatePlaceMutation, { place: Types.PlaceInput }>(
+      Documents.CreatePlace,
+      { place: place }
+    );
+  }
+
+  public async updatePlace(place: Types.PlaceUpdateInput): Promise<Types.UpdatePlaceMutation> {
+    return this.mutateAndCheckError<Types.UpdatePlaceMutation, { place: Types.PlaceUpdateInput }>(
+      Documents.UpdatePlace,
+      { place: place }
+    );
+  }
+
+  public async deletePlace(id: string): Promise<Types.DeletePlaceMutation> {
+    return this.mutateAndCheckError<Types.DeletePlaceMutation, { id: string }>(
+      Documents.DeletePlace,
+      { id: id }
+    );
+  }
+
+  public async deletePlaces(): Promise<Types.DeletePlacesMutation> {
+    return this.mutateAndCheckError<Types.DeletePlacesMutation>(
+      Documents.DeletePlaces
+    );
+  }
+
+  public async deleteAllPlaces(): Promise<Types.DeleteAllPlacesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllPlacesMutation>(
+      Documents.DeleteAllPlaces
+    );
+  }
+
+  public async getPlace(id: string): Promise<Types.GetPlaceQuery> {
+    return this.queryAndCheckError<Types.GetPlaceQuery, { id: string }>(
+      Documents.GetPlace,
+      { id: id }
+    );
+  }
+
+  public async queryPlaces(filter?: Types.PlaceFilter): Promise<Types.QueryPlacesQuery> {
+    return this.queryAndCheckError<Types.QueryPlacesQuery, { filter?: Types.PlaceFilter }>(
+      Documents.QueryPlaces,
+      { filter: filter }
+    );
+  }
+
+  public async createEvent(event: Types.EventInput): Promise<Types.CreateEventMutation> {
+    return this.mutateAndCheckError<Types.CreateEventMutation, { event: Types.EventInput }>(
+      Documents.CreateEvent,
+      { event: event }
+    );
+  }
+
+  public async updateEvent(event: Types.EventUpdateInput): Promise<Types.UpdateEventMutation> {
+    return this.mutateAndCheckError<Types.UpdateEventMutation, { event: Types.EventUpdateInput }>(
+      Documents.UpdateEvent,
+      { event: event }
+    );
+  }
+
+  public async deleteEvent(id: string): Promise<Types.DeleteEventMutation> {
+    return this.mutateAndCheckError<Types.DeleteEventMutation, { id: string }>(
+      Documents.DeleteEvent,
+      { id: id }
+    );
+  }
+
+  public async deleteEvents(): Promise<Types.DeleteEventsMutation> {
+    return this.mutateAndCheckError<Types.DeleteEventsMutation>(
+      Documents.DeleteEvents
+    );
+  }
+
+  public async deleteAllEvents(): Promise<Types.DeleteAllEventsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllEventsMutation>(
+      Documents.DeleteAllEvents
+    );
+  }
+
+  public async getEvent(id: string): Promise<Types.GetEventQuery> {
+    return this.queryAndCheckError<Types.GetEventQuery, { id: string }>(
+      Documents.GetEvent,
+      { id: id }
+    );
+  }
+
+  public async queryEvents(filter?: Types.EventFilter): Promise<Types.QueryEventsQuery> {
+    return this.queryAndCheckError<Types.QueryEventsQuery, { filter?: Types.EventFilter }>(
+      Documents.QueryEvents,
+      { filter: filter }
+    );
+  }
+
+  public async createProduct(product: Types.ProductInput): Promise<Types.CreateProductMutation> {
+    return this.mutateAndCheckError<Types.CreateProductMutation, { product: Types.ProductInput }>(
+      Documents.CreateProduct,
+      { product: product }
+    );
+  }
+
+  public async updateProduct(product: Types.ProductUpdateInput): Promise<Types.UpdateProductMutation> {
+    return this.mutateAndCheckError<Types.UpdateProductMutation, { product: Types.ProductUpdateInput }>(
+      Documents.UpdateProduct,
+      { product: product }
+    );
+  }
+
+  public async deleteProduct(id: string): Promise<Types.DeleteProductMutation> {
+    return this.mutateAndCheckError<Types.DeleteProductMutation, { id: string }>(
+      Documents.DeleteProduct,
+      { id: id }
+    );
+  }
+
+  public async deleteProducts(): Promise<Types.DeleteProductsMutation> {
+    return this.mutateAndCheckError<Types.DeleteProductsMutation>(
+      Documents.DeleteProducts
+    );
+  }
+
+  public async deleteAllProducts(): Promise<Types.DeleteAllProductsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllProductsMutation>(
+      Documents.DeleteAllProducts
+    );
+  }
+
+  public async getProduct(id: string): Promise<Types.GetProductQuery> {
+    return this.queryAndCheckError<Types.GetProductQuery, { id: string }>(
+      Documents.GetProduct,
+      { id: id }
+    );
+  }
+
+  public async queryProducts(filter?: Types.ProductFilter): Promise<Types.QueryProductsQuery> {
+    return this.queryAndCheckError<Types.QueryProductsQuery, { filter?: Types.ProductFilter }>(
+      Documents.QueryProducts,
+      { filter: filter }
+    );
+  }
+
+  public async createRepo(repo: Types.RepoInput): Promise<Types.CreateRepoMutation> {
+    return this.mutateAndCheckError<Types.CreateRepoMutation, { repo: Types.RepoInput }>(
+      Documents.CreateRepo,
+      { repo: repo }
+    );
+  }
+
+  public async updateRepo(repo: Types.RepoUpdateInput): Promise<Types.UpdateRepoMutation> {
+    return this.mutateAndCheckError<Types.UpdateRepoMutation, { repo: Types.RepoUpdateInput }>(
+      Documents.UpdateRepo,
+      { repo: repo }
+    );
+  }
+
+  public async deleteRepo(id: string): Promise<Types.DeleteRepoMutation> {
+    return this.mutateAndCheckError<Types.DeleteRepoMutation, { id: string }>(
+      Documents.DeleteRepo,
+      { id: id }
+    );
+  }
+
+  public async deleteRepos(): Promise<Types.DeleteReposMutation> {
+    return this.mutateAndCheckError<Types.DeleteReposMutation>(
+      Documents.DeleteRepos
+    );
+  }
+
+  public async deleteAllRepos(): Promise<Types.DeleteAllReposMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllReposMutation>(
+      Documents.DeleteAllRepos
+    );
+  }
+
+  public async getRepo(id: string): Promise<Types.GetRepoQuery> {
+    return this.queryAndCheckError<Types.GetRepoQuery, { id: string }>(
+      Documents.GetRepo,
+      { id: id }
+    );
+  }
+
+  public async queryRepos(filter?: Types.RepoFilter): Promise<Types.QueryReposQuery> {
+    return this.queryAndCheckError<Types.QueryReposQuery, { filter?: Types.RepoFilter }>(
+      Documents.QueryRepos,
+      { filter: filter }
+    );
+  }
+
+  public async createSoftware(software: Types.SoftwareInput): Promise<Types.CreateSoftwareMutation> {
+    return this.mutateAndCheckError<Types.CreateSoftwareMutation, { software: Types.SoftwareInput }>(
+      Documents.CreateSoftware,
+      { software: software }
+    );
+  }
+
+  public async updateSoftware(software: Types.SoftwareUpdateInput): Promise<Types.UpdateSoftwareMutation> {
+    return this.mutateAndCheckError<Types.UpdateSoftwareMutation, { software: Types.SoftwareUpdateInput }>(
+      Documents.UpdateSoftware,
+      { software: software }
+    );
+  }
+
+  public async deleteSoftware(id: string): Promise<Types.DeleteSoftwareMutation> {
+    return this.mutateAndCheckError<Types.DeleteSoftwareMutation, { id: string }>(
+      Documents.DeleteSoftware,
+      { id: id }
+    );
+  }
+
+  public async deleteSoftwares(): Promise<Types.DeleteSoftwaresMutation> {
+    return this.mutateAndCheckError<Types.DeleteSoftwaresMutation>(
+      Documents.DeleteSoftwares
+    );
+  }
+
+  public async deleteAllSoftwares(): Promise<Types.DeleteAllSoftwaresMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllSoftwaresMutation>(
+      Documents.DeleteAllSoftwares
+    );
+  }
+
+  public async getSoftware(id: string): Promise<Types.GetSoftwareQuery> {
+    return this.queryAndCheckError<Types.GetSoftwareQuery, { id: string }>(
+      Documents.GetSoftware,
+      { id: id }
+    );
+  }
+
+  public async querySoftwares(filter?: Types.SoftwareFilter): Promise<Types.QuerySoftwaresQuery> {
+    return this.queryAndCheckError<Types.QuerySoftwaresQuery, { filter?: Types.SoftwareFilter }>(
+      Documents.QuerySoftwares,
+      { filter: filter }
+    );
+  }
+
+  public async createObservation(observation: Types.ObservationInput): Promise<Types.CreateObservationMutation> {
+    return this.mutateAndCheckError<Types.CreateObservationMutation, { observation: Types.ObservationInput }>(
+      Documents.CreateObservation,
+      { observation: observation }
+    );
+  }
+
+  public async updateObservation(observation: Types.ObservationUpdateInput): Promise<Types.UpdateObservationMutation> {
+    return this.mutateAndCheckError<Types.UpdateObservationMutation, { observation: Types.ObservationUpdateInput }>(
+      Documents.UpdateObservation,
+      { observation: observation }
+    );
+  }
+
+  public async deleteObservation(id: string): Promise<Types.DeleteObservationMutation> {
+    return this.mutateAndCheckError<Types.DeleteObservationMutation, { id: string }>(
+      Documents.DeleteObservation,
+      { id: id }
     );
   }
 

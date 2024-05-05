@@ -1,5 +1,12 @@
 import gql from 'graphql-tag';
 
+export const CountAlerts = gql`
+    query CountAlerts($filter: AlertFilter) {
+  countAlerts(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateAlert = gql`
     mutation CreateAlert($alert: AlertInput!, $correlationId: String) {
   createAlert(alert: $alert, correlationId: $correlationId) {
@@ -19,16 +26,20 @@ export const DeleteAlert = gql`
 }
     `;
 export const DeleteAlerts = gql`
-    mutation DeleteAlerts($ids: [ID!]!) {
-  deleteAlerts(ids: $ids) {
+    mutation DeleteAlerts($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteAlerts(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
 }
     `;
 export const DeleteAllAlerts = gql`
-    mutation DeleteAllAlerts {
-  deleteAllAlerts {
+    mutation DeleteAllAlerts($filter: AlertFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllAlerts(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -202,6 +213,13 @@ export const UpdateAlert = gql`
   }
 }
     `;
+export const CountCategories = gql`
+    query CountCategories($filter: CategoryFilter) {
+  countCategories(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateCategory = gql`
     mutation CreateCategory($category: CategoryInput!) {
   createCategory(category: $category) {
@@ -211,16 +229,20 @@ export const CreateCategory = gql`
 }
     `;
 export const DeleteAllCategories = gql`
-    mutation DeleteAllCategories($filter: CategoryFilter!) {
-  deleteAllCategories(filter: $filter) {
+    mutation DeleteAllCategories($filter: CategoryFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllCategories(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
 }
     `;
 export const DeleteCategories = gql`
-    mutation DeleteCategories($ids: [ID!]!) {
-  deleteCategories(ids: $ids) {
+    mutation DeleteCategories($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteCategories(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -245,7 +267,7 @@ export const GetCategory = gql`
 }
     `;
 export const QueryCategories = gql`
-    query QueryCategories($filter: CategoryFilter!) {
+    query QueryCategories($filter: CategoryFilter) {
   categories(filter: $filter) {
     results {
       id
@@ -278,6 +300,13 @@ export const AddContentsToCollections = gql`
   }
 }
     `;
+export const CountCollections = gql`
+    query CountCollections($filter: CollectionFilter) {
+  countCollections(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateCollection = gql`
     mutation CreateCollection($collection: CollectionInput!) {
   createCollection(collection: $collection) {
@@ -289,8 +318,12 @@ export const CreateCollection = gql`
 }
     `;
 export const DeleteAllCollections = gql`
-    mutation DeleteAllCollections {
-  deleteAllCollections {
+    mutation DeleteAllCollections($filter: CollectionFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllCollections(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -305,8 +338,8 @@ export const DeleteCollection = gql`
 }
     `;
 export const DeleteCollections = gql`
-    mutation DeleteCollections($ids: [ID!]!) {
-  deleteCollections(ids: $ids) {
+    mutation DeleteCollections($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteCollections(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -374,9 +407,20 @@ export const UpdateCollection = gql`
   }
 }
     `;
+export const CountContents = gql`
+    query CountContents($filter: ContentFilter) {
+  countContents(filter: $filter) {
+    count
+  }
+}
+    `;
 export const DeleteAllContents = gql`
-    mutation DeleteAllContents {
-  deleteAllContents {
+    mutation DeleteAllContents($filter: ContentFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllContents(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -391,8 +435,8 @@ export const DeleteContent = gql`
 }
     `;
 export const DeleteContents = gql`
-    mutation DeleteContents($ids: [ID!]!) {
-  deleteContents(ids: $ids) {
+    mutation DeleteContents($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteContents(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -425,7 +469,6 @@ export const GetContent = gql`
   content(id: $id) {
     id
     name
-    description
     creationDate
     owner {
       id
@@ -435,6 +478,19 @@ export const GetContent = gql`
     finishedDate
     workflowDuration
     uri
+    description
+    markdown
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+    location {
+      latitude
+      longitude
+    }
     type
     fileType
     mimeType
@@ -449,9 +505,13 @@ export const GetContent = gql`
       width
       height
       duration
-      software
       make
       model
+      software
+      title
+      description
+      keywords
+      author
     }
     audio {
       keywords
@@ -465,6 +525,7 @@ export const GetContent = gql`
       language
       genre
       title
+      description
       bitrate
       channels
       sampleRate
@@ -474,20 +535,31 @@ export const GetContent = gql`
     image {
       width
       height
+      resolutionX
+      resolutionY
+      bitsPerComponent
+      components
+      projectionType
+      orientation
       description
-      software
-      identifier
       make
       model
+      software
+      lens
+      focalLength
+      exposureTime
+      fNumber
+      iso
+      heading
+      pitch
     }
     document {
       title
       subject
+      summary
       author
-      software
       publisher
       description
-      summary
       keywords
       pageCount
       worksheetCount
@@ -495,53 +567,78 @@ export const GetContent = gql`
       wordCount
       lineCount
       paragraphCount
-      characterCount
       isEncrypted
       hasDigitalSignature
     }
     email {
-      subject
       identifier
+      subject
+      labels
       sensitivity
       priority
       importance
-      labels
       from {
         name
-        familyName
-        givenName
         email
+        givenName
+        familyName
       }
       to {
         name
-        familyName
-        givenName
         email
+        givenName
+        familyName
       }
       cc {
         name
-        familyName
-        givenName
         email
+        givenName
+        familyName
       }
       bcc {
         name
-        familyName
-        givenName
         email
+        givenName
+        familyName
       }
     }
     issue {
+      identifier
       title
       project
       team
       status
       priority
       type
-      identifier
       labels
     }
+    package {
+      fileCount
+      folderCount
+      isEncrypted
+    }
+    parent {
+      id
+      name
+    }
+    children {
+      id
+      name
+    }
+    feed {
+      id
+      name
+    }
+    collections {
+      id
+      name
+    }
+    links {
+      uri
+      linkType
+    }
     observations {
+      id
       type
       observable {
         id
@@ -550,36 +647,40 @@ export const GetContent = gql`
       occurrences {
         type
         confidence
+        startTime
+        endTime
+        pageIndex
         boundingBox {
           left
           top
           width
           height
         }
-        pageIndex
-        startTime
-        endTime
       }
-    }
-    parent {
-      id
-    }
-    children {
-      id
-    }
-    collections {
-      id
-    }
-    feed {
-      id
+      state
     }
     workflow {
       id
+      name
     }
-    markdown
-    links {
-      uri
-      linkType
+    pages {
+      index
+      chunks {
+        index
+        pageIndex
+        rowIndex
+        columnIndex
+        confidence
+        text
+        role
+        relevance
+      }
+    }
+    segments {
+      startTime
+      endTime
+      text
+      relevance
     }
     error
   }
@@ -604,11 +705,15 @@ export const IngestEncodedFile = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
   }
 }
     `;
 export const IngestText = gql`
-    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestText(
     name: $name
     text: $text
@@ -616,8 +721,8 @@ export const IngestText = gql`
     uri: $uri
     id: $id
     isSynchronous: $isSynchronous
-    collections: $collections
     workflow: $workflow
+    collections: $collections
     correlationId: $correlationId
   ) {
     id
@@ -627,17 +732,21 @@ export const IngestText = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
   }
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
     id: $id
-    collections: $collections
     workflow: $workflow
+    collections: $collections
     isSynchronous: $isSynchronous
     correlationId: $correlationId
   ) {
@@ -648,6 +757,10 @@ export const IngestUri = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
   }
 }
     `;
@@ -659,18 +772,18 @@ export const IsContentDone = gql`
 }
     `;
 export const PublishContents = gql`
-    mutation PublishContents($summaryPrompt: String, $publishPrompt: String!, $connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $correlationId: String, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput, $isSynchronous: Boolean!) {
+    mutation PublishContents($summaryPrompt: String, $publishPrompt: String!, $connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $isSynchronous: Boolean, $correlationId: String, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput) {
   publishContents(
     summaryPrompt: $summaryPrompt
     publishPrompt: $publishPrompt
     connector: $connector
     filter: $filter
+    isSynchronous: $isSynchronous
     correlationId: $correlationId
     name: $name
     summarySpecification: $summarySpecification
     publishSpecification: $publishSpecification
     workflow: $workflow
-    isSynchronous: $isSynchronous
   ) {
     id
     name
@@ -679,6 +792,10 @@ export const PublishContents = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
     textUri
     audioUri
     markdown
@@ -686,15 +803,15 @@ export const PublishContents = gql`
 }
     `;
 export const PublishText = gql`
-    mutation PublishText($text: String!, $textType: TextTypes, $connector: ContentPublishingConnectorInput!, $correlationId: String, $name: String, $workflow: EntityReferenceInput, $isSynchronous: Boolean!) {
+    mutation PublishText($text: String!, $textType: TextTypes, $connector: ContentPublishingConnectorInput!, $isSynchronous: Boolean, $correlationId: String, $name: String, $workflow: EntityReferenceInput) {
   publishText(
     text: $text
     textType: $textType
     connector: $connector
+    isSynchronous: $isSynchronous
     correlationId: $correlationId
     name: $name
     workflow: $workflow
-    isSynchronous: $isSynchronous
   ) {
     id
     name
@@ -703,32 +820,18 @@ export const PublishText = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
     textUri
     audioUri
     markdown
   }
 }
     `;
-export const QueryContentFacets = gql`
-    query QueryContentFacets($filter: ContentFilter, $facets: [ContentFacetInput!]) {
-  contents(filter: $filter, facets: $facets) {
-    facets {
-      facet
-      type
-      observable {
-        type
-        observable {
-          id
-          name
-        }
-      }
-      count
-    }
-  }
-}
-    `;
 export const QueryContents = gql`
-    query QueryContents($filter: ContentFilter) {
+    query QueryContents($filter: ContentFilter!) {
   contents(filter: $filter) {
     results {
       id
@@ -742,6 +845,19 @@ export const QueryContents = gql`
       finishedDate
       workflowDuration
       uri
+      description
+      markdown
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      location {
+        latitude
+        longitude
+      }
       type
       fileType
       mimeType
@@ -752,6 +868,168 @@ export const QueryContents = gql`
       textUri
       audioUri
       transcriptUri
+      video {
+        width
+        height
+        duration
+        make
+        model
+        software
+        title
+        description
+        keywords
+        author
+      }
+      audio {
+        keywords
+        author
+        series
+        episode
+        episodeType
+        season
+        publisher
+        copyright
+        language
+        genre
+        title
+        description
+        bitrate
+        channels
+        sampleRate
+        bitsPerSample
+        duration
+      }
+      image {
+        width
+        height
+        resolutionX
+        resolutionY
+        bitsPerComponent
+        components
+        projectionType
+        orientation
+        description
+        make
+        model
+        software
+        lens
+        focalLength
+        exposureTime
+        fNumber
+        iso
+        heading
+        pitch
+      }
+      document {
+        title
+        subject
+        summary
+        author
+        publisher
+        description
+        keywords
+        pageCount
+        worksheetCount
+        slideCount
+        wordCount
+        lineCount
+        paragraphCount
+        isEncrypted
+        hasDigitalSignature
+      }
+      email {
+        identifier
+        subject
+        labels
+        sensitivity
+        priority
+        importance
+        from {
+          name
+          email
+          givenName
+          familyName
+        }
+        to {
+          name
+          email
+          givenName
+          familyName
+        }
+        cc {
+          name
+          email
+          givenName
+          familyName
+        }
+        bcc {
+          name
+          email
+          givenName
+          familyName
+        }
+      }
+      issue {
+        identifier
+        title
+        project
+        team
+        status
+        priority
+        type
+        labels
+      }
+      package {
+        fileCount
+        folderCount
+        isEncrypted
+      }
+      parent {
+        id
+        name
+      }
+      children {
+        id
+        name
+      }
+      feed {
+        id
+        name
+      }
+      collections {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+      }
+      observations {
+        id
+        type
+        observable {
+          id
+          name
+        }
+        occurrences {
+          type
+          confidence
+          startTime
+          endTime
+          pageIndex
+          boundingBox {
+            left
+            top
+            width
+            height
+          }
+        }
+        state
+      }
+      workflow {
+        id
+        name
+      }
       pages {
         index
         chunks {
@@ -771,13 +1049,60 @@ export const QueryContents = gql`
         text
         relevance
       }
+      error
+    }
+  }
+}
+    `;
+export const QueryContentsFacets = gql`
+    query QueryContentsFacets($filter: ContentFilter!, $facets: [ContentFacetInput!]) {
+  contents(filter: $filter, facets: $facets) {
+    results {
+      id
+      name
+      creationDate
+      owner {
+        id
+      }
+      state
+      originalDate
+      finishedDate
+      workflowDuration
+      uri
+      description
+      markdown
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      location {
+        latitude
+        longitude
+      }
+      type
+      fileType
+      mimeType
+      fileName
+      fileSize
+      masterUri
+      imageUri
+      textUri
+      audioUri
+      transcriptUri
       video {
         width
         height
         duration
-        software
         make
         model
+        software
+        title
+        description
+        keywords
+        author
       }
       audio {
         keywords
@@ -791,6 +1116,7 @@ export const QueryContents = gql`
         language
         genre
         title
+        description
         bitrate
         channels
         sampleRate
@@ -800,20 +1126,31 @@ export const QueryContents = gql`
       image {
         width
         height
+        resolutionX
+        resolutionY
+        bitsPerComponent
+        components
+        projectionType
+        orientation
         description
-        software
-        identifier
         make
         model
+        software
+        lens
+        focalLength
+        exposureTime
+        fNumber
+        iso
+        heading
+        pitch
       }
       document {
         title
         subject
+        summary
         author
-        software
         publisher
         description
-        summary
         keywords
         pageCount
         worksheetCount
@@ -821,53 +1158,78 @@ export const QueryContents = gql`
         wordCount
         lineCount
         paragraphCount
-        characterCount
         isEncrypted
         hasDigitalSignature
       }
       email {
-        subject
         identifier
+        subject
+        labels
         sensitivity
         priority
         importance
-        labels
         from {
           name
-          familyName
-          givenName
           email
+          givenName
+          familyName
         }
         to {
           name
-          familyName
-          givenName
           email
+          givenName
+          familyName
         }
         cc {
           name
-          familyName
-          givenName
           email
+          givenName
+          familyName
         }
         bcc {
           name
-          familyName
-          givenName
           email
+          givenName
+          familyName
         }
       }
       issue {
+        identifier
         title
         project
         team
         status
         priority
         type
-        identifier
         labels
       }
+      package {
+        fileCount
+        folderCount
+        isEncrypted
+      }
+      parent {
+        id
+        name
+      }
+      children {
+        id
+        name
+      }
+      feed {
+        id
+        name
+      }
+      collections {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+      }
       observations {
+        id
         type
         observable {
           id
@@ -876,38 +1238,77 @@ export const QueryContents = gql`
         occurrences {
           type
           confidence
+          startTime
+          endTime
+          pageIndex
           boundingBox {
             left
             top
             width
             height
           }
-          pageIndex
-          startTime
-          endTime
         }
-      }
-      parent {
-        id
-      }
-      children {
-        id
-      }
-      collections {
-        id
-      }
-      feed {
-        id
+        state
       }
       workflow {
         id
+        name
       }
-      markdown
-      links {
-        uri
-        linkType
+      pages {
+        index
+        chunks {
+          index
+          pageIndex
+          rowIndex
+          columnIndex
+          confidence
+          text
+          role
+          relevance
+        }
+      }
+      segments {
+        startTime
+        endTime
+        text
+        relevance
       }
       error
+    }
+    facets {
+      facet
+      count
+      type
+      value
+      range {
+        from
+        to
+      }
+      observable {
+        type
+        observable {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+    `;
+export const QueryContentsGraph = gql`
+    query QueryContentsGraph($filter: ContentFilter!, $graph: ContentGraphInput) {
+  contents(filter: $filter, graph: $graph) {
+    graph {
+      nodes {
+        id
+        name
+        type
+        metadata
+      }
+      edges {
+        from
+        to
+      }
     }
   }
 }
@@ -945,6 +1346,10 @@ export const UpdateContent = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
   }
 }
     `;
@@ -968,6 +1373,13 @@ export const CloseConversation = gql`
   }
 }
     `;
+export const CountConversations = gql`
+    query CountConversations($filter: ConversationFilter) {
+  countConversations(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateConversation = gql`
     mutation CreateConversation($conversation: ConversationInput!, $correlationId: String) {
   createConversation(conversation: $conversation, correlationId: $correlationId) {
@@ -979,8 +1391,12 @@ export const CreateConversation = gql`
 }
     `;
 export const DeleteAllConversations = gql`
-    mutation DeleteAllConversations {
-  deleteAllConversations {
+    mutation DeleteAllConversations($filter: ConversationFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllConversations(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -995,8 +1411,8 @@ export const DeleteConversation = gql`
 }
     `;
 export const DeleteConversations = gql`
-    mutation DeleteConversations($ids: [ID!]!) {
-  deleteConversations(ids: $ids) {
+    mutation DeleteConversations($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteConversations(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1021,6 +1437,13 @@ export const GetConversation = gql`
       citations {
         content {
           id
+          name
+          state
+          type
+          fileType
+          fileName
+          originalDate
+          uri
         }
         index
         text
@@ -1088,9 +1511,12 @@ export const PromptConversation = gql`
         content {
           id
           name
+          state
           type
           fileType
           fileName
+          originalDate
+          uri
         }
         index
         text
@@ -1128,11 +1554,12 @@ export const PromptConversation = gql`
 }
     `;
 export const PublishConversation = gql`
-    mutation PublishConversation($id: ID!, $connector: ContentPublishingConnectorInput!, $name: String, $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation PublishConversation($id: ID!, $connector: ContentPublishingConnectorInput!, $name: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
   publishConversation(
     id: $id
     connector: $connector
     name: $name
+    isSynchronous: $isSynchronous
     workflow: $workflow
     correlationId: $correlationId
   ) {
@@ -1143,6 +1570,10 @@ export const PublishConversation = gql`
     fileType
     mimeType
     uri
+    collections {
+      id
+      name
+    }
     textUri
     audioUri
     markdown
@@ -1169,6 +1600,13 @@ export const QueryConversations = gql`
         citations {
           content {
             id
+            name
+            state
+            type
+            fileType
+            fileName
+            originalDate
+            uri
           }
           index
           text
@@ -1240,6 +1678,13 @@ export const UpdateConversation = gql`
   }
 }
     `;
+export const CountEvents = gql`
+    query CountEvents($filter: EventFilter) {
+  countEvents(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateEvent = gql`
     mutation CreateEvent($event: EventInput!) {
   createEvent(event: $event) {
@@ -1249,8 +1694,12 @@ export const CreateEvent = gql`
 }
     `;
 export const DeleteAllEvents = gql`
-    mutation DeleteAllEvents($filter: EventFilter!) {
-  deleteAllEvents(filter: $filter) {
+    mutation DeleteAllEvents($filter: EventFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllEvents(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1265,8 +1714,8 @@ export const DeleteEvent = gql`
 }
     `;
 export const DeleteEvents = gql`
-    mutation DeleteEvents($ids: [ID!]!) {
-  deleteEvents(ids: $ids) {
+    mutation DeleteEvents($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteEvents(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1300,7 +1749,7 @@ export const GetEvent = gql`
 }
     `;
 export const QueryEvents = gql`
-    query QueryEvents($filter: EventFilter!) {
+    query QueryEvents($filter: EventFilter) {
   events(filter: $filter) {
     results {
       id
@@ -1336,6 +1785,13 @@ export const UpdateEvent = gql`
   }
 }
     `;
+export const CountFeeds = gql`
+    query CountFeeds($filter: FeedFilter) {
+  countFeeds(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateFeed = gql`
     mutation CreateFeed($feed: FeedInput!, $correlationId: String) {
   createFeed(feed: $feed, correlationId: $correlationId) {
@@ -1347,8 +1803,12 @@ export const CreateFeed = gql`
 }
     `;
 export const DeleteAllFeeds = gql`
-    mutation DeleteAllFeeds {
-  deleteAllFeeds {
+    mutation DeleteAllFeeds($filter: FeedFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllFeeds(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1363,8 +1823,8 @@ export const DeleteFeed = gql`
 }
     `;
 export const DeleteFeeds = gql`
-    mutation DeleteFeeds($ids: [ID!]!) {
-  deleteFeeds(ids: $ids) {
+    mutation DeleteFeeds($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteFeeds(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1697,6 +2157,13 @@ export const UpdateFeed = gql`
   }
 }
     `;
+export const CountLabels = gql`
+    query CountLabels($filter: LabelFilter) {
+  countLabels(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateLabel = gql`
     mutation CreateLabel($label: LabelInput!) {
   createLabel(label: $label) {
@@ -1706,8 +2173,12 @@ export const CreateLabel = gql`
 }
     `;
 export const DeleteAllLabels = gql`
-    mutation DeleteAllLabels($filter: LabelFilter!) {
-  deleteAllLabels(filter: $filter) {
+    mutation DeleteAllLabels($filter: LabelFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllLabels(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1722,8 +2193,8 @@ export const DeleteLabel = gql`
 }
     `;
 export const DeleteLabels = gql`
-    mutation DeleteLabels($ids: [ID!]!) {
-  deleteLabels(ids: $ids) {
+    mutation DeleteLabels($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteLabels(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1740,7 +2211,7 @@ export const GetLabel = gql`
 }
     `;
 export const QueryLabels = gql`
-    query QueryLabels($filter: LabelFilter!) {
+    query QueryLabels($filter: LabelFilter) {
   labels(filter: $filter) {
     results {
       id
@@ -1783,6 +2254,13 @@ export const UpdateObservation = gql`
   }
 }
     `;
+export const CountOrganizations = gql`
+    query CountOrganizations($filter: OrganizationFilter) {
+  countOrganizations(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateOrganization = gql`
     mutation CreateOrganization($organization: OrganizationInput!) {
   createOrganization(organization: $organization) {
@@ -1792,8 +2270,12 @@ export const CreateOrganization = gql`
 }
     `;
 export const DeleteAllOrganizations = gql`
-    mutation DeleteAllOrganizations($filter: OrganizationFilter!) {
-  deleteAllOrganizations(filter: $filter) {
+    mutation DeleteAllOrganizations($filter: OrganizationFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllOrganizations(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1808,8 +2290,8 @@ export const DeleteOrganization = gql`
 }
     `;
 export const DeleteOrganizations = gql`
-    mutation DeleteOrganizations($ids: [ID!]!) {
-  deleteOrganizations(ids: $ids) {
+    mutation DeleteOrganizations($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteOrganizations(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1839,7 +2321,7 @@ export const GetOrganization = gql`
 }
     `;
 export const QueryOrganizations = gql`
-    query QueryOrganizations($filter: OrganizationFilter!) {
+    query QueryOrganizations($filter: OrganizationFilter) {
   organizations(filter: $filter) {
     results {
       id
@@ -1871,6 +2353,13 @@ export const UpdateOrganization = gql`
   }
 }
     `;
+export const CountPersons = gql`
+    query CountPersons($filter: PersonFilter) {
+  countPersons(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreatePerson = gql`
     mutation CreatePerson($person: PersonInput!) {
   createPerson(person: $person) {
@@ -1880,8 +2369,12 @@ export const CreatePerson = gql`
 }
     `;
 export const DeleteAllPersons = gql`
-    mutation DeleteAllPersons($filter: PersonFilter!) {
-  deleteAllPersons(filter: $filter) {
+    mutation DeleteAllPersons($filter: PersonFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllPersons(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1896,8 +2389,8 @@ export const DeletePerson = gql`
 }
     `;
 export const DeletePersons = gql`
-    mutation DeletePersons($ids: [ID!]!) {
-  deletePersons(ids: $ids) {
+    mutation DeletePersons($ids: [ID!]!, $isSynchronous: Boolean) {
+  deletePersons(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -1929,7 +2422,7 @@ export const GetPerson = gql`
 }
     `;
 export const QueryPersons = gql`
-    query QueryPersons($filter: PersonFilter!) {
+    query QueryPersons($filter: PersonFilter) {
   persons(filter: $filter) {
     results {
       id
@@ -1963,6 +2456,13 @@ export const UpdatePerson = gql`
   }
 }
     `;
+export const CountPlaces = gql`
+    query CountPlaces($filter: PlaceFilter) {
+  countPlaces(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreatePlace = gql`
     mutation CreatePlace($place: PlaceInput!) {
   createPlace(place: $place) {
@@ -1972,8 +2472,12 @@ export const CreatePlace = gql`
 }
     `;
 export const DeleteAllPlaces = gql`
-    mutation DeleteAllPlaces($filter: PlaceFilter!) {
-  deleteAllPlaces(filter: $filter) {
+    mutation DeleteAllPlaces($filter: PlaceFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllPlaces(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -1988,8 +2492,8 @@ export const DeletePlace = gql`
 }
     `;
 export const DeletePlaces = gql`
-    mutation DeletePlaces($ids: [ID!]!) {
-  deletePlaces(ids: $ids) {
+    mutation DeletePlaces($ids: [ID!]!, $isSynchronous: Boolean) {
+  deletePlaces(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2013,7 +2517,7 @@ export const GetPlace = gql`
 }
     `;
 export const QueryPlaces = gql`
-    query QueryPlaces($filter: PlaceFilter!) {
+    query QueryPlaces($filter: PlaceFilter) {
   places(filter: $filter) {
     results {
       id
@@ -2039,6 +2543,13 @@ export const UpdatePlace = gql`
   }
 }
     `;
+export const CountProducts = gql`
+    query CountProducts($filter: ProductFilter) {
+  countProducts(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateProduct = gql`
     mutation CreateProduct($product: ProductInput!) {
   createProduct(product: $product) {
@@ -2048,8 +2559,12 @@ export const CreateProduct = gql`
 }
     `;
 export const DeleteAllProducts = gql`
-    mutation DeleteAllProducts($filter: ProductFilter!) {
-  deleteAllProducts(filter: $filter) {
+    mutation DeleteAllProducts($filter: ProductFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllProducts(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -2064,8 +2579,8 @@ export const DeleteProduct = gql`
 }
     `;
 export const DeleteProducts = gql`
-    mutation DeleteProducts($ids: [ID!]!) {
-  deleteProducts(ids: $ids) {
+    mutation DeleteProducts($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteProducts(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2096,7 +2611,7 @@ export const GetProduct = gql`
 }
     `;
 export const QueryProducts = gql`
-    query QueryProducts($filter: ProductFilter!) {
+    query QueryProducts($filter: ProductFilter) {
   products(filter: $filter) {
     results {
       id
@@ -2126,23 +2641,6 @@ export const UpdateProduct = gql`
   updateProduct(product: $product) {
     id
     name
-  }
-}
-    `;
-export const Credits = gql`
-    query Credits($startDate: DateTime!, $duration: TimeSpan!) {
-  credits(startDate: $startDate, duration: $duration) {
-    correlationId
-    ownerId
-    credits
-    storageRatio
-    computeRatio
-    preparationRatio
-    extractionRatio
-    enrichmentRatio
-    publishingRatio
-    searchRatio
-    conversationRatio
   }
 }
     `;
@@ -2226,16 +2724,25 @@ export const LookupUsage = gql`
   }
 }
     `;
-export const UpdateProject = gql`
-    mutation UpdateProject($project: ProjectUpdateInput!) {
-  updateProject(project: $project) {
-    id
-    name
+export const QueryCredits = gql`
+    query QueryCredits($startDate: DateTime!, $duration: TimeSpan!) {
+  credits(startDate: $startDate, duration: $duration) {
+    correlationId
+    ownerId
+    credits
+    storageRatio
+    computeRatio
+    preparationRatio
+    extractionRatio
+    enrichmentRatio
+    publishingRatio
+    searchRatio
+    conversationRatio
   }
 }
     `;
-export const Usage = gql`
-    query Usage($startDate: DateTime!, $duration: TimeSpan!) {
+export const QueryUsage = gql`
+    query QueryUsage($startDate: DateTime!, $duration: TimeSpan!) {
   usage(startDate: $startDate, duration: $duration) {
     correlationId
     date
@@ -2267,6 +2774,21 @@ export const Usage = gql`
   }
 }
     `;
+export const UpdateProject = gql`
+    mutation UpdateProject($project: ProjectUpdateInput!) {
+  updateProject(project: $project) {
+    id
+    name
+  }
+}
+    `;
+export const CountRepos = gql`
+    query CountRepos($filter: RepoFilter) {
+  countRepos(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateRepo = gql`
     mutation CreateRepo($repo: RepoInput!) {
   createRepo(repo: $repo) {
@@ -2276,8 +2798,12 @@ export const CreateRepo = gql`
 }
     `;
 export const DeleteAllRepos = gql`
-    mutation DeleteAllRepos($filter: RepoFilter!) {
-  deleteAllRepos(filter: $filter) {
+    mutation DeleteAllRepos($filter: RepoFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllRepos(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -2292,8 +2818,8 @@ export const DeleteRepo = gql`
 }
     `;
 export const DeleteRepos = gql`
-    mutation DeleteRepos($ids: [ID!]!) {
-  deleteRepos(ids: $ids) {
+    mutation DeleteRepos($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteRepos(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2310,7 +2836,7 @@ export const GetRepo = gql`
 }
     `;
 export const QueryRepos = gql`
-    query QueryRepos($filter: RepoFilter!) {
+    query QueryRepos($filter: RepoFilter) {
   repos(filter: $filter) {
     results {
       id
@@ -2329,6 +2855,13 @@ export const UpdateRepo = gql`
   }
 }
     `;
+export const CountSoftwares = gql`
+    query CountSoftwares($filter: SoftwareFilter) {
+  countSoftwares(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateSoftware = gql`
     mutation CreateSoftware($software: SoftwareInput!) {
   createSoftware(software: $software) {
@@ -2338,8 +2871,12 @@ export const CreateSoftware = gql`
 }
     `;
 export const DeleteAllSoftwares = gql`
-    mutation DeleteAllSoftwares($filter: SoftwareFilter!) {
-  deleteAllSoftwares(filter: $filter) {
+    mutation DeleteAllSoftwares($filter: SoftwareFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllSoftwares(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -2354,8 +2891,8 @@ export const DeleteSoftware = gql`
 }
     `;
 export const DeleteSoftwares = gql`
-    mutation DeleteSoftwares($ids: [ID!]!) {
-  deleteSoftwares(ids: $ids) {
+    mutation DeleteSoftwares($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteSoftwares(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2374,7 +2911,7 @@ export const GetSoftware = gql`
 }
     `;
 export const QuerySoftwares = gql`
-    query QuerySoftwares($filter: SoftwareFilter!) {
+    query QuerySoftwares($filter: SoftwareFilter) {
   softwares(filter: $filter) {
     results {
       id
@@ -2395,6 +2932,13 @@ export const UpdateSoftware = gql`
   }
 }
     `;
+export const CountSpecifications = gql`
+    query CountSpecifications($filter: SpecificationFilter) {
+  countSpecifications(filter: $filter) {
+    count
+  }
+}
+    `;
 export const CreateSpecification = gql`
     mutation CreateSpecification($specification: SpecificationInput!) {
   createSpecification(specification: $specification) {
@@ -2406,9 +2950,29 @@ export const CreateSpecification = gql`
   }
 }
     `;
+export const DeleteAllSpecifications = gql`
+    mutation DeleteAllSpecifications($filter: SpecificationFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllSpecifications(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
 export const DeleteSpecification = gql`
     mutation DeleteSpecification($id: ID!) {
   deleteSpecification(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteSpecifications = gql`
+    mutation DeleteSpecifications($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteSpecifications(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2428,6 +2992,9 @@ export const GetSpecification = gql`
     serviceType
     systemPrompt
     customGuidance
+    customInstructions
+    searchType
+    numberSimilar
     strategy {
       type
       messageLimit
@@ -2462,6 +3029,15 @@ export const GetSpecification = gql`
       key
       endpoint
       deploymentName
+      temperature
+      probability
+    }
+    cohere {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
       temperature
       probability
     }
@@ -2505,6 +3081,13 @@ export const PromptSpecifications = gql`
       citations {
         content {
           id
+          name
+          state
+          type
+          fileType
+          fileName
+          originalDate
+          uri
         }
         index
         text
@@ -2539,6 +3122,9 @@ export const QuerySpecifications = gql`
       serviceType
       systemPrompt
       customGuidance
+      customInstructions
+      searchType
+      numberSimilar
       strategy {
         type
         messageLimit
@@ -2573,6 +3159,15 @@ export const QuerySpecifications = gql`
         key
         endpoint
         deploymentName
+        temperature
+        probability
+      }
+      cohere {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
         temperature
         probability
       }
@@ -2612,6 +3207,13 @@ export const UpdateSpecification = gql`
     state
     type
     serviceType
+  }
+}
+    `;
+export const CountWorkflows = gql`
+    query CountWorkflows($filter: WorkflowFilter) {
+  countWorkflows(filter: $filter) {
+    count
   }
 }
     `;
@@ -2679,6 +3281,7 @@ export const CreateWorkflow = gql`
           openAIImage {
             confidenceThreshold
             detailLevel
+            customInstructions
           }
           modelText {
             specification {
@@ -2721,8 +3324,12 @@ export const CreateWorkflow = gql`
 }
     `;
 export const DeleteAllWorkflows = gql`
-    mutation DeleteAllWorkflows {
-  deleteAllWorkflows {
+    mutation DeleteAllWorkflows($filter: WorkflowFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllWorkflows(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
@@ -2737,8 +3344,8 @@ export const DeleteWorkflow = gql`
 }
     `;
 export const DeleteWorkflows = gql`
-    mutation DeleteWorkflows($ids: [ID!]!) {
-  deleteWorkflows(ids: $ids) {
+    mutation DeleteWorkflows($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteWorkflows(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
@@ -2812,6 +3419,7 @@ export const GetWorkflow = gql`
           openAIImage {
             confidenceThreshold
             detailLevel
+            customInstructions
           }
           modelText {
             specification {
@@ -2922,6 +3530,7 @@ export const QueryWorkflows = gql`
             openAIImage {
               confidenceThreshold
               detailLevel
+              customInstructions
             }
             modelText {
               specification {
@@ -3028,6 +3637,7 @@ export const UpdateWorkflow = gql`
           openAIImage {
             confidenceThreshold
             detailLevel
+            customInstructions
           }
           modelText {
             specification {

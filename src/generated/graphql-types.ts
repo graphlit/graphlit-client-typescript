@@ -401,6 +401,8 @@ export type AudioMetadata = {
   channels?: Maybe<Scalars['Int']['output']>;
   /** The episode copyright, if podcast episode. */
   copyright?: Maybe<Scalars['String']['output']>;
+  /** The audio description. */
+  description?: Maybe<Scalars['String']['output']>;
   /** The audio duration. */
   duration?: Maybe<Scalars['String']['output']>;
   /** The episode name, if podcast episode. */
@@ -423,6 +425,48 @@ export type AudioMetadata = {
   series?: Maybe<Scalars['String']['output']>;
   /** The audio title. */
   title?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents audio metadata. */
+export type AudioMetadataInput = {
+  /** The episode author, if podcast episode. */
+  author?: InputMaybe<Scalars['String']['input']>;
+  /** The audio bitrate. */
+  bitrate?: InputMaybe<Scalars['Int']['input']>;
+  /** The audio bits/sample. */
+  bitsPerSample?: InputMaybe<Scalars['Int']['input']>;
+  /** The audio channels. */
+  channels?: InputMaybe<Scalars['Int']['input']>;
+  /** The episode copyright, if podcast episode. */
+  copyright?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The audio duration. */
+  duration?: InputMaybe<Scalars['String']['input']>;
+  /** The episode name, if podcast episode. */
+  episode?: InputMaybe<Scalars['String']['input']>;
+  /** The episode type, if podcast episode. */
+  episodeType?: InputMaybe<Scalars['String']['input']>;
+  /** The audio genre. */
+  genre?: InputMaybe<Scalars['String']['input']>;
+  /** The episode keywords, if podcast episode. */
+  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The audio language. */
+  language?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The episode publisher, if podcast episode. */
+  publisher?: InputMaybe<Scalars['String']['input']>;
+  /** The audio sample rate. */
+  sampleRate?: InputMaybe<Scalars['Int']['input']>;
+  /** The episode season, if podcast episode. */
+  season?: InputMaybe<Scalars['String']['input']>;
+  /** The episode series name, if podcast episode. */
+  series?: InputMaybe<Scalars['String']['input']>;
+  /** The audio title. */
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Azure blob feed properties. */
@@ -1150,7 +1194,7 @@ export type ContentFacet = {
   value?: Maybe<Scalars['String']['output']>;
 };
 
-/** Represents the configuration for content facets. */
+/** Represents the configuration for retrieving the content facets. */
 export type ContentFacetInput = {
   /** The content facet type. */
   facet?: InputMaybe<ContentFacetTypes>;
@@ -1282,6 +1326,12 @@ export type ContentFilter = {
   workflows?: InputMaybe<Array<EntityReferenceFilter>>;
 };
 
+/** Represents the configuration for retrieving the knowledge graph. */
+export type ContentGraphInput = {
+  /** The observable types. */
+  types?: InputMaybe<Array<InputMaybe<ObservableTypes>>>;
+};
+
 /** Represents content. */
 export type ContentInput = {
   /** The content description. */
@@ -1353,6 +1403,8 @@ export type ContentResults = {
   __typename?: 'ContentResults';
   /** The content facets. */
   facets?: Maybe<Array<Maybe<ContentFacet>>>;
+  /** The knowledge graph generated from the content results. */
+  graph?: Maybe<Graph>;
   /** The content H3 facets. */
   h3?: Maybe<H3Facets>;
   /** The content results. */
@@ -1381,12 +1433,34 @@ export enum ContentTypes {
 
 /** Represents content. */
 export type ContentUpdateInput = {
+  /** The content audio metadata. */
+  audio?: InputMaybe<AudioMetadataInput>;
   /** The content description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The content document metadata. */
+  document?: InputMaybe<DocumentMetadataInput>;
+  /** The content drawing metadata. */
+  drawing?: InputMaybe<DrawingMetadataInput>;
+  /** The content email metadata. */
+  email?: InputMaybe<EmailMetadataInput>;
+  /** The content geometry metadata. */
+  geometry?: InputMaybe<GeometryMetadataInput>;
   /** The ID of the content to update. */
   id: Scalars['ID']['input'];
+  /** The content image metadata. */
+  image?: InputMaybe<ImageMetadataInput>;
+  /** The content issue metadata. */
+  issue?: InputMaybe<IssueMetadataInput>;
   /** The name of the content. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The content package metadata. */
+  package?: InputMaybe<PackageMetadataInput>;
+  /** The content point cloud metadata. */
+  pointCloud?: InputMaybe<PointCloudMetadataInput>;
+  /** The content shape metadata. */
+  shape?: InputMaybe<ShapeMetadataInput>;
+  /** The content video metadata. */
+  video?: InputMaybe<VideoMetadataInput>;
 };
 
 /** Represents a conversation. */
@@ -1808,6 +1882,58 @@ export type DocumentMetadata = {
   worksheetCount?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Represents document metadata. */
+export type DocumentMetadataInput = {
+  /** The document author. */
+  author?: InputMaybe<Scalars['String']['input']>;
+  /** The document character count. */
+  characterCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document comments. */
+  comments?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The document description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the document has a digital signature. */
+  hasDigitalSignature?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The document identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the document is encrypted or not. */
+  isEncrypted?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The document keywords. */
+  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The document line count. */
+  lineCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document hyperlinks. */
+  links?: InputMaybe<Array<InputMaybe<Scalars['URL']['input']>>>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The document page count. */
+  pageCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document paragraph count. */
+  paragraphCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document publisher. */
+  publisher?: InputMaybe<Scalars['String']['input']>;
+  /** The document slide count. */
+  slideCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document software. */
+  software?: InputMaybe<Scalars['String']['input']>;
+  /** The document subject. */
+  subject?: InputMaybe<Scalars['String']['input']>;
+  /** The document summary. */
+  summary?: InputMaybe<Scalars['String']['input']>;
+  /** The document title. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** The document total editing time. */
+  totalEditingTime?: InputMaybe<Scalars['String']['input']>;
+  /** The document word count. */
+  wordCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The document worksheet count. */
+  worksheetCount?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** Represents the document preparation properties. */
 export type DocumentPreparationProperties = {
   __typename?: 'DocumentPreparationProperties';
@@ -1860,6 +1986,28 @@ export type DrawingMetadata = {
   x?: Maybe<Scalars['Float']['output']>;
   /** The drawing Y origin. */
   y?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Represents drawing metadata. */
+export type DrawingMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The drawing depth. */
+  depth?: InputMaybe<Scalars['Float']['input']>;
+  /** The drawing height. */
+  height?: InputMaybe<Scalars['Float']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The drawing unit type. */
+  unitType?: InputMaybe<UnitTypes>;
+  /** The drawing width. */
+  width?: InputMaybe<Scalars['Float']['input']>;
+  /** The drawing X origin. */
+  x?: InputMaybe<Scalars['Float']['input']>;
+  /** The drawing Y origin. */
+  y?: InputMaybe<Scalars['Float']['input']>;
 };
 
 /** ElevenLabs models */
@@ -1967,6 +2115,30 @@ export type EmailMetadata = {
   subject?: Maybe<Scalars['String']['output']>;
   /** The to recipients of the email. */
   to?: Maybe<Array<Maybe<PersonReference>>>;
+};
+
+/** Represents email metadata. */
+export type EmailMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The email identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The email importance. */
+  importance?: InputMaybe<MailImportance>;
+  /** The email labels. */
+  labels?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The email hyperlinks. */
+  links?: InputMaybe<Array<InputMaybe<Scalars['URL']['input']>>>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The email priority. */
+  priority?: InputMaybe<MailPriority>;
+  /** The email sensitivity. */
+  sensitivity?: InputMaybe<MailSensitivity>;
+  /** The email subject. */
+  subject?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents the email preparation properties. */
@@ -2532,6 +2704,8 @@ export type Feed = {
   lastPostDate?: Maybe<Scalars['DateTime']['output']>;
   /** The date the feed was last read. */
   lastReadDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The Microsoft Teams feed properties. */
+  microsoftTeams?: Maybe<MicrosoftTeamsFeedProperties>;
   /** The modified date of the feed. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the feed. */
@@ -2623,6 +2797,8 @@ export type FeedInput = {
   email?: InputMaybe<EmailFeedPropertiesInput>;
   /** The issue feed properties. */
   issue?: InputMaybe<IssueFeedPropertiesInput>;
+  /** The Microsoft Teams feed properties. */
+  microsoftTeams?: InputMaybe<MicrosoftTeamsFeedPropertiesInput>;
   /** The name of the feed. */
   name: Scalars['String']['input'];
   /** The Notion feed properties. */
@@ -2715,6 +2891,8 @@ export enum FeedTypes {
   Email = 'EMAIL',
   /** Issue feed */
   Issue = 'ISSUE',
+  /** Microsoft Teams channel feed */
+  MicrosoftTeams = 'MICROSOFT_TEAMS',
   /** Notion feed */
   Notion = 'NOTION',
   /** Reddit feed */
@@ -2743,6 +2921,8 @@ export type FeedUpdateInput = {
   id: Scalars['ID']['input'];
   /** The issue feed properties. */
   issue?: InputMaybe<IssueFeedPropertiesUpdateInput>;
+  /** The Microsoft Teams feed properties. */
+  microsoftTeams?: InputMaybe<MicrosoftTeamsFeedPropertiesUpdateInput>;
   /** The name of the feed. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** The Notion feed properties. */
@@ -2853,6 +3033,20 @@ export type GeometryMetadata = {
   triangleCount?: Maybe<Scalars['Long']['output']>;
   /** The geometry vertex count. */
   vertexCount?: Maybe<Scalars['Long']['output']>;
+};
+
+/** Represents geometry metadata. */
+export type GeometryMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The geometry triangle count. */
+  triangleCount?: InputMaybe<Scalars['Long']['input']>;
+  /** The geometry vertex count. */
+  vertexCount?: InputMaybe<Scalars['Long']['input']>;
 };
 
 /** Represents GitHub Issues feed properties. */
@@ -2977,6 +3171,37 @@ export type GoogleFeedPropertiesUpdateInput = {
   credentials?: InputMaybe<Scalars['String']['input']>;
   /** Google Cloud storage container prefix. */
   prefix?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a knowledge graph. */
+export type Graph = {
+  __typename?: 'Graph';
+  /** The knowledge graph edges. */
+  edges?: Maybe<Array<Maybe<GraphEdge>>>;
+  /** The knowledge graph nodes. */
+  nodes?: Maybe<Array<Maybe<GraphNode>>>;
+};
+
+/** Represents a knowledge graph edge. */
+export type GraphEdge = {
+  __typename?: 'GraphEdge';
+  /** The source node identifier of the knowledge graph edge. */
+  from: Scalars['ID']['output'];
+  /** The destination node identifier of the knowledge graph edge. */
+  to: Scalars['ID']['output'];
+};
+
+/** Represents a knowledge graph node. */
+export type GraphNode = {
+  __typename?: 'GraphNode';
+  /** The knowledge graph node identifier. */
+  id: Scalars['ID']['output'];
+  /** The knowledge graph node metadata. */
+  metadata?: Maybe<Scalars['String']['output']>;
+  /** The knowledge graph node name. */
+  name: Scalars['String']['output'];
+  /** The knowledge graph node type. */
+  type: EntityTypes;
 };
 
 /** Represents Groq model properties. */
@@ -3212,6 +3437,60 @@ export type ImageMetadata = {
   width?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Represents image metadata. */
+export type ImageMetadataInput = {
+  /** The image bits/component. */
+  bitsPerComponent?: InputMaybe<Scalars['Int']['input']>;
+  /** The image device color space. */
+  colorSpace?: InputMaybe<Scalars['String']['input']>;
+  /** The number of image components. */
+  components?: InputMaybe<Scalars['Int']['input']>;
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The image description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The image device exposure time. */
+  exposureTime?: InputMaybe<Scalars['String']['input']>;
+  /** The image device F/number. */
+  fNumber?: InputMaybe<Scalars['String']['input']>;
+  /** The image device focal length. */
+  focalLength?: InputMaybe<Scalars['Float']['input']>;
+  /** The image device GPS heading. */
+  heading?: InputMaybe<Scalars['Float']['input']>;
+  /** The image height. */
+  height?: InputMaybe<Scalars['Int']['input']>;
+  /** The image device identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The image device ISO rating. */
+  iso?: InputMaybe<Scalars['String']['input']>;
+  /** The image device lens. */
+  lens?: InputMaybe<Scalars['String']['input']>;
+  /** The image device lens specification. */
+  lensSpecification?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The image device make. */
+  make?: InputMaybe<Scalars['String']['input']>;
+  /** The image device model. */
+  model?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The image orientation. */
+  orientation?: InputMaybe<OrientationTypes>;
+  /** The image device GPS pitch. */
+  pitch?: InputMaybe<Scalars['Float']['input']>;
+  /** The image projection type. */
+  projectionType?: InputMaybe<ImageProjectionTypes>;
+  /** The image X resolution. */
+  resolutionX?: InputMaybe<Scalars['Int']['input']>;
+  /** The image Y resolution. */
+  resolutionY?: InputMaybe<Scalars['Int']['input']>;
+  /** The image device software. */
+  software?: InputMaybe<Scalars['String']['input']>;
+  /** The image width. */
+  width?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** Image projection types */
 export enum ImageProjectionTypes {
   /** Cylindrical image projection */
@@ -3376,6 +3655,34 @@ export type IssueMetadata = {
   title?: Maybe<Scalars['String']['output']>;
   /** The issue type, i.e. epic, story, task. */
   type?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents issue metadata. */
+export type IssueMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The issue identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The issue labels. */
+  labels?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The issue hyperlinks. */
+  links?: InputMaybe<Array<InputMaybe<Scalars['URL']['input']>>>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The issue priority. */
+  priority?: InputMaybe<Scalars['String']['input']>;
+  /** The issue project name. */
+  project?: InputMaybe<Scalars['String']['input']>;
+  /** The issue status. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** The issue team name. */
+  team?: InputMaybe<Scalars['String']['input']>;
+  /** The issue title. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** The issue type, i.e. epic, story, task. */
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a label. */
@@ -3598,6 +3905,8 @@ export enum LinkTypes {
   Media = 'MEDIA',
   /** Medium link */
   Medium = 'MEDIUM',
+  /** Microsoft Teams link */
+  MicrosoftTeams = 'MICROSOFT_TEAMS',
   /** Notion link */
   Notion = 'NOTION',
   /** Pandora link */
@@ -3806,6 +4115,55 @@ export type MicrosoftEmailFeedPropertiesUpdateInput = {
   type?: InputMaybe<EmailListingTypes>;
 };
 
+/** Represents Microsoft Teams feed properties. */
+export type MicrosoftTeamsFeedProperties = {
+  __typename?: 'MicrosoftTeamsFeedProperties';
+  /** The Microsoft Teams channel identifier. */
+  channel: Scalars['String']['output'];
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** The Microsoft Graph refresh token. */
+  refreshToken: Scalars['String']['output'];
+  /** The Microsoft Teams team identifier. */
+  team: Scalars['String']['output'];
+  /** Azure Active Directory tenant identifier. */
+  tenantId: Scalars['String']['output'];
+  /** Feed listing type, i.e. past or new messages. */
+  type?: Maybe<FeedListingTypes>;
+};
+
+/** Represents Microsoft Teams feed properties. */
+export type MicrosoftTeamsFeedPropertiesInput = {
+  /** The Microsoft Teams channel identifier. */
+  channel: Scalars['String']['input'];
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The Microsoft Graph refresh token. */
+  refreshToken: Scalars['String']['input'];
+  /** The Microsoft Teams team identifier. */
+  team: Scalars['String']['input'];
+  /** Azure Active Directory tenant identifier. */
+  tenantId: Scalars['String']['input'];
+  /** Feed listing type, i.e. past or new messages. */
+  type?: InputMaybe<FeedListingTypes>;
+};
+
+/** Represents Microsoft Teams feed properties. */
+export type MicrosoftTeamsFeedPropertiesUpdateInput = {
+  /** The Microsoft Teams channel identifier. */
+  channel: Scalars['String']['input'];
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The Microsoft Graph refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** The Microsoft Teams team identifier. */
+  team: Scalars['String']['input'];
+  /** Azure Active Directory tenant identifier. */
+  tenantId?: InputMaybe<Scalars['String']['input']>;
+  /** Feed listing type, i.e. past or new messages. */
+  type?: InputMaybe<FeedListingTypes>;
+};
+
 /** Represents Mistral model properties. */
 export type MistralModelProperties = {
   __typename?: 'MistralModelProperties';
@@ -3993,6 +4351,8 @@ export type Mutation = {
   deleteAllRepos?: Maybe<Array<Maybe<Repo>>>;
   /** Bulk deletes software based on the provided filter criteria. */
   deleteAllSoftwares?: Maybe<Array<Maybe<Software>>>;
+  /** Bulk deletes specifications based on the provided filter criteria. */
+  deleteAllSpecifications?: Maybe<Array<Maybe<Specification>>>;
   /** Bulk deletes workflows based on the provided filter criteria. */
   deleteAllWorkflows?: Maybe<Array<Maybe<Workflow>>>;
   /** Bulk deletes categories. */
@@ -4051,6 +4411,8 @@ export type Mutation = {
   deleteSoftwares?: Maybe<Array<Maybe<Software>>>;
   /** Deletes a LLM specification. */
   deleteSpecification?: Maybe<Specification>;
+  /** Deletes multiple specifications given their IDs. */
+  deleteSpecifications?: Maybe<Array<Maybe<Specification>>>;
   /** Deletes a content workflow. */
   deleteWorkflow?: Maybe<Workflow>;
   /** Deletes multiple workflows given their IDs. */
@@ -4268,99 +4630,125 @@ export type MutationDeleteAlertArgs = {
 
 export type MutationDeleteAlertsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllAlertsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<AlertFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllCategoriesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CategoryFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllCollectionsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CollectionFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ContentFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllConversationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ConversationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllEventsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<EventFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllFeedsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FeedFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllLabelsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<LabelFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllOrganizationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<OrganizationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllPersonsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PersonFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllPlacesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PlaceFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllProductsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ProductFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllReposArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<RepoFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllSoftwaresArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SoftwareFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllSpecificationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SpecificationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteAllWorkflowsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<WorkflowFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteCategoriesArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4376,6 +4764,7 @@ export type MutationDeleteCollectionArgs = {
 
 export type MutationDeleteCollectionsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4386,6 +4775,7 @@ export type MutationDeleteContentArgs = {
 
 export type MutationDeleteContentsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4396,6 +4786,7 @@ export type MutationDeleteConversationArgs = {
 
 export type MutationDeleteConversationsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4406,6 +4797,7 @@ export type MutationDeleteEventArgs = {
 
 export type MutationDeleteEventsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4416,6 +4808,7 @@ export type MutationDeleteFeedArgs = {
 
 export type MutationDeleteFeedsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4426,6 +4819,7 @@ export type MutationDeleteLabelArgs = {
 
 export type MutationDeleteLabelsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4441,6 +4835,7 @@ export type MutationDeleteOrganizationArgs = {
 
 export type MutationDeleteOrganizationsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4451,6 +4846,7 @@ export type MutationDeletePersonArgs = {
 
 export type MutationDeletePersonsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4461,6 +4857,7 @@ export type MutationDeletePlaceArgs = {
 
 export type MutationDeletePlacesArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4471,6 +4868,7 @@ export type MutationDeleteProductArgs = {
 
 export type MutationDeleteProductsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4481,6 +4879,7 @@ export type MutationDeleteRepoArgs = {
 
 export type MutationDeleteReposArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4491,11 +4890,18 @@ export type MutationDeleteSoftwareArgs = {
 
 export type MutationDeleteSoftwaresArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationDeleteSpecificationArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteSpecificationsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4506,6 +4912,7 @@ export type MutationDeleteWorkflowArgs = {
 
 export type MutationDeleteWorkflowsArgs = {
   ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -4637,6 +5044,7 @@ export type MutationPublishConversationArgs = {
   connector: ContentPublishingConnectorInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
 };
@@ -5391,6 +5799,20 @@ export type PackageMetadata = {
   isEncrypted?: Maybe<Scalars['Boolean']['output']>;
 };
 
+/** Represents package metadata. */
+export type PackageMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The package file count. */
+  fileCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The package folder count. */
+  folderCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 /** Represents a person. */
 export type Person = {
   __typename?: 'Person';
@@ -5770,6 +6192,24 @@ export type PointCloudMetadata = {
   pointCount?: Maybe<Scalars['Long']['output']>;
   /** The point cloud device software. */
   software?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents point cloud metadata. */
+export type PointCloudMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The point cloud description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The point cloud device identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The point cloud point count. */
+  pointCount?: InputMaybe<Scalars['Long']['input']>;
+  /** The point cloud device software. */
+  software?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Filter by geospatial point (i.e. latitude, longitude) and distance radius. */
@@ -6397,7 +6837,9 @@ export enum PromptStrategyTypes {
   /** Rewrite prompt */
   Rewrite = 'REWRITE',
   /** Rewrite prompt as multiple sub-prompts */
-  RewriteMultiple = 'REWRITE_MULTIPLE'
+  RewriteMultiple = 'REWRITE_MULTIPLE',
+  /** Rewrite prompt as question requiring detailed response with example */
+  RewriteQuestion = 'REWRITE_QUESTION'
 }
 
 /** Represents a prompt strategy. */
@@ -6450,12 +6892,20 @@ export type Query = {
   conversation?: Maybe<Conversation>;
   /** Retrieves conversations based on the provided filter criteria. */
   conversations?: Maybe<ConversationResults>;
+  /** Counts alerts based on the provided filter criteria. */
+  countAlerts?: Maybe<CountResult>;
   /** Counts categories based on the provided filter criteria. */
   countCategories?: Maybe<CountResult>;
+  /** Counts collections based on the provided filter criteria. */
+  countCollections?: Maybe<CountResult>;
   /** Counts contents based on the provided filter criteria. */
   countContents?: Maybe<CountResult>;
+  /** Counts conversations based on the provided filter criteria. */
+  countConversations?: Maybe<CountResult>;
   /** Counts events based on the provided filter criteria. */
   countEvents?: Maybe<CountResult>;
+  /** Counts feeds based on the provided filter criteria. */
+  countFeeds?: Maybe<CountResult>;
   /** Counts labels based on the provided filter criteria. */
   countLabels?: Maybe<CountResult>;
   /** Counts organizations based on the provided filter criteria. */
@@ -6469,7 +6919,11 @@ export type Query = {
   /** Counts repos based on the provided filter criteria. */
   countRepos?: Maybe<CountResult>;
   /** Counts software based on the provided filter criteria. */
-  countSoftware?: Maybe<CountResult>;
+  countSoftwares?: Maybe<CountResult>;
+  /** Counts specifications based on the provided filter criteria. */
+  countSpecifications?: Maybe<CountResult>;
+  /** Counts workflows based on the provided filter criteria. */
+  countWorkflows?: Maybe<CountResult>;
   /** Retrieves correlated project credits. */
   credits?: Maybe<Array<Maybe<ProjectCredits>>>;
   /** Lookup an event given its ID. */
@@ -6494,6 +6948,8 @@ export type Query = {
   lookupCredits?: Maybe<ProjectCredits>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
+  /** Retrieves Microsoft Graph consent URI. Visit URI to provide administrator consent for feeds which use the Microsoft Graph API, such as SharePoint and Microsoft Teams. */
+  microsoftGraphConsentUri?: Maybe<UriResult>;
   /** Lookup a observation given its ID. */
   observation?: Maybe<Observation>;
   /** Lookup an organization given its ID. */
@@ -6520,8 +6976,6 @@ export type Query = {
   repo?: Maybe<Repo>;
   /** Retrieves code repositories based on the provided filter criteria. */
   repos?: Maybe<RepoResults>;
-  /** Retrieves SharePoint consent URI. Visit URI to provide administrator consent for SharePoint feed. */
-  sharePointConsentUri?: Maybe<UriResult>;
   /** Retrieves available SharePoint document libraries. */
   sharePointLibraries?: Maybe<SharePointLibraryResults>;
   /** Lookup software given its ID. */
@@ -6588,6 +7042,7 @@ export type QueryContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   facets?: InputMaybe<Array<ContentFacetInput>>;
   filter?: InputMaybe<ContentFilter>;
+  graph?: InputMaybe<ContentGraphInput>;
 };
 
 
@@ -6603,9 +7058,21 @@ export type QueryConversationsArgs = {
 };
 
 
+export type QueryCountAlertsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<AlertFilter>;
+};
+
+
 export type QueryCountCategoriesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CategoryFilter>;
+};
+
+
+export type QueryCountCollectionsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<CollectionFilter>;
 };
 
 
@@ -6615,9 +7082,21 @@ export type QueryCountContentsArgs = {
 };
 
 
+export type QueryCountConversationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ConversationFilter>;
+};
+
+
 export type QueryCountEventsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<EventFilter>;
+};
+
+
+export type QueryCountFeedsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<FeedFilter>;
 };
 
 
@@ -6657,9 +7136,21 @@ export type QueryCountReposArgs = {
 };
 
 
-export type QueryCountSoftwareArgs = {
+export type QueryCountSoftwaresArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SoftwareFilter>;
+};
+
+
+export type QueryCountSpecificationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SpecificationFilter>;
+};
+
+
+export type QueryCountWorkflowsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<WorkflowFilter>;
 };
 
 
@@ -6732,6 +7223,11 @@ export type QueryLookupCreditsArgs = {
 
 export type QueryLookupUsageArgs = {
   correlationId: Scalars['String']['input'];
+};
+
+
+export type QueryMicrosoftGraphConsentUriArgs = {
+  tenantId: Scalars['ID']['input'];
 };
 
 
@@ -6814,11 +7310,6 @@ export type QueryReposArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   facets?: InputMaybe<Array<RepoFacetInput>>;
   filter?: InputMaybe<RepoFilter>;
-};
-
-
-export type QuerySharePointConsentUriArgs = {
-  tenantId: Scalars['ID']['input'];
 };
 
 
@@ -7171,7 +7662,9 @@ export enum RerankingModelServiceTypes {
   /** Cohere */
   Cohere = 'COHERE',
   /** Jina */
-  Jina = 'JINA'
+  Jina = 'JINA',
+  /** Pongo */
+  Pongo = 'PONGO'
 }
 
 /** Represents a reranking strategy. */
@@ -7267,6 +7760,20 @@ export type ShapeMetadata = {
   featureCount?: Maybe<Scalars['Int']['output']>;
   /** The shape WKT (well-known text) specification. */
   wkt?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents shape metadata. */
+export type ShapeMetadataInput = {
+  /** The shape attribute count. */
+  attributeCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The shape feature count. */
+  featureCount?: InputMaybe<Scalars['Int']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export enum SharePointAuthenticationTypes {
@@ -8124,18 +8631,48 @@ export type UriResult = {
 /** Represents video metadata. */
 export type VideoMetadata = {
   __typename?: 'VideoMetadata';
+  /** The episode author, if podcast episode. */
+  author?: Maybe<Scalars['String']['output']>;
+  /** The audio description. */
+  description?: Maybe<Scalars['String']['output']>;
   /** The video duration. */
   duration?: Maybe<Scalars['String']['output']>;
   /** The video height. */
   height?: Maybe<Scalars['Int']['output']>;
+  /** The episode keywords, if podcast episode. */
+  keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** The video device make. */
   make?: Maybe<Scalars['String']['output']>;
   /** The video device model. */
   model?: Maybe<Scalars['String']['output']>;
   /** The video device software. */
   software?: Maybe<Scalars['String']['output']>;
+  /** The audio title. */
+  title?: Maybe<Scalars['String']['output']>;
   /** The video width. */
   width?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents video metadata. */
+export type VideoMetadataInput = {
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The video duration. */
+  duration?: InputMaybe<Scalars['String']['input']>;
+  /** The video height. */
+  height?: InputMaybe<Scalars['Int']['input']>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The video device make. */
+  make?: InputMaybe<Scalars['String']['input']>;
+  /** The video device model. */
+  model?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The video device software. */
+  software?: InputMaybe<Scalars['String']['input']>;
+  /** The video width. */
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents web feed properties. */
@@ -8332,6 +8869,13 @@ export enum YouTubeTypes {
   Videos = 'VIDEOS'
 }
 
+export type CountAlertsQueryVariables = Exact<{
+  filter?: InputMaybe<AlertFilter>;
+}>;
+
+
+export type CountAlertsQuery = { __typename?: 'Query', countAlerts?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateAlertMutationVariables = Exact<{
   alert: AlertInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -8349,12 +8893,17 @@ export type DeleteAlertMutation = { __typename?: 'Mutation', deleteAlert?: { __t
 
 export type DeleteAlertsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type DeleteAlertsMutation = { __typename?: 'Mutation', deleteAlerts?: Array<{ __typename?: 'Alert', id: string, state: EntityState } | null> | null };
 
-export type DeleteAllAlertsMutationVariables = Exact<{ [key: string]: never; }>;
+export type DeleteAllAlertsMutationVariables = Exact<{
+  filter?: InputMaybe<AlertFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllAlertsMutation = { __typename?: 'Mutation', deleteAllAlerts?: Array<{ __typename?: 'Alert', id: string, state: EntityState } | null> | null };
@@ -8394,6 +8943,13 @@ export type UpdateAlertMutationVariables = Exact<{
 
 export type UpdateAlertMutation = { __typename?: 'Mutation', updateAlert?: { __typename?: 'Alert', id: string, name: string, state: EntityState, type: AlertTypes } | null };
 
+export type CountCategoriesQueryVariables = Exact<{
+  filter?: InputMaybe<CategoryFilter>;
+}>;
+
+
+export type CountCategoriesQuery = { __typename?: 'Query', countCategories?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateCategoryMutationVariables = Exact<{
   category: CategoryInput;
 }>;
@@ -8402,7 +8958,9 @@ export type CreateCategoryMutationVariables = Exact<{
 export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory?: { __typename?: 'Category', id: string, name: string } | null };
 
 export type DeleteAllCategoriesMutationVariables = Exact<{
-  filter: CategoryFilter;
+  filter?: InputMaybe<CategoryFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -8410,6 +8968,7 @@ export type DeleteAllCategoriesMutation = { __typename?: 'Mutation', deleteAllCa
 
 export type DeleteCategoriesMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8430,7 +8989,7 @@ export type GetCategoryQueryVariables = Exact<{
 export type GetCategoryQuery = { __typename?: 'Query', category?: { __typename?: 'Category', id: string, name: string, description?: string | null, creationDate: any } | null };
 
 export type QueryCategoriesQueryVariables = Exact<{
-  filter: CategoryFilter;
+  filter?: InputMaybe<CategoryFilter>;
 }>;
 
 
@@ -8451,6 +9010,13 @@ export type AddContentsToCollectionsMutationVariables = Exact<{
 
 export type AddContentsToCollectionsMutation = { __typename?: 'Mutation', addContentsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null> | null };
 
+export type CountCollectionsQueryVariables = Exact<{
+  filter?: InputMaybe<CollectionFilter>;
+}>;
+
+
+export type CountCollectionsQuery = { __typename?: 'Query', countCollections?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateCollectionMutationVariables = Exact<{
   collection: CollectionInput;
 }>;
@@ -8458,7 +9024,11 @@ export type CreateCollectionMutationVariables = Exact<{
 
 export type CreateCollectionMutation = { __typename?: 'Mutation', createCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null } | null };
 
-export type DeleteAllCollectionsMutationVariables = Exact<{ [key: string]: never; }>;
+export type DeleteAllCollectionsMutationVariables = Exact<{
+  filter?: InputMaybe<CollectionFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllCollectionsMutation = { __typename?: 'Mutation', deleteAllCollections?: Array<{ __typename?: 'Collection', id: string, state: EntityState } | null> | null };
@@ -8472,6 +9042,7 @@ export type DeleteCollectionMutation = { __typename?: 'Mutation', deleteCollecti
 
 export type DeleteCollectionsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8506,7 +9077,18 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 export type UpdateCollectionMutation = { __typename?: 'Mutation', updateCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null } | null };
 
-export type DeleteAllContentsMutationVariables = Exact<{ [key: string]: never; }>;
+export type CountContentsQueryVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+}>;
+
+
+export type CountContentsQuery = { __typename?: 'Query', countContents?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type DeleteAllContentsMutationVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllContentsMutation = { __typename?: 'Mutation', deleteAllContents?: Array<{ __typename?: 'Content', id: string, state: EntityState } | null> | null };
@@ -8520,6 +9102,7 @@ export type DeleteContentMutation = { __typename?: 'Mutation', deleteContent?: {
 
 export type DeleteContentsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8540,7 +9123,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, description?: string | null, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, markdown?: string | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, software?: string | null, make?: string | null, model?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, description?: string | null, software?: string | null, identifier?: string | null, make?: string | null, model?: string | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, author?: string | null, software?: string | null, publisher?: string | null, description?: string | null, summary?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, characterCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', subject?: string | null, identifier?: string | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, labels?: Array<string | null> | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, identifier?: string | null, labels?: Array<string | null> | null } | null, observations?: Array<{ __typename?: 'Observation', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, pageIndex?: number | null, startTime?: any | null, endTime?: any | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, parent?: { __typename?: 'Content', id: string } | null, children?: Array<{ __typename?: 'Content', id: string } | null> | null, collections?: Array<{ __typename?: 'Collection', id: string } | null> | null, feed?: { __typename?: 'Feed', id: string } | null, workflow?: { __typename?: 'Workflow', id: string } | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null } | null };
 
 export type IngestEncodedFileMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -8554,7 +9137,7 @@ export type IngestEncodedFileMutationVariables = Exact<{
 }>;
 
 
-export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type IngestTextMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -8563,26 +9146,26 @@ export type IngestTextMutationVariables = Exact<{
   uri?: InputMaybe<Scalars['URL']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
-  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type IngestTextMutation = { __typename?: 'Mutation', ingestText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type IngestTextMutation = { __typename?: 'Mutation', ingestText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type IngestUriMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']['input']>;
   uri: Scalars['URL']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
-  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type IngestUriMutation = { __typename?: 'Mutation', ingestUri?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type IngestUriMutation = { __typename?: 'Mutation', ingestUri?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type IsContentDoneQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -8596,44 +9179,52 @@ export type PublishContentsMutationVariables = Exact<{
   publishPrompt: Scalars['String']['input'];
   connector: ContentPublishingConnectorInput;
   filter?: InputMaybe<ContentFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   summarySpecification?: InputMaybe<EntityReferenceInput>;
   publishSpecification?: InputMaybe<EntityReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
-  isSynchronous: Scalars['Boolean']['input'];
 }>;
 
 
-export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null } | null };
+export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type PublishTextMutationVariables = Exact<{
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
   connector: ContentPublishingConnectorInput;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
-  isSynchronous: Scalars['Boolean']['input'];
 }>;
 
 
-export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null } | null };
+export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
-export type QueryContentFacetsQueryVariables = Exact<{
-  filter?: InputMaybe<ContentFilter>;
+export type QueryContentsQueryVariables = Exact<{
+  filter: ContentFilter;
+}>;
+
+
+export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
+
+export type QueryContentsFacetsQueryVariables = Exact<{
+  filter: ContentFilter;
   facets?: InputMaybe<Array<ContentFacetInput> | ContentFacetInput>;
 }>;
 
 
-export type QueryContentFacetsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', facets?: Array<{ __typename?: 'ContentFacet', facet?: ContentFacetTypes | null, type?: FacetValueTypes | null, count?: any | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
+export type QueryContentsFacetsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null } | null> | null, facets?: Array<{ __typename?: 'ContentFacet', facet?: ContentFacetTypes | null, count?: any | null, type?: FacetValueTypes | null, value?: string | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
 
-export type QueryContentsQueryVariables = Exact<{
-  filter?: InputMaybe<ContentFilter>;
+export type QueryContentsGraphQueryVariables = Exact<{
+  filter: ContentFilter;
+  graph?: InputMaybe<ContentGraphInput>;
 }>;
 
 
-export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, markdown?: string | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, pages?: Array<{ __typename?: 'TextPage', index?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, software?: string | null, make?: string | null, model?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, description?: string | null, software?: string | null, identifier?: string | null, make?: string | null, model?: string | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, author?: string | null, software?: string | null, publisher?: string | null, description?: string | null, summary?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, characterCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', subject?: string | null, identifier?: string | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, labels?: Array<string | null> | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, familyName?: string | null, givenName?: string | null, email?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, identifier?: string | null, labels?: Array<string | null> | null } | null, observations?: Array<{ __typename?: 'Observation', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, pageIndex?: number | null, startTime?: any | null, endTime?: any | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, parent?: { __typename?: 'Content', id: string } | null, children?: Array<{ __typename?: 'Content', id: string } | null> | null, collections?: Array<{ __typename?: 'Collection', id: string } | null> | null, feed?: { __typename?: 'Feed', id: string } | null, workflow?: { __typename?: 'Workflow', id: string } | null, links?: Array<{ __typename?: 'LinkReferenceType', uri?: any | null, linkType?: LinkTypes | null }> | null } | null> | null } | null };
+export type QueryContentsGraphQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string } | null> | null } | null } | null };
 
 export type SummarizeContentsMutationVariables = Exact<{
   summarizations: Array<SummarizationStrategyInput> | SummarizationStrategyInput;
@@ -8649,7 +9240,7 @@ export type UpdateContentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateContentMutation = { __typename?: 'Mutation', updateContent?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null } | null };
+export type UpdateContentMutation = { __typename?: 'Mutation', updateContent?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type ClearConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -8665,6 +9256,13 @@ export type CloseConversationMutationVariables = Exact<{
 
 export type CloseConversationMutation = { __typename?: 'Mutation', closeConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
 
+export type CountConversationsQueryVariables = Exact<{
+  filter?: InputMaybe<ConversationFilter>;
+}>;
+
+
+export type CountConversationsQuery = { __typename?: 'Query', countConversations?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateConversationMutationVariables = Exact<{
   conversation: ConversationInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -8673,7 +9271,11 @@ export type CreateConversationMutationVariables = Exact<{
 
 export type CreateConversationMutation = { __typename?: 'Mutation', createConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
 
-export type DeleteAllConversationsMutationVariables = Exact<{ [key: string]: never; }>;
+export type DeleteAllConversationsMutationVariables = Exact<{
+  filter?: InputMaybe<ConversationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllConversationsMutation = { __typename?: 'Mutation', deleteAllConversations?: Array<{ __typename?: 'Conversation', id: string, state: EntityState } | null> | null };
@@ -8687,6 +9289,7 @@ export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConver
 
 export type DeleteConversationsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8697,7 +9300,7 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null };
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -8706,25 +9309,26 @@ export type PromptConversationMutationVariables = Exact<{
 }>;
 
 
-export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
+export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
 
 export type PublishConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   connector: ContentPublishingConnectorInput;
   name?: InputMaybe<Scalars['String']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null } | null };
+export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type QueryConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null> | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -8742,6 +9346,13 @@ export type UpdateConversationMutationVariables = Exact<{
 
 export type UpdateConversationMutation = { __typename?: 'Mutation', updateConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
 
+export type CountEventsQueryVariables = Exact<{
+  filter?: InputMaybe<EventFilter>;
+}>;
+
+
+export type CountEventsQuery = { __typename?: 'Query', countEvents?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateEventMutationVariables = Exact<{
   event: EventInput;
 }>;
@@ -8750,7 +9361,9 @@ export type CreateEventMutationVariables = Exact<{
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent?: { __typename?: 'Event', id: string, name: string } | null };
 
 export type DeleteAllEventsMutationVariables = Exact<{
-  filter: EventFilter;
+  filter?: InputMaybe<EventFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -8765,6 +9378,7 @@ export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent?: { __t
 
 export type DeleteEventsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8778,7 +9392,7 @@ export type GetEventQueryVariables = Exact<{
 export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryEventsQueryVariables = Exact<{
-  filter: EventFilter;
+  filter?: InputMaybe<EventFilter>;
 }>;
 
 
@@ -8791,6 +9405,13 @@ export type UpdateEventMutationVariables = Exact<{
 
 export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __typename?: 'Event', id: string, name: string } | null };
 
+export type CountFeedsQueryVariables = Exact<{
+  filter?: InputMaybe<FeedFilter>;
+}>;
+
+
+export type CountFeedsQuery = { __typename?: 'Query', countFeeds?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateFeedMutationVariables = Exact<{
   feed: FeedInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -8799,7 +9420,11 @@ export type CreateFeedMutationVariables = Exact<{
 
 export type CreateFeedMutation = { __typename?: 'Mutation', createFeed?: { __typename?: 'Feed', id: string, name: string, state: EntityState, type: FeedTypes } | null };
 
-export type DeleteAllFeedsMutationVariables = Exact<{ [key: string]: never; }>;
+export type DeleteAllFeedsMutationVariables = Exact<{
+  filter?: InputMaybe<FeedFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllFeedsMutation = { __typename?: 'Mutation', deleteAllFeeds?: Array<{ __typename?: 'Feed', id: string, state: EntityState } | null> | null };
@@ -8813,6 +9438,7 @@ export type DeleteFeedMutation = { __typename?: 'Mutation', deleteFeed?: { __typ
 
 export type DeleteFeedsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8860,6 +9486,13 @@ export type UpdateFeedMutationVariables = Exact<{
 
 export type UpdateFeedMutation = { __typename?: 'Mutation', updateFeed?: { __typename?: 'Feed', id: string, name: string, state: EntityState, type: FeedTypes } | null };
 
+export type CountLabelsQueryVariables = Exact<{
+  filter?: InputMaybe<LabelFilter>;
+}>;
+
+
+export type CountLabelsQuery = { __typename?: 'Query', countLabels?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateLabelMutationVariables = Exact<{
   label: LabelInput;
 }>;
@@ -8868,7 +9501,9 @@ export type CreateLabelMutationVariables = Exact<{
 export type CreateLabelMutation = { __typename?: 'Mutation', createLabel?: { __typename?: 'Label', id: string, name: string } | null };
 
 export type DeleteAllLabelsMutationVariables = Exact<{
-  filter: LabelFilter;
+  filter?: InputMaybe<LabelFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -8883,6 +9518,7 @@ export type DeleteLabelMutation = { __typename?: 'Mutation', deleteLabel?: { __t
 
 export type DeleteLabelsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8896,7 +9532,7 @@ export type GetLabelQueryVariables = Exact<{
 export type GetLabelQuery = { __typename?: 'Query', label?: { __typename?: 'Label', id: string, name: string, description?: string | null, creationDate: any } | null };
 
 export type QueryLabelsQueryVariables = Exact<{
-  filter: LabelFilter;
+  filter?: InputMaybe<LabelFilter>;
 }>;
 
 
@@ -8930,6 +9566,13 @@ export type UpdateObservationMutationVariables = Exact<{
 
 export type UpdateObservationMutation = { __typename?: 'Mutation', updateObservation?: { __typename?: 'Observation', id: string, state: EntityState } | null };
 
+export type CountOrganizationsQueryVariables = Exact<{
+  filter?: InputMaybe<OrganizationFilter>;
+}>;
+
+
+export type CountOrganizationsQuery = { __typename?: 'Query', countOrganizations?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateOrganizationMutationVariables = Exact<{
   organization: OrganizationInput;
 }>;
@@ -8938,7 +9581,9 @@ export type CreateOrganizationMutationVariables = Exact<{
 export type CreateOrganizationMutation = { __typename?: 'Mutation', createOrganization?: { __typename?: 'Organization', id: string, name: string } | null };
 
 export type DeleteAllOrganizationsMutationVariables = Exact<{
-  filter: OrganizationFilter;
+  filter?: InputMaybe<OrganizationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -8953,6 +9598,7 @@ export type DeleteOrganizationMutation = { __typename?: 'Mutation', deleteOrgani
 
 export type DeleteOrganizationsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -8966,7 +9612,7 @@ export type GetOrganizationQueryVariables = Exact<{
 export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryOrganizationsQueryVariables = Exact<{
-  filter: OrganizationFilter;
+  filter?: InputMaybe<OrganizationFilter>;
 }>;
 
 
@@ -8979,6 +9625,13 @@ export type UpdateOrganizationMutationVariables = Exact<{
 
 export type UpdateOrganizationMutation = { __typename?: 'Mutation', updateOrganization?: { __typename?: 'Organization', id: string, name: string } | null };
 
+export type CountPersonsQueryVariables = Exact<{
+  filter?: InputMaybe<PersonFilter>;
+}>;
+
+
+export type CountPersonsQuery = { __typename?: 'Query', countPersons?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreatePersonMutationVariables = Exact<{
   person: PersonInput;
 }>;
@@ -8987,7 +9640,9 @@ export type CreatePersonMutationVariables = Exact<{
 export type CreatePersonMutation = { __typename?: 'Mutation', createPerson?: { __typename?: 'Person', id: string, name: string } | null };
 
 export type DeleteAllPersonsMutationVariables = Exact<{
-  filter: PersonFilter;
+  filter?: InputMaybe<PersonFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9002,6 +9657,7 @@ export type DeletePersonMutation = { __typename?: 'Mutation', deletePerson?: { _
 
 export type DeletePersonsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9015,7 +9671,7 @@ export type GetPersonQueryVariables = Exact<{
 export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPersonsQueryVariables = Exact<{
-  filter: PersonFilter;
+  filter?: InputMaybe<PersonFilter>;
 }>;
 
 
@@ -9028,6 +9684,13 @@ export type UpdatePersonMutationVariables = Exact<{
 
 export type UpdatePersonMutation = { __typename?: 'Mutation', updatePerson?: { __typename?: 'Person', id: string, name: string } | null };
 
+export type CountPlacesQueryVariables = Exact<{
+  filter?: InputMaybe<PlaceFilter>;
+}>;
+
+
+export type CountPlacesQuery = { __typename?: 'Query', countPlaces?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreatePlaceMutationVariables = Exact<{
   place: PlaceInput;
 }>;
@@ -9036,7 +9699,9 @@ export type CreatePlaceMutationVariables = Exact<{
 export type CreatePlaceMutation = { __typename?: 'Mutation', createPlace?: { __typename?: 'Place', id: string, name: string } | null };
 
 export type DeleteAllPlacesMutationVariables = Exact<{
-  filter: PlaceFilter;
+  filter?: InputMaybe<PlaceFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9051,6 +9716,7 @@ export type DeletePlaceMutation = { __typename?: 'Mutation', deletePlace?: { __t
 
 export type DeletePlacesMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9064,7 +9730,7 @@ export type GetPlaceQueryVariables = Exact<{
 export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPlacesQueryVariables = Exact<{
-  filter: PlaceFilter;
+  filter?: InputMaybe<PlaceFilter>;
 }>;
 
 
@@ -9077,6 +9743,13 @@ export type UpdatePlaceMutationVariables = Exact<{
 
 export type UpdatePlaceMutation = { __typename?: 'Mutation', updatePlace?: { __typename?: 'Place', id: string, name: string } | null };
 
+export type CountProductsQueryVariables = Exact<{
+  filter?: InputMaybe<ProductFilter>;
+}>;
+
+
+export type CountProductsQuery = { __typename?: 'Query', countProducts?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateProductMutationVariables = Exact<{
   product: ProductInput;
 }>;
@@ -9085,7 +9758,9 @@ export type CreateProductMutationVariables = Exact<{
 export type CreateProductMutation = { __typename?: 'Mutation', createProduct?: { __typename?: 'Product', id: string, name: string } | null };
 
 export type DeleteAllProductsMutationVariables = Exact<{
-  filter: ProductFilter;
+  filter?: InputMaybe<ProductFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9100,6 +9775,7 @@ export type DeleteProductMutation = { __typename?: 'Mutation', deleteProduct?: {
 
 export type DeleteProductsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9113,7 +9789,7 @@ export type GetProductQueryVariables = Exact<{
 export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryProductsQueryVariables = Exact<{
-  filter: ProductFilter;
+  filter?: InputMaybe<ProductFilter>;
 }>;
 
 
@@ -9125,14 +9801,6 @@ export type UpdateProductMutationVariables = Exact<{
 
 
 export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', id: string, name: string } | null };
-
-export type CreditsQueryVariables = Exact<{
-  startDate: Scalars['DateTime']['input'];
-  duration: Scalars['TimeSpan']['input'];
-}>;
-
-
-export type CreditsQuery = { __typename?: 'Query', credits?: Array<{ __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null> | null };
 
 export type GetProjectQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9153,6 +9821,22 @@ export type LookupUsageQueryVariables = Exact<{
 
 export type LookupUsageQuery = { __typename?: 'Query', lookupUsage?: Array<{ __typename?: 'ProjectUsageRecord', correlationId?: string | null, date: any, credits?: any | null, name: string, metric?: BillableMetrics | null, workflow?: string | null, entityType?: EntityTypes | null, entityId?: string | null, projectId: string, ownerId: string, uri?: string | null, duration?: any | null, throughput?: number | null, contentType?: ContentTypes | null, fileType?: FileTypes | null, modelService?: string | null, modelName?: string | null, processorName?: string | null, prompt?: string | null, promptTokens?: number | null, completion?: string | null, completionTokens?: number | null, tokens?: number | null, count?: number | null, request?: string | null, variables?: string | null, response?: string | null } | null> | null };
 
+export type QueryCreditsQueryVariables = Exact<{
+  startDate: Scalars['DateTime']['input'];
+  duration: Scalars['TimeSpan']['input'];
+}>;
+
+
+export type QueryCreditsQuery = { __typename?: 'Query', credits?: Array<{ __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null> | null };
+
+export type QueryUsageQueryVariables = Exact<{
+  startDate: Scalars['DateTime']['input'];
+  duration: Scalars['TimeSpan']['input'];
+}>;
+
+
+export type QueryUsageQuery = { __typename?: 'Query', usage?: Array<{ __typename?: 'ProjectUsageRecord', correlationId?: string | null, date: any, credits?: any | null, name: string, metric?: BillableMetrics | null, workflow?: string | null, entityType?: EntityTypes | null, entityId?: string | null, projectId: string, ownerId: string, uri?: string | null, duration?: any | null, throughput?: number | null, contentType?: ContentTypes | null, fileType?: FileTypes | null, modelService?: string | null, modelName?: string | null, processorName?: string | null, prompt?: string | null, promptTokens?: number | null, completion?: string | null, completionTokens?: number | null, tokens?: number | null, count?: number | null, request?: string | null, variables?: string | null, response?: string | null } | null> | null };
+
 export type UpdateProjectMutationVariables = Exact<{
   project: ProjectUpdateInput;
 }>;
@@ -9160,13 +9844,12 @@ export type UpdateProjectMutationVariables = Exact<{
 
 export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject?: { __typename?: 'Project', id: string, name: string } | null };
 
-export type UsageQueryVariables = Exact<{
-  startDate: Scalars['DateTime']['input'];
-  duration: Scalars['TimeSpan']['input'];
+export type CountReposQueryVariables = Exact<{
+  filter?: InputMaybe<RepoFilter>;
 }>;
 
 
-export type UsageQuery = { __typename?: 'Query', usage?: Array<{ __typename?: 'ProjectUsageRecord', correlationId?: string | null, date: any, credits?: any | null, name: string, metric?: BillableMetrics | null, workflow?: string | null, entityType?: EntityTypes | null, entityId?: string | null, projectId: string, ownerId: string, uri?: string | null, duration?: any | null, throughput?: number | null, contentType?: ContentTypes | null, fileType?: FileTypes | null, modelService?: string | null, modelName?: string | null, processorName?: string | null, prompt?: string | null, promptTokens?: number | null, completion?: string | null, completionTokens?: number | null, tokens?: number | null, count?: number | null, request?: string | null, variables?: string | null, response?: string | null } | null> | null };
+export type CountReposQuery = { __typename?: 'Query', countRepos?: { __typename?: 'CountResult', count?: any | null } | null };
 
 export type CreateRepoMutationVariables = Exact<{
   repo: RepoInput;
@@ -9176,7 +9859,9 @@ export type CreateRepoMutationVariables = Exact<{
 export type CreateRepoMutation = { __typename?: 'Mutation', createRepo?: { __typename?: 'Repo', id: string, name: string } | null };
 
 export type DeleteAllReposMutationVariables = Exact<{
-  filter: RepoFilter;
+  filter?: InputMaybe<RepoFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9191,6 +9876,7 @@ export type DeleteRepoMutation = { __typename?: 'Mutation', deleteRepo?: { __typ
 
 export type DeleteReposMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9204,7 +9890,7 @@ export type GetRepoQueryVariables = Exact<{
 export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any } | null };
 
 export type QueryReposQueryVariables = Exact<{
-  filter: RepoFilter;
+  filter?: InputMaybe<RepoFilter>;
 }>;
 
 
@@ -9217,6 +9903,13 @@ export type UpdateRepoMutationVariables = Exact<{
 
 export type UpdateRepoMutation = { __typename?: 'Mutation', updateRepo?: { __typename?: 'Repo', id: string, name: string } | null };
 
+export type CountSoftwaresQueryVariables = Exact<{
+  filter?: InputMaybe<SoftwareFilter>;
+}>;
+
+
+export type CountSoftwaresQuery = { __typename?: 'Query', countSoftwares?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateSoftwareMutationVariables = Exact<{
   software: SoftwareInput;
 }>;
@@ -9225,7 +9918,9 @@ export type CreateSoftwareMutationVariables = Exact<{
 export type CreateSoftwareMutation = { __typename?: 'Mutation', createSoftware?: { __typename?: 'Software', id: string, name: string } | null };
 
 export type DeleteAllSoftwaresMutationVariables = Exact<{
-  filter: SoftwareFilter;
+  filter?: InputMaybe<SoftwareFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -9240,6 +9935,7 @@ export type DeleteSoftwareMutation = { __typename?: 'Mutation', deleteSoftware?:
 
 export type DeleteSoftwaresMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9253,7 +9949,7 @@ export type GetSoftwareQueryVariables = Exact<{
 export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, releaseDate?: any | null, developer?: string | null } | null };
 
 export type QuerySoftwaresQueryVariables = Exact<{
-  filter: SoftwareFilter;
+  filter?: InputMaybe<SoftwareFilter>;
 }>;
 
 
@@ -9266,12 +9962,28 @@ export type UpdateSoftwareMutationVariables = Exact<{
 
 export type UpdateSoftwareMutation = { __typename?: 'Mutation', updateSoftware?: { __typename?: 'Software', id: string, name: string } | null };
 
+export type CountSpecificationsQueryVariables = Exact<{
+  filter?: InputMaybe<SpecificationFilter>;
+}>;
+
+
+export type CountSpecificationsQuery = { __typename?: 'Query', countSpecifications?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateSpecificationMutationVariables = Exact<{
   specification: SpecificationInput;
 }>;
 
 
 export type CreateSpecificationMutation = { __typename?: 'Mutation', createSpecification?: { __typename?: 'Specification', id: string, name: string, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null } | null };
+
+export type DeleteAllSpecificationsMutationVariables = Exact<{
+  filter?: InputMaybe<SpecificationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllSpecificationsMutation = { __typename?: 'Mutation', deleteAllSpecifications?: Array<{ __typename?: 'Specification', id: string, state: EntityState } | null> | null };
 
 export type DeleteSpecificationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -9280,12 +9992,20 @@ export type DeleteSpecificationMutationVariables = Exact<{
 
 export type DeleteSpecificationMutation = { __typename?: 'Mutation', deleteSpecification?: { __typename?: 'Specification', id: string, state: EntityState } | null };
 
+export type DeleteSpecificationsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteSpecificationsMutation = { __typename?: 'Mutation', deleteSpecifications?: Array<{ __typename?: 'Specification', id: string, state: EntityState } | null> | null };
+
 export type GetSpecificationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null };
+export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null };
 
 export type PromptSpecificationsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -9293,14 +10013,14 @@ export type PromptSpecificationsMutationVariables = Exact<{
 }>;
 
 
-export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string } | null } | null> | null } | null> | null } | null> | null };
+export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null } | null> | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
 }>;
 
 
-export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null> | null } | null };
+export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, tools?: Array<{ __typename?: 'ToolDefinition', name: string, description?: string | null, schema: string, uri?: any | null }> | null } | null> | null } | null };
 
 export type UpdateSpecificationMutationVariables = Exact<{
   specification: SpecificationUpdateInput;
@@ -9309,14 +10029,25 @@ export type UpdateSpecificationMutationVariables = Exact<{
 
 export type UpdateSpecificationMutation = { __typename?: 'Mutation', updateSpecification?: { __typename?: 'Specification', id: string, name: string, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null } | null };
 
+export type CountWorkflowsQueryVariables = Exact<{
+  filter?: InputMaybe<WorkflowFilter>;
+}>;
+
+
+export type CountWorkflowsQuery = { __typename?: 'Query', countWorkflows?: { __typename?: 'CountResult', count?: any | null } | null };
+
 export type CreateWorkflowMutationVariables = Exact<{
   workflow: WorkflowInput;
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
-export type DeleteAllWorkflowsMutationVariables = Exact<{ [key: string]: never; }>;
+export type DeleteAllWorkflowsMutationVariables = Exact<{
+  filter?: InputMaybe<WorkflowFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type DeleteAllWorkflowsMutation = { __typename?: 'Mutation', deleteAllWorkflows?: Array<{ __typename?: 'Workflow', id: string, state: EntityState } | null> | null };
@@ -9330,6 +10061,7 @@ export type DeleteWorkflowMutation = { __typename?: 'Mutation', deleteWorkflow?:
 
 export type DeleteWorkflowsMutationVariables = Exact<{
   ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -9340,18 +10072,18 @@ export type GetWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
 }>;
 
 
-export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
+export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   workflow: WorkflowUpdateInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
