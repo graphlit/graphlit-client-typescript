@@ -53,11 +53,6 @@ class Graphlit {
     this.refreshClient();
   }
 
-  public testCall() {
-    this.createCollection({ name: "Dinner Table Sessions" });
-
-  }
-
   public refreshClient() {
     this.client = undefined;
     this.generateToken();
