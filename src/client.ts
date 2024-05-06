@@ -53,6 +53,11 @@ class Graphlit {
     this.refreshClient();
   }
 
+  public testCall() {
+    this.createCollection({ name: "Dinner Table Sessions" });
+
+  }
+
   public refreshClient() {
     this.client = undefined;
     this.generateToken();
@@ -213,17 +218,17 @@ class Graphlit {
     );
   }
 
-  public async createCollection(Collection: Types.CollectionInput): Promise<Types.CreateCollectionMutation> {
-    return this.mutateAndCheckError<Types.CreateCollectionMutation, { Collection: Types.CollectionInput }>(
+  public async createCollection(collection: Types.CollectionInput): Promise<Types.CreateCollectionMutation> {
+    return this.mutateAndCheckError<Types.CreateCollectionMutation, { collection: Types.CollectionInput }>(
       Documents.CreateCollection,
-      { Collection: Collection }
+      { collection: collection }
     );
   }
 
-  public async updateCollection(Collection: Types.CollectionUpdateInput): Promise<Types.UpdateCollectionMutation> {
-    return this.mutateAndCheckError<Types.UpdateCollectionMutation, { Collection: Types.CollectionUpdateInput }>(
+  public async updateCollection(collection: Types.CollectionUpdateInput): Promise<Types.UpdateCollectionMutation> {
+    return this.mutateAndCheckError<Types.UpdateCollectionMutation, { collection: Types.CollectionUpdateInput }>(
       Documents.UpdateCollection,
-      { Collection: Collection }
+      { collection: collection }
     );
   }
 
