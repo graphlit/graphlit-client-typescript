@@ -386,6 +386,13 @@ class Graphlit {
     );
   }
 
+  public async isContentDone(id: string): Promise<Types.IsContentDoneQuery> {
+    return this.queryAndCheckError<Types.IsContentDoneQuery, { id: string }>(
+      Documents.IsContentDone,
+      { id: id }
+    );
+  }
+
   public async createConversation(conversation: Types.ConversationInput, correlationId?: string): Promise<Types.CreateConversationMutation> {
     return this.mutateAndCheckError<Types.CreateConversationMutation, { conversation: Types.ConversationInput, correlationId?: string }>(
       Documents.CreateConversation,
@@ -526,6 +533,13 @@ class Graphlit {
     return this.queryAndCheckError<Types.QueryFeedsQuery, { filter?: Types.FeedFilter }>(
       Documents.QueryFeeds,
       { filter: filter }
+    );
+  }
+
+  public async isFeedDone(id: string): Promise<Types.IsFeedDoneQuery> {
+    return this.queryAndCheckError<Types.IsFeedDoneQuery, { id: string }>(
+      Documents.IsFeedDone,
+      { id: id }
     );
   }
 
