@@ -4115,17 +4115,41 @@ export type MicrosoftEmailFeedPropertiesUpdateInput = {
   type?: InputMaybe<EmailListingTypes>;
 };
 
+/** Represents a Microsoft Teams channel. */
+export type MicrosoftTeamsChannelResult = {
+  __typename?: 'MicrosoftTeamsChannelResult';
+  /** The Microsoft Teams channel identifier. */
+  channelId?: Maybe<Scalars['ID']['output']>;
+  /** The Microsoft Teams channel name. */
+  channelName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Microsoft Teams channels. */
+export type MicrosoftTeamsChannelResults = {
+  __typename?: 'MicrosoftTeamsChannelResults';
+  /** The Microsoft Teams channels. */
+  results?: Maybe<Array<Maybe<MicrosoftTeamsChannelResult>>>;
+};
+
+/** Represents Microsoft Teams team channels properties. */
+export type MicrosoftTeamsChannelsInput = {
+  /** The Microsoft Graph refresh token. */
+  refreshToken: Scalars['String']['input'];
+  /** Azure Active Directory tenant identifier. */
+  tenantId: Scalars['String']['input'];
+};
+
 /** Represents Microsoft Teams feed properties. */
 export type MicrosoftTeamsFeedProperties = {
   __typename?: 'MicrosoftTeamsFeedProperties';
   /** The Microsoft Teams channel identifier. */
-  channel: Scalars['String']['output'];
+  channelId: Scalars['String']['output'];
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
   /** The Microsoft Graph refresh token. */
   refreshToken: Scalars['String']['output'];
   /** The Microsoft Teams team identifier. */
-  team: Scalars['String']['output'];
+  teamId: Scalars['String']['output'];
   /** Azure Active Directory tenant identifier. */
   tenantId: Scalars['String']['output'];
   /** Feed listing type, i.e. past or new messages. */
@@ -4135,13 +4159,13 @@ export type MicrosoftTeamsFeedProperties = {
 /** Represents Microsoft Teams feed properties. */
 export type MicrosoftTeamsFeedPropertiesInput = {
   /** The Microsoft Teams channel identifier. */
-  channel: Scalars['String']['input'];
+  channelId: Scalars['String']['input'];
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The Microsoft Graph refresh token. */
   refreshToken: Scalars['String']['input'];
   /** The Microsoft Teams team identifier. */
-  team: Scalars['String']['input'];
+  teamId: Scalars['String']['input'];
   /** Azure Active Directory tenant identifier. */
   tenantId: Scalars['String']['input'];
   /** Feed listing type, i.e. past or new messages. */
@@ -4151,17 +4175,41 @@ export type MicrosoftTeamsFeedPropertiesInput = {
 /** Represents Microsoft Teams feed properties. */
 export type MicrosoftTeamsFeedPropertiesUpdateInput = {
   /** The Microsoft Teams channel identifier. */
-  channel: Scalars['String']['input'];
+  channelId: Scalars['String']['input'];
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The Microsoft Graph refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** The Microsoft Teams team identifier. */
-  team: Scalars['String']['input'];
+  teamId: Scalars['String']['input'];
   /** Azure Active Directory tenant identifier. */
   tenantId?: InputMaybe<Scalars['String']['input']>;
   /** Feed listing type, i.e. past or new messages. */
   type?: InputMaybe<FeedListingTypes>;
+};
+
+/** Represents a Microsoft Teams team. */
+export type MicrosoftTeamsTeamResult = {
+  __typename?: 'MicrosoftTeamsTeamResult';
+  /** The Microsoft Teams team identifier. */
+  teamId?: Maybe<Scalars['ID']['output']>;
+  /** The Microsoft Teams team name. */
+  teamName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Microsoft Teams teams. */
+export type MicrosoftTeamsTeamResults = {
+  __typename?: 'MicrosoftTeamsTeamResults';
+  /** The Microsoft Teams teams. */
+  results?: Maybe<Array<Maybe<MicrosoftTeamsTeamResult>>>;
+};
+
+/** Represents Microsoft Teams teams properties. */
+export type MicrosoftTeamsTeamsInput = {
+  /** The Microsoft Graph refresh token. */
+  refreshToken: Scalars['String']['input'];
+  /** Azure Active Directory tenant identifier. */
+  tenantId: Scalars['String']['input'];
 };
 
 /** Represents Mistral model properties. */
@@ -5411,7 +5459,7 @@ export enum OccurrenceTypes {
 export type OneDriveFeedProperties = {
   __typename?: 'OneDriveFeedProperties';
   /** OneDrive folder identifier. */
-  folderId?: Maybe<Scalars['String']['output']>;
+  folderId?: Maybe<Scalars['ID']['output']>;
   /** OneDrive refresh token. */
   refreshToken: Scalars['String']['output'];
 };
@@ -5419,7 +5467,7 @@ export type OneDriveFeedProperties = {
 /** Represents OneDrive properties. */
 export type OneDriveFeedPropertiesInput = {
   /** OneDrive folder identifier. */
-  folderId?: InputMaybe<Scalars['String']['input']>;
+  folderId?: InputMaybe<Scalars['ID']['input']>;
   /** OneDrive refresh token. */
   refreshToken: Scalars['String']['input'];
 };
@@ -5427,9 +5475,31 @@ export type OneDriveFeedPropertiesInput = {
 /** Represents OneDrive properties. */
 export type OneDriveFeedPropertiesUpdateInput = {
   /** OneDrive folder identifier. */
-  folderId?: InputMaybe<Scalars['String']['input']>;
+  folderId?: InputMaybe<Scalars['ID']['input']>;
   /** OneDrive refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a OneDrive folder. */
+export type OneDriveFolderResult = {
+  __typename?: 'OneDriveFolderResult';
+  /** The OneDrive folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
+  /** The OneDrive folder name. */
+  folderName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents OneDrive folders. */
+export type OneDriveFolderResults = {
+  __typename?: 'OneDriveFolderResults';
+  /** The OneDrive folders. */
+  results?: Maybe<Array<Maybe<OneDriveFolderResult>>>;
+};
+
+/** Represents OneDrive folders properties. */
+export type OneDriveFoldersInput = {
+  /** OneDrive refresh token. */
+  refreshToken: Scalars['String']['input'];
 };
 
 /** Represents an OpenAI image entity extraction connector. */
@@ -6520,7 +6590,7 @@ export type ProjectCredits = {
   /** The tenant correlation identifier. */
   correlationId?: Maybe<Scalars['String']['output']>;
   /** The credits used. */
-  credits?: Maybe<Scalars['Long']['output']>;
+  credits?: Maybe<Scalars['Decimal']['output']>;
   /** The content enrichment ratio of credits. */
   enrichmentRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The content extraction ratio of credits. */
@@ -6948,8 +7018,14 @@ export type Query = {
   lookupCredits?: Maybe<ProjectCredits>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
+  /** Retrieves available Microsoft Teams team channels. */
+  microsoftTeamsChannels?: Maybe<MicrosoftTeamsChannelResults>;
+  /** Retrieves available Microsoft Teams teams. */
+  microsoftTeamsTeams?: Maybe<MicrosoftTeamsTeamResults>;
   /** Lookup a observation given its ID. */
   observation?: Maybe<Observation>;
+  /** Retrieves available OneDrive folders. */
+  oneDriveFolders?: Maybe<OneDriveFolderResults>;
   /** Lookup an organization given its ID. */
   organization?: Maybe<Organization>;
   /** Retrieves organizations based on the provided filter criteria. */
@@ -6976,6 +7052,8 @@ export type Query = {
   repos?: Maybe<RepoResults>;
   /** Retrieves Microsoft SharePoint consent URI. Visit URI to provide administrator consent for feeds which use the Microsoft Graph API. */
   sharePointConsentUri?: Maybe<UriResult>;
+  /** Retrieves available SharePoint document library folders. */
+  sharePointFolders?: Maybe<SharePointFolderResults>;
   /** Retrieves available SharePoint document libraries. */
   sharePointLibraries?: Maybe<SharePointLibraryResults>;
   /** Lookup software given its ID. */
@@ -7226,9 +7304,26 @@ export type QueryLookupUsageArgs = {
 };
 
 
+export type QueryMicrosoftTeamsChannelsArgs = {
+  properties: MicrosoftTeamsChannelsInput;
+  teamId: Scalars['ID']['input'];
+};
+
+
+export type QueryMicrosoftTeamsTeamsArgs = {
+  properties: MicrosoftTeamsTeamsInput;
+};
+
+
 export type QueryObservationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryOneDriveFoldersArgs = {
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+  properties: OneDriveFoldersInput;
 };
 
 
@@ -7310,6 +7405,13 @@ export type QueryReposArgs = {
 
 export type QuerySharePointConsentUriArgs = {
   tenantId: Scalars['ID']['input'];
+};
+
+
+export type QuerySharePointFoldersArgs = {
+  driveId: Scalars['ID']['input'];
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+  properties: SharePointFoldersInput;
 };
 
 
@@ -7785,11 +7887,13 @@ export enum SharePointAuthenticationTypes {
 export type SharePointFeedProperties = {
   __typename?: 'SharePointFeedProperties';
   /** SharePoint account name. */
-  accountName?: Maybe<Scalars['String']['output']>;
+  accountName: Scalars['String']['output'];
   /** SharePoint authentication type. */
-  authenticationType?: Maybe<SharePointAuthenticationTypes>;
+  authenticationType: SharePointAuthenticationTypes;
+  /** SharePoint folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
   /** SharePoint library identifier. */
-  libraryId?: Maybe<Scalars['ID']['output']>;
+  libraryId: Scalars['ID']['output'];
   /** Azure Active Directory refresh token, when using user authentication type. */
   refreshToken?: Maybe<Scalars['String']['output']>;
   /** Azure Active Directory tenant identifier, when using application authentication type. */
@@ -7802,6 +7906,8 @@ export type SharePointFeedPropertiesInput = {
   accountName: Scalars['String']['input'];
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** SharePoint folder identifier. */
+  folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
   libraryId: Scalars['ID']['input'];
   /** Azure Active Directory refresh token, when using user authentication type. */
@@ -7816,8 +7922,38 @@ export type SharePointFeedPropertiesUpdateInput = {
   accountName?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint authentication type. */
   authenticationType?: InputMaybe<SharePointAuthenticationTypes>;
+  /** SharePoint folder identifier. */
+  folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
   libraryId?: InputMaybe<Scalars['ID']['input']>;
+  /** Azure Active Directory refresh token, when using user authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Azure Active Directory tenant identifier, when using application authentication type. */
+  tenantId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+/** Represents a SharePoint folder. */
+export type SharePointFolderResult = {
+  __typename?: 'SharePointFolderResult';
+  /** The SharePoint folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
+  /** The SharePoint folder name. */
+  folderName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents SharePoint folders. */
+export type SharePointFolderResults = {
+  __typename?: 'SharePointFolderResults';
+  /** The SharePoint account name. */
+  accountName?: Maybe<Scalars['String']['output']>;
+  /** The SharePoint folders. */
+  results?: Maybe<Array<Maybe<SharePointFolderResult>>>;
+};
+
+/** Represents SharePoint library folders properties. */
+export type SharePointFoldersInput = {
+  /** SharePoint authentication type. */
+  authenticationType: SharePointAuthenticationTypes;
   /** Azure Active Directory refresh token, when using user authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Azure Active Directory tenant identifier, when using application authentication type. */
@@ -9463,7 +9599,14 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName?: string | null, libraryId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, tenantId?: string | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, tenantId?: string | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+
+export type GetSharePointConsentUriQueryVariables = Exact<{
+  tenantId: Scalars['ID']['input'];
+}>;
+
+
+export type GetSharePointConsentUriQuery = { __typename?: 'Query', sharePointConsentUri?: { __typename?: 'UriResult', uri?: any | null } | null };
 
 export type IsFeedDoneQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -9477,7 +9620,46 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName?: string | null, libraryId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, tenantId?: string | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, tenantId?: string | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
+
+export type QueryMicrosoftTeamsChannelsQueryVariables = Exact<{
+  properties: MicrosoftTeamsChannelsInput;
+  teamId: Scalars['ID']['input'];
+}>;
+
+
+export type QueryMicrosoftTeamsChannelsQuery = { __typename?: 'Query', microsoftTeamsChannels?: { __typename?: 'MicrosoftTeamsChannelResults', results?: Array<{ __typename?: 'MicrosoftTeamsChannelResult', channelName?: string | null, channelId?: string | null } | null> | null } | null };
+
+export type QueryMicrosoftTeamsTeamsQueryVariables = Exact<{
+  properties: MicrosoftTeamsTeamsInput;
+}>;
+
+
+export type QueryMicrosoftTeamsTeamsQuery = { __typename?: 'Query', microsoftTeamsTeams?: { __typename?: 'MicrosoftTeamsTeamResults', results?: Array<{ __typename?: 'MicrosoftTeamsTeamResult', teamName?: string | null, teamId?: string | null } | null> | null } | null };
+
+export type QueryOneDriveFoldersQueryVariables = Exact<{
+  properties: OneDriveFoldersInput;
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type QueryOneDriveFoldersQuery = { __typename?: 'Query', oneDriveFolders?: { __typename?: 'OneDriveFolderResults', results?: Array<{ __typename?: 'OneDriveFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
+export type QuerySharePointFoldersQueryVariables = Exact<{
+  properties: SharePointFoldersInput;
+  driveId: Scalars['ID']['input'];
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type QuerySharePointFoldersQuery = { __typename?: 'Query', sharePointFolders?: { __typename?: 'SharePointFolderResults', accountName?: string | null, results?: Array<{ __typename?: 'SharePointFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
+export type QuerySharePointLibrariesQueryVariables = Exact<{
+  properties: SharePointLibrariesInput;
+}>;
+
+
+export type QuerySharePointLibrariesQuery = { __typename?: 'Query', sharePointLibraries?: { __typename?: 'SharePointLibraryResults', accountName?: string | null, results?: Array<{ __typename?: 'SharePointLibraryResult', libraryName?: string | null, libraryId?: string | null, siteName?: string | null, siteId?: string | null } | null> | null } | null };
 
 export type UpdateFeedMutationVariables = Exact<{
   feed: FeedUpdateInput;

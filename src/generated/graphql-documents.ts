@@ -1890,6 +1890,7 @@ export const GetFeed = gql`
         authenticationType
         accountName
         libraryId
+        folderId
         tenantId
         refreshToken
       }
@@ -1992,6 +1993,13 @@ export const GetFeed = gql`
   }
 }
     `;
+export const GetSharePointConsentUri = gql`
+    query GetSharePointConsentUri($tenantId: ID!) {
+  sharePointConsentUri(tenantId: $tenantId) {
+    uri
+  }
+}
+    `;
 export const IsFeedDone = gql`
     query IsFeedDone($id: ID!) {
   isFeedDone(id: $id) {
@@ -2044,6 +2052,7 @@ export const QueryFeeds = gql`
           authenticationType
           accountName
           libraryId
+          folderId
           tenantId
           refreshToken
         }
@@ -2143,6 +2152,64 @@ export const QueryFeeds = gql`
         recurrenceType
         repeatInterval
       }
+    }
+  }
+}
+    `;
+export const QueryMicrosoftTeamsChannels = gql`
+    query QueryMicrosoftTeamsChannels($properties: MicrosoftTeamsChannelsInput!, $teamId: ID!) {
+  microsoftTeamsChannels(properties: $properties, teamId: $teamId) {
+    results {
+      channelName
+      channelId
+    }
+  }
+}
+    `;
+export const QueryMicrosoftTeamsTeams = gql`
+    query QueryMicrosoftTeamsTeams($properties: MicrosoftTeamsTeamsInput!) {
+  microsoftTeamsTeams(properties: $properties) {
+    results {
+      teamName
+      teamId
+    }
+  }
+}
+    `;
+export const QueryOneDriveFolders = gql`
+    query QueryOneDriveFolders($properties: OneDriveFoldersInput!, $folderId: ID) {
+  oneDriveFolders(properties: $properties, folderId: $folderId) {
+    results {
+      folderName
+      folderId
+    }
+  }
+}
+    `;
+export const QuerySharePointFolders = gql`
+    query QuerySharePointFolders($properties: SharePointFoldersInput!, $driveId: ID!, $folderId: ID) {
+  sharePointFolders(
+    properties: $properties
+    driveId: $driveId
+    folderId: $folderId
+  ) {
+    accountName
+    results {
+      folderName
+      folderId
+    }
+  }
+}
+    `;
+export const QuerySharePointLibraries = gql`
+    query QuerySharePointLibraries($properties: SharePointLibrariesInput!) {
+  sharePointLibraries(properties: $properties) {
+    accountName
+    results {
+      libraryName
+      libraryId
+      siteName
+      siteId
     }
   }
 }
