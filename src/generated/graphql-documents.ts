@@ -831,7 +831,7 @@ export const PublishText = gql`
 }
     `;
 export const QueryContents = gql`
-    query QueryContents($filter: ContentFilter!) {
+    query QueryContents($filter: ContentFilter) {
   contents(filter: $filter) {
     results {
       id
@@ -1055,7 +1055,7 @@ export const QueryContents = gql`
 }
     `;
 export const QueryContentsFacets = gql`
-    query QueryContentsFacets($filter: ContentFilter!, $facets: [ContentFacetInput!]) {
+    query QueryContentsFacets($filter: ContentFilter, $facets: [ContentFacetInput!]) {
   contents(filter: $filter, facets: $facets) {
     results {
       id
@@ -1296,7 +1296,7 @@ export const QueryContentsFacets = gql`
 }
     `;
 export const QueryContentsGraph = gql`
-    query QueryContentsGraph($filter: ContentFilter!, $graph: ContentGraphInput) {
+    query QueryContentsGraph($filter: ContentFilter, $graph: ContentGraphInput) {
   contents(filter: $filter, graph: $graph) {
     graph {
       nodes {
