@@ -1940,7 +1940,6 @@ export const GetFeed = gql`
       }
       microsoft {
         type
-        tenantId
         refreshToken
       }
     }
@@ -2102,7 +2101,6 @@ export const QueryFeeds = gql`
         }
         microsoft {
           type
-          tenantId
           refreshToken
         }
       }
