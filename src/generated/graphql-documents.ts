@@ -644,6 +644,11 @@ export const GetContent = gql`
         id
         name
       }
+      related {
+        id
+        name
+      }
+      relation
       occurrences {
         type
         confidence
@@ -1011,6 +1016,11 @@ export const QueryContents = gql`
           id
           name
         }
+        related {
+          id
+          name
+        }
+        relation
         occurrences {
           type
           confidence
@@ -1235,6 +1245,11 @@ export const QueryContentsFacets = gql`
           id
           name
         }
+        related {
+          id
+          name
+        }
+        relation
         occurrences {
           type
           confidence
@@ -1308,6 +1323,7 @@ export const QueryContentsGraph = gql`
       edges {
         from
         to
+        relation
       }
     }
   }
@@ -1548,6 +1564,18 @@ export const PromptConversation = gql`
           id
           name
         }
+      }
+    }
+    graph {
+      nodes {
+        id
+        type
+        metadata
+      }
+      edges {
+        from
+        to
+        relation
       }
     }
   }
@@ -2761,6 +2789,7 @@ export const LookupCredits = gql`
 export const LookupUsage = gql`
     query LookupUsage($correlationId: String!) {
   lookupUsage(correlationId: $correlationId) {
+    id
     correlationId
     date
     credits
@@ -2785,6 +2814,8 @@ export const LookupUsage = gql`
     completionTokens
     tokens
     count
+    operation
+    operationType
     request
     variables
     response
@@ -2811,6 +2842,7 @@ export const QueryCredits = gql`
 export const QueryUsage = gql`
     query QueryUsage($startDate: DateTime!, $duration: TimeSpan!) {
   usage(startDate: $startDate, duration: $duration) {
+    id
     correlationId
     date
     credits
@@ -2835,6 +2867,8 @@ export const QueryUsage = gql`
     completionTokens
     tokens
     count
+    operation
+    operationType
     request
     variables
     response
@@ -3080,6 +3114,14 @@ export const GetSpecification = gql`
     rerankingStrategy {
       serviceType
     }
+    graphStrategy {
+      type
+    }
+    revisionStrategy {
+      type
+      customRevision
+      count
+    }
     openAI {
       tokenLimit
       completionTokenLimit
@@ -3210,6 +3252,14 @@ export const QuerySpecifications = gql`
       rerankingStrategy {
         serviceType
       }
+      graphStrategy {
+        type
+      }
+      revisionStrategy {
+        type
+        customRevision
+        count
+      }
       openAI {
         tokenLimit
         completionTokenLimit
@@ -3338,6 +3388,7 @@ export const CreateWorkflow = gql`
           contentTypes
           fileTypes
           extractedTypes
+          extractedCount
           azureText {
             confidenceThreshold
             enablePII
@@ -3476,6 +3527,7 @@ export const GetWorkflow = gql`
           contentTypes
           fileTypes
           extractedTypes
+          extractedCount
           azureText {
             confidenceThreshold
             enablePII
@@ -3587,6 +3639,7 @@ export const QueryWorkflows = gql`
             contentTypes
             fileTypes
             extractedTypes
+            extractedCount
             azureText {
               confidenceThreshold
               enablePII
@@ -3694,6 +3747,7 @@ export const UpdateWorkflow = gql`
           contentTypes
           fileTypes
           extractedTypes
+          extractedCount
           azureText {
             confidenceThreshold
             enablePII
