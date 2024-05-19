@@ -648,6 +648,7 @@ export const GetContent = gql`
         id
         name
       }
+      relatedType
       relation
       occurrences {
         type
@@ -1020,6 +1021,7 @@ export const QueryContents = gql`
           id
           name
         }
+        relatedType
         relation
         occurrences {
           type
@@ -1249,6 +1251,7 @@ export const QueryContentsFacets = gql`
           id
           name
         }
+        relatedType
         relation
         occurrences {
           type
@@ -1569,6 +1572,7 @@ export const PromptConversation = gql`
     graph {
       nodes {
         id
+        name
         type
         metadata
       }
