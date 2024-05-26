@@ -1135,6 +1135,8 @@ export type Content = {
 /** Represents a content filter. */
 export type ContentCriteria = {
   __typename?: 'ContentCriteria';
+  /** List of additional content filters using conjunctive conditions, i.e. 'and' semantics between each filter in list. */
+  and?: Maybe<Array<ContentCriteriaLevel>>;
   /** Filter by collections. */
   collections?: Maybe<Array<EntityReference>>;
   /** Filter by similar contents. */
@@ -1149,6 +1151,8 @@ export type ContentCriteria = {
   fileTypes?: Maybe<Array<Maybe<FileTypes>>>;
   /** Filter by observations. */
   observations?: Maybe<Array<ObservationCriteria>>;
+  /** List of additional content filters using disjunctive conditions, i.e. 'or' semantics between each filter in list. */
+  or?: Maybe<Array<ContentCriteriaLevel>>;
   /** Filter by content types. */
   types?: Maybe<Array<ContentTypes>>;
   /** Filter by workflows. */
@@ -1157,6 +1161,8 @@ export type ContentCriteria = {
 
 /** Represents a content filter. */
 export type ContentCriteriaInput = {
+  /** List of additional content filters using conjunctive conditions, i.e. 'and' semantics between each filter in list. */
+  and?: InputMaybe<Array<ContentCriteriaLevelInput>>;
   /** Filter by collections. */
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   /** Filter by similar contents. */
@@ -1171,8 +1177,35 @@ export type ContentCriteriaInput = {
   fileTypes?: InputMaybe<Array<FileTypes>>;
   /** Filter by observations. */
   observations?: InputMaybe<Array<ObservationCriteriaInput>>;
+  /** List of additional content filters using disjunctive conditions, i.e. 'or' semantics between each filter in list. */
+  or?: InputMaybe<Array<ContentCriteriaLevelInput>>;
   /** Filter by content types. */
   types?: InputMaybe<Array<ContentTypes>>;
+  /** Filter by workflows. */
+  workflows?: InputMaybe<Array<EntityReferenceInput>>;
+};
+
+/** Represents a filter level for contents. */
+export type ContentCriteriaLevel = {
+  __typename?: 'ContentCriteriaLevel';
+  /** Filter by collections. */
+  collections?: Maybe<Array<EntityReference>>;
+  /** Filter by feeds. */
+  feeds?: Maybe<Array<EntityReference>>;
+  /** Filter by observations. */
+  observations?: Maybe<Array<ObservationCriteria>>;
+  /** Filter by workflows. */
+  workflows?: Maybe<Array<EntityReference>>;
+};
+
+/** Represents a filter level for contents. */
+export type ContentCriteriaLevelInput = {
+  /** Filter by collections. */
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Filter by feeds. */
+  feeds?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Filter by observations. */
+  observations?: InputMaybe<Array<ObservationCriteriaInput>>;
   /** Filter by workflows. */
   workflows?: InputMaybe<Array<EntityReferenceInput>>;
 };
@@ -1270,7 +1303,7 @@ export enum ContentFacetTypes {
 
 /** Represents a filter for contents. */
 export type ContentFilter = {
-  /** List of additional content filters using conjunctive conditions, i.e. 'and' semantics. */
+  /** List of additional content filters using conjunctive conditions, i.e. 'and' semantics between each filter in list. */
   and?: InputMaybe<Array<InputMaybe<ContentFilterLevel>>>;
   /** Filter by geo-boundaries, as GeoJSON Feature with Polygon geometry. */
   boundaries?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
@@ -1308,7 +1341,7 @@ export type ContentFilter = {
   observations?: InputMaybe<Array<ObservationReferenceFilter>>;
   /** Skip the specified number of content(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
-  /** List of additional content filters using disjunctive conditions, i.e. 'or' semantics. */
+  /** List of additional content filters using disjunctive conditions, i.e. 'or' semantics between each filter in list. */
   or?: InputMaybe<Array<InputMaybe<ContentFilterLevel>>>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
@@ -3553,18 +3586,26 @@ export enum ImageProjectionTypes {
 /** Represents an ingestion content filter. */
 export type IngestionContentFilter = {
   __typename?: 'IngestionContentFilter';
+  /** The list of regular expressions for allowed URL paths, i.e. "^/public/blogs/.*". */
+  allowedPaths?: Maybe<Array<Scalars['String']['output']>>;
+  /** The list of regular expressions for excluded URL paths, i.e. "^/internal/private/.*". */
+  excludedPaths?: Maybe<Array<Scalars['String']['output']>>;
   /** Filter by file types. */
-  fileTypes?: Maybe<Array<Maybe<FileTypes>>>;
+  fileTypes?: Maybe<Array<FileTypes>>;
   /** Filter by content types. */
-  types?: Maybe<Array<Maybe<ContentTypes>>>;
+  types?: Maybe<Array<ContentTypes>>;
 };
 
 /** Represents an ingestion content filter. */
 export type IngestionContentFilterInput = {
+  /** The list of regular expressions for allowed URL paths, i.e. "^/public/blogs/.*". */
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The list of regular expressions for excluded URL paths, i.e. "^/internal/private/.*". */
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Filter by file types. */
-  fileTypes?: InputMaybe<Array<InputMaybe<FileTypes>>>;
+  fileTypes?: InputMaybe<Array<FileTypes>>;
   /** Filter by content types. */
-  types?: InputMaybe<Array<InputMaybe<ContentTypes>>>;
+  types?: InputMaybe<Array<ContentTypes>>;
 };
 
 /** Represents the ingestion workflow stage. */
@@ -3878,6 +3919,8 @@ export type LinkStrategy = {
   allowedFiles?: Maybe<Array<FileTypes>>;
   /** The allowed link types. */
   allowedLinks?: Maybe<Array<LinkTypes>>;
+  /** The list of regular expressions for URL paths to be crawled, i.e. "^/public/blogs/.*". */
+  allowedPaths?: Maybe<Array<Scalars['String']['output']>>;
   /** Whether link crawling is enabled. */
   enableCrawling?: Maybe<Scalars['Boolean']['output']>;
   /** The list of DNS domains to not be crawled, i.e. example.com. */
@@ -3886,6 +3929,8 @@ export type LinkStrategy = {
   excludedFiles?: Maybe<Array<FileTypes>>;
   /** The excluded link types. */
   excludedLinks?: Maybe<Array<LinkTypes>>;
+  /** The list of regular expressions for URL paths to not be crawled, i.e. "^/internal/private/.*". */
+  excludedPaths?: Maybe<Array<Scalars['String']['output']>>;
   /** The maximum number of links to be crawled. */
   maximumLinks?: Maybe<Scalars['Int']['output']>;
 };
@@ -3900,6 +3945,8 @@ export type LinkStrategyInput = {
   allowedFiles?: InputMaybe<Array<FileTypes>>;
   /** The allowed link types. */
   allowedLinks?: InputMaybe<Array<LinkTypes>>;
+  /** The list of regular expressions for URL paths to be crawled, i.e. "^/public/blogs/.*". */
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Whether link crawling is enabled. */
   enableCrawling?: InputMaybe<Scalars['Boolean']['input']>;
   /** The list of DNS domains to not be crawled, i.e. example.com. */
@@ -3908,6 +3955,8 @@ export type LinkStrategyInput = {
   excludedFiles?: InputMaybe<Array<FileTypes>>;
   /** The excluded link types. */
   excludedLinks?: InputMaybe<Array<LinkTypes>>;
+  /** The list of regular expressions for URL paths to not be crawled, i.e. "^/internal/private/.*". */
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The maximum number of links to be crawled. */
   maximumLinks?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -8945,6 +8994,10 @@ export type VideoMetadataInput = {
 /** Represents web feed properties. */
 export type WebFeedProperties = {
   __typename?: 'WebFeedProperties';
+  /** The list of regular expressions for URL paths to be crawled, i.e. "^/public/blogs/.*". */
+  allowedPaths?: Maybe<Array<Scalars['String']['output']>>;
+  /** The list of regular expressions for URL paths to not be crawled, i.e. "^/internal/private/.*". */
+  excludedPaths?: Maybe<Array<Scalars['String']['output']>>;
   /** Whether to include files referenced by the web sitemap, defaults to false. */
   includeFiles?: Maybe<Scalars['Boolean']['output']>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -8955,6 +9008,10 @@ export type WebFeedProperties = {
 
 /** Represents web feed properties. */
 export type WebFeedPropertiesInput = {
+  /** The list of regular expressions for URL paths to be crawled, i.e. "^/public/blogs/.*". */
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The list of regular expressions for URL paths to not be crawled, i.e. "^/internal/private/.*". */
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Whether to include files referenced by the web sitemap, defaults to false. */
   includeFiles?: InputMaybe<Scalars['Boolean']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -8965,6 +9022,10 @@ export type WebFeedPropertiesInput = {
 
 /** Represents web feed properties. */
 export type WebFeedPropertiesUpdateInput = {
+  /** The list of regular expressions for URL paths to be crawled, i.e. "^/public/blogs/.*". */
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The list of regular expressions for URL paths to not be crawled, i.e. "^/internal/private/.*". */
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Whether to include files referenced by the web sitemap, defaults to false. */
   includeFiles?: InputMaybe<Scalars['Boolean']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -10354,7 +10415,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type DeleteAllWorkflowsMutationVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -10385,18 +10446,18 @@ export type GetWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
 }>;
 
 
-export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
+export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   workflow: WorkflowUpdateInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes | null> | null, fileTypes?: Array<FileTypes | null> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
