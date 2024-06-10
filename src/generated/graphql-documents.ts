@@ -105,6 +105,42 @@ export const GetAlert = gql`
         }
         states
       }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
     }
     integration {
       type
@@ -175,6 +211,42 @@ export const QueryAlerts = gql`
             id
           }
           states
+        }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
         }
       }
       integration {
@@ -1512,6 +1584,42 @@ export const GetConversation = gql`
         }
         states
       }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
     }
   }
 }
@@ -1688,14 +1796,55 @@ export const QueryConversations = gql`
           }
           states
         }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
       }
     }
   }
 }
     `;
 export const SuggestConversation = gql`
-    mutation SuggestConversation($id: ID!, $count: Int, $correlationId: String) {
-  suggestConversation(id: $id, count: $count, correlationId: $correlationId) {
+    mutation SuggestConversation($id: ID!, $count: Int, $prompt: String, $correlationId: String) {
+  suggestConversation(
+    id: $id
+    count: $count
+    prompt: $prompt
+    correlationId: $correlationId
+  ) {
     prompts
   }
 }
@@ -1760,6 +1909,7 @@ export const GetEvent = gql`
     name
     alternateNames
     creationDate
+    thing
     address {
       streetAddress
       city
@@ -1788,6 +1938,7 @@ export const QueryEvents = gql`
       name
       alternateNames
       creationDate
+      thing
       address {
         streetAddress
         city
@@ -1976,6 +2127,8 @@ export const GetFeed = gql`
       readLimit
       uri
       includeFiles
+      allowedPaths
+      excludedPaths
     }
     reddit {
       readLimit
@@ -2137,6 +2290,8 @@ export const QueryFeeds = gql`
         readLimit
         uri
         includeFiles
+        allowedPaths
+        excludedPaths
       }
       reddit {
         readLimit
@@ -2401,6 +2556,7 @@ export const GetOrganization = gql`
     name
     alternateNames
     creationDate
+    thing
     address {
       streetAddress
       city
@@ -2425,6 +2581,7 @@ export const QueryOrganizations = gql`
       name
       alternateNames
       creationDate
+      thing
       address {
         streetAddress
         city
@@ -2500,6 +2657,7 @@ export const GetPerson = gql`
     name
     alternateNames
     creationDate
+    thing
     address {
       streetAddress
       city
@@ -2526,6 +2684,7 @@ export const QueryPersons = gql`
       name
       alternateNames
       creationDate
+      thing
       address {
         streetAddress
         city
@@ -2603,6 +2762,7 @@ export const GetPlace = gql`
     name
     alternateNames
     creationDate
+    thing
     address {
       streetAddress
       city
@@ -2621,6 +2781,7 @@ export const QueryPlaces = gql`
       name
       alternateNames
       creationDate
+      thing
       address {
         streetAddress
         city
@@ -2690,6 +2851,7 @@ export const GetProduct = gql`
     name
     alternateNames
     creationDate
+    thing
     address {
       streetAddress
       city
@@ -2715,6 +2877,7 @@ export const QueryProducts = gql`
       name
       alternateNames
       creationDate
+      thing
       address {
         streetAddress
         city
@@ -2935,6 +3098,7 @@ export const GetRepo = gql`
     name
     alternateNames
     creationDate
+    thing
   }
 }
     `;
@@ -2946,6 +3110,7 @@ export const QueryRepos = gql`
       name
       alternateNames
       creationDate
+      thing
     }
   }
 }
@@ -3008,6 +3173,7 @@ export const GetSoftware = gql`
     name
     alternateNames
     creationDate
+    thing
     releaseDate
     developer
   }
@@ -3021,6 +3187,7 @@ export const QuerySoftwares = gql`
       name
       alternateNames
       creationDate
+      thing
       releaseDate
       developer
     }
@@ -3118,6 +3285,8 @@ export const GetSpecification = gql`
     }
     graphStrategy {
       type
+      generateGraph
+      observableLimit
     }
     revisionStrategy {
       type
@@ -3256,6 +3425,8 @@ export const QuerySpecifications = gql`
       }
       graphStrategy {
         type
+        generateGraph
+        observableLimit
       }
       revisionStrategy {
         type
@@ -3346,6 +3517,8 @@ export const CreateWorkflow = gql`
       if {
         types
         fileTypes
+        allowedPaths
+        excludedPaths
       }
       collections {
         id
@@ -3416,6 +3589,8 @@ export const CreateWorkflow = gql`
         enableCrawling
         allowedDomains
         excludedDomains
+        allowedPaths
+        excludedPaths
         allowedLinks
         excludedLinks
         allowedFiles
@@ -3485,6 +3660,8 @@ export const GetWorkflow = gql`
       if {
         types
         fileTypes
+        allowedPaths
+        excludedPaths
       }
       collections {
         id
@@ -3555,6 +3732,8 @@ export const GetWorkflow = gql`
         enableCrawling
         allowedDomains
         excludedDomains
+        allowedPaths
+        excludedPaths
         allowedLinks
         excludedLinks
         allowedFiles
@@ -3597,6 +3776,8 @@ export const QueryWorkflows = gql`
         if {
           types
           fileTypes
+          allowedPaths
+          excludedPaths
         }
         collections {
           id
@@ -3667,6 +3848,8 @@ export const QueryWorkflows = gql`
           enableCrawling
           allowedDomains
           excludedDomains
+          allowedPaths
+          excludedPaths
           allowedLinks
           excludedLinks
           allowedFiles
@@ -3705,6 +3888,8 @@ export const UpdateWorkflow = gql`
       if {
         types
         fileTypes
+        allowedPaths
+        excludedPaths
       }
       collections {
         id
@@ -3775,6 +3960,8 @@ export const UpdateWorkflow = gql`
         enableCrawling
         allowedDomains
         excludedDomains
+        allowedPaths
+        excludedPaths
         allowedLinks
         excludedLinks
         allowedFiles
