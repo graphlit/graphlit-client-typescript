@@ -330,6 +330,8 @@ export enum AnthropicModels {
   Claude_2_0 = 'CLAUDE_2_0',
   /** Claude 2.1 */
   Claude_2_1 = 'CLAUDE_2_1',
+  /** Claude 3.5 Sonnet (Latest) */
+  Claude_3_5Sonnet = 'CLAUDE_3_5_SONNET',
   /** Claude 3 Haiku (Latest) */
   Claude_3Haiku = 'CLAUDE_3_HAIKU',
   /** Claude 3 Opus (Latest) */
@@ -895,11 +897,7 @@ export enum CohereModels {
   /** Command R+ */
   CommandRPlus = 'COMMAND_R_PLUS',
   /** Developer-specified model */
-  Custom = 'CUSTOM',
-  /** Embed English 3.0 */
-  EmbedEnglish_3_0 = 'EMBED_ENGLISH_3_0',
-  /** Embed Multilingual 3.0 */
-  EmbedMultilingual_3_0 = 'EMBED_MULTILINGUAL_3_0'
+  Custom = 'CUSTOM'
 }
 
 /** Represents a collection. */
@@ -2267,6 +2265,19 @@ export type EmailPreparationPropertiesInput = {
   includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** Represents the embeddings strategy. */
+export type EmbeddingsStrategy = {
+  __typename?: 'EmbeddingsStrategy';
+  /** The limit of tokens per embedded text chunk, defaults to 600. */
+  chunkTokenLimit?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents the embeddings strategy. */
+export type EmbeddingsStrategyInput = {
+  /** The limit of tokens per embedded text chunk, defaults to 600. */
+  chunkTokenLimit?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** Represents an enrichment workflow job. */
 export type EnrichmentWorkflowJob = {
   __typename?: 'EnrichmentWorkflowJob';
@@ -2561,6 +2572,8 @@ export type Event = {
   price?: Maybe<Scalars['Decimal']['output']>;
   /** The currency of the event price. */
   priceCurrency?: Maybe<Scalars['String']['output']>;
+  /** The relevance score of the event. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The event start date. */
   startDate?: Maybe<Scalars['DateTime']['output']>;
   /** The state of the event (i.e. created, enabled). */
@@ -2620,6 +2633,8 @@ export type EventFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter by event end date range. */
   endDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by similar events. */
+  events?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by observable H3 index. */
   h3?: InputMaybe<H3Filter>;
   /** Filter event(s) by their unique ID. */
@@ -2636,6 +2651,8 @@ export type EventFilter = {
   minPrice?: InputMaybe<Scalars['Decimal']['input']>;
   /** Filter event(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of event(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
@@ -2644,8 +2661,12 @@ export type EventFilter = {
   price?: InputMaybe<Scalars['Decimal']['input']>;
   /** Filter by the currency of the event price. */
   priceCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter event(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter by event start date range. */
   startDateRange?: InputMaybe<DateRangeFilter>;
   /** Filter event(s) by their states. */
@@ -3214,31 +3235,47 @@ export type GitHubIssuesFeedPropertiesUpdateInput = {
 /** Represents Google Drive properties. */
 export type GoogleDriveFeedProperties = {
   __typename?: 'GoogleDriveFeedProperties';
+  /** Google client identifier. */
+  clientId: Scalars['String']['output'];
+  /** Google client secret. */
+  clientSecret: Scalars['String']['output'];
   /** Google Drive folder identifier. */
   folderId?: Maybe<Scalars['String']['output']>;
-  /** Google Drive refresh token. */
+  /** Google refresh token. */
   refreshToken: Scalars['String']['output'];
 };
 
 /** Represents Google Drive properties. */
 export type GoogleDriveFeedPropertiesInput = {
+  /** Google client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google client secret. */
+  clientSecret: Scalars['String']['input'];
   /** Google Drive folder identifier. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** Google Drive refresh token. */
+  /** Google refresh token. */
   refreshToken: Scalars['String']['input'];
 };
 
 /** Represents Google Drive properties. */
 export type GoogleDriveFeedPropertiesUpdateInput = {
+  /** Google client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive folder identifier. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** Google Drive refresh token. */
+  /** Google refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedProperties = {
   __typename?: 'GoogleEmailFeedProperties';
+  /** Google client identifier. */
+  clientId: Scalars['String']['output'];
+  /** Google client secret. */
+  clientSecret: Scalars['String']['output'];
   /** Google refresh token. */
   refreshToken?: Maybe<Scalars['String']['output']>;
   /** Email listing type, i.e. past or new emails. */
@@ -3247,14 +3284,22 @@ export type GoogleEmailFeedProperties = {
 
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedPropertiesInput = {
+  /** Google client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google client secret. */
+  clientSecret: Scalars['String']['input'];
   /** Google refresh token. */
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  refreshToken: Scalars['String']['input'];
   /** Email listing type, i.e. past or new emails. */
   type?: InputMaybe<EmailListingTypes>;
 };
 
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedPropertiesUpdateInput = {
+  /** Google client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** Google refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Email listing type, i.e. past or new emails. */
@@ -5881,6 +5926,8 @@ export type Organization = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the organization. */
   name: Scalars['String']['output'];
+  /** The relevance score of the organization. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The revenue of the organization. */
   revenue?: Maybe<Scalars['Decimal']['output']>;
   /** The currency of the revenue of the organization. */
@@ -5944,12 +5991,20 @@ export type OrganizationFilter = {
   location?: InputMaybe<PointFilter>;
   /** Filter organization(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of organization(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** Filter by similar organizations. */
+  organizations?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter organization(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter organization(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
@@ -6122,6 +6177,8 @@ export type Person = {
   occupation?: Maybe<Scalars['String']['output']>;
   /** The phone number of the person. */
   phoneNumber?: Maybe<Scalars['String']['output']>;
+  /** The relevance score of the person. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the person (i.e. created, enabled). */
   state: EntityState;
   /** The JSON-LD value of the person. */
@@ -6189,14 +6246,22 @@ export type PersonFilter = {
   location?: InputMaybe<PointFilter>;
   /** Filter person(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of person(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** Filter by similar persons. */
+  persons?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by the phone number of the person. */
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter person(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter person(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
@@ -6324,6 +6389,8 @@ export type Place = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the place. */
   name: Scalars['String']['output'];
+  /** The relevance score of the place. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the place (i.e. created, enabled). */
   state: EntityState;
   /** The JSON-LD value of the place. */
@@ -6383,12 +6450,20 @@ export type PlaceFilter = {
   location?: InputMaybe<PointFilter>;
   /** Filter place(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of place(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** Filter by similar places. */
+  places?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter place(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter place(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
@@ -6583,6 +6658,8 @@ export type Product = {
   productionDate?: Maybe<Scalars['DateTime']['output']>;
   /** The product release date. */
   releaseDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The relevance score of the product. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The product SKU. */
   sku?: Maybe<Scalars['String']['output']>;
   /** The state of the product (i.e. created, enabled). */
@@ -6652,16 +6729,24 @@ export type ProductFilter = {
   model?: InputMaybe<Scalars['String']['input']>;
   /** Filter product(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of product(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
   /** Filter by production date range. */
   productionDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by similar products. */
+  products?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter by release date range. */
   releaseDateRange?: InputMaybe<DateRangeFilter>;
   /** Filter product(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter by product SKU. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** Filter product(s) by their states. */
@@ -6752,12 +6837,16 @@ export type Project = {
   callbackUri?: Maybe<Scalars['URL']['output']>;
   /** The creation date of the project. */
   creationDate: Scalars['DateTime']['output'];
+  /** The project credit usage. */
+  credits?: Maybe<Scalars['Long']['output']>;
   /** The project environment type. */
   environmentType?: Maybe<EnvironmentTypes>;
   /** The ID of the project. */
   id: Scalars['ID']['output'];
   /** The project JWT signing secret. */
   jwtSecret?: Maybe<Scalars['String']['output']>;
+  /** The last date that project credit usage was synchronized. */
+  lastCreditsDate?: Maybe<Scalars['DateTime']['output']>;
   /** The modified date of the project. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the project. */
@@ -6856,6 +6945,8 @@ export type ProjectQuota = {
   contents?: Maybe<Scalars['Int']['output']>;
   /** The maximum number of conversations which can be created. */
   conversations?: Maybe<Scalars['Int']['output']>;
+  /** The maximum number of credits which can be accrued. */
+  credits?: Maybe<Scalars['Int']['output']>;
   /** The maximum number of feeds which can be created. */
   feeds?: Maybe<Scalars['Int']['output']>;
   /** The maximum number of posts which can be read by feeds. */
@@ -7867,6 +7958,8 @@ export type Repo = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the repo. */
   name: Scalars['String']['output'];
+  /** The relevance score of the repo. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the repo (i.e. created, enabled). */
   state: EntityState;
   /** The JSON-LD value of the repo. */
@@ -7926,12 +8019,20 @@ export type RepoFilter = {
   location?: InputMaybe<PointFilter>;
   /** Filter repo(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of repo(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter by similar code repositories. */
+  repos?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter repo(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter repo(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
@@ -8411,6 +8512,8 @@ export type Software = {
   name: Scalars['String']['output'];
   /** The software release date. */
   releaseDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The relevance score of the software. */
+  relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the software (i.e. created, enabled). */
   state: EntityState;
   /** The JSON-LD value of the software. */
@@ -8470,12 +8573,20 @@ export type SoftwareFilter = {
   location?: InputMaybe<PointFilter>;
   /** Filter software(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of software(s) from the beginning of the result set. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter software(s) by searching for specific text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter by similar software. */
+  softwares?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter software(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
@@ -8725,6 +8836,19 @@ export type SpecificationUpdateInput = {
   tools?: InputMaybe<Array<ToolDefinitionUpdateInput>>;
   /** The specification type. */
   type?: InputMaybe<SpecificationTypes>;
+};
+
+/** Represents the storage workflow stage. */
+export type StorageWorkflowStage = {
+  __typename?: 'StorageWorkflowStage';
+  /** The vector storage embeddings strategy. */
+  embeddings?: Maybe<EmbeddingsStrategy>;
+};
+
+/** Represents the storage workflow stage. */
+export type StorageWorkflowStageInput = {
+  /** The vector storage embeddings strategy. */
+  embeddings?: InputMaybe<EmbeddingsStrategyInput>;
 };
 
 /** Represents a range of string values. */
@@ -9154,6 +9278,8 @@ export type Workflow = {
   preparation?: Maybe<PreparationWorkflowStage>;
   /** The state of the workflow (i.e. created, finished). */
   state: EntityState;
+  /** The storage stage of the content workflow. */
+  storage?: Maybe<StorageWorkflowStage>;
 };
 
 /** Represents the workflow action. */
@@ -9205,6 +9331,8 @@ export type WorkflowInput = {
   name: Scalars['String']['input'];
   /** The preparation stage of the content workflow. */
   preparation?: InputMaybe<PreparationWorkflowStageInput>;
+  /** The storage stage of the content workflow. */
+  storage?: InputMaybe<StorageWorkflowStageInput>;
 };
 
 /** Represents workflow query results. */
@@ -9230,6 +9358,8 @@ export type WorkflowUpdateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** The preparation stage of the content workflow. */
   preparation?: InputMaybe<PreparationWorkflowStageInput>;
+  /** The storage stage of the content workflow. */
+  storage?: InputMaybe<StorageWorkflowStageInput>;
 };
 
 /** Represents YouTube feed properties. */
@@ -9723,7 +9853,7 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -9732,7 +9862,7 @@ export type PromptConversationMutationVariables = Exact<{
 }>;
 
 
-export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
+export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
 
 export type PublishConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -9751,7 +9881,7 @@ export type QueryConversationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null> | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -9813,14 +9943,14 @@ export type GetEventQueryVariables = Exact<{
 }>;
 
 
-export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryEventsQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
 }>;
 
 
-export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateEventMutationVariables = Exact<{
   event: EventUpdateInput;
@@ -9887,7 +10017,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -9908,7 +10038,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
 
 export type QueryMicrosoftTeamsChannelsQueryVariables = Exact<{
   properties: MicrosoftTeamsChannelsInput;
@@ -10079,14 +10209,14 @@ export type GetOrganizationQueryVariables = Exact<{
 }>;
 
 
-export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryOrganizationsQueryVariables = Exact<{
   filter?: InputMaybe<OrganizationFilter>;
 }>;
 
 
-export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateOrganizationMutationVariables = Exact<{
   organization: OrganizationUpdateInput;
@@ -10138,14 +10268,14 @@ export type GetPersonQueryVariables = Exact<{
 }>;
 
 
-export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPersonsQueryVariables = Exact<{
   filter?: InputMaybe<PersonFilter>;
 }>;
 
 
-export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePersonMutationVariables = Exact<{
   person: PersonUpdateInput;
@@ -10197,14 +10327,14 @@ export type GetPlaceQueryVariables = Exact<{
 }>;
 
 
-export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPlacesQueryVariables = Exact<{
   filter?: InputMaybe<PlaceFilter>;
 }>;
 
 
-export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePlaceMutationVariables = Exact<{
   place: PlaceUpdateInput;
@@ -10256,14 +10386,14 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryProductsQueryVariables = Exact<{
   filter?: InputMaybe<ProductFilter>;
 }>;
 
 
-export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateProductMutationVariables = Exact<{
   product: ProductUpdateInput;
@@ -10275,7 +10405,7 @@ export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: {
 export type GetProjectQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, environmentType?: EnvironmentTypes | null, platform?: ResourceConnectorTypes | null, region?: string | null, callbackUri?: any | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, quota?: { __typename?: 'ProjectQuota', storage?: number | null, contents?: number | null, feeds?: number | null, posts?: number | null, conversations?: number | null } | null } | null };
+export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, environmentType?: EnvironmentTypes | null, platform?: ResourceConnectorTypes | null, region?: string | null, credits?: any | null, lastCreditsDate?: any | null, callbackUri?: any | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, quota?: { __typename?: 'ProjectQuota', storage?: number | null, contents?: number | null, credits?: number | null, feeds?: number | null, posts?: number | null, conversations?: number | null } | null } | null };
 
 export type LookupCreditsQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
@@ -10357,14 +10487,14 @@ export type GetRepoQueryVariables = Exact<{
 }>;
 
 
-export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null } | null };
+export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
 }>;
 
 
-export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null } | null> | null } | null };
+export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateRepoMutationVariables = Exact<{
   repo: RepoUpdateInput;
@@ -10416,14 +10546,14 @@ export type GetSoftwareQueryVariables = Exact<{
 }>;
 
 
-export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, releaseDate?: any | null, developer?: string | null } | null };
+export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null };
 
 export type QuerySoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
 }>;
 
 
-export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, releaseDate?: any | null, developer?: string | null } | null> | null } | null };
+export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null> | null } | null };
 
 export type UpdateSoftwareMutationVariables = Exact<{
   software: SoftwareUpdateInput;
@@ -10483,7 +10613,7 @@ export type PromptSpecificationsMutationVariables = Exact<{
 }>;
 
 
-export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, fileName?: string | null, originalDate?: any | null, uri?: any | null } | null } | null> | null } | null> | null } | null> | null };
+export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: string | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, language?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: string | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null } | null> | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
@@ -10511,7 +10641,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', embeddings?: { __typename?: 'EmbeddingsStrategy', chunkTokenLimit?: number | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type DeleteAllWorkflowsMutationVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -10542,18 +10672,18 @@ export type GetWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', embeddings?: { __typename?: 'EmbeddingsStrategy', chunkTokenLimit?: number | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
 }>;
 
 
-export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
+export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', embeddings?: { __typename?: 'EmbeddingsStrategy', chunkTokenLimit?: number | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null> | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   workflow: WorkflowUpdateInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', model?: AzureDocumentIntelligenceModels | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, openAIImage?: { __typename?: 'OpenAIImageExtractionProperties', confidenceThreshold?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, customInstructions?: string | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', embeddings?: { __typename?: 'EmbeddingsStrategy', chunkTokenLimit?: number | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null } | null } | null> | null } | null };

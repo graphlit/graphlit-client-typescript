@@ -1530,11 +1530,90 @@ export const GetConversation = gql`
           id
           name
           state
-          type
-          fileType
-          fileName
           originalDate
           uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            language
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
         }
         index
         text
@@ -1639,11 +1718,90 @@ export const PromptConversation = gql`
           id
           name
           state
-          type
-          fileType
-          fileName
           originalDate
           uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            language
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
         }
         index
         text
@@ -1742,11 +1900,90 @@ export const QueryConversations = gql`
             id
             name
             state
-            type
-            fileType
-            fileName
             originalDate
             uri
+            type
+            fileType
+            mimeType
+            format
+            formatName
+            fileExtension
+            fileName
+            fileSize
+            masterUri
+            imageUri
+            textUri
+            audioUri
+            transcriptUri
+            video {
+              width
+              height
+              duration
+              make
+              model
+              software
+              title
+              description
+              keywords
+              author
+            }
+            audio {
+              keywords
+              author
+              series
+              episode
+              episodeType
+              season
+              publisher
+              copyright
+              language
+              genre
+              title
+              description
+              bitrate
+              channels
+              sampleRate
+              bitsPerSample
+              duration
+            }
+            image {
+              width
+              height
+              resolutionX
+              resolutionY
+              bitsPerComponent
+              components
+              projectionType
+              orientation
+              description
+              make
+              model
+              software
+              lens
+              focalLength
+              exposureTime
+              fNumber
+              iso
+              heading
+              pitch
+            }
+            document {
+              title
+              subject
+              summary
+              author
+              publisher
+              description
+              keywords
+              pageCount
+              worksheetCount
+              slideCount
+              wordCount
+              lineCount
+              paragraphCount
+              isEncrypted
+              hasDigitalSignature
+            }
           }
           index
           text
@@ -1910,6 +2147,7 @@ export const GetEvent = gql`
     alternateNames
     creationDate
     thing
+    relevance
     address {
       streetAddress
       city
@@ -1939,6 +2177,7 @@ export const QueryEvents = gql`
       alternateNames
       creationDate
       thing
+      relevance
       address {
         streetAddress
         city
@@ -2084,6 +2323,8 @@ export const GetFeed = gql`
       googleDrive {
         folderId
         refreshToken
+        clientId
+        clientSecret
       }
     }
     email {
@@ -2092,6 +2333,8 @@ export const GetFeed = gql`
       google {
         type
         refreshToken
+        clientId
+        clientSecret
       }
       microsoft {
         type
@@ -2247,6 +2490,8 @@ export const QueryFeeds = gql`
         googleDrive {
           folderId
           refreshToken
+          clientId
+          clientSecret
         }
       }
       email {
@@ -2255,6 +2500,8 @@ export const QueryFeeds = gql`
         google {
           type
           refreshToken
+          clientId
+          clientSecret
         }
         microsoft {
           type
@@ -2557,6 +2804,7 @@ export const GetOrganization = gql`
     alternateNames
     creationDate
     thing
+    relevance
     address {
       streetAddress
       city
@@ -2582,6 +2830,7 @@ export const QueryOrganizations = gql`
       alternateNames
       creationDate
       thing
+      relevance
       address {
         streetAddress
         city
@@ -2658,6 +2907,7 @@ export const GetPerson = gql`
     alternateNames
     creationDate
     thing
+    relevance
     address {
       streetAddress
       city
@@ -2685,6 +2935,7 @@ export const QueryPersons = gql`
       alternateNames
       creationDate
       thing
+      relevance
       address {
         streetAddress
         city
@@ -2763,6 +3014,7 @@ export const GetPlace = gql`
     alternateNames
     creationDate
     thing
+    relevance
     address {
       streetAddress
       city
@@ -2782,6 +3034,7 @@ export const QueryPlaces = gql`
       alternateNames
       creationDate
       thing
+      relevance
       address {
         streetAddress
         city
@@ -2852,6 +3105,7 @@ export const GetProduct = gql`
     alternateNames
     creationDate
     thing
+    relevance
     address {
       streetAddress
       city
@@ -2878,6 +3132,7 @@ export const QueryProducts = gql`
       alternateNames
       creationDate
       thing
+      relevance
       address {
         streetAddress
         city
@@ -2915,6 +3170,8 @@ export const GetProject = gql`
     environmentType
     platform
     region
+    credits
+    lastCreditsDate
     workflow {
       id
       name
@@ -2926,6 +3183,7 @@ export const GetProject = gql`
     quota {
       storage
       contents
+      credits
       feeds
       posts
       conversations
@@ -3099,6 +3357,7 @@ export const GetRepo = gql`
     alternateNames
     creationDate
     thing
+    relevance
   }
 }
     `;
@@ -3111,6 +3370,7 @@ export const QueryRepos = gql`
       alternateNames
       creationDate
       thing
+      relevance
     }
   }
 }
@@ -3174,6 +3434,7 @@ export const GetSoftware = gql`
     alternateNames
     creationDate
     thing
+    relevance
     releaseDate
     developer
   }
@@ -3188,6 +3449,7 @@ export const QuerySoftwares = gql`
       alternateNames
       creationDate
       thing
+      relevance
       releaseDate
       developer
     }
@@ -3363,11 +3625,90 @@ export const PromptSpecifications = gql`
           id
           name
           state
-          type
-          fileType
-          fileName
           originalDate
           uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            language
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
         }
         index
         text
@@ -3605,6 +3946,11 @@ export const CreateWorkflow = gql`
         }
       }
     }
+    storage {
+      embeddings {
+        chunkTokenLimit
+      }
+    }
     actions {
       connector {
         type
@@ -3748,6 +4094,11 @@ export const GetWorkflow = gql`
         }
       }
     }
+    storage {
+      embeddings {
+        chunkTokenLimit
+      }
+    }
     actions {
       connector {
         type
@@ -3864,6 +4215,11 @@ export const QueryWorkflows = gql`
           }
         }
       }
+      storage {
+        embeddings {
+          chunkTokenLimit
+        }
+      }
       actions {
         connector {
           type
@@ -3974,6 +4330,11 @@ export const UpdateWorkflow = gql`
           type
           enrichedTypes
         }
+      }
+    }
+    storage {
+      embeddings {
+        chunkTokenLimit
       }
     }
     actions {
