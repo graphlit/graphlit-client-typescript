@@ -573,6 +573,14 @@ export const GetContent = gql`
     textUri
     audioUri
     transcriptUri
+    summary
+    customSummary
+    keywords
+    bullets
+    headlines
+    posts
+    chapters
+    questions
     video {
       width
       height
@@ -946,6 +954,14 @@ export const QueryContents = gql`
       textUri
       audioUri
       transcriptUri
+      summary
+      customSummary
+      keywords
+      bullets
+      headlines
+      posts
+      chapters
+      questions
       video {
         width
         height
@@ -1176,6 +1192,14 @@ export const QueryContentsFacets = gql`
       textUri
       audioUri
       transcriptUri
+      summary
+      customSummary
+      keywords
+      bullets
+      headlines
+      posts
+      chapters
+      questions
       video {
         width
         height
@@ -1545,6 +1569,14 @@ export const GetConversation = gql`
           textUri
           audioUri
           transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
           video {
             width
             height
@@ -1733,6 +1765,14 @@ export const PromptConversation = gql`
           textUri
           audioUri
           transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
           video {
             width
             height
@@ -1915,6 +1955,14 @@ export const QueryConversations = gql`
             textUri
             audioUri
             transcriptUri
+            summary
+            customSummary
+            keywords
+            bullets
+            headlines
+            posts
+            chapters
+            questions
             video {
               width
               height
@@ -3263,8 +3311,14 @@ export const QueryCredits = gql`
 }
     `;
 export const QueryUsage = gql`
-    query QueryUsage($startDate: DateTime!, $duration: TimeSpan!) {
-  usage(startDate: $startDate, duration: $duration) {
+    query QueryUsage($startDate: DateTime!, $duration: TimeSpan!, $names: [String!], $offset: Int, $limit: Int) {
+  usage(
+    startDate: $startDate
+    duration: $duration
+    names: $names
+    offset: $offset
+    limit: $limit
+  ) {
     id
     correlationId
     date
@@ -3640,6 +3694,14 @@ export const PromptSpecifications = gql`
           textUri
           audioUri
           transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
           video {
             width
             height
