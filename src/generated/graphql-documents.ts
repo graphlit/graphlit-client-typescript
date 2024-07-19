@@ -551,6 +551,7 @@ export const GetContent = gql`
     workflowDuration
     uri
     description
+    relevance
     markdown
     address {
       streetAddress
@@ -932,6 +933,7 @@ export const QueryContents = gql`
       workflowDuration
       uri
       description
+      relevance
       markdown
       address {
         streetAddress
@@ -1170,6 +1172,7 @@ export const QueryContentsFacets = gql`
       workflowDuration
       uri
       description
+      relevance
       markdown
       address {
         streetAddress
@@ -1732,6 +1735,7 @@ export const GetConversation = gql`
         }
       }
     }
+    relevance
   }
 }
     `;
@@ -2118,6 +2122,7 @@ export const QueryConversations = gql`
           }
         }
       }
+      relevance
     }
   }
 }
@@ -2374,6 +2379,7 @@ export const GetFeed = gql`
         clientId
         clientSecret
       }
+      readLimit
     }
     email {
       type
@@ -2388,6 +2394,7 @@ export const GetFeed = gql`
         type
         refreshToken
       }
+      readLimit
     }
     issue {
       type
@@ -2397,6 +2404,7 @@ export const GetFeed = gql`
         project
         email
         token
+        offset
       }
       linear {
         key
@@ -2409,6 +2417,7 @@ export const GetFeed = gql`
         refreshToken
         personalAccessToken
       }
+      readLimit
     }
     rss {
       readLimit
@@ -2541,6 +2550,7 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
         }
+        readLimit
       }
       email {
         type
@@ -2555,6 +2565,7 @@ export const QueryFeeds = gql`
           type
           refreshToken
         }
+        readLimit
       }
       issue {
         type
@@ -2564,6 +2575,7 @@ export const QueryFeeds = gql`
           project
           email
           token
+          offset
         }
         linear {
           key
@@ -2576,6 +2588,7 @@ export const QueryFeeds = gql`
           refreshToken
           personalAccessToken
         }
+        readLimit
       }
       rss {
         readLimit
@@ -3943,6 +3956,8 @@ export const CreateWorkflow = gql`
           fileTypes
           azureDocument {
             model
+            endpoint
+            key
           }
           deepgram {
             model
@@ -4091,6 +4106,8 @@ export const GetWorkflow = gql`
           fileTypes
           azureDocument {
             model
+            endpoint
+            key
           }
           deepgram {
             model
@@ -4212,6 +4229,8 @@ export const QueryWorkflows = gql`
             fileTypes
             azureDocument {
               model
+              endpoint
+              key
             }
             deepgram {
               model
@@ -4329,6 +4348,8 @@ export const UpdateWorkflow = gql`
           fileTypes
           azureDocument {
             model
+            endpoint
+            key
           }
           deepgram {
             model
