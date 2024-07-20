@@ -67,6 +67,7 @@ export const GetAlert = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -174,6 +175,7 @@ export const QueryAlerts = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -335,6 +337,7 @@ export const GetCategory = gql`
     name
     description
     creationDate
+    relevance
   }
 }
     `;
@@ -346,6 +349,7 @@ export const QueryCategories = gql`
       name
       description
       creationDate
+      relevance
     }
   }
 }
@@ -423,6 +427,7 @@ export const GetCollection = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -442,6 +447,7 @@ export const QueryCollections = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -542,6 +548,7 @@ export const GetContent = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -551,7 +558,6 @@ export const GetContent = gql`
     workflowDuration
     uri
     description
-    relevance
     markdown
     address {
       streetAddress
@@ -924,6 +930,7 @@ export const QueryContents = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -933,7 +940,6 @@ export const QueryContents = gql`
       workflowDuration
       uri
       description
-      relevance
       markdown
       address {
         streetAddress
@@ -1163,6 +1169,7 @@ export const QueryContentsFacets = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -1172,7 +1179,6 @@ export const QueryContentsFacets = gql`
       workflowDuration
       uri
       description
-      relevance
       markdown
       address {
         streetAddress
@@ -1542,6 +1548,7 @@ export const GetConversation = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -1735,7 +1742,6 @@ export const GetConversation = gql`
         }
       }
     }
-    relevance
   }
 }
     `;
@@ -1929,6 +1935,7 @@ export const QueryConversations = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -2122,7 +2129,6 @@ export const QueryConversations = gql`
           }
         }
       }
-      relevance
     }
   }
 }
@@ -2327,6 +2333,7 @@ export const GetFeed = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -2498,6 +2505,7 @@ export const QueryFeeds = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -2767,6 +2775,7 @@ export const GetLabel = gql`
     name
     description
     creationDate
+    relevance
   }
 }
     `;
@@ -2778,6 +2787,7 @@ export const QueryLabels = gql`
       name
       description
       creationDate
+      relevance
     }
   }
 }
@@ -3583,6 +3593,7 @@ export const GetSpecification = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -3810,6 +3821,7 @@ export const QuerySpecifications = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
@@ -4075,6 +4087,7 @@ export const GetWorkflow = gql`
     id
     name
     creationDate
+    relevance
     owner {
       id
     }
@@ -4198,6 +4211,7 @@ export const QueryWorkflows = gql`
       id
       name
       creationDate
+      relevance
       owner {
         id
       }
