@@ -3961,12 +3961,14 @@ export const CreateWorkflow = gql`
         }
         tokens
         items
+        prompt
       }
       jobs {
         connector {
           type
           fileTypes
           azureDocument {
+            version
             model
             endpoint
             key
@@ -4112,12 +4114,14 @@ export const GetWorkflow = gql`
         }
         tokens
         items
+        prompt
       }
       jobs {
         connector {
           type
           fileTypes
           azureDocument {
+            version
             model
             endpoint
             key
@@ -4236,12 +4240,14 @@ export const QueryWorkflows = gql`
           }
           tokens
           items
+          prompt
         }
         jobs {
           connector {
             type
             fileTypes
             azureDocument {
+              version
               model
               endpoint
               key
@@ -4355,12 +4361,14 @@ export const UpdateWorkflow = gql`
         }
         tokens
         items
+        prompt
       }
       jobs {
         connector {
           type
           fileTypes
           azureDocument {
+            version
             model
             endpoint
             key
