@@ -609,7 +609,6 @@ export const GetContent = gql`
       season
       publisher
       copyright
-      language
       genre
       title
       description
@@ -703,6 +702,9 @@ export const GetContent = gql`
       fileCount
       folderCount
       isEncrypted
+    }
+    language {
+      languages
     }
     parent {
       id
@@ -991,7 +993,6 @@ export const QueryContents = gql`
         season
         publisher
         copyright
-        language
         genre
         title
         description
@@ -1085,6 +1086,9 @@ export const QueryContents = gql`
         fileCount
         folderCount
         isEncrypted
+      }
+      language {
+        languages
       }
       parent {
         id
@@ -1230,7 +1234,6 @@ export const QueryContentsFacets = gql`
         season
         publisher
         copyright
-        language
         genre
         title
         description
@@ -1324,6 +1327,9 @@ export const QueryContentsFacets = gql`
         fileCount
         folderCount
         isEncrypted
+      }
+      language {
+        languages
       }
       parent {
         id
@@ -1608,7 +1614,6 @@ export const GetConversation = gql`
             season
             publisher
             copyright
-            language
             genre
             title
             description
@@ -1804,7 +1809,6 @@ export const PromptConversation = gql`
             season
             publisher
             copyright
-            language
             genre
             title
             description
@@ -1995,7 +1999,6 @@ export const QueryConversations = gql`
               season
               publisher
               copyright
-              language
               genre
               title
               description
@@ -3271,6 +3274,7 @@ export const LookupCredits = gql`
     credits
     storageRatio
     computeRatio
+    indexingRatio
     preparationRatio
     extractionRatio
     enrichmentRatio
@@ -3324,6 +3328,7 @@ export const QueryCredits = gql`
     credits
     storageRatio
     computeRatio
+    indexingRatio
     preparationRatio
     extractionRatio
     enrichmentRatio
@@ -3747,7 +3752,6 @@ export const PromptSpecifications = gql`
             season
             publisher
             copyright
-            language
             genre
             title
             description
@@ -3952,6 +3956,15 @@ export const CreateWorkflow = gql`
         id
       }
     }
+    indexing {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+        }
+      }
+    }
     preparation {
       disableSmartCapture
       summarizations {
@@ -4007,6 +4020,11 @@ export const CreateWorkflow = gql`
             confidenceThreshold
             detailLevel
             customInstructions
+          }
+          modelImage {
+            specification {
+              id
+            }
           }
           modelText {
             specification {
@@ -4105,6 +4123,15 @@ export const GetWorkflow = gql`
         id
       }
     }
+    indexing {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+        }
+      }
+    }
     preparation {
       disableSmartCapture
       summarizations {
@@ -4160,6 +4187,11 @@ export const GetWorkflow = gql`
             confidenceThreshold
             detailLevel
             customInstructions
+          }
+          modelImage {
+            specification {
+              id
+            }
           }
           modelText {
             specification {
@@ -4231,6 +4263,15 @@ export const QueryWorkflows = gql`
           id
         }
       }
+      indexing {
+        jobs {
+          connector {
+            type
+            contentType
+            fileType
+          }
+        }
+      }
       preparation {
         disableSmartCapture
         summarizations {
@@ -4286,6 +4327,11 @@ export const QueryWorkflows = gql`
               confidenceThreshold
               detailLevel
               customInstructions
+            }
+            modelImage {
+              specification {
+                id
+              }
             }
             modelText {
               specification {
@@ -4352,6 +4398,15 @@ export const UpdateWorkflow = gql`
         id
       }
     }
+    indexing {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+        }
+      }
+    }
     preparation {
       disableSmartCapture
       summarizations {
@@ -4407,6 +4462,11 @@ export const UpdateWorkflow = gql`
             confidenceThreshold
             detailLevel
             customInstructions
+          }
+          modelImage {
+            specification {
+              id
+            }
           }
           modelText {
             specification {
