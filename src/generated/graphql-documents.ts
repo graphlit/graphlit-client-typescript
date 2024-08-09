@@ -558,6 +558,7 @@ export const GetContent = gql`
     workflowDuration
     uri
     description
+    identifier
     markdown
     address {
       streetAddress
@@ -942,6 +943,7 @@ export const QueryContents = gql`
       workflowDuration
       uri
       description
+      identifier
       markdown
       address {
         streetAddress
@@ -1183,6 +1185,7 @@ export const QueryContentsFacets = gql`
       workflowDuration
       uri
       description
+      identifier
       markdown
       address {
         streetAddress
@@ -1571,6 +1574,7 @@ export const GetConversation = gql`
           name
           state
           originalDate
+          identifier
           uri
           type
           fileType
@@ -1747,6 +1751,73 @@ export const GetConversation = gql`
         }
       }
     }
+    augmentedFilter {
+      dateRange {
+        from
+        to
+      }
+      creationDateRange {
+        from
+        to
+      }
+      types
+      fileTypes
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
   }
 }
     `;
@@ -1766,6 +1837,7 @@ export const PromptConversation = gql`
           name
           state
           originalDate
+          identifier
           uri
           type
           fileType
@@ -1956,6 +2028,7 @@ export const QueryConversations = gql`
             name
             state
             originalDate
+            identifier
             uri
             type
             fileType
@@ -2066,6 +2139,73 @@ export const QueryConversations = gql`
         name
       }
       filter {
+        dateRange {
+          from
+          to
+        }
+        creationDateRange {
+          from
+          to
+        }
+        types
+        fileTypes
+        contents {
+          id
+        }
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+      }
+      augmentedFilter {
         dateRange {
           from
           to
@@ -3684,6 +3824,35 @@ export const GetSpecification = gql`
       temperature
       probability
     }
+    mistral {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      endpoint
+      temperature
+      probability
+    }
+    groq {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      endpoint
+      temperature
+      probability
+    }
+    deepseek {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      temperature
+      probability
+    }
     tools {
       name
       description
@@ -3709,6 +3878,7 @@ export const PromptSpecifications = gql`
           name
           state
           originalDate
+          identifier
           uri
           type
           fileType
@@ -3911,6 +4081,35 @@ export const QuerySpecifications = gql`
         temperature
         probability
       }
+      mistral {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        endpoint
+        temperature
+        probability
+      }
+      groq {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        endpoint
+        temperature
+        probability
+      }
+      deepseek {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        temperature
+        probability
+      }
       tools {
         name
         description
@@ -3997,6 +4196,11 @@ export const CreateWorkflow = gql`
           }
           email {
             includeAttachments
+          }
+          modelDocument {
+            specification {
+              id
+            }
           }
         }
       }
@@ -4165,6 +4369,11 @@ export const GetWorkflow = gql`
           email {
             includeAttachments
           }
+          modelDocument {
+            specification {
+              id
+            }
+          }
         }
       }
     }
@@ -4305,6 +4514,11 @@ export const QueryWorkflows = gql`
             email {
               includeAttachments
             }
+            modelDocument {
+              specification {
+                id
+              }
+            }
           }
         }
       }
@@ -4439,6 +4653,11 @@ export const UpdateWorkflow = gql`
           }
           email {
             includeAttachments
+          }
+          modelDocument {
+            specification {
+              id
+            }
           }
         }
       }
