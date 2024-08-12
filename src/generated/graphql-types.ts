@@ -3231,7 +3231,7 @@ export type FilePreparationConnectorInput = {
 
 /** File preparation service type */
 export enum FilePreparationServiceTypes {
-  /** Azure Document Intelligence */
+  /** Azure AI Document Intelligence */
   AzureDocumentIntelligence = 'AZURE_DOCUMENT_INTELLIGENCE',
   /** Deepgram Audio Transcription */
   Deepgram = 'DEEPGRAM',
@@ -3239,7 +3239,7 @@ export enum FilePreparationServiceTypes {
   Document = 'DOCUMENT',
   /** Email Preparation */
   Email = 'EMAIL',
-  /** LLM Document Extraction */
+  /** LLM Document Preparation */
   ModelDocument = 'MODEL_DOCUMENT'
 }
 
@@ -9003,7 +9003,9 @@ export enum SpecificationTypes {
   /** Prompt completion */
   Completion = 'COMPLETION',
   /** Data extraction */
-  Extraction = 'EXTRACTION'
+  Extraction = 'EXTRACTION',
+  /** Document preparation */
+  Preparation = 'PREPARATION'
 }
 
 /** Represents an LLM specification. */
