@@ -326,11 +326,11 @@ export type AnthropicModelPropertiesUpdateInput = {
 
 /** Anthropic model type */
 export enum AnthropicModels {
-  /** Claude 2 (Latest) */
+  /** @deprecated Use Claude 3.x instead. */
   Claude_2 = 'CLAUDE_2',
-  /** Claude 2.0 */
+  /** @deprecated Use Claude 3.x instead. */
   Claude_2_0 = 'CLAUDE_2_0',
-  /** Claude 2.1 */
+  /** @deprecated Use Claude 3.x instead. */
   Claude_2_1 = 'CLAUDE_2_1',
   /** Claude 3.5 Sonnet (Latest) */
   Claude_3_5Sonnet = 'CLAUDE_3_5_SONNET',
@@ -340,9 +340,9 @@ export enum AnthropicModels {
   Claude_3Opus = 'CLAUDE_3_OPUS',
   /** Claude 3 Sonnet (Latest) */
   Claude_3Sonnet = 'CLAUDE_3_SONNET',
-  /** Claude Instant 1 (Latest) */
+  /** @deprecated Use Claude 3 Haiku instead. */
   ClaudeInstant_1 = 'CLAUDE_INSTANT_1',
-  /** Claude Instant 1.2 */
+  /** @deprecated Use Claude 3 Haiku instead. */
   ClaudeInstant_1_2 = 'CLAUDE_INSTANT_1_2',
   /** Developer-specified model */
   Custom = 'CUSTOM'
@@ -2439,7 +2439,7 @@ export type EntityExtractionConnector = {
   contentTypes?: Maybe<Array<ContentTypes>>;
   /** The maximum number of observable entities to be extracted, per entity type. Defaults to 100. */
   extractedCount?: Maybe<Scalars['Int']['output']>;
-  /** The observable entity types to be extracted, defaults to all observables. */
+  /** The observable entity types to be extracted, defaults to all non-medical observables. */
   extractedTypes?: Maybe<Array<ObservableTypes>>;
   /** The file types to allow for entity extraction. */
   fileTypes?: Maybe<Array<FileTypes>>;
@@ -2466,7 +2466,7 @@ export type EntityExtractionConnectorInput = {
   contentTypes?: InputMaybe<Array<ContentTypes>>;
   /** The maximum number of observable entities to be extracted, per entity type. Defaults to 100. */
   extractedCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The observable entity types to be extracted, defaults to all observables. */
+  /** The observable entity types to be extracted, defaults to all non-medical observables. */
   extractedTypes?: InputMaybe<Array<ObservableTypes>>;
   /** The file types to allow for entity extraction. */
   fileTypes?: InputMaybe<Array<FileTypes>>;
@@ -2594,6 +2594,28 @@ export enum EntityTypes {
   Job = 'JOB',
   /** Label */
   Label = 'LABEL',
+  /** Medical condition */
+  MedicalCondition = 'MEDICAL_CONDITION',
+  /** Medical contraindication */
+  MedicalContraindication = 'MEDICAL_CONTRAINDICATION',
+  /** Medical device */
+  MedicalDevice = 'MEDICAL_DEVICE',
+  /** Medical drug */
+  MedicalDrug = 'MEDICAL_DRUG',
+  /** Medical drug class */
+  MedicalDrugClass = 'MEDICAL_DRUG_CLASS',
+  /** Medical guideline */
+  MedicalGuideline = 'MEDICAL_GUIDELINE',
+  /** Medical indication */
+  MedicalIndication = 'MEDICAL_INDICATION',
+  /** Medical procedure */
+  MedicalProcedure = 'MEDICAL_PROCEDURE',
+  /** Medical study */
+  MedicalStudy = 'MEDICAL_STUDY',
+  /** Medical test */
+  MedicalTest = 'MEDICAL_TEST',
+  /** Medical therapy */
+  MedicalTherapy = 'MEDICAL_THERAPY',
   /** Metadata */
   Metadata = 'METADATA',
   /** Observation */
@@ -4380,6 +4402,1653 @@ export enum MailSensitivity {
   Private = 'PRIVATE'
 }
 
+/** Represents a medical condition. */
+export type MedicalCondition = {
+  __typename?: 'MedicalCondition';
+  /** The alternate names of the medicalcondition. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalcondition, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalcondition. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalcondition description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalcondition. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalcondition. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalcondition. */
+  id: Scalars['ID']['output'];
+  /** The medicalcondition external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalcondition. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalcondition. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalcondition. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalcondition. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalcondition (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalcondition. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalcondition URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical condition facet. */
+export type MedicalConditionFacet = {
+  __typename?: 'MedicalConditionFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical condition facet type. */
+  facet?: Maybe<MedicalConditionFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical condition facets. */
+export type MedicalConditionFacetInput = {
+  /** The medical condition facet type. */
+  facet?: InputMaybe<MedicalConditionFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Condition facet types */
+export enum MedicalConditionFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical conditions. */
+export type MedicalConditionFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter by similar medical conditions. */
+  conditions?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter medicalcondition(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalcondition(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicalcondition(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalcondition(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalcondition(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalcondition(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalcondition(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical condition. */
+export type MedicalConditionInput = {
+  /** The medicalcondition geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalcondition. */
+  name: Scalars['String']['input'];
+  /** The medicalcondition URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical condition query results. */
+export type MedicalConditionResults = {
+  __typename?: 'MedicalConditionResults';
+  /** The medical condition facets. */
+  facets?: Maybe<Array<Maybe<MedicalConditionFacet>>>;
+  /** The medical condition results. */
+  results?: Maybe<Array<Maybe<MedicalCondition>>>;
+};
+
+/** Represents a medical condition. */
+export type MedicalConditionUpdateInput = {
+  /** The medicalcondition geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalcondition to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalcondition external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalcondition. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcondition URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical contraindication. */
+export type MedicalContraindication = {
+  __typename?: 'MedicalContraindication';
+  /** The alternate names of the medicalcontraindication. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalcontraindication, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalcontraindication. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalcontraindication description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalcontraindication. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalcontraindication. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalcontraindication. */
+  id: Scalars['ID']['output'];
+  /** The medicalcontraindication external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalcontraindication. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalcontraindication. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalcontraindication. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalcontraindication. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalcontraindication (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalcontraindication. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalcontraindication URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical contraindication facet. */
+export type MedicalContraindicationFacet = {
+  __typename?: 'MedicalContraindicationFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical contraindication facet type. */
+  facet?: Maybe<MedicalContraindicationFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical contraindication facets. */
+export type MedicalContraindicationFacetInput = {
+  /** The medical contraindication facet type. */
+  facet?: InputMaybe<MedicalContraindicationFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Contraindication facet types */
+export enum MedicalContraindicationFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical contraindications. */
+export type MedicalContraindicationFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter by similar medical contraindications. */
+  contraindications?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter medicalcontraindication(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalcontraindication(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicalcontraindication(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalcontraindication(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalcontraindication(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalcontraindication(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalcontraindication(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical contraindication. */
+export type MedicalContraindicationInput = {
+  /** The medicalcontraindication geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalcontraindication. */
+  name: Scalars['String']['input'];
+  /** The medicalcontraindication URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical contraindication query results. */
+export type MedicalContraindicationResults = {
+  __typename?: 'MedicalContraindicationResults';
+  /** The medical contraindication facets. */
+  facets?: Maybe<Array<Maybe<MedicalContraindicationFacet>>>;
+  /** The medical contraindication results. */
+  results?: Maybe<Array<Maybe<MedicalContraindication>>>;
+};
+
+/** Represents a medical contraindication. */
+export type MedicalContraindicationUpdateInput = {
+  /** The medicalcontraindication geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalcontraindication to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalcontraindication external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalcontraindication. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalcontraindication URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical device. */
+export type MedicalDevice = {
+  __typename?: 'MedicalDevice';
+  /** The alternate names of the medicaldevice. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicaldevice, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicaldevice. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicaldevice description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicaldevice. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicaldevice. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicaldevice. */
+  id: Scalars['ID']['output'];
+  /** The medicaldevice external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicaldevice. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicaldevice. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicaldevice. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicaldevice. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicaldevice (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicaldevice. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicaldevice URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical device facet. */
+export type MedicalDeviceFacet = {
+  __typename?: 'MedicalDeviceFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical device facet type. */
+  facet?: Maybe<MedicalDeviceFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical device facets. */
+export type MedicalDeviceFacetInput = {
+  /** The medical device facet type. */
+  facet?: InputMaybe<MedicalDeviceFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Device facet types */
+export enum MedicalDeviceFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical devices. */
+export type MedicalDeviceFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicaldevice(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by similar medical devices. */
+  devices?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicaldevice(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicaldevice(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicaldevice(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicaldevice(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicaldevice(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicaldevice(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical device. */
+export type MedicalDeviceInput = {
+  /** The medicaldevice geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldevice. */
+  name: Scalars['String']['input'];
+  /** The medicaldevice URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical device query results. */
+export type MedicalDeviceResults = {
+  __typename?: 'MedicalDeviceResults';
+  /** The medical device facets. */
+  facets?: Maybe<Array<Maybe<MedicalDeviceFacet>>>;
+  /** The medical device results. */
+  results?: Maybe<Array<Maybe<MedicalDevice>>>;
+};
+
+/** Represents a medical device. */
+export type MedicalDeviceUpdateInput = {
+  /** The medicaldevice geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicaldevice to update. */
+  id: Scalars['ID']['input'];
+  /** The medicaldevice external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldevice. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldevice URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical drug. */
+export type MedicalDrug = {
+  __typename?: 'MedicalDrug';
+  /** The alternate names of the medicaldrug. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicaldrug, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicaldrug. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicaldrug description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicaldrug. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicaldrug. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicaldrug. */
+  id: Scalars['ID']['output'];
+  /** The medicaldrug external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicaldrug. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicaldrug. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicaldrug. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicaldrug. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicaldrug (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicaldrug. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicaldrug URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical drug class. */
+export type MedicalDrugClass = {
+  __typename?: 'MedicalDrugClass';
+  /** The alternate names of the medicaldrugclass. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicaldrugclass, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicaldrugclass. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicaldrugclass description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicaldrugclass. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicaldrugclass. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicaldrugclass. */
+  id: Scalars['ID']['output'];
+  /** The medicaldrugclass external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicaldrugclass. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicaldrugclass. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicaldrugclass. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicaldrugclass. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicaldrugclass (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicaldrugclass. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicaldrugclass URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical drug class facet. */
+export type MedicalDrugClassFacet = {
+  __typename?: 'MedicalDrugClassFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical drug class facet type. */
+  facet?: Maybe<MedicalDrugClassFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical drug class facets. */
+export type MedicalDrugClassFacetInput = {
+  /** The medical drug class facet type. */
+  facet?: InputMaybe<MedicalDrugClassFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Drug Class facet types */
+export enum MedicalDrugClassFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical drug classes. */
+export type MedicalDrugClassFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter by similar medical drug classes. */
+  classes?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter medicaldrugclass(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicaldrugclass(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicaldrugclass(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicaldrugclass(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicaldrugclass(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicaldrugclass(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicaldrugclass(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical drug class. */
+export type MedicalDrugClassInput = {
+  /** The medicaldrugclass geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldrugclass. */
+  name: Scalars['String']['input'];
+  /** The medicaldrugclass URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical drug class query results. */
+export type MedicalDrugClassResults = {
+  __typename?: 'MedicalDrugClassResults';
+  /** The medical drug class facets. */
+  facets?: Maybe<Array<Maybe<MedicalDrugClassFacet>>>;
+  /** The medical drug class results. */
+  results?: Maybe<Array<Maybe<MedicalDrugClass>>>;
+};
+
+/** Represents a medical drug class. */
+export type MedicalDrugClassUpdateInput = {
+  /** The medicaldrugclass geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicaldrugclass to update. */
+  id: Scalars['ID']['input'];
+  /** The medicaldrugclass external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldrugclass. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrugclass URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical drug facet. */
+export type MedicalDrugFacet = {
+  __typename?: 'MedicalDrugFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical drug facet type. */
+  facet?: Maybe<MedicalDrugFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical drug facets. */
+export type MedicalDrugFacetInput = {
+  /** The medical drug facet type. */
+  facet?: InputMaybe<MedicalDrugFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Drug facet types */
+export enum MedicalDrugFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical drugs. */
+export type MedicalDrugFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicaldrug(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by similar medical drugs. */
+  drugs?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicaldrug(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicaldrug(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicaldrug(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicaldrug(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicaldrug(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicaldrug(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical drug. */
+export type MedicalDrugInput = {
+  /** The medicaldrug geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldrug. */
+  name: Scalars['String']['input'];
+  /** The medicaldrug URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical drug query results. */
+export type MedicalDrugResults = {
+  __typename?: 'MedicalDrugResults';
+  /** The medical drug facets. */
+  facets?: Maybe<Array<Maybe<MedicalDrugFacet>>>;
+  /** The medical drug results. */
+  results?: Maybe<Array<Maybe<MedicalDrug>>>;
+};
+
+/** Represents a medical drug. */
+export type MedicalDrugUpdateInput = {
+  /** The medicaldrug geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicaldrug to update. */
+  id: Scalars['ID']['input'];
+  /** The medicaldrug external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaldrug. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaldrug URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical guideline. */
+export type MedicalGuideline = {
+  __typename?: 'MedicalGuideline';
+  /** The alternate names of the medicalguideline. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalguideline, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalguideline. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalguideline description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalguideline. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalguideline. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalguideline. */
+  id: Scalars['ID']['output'];
+  /** The medicalguideline external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalguideline. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalguideline. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalguideline. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalguideline. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalguideline (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalguideline. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalguideline URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical guideline facet. */
+export type MedicalGuidelineFacet = {
+  __typename?: 'MedicalGuidelineFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical guideline facet type. */
+  facet?: Maybe<MedicalGuidelineFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical guideline facets. */
+export type MedicalGuidelineFacetInput = {
+  /** The medical guideline facet type. */
+  facet?: InputMaybe<MedicalGuidelineFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Guideline facet types */
+export enum MedicalGuidelineFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical guidelines. */
+export type MedicalGuidelineFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicalguideline(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by similar medical guidelines. */
+  guidelines?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalguideline(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicalguideline(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalguideline(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalguideline(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalguideline(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalguideline(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical guideline. */
+export type MedicalGuidelineInput = {
+  /** The medicalguideline geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalguideline. */
+  name: Scalars['String']['input'];
+  /** The medicalguideline URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical guideline query results. */
+export type MedicalGuidelineResults = {
+  __typename?: 'MedicalGuidelineResults';
+  /** The medical guideline facets. */
+  facets?: Maybe<Array<Maybe<MedicalGuidelineFacet>>>;
+  /** The medical guideline results. */
+  results?: Maybe<Array<Maybe<MedicalGuideline>>>;
+};
+
+/** Represents a medical guideline. */
+export type MedicalGuidelineUpdateInput = {
+  /** The medicalguideline geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalguideline to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalguideline external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalguideline. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalguideline URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical indication. */
+export type MedicalIndication = {
+  __typename?: 'MedicalIndication';
+  /** The alternate names of the medicalindication. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalindication, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalindication. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalindication description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalindication. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalindication. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalindication. */
+  id: Scalars['ID']['output'];
+  /** The medicalindication external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalindication. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalindication. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalindication. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalindication. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalindication (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalindication. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalindication URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical indication facet. */
+export type MedicalIndicationFacet = {
+  __typename?: 'MedicalIndicationFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical indication facet type. */
+  facet?: Maybe<MedicalIndicationFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical indication facets. */
+export type MedicalIndicationFacetInput = {
+  /** The medical indication facet type. */
+  facet?: InputMaybe<MedicalIndicationFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Indication facet types */
+export enum MedicalIndicationFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical indications. */
+export type MedicalIndicationFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicalindication(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalindication(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Filter by similar medical indications. */
+  indications?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Limit the number of medicalindication(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalindication(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalindication(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalindication(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalindication(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical indication. */
+export type MedicalIndicationInput = {
+  /** The medicalindication geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalindication. */
+  name: Scalars['String']['input'];
+  /** The medicalindication URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical indication query results. */
+export type MedicalIndicationResults = {
+  __typename?: 'MedicalIndicationResults';
+  /** The medical indication facets. */
+  facets?: Maybe<Array<Maybe<MedicalIndicationFacet>>>;
+  /** The medical indication results. */
+  results?: Maybe<Array<Maybe<MedicalIndication>>>;
+};
+
+/** Represents a medical indication. */
+export type MedicalIndicationUpdateInput = {
+  /** The medicalindication geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalindication to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalindication external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalindication. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalindication URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical procedure. */
+export type MedicalProcedure = {
+  __typename?: 'MedicalProcedure';
+  /** The alternate names of the medicalprocedure. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalprocedure, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalprocedure. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalprocedure description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalprocedure. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalprocedure. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalprocedure. */
+  id: Scalars['ID']['output'];
+  /** The medicalprocedure external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalprocedure. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalprocedure. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalprocedure. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalprocedure. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalprocedure (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalprocedure. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalprocedure URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical procedure facet. */
+export type MedicalProcedureFacet = {
+  __typename?: 'MedicalProcedureFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical procedure facet type. */
+  facet?: Maybe<MedicalProcedureFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical procedure facets. */
+export type MedicalProcedureFacetInput = {
+  /** The medical procedure facet type. */
+  facet?: InputMaybe<MedicalProcedureFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Procedure facet types */
+export enum MedicalProcedureFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical procedures. */
+export type MedicalProcedureFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicalprocedure(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalprocedure(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicalprocedure(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalprocedure(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalprocedure(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** Filter by similar medical procedures. */
+  procedures?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalprocedure(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalprocedure(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a medical procedure. */
+export type MedicalProcedureInput = {
+  /** The medicalprocedure geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalprocedure. */
+  name: Scalars['String']['input'];
+  /** The medicalprocedure URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical procedure query results. */
+export type MedicalProcedureResults = {
+  __typename?: 'MedicalProcedureResults';
+  /** The medical procedure facets. */
+  facets?: Maybe<Array<Maybe<MedicalProcedureFacet>>>;
+  /** The medical procedure results. */
+  results?: Maybe<Array<Maybe<MedicalProcedure>>>;
+};
+
+/** Represents a medical procedure. */
+export type MedicalProcedureUpdateInput = {
+  /** The medicalprocedure geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalprocedure to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalprocedure external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalprocedure. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalprocedure URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical study. */
+export type MedicalStudy = {
+  __typename?: 'MedicalStudy';
+  /** The physical address of the medical study. */
+  address?: Maybe<Address>;
+  /** The alternate names of the medicalstudy. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicalstudy, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicalstudy. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicalstudy description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicalstudy. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicalstudy. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicalstudy. */
+  id: Scalars['ID']['output'];
+  /** The medicalstudy external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicalstudy. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicalstudy. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicalstudy. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicalstudy. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicalstudy (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicalstudy. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicalstudy URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical study facet. */
+export type MedicalStudyFacet = {
+  __typename?: 'MedicalStudyFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical study facet type. */
+  facet?: Maybe<MedicalStudyFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical study facets. */
+export type MedicalStudyFacetInput = {
+  /** The medical study facet type. */
+  facet?: InputMaybe<MedicalStudyFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Study facet types */
+export enum MedicalStudyFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical studies. */
+export type MedicalStudyFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicalstudy(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicalstudy(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicalstudy(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicalstudy(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicalstudy(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicalstudy(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicalstudy(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+  /** Filter by similar medical studies. */
+  studies?: InputMaybe<Array<EntityReferenceFilter>>;
+};
+
+/** Represents a medical study. */
+export type MedicalStudyInput = {
+  /** The physical address of the medical study. */
+  address?: InputMaybe<AddressInput>;
+  /** The medicalstudy geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalstudy. */
+  name: Scalars['String']['input'];
+  /** The medicalstudy URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical study query results. */
+export type MedicalStudyResults = {
+  __typename?: 'MedicalStudyResults';
+  /** The medical study facets. */
+  facets?: Maybe<Array<Maybe<MedicalStudyFacet>>>;
+  /** The medical study H3 facets. */
+  h3?: Maybe<H3Facets>;
+  /** The medical study results. */
+  results?: Maybe<Array<Maybe<MedicalStudy>>>;
+};
+
+/** Represents a medical study. */
+export type MedicalStudyUpdateInput = {
+  /** The physical address of the medical study. */
+  address?: InputMaybe<AddressInput>;
+  /** The medicalstudy geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicalstudy to update. */
+  id: Scalars['ID']['input'];
+  /** The medicalstudy external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicalstudy. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicalstudy URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical test. */
+export type MedicalTest = {
+  __typename?: 'MedicalTest';
+  /** The alternate names of the medicaltest. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicaltest, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicaltest. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicaltest description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicaltest. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicaltest. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicaltest. */
+  id: Scalars['ID']['output'];
+  /** The medicaltest external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicaltest. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicaltest. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicaltest. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicaltest. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicaltest (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicaltest. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicaltest URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical test facet. */
+export type MedicalTestFacet = {
+  __typename?: 'MedicalTestFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical test facet type. */
+  facet?: Maybe<MedicalTestFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical test facets. */
+export type MedicalTestFacetInput = {
+  /** The medical test facet type. */
+  facet?: InputMaybe<MedicalTestFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Test facet types */
+export enum MedicalTestFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical tests. */
+export type MedicalTestFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicaltest(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicaltest(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicaltest(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicaltest(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicaltest(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicaltest(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicaltest(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+  /** Filter by similar medical tests. */
+  tests?: InputMaybe<Array<EntityReferenceFilter>>;
+};
+
+/** Represents a medical test. */
+export type MedicalTestInput = {
+  /** The medicaltest geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaltest. */
+  name: Scalars['String']['input'];
+  /** The medicaltest URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical test query results. */
+export type MedicalTestResults = {
+  __typename?: 'MedicalTestResults';
+  /** The medical test facets. */
+  facets?: Maybe<Array<Maybe<MedicalTestFacet>>>;
+  /** The medical test results. */
+  results?: Maybe<Array<Maybe<MedicalTest>>>;
+};
+
+/** Represents a medical test. */
+export type MedicalTestUpdateInput = {
+  /** The medicaltest geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicaltest to update. */
+  id: Scalars['ID']['input'];
+  /** The medicaltest external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaltest. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltest URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents a medical therapy. */
+export type MedicalTherapy = {
+  __typename?: 'MedicalTherapy';
+  /** The alternate names of the medicaltherapy. */
+  alternateNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The geo-boundary of the medicaltherapy, as GeoJSON Feature with Polygon geometry. */
+  boundary?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the medicaltherapy. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The medicaltherapy description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The EPSG code for spatial reference of the medicaltherapy. */
+  epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The H3 index of the medicaltherapy. */
+  h3?: Maybe<H3>;
+  /** The ID of the medicaltherapy. */
+  id: Scalars['ID']['output'];
+  /** The medicaltherapy external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReferenceType>>>;
+  /** The geo-location of the medicaltherapy. */
+  location?: Maybe<Point>;
+  /** The modified date of the medicaltherapy. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the medicaltherapy. */
+  name: Scalars['String']['output'];
+  /** The relevance score of the medicaltherapy. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the medicaltherapy (i.e. created, enabled). */
+  state: EntityState;
+  /** The JSON-LD value of the medicaltherapy. */
+  thing?: Maybe<Scalars['String']['output']>;
+  /** The medicaltherapy URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a medical therapy facet. */
+export type MedicalTherapyFacet = {
+  __typename?: 'MedicalTherapyFacet';
+  /** The facet count. */
+  count?: Maybe<Scalars['Long']['output']>;
+  /** The medical therapy facet type. */
+  facet?: Maybe<MedicalTherapyFacetTypes>;
+  /** The facet value range. */
+  range?: Maybe<StringRange>;
+  /** The facet value type. */
+  type?: Maybe<FacetValueTypes>;
+  /** The facet value. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the configuration for medical therapy facets. */
+export type MedicalTherapyFacetInput = {
+  /** The medical therapy facet type. */
+  facet?: InputMaybe<MedicalTherapyFacetTypes>;
+  /** The facet time interval. */
+  timeInterval?: InputMaybe<TimeIntervalTypes>;
+  /** The facet time offset (in hours). */
+  timeOffset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Medical Therapy facet types */
+export enum MedicalTherapyFacetTypes {
+  /** Creation Date */
+  CreationDate = 'CREATION_DATE'
+}
+
+/** Represents a filter for medical therapies. */
+export type MedicalTherapyFilter = {
+  /** Filter by observable physical address. */
+  address?: InputMaybe<AddressFilter>;
+  /** Filter by observable geo-boundaries, as GeoJSON Feature with Polygon geometry. */
+  boundaries?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Filter medicaltherapy(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by observable H3 index. */
+  h3?: InputMaybe<H3Filter>;
+  /** Filter medicaltherapy(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of medicaltherapy(s) to be returned. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter by observable geo-location. */
+  location?: InputMaybe<PointFilter>;
+  /** Filter medicaltherapy(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
+  /** Skip the specified number of medicaltherapy(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
+  /** Filter medicaltherapy(s) by searching for specific text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
+  /** Filter medicaltherapy(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+  /** Filter by similar medical therapies. */
+  therapies?: InputMaybe<Array<EntityReferenceFilter>>;
+};
+
+/** Represents a medical therapy. */
+export type MedicalTherapyInput = {
+  /** The medicaltherapy geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaltherapy. */
+  name: Scalars['String']['input'];
+  /** The medicaltherapy URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents medical therapy query results. */
+export type MedicalTherapyResults = {
+  __typename?: 'MedicalTherapyResults';
+  /** The medical therapy facets. */
+  facets?: Maybe<Array<Maybe<MedicalTherapyFacet>>>;
+  /** The medical therapy results. */
+  results?: Maybe<Array<Maybe<MedicalTherapy>>>;
+};
+
+/** Represents a medical therapy. */
+export type MedicalTherapyUpdateInput = {
+  /** The medicaltherapy geo-boundary, as GeoJSON Feature with Polygon geometry. */
+  boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the medicaltherapy to update. */
+  id: Scalars['ID']['input'];
+  /** The medicaltherapy external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The name of the medicaltherapy. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The medicaltherapy URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
 /** Represents metadata. */
 export type Metadata = {
   __typename?: 'Metadata';
@@ -4746,6 +6415,28 @@ export type Mutation = {
   createFeed?: Maybe<Feed>;
   /** Creates a new label. */
   createLabel?: Maybe<Label>;
+  /** Creates a new medical condition. */
+  createMedicalCondition?: Maybe<MedicalCondition>;
+  /** Creates a new medical contraindication. */
+  createMedicalContraindication?: Maybe<MedicalContraindication>;
+  /** Creates a new medical device. */
+  createMedicalDevice?: Maybe<MedicalDevice>;
+  /** Creates a new medical drug. */
+  createMedicalDrug?: Maybe<MedicalDrug>;
+  /** Creates a new medical drug class. */
+  createMedicalDrugClass?: Maybe<MedicalDrugClass>;
+  /** Creates a new medical guideline. */
+  createMedicalGuideline?: Maybe<MedicalGuideline>;
+  /** Creates a new medical indication. */
+  createMedicalIndication?: Maybe<MedicalIndication>;
+  /** Creates a new medical procedure. */
+  createMedicalProcedure?: Maybe<MedicalProcedure>;
+  /** Creates a new medical study. */
+  createMedicalStudy?: Maybe<MedicalStudy>;
+  /** Creates a new medical test. */
+  createMedicalTest?: Maybe<MedicalTest>;
+  /** Creates a new medical therapy. */
+  createMedicalTherapy?: Maybe<MedicalTherapy>;
   /** Creates a new observation. */
   createObservation?: Maybe<Observation>;
   /** Creates a new organization. */
@@ -4784,6 +6475,28 @@ export type Mutation = {
   deleteAllFeeds?: Maybe<Array<Maybe<Feed>>>;
   /** Bulk deletes labels based on the provided filter criteria. */
   deleteAllLabels?: Maybe<Array<Maybe<Label>>>;
+  /** Bulk deletes medical conditions based on the provided filter criteria. */
+  deleteAllMedicalConditions?: Maybe<Array<Maybe<MedicalCondition>>>;
+  /** Bulk deletes medical contraindications based on the provided filter criteria. */
+  deleteAllMedicalContraindications?: Maybe<Array<Maybe<MedicalContraindication>>>;
+  /** Bulk deletes medical devices based on the provided filter criteria. */
+  deleteAllMedicalDevices?: Maybe<Array<Maybe<MedicalDevice>>>;
+  /** Bulk deletes medical drug classes based on the provided filter criteria. */
+  deleteAllMedicalDrugClasses?: Maybe<Array<Maybe<MedicalDrugClass>>>;
+  /** Bulk deletes medical drugs based on the provided filter criteria. */
+  deleteAllMedicalDrugs?: Maybe<Array<Maybe<MedicalDrug>>>;
+  /** Bulk deletes medical guidelines based on the provided filter criteria. */
+  deleteAllMedicalGuidelines?: Maybe<Array<Maybe<MedicalGuideline>>>;
+  /** Bulk deletes medical indications based on the provided filter criteria. */
+  deleteAllMedicalIndications?: Maybe<Array<Maybe<MedicalIndication>>>;
+  /** Bulk deletes medical procedures based on the provided filter criteria. */
+  deleteAllMedicalProcedures?: Maybe<Array<Maybe<MedicalProcedure>>>;
+  /** Bulk deletes medical studies based on the provided filter criteria. */
+  deleteAllMedicalStudies?: Maybe<Array<Maybe<MedicalStudy>>>;
+  /** Bulk deletes medical tests based on the provided filter criteria. */
+  deleteAllMedicalTests?: Maybe<Array<Maybe<MedicalTest>>>;
+  /** Bulk deletes medical therapies based on the provided filter criteria. */
+  deleteAllMedicalTherapies?: Maybe<Array<Maybe<MedicalTherapy>>>;
   /** Bulk deletes organizations based on the provided filter criteria. */
   deleteAllOrganizations?: Maybe<Array<Maybe<Organization>>>;
   /** Bulk deletes persons based on the provided filter criteria. */
@@ -4828,6 +6541,50 @@ export type Mutation = {
   deleteLabel?: Maybe<Label>;
   /** Bulk deletes labels. */
   deleteLabels?: Maybe<Array<Maybe<Label>>>;
+  /** Deletes a medical condition. */
+  deleteMedicalCondition?: Maybe<MedicalCondition>;
+  /** Bulk deletes medical conditions. */
+  deleteMedicalConditions?: Maybe<Array<Maybe<MedicalCondition>>>;
+  /** Deletes a medical contraindication. */
+  deleteMedicalContraindication?: Maybe<MedicalContraindication>;
+  /** Bulk deletes medical contraindications. */
+  deleteMedicalContraindications?: Maybe<Array<Maybe<MedicalContraindication>>>;
+  /** Deletes a medical device. */
+  deleteMedicalDevice?: Maybe<MedicalDevice>;
+  /** Bulk deletes medical devices. */
+  deleteMedicalDevices?: Maybe<Array<Maybe<MedicalDevice>>>;
+  /** Deletes a medical drug. */
+  deleteMedicalDrug?: Maybe<MedicalDrug>;
+  /** Deletes a medical drug class. */
+  deleteMedicalDrugClass?: Maybe<MedicalDrugClass>;
+  /** Bulk deletes medical drug classes. */
+  deleteMedicalDrugClasses?: Maybe<Array<Maybe<MedicalDrugClass>>>;
+  /** Bulk deletes medical drugs. */
+  deleteMedicalDrugs?: Maybe<Array<Maybe<MedicalDrug>>>;
+  /** Deletes a medical guideline. */
+  deleteMedicalGuideline?: Maybe<MedicalGuideline>;
+  /** Bulk deletes medical guidelines. */
+  deleteMedicalGuidelines?: Maybe<Array<Maybe<MedicalGuideline>>>;
+  /** Deletes a medical indication. */
+  deleteMedicalIndication?: Maybe<MedicalIndication>;
+  /** Bulk deletes medical indications. */
+  deleteMedicalIndications?: Maybe<Array<Maybe<MedicalIndication>>>;
+  /** Deletes a medical procedure. */
+  deleteMedicalProcedure?: Maybe<MedicalProcedure>;
+  /** Bulk deletes medical procedures. */
+  deleteMedicalProcedures?: Maybe<Array<Maybe<MedicalProcedure>>>;
+  /** Bulk deletes medical studies. */
+  deleteMedicalStudies?: Maybe<Array<Maybe<MedicalStudy>>>;
+  /** Deletes a medical study. */
+  deleteMedicalStudy?: Maybe<MedicalStudy>;
+  /** Deletes a medical test. */
+  deleteMedicalTest?: Maybe<MedicalTest>;
+  /** Bulk deletes medical tests. */
+  deleteMedicalTests?: Maybe<Array<Maybe<MedicalTest>>>;
+  /** Bulk deletes medical therapies. */
+  deleteMedicalTherapies?: Maybe<Array<Maybe<MedicalTherapy>>>;
+  /** Deletes a medical therapy. */
+  deleteMedicalTherapy?: Maybe<MedicalTherapy>;
   /** Deletes an observation. */
   deleteObservation?: Maybe<Observation>;
   /** Deletes an organization. */
@@ -4935,6 +6692,28 @@ export type Mutation = {
   updateFeed?: Maybe<Feed>;
   /** Updates a label. */
   updateLabel?: Maybe<Label>;
+  /** Updates a medical condition. */
+  updateMedicalCondition?: Maybe<MedicalCondition>;
+  /** Updates a medical contraindication. */
+  updateMedicalContraindication?: Maybe<MedicalContraindication>;
+  /** Updates a medical device. */
+  updateMedicalDevice?: Maybe<MedicalDevice>;
+  /** Updates a medical drug. */
+  updateMedicalDrug?: Maybe<MedicalDrug>;
+  /** Updates a medical drug class. */
+  updateMedicalDrugClass?: Maybe<MedicalDrugClass>;
+  /** Updates a medical guideline. */
+  updateMedicalGuideline?: Maybe<MedicalGuideline>;
+  /** Updates a medical indication. */
+  updateMedicalIndication?: Maybe<MedicalIndication>;
+  /** Updates a medical procedure. */
+  updateMedicalProcedure?: Maybe<MedicalProcedure>;
+  /** Updates a medical study. */
+  updateMedicalStudy?: Maybe<MedicalStudy>;
+  /** Updates a medical test. */
+  updateMedicalTest?: Maybe<MedicalTest>;
+  /** Updates a medical therapy. */
+  updateMedicalTherapy?: Maybe<MedicalTherapy>;
   /** Updates an observation. */
   updateObservation?: Maybe<Observation>;
   /** Updates an organization. */
@@ -5020,6 +6799,61 @@ export type MutationCreateFeedArgs = {
 
 export type MutationCreateLabelArgs = {
   label: LabelInput;
+};
+
+
+export type MutationCreateMedicalConditionArgs = {
+  medicalCondition: MedicalConditionInput;
+};
+
+
+export type MutationCreateMedicalContraindicationArgs = {
+  medicalContraindication: MedicalContraindicationInput;
+};
+
+
+export type MutationCreateMedicalDeviceArgs = {
+  medicalDevice: MedicalDeviceInput;
+};
+
+
+export type MutationCreateMedicalDrugArgs = {
+  medicalDrug: MedicalDrugInput;
+};
+
+
+export type MutationCreateMedicalDrugClassArgs = {
+  medicalDrugClass: MedicalDrugClassInput;
+};
+
+
+export type MutationCreateMedicalGuidelineArgs = {
+  medicalGuideline: MedicalGuidelineInput;
+};
+
+
+export type MutationCreateMedicalIndicationArgs = {
+  medicalIndication: MedicalIndicationInput;
+};
+
+
+export type MutationCreateMedicalProcedureArgs = {
+  medicalProcedure: MedicalProcedureInput;
+};
+
+
+export type MutationCreateMedicalStudyArgs = {
+  medicalStudy: MedicalStudyInput;
+};
+
+
+export type MutationCreateMedicalTestArgs = {
+  medicalTest: MedicalTestInput;
+};
+
+
+export type MutationCreateMedicalTherapyArgs = {
+  medicalTherapy: MedicalTherapyInput;
 };
 
 
@@ -5131,6 +6965,83 @@ export type MutationDeleteAllFeedsArgs = {
 export type MutationDeleteAllLabelsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<LabelFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalConditionsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalConditionFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalContraindicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalDevicesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDeviceFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalDrugClassesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalDrugsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDrugFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalGuidelinesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalIndicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalIndicationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalProceduresArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalProcedureFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalStudiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalStudyFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalTestsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalTestFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllMedicalTherapiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalTherapyFilter>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -5265,6 +7176,127 @@ export type MutationDeleteLabelArgs = {
 export type MutationDeleteLabelsArgs = {
   ids: Array<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalConditionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalConditionsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalContraindicationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalContraindicationsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalDeviceArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalDevicesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalDrugArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalDrugClassArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalDrugClassesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalDrugsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalGuidelineArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalGuidelinesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalIndicationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalIndicationsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalProcedureArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalProceduresArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalStudiesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalStudyArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalTestArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMedicalTestsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalTherapiesArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteMedicalTherapyArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -5589,6 +7621,61 @@ export type MutationUpdateLabelArgs = {
 };
 
 
+export type MutationUpdateMedicalConditionArgs = {
+  medicalCondition: MedicalConditionUpdateInput;
+};
+
+
+export type MutationUpdateMedicalContraindicationArgs = {
+  medicalContraindication: MedicalContraindicationUpdateInput;
+};
+
+
+export type MutationUpdateMedicalDeviceArgs = {
+  medicalDevice: MedicalDeviceUpdateInput;
+};
+
+
+export type MutationUpdateMedicalDrugArgs = {
+  medicalDrug: MedicalDrugUpdateInput;
+};
+
+
+export type MutationUpdateMedicalDrugClassArgs = {
+  medicalDrugClass: MedicalDrugClassUpdateInput;
+};
+
+
+export type MutationUpdateMedicalGuidelineArgs = {
+  medicalGuideline: MedicalGuidelineUpdateInput;
+};
+
+
+export type MutationUpdateMedicalIndicationArgs = {
+  medicalIndication: MedicalIndicationUpdateInput;
+};
+
+
+export type MutationUpdateMedicalProcedureArgs = {
+  medicalProcedure: MedicalProcedureUpdateInput;
+};
+
+
+export type MutationUpdateMedicalStudyArgs = {
+  medicalStudy: MedicalStudyUpdateInput;
+};
+
+
+export type MutationUpdateMedicalTestArgs = {
+  medicalTest: MedicalTestUpdateInput;
+};
+
+
+export type MutationUpdateMedicalTherapyArgs = {
+  medicalTherapy: MedicalTherapyUpdateInput;
+};
+
+
 export type MutationUpdateObservationArgs = {
   observation: ObservationUpdateInput;
 };
@@ -5722,6 +7809,28 @@ export enum ObservableTypes {
   Event = 'EVENT',
   /** Label */
   Label = 'LABEL',
+  /** Medical condition */
+  MedicalCondition = 'MEDICAL_CONDITION',
+  /** Medical contraindication */
+  MedicalContraindication = 'MEDICAL_CONTRAINDICATION',
+  /** Medical device */
+  MedicalDevice = 'MEDICAL_DEVICE',
+  /** Medical drug */
+  MedicalDrug = 'MEDICAL_DRUG',
+  /** Medical drug class */
+  MedicalDrugClass = 'MEDICAL_DRUG_CLASS',
+  /** Medical guideline */
+  MedicalGuideline = 'MEDICAL_GUIDELINE',
+  /** Medical indication */
+  MedicalIndication = 'MEDICAL_INDICATION',
+  /** Medical procedure */
+  MedicalProcedure = 'MEDICAL_PROCEDURE',
+  /** Medical study */
+  MedicalStudy = 'MEDICAL_STUDY',
+  /** Medical test */
+  MedicalTest = 'MEDICAL_TEST',
+  /** Medical therapy */
+  MedicalTherapy = 'MEDICAL_THERAPY',
   /** Organization */
   Organization = 'ORGANIZATION',
   /** Person */
@@ -6014,6 +8123,8 @@ export enum OpenAiModels {
   Gpt4O_128K_20240513 = 'GPT4O_128K_20240513',
   /** GPT-4o 128k (2024-08-06 version) */
   Gpt4O_128K_20240806 = 'GPT4O_128K_20240806',
+  /** ChatGPT-4o 128k (latest version) */
+  Gpt4OChat_128K = 'GPT4O_CHAT_128K',
   /** GPT-4o Mini 128k (latest version) */
   Gpt4OMini_128K = 'GPT4O_MINI_128K',
   /** GPT-4o Mini 128k (2024-07-18 version) */
@@ -7479,6 +9590,28 @@ export type Query = {
   countFeeds?: Maybe<CountResult>;
   /** Counts labels based on the provided filter criteria. */
   countLabels?: Maybe<CountResult>;
+  /** Counts medical conditions based on the provided filter criteria. */
+  countMedicalConditions?: Maybe<CountResult>;
+  /** Counts medical contraindications based on the provided filter criteria. */
+  countMedicalContraindications?: Maybe<CountResult>;
+  /** Counts medical devices based on the provided filter criteria. */
+  countMedicalDevices?: Maybe<CountResult>;
+  /** Counts medical drug classes based on the provided filter criteria. */
+  countMedicalDrugClasses?: Maybe<CountResult>;
+  /** Counts medical drugs based on the provided filter criteria. */
+  countMedicalDrugs?: Maybe<CountResult>;
+  /** Counts medical guidelines based on the provided filter criteria. */
+  countMedicalGuidelines?: Maybe<CountResult>;
+  /** Counts medical Indications based on the provided filter criteria. */
+  countMedicalIndications?: Maybe<CountResult>;
+  /** Counts medical procedures based on the provided filter criteria. */
+  countMedicalProcedures?: Maybe<CountResult>;
+  /** Counts medical studies based on the provided filter criteria. */
+  countMedicalStudies?: Maybe<CountResult>;
+  /** Counts medical tests based on the provided filter criteria. */
+  countMedicalTests?: Maybe<CountResult>;
+  /** Counts medical therapies based on the provided filter criteria. */
+  countMedicalTherapies?: Maybe<CountResult>;
   /** Counts organizations based on the provided filter criteria. */
   countOrganizations?: Maybe<CountResult>;
   /** Counts persons based on the provided filter criteria. */
@@ -7519,6 +9652,50 @@ export type Query = {
   lookupCredits?: Maybe<ProjectCredits>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
+  /** Lookup a medical condition given its ID. */
+  medicalCondition?: Maybe<MedicalCondition>;
+  /** Retrieves medical conditions based on the provided filter criteria. */
+  medicalConditions?: Maybe<MedicalConditionResults>;
+  /** Lookup a medical contraindication given its ID. */
+  medicalContraindication?: Maybe<MedicalContraindication>;
+  /** Retrieves medical contraindications based on the provided filter criteria. */
+  medicalContraindications?: Maybe<MedicalContraindicationResults>;
+  /** Lookup a medical device given its ID. */
+  medicalDevice?: Maybe<MedicalDevice>;
+  /** Retrieves medical devices based on the provided filter criteria. */
+  medicalDevices?: Maybe<MedicalDeviceResults>;
+  /** Lookup a medical drug given its ID. */
+  medicalDrug?: Maybe<MedicalDrug>;
+  /** Lookup a medical drug class given its ID. */
+  medicalDrugClass?: Maybe<MedicalDrugClass>;
+  /** Retrieves medical drug classes based on the provided filter criteria. */
+  medicalDrugClasses?: Maybe<MedicalDrugClassResults>;
+  /** Retrieves medical drugs based on the provided filter criteria. */
+  medicalDrugs?: Maybe<MedicalDrugResults>;
+  /** Lookup a medical guideline given its ID. */
+  medicalGuideline?: Maybe<MedicalGuideline>;
+  /** Retrieves medical guidelines based on the provided filter criteria. */
+  medicalGuidelines?: Maybe<MedicalGuidelineResults>;
+  /** Lookup a medical Indication given its ID. */
+  medicalIndication?: Maybe<MedicalIndication>;
+  /** Retrieves medical Indications based on the provided filter criteria. */
+  medicalIndications?: Maybe<MedicalIndicationResults>;
+  /** Lookup a medical procedure given its ID. */
+  medicalProcedure?: Maybe<MedicalProcedure>;
+  /** Retrieves medical procedures based on the provided filter criteria. */
+  medicalProcedures?: Maybe<MedicalProcedureResults>;
+  /** Retrieves medical studies based on the provided filter criteria. */
+  medicalStudies?: Maybe<MedicalStudyResults>;
+  /** Lookup a medical study given its ID. */
+  medicalStudy?: Maybe<MedicalStudy>;
+  /** Lookup a medical test given its ID. */
+  medicalTest?: Maybe<MedicalTest>;
+  /** Retrieves medical tests based on the provided filter criteria. */
+  medicalTests?: Maybe<MedicalTestResults>;
+  /** Retrieves medical therapies based on the provided filter criteria. */
+  medicalTherapies?: Maybe<MedicalTherapyResults>;
+  /** Lookup a medical therapy given its ID. */
+  medicalTherapy?: Maybe<MedicalTherapy>;
   /** Retrieves available Microsoft Teams team channels. */
   microsoftTeamsChannels?: Maybe<MicrosoftTeamsChannelResults>;
   /** Retrieves available Microsoft Teams teams. */
@@ -7687,6 +9864,72 @@ export type QueryCountLabelsArgs = {
 };
 
 
+export type QueryCountMedicalConditionsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalConditionFilter>;
+};
+
+
+export type QueryCountMedicalContraindicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+};
+
+
+export type QueryCountMedicalDevicesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDeviceFilter>;
+};
+
+
+export type QueryCountMedicalDrugClassesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+};
+
+
+export type QueryCountMedicalDrugsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalDrugFilter>;
+};
+
+
+export type QueryCountMedicalGuidelinesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+};
+
+
+export type QueryCountMedicalIndicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalIndicationFilter>;
+};
+
+
+export type QueryCountMedicalProceduresArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalProcedureFilter>;
+};
+
+
+export type QueryCountMedicalStudiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalStudyFilter>;
+};
+
+
+export type QueryCountMedicalTestsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalTestFilter>;
+};
+
+
+export type QueryCountMedicalTherapiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<MedicalTherapyFilter>;
+};
+
+
 export type QueryCountOrganizationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<OrganizationFilter>;
@@ -7804,6 +10047,149 @@ export type QueryLookupCreditsArgs = {
 
 export type QueryLookupUsageArgs = {
   correlationId: Scalars['String']['input'];
+};
+
+
+export type QueryMedicalConditionArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalConditionsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalConditionFacetInput>>;
+  filter?: InputMaybe<MedicalConditionFilter>;
+};
+
+
+export type QueryMedicalContraindicationArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalContraindicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalContraindicationFacetInput>>;
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+};
+
+
+export type QueryMedicalDeviceArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalDevicesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalDeviceFacetInput>>;
+  filter?: InputMaybe<MedicalDeviceFilter>;
+};
+
+
+export type QueryMedicalDrugArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalDrugClassArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalDrugClassesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalDrugClassFacetInput>>;
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+};
+
+
+export type QueryMedicalDrugsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalDrugFacetInput>>;
+  filter?: InputMaybe<MedicalDrugFilter>;
+};
+
+
+export type QueryMedicalGuidelineArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalGuidelinesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalGuidelineFacetInput>>;
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+};
+
+
+export type QueryMedicalIndicationArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalIndicationsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalIndicationFacetInput>>;
+  filter?: InputMaybe<MedicalIndicationFilter>;
+};
+
+
+export type QueryMedicalProcedureArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalProceduresArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalProcedureFacetInput>>;
+  filter?: InputMaybe<MedicalProcedureFilter>;
+};
+
+
+export type QueryMedicalStudiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalStudyFacetInput>>;
+  filter?: InputMaybe<MedicalStudyFilter>;
+};
+
+
+export type QueryMedicalStudyArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalTestArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMedicalTestsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalTestFacetInput>>;
+  filter?: InputMaybe<MedicalTestFilter>;
+};
+
+
+export type QueryMedicalTherapiesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  facets?: InputMaybe<Array<MedicalTherapyFacetInput>>;
+  filter?: InputMaybe<MedicalTherapyFilter>;
+};
+
+
+export type QueryMedicalTherapyArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
 };
 
 
@@ -9255,7 +11641,9 @@ export enum TextRoles {
   /** Table Row Header */
   TableRowHeader = 'TABLE_ROW_HEADER',
   /** Title */
-  Title = 'TITLE'
+  Title = 'TITLE',
+  /** Watermark */
+  Watermark = 'WATERMARK'
 }
 
 /** Represents a segment of an audio transcript. */
@@ -10388,6 +12776,655 @@ export type UpdateLabelMutationVariables = Exact<{
 
 
 export type UpdateLabelMutation = { __typename?: 'Mutation', updateLabel?: { __typename?: 'Label', id: string, name: string } | null };
+
+export type CountMedicalConditionsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalConditionFilter>;
+}>;
+
+
+export type CountMedicalConditionsQuery = { __typename?: 'Query', countMedicalConditions?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalConditionMutationVariables = Exact<{
+  medicalCondition: MedicalConditionInput;
+}>;
+
+
+export type CreateMedicalConditionMutation = { __typename?: 'Mutation', createMedicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string } | null };
+
+export type DeleteAllMedicalConditionsMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalConditionFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalConditionsMutation = { __typename?: 'Mutation', deleteAllMedicalConditions?: Array<{ __typename?: 'MedicalCondition', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalConditionMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalConditionMutation = { __typename?: 'Mutation', deleteMedicalCondition?: { __typename?: 'MedicalCondition', id: string, state: EntityState } | null };
+
+export type DeleteMedicalConditionsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalConditionsMutation = { __typename?: 'Mutation', deleteMedicalConditions?: Array<{ __typename?: 'MedicalCondition', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalConditionQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalConditionsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalConditionFilter>;
+}>;
+
+
+export type QueryMedicalConditionsQuery = { __typename?: 'Query', medicalConditions?: { __typename?: 'MedicalConditionResults', results?: Array<{ __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalConditionMutationVariables = Exact<{
+  medicalCondition: MedicalConditionUpdateInput;
+}>;
+
+
+export type UpdateMedicalConditionMutation = { __typename?: 'Mutation', updateMedicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string } | null };
+
+export type CountMedicalContraindicationsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+}>;
+
+
+export type CountMedicalContraindicationsQuery = { __typename?: 'Query', countMedicalContraindications?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalContraindicationMutationVariables = Exact<{
+  medicalContraindication: MedicalContraindicationInput;
+}>;
+
+
+export type CreateMedicalContraindicationMutation = { __typename?: 'Mutation', createMedicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string } | null };
+
+export type DeleteAllMedicalContraindicationsMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalContraindicationsMutation = { __typename?: 'Mutation', deleteAllMedicalContraindications?: Array<{ __typename?: 'MedicalContraindication', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalContraindicationMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalContraindicationMutation = { __typename?: 'Mutation', deleteMedicalContraindication?: { __typename?: 'MedicalContraindication', id: string, state: EntityState } | null };
+
+export type DeleteMedicalContraindicationsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalContraindicationsMutation = { __typename?: 'Mutation', deleteMedicalContraindications?: Array<{ __typename?: 'MedicalContraindication', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalContraindicationQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalContraindicationsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalContraindicationFilter>;
+}>;
+
+
+export type QueryMedicalContraindicationsQuery = { __typename?: 'Query', medicalContraindications?: { __typename?: 'MedicalContraindicationResults', results?: Array<{ __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalContraindicationMutationVariables = Exact<{
+  medicalContraindication: MedicalContraindicationUpdateInput;
+}>;
+
+
+export type UpdateMedicalContraindicationMutation = { __typename?: 'Mutation', updateMedicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string } | null };
+
+export type CountMedicalDevicesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDeviceFilter>;
+}>;
+
+
+export type CountMedicalDevicesQuery = { __typename?: 'Query', countMedicalDevices?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalDeviceMutationVariables = Exact<{
+  medicalDevice: MedicalDeviceInput;
+}>;
+
+
+export type CreateMedicalDeviceMutation = { __typename?: 'Mutation', createMedicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string } | null };
+
+export type DeleteAllMedicalDevicesMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalDeviceFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalDevicesMutation = { __typename?: 'Mutation', deleteAllMedicalDevices?: Array<{ __typename?: 'MedicalDevice', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalDeviceMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalDeviceMutation = { __typename?: 'Mutation', deleteMedicalDevice?: { __typename?: 'MedicalDevice', id: string, state: EntityState } | null };
+
+export type DeleteMedicalDevicesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalDevicesMutation = { __typename?: 'Mutation', deleteMedicalDevices?: Array<{ __typename?: 'MedicalDevice', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalDeviceQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalDevicesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDeviceFilter>;
+}>;
+
+
+export type QueryMedicalDevicesQuery = { __typename?: 'Query', medicalDevices?: { __typename?: 'MedicalDeviceResults', results?: Array<{ __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalDeviceMutationVariables = Exact<{
+  medicalDevice: MedicalDeviceUpdateInput;
+}>;
+
+
+export type UpdateMedicalDeviceMutation = { __typename?: 'Mutation', updateMedicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string } | null };
+
+export type CountMedicalDrugsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugFilter>;
+}>;
+
+
+export type CountMedicalDrugsQuery = { __typename?: 'Query', countMedicalDrugs?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalDrugMutationVariables = Exact<{
+  medicalDrug: MedicalDrugInput;
+}>;
+
+
+export type CreateMedicalDrugMutation = { __typename?: 'Mutation', createMedicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string } | null };
+
+export type DeleteAllMedicalDrugsMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalDrugsMutation = { __typename?: 'Mutation', deleteAllMedicalDrugs?: Array<{ __typename?: 'MedicalDrug', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalDrugMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalDrugMutation = { __typename?: 'Mutation', deleteMedicalDrug?: { __typename?: 'MedicalDrug', id: string, state: EntityState } | null };
+
+export type DeleteMedicalDrugsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalDrugsMutation = { __typename?: 'Mutation', deleteMedicalDrugs?: Array<{ __typename?: 'MedicalDrug', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalDrugQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalDrugsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugFilter>;
+}>;
+
+
+export type QueryMedicalDrugsQuery = { __typename?: 'Query', medicalDrugs?: { __typename?: 'MedicalDrugResults', results?: Array<{ __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalDrugMutationVariables = Exact<{
+  medicalDrug: MedicalDrugUpdateInput;
+}>;
+
+
+export type UpdateMedicalDrugMutation = { __typename?: 'Mutation', updateMedicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string } | null };
+
+export type CountMedicalDrugClassesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+}>;
+
+
+export type CountMedicalDrugClassesQuery = { __typename?: 'Query', countMedicalDrugClasses?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalDrugClassMutationVariables = Exact<{
+  medicalDrugClass: MedicalDrugClassInput;
+}>;
+
+
+export type CreateMedicalDrugClassMutation = { __typename?: 'Mutation', createMedicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string } | null };
+
+export type DeleteAllMedicalDrugClassesMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalDrugClassesMutation = { __typename?: 'Mutation', deleteAllMedicalDrugClasses?: Array<{ __typename?: 'MedicalDrugClass', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalDrugClassMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalDrugClassMutation = { __typename?: 'Mutation', deleteMedicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, state: EntityState } | null };
+
+export type DeleteMedicalDrugClassesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalDrugClassesMutation = { __typename?: 'Mutation', deleteMedicalDrugClasses?: Array<{ __typename?: 'MedicalDrugClass', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalDrugClassQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalDrugClassesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalDrugClassFilter>;
+}>;
+
+
+export type QueryMedicalDrugClassesQuery = { __typename?: 'Query', medicalDrugClasses?: { __typename?: 'MedicalDrugClassResults', results?: Array<{ __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalDrugClassMutationVariables = Exact<{
+  medicalDrugClass: MedicalDrugClassUpdateInput;
+}>;
+
+
+export type UpdateMedicalDrugClassMutation = { __typename?: 'Mutation', updateMedicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string } | null };
+
+export type CountMedicalGuidelinesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+}>;
+
+
+export type CountMedicalGuidelinesQuery = { __typename?: 'Query', countMedicalGuidelines?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalGuidelineMutationVariables = Exact<{
+  medicalGuideline: MedicalGuidelineInput;
+}>;
+
+
+export type CreateMedicalGuidelineMutation = { __typename?: 'Mutation', createMedicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string } | null };
+
+export type DeleteAllMedicalGuidelinesMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalGuidelinesMutation = { __typename?: 'Mutation', deleteAllMedicalGuidelines?: Array<{ __typename?: 'MedicalGuideline', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalGuidelineMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalGuidelineMutation = { __typename?: 'Mutation', deleteMedicalGuideline?: { __typename?: 'MedicalGuideline', id: string, state: EntityState } | null };
+
+export type DeleteMedicalGuidelinesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalGuidelinesMutation = { __typename?: 'Mutation', deleteMedicalGuidelines?: Array<{ __typename?: 'MedicalGuideline', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalGuidelineQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalGuidelinesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalGuidelineFilter>;
+}>;
+
+
+export type QueryMedicalGuidelinesQuery = { __typename?: 'Query', medicalGuidelines?: { __typename?: 'MedicalGuidelineResults', results?: Array<{ __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalGuidelineMutationVariables = Exact<{
+  medicalGuideline: MedicalGuidelineUpdateInput;
+}>;
+
+
+export type UpdateMedicalGuidelineMutation = { __typename?: 'Mutation', updateMedicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string } | null };
+
+export type CountMedicalIndicationsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalIndicationFilter>;
+}>;
+
+
+export type CountMedicalIndicationsQuery = { __typename?: 'Query', countMedicalIndications?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalIndicationMutationVariables = Exact<{
+  medicalIndication: MedicalIndicationInput;
+}>;
+
+
+export type CreateMedicalIndicationMutation = { __typename?: 'Mutation', createMedicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string } | null };
+
+export type DeleteAllMedicalIndicationsMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalIndicationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalIndicationsMutation = { __typename?: 'Mutation', deleteAllMedicalIndications?: Array<{ __typename?: 'MedicalIndication', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalIndicationMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalIndicationMutation = { __typename?: 'Mutation', deleteMedicalIndication?: { __typename?: 'MedicalIndication', id: string, state: EntityState } | null };
+
+export type DeleteMedicalIndicationsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalIndicationsMutation = { __typename?: 'Mutation', deleteMedicalIndications?: Array<{ __typename?: 'MedicalIndication', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalIndicationQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalIndicationsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalIndicationFilter>;
+}>;
+
+
+export type QueryMedicalIndicationsQuery = { __typename?: 'Query', medicalIndications?: { __typename?: 'MedicalIndicationResults', results?: Array<{ __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalIndicationMutationVariables = Exact<{
+  medicalIndication: MedicalIndicationUpdateInput;
+}>;
+
+
+export type UpdateMedicalIndicationMutation = { __typename?: 'Mutation', updateMedicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string } | null };
+
+export type CountMedicalProceduresQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalProcedureFilter>;
+}>;
+
+
+export type CountMedicalProceduresQuery = { __typename?: 'Query', countMedicalProcedures?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalProcedureMutationVariables = Exact<{
+  medicalProcedure: MedicalProcedureInput;
+}>;
+
+
+export type CreateMedicalProcedureMutation = { __typename?: 'Mutation', createMedicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string } | null };
+
+export type DeleteAllMedicalProceduresMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalProcedureFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalProceduresMutation = { __typename?: 'Mutation', deleteAllMedicalProcedures?: Array<{ __typename?: 'MedicalProcedure', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalProcedureMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalProcedureMutation = { __typename?: 'Mutation', deleteMedicalProcedure?: { __typename?: 'MedicalProcedure', id: string, state: EntityState } | null };
+
+export type DeleteMedicalProceduresMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalProceduresMutation = { __typename?: 'Mutation', deleteMedicalProcedures?: Array<{ __typename?: 'MedicalProcedure', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalProcedureQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalProceduresQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalProcedureFilter>;
+}>;
+
+
+export type QueryMedicalProceduresQuery = { __typename?: 'Query', medicalProcedures?: { __typename?: 'MedicalProcedureResults', results?: Array<{ __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalProcedureMutationVariables = Exact<{
+  medicalProcedure: MedicalProcedureUpdateInput;
+}>;
+
+
+export type UpdateMedicalProcedureMutation = { __typename?: 'Mutation', updateMedicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string } | null };
+
+export type CountMedicalStudiesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalStudyFilter>;
+}>;
+
+
+export type CountMedicalStudiesQuery = { __typename?: 'Query', countMedicalStudies?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalStudyMutationVariables = Exact<{
+  medicalStudy: MedicalStudyInput;
+}>;
+
+
+export type CreateMedicalStudyMutation = { __typename?: 'Mutation', createMedicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string } | null };
+
+export type DeleteAllMedicalStudiesMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalStudyFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalStudiesMutation = { __typename?: 'Mutation', deleteAllMedicalStudies?: Array<{ __typename?: 'MedicalStudy', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalStudiesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalStudiesMutation = { __typename?: 'Mutation', deleteMedicalStudies?: Array<{ __typename?: 'MedicalStudy', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalStudyMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalStudyMutation = { __typename?: 'Mutation', deleteMedicalStudy?: { __typename?: 'MedicalStudy', id: string, state: EntityState } | null };
+
+export type GetMedicalStudyQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+
+export type QueryMedicalStudiesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalStudyFilter>;
+}>;
+
+
+export type QueryMedicalStudiesQuery = { __typename?: 'Query', medicalStudies?: { __typename?: 'MedicalStudyResults', results?: Array<{ __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+
+export type UpdateMedicalStudyMutationVariables = Exact<{
+  medicalStudy: MedicalStudyUpdateInput;
+}>;
+
+
+export type UpdateMedicalStudyMutation = { __typename?: 'Mutation', updateMedicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string } | null };
+
+export type CountMedicalTestsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalTestFilter>;
+}>;
+
+
+export type CountMedicalTestsQuery = { __typename?: 'Query', countMedicalTests?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalTestMutationVariables = Exact<{
+  medicalTest: MedicalTestInput;
+}>;
+
+
+export type CreateMedicalTestMutation = { __typename?: 'Mutation', createMedicalTest?: { __typename?: 'MedicalTest', id: string, name: string } | null };
+
+export type DeleteAllMedicalTestsMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalTestFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalTestsMutation = { __typename?: 'Mutation', deleteAllMedicalTests?: Array<{ __typename?: 'MedicalTest', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalTestMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalTestMutation = { __typename?: 'Mutation', deleteMedicalTest?: { __typename?: 'MedicalTest', id: string, state: EntityState } | null };
+
+export type DeleteMedicalTestsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalTestsMutation = { __typename?: 'Mutation', deleteMedicalTests?: Array<{ __typename?: 'MedicalTest', id: string, state: EntityState } | null> | null };
+
+export type GetMedicalTestQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalTestsQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalTestFilter>;
+}>;
+
+
+export type QueryMedicalTestsQuery = { __typename?: 'Query', medicalTests?: { __typename?: 'MedicalTestResults', results?: Array<{ __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalTestMutationVariables = Exact<{
+  medicalTest: MedicalTestUpdateInput;
+}>;
+
+
+export type UpdateMedicalTestMutation = { __typename?: 'Mutation', updateMedicalTest?: { __typename?: 'MedicalTest', id: string, name: string } | null };
+
+export type CountMedicalTherapiesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalTherapyFilter>;
+}>;
+
+
+export type CountMedicalTherapiesQuery = { __typename?: 'Query', countMedicalTherapies?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateMedicalTherapyMutationVariables = Exact<{
+  medicalTherapy: MedicalTherapyInput;
+}>;
+
+
+export type CreateMedicalTherapyMutation = { __typename?: 'Mutation', createMedicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string } | null };
+
+export type DeleteAllMedicalTherapiesMutationVariables = Exact<{
+  filter?: InputMaybe<MedicalTherapyFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllMedicalTherapiesMutation = { __typename?: 'Mutation', deleteAllMedicalTherapies?: Array<{ __typename?: 'MedicalTherapy', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalTherapiesMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteMedicalTherapiesMutation = { __typename?: 'Mutation', deleteMedicalTherapies?: Array<{ __typename?: 'MedicalTherapy', id: string, state: EntityState } | null> | null };
+
+export type DeleteMedicalTherapyMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteMedicalTherapyMutation = { __typename?: 'Mutation', deleteMedicalTherapy?: { __typename?: 'MedicalTherapy', id: string, state: EntityState } | null };
+
+export type GetMedicalTherapyQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+
+export type QueryMedicalTherapiesQueryVariables = Exact<{
+  filter?: InputMaybe<MedicalTherapyFilter>;
+}>;
+
+
+export type QueryMedicalTherapiesQuery = { __typename?: 'Query', medicalTherapies?: { __typename?: 'MedicalTherapyResults', results?: Array<{ __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+
+export type UpdateMedicalTherapyMutationVariables = Exact<{
+  medicalTherapy: MedicalTherapyUpdateInput;
+}>;
+
+
+export type UpdateMedicalTherapyMutation = { __typename?: 'Mutation', updateMedicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string } | null };
 
 export type CreateObservationMutationVariables = Exact<{
   observation: ObservationInput;

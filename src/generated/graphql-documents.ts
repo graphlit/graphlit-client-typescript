@@ -2943,6 +2943,867 @@ export const UpdateLabel = gql`
   }
 }
     `;
+export const CountMedicalConditions = gql`
+    query CountMedicalConditions($filter: MedicalConditionFilter) {
+  countMedicalConditions(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalCondition = gql`
+    mutation CreateMedicalCondition($medicalCondition: MedicalConditionInput!) {
+  createMedicalCondition(medicalCondition: $medicalCondition) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalConditions = gql`
+    mutation DeleteAllMedicalConditions($filter: MedicalConditionFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalConditions(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalCondition = gql`
+    mutation DeleteMedicalCondition($id: ID!) {
+  deleteMedicalCondition(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalConditions = gql`
+    mutation DeleteMedicalConditions($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalConditions(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalCondition = gql`
+    query GetMedicalCondition($id: ID!) {
+  medicalCondition(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalConditions = gql`
+    query QueryMedicalConditions($filter: MedicalConditionFilter) {
+  medicalConditions(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalCondition = gql`
+    mutation UpdateMedicalCondition($medicalCondition: MedicalConditionUpdateInput!) {
+  updateMedicalCondition(medicalCondition: $medicalCondition) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalContraindications = gql`
+    query CountMedicalContraindications($filter: MedicalContraindicationFilter) {
+  countMedicalContraindications(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalContraindication = gql`
+    mutation CreateMedicalContraindication($medicalContraindication: MedicalContraindicationInput!) {
+  createMedicalContraindication(medicalContraindication: $medicalContraindication) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalContraindications = gql`
+    mutation DeleteAllMedicalContraindications($filter: MedicalContraindicationFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalContraindications(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalContraindication = gql`
+    mutation DeleteMedicalContraindication($id: ID!) {
+  deleteMedicalContraindication(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalContraindications = gql`
+    mutation DeleteMedicalContraindications($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalContraindications(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalContraindication = gql`
+    query GetMedicalContraindication($id: ID!) {
+  medicalContraindication(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalContraindications = gql`
+    query QueryMedicalContraindications($filter: MedicalContraindicationFilter) {
+  medicalContraindications(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalContraindication = gql`
+    mutation UpdateMedicalContraindication($medicalContraindication: MedicalContraindicationUpdateInput!) {
+  updateMedicalContraindication(medicalContraindication: $medicalContraindication) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalDevices = gql`
+    query CountMedicalDevices($filter: MedicalDeviceFilter) {
+  countMedicalDevices(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalDevice = gql`
+    mutation CreateMedicalDevice($medicalDevice: MedicalDeviceInput!) {
+  createMedicalDevice(medicalDevice: $medicalDevice) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalDevices = gql`
+    mutation DeleteAllMedicalDevices($filter: MedicalDeviceFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalDevices(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDevice = gql`
+    mutation DeleteMedicalDevice($id: ID!) {
+  deleteMedicalDevice(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDevices = gql`
+    mutation DeleteMedicalDevices($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalDevices(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalDevice = gql`
+    query GetMedicalDevice($id: ID!) {
+  medicalDevice(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalDevices = gql`
+    query QueryMedicalDevices($filter: MedicalDeviceFilter) {
+  medicalDevices(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalDevice = gql`
+    mutation UpdateMedicalDevice($medicalDevice: MedicalDeviceUpdateInput!) {
+  updateMedicalDevice(medicalDevice: $medicalDevice) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalDrugs = gql`
+    query CountMedicalDrugs($filter: MedicalDrugFilter) {
+  countMedicalDrugs(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalDrug = gql`
+    mutation CreateMedicalDrug($medicalDrug: MedicalDrugInput!) {
+  createMedicalDrug(medicalDrug: $medicalDrug) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalDrugs = gql`
+    mutation DeleteAllMedicalDrugs($filter: MedicalDrugFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalDrugs(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDrug = gql`
+    mutation DeleteMedicalDrug($id: ID!) {
+  deleteMedicalDrug(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDrugs = gql`
+    mutation DeleteMedicalDrugs($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalDrugs(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalDrug = gql`
+    query GetMedicalDrug($id: ID!) {
+  medicalDrug(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalDrugs = gql`
+    query QueryMedicalDrugs($filter: MedicalDrugFilter) {
+  medicalDrugs(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalDrug = gql`
+    mutation UpdateMedicalDrug($medicalDrug: MedicalDrugUpdateInput!) {
+  updateMedicalDrug(medicalDrug: $medicalDrug) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalDrugClasses = gql`
+    query CountMedicalDrugClasses($filter: MedicalDrugClassFilter) {
+  countMedicalDrugClasses(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalDrugClass = gql`
+    mutation CreateMedicalDrugClass($medicalDrugClass: MedicalDrugClassInput!) {
+  createMedicalDrugClass(medicalDrugClass: $medicalDrugClass) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalDrugClasses = gql`
+    mutation DeleteAllMedicalDrugClasses($filter: MedicalDrugClassFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalDrugClasses(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDrugClass = gql`
+    mutation DeleteMedicalDrugClass($id: ID!) {
+  deleteMedicalDrugClass(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalDrugClasses = gql`
+    mutation DeleteMedicalDrugClasses($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalDrugClasses(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalDrugClass = gql`
+    query GetMedicalDrugClass($id: ID!) {
+  medicalDrugClass(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalDrugClasses = gql`
+    query QueryMedicalDrugClasses($filter: MedicalDrugClassFilter) {
+  medicalDrugClasses(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalDrugClass = gql`
+    mutation UpdateMedicalDrugClass($medicalDrugClass: MedicalDrugClassUpdateInput!) {
+  updateMedicalDrugClass(medicalDrugClass: $medicalDrugClass) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalGuidelines = gql`
+    query CountMedicalGuidelines($filter: MedicalGuidelineFilter) {
+  countMedicalGuidelines(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalGuideline = gql`
+    mutation CreateMedicalGuideline($medicalGuideline: MedicalGuidelineInput!) {
+  createMedicalGuideline(medicalGuideline: $medicalGuideline) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalGuidelines = gql`
+    mutation DeleteAllMedicalGuidelines($filter: MedicalGuidelineFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalGuidelines(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalGuideline = gql`
+    mutation DeleteMedicalGuideline($id: ID!) {
+  deleteMedicalGuideline(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalGuidelines = gql`
+    mutation DeleteMedicalGuidelines($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalGuidelines(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalGuideline = gql`
+    query GetMedicalGuideline($id: ID!) {
+  medicalGuideline(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalGuidelines = gql`
+    query QueryMedicalGuidelines($filter: MedicalGuidelineFilter) {
+  medicalGuidelines(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalGuideline = gql`
+    mutation UpdateMedicalGuideline($medicalGuideline: MedicalGuidelineUpdateInput!) {
+  updateMedicalGuideline(medicalGuideline: $medicalGuideline) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalIndications = gql`
+    query CountMedicalIndications($filter: MedicalIndicationFilter) {
+  countMedicalIndications(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalIndication = gql`
+    mutation CreateMedicalIndication($medicalIndication: MedicalIndicationInput!) {
+  createMedicalIndication(medicalIndication: $medicalIndication) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalIndications = gql`
+    mutation DeleteAllMedicalIndications($filter: MedicalIndicationFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalIndications(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalIndication = gql`
+    mutation DeleteMedicalIndication($id: ID!) {
+  deleteMedicalIndication(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalIndications = gql`
+    mutation DeleteMedicalIndications($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalIndications(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalIndication = gql`
+    query GetMedicalIndication($id: ID!) {
+  medicalIndication(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalIndications = gql`
+    query QueryMedicalIndications($filter: MedicalIndicationFilter) {
+  medicalIndications(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalIndication = gql`
+    mutation UpdateMedicalIndication($medicalIndication: MedicalIndicationUpdateInput!) {
+  updateMedicalIndication(medicalIndication: $medicalIndication) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalProcedures = gql`
+    query CountMedicalProcedures($filter: MedicalProcedureFilter) {
+  countMedicalProcedures(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalProcedure = gql`
+    mutation CreateMedicalProcedure($medicalProcedure: MedicalProcedureInput!) {
+  createMedicalProcedure(medicalProcedure: $medicalProcedure) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalProcedures = gql`
+    mutation DeleteAllMedicalProcedures($filter: MedicalProcedureFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalProcedures(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalProcedure = gql`
+    mutation DeleteMedicalProcedure($id: ID!) {
+  deleteMedicalProcedure(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalProcedures = gql`
+    mutation DeleteMedicalProcedures($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalProcedures(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalProcedure = gql`
+    query GetMedicalProcedure($id: ID!) {
+  medicalProcedure(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalProcedures = gql`
+    query QueryMedicalProcedures($filter: MedicalProcedureFilter) {
+  medicalProcedures(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalProcedure = gql`
+    mutation UpdateMedicalProcedure($medicalProcedure: MedicalProcedureUpdateInput!) {
+  updateMedicalProcedure(medicalProcedure: $medicalProcedure) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalStudies = gql`
+    query CountMedicalStudies($filter: MedicalStudyFilter) {
+  countMedicalStudies(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalStudy = gql`
+    mutation CreateMedicalStudy($medicalStudy: MedicalStudyInput!) {
+  createMedicalStudy(medicalStudy: $medicalStudy) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalStudies = gql`
+    mutation DeleteAllMedicalStudies($filter: MedicalStudyFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalStudies(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalStudies = gql`
+    mutation DeleteMedicalStudies($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalStudies(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalStudy = gql`
+    mutation DeleteMedicalStudy($id: ID!) {
+  deleteMedicalStudy(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalStudy = gql`
+    query GetMedicalStudy($id: ID!) {
+  medicalStudy(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+    address {
+      streetAddress
+      city
+      region
+      country
+      postalCode
+    }
+  }
+}
+    `;
+export const QueryMedicalStudies = gql`
+    query QueryMedicalStudies($filter: MedicalStudyFilter) {
+  medicalStudies(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+    }
+  }
+}
+    `;
+export const UpdateMedicalStudy = gql`
+    mutation UpdateMedicalStudy($medicalStudy: MedicalStudyUpdateInput!) {
+  updateMedicalStudy(medicalStudy: $medicalStudy) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalTests = gql`
+    query CountMedicalTests($filter: MedicalTestFilter) {
+  countMedicalTests(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalTest = gql`
+    mutation CreateMedicalTest($medicalTest: MedicalTestInput!) {
+  createMedicalTest(medicalTest: $medicalTest) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalTests = gql`
+    mutation DeleteAllMedicalTests($filter: MedicalTestFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalTests(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalTest = gql`
+    mutation DeleteMedicalTest($id: ID!) {
+  deleteMedicalTest(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalTests = gql`
+    mutation DeleteMedicalTests($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalTests(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalTest = gql`
+    query GetMedicalTest($id: ID!) {
+  medicalTest(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalTests = gql`
+    query QueryMedicalTests($filter: MedicalTestFilter) {
+  medicalTests(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalTest = gql`
+    mutation UpdateMedicalTest($medicalTest: MedicalTestUpdateInput!) {
+  updateMedicalTest(medicalTest: $medicalTest) {
+    id
+    name
+  }
+}
+    `;
+export const CountMedicalTherapies = gql`
+    query CountMedicalTherapies($filter: MedicalTherapyFilter) {
+  countMedicalTherapies(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateMedicalTherapy = gql`
+    mutation CreateMedicalTherapy($medicalTherapy: MedicalTherapyInput!) {
+  createMedicalTherapy(medicalTherapy: $medicalTherapy) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllMedicalTherapies = gql`
+    mutation DeleteAllMedicalTherapies($filter: MedicalTherapyFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalTherapies(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalTherapies = gql`
+    mutation DeleteMedicalTherapies($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteMedicalTherapies(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteMedicalTherapy = gql`
+    mutation DeleteMedicalTherapy($id: ID!) {
+  deleteMedicalTherapy(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetMedicalTherapy = gql`
+    query GetMedicalTherapy($id: ID!) {
+  medicalTherapy(id: $id) {
+    id
+    name
+    alternateNames
+    creationDate
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryMedicalTherapies = gql`
+    query QueryMedicalTherapies($filter: MedicalTherapyFilter) {
+  medicalTherapies(filter: $filter) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateMedicalTherapy = gql`
+    mutation UpdateMedicalTherapy($medicalTherapy: MedicalTherapyUpdateInput!) {
+  updateMedicalTherapy(medicalTherapy: $medicalTherapy) {
+    id
+    name
+  }
+}
+    `;
 export const CreateObservation = gql`
     mutation CreateObservation($observation: ObservationInput!) {
   createObservation(observation: $observation) {
