@@ -4275,6 +4275,8 @@ export const LookupCredits = gql`
     credits
     storageRatio
     computeRatio
+    embeddingRatio
+    completionRatio
     indexingRatio
     preparationRatio
     extractionRatio
@@ -4329,6 +4331,8 @@ export const QueryCredits = gql`
     credits
     storageRatio
     computeRatio
+    embeddingRatio
+    completionRatio
     indexingRatio
     preparationRatio
     extractionRatio
@@ -5117,6 +5121,9 @@ export const CreateWorkflow = gql`
         connector {
           type
           enrichedTypes
+          fhir {
+            endpoint
+          }
         }
       }
     }
@@ -5289,6 +5296,9 @@ export const GetWorkflow = gql`
         connector {
           type
           enrichedTypes
+          fhir {
+            endpoint
+          }
         }
       }
     }
@@ -5434,6 +5444,9 @@ export const QueryWorkflows = gql`
           connector {
             type
             enrichedTypes
+            fhir {
+              endpoint
+            }
           }
         }
       }
@@ -5574,6 +5587,9 @@ export const UpdateWorkflow = gql`
         connector {
           type
           enrichedTypes
+          fhir {
+            endpoint
+          }
         }
       }
     }
