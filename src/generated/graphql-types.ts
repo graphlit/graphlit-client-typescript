@@ -3023,6 +3023,8 @@ export type Feed = {
   rss?: Maybe<RssFeedProperties>;
   /** The feed schedule policy. */
   schedulePolicy?: Maybe<FeedSchedulePolicy>;
+  /** The web search feed properties. */
+  search?: Maybe<SearchFeedProperties>;
   /** The site feed properties. */
   site?: Maybe<SiteFeedProperties>;
   /** The Slack feed properties. */
@@ -3110,6 +3112,8 @@ export type FeedInput = {
   rss?: InputMaybe<RssFeedPropertiesInput>;
   /** The feed schedule policy. */
   schedulePolicy?: InputMaybe<FeedSchedulePolicyInput>;
+  /** The web search feed properties. */
+  search?: InputMaybe<SearchFeedPropertiesInput>;
   /** The site feed properties. */
   site?: InputMaybe<SiteFeedPropertiesInput>;
   /** The Slack feed properties. */
@@ -3200,6 +3204,8 @@ export enum FeedTypes {
   Reddit = 'REDDIT',
   /** RSS feed */
   Rss = 'RSS',
+  /** Web Search feed */
+  Search = 'SEARCH',
   /** Cloud storage site feed */
   Site = 'SITE',
   /** Slack channel feed */
@@ -3234,6 +3240,8 @@ export type FeedUpdateInput = {
   rss?: InputMaybe<RssFeedPropertiesUpdateInput>;
   /** The feed schedule policy. */
   schedulePolicy?: InputMaybe<FeedSchedulePolicyInput>;
+  /** The web search feed properties. */
+  search?: InputMaybe<SearchFeedPropertiesUpdateInput>;
   /** The site feed properties. */
   site?: InputMaybe<SiteFeedPropertiesUpdateInput>;
   /** The Slack feed properties. */
@@ -8149,7 +8157,10 @@ export type OpenAiModelPropertiesUpdateInput = {
 export enum OpenAiModels {
   /** Developer-specified model */
   Custom = 'CUSTOM',
-  /** GPT-4 (Latest) */
+  /**
+   * GPT-4 (Latest)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4 = 'GPT4',
   /** GPT-4o 128k (Latest) */
   Gpt4O_128K = 'GPT4O_128K',
@@ -8163,11 +8174,20 @@ export enum OpenAiModels {
   Gpt4OMini_128K = 'GPT4O_MINI_128K',
   /** GPT-4o Mini 128k (2024-07-18 version) */
   Gpt4OMini_128K_20240718 = 'GPT4O_MINI_128K_20240718',
-  /** GPT-4 (0613 version) */
+  /**
+   * GPT-4 (0613 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4_0613 = 'GPT4_0613',
-  /** GPT-4 32k (Latest) */
+  /**
+   * GPT-4 32k (Latest)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4_32K = 'GPT4_32K',
-  /** GPT-4 32k (0613 version) */
+  /**
+   * GPT-4 32k (0613 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4_32K_0613 = 'GPT4_32K_0613',
   /** GPT-4 Turbo 128k (Latest) */
   Gpt4Turbo_128K = 'GPT4_TURBO_128K',
@@ -8177,27 +8197,45 @@ export enum OpenAiModels {
   Gpt4Turbo_128K_1106 = 'GPT4_TURBO_128K_1106',
   /** GPT-4 Turbo 128k (2024-04-09 version) */
   Gpt4Turbo_128K_20240409 = 'GPT4_TURBO_128K_20240409',
-  /** @deprecated Use GPT4_Turbo_128k instead. */
+  /**
+   * GPT-4 Turbo Vision 128k (Latest)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4TurboVision_128K = 'GPT4_TURBO_VISION_128K',
-  /** GPT-4 Turbo Vision 128k (1106 version) */
+  /**
+   * GPT-4 Turbo Vision 128k (1106 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
+   */
   Gpt4TurboVision_128K_1106 = 'GPT4_TURBO_VISION_128K_1106',
   /**
    * GPT-3.5 Turbo (Latest)
-   * @deprecated OpenAI is deprecating this model. Use the GPT-3.5 Turbo 16k model instead.
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
    */
   Gpt35Turbo = 'GPT35_TURBO',
   /**
    * GPT-3.5 Turbo (0613 version)
-   * @deprecated OpenAI is deprecating this model. Use the GPT-3.5 Turbo 16k model instead.
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
    */
   Gpt35Turbo_0613 = 'GPT35_TURBO_0613',
-  /** GPT-3.5 Turbo 16k (Latest) */
+  /**
+   * GPT-3.5 Turbo 16k (Latest)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
+   */
   Gpt35Turbo_16K = 'GPT35_TURBO_16K',
-  /** GPT-3.5 Turbo 16k (0125 version) */
+  /**
+   * GPT-3.5 Turbo 16k (0125 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
+   */
   Gpt35Turbo_16K_0125 = 'GPT35_TURBO_16K_0125',
-  /** GPT-3.5 Turbo 16k (0613 version) */
+  /**
+   * GPT-3.5 Turbo 16k (0613 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
+   */
   Gpt35Turbo_16K_0613 = 'GPT35_TURBO_16K_0613',
-  /** GPT-3.5 Turbo 16k (1106 version) */
+  /**
+   * GPT-3.5 Turbo 16k (1106 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
+   */
   Gpt35Turbo_16K_1106 = 'GPT35_TURBO_16K_1106'
 }
 
@@ -9239,6 +9277,8 @@ export type ProjectCredits = {
   extractionRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The content indexing ratio of credits. */
   indexingRatio?: Maybe<Scalars['Decimal']['output']>;
+  /** The content ingestion ratio of credits. */
+  ingestionRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The tenant identifier. */
   ownerId?: Maybe<Scalars['ID']['output']>;
   /** The content preparation ratio of credits. */
@@ -10823,12 +10863,51 @@ export type RevisionStrategyUpdateInput = {
   type?: InputMaybe<RevisionStrategyTypes>;
 };
 
+/** Represents web search feed properties. */
+export type SearchFeedProperties = {
+  __typename?: 'SearchFeedProperties';
+  /** The limit of items to be read from feed, defaults to 10. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** The web search text. */
+  text: Scalars['String']['output'];
+  /** Search service type, defaults to Tavily. */
+  type?: Maybe<SearchServiceTypes>;
+};
+
+/** Represents web search feed properties. */
+export type SearchFeedPropertiesInput = {
+  /** The limit of items to be read from feed, defaults to 10. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The web search text. */
+  text: Scalars['String']['input'];
+  /** Search service type, defaults to Tavily. */
+  type?: InputMaybe<SearchServiceTypes>;
+};
+
+/** Represents web search feed properties. */
+export type SearchFeedPropertiesUpdateInput = {
+  /** The limit of items to be read from feed, defaults to 10. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The web search text. */
+  text?: InputMaybe<Scalars['String']['input']>;
+  /** Search service type, defaults to Tavily. */
+  type?: InputMaybe<SearchServiceTypes>;
+};
+
 /** Search query type */
 export enum SearchQueryTypes {
   /** Full (Lucene syntax) */
   Full = 'FULL',
   /** Simple */
   Simple = 'SIMPLE'
+}
+
+/** Search feed service type */
+export enum SearchServiceTypes {
+  /** Exa search feed service */
+  Exa = 'EXA',
+  /** Tavily search feed service */
+  Tavily = 'TAVILY'
 }
 
 /** Search type */
@@ -12687,7 +12766,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -12708,7 +12787,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', folderId?: string | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, refreshToken: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null> | null } | null };
 
 export type QueryMicrosoftTeamsChannelsQueryVariables = Exact<{
   properties: MicrosoftTeamsChannelsInput;
@@ -13731,7 +13810,7 @@ export type LookupCreditsQueryVariables = Exact<{
 }>;
 
 
-export type LookupCreditsQuery = { __typename?: 'Query', lookupCredits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
+export type LookupCreditsQuery = { __typename?: 'Query', lookupCredits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
 
 export type LookupUsageQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
@@ -13746,7 +13825,7 @@ export type QueryCreditsQueryVariables = Exact<{
 }>;
 
 
-export type QueryCreditsQuery = { __typename?: 'Query', credits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
+export type QueryCreditsQuery = { __typename?: 'Query', credits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
 
 export type QueryUsageQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];

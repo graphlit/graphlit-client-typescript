@@ -2580,6 +2580,11 @@ export const GetFeed = gql`
       allowedPaths
       excludedPaths
     }
+    search {
+      readLimit
+      type
+      text
+    }
     reddit {
       readLimit
       subredditName
@@ -2751,6 +2756,11 @@ export const QueryFeeds = gql`
         includeFiles
         allowedPaths
         excludedPaths
+      }
+      search {
+        readLimit
+        type
+        text
       }
       reddit {
         readLimit
@@ -4277,6 +4287,7 @@ export const LookupCredits = gql`
     computeRatio
     embeddingRatio
     completionRatio
+    ingestionRatio
     indexingRatio
     preparationRatio
     extractionRatio
@@ -4333,6 +4344,7 @@ export const QueryCredits = gql`
     computeRatio
     embeddingRatio
     completionRatio
+    ingestionRatio
     indexingRatio
     preparationRatio
     extractionRatio
