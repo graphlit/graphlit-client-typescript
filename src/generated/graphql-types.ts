@@ -3661,6 +3661,8 @@ export enum GroqModels {
   Llama_3_8B = 'LLAMA_3_8B',
   /** LLaMA 3 70b */
   Llama_3_70B = 'LLAMA_3_70B',
+  /** LLaVA 1.5 7B */
+  Llava_1_5_7B = 'LLAVA_1_5_7B',
   /** Mixtral 8x7b Instruct */
   Mixtral_8X7BInstruct = 'MIXTRAL_8X7B_INSTRUCT'
 }
