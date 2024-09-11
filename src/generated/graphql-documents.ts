@@ -4644,6 +4644,7 @@ export const GetSpecification = gql`
     }
     rerankingStrategy {
       serviceType
+      threshold
     }
     graphStrategy {
       type
@@ -4901,6 +4902,7 @@ export const QuerySpecifications = gql`
       }
       rerankingStrategy {
         serviceType
+        threshold
       }
       graphStrategy {
         type
