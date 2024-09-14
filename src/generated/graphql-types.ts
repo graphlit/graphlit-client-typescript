@@ -8240,7 +8240,15 @@ export enum OpenAiModels {
    * GPT-3.5 Turbo 16k (1106 version)
    * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
    */
-  Gpt35Turbo_16K_1106 = 'GPT35_TURBO_16K_1106'
+  Gpt35Turbo_16K_1106 = 'GPT35_TURBO_16K_1106',
+  /** o1 Mini 128k (Latest) */
+  O1Mini_128K = 'O1_MINI_128K',
+  /** o1 Mini 128k (2024-09-12 version) */
+  O1Mini_128K_20240912 = 'O1_MINI_128K_20240912',
+  /** o1 Preview 128k (Latest) */
+  O1Preview_128K = 'O1_PREVIEW_128K',
+  /** o1 Preview 128k (2024-09-12 version) */
+  O1Preview_128K_20240912 = 'O1_PREVIEW_128K_20240912'
 }
 
 /** OpenAI vision model detail levels */
