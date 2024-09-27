@@ -761,6 +761,7 @@ export const GetContent = gql`
     }
     pages {
       index
+      relevance
       chunks {
         index
         pageIndex
@@ -1146,6 +1147,7 @@ export const QueryContents = gql`
       }
       pages {
         index
+        relevance
         chunks {
           index
           pageIndex
@@ -1388,6 +1390,7 @@ export const QueryContentsFacets = gql`
       }
       pages {
         index
+        relevance
         chunks {
           index
           pageIndex
@@ -1822,8 +1825,13 @@ export const GetConversation = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $id: ID, $correlationId: String) {
-  promptConversation(prompt: $prompt, id: $id, correlationId: $correlationId) {
+    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  promptConversation(
+    prompt: $prompt
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
     conversation {
       id
     }
@@ -4693,6 +4701,15 @@ export const GetSpecification = gql`
       temperature
       probability
     }
+    google {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      temperature
+      probability
+    }
     replicate {
       tokenLimit
       completionTokenLimit
@@ -4713,6 +4730,16 @@ export const GetSpecification = gql`
       probability
     }
     groq {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      endpoint
+      temperature
+      probability
+    }
+    cerebras {
       tokenLimit
       completionTokenLimit
       model
@@ -4951,6 +4978,15 @@ export const QuerySpecifications = gql`
         temperature
         probability
       }
+      google {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        temperature
+        probability
+      }
       replicate {
         tokenLimit
         completionTokenLimit
@@ -4971,6 +5007,16 @@ export const QuerySpecifications = gql`
         probability
       }
       groq {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        endpoint
+        temperature
+        probability
+      }
+      cerebras {
         tokenLimit
         completionTokenLimit
         model
