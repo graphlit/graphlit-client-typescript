@@ -3801,6 +3801,8 @@ export enum GroqModels {
   Llama_3_2_3BPreview = 'LLAMA_3_2_3B_PREVIEW',
   /** LLaMA 3.2 11b Text Preview */
   Llama_3_2_11BTextPreview = 'LLAMA_3_2_11B_TEXT_PREVIEW',
+  /** LLaMA 3.2 11b Vision Preview */
+  Llama_3_2_11BVisionPreview = 'LLAMA_3_2_11B_VISION_PREVIEW',
   /** LLaMA 3.2 90b Text Preview */
   Llama_3_2_90BTextPreview = 'LLAMA_3_2_90B_TEXT_PREVIEW',
   /** LLaMA 3 8b */
