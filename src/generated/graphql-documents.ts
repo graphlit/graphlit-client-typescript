@@ -4664,6 +4664,14 @@ export const GetSpecification = gql`
       customRevision
       count
     }
+    azureAI {
+      tokenLimit
+      completionTokenLimit
+      key
+      endpoint
+      temperature
+      probability
+    }
     openAI {
       tokenLimit
       completionTokenLimit
@@ -4940,6 +4948,14 @@ export const QuerySpecifications = gql`
         type
         customRevision
         count
+      }
+      azureAI {
+        tokenLimit
+        completionTokenLimit
+        key
+        endpoint
+        temperature
+        probability
       }
       openAI {
         tokenLimit
