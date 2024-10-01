@@ -3695,8 +3695,16 @@ export enum GoogleModels {
   Custom = 'CUSTOM',
   /** Gemini 1.5 Flash (Latest) */
   Gemini_1_5Flash = 'GEMINI_1_5_FLASH',
+  /** Gemini 1.5 Flash (001 version) */
+  Gemini_1_5Flash_001 = 'GEMINI_1_5_FLASH_001',
+  /** Gemini 1.5 Flash (002 version) */
+  Gemini_1_5Flash_002 = 'GEMINI_1_5_FLASH_002',
   /** Gemini 1.5 Pro (Latest) */
-  Gemini_1_5Pro = 'GEMINI_1_5_PRO'
+  Gemini_1_5Pro = 'GEMINI_1_5_PRO',
+  /** Gemini 1.5 Pro (001 version) */
+  Gemini_1_5Pro_001 = 'GEMINI_1_5_PRO_001',
+  /** Gemini 1.5 Pro (002 version) */
+  Gemini_1_5Pro_002 = 'GEMINI_1_5_PRO_002'
 }
 
 /** Represents a knowledge graph. */
