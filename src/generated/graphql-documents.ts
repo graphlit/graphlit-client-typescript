@@ -521,11 +521,12 @@ export const DeleteContents = gql`
 }
     `;
 export const ExtractContents = gql`
-    mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput!, $correlationId: String) {
+    mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput!, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractContents(
     prompt: $prompt
     filter: $filter
     specification: $specification
+    tools: $tools
     correlationId: $correlationId
   ) {
     specification {
@@ -780,6 +781,28 @@ export const GetContent = gql`
       relevance
     }
     error
+  }
+}
+    `;
+export const IngestBatch = gql`
+    mutation IngestBatch($uris: [URL!]!, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+  ingestBatch(
+    uris: $uris
+    workflow: $workflow
+    collections: $collections
+    correlationId: $correlationId
+  ) {
+    id
+    name
+    state
+    type
+    fileType
+    mimeType
+    uri
+    collections {
+      id
+      name
+    }
   }
 }
     `;
@@ -1509,6 +1532,171 @@ export const CloseConversation = gql`
   }
 }
     `;
+export const ContinueConversation = gql`
+    mutation ContinueConversation($id: ID!, $responses: [ConversationToolResponseInput!]!, $correlationId: String) {
+  continueConversation(
+    id: $id
+    responses: $responses
+    correlationId: $correlationId
+  ) {
+    conversation {
+      id
+    }
+    message {
+      role
+      author
+      message
+      citations {
+        content {
+          id
+          name
+          state
+          originalDate
+          identifier
+          uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
+        }
+        index
+        text
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
+      }
+      tokens
+      throughput
+      completionTime
+      timestamp
+      modelService
+      model
+    }
+    messageCount
+    facets {
+      type
+      value
+      range {
+        from
+        to
+      }
+      count
+      facet
+      observable {
+        type
+        observable {
+          id
+          name
+        }
+      }
+    }
+    graph {
+      nodes {
+        id
+        name
+        type
+        metadata
+      }
+      edges {
+        from
+        to
+        relation
+      }
+    }
+  }
+}
+    `;
 export const CountConversations = gql`
     query CountConversations($filter: ConversationFilter) {
   countConversations(filter: $filter) {
@@ -1676,6 +1864,11 @@ export const GetConversation = gql`
         pageNumber
         frameNumber
       }
+      toolCalls {
+        id
+        name
+        arguments
+      }
       tokens
       throughput
       completionTime
@@ -1825,11 +2018,12 @@ export const GetConversation = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $correlationId: String) {
   promptConversation(
     prompt: $prompt
     id: $id
     specification: $specification
+    tools: $tools
     correlationId: $correlationId
   ) {
     conversation {
@@ -1943,6 +2137,11 @@ export const PromptConversation = gql`
         endTime
         pageNumber
         frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
       }
       tokens
       throughput
@@ -2134,6 +2333,11 @@ export const QueryConversations = gql`
           endTime
           pageNumber
           frameNumber
+        }
+        toolCalls {
+          id
+          name
+          arguments
         }
         tokens
         throughput
@@ -4889,6 +5093,11 @@ export const PromptSpecifications = gql`
         endTime
         pageNumber
         frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
       }
       tokens
       throughput

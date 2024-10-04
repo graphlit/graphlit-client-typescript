@@ -313,7 +313,7 @@ export type AnthropicModelPropertiesUpdateInput = {
   /** The Anthropic API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Anthropic model, or custom, when using developer's own account. */
-  model: AnthropicModels;
+  model?: InputMaybe<AnthropicModels>;
   /** The Anthropic model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -734,7 +734,7 @@ export type AzureOpenAiModelPropertiesUpdateInput = {
   /** The Azure OpenAI API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Azure OpenAI model, or custom, when using developer's own account. */
-  model: AzureOpenAiModels;
+  model?: InputMaybe<AzureOpenAiModels>;
   /** The model token probability. */
   probability?: InputMaybe<Scalars['Float']['input']>;
   /** The model temperature. */
@@ -964,7 +964,7 @@ export type CerebrasModelPropertiesUpdateInput = {
   /** The Cerebras API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Cerebras model, or custom, when using developer's own account. */
-  model: CerebrasModels;
+  model?: InputMaybe<CerebrasModels>;
   /** The Cerebras model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -1029,7 +1029,7 @@ export type CohereModelPropertiesUpdateInput = {
   /** The Cohere API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Cohere model, or custom, when using developer's own account. */
-  model: CohereModels;
+  model?: InputMaybe<CohereModels>;
   /** The Cohere model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -1778,7 +1778,7 @@ export type ConversationCitation = {
   /** The citation start time, within the referenced audio or video content. */
   startTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The citation text. */
-  text?: Maybe<Scalars['String']['output']>;
+  text: Scalars['String']['output'];
 };
 
 /** Represents a filter for conversations. */
@@ -1819,6 +1819,8 @@ export type ConversationInput = {
   augmentedFilter?: InputMaybe<ContentCriteriaInput>;
   /** Filter content for conversation, optional. */
   filter?: InputMaybe<ContentCriteriaInput>;
+  /** The conversation messages. */
+  messages?: InputMaybe<Array<InputMaybe<ConversationMessageInput>>>;
   /** The name of the conversation. */
   name: Scalars['String']['input'];
   /** The LLM specification used by this conversation, optional. */
@@ -1837,7 +1839,7 @@ export type ConversationMessage = {
   /** The elapsed time for the model to complete the prompt, only provided with assistant role. */
   completionTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The conversation message. */
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   /** The LLM description, only provided with assistant role. */
   model?: Maybe<Scalars['String']['output']>;
   /** The LLM service type, only provided with assistant role. */
@@ -1847,9 +1849,21 @@ export type ConversationMessage = {
   /** The LLM completion throughput in tokens/second, only provided with assistant role. */
   throughput?: Maybe<Scalars['Float']['output']>;
   /** The conversation message timestamp. */
-  timestamp: Scalars['DateTime']['output'];
+  timestamp?: Maybe<Scalars['DateTime']['output']>;
   /** The conversation message token usage, not including RAG context tokens. */
-  tokens: Scalars['Int']['output'];
+  tokens?: Maybe<Scalars['Int']['output']>;
+  /** The tools called during the prompting of the conversation. You will need to call continueConversation with the tool responses to continue the conversation. */
+  toolCalls?: Maybe<Array<Maybe<ConversationToolCall>>>;
+};
+
+/** Represents a conversation message. */
+export type ConversationMessageInput = {
+  /** The conversation message author. */
+  author?: InputMaybe<Scalars['String']['input']>;
+  /** The conversation message. */
+  message: Scalars['String']['input'];
+  /** The conversation message role. */
+  role: ConversationRoleTypes;
 };
 
 /** Represents conversation query results. */
@@ -1859,10 +1873,13 @@ export type ConversationResults = {
   results?: Maybe<Array<Maybe<Conversation>>>;
 };
 
+/** Conversation message role type */
 export enum ConversationRoleTypes {
+  /** LLM assistant message */
   Assistant = 'ASSISTANT',
-  Function = 'FUNCTION',
+  /** LLM system message */
   System = 'SYSTEM',
+  /** LLM user prompt message */
   User = 'USER'
 }
 
@@ -1933,6 +1950,25 @@ export type ConversationStrategyUpdateInput = {
   messagesWeight?: InputMaybe<Scalars['Float']['input']>;
   /** The conversation strategy type. */
   type?: InputMaybe<ConversationStrategyTypes>;
+};
+
+/** Represents a conversation tool call. */
+export type ConversationToolCall = {
+  __typename?: 'ConversationToolCall';
+  /** The tool arguments. */
+  arguments: Scalars['String']['output'];
+  /** The tool identifier. */
+  id?: Maybe<Scalars['String']['output']>;
+  /** The tool name. */
+  name: Scalars['String']['output'];
+};
+
+/** Represents a conversation tool calling response. */
+export type ConversationToolResponseInput = {
+  /** The JSON response to the tool. */
+  content: Scalars['String']['input'];
+  /** The tool identifier. */
+  id: Scalars['String']['input'];
 };
 
 /** Conversation type */
@@ -2090,7 +2126,7 @@ export type DeepseekModelPropertiesUpdateInput = {
   /** The Deepseek API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Deepseek model, or custom, when using developer's own account. */
-  model: DeepseekModels;
+  model?: InputMaybe<DeepseekModels>;
   /** The Deepseek model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -3678,7 +3714,7 @@ export type GoogleModelPropertiesUpdateInput = {
   /** The Google API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Google model, or custom, when using developer's own account. */
-  model: GoogleModels;
+  model?: InputMaybe<GoogleModels>;
   /** The Google model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -3699,6 +3735,10 @@ export enum GoogleModels {
   Gemini_1_5Flash_001 = 'GEMINI_1_5_FLASH_001',
   /** Gemini 1.5 Flash (002 version) */
   Gemini_1_5Flash_002 = 'GEMINI_1_5_FLASH_002',
+  /** Gemini 1.5 Flash 8b (Latest) */
+  Gemini_1_5Flash_8B = 'GEMINI_1_5_FLASH_8B',
+  /** Gemini 1.5 Flash 8b (001 version) */
+  Gemini_1_5Flash_8B_001 = 'GEMINI_1_5_FLASH_8B_001',
   /** Gemini 1.5 Pro (Latest) */
   Gemini_1_5Pro = 'GEMINI_1_5_PRO',
   /** Gemini 1.5 Pro (001 version) */
@@ -3831,7 +3871,7 @@ export type GroqModelPropertiesUpdateInput = {
   /** The Groq API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Groq model, or custom, when using developer's own account. */
-  model: GroqModels;
+  model?: InputMaybe<GroqModels>;
   /** The Groq model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -6549,7 +6589,7 @@ export type MistralModelPropertiesUpdateInput = {
   /** The Mistral API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Mistral model, or custom, when using developer's own account. */
-  model: MistralModels;
+  model?: InputMaybe<MistralModels>;
   /** The Mistral model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -6658,6 +6698,8 @@ export type Mutation = {
   closeCollection?: Maybe<Collection>;
   /** Closes an existing conversation. */
   closeConversation?: Maybe<Conversation>;
+  /** Provide responses to called tools which continues prompted conversation. */
+  continueConversation?: Maybe<PromptConversation>;
   /** Creates a new alert. */
   createAlert?: Maybe<Alert>;
   /** Creates a new category. */
@@ -6884,8 +6926,10 @@ export type Mutation = {
   enableAlert?: Maybe<Alert>;
   /** Enables a feed. */
   enableFeed?: Maybe<Feed>;
-  /** Extracts data from contents based on the provided filter criteria. */
+  /** Extracts data using tool calling, from contents resulting from the provided filter criteria. */
   extractContents?: Maybe<Array<Maybe<ExtractCompletion>>>;
+  /** Ingests a batch of content by URI. Supports files and webpages. */
+  ingestBatch?: Maybe<Array<Maybe<Content>>>;
   /** Ingests a file from Base64-encoded data. */
   ingestEncodedFile?: Maybe<Content>;
   /**
@@ -7018,6 +7062,13 @@ export type MutationCloseCollectionArgs = {
 
 export type MutationCloseConversationArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationContinueConversationArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  responses: Array<ConversationToolResponseInput>;
 };
 
 
@@ -7675,6 +7726,15 @@ export type MutationExtractContentsArgs = {
   filter?: InputMaybe<ContentFilter>;
   prompt: Scalars['String']['input'];
   specification: EntityReferenceInput;
+  tools: Array<ToolDefinitionInput>;
+};
+
+
+export type MutationIngestBatchArgs = {
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  uris: Array<Scalars['URL']['input']>;
+  workflow?: InputMaybe<EntityReferenceInput>;
 };
 
 
@@ -7751,6 +7811,7 @@ export type MutationPromptConversationArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   prompt: Scalars['String']['input'];
   specification?: InputMaybe<EntityReferenceInput>;
+  tools?: InputMaybe<Array<ToolDefinitionInput>>;
 };
 
 
@@ -8358,7 +8419,7 @@ export type OpenAiModelPropertiesUpdateInput = {
   /** The OpenAI API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Azure OpenAI model, or custom, when using developer's own account. */
-  model: OpenAiModels;
+  model?: InputMaybe<OpenAiModels>;
   /** The OpenAI model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -10808,7 +10869,7 @@ export type ReplicateModelPropertiesUpdateInput = {
   /** The Replicate API key, if using developer's own account. */
   key?: InputMaybe<Scalars['String']['input']>;
   /** The Replicate model, or custom, when using developer's own account. */
-  model: ReplicateModels;
+  model?: InputMaybe<ReplicateModels>;
   /** The Replicate model name, if using developer's own account. */
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
@@ -11648,7 +11709,10 @@ export type Specification = {
   strategy?: Maybe<ConversationStrategy>;
   /** The LLM system prompt. */
   systemPrompt?: Maybe<Scalars['String']['output']>;
-  /** The tool definitions. */
+  /**
+   * The tool definitions.
+   * @deprecated Tool definitions have been moved to prompt conversation mutation.
+   */
   tools?: Maybe<Array<ToolDefinition>>;
   /** The specification type. */
   type?: Maybe<SpecificationTypes>;
@@ -11730,8 +11794,6 @@ export type SpecificationInput = {
   strategy?: InputMaybe<ConversationStrategyInput>;
   /** The LLM system prompt. */
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
-  /** The tool definitions. */
-  tools?: InputMaybe<Array<ToolDefinitionInput>>;
   /** The specification type. */
   type?: InputMaybe<SpecificationTypes>;
 };
@@ -11805,8 +11867,6 @@ export type SpecificationUpdateInput = {
   strategy?: InputMaybe<ConversationStrategyUpdateInput>;
   /** The LLM system prompt. */
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
-  /** The tool definitions. */
-  tools?: InputMaybe<Array<ToolDefinitionUpdateInput>>;
   /** The specification type. */
   type?: InputMaybe<SpecificationTypes>;
 };
@@ -12662,6 +12722,7 @@ export type ExtractContentsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   filter?: InputMaybe<ContentFilter>;
   specification: EntityReferenceInput;
+  tools: Array<ToolDefinitionInput> | ToolDefinitionInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -12674,6 +12735,16 @@ export type GetContentQueryVariables = Exact<{
 
 
 export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, relevance?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null } | null };
+
+export type IngestBatchMutationVariables = Exact<{
+  uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
+  workflow?: InputMaybe<EntityReferenceInput>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type IngestBatchMutation = { __typename?: 'Mutation', ingestBatch?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null> | null };
 
 export type IngestEncodedFileMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -12806,6 +12877,15 @@ export type CloseConversationMutationVariables = Exact<{
 
 export type CloseConversationMutation = { __typename?: 'Mutation', closeConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
 
+export type ContinueConversationMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  responses: Array<ConversationToolResponseInput> | ConversationToolResponseInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ContinueConversationMutation = { __typename?: 'Mutation', continueConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id?: string | null, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
+
 export type CountConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
 }>;
@@ -12850,17 +12930,18 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id?: string | null, name: string, arguments: string } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
+  tools?: InputMaybe<Array<ToolDefinitionInput> | ToolDefinitionInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
+export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id?: string | null, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
 
 export type PublishConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -12879,7 +12960,7 @@ export type QueryConversationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id?: string | null, name: string, arguments: string } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, filter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null> | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -14263,7 +14344,7 @@ export type PromptSpecificationsMutationVariables = Exact<{
 }>;
 
 
-export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message: string, tokens: number, throughput?: number | null, completionTime?: any | null, timestamp: any, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null } | null> | null } | null> | null };
+export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id?: string | null, name: string, arguments: string } | null> | null } | null> | null } | null> | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
