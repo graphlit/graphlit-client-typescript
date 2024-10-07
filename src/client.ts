@@ -277,24 +277,31 @@ class Graphlit {
     );
   }
 
-  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestUriMutation> {
-    return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestBatch(uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestBatchMutation> {
+    return this.mutateAndCheckError<Types.IngestBatchMutation, { uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+      Documents.IngestBatch,
+      { uris: uris, workflow: workflow, collections: collections, correlationId: correlationId }
+    );
+  }
+
+  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestUriMutation> {
+    return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
       Documents.IngestUri,
-      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
+      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
     );
   }
 
-  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestTextMutation> {
-    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestTextMutation> {
+    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
       Documents.IngestText,
-      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
+      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
     );
   }
 
-  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.IngestEncodedFileMutation> {
-    return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestEncodedFileMutation> {
+    return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
       Documents.IngestEncodedFile,
-      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, correlationId: correlationId }
+      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
     );
   }
 
@@ -457,10 +464,17 @@ class Graphlit {
     );
   }
 
-  public async promptConversation(prompt: string, id?: string, correlationId?: string): Promise<Types.PromptConversationMutation> {
-    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, correlationId?: string }>(
+  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], correlationId?: string): Promise<Types.PromptConversationMutation> {
+    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], correlationId?: string }>(
       Documents.PromptConversation,
-      { prompt: prompt, id: id, correlationId: correlationId }
+      { prompt: prompt, id: id, specification: specification, tools: tools, correlationId: correlationId }
+    );
+  }
+
+  public async continueConversation(id: string, responses: [Types.ConversationToolResponseInput], correlationId?: string): Promise<Types.ContinueConversationMutation> {
+    return this.mutateAndCheckError<Types.ContinueConversationMutation, { id: string, responses: [Types.ConversationToolResponseInput], correlationId?: string }>(
+      Documents.ContinueConversation,
+      { id: id, responses: responses, correlationId: correlationId }
     );
   }
 
@@ -1066,6 +1080,523 @@ class Graphlit {
   public async querySoftwares(filter?: Types.SoftwareFilter): Promise<Types.QuerySoftwaresQuery> {
     return this.queryAndCheckError<Types.QuerySoftwaresQuery, { filter?: Types.SoftwareFilter }>(
       Documents.QuerySoftwares,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalCondition(MedicalCondition: Types.MedicalConditionInput): Promise<Types.CreateMedicalConditionMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalConditionMutation, { MedicalCondition: Types.MedicalConditionInput }>(
+      Documents.CreateMedicalCondition,
+      { MedicalCondition: MedicalCondition }
+    );
+  }
+
+  public async updateMedicalCondition(MedicalCondition: Types.MedicalConditionUpdateInput): Promise<Types.UpdateMedicalConditionMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalConditionMutation, { MedicalCondition: Types.MedicalConditionUpdateInput }>(
+      Documents.UpdateMedicalCondition,
+      { MedicalCondition: MedicalCondition }
+    );
+  }
+
+  public async deleteMedicalCondition(id: string): Promise<Types.DeleteMedicalConditionMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalConditionMutation, { id: string }>(
+      Documents.DeleteMedicalCondition,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalConditions(): Promise<Types.DeleteMedicalConditionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalConditionsMutation>(
+      Documents.DeleteMedicalConditions
+    );
+  }
+
+  public async deleteAllMedicalConditions(): Promise<Types.DeleteAllMedicalConditionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalConditionsMutation>(
+      Documents.DeleteAllMedicalConditions
+    );
+  }
+
+  public async getMedicalCondition(id: string): Promise<Types.GetMedicalConditionQuery> {
+    return this.queryAndCheckError<Types.GetMedicalConditionQuery, { id: string }>(
+      Documents.GetMedicalCondition,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalConditions(filter?: Types.MedicalConditionFilter): Promise<Types.QueryMedicalConditionsQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalConditionsQuery, { filter?: Types.MedicalConditionFilter }>(
+      Documents.QueryMedicalConditions,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalGuideline(MedicalGuideline: Types.MedicalGuidelineInput): Promise<Types.CreateMedicalGuidelineMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalGuidelineMutation, { MedicalGuideline: Types.MedicalGuidelineInput }>(
+      Documents.CreateMedicalGuideline,
+      { MedicalGuideline: MedicalGuideline }
+    );
+  }
+
+  public async updateMedicalGuideline(MedicalGuideline: Types.MedicalGuidelineUpdateInput): Promise<Types.UpdateMedicalGuidelineMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalGuidelineMutation, { MedicalGuideline: Types.MedicalGuidelineUpdateInput }>(
+      Documents.UpdateMedicalGuideline,
+      { MedicalGuideline: MedicalGuideline }
+    );
+  }
+
+  public async deleteMedicalGuideline(id: string): Promise<Types.DeleteMedicalGuidelineMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalGuidelineMutation, { id: string }>(
+      Documents.DeleteMedicalGuideline,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalGuidelines(): Promise<Types.DeleteMedicalGuidelinesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalGuidelinesMutation>(
+      Documents.DeleteMedicalGuidelines
+    );
+  }
+
+  public async deleteAllMedicalGuidelines(): Promise<Types.DeleteAllMedicalGuidelinesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalGuidelinesMutation>(
+      Documents.DeleteAllMedicalGuidelines
+    );
+  }
+
+  public async getMedicalGuideline(id: string): Promise<Types.GetMedicalGuidelineQuery> {
+    return this.queryAndCheckError<Types.GetMedicalGuidelineQuery, { id: string }>(
+      Documents.GetMedicalGuideline,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalGuidelines(filter?: Types.MedicalGuidelineFilter): Promise<Types.QueryMedicalGuidelinesQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalGuidelinesQuery, { filter?: Types.MedicalGuidelineFilter }>(
+      Documents.QueryMedicalGuidelines,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalDrug(MedicalDrug: Types.MedicalDrugInput): Promise<Types.CreateMedicalDrugMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalDrugMutation, { MedicalDrug: Types.MedicalDrugInput }>(
+      Documents.CreateMedicalDrug,
+      { MedicalDrug: MedicalDrug }
+    );
+  }
+
+  public async updateMedicalDrug(MedicalDrug: Types.MedicalDrugUpdateInput): Promise<Types.UpdateMedicalDrugMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalDrugMutation, { MedicalDrug: Types.MedicalDrugUpdateInput }>(
+      Documents.UpdateMedicalDrug,
+      { MedicalDrug: MedicalDrug }
+    );
+  }
+
+  public async deleteMedicalDrug(id: string): Promise<Types.DeleteMedicalDrugMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugMutation, { id: string }>(
+      Documents.DeleteMedicalDrug,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalDrugs(): Promise<Types.DeleteMedicalDrugsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugsMutation>(
+      Documents.DeleteMedicalDrugs
+    );
+  }
+
+  public async deleteAllMedicalDrugs(): Promise<Types.DeleteAllMedicalDrugsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugsMutation>(
+      Documents.DeleteAllMedicalDrugs
+    );
+  }
+
+  public async getMedicalDrug(id: string): Promise<Types.GetMedicalDrugQuery> {
+    return this.queryAndCheckError<Types.GetMedicalDrugQuery, { id: string }>(
+      Documents.GetMedicalDrug,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalDrugs(filter?: Types.MedicalDrugFilter): Promise<Types.QueryMedicalDrugsQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalDrugsQuery, { filter?: Types.MedicalDrugFilter }>(
+      Documents.QueryMedicalDrugs,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalIndication(MedicalIndication: Types.MedicalIndicationInput): Promise<Types.CreateMedicalIndicationMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalIndicationMutation, { MedicalIndication: Types.MedicalIndicationInput }>(
+      Documents.CreateMedicalIndication,
+      { MedicalIndication: MedicalIndication }
+    );
+  }
+
+  public async updateMedicalIndication(MedicalIndication: Types.MedicalIndicationUpdateInput): Promise<Types.UpdateMedicalIndicationMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalIndicationMutation, { MedicalIndication: Types.MedicalIndicationUpdateInput }>(
+      Documents.UpdateMedicalIndication,
+      { MedicalIndication: MedicalIndication }
+    );
+  }
+
+  public async deleteMedicalIndication(id: string): Promise<Types.DeleteMedicalIndicationMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalIndicationMutation, { id: string }>(
+      Documents.DeleteMedicalIndication,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalIndications(): Promise<Types.DeleteMedicalIndicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalIndicationsMutation>(
+      Documents.DeleteMedicalIndications
+    );
+  }
+
+  public async deleteAllMedicalIndications(): Promise<Types.DeleteAllMedicalIndicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalIndicationsMutation>(
+      Documents.DeleteAllMedicalIndications
+    );
+  }
+
+  public async getMedicalIndication(id: string): Promise<Types.GetMedicalIndicationQuery> {
+    return this.queryAndCheckError<Types.GetMedicalIndicationQuery, { id: string }>(
+      Documents.GetMedicalIndication,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalIndications(filter?: Types.MedicalIndicationFilter): Promise<Types.QueryMedicalIndicationsQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalIndicationsQuery, { filter?: Types.MedicalIndicationFilter }>(
+      Documents.QueryMedicalIndications,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalContraindication(MedicalContraindication: Types.MedicalContraindicationInput): Promise<Types.CreateMedicalContraindicationMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalContraindicationMutation, { MedicalContraindication: Types.MedicalContraindicationInput }>(
+      Documents.CreateMedicalContraindication,
+      { MedicalContraindication: MedicalContraindication }
+    );
+  }
+
+  public async updateMedicalContraindication(MedicalContraindication: Types.MedicalContraindicationUpdateInput): Promise<Types.UpdateMedicalContraindicationMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalContraindicationMutation, { MedicalContraindication: Types.MedicalContraindicationUpdateInput }>(
+      Documents.UpdateMedicalContraindication,
+      { MedicalContraindication: MedicalContraindication }
+    );
+  }
+
+  public async deleteMedicalContraindication(id: string): Promise<Types.DeleteMedicalContraindicationMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalContraindicationMutation, { id: string }>(
+      Documents.DeleteMedicalContraindication,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalContraindications(): Promise<Types.DeleteMedicalContraindicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalContraindicationsMutation>(
+      Documents.DeleteMedicalContraindications
+    );
+  }
+
+  public async deleteAllMedicalContraindications(): Promise<Types.DeleteAllMedicalContraindicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalContraindicationsMutation>(
+      Documents.DeleteAllMedicalContraindications
+    );
+  }
+
+  public async getMedicalContraindication(id: string): Promise<Types.GetMedicalContraindicationQuery> {
+    return this.queryAndCheckError<Types.GetMedicalContraindicationQuery, { id: string }>(
+      Documents.GetMedicalContraindication,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalContraindications(filter?: Types.MedicalContraindicationFilter): Promise<Types.QueryMedicalContraindicationsQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalContraindicationsQuery, { filter?: Types.MedicalContraindicationFilter }>(
+      Documents.QueryMedicalContraindications,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalTest(MedicalTest: Types.MedicalTestInput): Promise<Types.CreateMedicalTestMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalTestMutation, { MedicalTest: Types.MedicalTestInput }>(
+      Documents.CreateMedicalTest,
+      { MedicalTest: MedicalTest }
+    );
+  }
+
+  public async updateMedicalTest(MedicalTest: Types.MedicalTestUpdateInput): Promise<Types.UpdateMedicalTestMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalTestMutation, { MedicalTest: Types.MedicalTestUpdateInput }>(
+      Documents.UpdateMedicalTest,
+      { MedicalTest: MedicalTest }
+    );
+  }
+
+  public async deleteMedicalTest(id: string): Promise<Types.DeleteMedicalTestMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTestMutation, { id: string }>(
+      Documents.DeleteMedicalTest,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalTests(): Promise<Types.DeleteMedicalTestsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTestsMutation>(
+      Documents.DeleteMedicalTests
+    );
+  }
+
+  public async deleteAllMedicalTests(): Promise<Types.DeleteAllMedicalTestsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalTestsMutation>(
+      Documents.DeleteAllMedicalTests
+    );
+  }
+
+  public async getMedicalTest(id: string): Promise<Types.GetMedicalTestQuery> {
+    return this.queryAndCheckError<Types.GetMedicalTestQuery, { id: string }>(
+      Documents.GetMedicalTest,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalTests(filter?: Types.MedicalTestFilter): Promise<Types.QueryMedicalTestsQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalTestsQuery, { filter?: Types.MedicalTestFilter }>(
+      Documents.QueryMedicalTests,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalDevice(MedicalDevice: Types.MedicalDeviceInput): Promise<Types.CreateMedicalDeviceMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalDeviceMutation, { MedicalDevice: Types.MedicalDeviceInput }>(
+      Documents.CreateMedicalDevice,
+      { MedicalDevice: MedicalDevice }
+    );
+  }
+
+  public async updateMedicalDevice(MedicalDevice: Types.MedicalDeviceUpdateInput): Promise<Types.UpdateMedicalDeviceMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalDeviceMutation, { MedicalDevice: Types.MedicalDeviceUpdateInput }>(
+      Documents.UpdateMedicalDevice,
+      { MedicalDevice: MedicalDevice }
+    );
+  }
+
+  public async deleteMedicalDevice(id: string): Promise<Types.DeleteMedicalDeviceMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDeviceMutation, { id: string }>(
+      Documents.DeleteMedicalDevice,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalDevices(): Promise<Types.DeleteMedicalDevicesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDevicesMutation>(
+      Documents.DeleteMedicalDevices
+    );
+  }
+
+  public async deleteAllMedicalDevices(): Promise<Types.DeleteAllMedicalDevicesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDevicesMutation>(
+      Documents.DeleteAllMedicalDevices
+    );
+  }
+
+  public async getMedicalDevice(id: string): Promise<Types.GetMedicalDeviceQuery> {
+    return this.queryAndCheckError<Types.GetMedicalDeviceQuery, { id: string }>(
+      Documents.GetMedicalDevice,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalDevices(filter?: Types.MedicalDeviceFilter): Promise<Types.QueryMedicalDevicesQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalDevicesQuery, { filter?: Types.MedicalDeviceFilter }>(
+      Documents.QueryMedicalDevices,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalProcedure(MedicalProcedure: Types.MedicalProcedureInput): Promise<Types.CreateMedicalProcedureMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalProcedureMutation, { MedicalProcedure: Types.MedicalProcedureInput }>(
+      Documents.CreateMedicalProcedure,
+      { MedicalProcedure: MedicalProcedure }
+    );
+  }
+
+  public async updateMedicalProcedure(MedicalProcedure: Types.MedicalProcedureUpdateInput): Promise<Types.UpdateMedicalProcedureMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalProcedureMutation, { MedicalProcedure: Types.MedicalProcedureUpdateInput }>(
+      Documents.UpdateMedicalProcedure,
+      { MedicalProcedure: MedicalProcedure }
+    );
+  }
+
+  public async deleteMedicalProcedure(id: string): Promise<Types.DeleteMedicalProcedureMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalProcedureMutation, { id: string }>(
+      Documents.DeleteMedicalProcedure,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalProcedures(): Promise<Types.DeleteMedicalProceduresMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalProceduresMutation>(
+      Documents.DeleteMedicalProcedures
+    );
+  }
+
+  public async deleteAllMedicalProcedures(): Promise<Types.DeleteAllMedicalProceduresMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalProceduresMutation>(
+      Documents.DeleteAllMedicalProcedures
+    );
+  }
+
+  public async getMedicalProcedure(id: string): Promise<Types.GetMedicalProcedureQuery> {
+    return this.queryAndCheckError<Types.GetMedicalProcedureQuery, { id: string }>(
+      Documents.GetMedicalProcedure,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalProcedures(filter?: Types.MedicalProcedureFilter): Promise<Types.QueryMedicalProceduresQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalProceduresQuery, { filter?: Types.MedicalProcedureFilter }>(
+      Documents.QueryMedicalProcedures,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalStudy(MedicalStudy: Types.MedicalStudyInput): Promise<Types.CreateMedicalStudyMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalStudyMutation, { MedicalStudy: Types.MedicalStudyInput }>(
+      Documents.CreateMedicalStudy,
+      { MedicalStudy: MedicalStudy }
+    );
+  }
+
+  public async updateMedicalStudy(MedicalStudy: Types.MedicalStudyUpdateInput): Promise<Types.UpdateMedicalStudyMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalStudyMutation, { MedicalStudy: Types.MedicalStudyUpdateInput }>(
+      Documents.UpdateMedicalStudy,
+      { MedicalStudy: MedicalStudy }
+    );
+  }
+
+  public async deleteMedicalStudy(id: string): Promise<Types.DeleteMedicalStudyMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalStudyMutation, { id: string }>(
+      Documents.DeleteMedicalStudy,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalStudies(): Promise<Types.DeleteMedicalStudiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalStudiesMutation>(
+      Documents.DeleteMedicalStudies
+    );
+  }
+
+  public async deleteAllMedicalStudies(): Promise<Types.DeleteAllMedicalStudiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalStudiesMutation>(
+      Documents.DeleteAllMedicalStudies
+    );
+  }
+
+  public async getMedicalStudy(id: string): Promise<Types.GetMedicalStudyQuery> {
+    return this.queryAndCheckError<Types.GetMedicalStudyQuery, { id: string }>(
+      Documents.GetMedicalStudy,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalStudies(filter?: Types.MedicalStudyFilter): Promise<Types.QueryMedicalStudiesQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalStudiesQuery, { filter?: Types.MedicalStudyFilter }>(
+      Documents.QueryMedicalStudies,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalDrugClass(MedicalDrugClass: Types.MedicalDrugClassInput): Promise<Types.CreateMedicalDrugClassMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalDrugClassMutation, { MedicalDrugClass: Types.MedicalDrugClassInput }>(
+      Documents.CreateMedicalDrugClass,
+      { MedicalDrugClass: MedicalDrugClass }
+    );
+  }
+
+  public async updateMedicalDrugClass(MedicalDrugClass: Types.MedicalDrugClassUpdateInput): Promise<Types.UpdateMedicalDrugClassMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalDrugClassMutation, { MedicalDrugClass: Types.MedicalDrugClassUpdateInput }>(
+      Documents.UpdateMedicalDrugClass,
+      { MedicalDrugClass: MedicalDrugClass }
+    );
+  }
+
+  public async deleteMedicalDrugClass(id: string): Promise<Types.DeleteMedicalDrugClassMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugClassMutation, { id: string }>(
+      Documents.DeleteMedicalDrugClass,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalDrugClasses(): Promise<Types.DeleteMedicalDrugClassesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugClassesMutation>(
+      Documents.DeleteMedicalDrugClasses
+    );
+  }
+
+  public async deleteAllMedicalDrugClasses(): Promise<Types.DeleteAllMedicalDrugClassesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugClassesMutation>(
+      Documents.DeleteAllMedicalDrugClasses
+    );
+  }
+
+  public async getMedicalDrugClass(id: string): Promise<Types.GetMedicalDrugClassQuery> {
+    return this.queryAndCheckError<Types.GetMedicalDrugClassQuery, { id: string }>(
+      Documents.GetMedicalDrugClass,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalDrugClasses(filter?: Types.MedicalDrugClassFilter): Promise<Types.QueryMedicalDrugClassesQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalDrugClassesQuery, { filter?: Types.MedicalDrugClassFilter }>(
+      Documents.QueryMedicalDrugClasses,
+      { filter: filter }
+    );
+  }
+
+  public async createMedicalTherapy(MedicalTherapy: Types.MedicalTherapyInput): Promise<Types.CreateMedicalTherapyMutation> {
+    return this.mutateAndCheckError<Types.CreateMedicalTherapyMutation, { MedicalTherapy: Types.MedicalTherapyInput }>(
+      Documents.CreateMedicalTherapy,
+      { MedicalTherapy: MedicalTherapy }
+    );
+  }
+
+  public async updateMedicalTherapy(MedicalTherapy: Types.MedicalTherapyUpdateInput): Promise<Types.UpdateMedicalTherapyMutation> {
+    return this.mutateAndCheckError<Types.UpdateMedicalTherapyMutation, { MedicalTherapy: Types.MedicalTherapyUpdateInput }>(
+      Documents.UpdateMedicalTherapy,
+      { MedicalTherapy: MedicalTherapy }
+    );
+  }
+
+  public async deleteMedicalTherapy(id: string): Promise<Types.DeleteMedicalTherapyMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTherapyMutation, { id: string }>(
+      Documents.DeleteMedicalTherapy,
+      { id: id }
+    );
+  }
+
+  public async deleteMedicalTherapies(): Promise<Types.DeleteMedicalTherapiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTherapiesMutation>(
+      Documents.DeleteMedicalTherapies
+    );
+  }
+
+  public async deleteAllMedicalTherapies(): Promise<Types.DeleteAllMedicalTherapiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalTherapiesMutation>(
+      Documents.DeleteAllMedicalTherapies
+    );
+  }
+
+  public async getMedicalTherapy(id: string): Promise<Types.GetMedicalTherapyQuery> {
+    return this.queryAndCheckError<Types.GetMedicalTherapyQuery, { id: string }>(
+      Documents.GetMedicalTherapy,
+      { id: id }
+    );
+  }
+
+  public async queryMedicalTherapies(filter?: Types.MedicalTherapyFilter): Promise<Types.QueryMedicalTherapiesQuery> {
+    return this.queryAndCheckError<Types.QueryMedicalTherapiesQuery, { filter?: Types.MedicalTherapyFilter }>(
+      Documents.QueryMedicalTherapies,
       { filter: filter }
     );
   }

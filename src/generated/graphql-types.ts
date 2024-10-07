@@ -1965,9 +1965,9 @@ export type ConversationToolCall = {
 
 /** Represents a conversation tool calling response. */
 export type ConversationToolResponseInput = {
-  /** The JSON response to the tool. */
+  /** The provided response to the tool call. Accepts either text or JSON. */
   content: Scalars['String']['input'];
-  /** The tool identifier. */
+  /** The tool call identifier. */
   id: Scalars['String']['input'];
 };
 
