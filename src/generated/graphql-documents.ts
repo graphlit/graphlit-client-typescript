@@ -4974,7 +4974,6 @@ export const GetSpecification = gql`
       name
       description
       schema
-      uri
     }
   }
 }
@@ -5264,7 +5263,6 @@ export const QuerySpecifications = gql`
         name
         description
         schema
-        uri
       }
     }
   }
