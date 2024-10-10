@@ -2741,6 +2741,13 @@ export const GetFeed = gql`
         clientId
         clientSecret
       }
+      github {
+        uri
+        repositoryOwner
+        repositoryName
+        refreshToken
+        personalAccessToken
+      }
       readLimit
     }
     email {
@@ -2917,6 +2924,13 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
+        }
+        github {
+          uri
+          repositoryOwner
+          repositoryName
+          refreshToken
+          personalAccessToken
         }
         readLimit
       }
