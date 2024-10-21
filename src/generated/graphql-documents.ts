@@ -859,6 +859,29 @@ export const IngestText = gql`
   }
 }
     `;
+export const IngestTextBatch = gql`
+    mutation IngestTextBatch($batch: [TextContentInput!]!, $textType: TextTypes, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+  ingestTextBatch(
+    batch: $batch
+    workflow: $workflow
+    textType: $textType
+    collections: $collections
+    correlationId: $correlationId
+  ) {
+    id
+    name
+    state
+    type
+    fileType
+    mimeType
+    uri
+    collections {
+      id
+      name
+    }
+  }
+}
+    `;
 export const IngestUri = gql`
     mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestUri(
@@ -4491,6 +4514,14 @@ export const GetProject = gql`
       id
       name
     }
+    embeddings {
+      textSpecification {
+        id
+      }
+      imageSpecification {
+        id
+      }
+    }
     quota {
       storage
       contents
@@ -4889,6 +4920,7 @@ export const GetSpecification = gql`
       endpoint
       temperature
       probability
+      chunkTokenLimit
     }
     openAI {
       tokenLimit
@@ -4898,6 +4930,7 @@ export const GetSpecification = gql`
       modelName
       temperature
       probability
+      chunkTokenLimit
     }
     azureOpenAI {
       tokenLimit
@@ -4908,6 +4941,7 @@ export const GetSpecification = gql`
       deploymentName
       temperature
       probability
+      chunkTokenLimit
     }
     cohere {
       tokenLimit
@@ -4917,6 +4951,7 @@ export const GetSpecification = gql`
       modelName
       temperature
       probability
+      chunkTokenLimit
     }
     anthropic {
       tokenLimit
@@ -4935,6 +4970,7 @@ export const GetSpecification = gql`
       modelName
       temperature
       probability
+      chunkTokenLimit
     }
     replicate {
       tokenLimit
@@ -4954,6 +4990,7 @@ export const GetSpecification = gql`
       endpoint
       temperature
       probability
+      chunkTokenLimit
     }
     groq {
       tokenLimit
@@ -4984,10 +5021,17 @@ export const GetSpecification = gql`
       temperature
       probability
     }
-    tools {
-      name
-      description
-      schema
+    jina {
+      model
+      key
+      modelName
+      chunkTokenLimit
+    }
+    voyage {
+      model
+      key
+      modelName
+      chunkTokenLimit
     }
   }
 }
@@ -5178,6 +5222,7 @@ export const QuerySpecifications = gql`
         endpoint
         temperature
         probability
+        chunkTokenLimit
       }
       openAI {
         tokenLimit
@@ -5187,6 +5232,7 @@ export const QuerySpecifications = gql`
         modelName
         temperature
         probability
+        chunkTokenLimit
       }
       azureOpenAI {
         tokenLimit
@@ -5197,6 +5243,7 @@ export const QuerySpecifications = gql`
         deploymentName
         temperature
         probability
+        chunkTokenLimit
       }
       cohere {
         tokenLimit
@@ -5206,6 +5253,7 @@ export const QuerySpecifications = gql`
         modelName
         temperature
         probability
+        chunkTokenLimit
       }
       anthropic {
         tokenLimit
@@ -5224,6 +5272,7 @@ export const QuerySpecifications = gql`
         modelName
         temperature
         probability
+        chunkTokenLimit
       }
       replicate {
         tokenLimit
@@ -5243,6 +5292,7 @@ export const QuerySpecifications = gql`
         endpoint
         temperature
         probability
+        chunkTokenLimit
       }
       groq {
         tokenLimit
@@ -5273,10 +5323,17 @@ export const QuerySpecifications = gql`
         temperature
         probability
       }
-      tools {
-        name
-        description
-        schema
+      jina {
+        model
+        key
+        modelName
+        chunkTokenLimit
+      }
+      voyage {
+        model
+        key
+        modelName
+        chunkTokenLimit
       }
     }
   }
@@ -5382,11 +5439,6 @@ export const CreateWorkflow = gql`
           azureImage {
             confidenceThreshold
           }
-          openAIImage {
-            confidenceThreshold
-            detailLevel
-            customInstructions
-          }
           modelImage {
             specification {
               id
@@ -5422,11 +5474,6 @@ export const CreateWorkflow = gql`
             endpoint
           }
         }
-      }
-    }
-    storage {
-      embeddings {
-        chunkTokenLimit
       }
     }
     actions {
@@ -5557,11 +5604,6 @@ export const GetWorkflow = gql`
           azureImage {
             confidenceThreshold
           }
-          openAIImage {
-            confidenceThreshold
-            detailLevel
-            customInstructions
-          }
           modelImage {
             specification {
               id
@@ -5597,11 +5639,6 @@ export const GetWorkflow = gql`
             endpoint
           }
         }
-      }
-    }
-    storage {
-      embeddings {
-        chunkTokenLimit
       }
     }
     actions {
@@ -5705,11 +5742,6 @@ export const QueryWorkflows = gql`
             azureImage {
               confidenceThreshold
             }
-            openAIImage {
-              confidenceThreshold
-              detailLevel
-              customInstructions
-            }
             modelImage {
               specification {
                 id
@@ -5745,11 +5777,6 @@ export const QueryWorkflows = gql`
               endpoint
             }
           }
-        }
-      }
-      storage {
-        embeddings {
-          chunkTokenLimit
         }
       }
       actions {
@@ -5848,11 +5875,6 @@ export const UpdateWorkflow = gql`
           azureImage {
             confidenceThreshold
           }
-          openAIImage {
-            confidenceThreshold
-            detailLevel
-            customInstructions
-          }
           modelImage {
             specification {
               id
@@ -5888,11 +5910,6 @@ export const UpdateWorkflow = gql`
             endpoint
           }
         }
-      }
-    }
-    storage {
-      embeddings {
-        chunkTokenLimit
       }
     }
     actions {
