@@ -336,12 +336,22 @@ export enum AnthropicModels {
   Claude_2_1 = 'CLAUDE_2_1',
   /** Claude 3.5 Sonnet (Latest) */
   Claude_3_5Sonnet = 'CLAUDE_3_5_SONNET',
+  /** Claude 3.5 Sonnet (06-20-2024 version) */
+  Claude_3_5Sonnet_20240620 = 'CLAUDE_3_5_SONNET_20240620',
+  /** Claude 3.5 Sonnet (10-22-2024 version) */
+  Claude_3_5Sonnet_20241022 = 'CLAUDE_3_5_SONNET_20241022',
   /** Claude 3 Haiku (Latest) */
   Claude_3Haiku = 'CLAUDE_3_HAIKU',
+  /** Claude 3 Haiku (03-07-2024 version) */
+  Claude_3Haiku_20240307 = 'CLAUDE_3_HAIKU_20240307',
   /** Claude 3 Opus (Latest) */
   Claude_3Opus = 'CLAUDE_3_OPUS',
+  /** Claude 3 Opus (02-29-2024 version) */
+  Claude_3Opus_20240229 = 'CLAUDE_3_OPUS_20240229',
   /** Claude 3 Sonnet (Latest) */
   Claude_3Sonnet = 'CLAUDE_3_SONNET',
+  /** Claude 3 Sonnet (02-29-2024 version) */
+  Claude_3Sonnet_20240229 = 'CLAUDE_3_SONNET_20240229',
   /** @deprecated Use Claude 3 Haiku instead. */
   ClaudeInstant_1 = 'CLAUDE_INSTANT_1',
   /** @deprecated Use Claude 3 Haiku instead. */
@@ -3972,7 +3982,10 @@ export enum GroqModels {
   Llama_3_2_1BPreview = 'LLAMA_3_2_1B_PREVIEW',
   /** LLaMA 3.2 3b Preview */
   Llama_3_2_3BPreview = 'LLAMA_3_2_3B_PREVIEW',
-  /** LLaMA 3.2 11b Text Preview */
+  /**
+   * LLaMA 3.2 11b Text Preview
+   * @deprecated Use Llama 3.2 11b Vision Preview instead.
+   */
   Llama_3_2_11BTextPreview = 'LLAMA_3_2_11B_TEXT_PREVIEW',
   /** LLaMA 3.2 11b Vision Preview */
   Llama_3_2_11BVisionPreview = 'LLAMA_3_2_11B_VISION_PREVIEW',
@@ -3982,7 +3995,10 @@ export enum GroqModels {
   Llama_3_8B = 'LLAMA_3_8B',
   /** LLaMA 3 70b */
   Llama_3_70B = 'LLAMA_3_70B',
-  /** LLaVA 1.5 7B Preview */
+  /**
+   * LLaVA 1.5 7B Preview
+   * @deprecated Use Llama 3.2 11b Vision Preview instead.
+   */
   Llava_1_5_7BPreview = 'LLAVA_1_5_7B_PREVIEW',
   /** Mixtral 8x7b Instruct */
   Mixtral_8X7BInstruct = 'MIXTRAL_8X7B_INSTRUCT'
