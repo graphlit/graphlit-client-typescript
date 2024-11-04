@@ -4898,6 +4898,7 @@ export const GetSpecification = gql`
     retrievalStrategy {
       type
       contentLimit
+      disableFallback
     }
     rerankingStrategy {
       serviceType
@@ -5200,6 +5201,7 @@ export const QuerySpecifications = gql`
       retrievalStrategy {
         type
         contentLimit
+        disableFallback
       }
       rerankingStrategy {
         serviceType
