@@ -155,6 +155,13 @@ class Graphlit {
     );
   }
 
+  public async searchWeb(text: string, service?: Types.SearchServiceTypes, limit?: number): Promise<Types.SearchWebQuery> {
+    return this.queryAndCheckError<Types.SearchWebQuery, { text: string, service?: Types.SearchServiceTypes, limit?: number }>(
+      Documents.SearchWeb,
+      { text: text, service: service, limit: limit }
+    );
+  }
+
   public async createAlert(alert: Types.AlertInput, correlationId?: string): Promise<Types.CreateAlertMutation> {
     return this.mutateAndCheckError<Types.CreateAlertMutation, { alert: Types.AlertInput, correlationId?: string }>(
       Documents.CreateAlert,
@@ -464,10 +471,17 @@ class Graphlit {
     );
   }
 
-  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], correlationId?: string): Promise<Types.PromptConversationMutation> {
-    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], correlationId?: string }>(
+  public async reviseContent(prompt: string, content: Types.EntityReferenceInput, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ReviseContentMutation> {
+    return this.mutateAndCheckError<Types.ReviseContentMutation, { prompt: string, content: Types.EntityReferenceInput, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.ReviseContent,
+      { prompt: prompt, content: content, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
+  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
+    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, correlationId?: string }>(
       Documents.PromptConversation,
-      { prompt: prompt, id: id, specification: specification, tools: tools, correlationId: correlationId }
+      { prompt: prompt, id: id, specification: specification, tools: tools, requireTool: requireTool, correlationId: correlationId }
     );
   }
 

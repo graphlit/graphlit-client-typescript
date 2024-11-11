@@ -2041,12 +2041,13 @@ export const GetConversation = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $correlationId: String) {
+    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $correlationId: String) {
   promptConversation(
     prompt: $prompt
     id: $id
     specification: $specification
     tools: $tools
+    requireTool: $requireTool
     correlationId: $correlationId
   ) {
     conversation {
@@ -2508,6 +2509,143 @@ export const QueryConversations = gql`
         }
       }
     }
+  }
+}
+    `;
+export const ReviseContent = gql`
+    mutation ReviseContent($prompt: String!, $content: EntityReferenceInput!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  reviseContent(
+    prompt: $prompt
+    content: $content
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    conversation {
+      id
+    }
+    message {
+      role
+      author
+      message
+      citations {
+        content {
+          id
+          name
+          state
+          originalDate
+          identifier
+          uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
+        }
+        index
+        text
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
+      }
+      tokens
+      throughput
+      completionTime
+      timestamp
+      modelService
+      model
+    }
+    messageCount
   }
 }
     `;
@@ -4739,6 +4877,18 @@ export const UpdateRepo = gql`
   }
 }
     `;
+export const SearchWeb = gql`
+    query SearchWeb($text: String!, $service: SearchServiceTypes, $limit: Int) {
+  searchWeb(text: $text, service: $service, limit: $limit) {
+    results {
+      uri
+      text
+      title
+      score
+    }
+  }
+}
+    `;
 export const CountSoftwares = gql`
     query CountSoftwares($filter: SoftwareFilter) {
   countSoftwares(filter: $filter) {
@@ -5411,6 +5561,8 @@ export const CreateWorkflow = gql`
             key
             enableRedaction
             enableSpeakerDiarization
+            detectLanguage
+            language
           }
           document {
             includeImages
@@ -5576,6 +5728,8 @@ export const GetWorkflow = gql`
             key
             enableRedaction
             enableSpeakerDiarization
+            detectLanguage
+            language
           }
           document {
             includeImages
@@ -5714,6 +5868,8 @@ export const QueryWorkflows = gql`
               key
               enableRedaction
               enableSpeakerDiarization
+              detectLanguage
+              language
             }
             document {
               includeImages
@@ -5847,6 +6003,8 @@ export const UpdateWorkflow = gql`
             key
             enableRedaction
             enableSpeakerDiarization
+            detectLanguage
+            language
           }
           document {
             includeImages
