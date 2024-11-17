@@ -7087,6 +7087,10 @@ export type Mutation = {
   deleteWorkflow?: Maybe<Workflow>;
   /** Deletes multiple workflows given their IDs. */
   deleteWorkflows?: Maybe<Array<Maybe<Workflow>>>;
+  /** Describes Base64-encoded image using LLM via prompt. */
+  describeEncodedImage?: Maybe<ConversationMessage>;
+  /** Describes image using LLM via prompt. */
+  describeImage?: Maybe<ConversationMessage>;
   /** Disables an alert. */
   disableAlert?: Maybe<Alert>;
   /** Disables a feed. */
@@ -7143,6 +7147,8 @@ export type Mutation = {
   restartContent?: Maybe<Content>;
   /** Revise content via prompted conversation. */
   reviseContent?: Maybe<ReviseContent>;
+  /** Revise text via prompted conversation. */
+  reviseText?: Maybe<ReviseContent>;
   /** Suggest prompts for a conversation. */
   suggestConversation?: Maybe<PromptSuggestion>;
   /** Summarizes contents based on the provided filter criteria. */
@@ -7873,6 +7879,23 @@ export type MutationDeleteWorkflowsArgs = {
 };
 
 
+export type MutationDescribeEncodedImageArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  data: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  prompt: Scalars['String']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationDescribeImageArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  prompt: Scalars['String']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
+  uri: Scalars['URL']['input'];
+};
+
+
 export type MutationDisableAlertArgs = {
   id: Scalars['ID']['input'];
 };
@@ -8068,6 +8091,15 @@ export type MutationReviseContentArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   prompt: Scalars['String']['input'];
   specification?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationReviseTextArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  prompt: Scalars['String']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
+  text: Scalars['String']['input'];
 };
 
 
@@ -13018,6 +13050,27 @@ export type DeleteContentsMutationVariables = Exact<{
 
 export type DeleteContentsMutation = { __typename?: 'Mutation', deleteContents?: Array<{ __typename?: 'Content', id: string, state: EntityState } | null> | null };
 
+export type DescribeEncodedImageMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  mimeType: Scalars['String']['input'];
+  data: Scalars['String']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DescribeEncodedImageMutation = { __typename?: 'Mutation', describeEncodedImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
+
+export type DescribeImageMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  uri: Scalars['URL']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DescribeImageMutation = { __typename?: 'Mutation', describeImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
+
 export type ExtractContentsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   filter?: InputMaybe<ContentFilter>;
@@ -13284,6 +13337,17 @@ export type ReviseContentMutationVariables = Exact<{
 
 
 export type ReviseContentMutation = { __typename?: 'Mutation', reviseContent?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+
+export type ReviseTextMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  text: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  specification?: InputMaybe<EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ReviseTextMutation = { __typename?: 'Mutation', reviseText?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];

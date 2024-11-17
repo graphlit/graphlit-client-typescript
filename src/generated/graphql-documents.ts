@@ -520,6 +520,267 @@ export const DeleteContents = gql`
   }
 }
     `;
+export const DescribeEncodedImage = gql`
+    mutation DescribeEncodedImage($prompt: String!, $mimeType: String!, $data: String!, $specification: EntityReferenceInput, $correlationId: String) {
+  describeEncodedImage(
+    prompt: $prompt
+    mimeType: $mimeType
+    data: $data
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    role
+    author
+    message
+    citations {
+      content {
+        id
+        name
+        state
+        originalDate
+        identifier
+        uri
+        type
+        fileType
+        mimeType
+        format
+        formatName
+        fileExtension
+        fileName
+        fileSize
+        masterUri
+        imageUri
+        textUri
+        audioUri
+        transcriptUri
+        summary
+        customSummary
+        keywords
+        bullets
+        headlines
+        posts
+        chapters
+        questions
+        video {
+          width
+          height
+          duration
+          make
+          model
+          software
+          title
+          description
+          keywords
+          author
+        }
+        audio {
+          keywords
+          author
+          series
+          episode
+          episodeType
+          season
+          publisher
+          copyright
+          genre
+          title
+          description
+          bitrate
+          channels
+          sampleRate
+          bitsPerSample
+          duration
+        }
+        image {
+          width
+          height
+          resolutionX
+          resolutionY
+          bitsPerComponent
+          components
+          projectionType
+          orientation
+          description
+          make
+          model
+          software
+          lens
+          focalLength
+          exposureTime
+          fNumber
+          iso
+          heading
+          pitch
+        }
+        document {
+          title
+          subject
+          summary
+          author
+          publisher
+          description
+          keywords
+          pageCount
+          worksheetCount
+          slideCount
+          wordCount
+          lineCount
+          paragraphCount
+          isEncrypted
+          hasDigitalSignature
+        }
+      }
+      index
+      text
+      startTime
+      endTime
+      pageNumber
+      frameNumber
+    }
+    toolCalls {
+      id
+      name
+      arguments
+    }
+    tokens
+    throughput
+    completionTime
+    timestamp
+    modelService
+    model
+  }
+}
+    `;
+export const DescribeImage = gql`
+    mutation DescribeImage($prompt: String!, $uri: URL!, $specification: EntityReferenceInput, $correlationId: String) {
+  describeImage(
+    prompt: $prompt
+    uri: $uri
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    role
+    author
+    message
+    citations {
+      content {
+        id
+        name
+        state
+        originalDate
+        identifier
+        uri
+        type
+        fileType
+        mimeType
+        format
+        formatName
+        fileExtension
+        fileName
+        fileSize
+        masterUri
+        imageUri
+        textUri
+        audioUri
+        transcriptUri
+        summary
+        customSummary
+        keywords
+        bullets
+        headlines
+        posts
+        chapters
+        questions
+        video {
+          width
+          height
+          duration
+          make
+          model
+          software
+          title
+          description
+          keywords
+          author
+        }
+        audio {
+          keywords
+          author
+          series
+          episode
+          episodeType
+          season
+          publisher
+          copyright
+          genre
+          title
+          description
+          bitrate
+          channels
+          sampleRate
+          bitsPerSample
+          duration
+        }
+        image {
+          width
+          height
+          resolutionX
+          resolutionY
+          bitsPerComponent
+          components
+          projectionType
+          orientation
+          description
+          make
+          model
+          software
+          lens
+          focalLength
+          exposureTime
+          fNumber
+          iso
+          heading
+          pitch
+        }
+        document {
+          title
+          subject
+          summary
+          author
+          publisher
+          description
+          keywords
+          pageCount
+          worksheetCount
+          slideCount
+          wordCount
+          lineCount
+          paragraphCount
+          isEncrypted
+          hasDigitalSignature
+        }
+      }
+      index
+      text
+      startTime
+      endTime
+      pageNumber
+      frameNumber
+    }
+    toolCalls {
+      id
+      name
+      arguments
+    }
+    tokens
+    throughput
+    completionTime
+    timestamp
+    modelService
+    model
+  }
+}
+    `;
 export const ExtractContents = gql`
     mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput!, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractContents(
@@ -2517,6 +2778,143 @@ export const ReviseContent = gql`
   reviseContent(
     prompt: $prompt
     content: $content
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    conversation {
+      id
+    }
+    message {
+      role
+      author
+      message
+      citations {
+        content {
+          id
+          name
+          state
+          originalDate
+          identifier
+          uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
+        }
+        index
+        text
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
+      }
+      tokens
+      throughput
+      completionTime
+      timestamp
+      modelService
+      model
+    }
+    messageCount
+  }
+}
+    `;
+export const ReviseText = gql`
+    mutation ReviseText($prompt: String!, $text: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  reviseText(
+    prompt: $prompt
+    text: $text
     id: $id
     specification: $specification
     correlationId: $correlationId

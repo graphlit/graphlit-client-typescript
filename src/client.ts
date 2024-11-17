@@ -284,6 +284,20 @@ class Graphlit {
     );
   }
 
+  public async describeImage(prompt: string, uri: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.DescribeImageMutation> {
+    return this.mutateAndCheckError<Types.DescribeImageMutation, { prompt: string, uri: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.DescribeImage,
+      { prompt: prompt, uri: uri, specification: specification, correlationId: correlationId }
+    );
+  }
+
+  public async describeEncodedImage(prompt: string, mimeType: string, data: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.DescribeEncodedImageMutation> {
+    return this.mutateAndCheckError<Types.DescribeEncodedImageMutation, { prompt: string, mimeType: string, data: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.DescribeEncodedImage,
+      { prompt: prompt, mimeType: mimeType, data: data, specification: specification, correlationId: correlationId }
+    );
+  }
+
   public async ingestBatch(uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestBatchMutation> {
     return this.mutateAndCheckError<Types.IngestBatchMutation, { uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
       Documents.IngestBatch,
@@ -468,6 +482,13 @@ class Graphlit {
     return this.queryAndCheckError<Types.QueryConversationsQuery, { filter?: Types.ConversationFilter }>(
       Documents.QueryConversations,
       { filter: filter }
+    );
+  }
+
+  public async reviseText(prompt: string, text: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ReviseTextMutation> {
+    return this.mutateAndCheckError<Types.ReviseTextMutation, { prompt: string, text: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.ReviseText,
+      { prompt: prompt, text: text, id: id, specification: specification, correlationId: correlationId }
     );
   }
 
