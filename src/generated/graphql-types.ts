@@ -11613,6 +11613,10 @@ export type SharePointFolderResults = {
 export type SharePointFoldersInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** Microsoft Entra ID client identifier, when using user authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client secret, when using user authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, when using user authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, when using application authentication type. */
@@ -11623,6 +11627,10 @@ export type SharePointFoldersInput = {
 export type SharePointLibrariesInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** Microsoft Entra ID client identifier, when using user authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client secret, when using user authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, when using user authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, when using application authentication type. */
