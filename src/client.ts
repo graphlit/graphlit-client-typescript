@@ -485,6 +485,20 @@ class Graphlit {
     );
   }
 
+  public async reviseImage(prompt: string, uri: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ReviseImageMutation> {
+    return this.mutateAndCheckError<Types.ReviseImageMutation, { prompt: string, uri: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.ReviseImage,
+      { prompt: prompt, uri: uri, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
+  public async reviseEncodedImage(prompt: string, mimeType: string, data: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ReviseEncodedImageMutation> {
+    return this.mutateAndCheckError<Types.ReviseEncodedImageMutation, { prompt: string, mimeType: string, data: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.ReviseEncodedImage,
+      { prompt: prompt, mimeType: mimeType, data: data, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
   public async reviseText(prompt: string, text: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ReviseTextMutation> {
     return this.mutateAndCheckError<Types.ReviseTextMutation, { prompt: string, text: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.ReviseText,
@@ -496,6 +510,13 @@ class Graphlit {
     return this.mutateAndCheckError<Types.ReviseContentMutation, { prompt: string, content: Types.EntityReferenceInput, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
       Documents.ReviseContent,
       { prompt: prompt, content: content, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
+  public async prompt(prompt: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput], correlationId?: string): Promise<Types.PromptMutation> {
+    return this.mutateAndCheckError<Types.PromptMutation, { prompt: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput?], correlationId?: string }>(
+      Documents.Prompt,
+      { prompt: prompt, specification: specification, messages: messages, correlationId: correlationId }
     );
   }
 
