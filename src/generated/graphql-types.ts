@@ -6869,6 +6869,8 @@ export type Mutation = {
   closeCollection?: Maybe<Collection>;
   /** Closes an existing conversation. */
   closeConversation?: Maybe<Conversation>;
+  /** Complete a conversation with LLM assistant message. */
+  completeConversation?: Maybe<PromptConversation>;
   /** Provide responses to called tools which continues prompted conversation. */
   continueConversation?: Maybe<PromptConversation>;
   /** Creates a new alert. */
@@ -7103,6 +7105,8 @@ export type Mutation = {
   enableFeed?: Maybe<Feed>;
   /** Extracts data using tool calling, from contents resulting from the provided filter criteria. */
   extractContents?: Maybe<Array<Maybe<ExtractCompletion>>>;
+  /** Format a conversation LLM user prompt. */
+  formatConversation?: Maybe<PromptConversation>;
   /** Ingests a batch of content by URI. Supports files and webpages. */
   ingestBatch?: Maybe<Array<Maybe<Content>>>;
   /** Ingests a file from Base64-encoded data. */
@@ -7247,6 +7251,13 @@ export type MutationCloseCollectionArgs = {
 
 
 export type MutationCloseConversationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationCompleteConversationArgs = {
+  completion: Scalars['String']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
 };
 
@@ -7930,6 +7941,14 @@ export type MutationExtractContentsArgs = {
   prompt: Scalars['String']['input'];
   specification: EntityReferenceInput;
   tools: Array<ToolDefinitionInput>;
+};
+
+
+export type MutationFormatConversationArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  prompt: Scalars['String']['input'];
+  specification?: InputMaybe<EntityReferenceInput>;
 };
 
 
@@ -12369,6 +12388,8 @@ export enum TextRoles {
   Heading4 = 'HEADING4',
   /** Heading 5 */
   Heading5 = 'HEADING5',
+  /** Heading 6 */
+  Heading6 = 'HEADING6',
   /** List Item */
   ListItem = 'LIST_ITEM',
   /** Page Footer */
@@ -13300,6 +13321,15 @@ export type CloseConversationMutationVariables = Exact<{
 
 export type CloseConversationMutation = { __typename?: 'Mutation', closeConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
 
+export type CompleteConversationMutationVariables = Exact<{
+  completion: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CompleteConversationMutation = { __typename?: 'Mutation', completeConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
+
 export type ContinueConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   responses: Array<ConversationToolResponseInput> | ConversationToolResponseInput;
@@ -13347,6 +13377,16 @@ export type DeleteConversationsMutationVariables = Exact<{
 
 
 export type DeleteConversationsMutation = { __typename?: 'Mutation', deleteConversations?: Array<{ __typename?: 'Conversation', id: string, state: EntityState } | null> | null };
+
+export type FormatConversationMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  specification?: InputMaybe<EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FormatConversationMutation = { __typename?: 'Mutation', formatConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
 
 export type GetConversationQueryVariables = Exact<{
   id: Scalars['ID']['input'];

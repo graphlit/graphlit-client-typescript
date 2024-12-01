@@ -520,6 +520,20 @@ class Graphlit {
     );
   }
 
+  public async formatConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.FormatConversationMutation> {
+    return this.mutateAndCheckError<Types.FormatConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.FormatConversation,
+      { prompt: prompt, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
+  public async completeConversation(completion: string, id: string, correlationId?: string): Promise<Types.CompleteConversationMutation> {
+    return this.mutateAndCheckError<Types.CompleteConversationMutation, { completion: string, id: string, correlationId?: string }>(
+      Documents.CompleteConversation,
+      { completion: completion, id: id, correlationId: correlationId }
+    );
+  }
+
   public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, correlationId?: string }>(
       Documents.PromptConversation,
