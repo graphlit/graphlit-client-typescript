@@ -4005,8 +4005,13 @@ export enum GroqModels {
   Llama_3_2_11BTextPreview = 'LLAMA_3_2_11B_TEXT_PREVIEW',
   /** LLaMA 3.2 11b Vision Preview */
   Llama_3_2_11BVisionPreview = 'LLAMA_3_2_11B_VISION_PREVIEW',
-  /** LLaMA 3.2 90b Text Preview */
+  /**
+   * LLaMA 3.2 90b Text Preview
+   * @deprecated Use Llama 3.2 90b Vision Preview instead.
+   */
   Llama_3_2_90BTextPreview = 'LLAMA_3_2_90B_TEXT_PREVIEW',
+  /** LLaMA 3.2 90b Vision Preview */
+  Llama_3_2_90BVisionPreview = 'LLAMA_3_2_90B_VISION_PREVIEW',
   /** LLaMA 3 8b */
   Llama_3_8B = 'LLAMA_3_8B',
   /** LLaMA 3 70b */
@@ -14757,6 +14762,7 @@ export type SearchWebQueryVariables = Exact<{
   text: Scalars['String']['input'];
   service?: InputMaybe<SearchServiceTypes>;
   limit?: InputMaybe<Scalars['Int']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 

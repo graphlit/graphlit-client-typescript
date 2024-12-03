@@ -6022,8 +6022,13 @@ export const UpdateRepo = gql`
 }
     `;
 export const SearchWeb = gql`
-    query SearchWeb($text: String!, $service: SearchServiceTypes, $limit: Int) {
-  searchWeb(text: $text, service: $service, limit: $limit) {
+    query SearchWeb($text: String!, $service: SearchServiceTypes, $limit: Int, $correlationId: String) {
+  searchWeb(
+    text: $text
+    service: $service
+    limit: $limit
+    correlationId: $correlationId
+  ) {
     results {
       uri
       text

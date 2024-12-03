@@ -155,10 +155,10 @@ class Graphlit {
     );
   }
 
-  public async searchWeb(text: string, service?: Types.SearchServiceTypes, limit?: number): Promise<Types.SearchWebQuery> {
-    return this.queryAndCheckError<Types.SearchWebQuery, { text: string, service?: Types.SearchServiceTypes, limit?: number }>(
+  public async searchWeb(text: string, service?: Types.SearchServiceTypes, limit?: number, correlationId?: string): Promise<Types.SearchWebQuery> {
+    return this.queryAndCheckError<Types.SearchWebQuery, { text: string, service?: Types.SearchServiceTypes, limit?: number, correlationId?: string }>(
       Documents.SearchWeb,
-      { text: text, service: service, limit: limit }
+      { text: text, service: service, limit: limit, correlationId: correlationId }
     );
   }
 
