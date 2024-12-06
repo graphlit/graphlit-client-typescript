@@ -4036,6 +4036,8 @@ export const GetFeed = gql`
       }
       oneDrive {
         folderId
+        clientId
+        clientSecret
         refreshToken
       }
       googleDrive {
@@ -4065,6 +4067,8 @@ export const GetFeed = gql`
       microsoft {
         type
         refreshToken
+        clientId
+        clientSecret
       }
       readLimit
     }
@@ -4131,6 +4135,15 @@ export const GetFeed = gql`
       token
       channel
       includeAttachments
+    }
+    microsoftTeams {
+      readLimit
+      type
+      clientId
+      clientSecret
+      refreshToken
+      teamId
+      channelId
     }
     discord {
       readLimit
@@ -4222,6 +4235,8 @@ export const QueryFeeds = gql`
         }
         oneDrive {
           folderId
+          clientId
+          clientSecret
           refreshToken
         }
         googleDrive {
@@ -4251,6 +4266,8 @@ export const QueryFeeds = gql`
         microsoft {
           type
           refreshToken
+          clientId
+          clientSecret
         }
         readLimit
       }
@@ -4317,6 +4334,15 @@ export const QueryFeeds = gql`
         token
         channel
         includeAttachments
+      }
+      microsoftTeams {
+        readLimit
+        type
+        clientId
+        clientSecret
+        refreshToken
+        teamId
+        channelId
       }
       discord {
         readLimit
@@ -6187,6 +6213,7 @@ export const GetSpecification = gql`
       type
       messageLimit
       embedCitations
+      flattenCitations
       enableFacets
       messagesWeight
       contentsWeight
@@ -6490,6 +6517,7 @@ export const QuerySpecifications = gql`
         type
         messageLimit
         embedCitations
+        flattenCitations
         enableFacets
         messagesWeight
         contentsWeight
