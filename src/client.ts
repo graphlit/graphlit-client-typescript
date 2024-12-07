@@ -298,6 +298,13 @@ class Graphlit {
     );
   }
 
+  public async screenshotPage(uri: string, maximumHeight?: number, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.ScreenshotPageMutation> {
+    return this.mutateAndCheckError<Types.ScreenshotPageMutation, { uri: string, maximumHeight?: number, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+      Documents.ScreenshotPage,
+      { uri: uri, maximumHeight: maximumHeight, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
+    );
+  }
+
   public async ingestBatch(uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestBatchMutation> {
     return this.mutateAndCheckError<Types.IngestBatchMutation, { uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
       Documents.IngestBatch,
@@ -349,6 +356,13 @@ class Graphlit {
   public async deleteAllContents(): Promise<Types.DeleteAllContentsMutation> {
     return this.mutateAndCheckError<Types.DeleteAllContentsMutation>(
       Documents.DeleteAllContents
+    );
+  }
+
+  public async summarizeText(summarization: Types.SummarizationStrategyInput, text: string, textType?: Types.TextTypes, correlationId?: string): Promise<Types.SummarizeTextMutation> {
+    return this.mutateAndCheckError<Types.SummarizeTextMutation, { summarization: Types.SummarizationStrategyInput, text: string, textType?: Types.TextTypes, correlationId?: string }>(
+      Documents.SummarizeText,
+      { summarization: summarization, text: text, textType: textType, correlationId: correlationId }
     );
   }
 

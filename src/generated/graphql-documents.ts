@@ -1756,11 +1756,59 @@ export const QueryContentsGraph = gql`
   }
 }
     `;
+export const ScreenshotPage = gql`
+    mutation ScreenshotPage($uri: URL!, $maximumHeight: Int, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+  screenshotPage(
+    uri: $uri
+    maximumHeight: $maximumHeight
+    workflow: $workflow
+    collections: $collections
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    name
+    state
+    type
+    fileType
+    mimeType
+    uri
+    collections {
+      id
+      name
+    }
+  }
+}
+    `;
 export const SummarizeContents = gql`
     mutation SummarizeContents($summarizations: [SummarizationStrategyInput!]!, $filter: ContentFilter, $correlationId: String) {
   summarizeContents(
     summarizations: $summarizations
     filter: $filter
+    correlationId: $correlationId
+  ) {
+    specification {
+      id
+    }
+    content {
+      id
+    }
+    type
+    items {
+      text
+      tokens
+      summarizationTime
+    }
+    error
+  }
+}
+    `;
+export const SummarizeText = gql`
+    mutation SummarizeText($summarization: SummarizationStrategyInput!, $text: String!, $textType: TextTypes, $correlationId: String) {
+  summarizeText(
+    summarization: $summarization
+    text: $text
+    textType: $textType
     correlationId: $correlationId
   ) {
     specification {

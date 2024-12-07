@@ -3996,7 +3996,10 @@ export enum GroqModels {
   Custom = 'CUSTOM',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
-  /** LLaMA 3.1 70b */
+  /**
+   * LLaMA 3.1 70b
+   * @deprecated Use Llama 3.3 70b instead.
+   */
   Llama_3_1_70B = 'LLAMA_3_1_70B',
   /** LLaMA 3.1 405b */
   Llama_3_1_405B = 'LLAMA_3_1_405B',
@@ -4018,6 +4021,8 @@ export enum GroqModels {
   Llama_3_2_90BTextPreview = 'LLAMA_3_2_90B_TEXT_PREVIEW',
   /** LLaMA 3.2 90b Vision Preview */
   Llama_3_2_90BVisionPreview = 'LLAMA_3_2_90B_VISION_PREVIEW',
+  /** LLaMA 3.3 70b */
+  Llama_3_3_70B = 'LLAMA_3_3_70B',
   /** LLaMA 3 8b */
   Llama_3_8B = 'LLAMA_3_8B',
   /** LLaMA 3 70b */
@@ -7196,10 +7201,14 @@ export type Mutation = {
   reviseImage?: Maybe<ReviseContent>;
   /** Revise text via prompted conversation. */
   reviseText?: Maybe<ReviseContent>;
+  /** Screenshot web page by URI. */
+  screenshotPage?: Maybe<Content>;
   /** Suggest prompts for a conversation. */
   suggestConversation?: Maybe<PromptSuggestion>;
   /** Summarizes contents based on the provided filter criteria. */
   summarizeContents?: Maybe<Array<Maybe<PromptSummarization>>>;
+  /** Summarizes text. */
+  summarizeText?: Maybe<PromptSummarization>;
   /** Undo an existing conversation. */
   undoConversation?: Maybe<Conversation>;
   /** Updates an existing alert. */
@@ -8192,6 +8201,16 @@ export type MutationReviseTextArgs = {
 };
 
 
+export type MutationScreenshotPageArgs = {
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  maximumHeight?: InputMaybe<Scalars['Int']['input']>;
+  uri: Scalars['URL']['input'];
+  workflow?: InputMaybe<EntityReferenceInput>;
+};
+
+
 export type MutationSuggestConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   count?: InputMaybe<Scalars['Int']['input']>;
@@ -8204,6 +8223,14 @@ export type MutationSummarizeContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ContentFilter>;
   summarizations: Array<InputMaybe<SummarizationStrategyInput>>;
+};
+
+
+export type MutationSummarizeTextArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  summarization: SummarizationStrategyInput;
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
 };
 
 
@@ -10235,13 +10262,13 @@ export type PromptSuggestion = {
 /** Represents an LLM summarization. */
 export type PromptSummarization = {
   __typename?: 'PromptSummarization';
-  /** The summarized content. */
-  content: EntityReference;
+  /** The summarized content. Not assigned when summarizing text */
+  content?: Maybe<EntityReference>;
   /** If summarization failed, the error message. */
   error?: Maybe<Scalars['String']['output']>;
   /** The summarized items. */
   items?: Maybe<Array<Summarized>>;
-  /** The LLM specification. */
+  /** The LLM specification, optional. */
   specification?: Maybe<EntityReference>;
   /** The summarization type. */
   type: SummarizationTypes;
@@ -13338,6 +13365,18 @@ export type QueryContentsGraphQueryVariables = Exact<{
 
 export type QueryContentsGraphQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
 
+export type ScreenshotPageMutationVariables = Exact<{
+  uri: Scalars['URL']['input'];
+  maximumHeight?: InputMaybe<Scalars['Int']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  workflow?: InputMaybe<EntityReferenceInput>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ScreenshotPageMutation = { __typename?: 'Mutation', screenshotPage?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+
 export type SummarizeContentsMutationVariables = Exact<{
   summarizations: Array<SummarizationStrategyInput> | SummarizationStrategyInput;
   filter?: InputMaybe<ContentFilter>;
@@ -13345,7 +13384,17 @@ export type SummarizeContentsMutationVariables = Exact<{
 }>;
 
 
-export type SummarizeContentsMutation = { __typename?: 'Mutation', summarizeContents?: Array<{ __typename?: 'PromptSummarization', type: SummarizationTypes, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content: { __typename?: 'EntityReference', id: string }, items?: Array<{ __typename?: 'Summarized', text?: string | null, tokens: number, summarizationTime?: any | null }> | null } | null> | null };
+export type SummarizeContentsMutation = { __typename?: 'Mutation', summarizeContents?: Array<{ __typename?: 'PromptSummarization', type: SummarizationTypes, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'EntityReference', id: string } | null, items?: Array<{ __typename?: 'Summarized', text?: string | null, tokens: number, summarizationTime?: any | null }> | null } | null> | null };
+
+export type SummarizeTextMutationVariables = Exact<{
+  summarization: SummarizationStrategyInput;
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SummarizeTextMutation = { __typename?: 'Mutation', summarizeText?: { __typename?: 'PromptSummarization', type: SummarizationTypes, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'EntityReference', id: string } | null, items?: Array<{ __typename?: 'Summarized', text?: string | null, tokens: number, summarizationTime?: any | null }> | null } | null };
 
 export type UpdateContentMutationVariables = Exact<{
   content: ContentUpdateInput;
