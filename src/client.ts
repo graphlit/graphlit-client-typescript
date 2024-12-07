@@ -155,6 +155,13 @@ class Graphlit {
     );
   }
 
+  public async mapWeb(uri: string, allowedPaths?: string[], excludedPaths?: string[], correlationId?: string): Promise<Types.MapWebQuery> {
+    return this.queryAndCheckError<Types.MapWebQuery, { uri: string, allowedPaths?: string[], excludedPaths?: string[], correlationId?: string }>(
+      Documents.MapWeb,
+      { uri: uri, allowedPaths: allowedPaths, excludedPaths: excludedPaths, correlationId: correlationId }
+    );
+  }
+
   public async searchWeb(text: string, service?: Types.SearchServiceTypes, limit?: number, correlationId?: string): Promise<Types.SearchWebQuery> {
     return this.queryAndCheckError<Types.SearchWebQuery, { text: string, service?: Types.SearchServiceTypes, limit?: number, correlationId?: string }>(
       Documents.SearchWeb,

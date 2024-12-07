@@ -10374,6 +10374,8 @@ export type Query = {
   lookupCredits?: Maybe<ProjectCredits>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
+  /** Enumerates the web pages at or beneath the provided URL using web sitemap. */
+  mapWeb?: Maybe<UriResults>;
   /** Lookup a medical condition given its ID. */
   medicalCondition?: Maybe<MedicalCondition>;
   /** Retrieves medical conditions based on the provided filter criteria. */
@@ -10771,6 +10773,14 @@ export type QueryLookupCreditsArgs = {
 
 export type QueryLookupUsageArgs = {
   correlationId: Scalars['String']['input'];
+};
+
+
+export type QueryMapWebArgs = {
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
+  uri: Scalars['URL']['input'];
 };
 
 
@@ -12623,6 +12633,13 @@ export type UriResult = {
   __typename?: 'UriResult';
   /** The URI result. */
   uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents URI results. */
+export type UriResults = {
+  __typename?: 'UriResults';
+  /** The URI results. */
+  results?: Maybe<Array<Maybe<Scalars['URL']['output']>>>;
 };
 
 /** Represents video metadata. */
@@ -14848,6 +14865,16 @@ export type UpdateRepoMutationVariables = Exact<{
 
 
 export type UpdateRepoMutation = { __typename?: 'Mutation', updateRepo?: { __typename?: 'Repo', id: string, name: string } | null };
+
+export type MapWebQueryVariables = Exact<{
+  uri: Scalars['URL']['input'];
+  allowedPaths?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  excludedPaths?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type MapWebQuery = { __typename?: 'Query', mapWeb?: { __typename?: 'UriResults', results?: Array<any | null> | null } | null };
 
 export type SearchWebQueryVariables = Exact<{
   text: Scalars['String']['input'];

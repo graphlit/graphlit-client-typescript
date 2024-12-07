@@ -6095,6 +6095,18 @@ export const UpdateRepo = gql`
   }
 }
     `;
+export const MapWeb = gql`
+    query MapWeb($uri: URL!, $allowedPaths: [String!], $excludedPaths: [String!], $correlationId: String) {
+  mapWeb(
+    uri: $uri
+    allowedPaths: $allowedPaths
+    excludedPaths: $excludedPaths
+    correlationId: $correlationId
+  ) {
+    results
+  }
+}
+    `;
 export const SearchWeb = gql`
     query SearchWeb($text: String!, $service: SearchServiceTypes, $limit: Int, $correlationId: String) {
   searchWeb(
