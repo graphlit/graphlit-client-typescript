@@ -3123,23 +3123,25 @@ export type EventUpdateInput = {
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
 
-/** Represents an prompted LLM extraction. */
+/** Represents an prompted LLM data extraction. */
 export type ExtractCompletion = {
   __typename?: 'ExtractCompletion';
-  /** The content. */
+  /** The content from which data was extracted, optional. */
   content?: Maybe<EntityReference>;
-  /** The end time of the audio transcript segment. */
+  /** The end time of the audio transcript segment, when extracting from audio content. */
   endTime?: Maybe<Scalars['TimeSpan']['output']>;
-  /** If prompt extraction failed, the error message. */
+  /** If data extraction failed, the error message. */
   error?: Maybe<Scalars['String']['output']>;
-  /** The page index of the text document. */
+  /** The name of the called tool. */
+  name: Scalars['String']['output'];
+  /** The page index of the text document, when extracting from document content. */
   pageNumber?: Maybe<Scalars['Int']['output']>;
-  /** The LLM specification. */
-  specification?: Maybe<EntityReference>;
-  /** The start time of the audio transcript segment. */
+  /** The LLM specification used for data extraction. */
+  specification: EntityReference;
+  /** The start time of the audio transcript segment, when extracting from audio content. */
   startTime?: Maybe<Scalars['TimeSpan']['output']>;
-  /** The extracted JSON value. */
-  value?: Maybe<Scalars['String']['output']>;
+  /** The extracted JSON value from the called tool. */
+  value: Scalars['String']['output'];
 };
 
 /** Represents an extraction workflow job. */
@@ -7145,6 +7147,8 @@ export type Mutation = {
   enableFeed?: Maybe<Feed>;
   /** Extracts data using tool calling, from contents resulting from the provided filter criteria. */
   extractContents?: Maybe<Array<Maybe<ExtractCompletion>>>;
+  /** Extracts data using tool calling, from text. */
+  extractText?: Maybe<Array<Maybe<ExtractCompletion>>>;
   /** Format a conversation LLM user prompt. */
   formatConversation?: Maybe<PromptConversation>;
   /** Ingests a batch of content by URI. Supports files and webpages. */
@@ -7984,6 +7988,16 @@ export type MutationExtractContentsArgs = {
   filter?: InputMaybe<ContentFilter>;
   prompt: Scalars['String']['input'];
   specification: EntityReferenceInput;
+  tools: Array<ToolDefinitionInput>;
+};
+
+
+export type MutationExtractTextArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  prompt: Scalars['String']['input'];
+  specification: EntityReferenceInput;
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
   tools: Array<ToolDefinitionInput>;
 };
 
@@ -10204,7 +10218,7 @@ export type PromptCompletion = {
   error?: Maybe<Scalars['String']['output']>;
   /** The completed messages. */
   messages?: Maybe<Array<Maybe<ConversationMessage>>>;
-  /** The LLM specification. */
+  /** The LLM specification used for prompt completion, optional. */
   specification?: Maybe<EntityReference>;
 };
 
@@ -13251,7 +13265,19 @@ export type ExtractContentsMutationVariables = Exact<{
 }>;
 
 
-export type ExtractContentsMutation = { __typename?: 'Mutation', extractContents?: Array<{ __typename?: 'ExtractCompletion', value?: string | null, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
+export type ExtractContentsMutation = { __typename?: 'Mutation', extractContents?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification: { __typename?: 'EntityReference', id: string }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
+
+export type ExtractTextMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
+  specification: EntityReferenceInput;
+  tools: Array<ToolDefinitionInput> | ToolDefinitionInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ExtractTextMutation = { __typename?: 'Mutation', extractText?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification: { __typename?: 'EntityReference', id: string }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
 
 export type GetContentQueryVariables = Exact<{
   id: Scalars['ID']['input'];

@@ -796,6 +796,32 @@ export const ExtractContents = gql`
     content {
       id
     }
+    name
+    value
+    startTime
+    endTime
+    pageNumber
+    error
+  }
+}
+    `;
+export const ExtractText = gql`
+    mutation ExtractText($prompt: String!, $text: String!, $textType: TextTypes, $specification: EntityReferenceInput!, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
+  extractText(
+    prompt: $prompt
+    text: $text
+    textType: $textType
+    specification: $specification
+    tools: $tools
+    correlationId: $correlationId
+  ) {
+    specification {
+      id
+    }
+    content {
+      id
+    }
+    name
     value
     startTime
     endTime

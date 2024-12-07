@@ -380,10 +380,17 @@ class Graphlit {
     );
   }
 
-  public async extractContents(prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.ExtractContentsMutation> {
-    return this.mutateAndCheckError<Types.ExtractContentsMutation, { prompt: string, filter?: Types.ContentFilter, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async extractText(prompt: string, text: string, specification: Types.EntityReferenceInput, tools: Types.ToolDefinitionInput[], textType?: Types.TextTypes, correlationId?: string): Promise<Types.ExtractTextMutation> {
+    return this.mutateAndCheckError<Types.ExtractTextMutation, { prompt: string, text: string, specification: Types.EntityReferenceInput, tools: Types.ToolDefinitionInput[], textType?: Types.TextTypes, correlationId?: string }>(
+      Documents.ExtractText,
+      { prompt: prompt, text: text, textType: textType, specification: specification, tools: tools, correlationId: correlationId }
+    );
+  }
+
+  public async extractContents(prompt: string, specification: Types.EntityReferenceInput, tools: Types.ToolDefinitionInput[], filter?: Types.ContentFilter, correlationId?: string): Promise<Types.ExtractContentsMutation> {
+    return this.mutateAndCheckError<Types.ExtractContentsMutation, { prompt: string, specification: Types.EntityReferenceInput,  tools: Types.ToolDefinitionInput[], filter?: Types.ContentFilter, correlationId?: string }>(
       Documents.ExtractContents,
-      { prompt: prompt, filter: filter, specification: specification, correlationId: correlationId }
+      { prompt: prompt, filter: filter, specification: specification, tools: tools, correlationId: correlationId }
     );
   }
 
