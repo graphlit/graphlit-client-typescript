@@ -782,7 +782,7 @@ export const DescribeImage = gql`
 }
     `;
 export const ExtractContents = gql`
-    mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput!, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
+    mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractContents(
     prompt: $prompt
     filter: $filter
@@ -806,7 +806,7 @@ export const ExtractContents = gql`
 }
     `;
 export const ExtractText = gql`
-    mutation ExtractText($prompt: String!, $text: String!, $textType: TextTypes, $specification: EntityReferenceInput!, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
+    mutation ExtractText($prompt: String!, $text: String!, $textType: TextTypes, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractText(
     prompt: $prompt
     text: $text

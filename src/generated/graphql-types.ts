@@ -3136,8 +3136,8 @@ export type ExtractCompletion = {
   name: Scalars['String']['output'];
   /** The page index of the text document, when extracting from document content. */
   pageNumber?: Maybe<Scalars['Int']['output']>;
-  /** The LLM specification used for data extraction. */
-  specification: EntityReference;
+  /** The LLM specification used for data extraction, optional. */
+  specification?: Maybe<EntityReference>;
   /** The start time of the audio transcript segment, when extracting from audio content. */
   startTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The extracted JSON value from the called tool. */
@@ -7987,7 +7987,7 @@ export type MutationExtractContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ContentFilter>;
   prompt: Scalars['String']['input'];
-  specification: EntityReferenceInput;
+  specification?: InputMaybe<EntityReferenceInput>;
   tools: Array<ToolDefinitionInput>;
 };
 
@@ -7995,7 +7995,7 @@ export type MutationExtractContentsArgs = {
 export type MutationExtractTextArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   prompt: Scalars['String']['input'];
-  specification: EntityReferenceInput;
+  specification?: InputMaybe<EntityReferenceInput>;
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
   tools: Array<ToolDefinitionInput>;
@@ -13259,25 +13259,25 @@ export type DescribeImageMutation = { __typename?: 'Mutation', describeImage?: {
 export type ExtractContentsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   filter?: InputMaybe<ContentFilter>;
-  specification: EntityReferenceInput;
+  specification?: InputMaybe<EntityReferenceInput>;
   tools: Array<ToolDefinitionInput> | ToolDefinitionInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type ExtractContentsMutation = { __typename?: 'Mutation', extractContents?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification: { __typename?: 'EntityReference', id: string }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
+export type ExtractContentsMutation = { __typename?: 'Mutation', extractContents?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
 
 export type ExtractTextMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
-  specification: EntityReferenceInput;
+  specification?: InputMaybe<EntityReferenceInput>;
   tools: Array<ToolDefinitionInput> | ToolDefinitionInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type ExtractTextMutation = { __typename?: 'Mutation', extractText?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification: { __typename?: 'EntityReference', id: string }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
+export type ExtractTextMutation = { __typename?: 'Mutation', extractText?: Array<{ __typename?: 'ExtractCompletion', name: string, value: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null };
 
 export type GetContentQueryVariables = Exact<{
   id: Scalars['ID']['input'];
