@@ -1067,6 +1067,12 @@ export const GetContent = gql`
       text
       relevance
     }
+    frames {
+      index
+      description
+      text
+      relevance
+    }
     error
   }
 }
@@ -1498,6 +1504,12 @@ export const QueryContents = gql`
         text
         relevance
       }
+      frames {
+        index
+        description
+        text
+        relevance
+      }
       error
     }
   }
@@ -1738,6 +1750,12 @@ export const QueryContentsFacets = gql`
       segments {
         startTime
         endTime
+        text
+        relevance
+      }
+      frames {
+        index
+        description
         text
         relevance
       }
