@@ -3953,6 +3953,9 @@ export const GetEvent = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -3983,6 +3986,9 @@ export const QueryEvents = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -4652,6 +4658,9 @@ export const GetMedicalCondition = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -4665,6 +4674,9 @@ export const QueryMedicalConditions = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -4729,6 +4741,9 @@ export const GetMedicalContraindication = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -4742,6 +4757,9 @@ export const QueryMedicalContraindications = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -4806,6 +4824,9 @@ export const GetMedicalDevice = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -4819,6 +4840,9 @@ export const QueryMedicalDevices = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -4883,6 +4907,9 @@ export const GetMedicalDrug = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -4896,6 +4923,9 @@ export const QueryMedicalDrugs = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -4960,6 +4990,9 @@ export const GetMedicalDrugClass = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -4973,6 +5006,9 @@ export const QueryMedicalDrugClasses = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5037,6 +5073,9 @@ export const GetMedicalGuideline = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -5050,6 +5089,9 @@ export const QueryMedicalGuidelines = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5114,6 +5156,9 @@ export const GetMedicalIndication = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -5127,6 +5172,9 @@ export const QueryMedicalIndications = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5191,6 +5239,9 @@ export const GetMedicalProcedure = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -5204,6 +5255,9 @@ export const QueryMedicalProcedures = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5268,6 +5322,9 @@ export const GetMedicalStudy = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -5288,6 +5345,9 @@ export const QueryMedicalStudies = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -5359,6 +5419,9 @@ export const GetMedicalTest = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -5372,6 +5435,9 @@ export const QueryMedicalTests = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5436,6 +5502,9 @@ export const GetMedicalTherapy = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -5449,6 +5518,9 @@ export const QueryMedicalTherapies = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -5537,6 +5609,9 @@ export const GetOrganization = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -5563,6 +5638,9 @@ export const QueryOrganizations = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -5640,6 +5718,9 @@ export const GetPerson = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -5668,6 +5749,9 @@ export const QueryPersons = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -5747,6 +5831,9 @@ export const GetPlace = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -5767,6 +5854,9 @@ export const QueryPlaces = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -5838,6 +5928,9 @@ export const GetProduct = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     address {
@@ -5865,6 +5958,9 @@ export const QueryProducts = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       address {
@@ -6112,6 +6208,9 @@ export const GetRepo = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
   }
@@ -6125,6 +6224,9 @@ export const QueryRepos = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
     }
@@ -6218,6 +6320,9 @@ export const GetSoftware = gql`
     name
     alternateNames
     creationDate
+    uri
+    description
+    identifier
     thing
     relevance
     releaseDate
@@ -6233,6 +6338,9 @@ export const QuerySoftwares = gql`
       name
       alternateNames
       creationDate
+      uri
+      description
+      identifier
       thing
       relevance
       releaseDate

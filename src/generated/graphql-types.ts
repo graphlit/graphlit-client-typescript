@@ -13684,14 +13684,14 @@ export type GetEventQueryVariables = Exact<{
 }>;
 
 
-export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryEventsQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
 }>;
 
 
-export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateEventMutationVariables = Exact<{
   event: EventUpdateInput;
@@ -13929,14 +13929,14 @@ export type GetMedicalConditionQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalConditionsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalConditionFilter>;
 }>;
 
 
-export type QueryMedicalConditionsQuery = { __typename?: 'Query', medicalConditions?: { __typename?: 'MedicalConditionResults', results?: Array<{ __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalConditionsQuery = { __typename?: 'Query', medicalConditions?: { __typename?: 'MedicalConditionResults', results?: Array<{ __typename?: 'MedicalCondition', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalConditionMutationVariables = Exact<{
   medicalCondition: MedicalConditionUpdateInput;
@@ -13988,14 +13988,14 @@ export type GetMedicalContraindicationQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalContraindicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalContraindicationFilter>;
 }>;
 
 
-export type QueryMedicalContraindicationsQuery = { __typename?: 'Query', medicalContraindications?: { __typename?: 'MedicalContraindicationResults', results?: Array<{ __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalContraindicationsQuery = { __typename?: 'Query', medicalContraindications?: { __typename?: 'MedicalContraindicationResults', results?: Array<{ __typename?: 'MedicalContraindication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalContraindicationMutationVariables = Exact<{
   medicalContraindication: MedicalContraindicationUpdateInput;
@@ -14047,14 +14047,14 @@ export type GetMedicalDeviceQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalDevicesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDeviceFilter>;
 }>;
 
 
-export type QueryMedicalDevicesQuery = { __typename?: 'Query', medicalDevices?: { __typename?: 'MedicalDeviceResults', results?: Array<{ __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalDevicesQuery = { __typename?: 'Query', medicalDevices?: { __typename?: 'MedicalDeviceResults', results?: Array<{ __typename?: 'MedicalDevice', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalDeviceMutationVariables = Exact<{
   medicalDevice: MedicalDeviceUpdateInput;
@@ -14106,14 +14106,14 @@ export type GetMedicalDrugQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalDrugsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugFilter>;
 }>;
 
 
-export type QueryMedicalDrugsQuery = { __typename?: 'Query', medicalDrugs?: { __typename?: 'MedicalDrugResults', results?: Array<{ __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalDrugsQuery = { __typename?: 'Query', medicalDrugs?: { __typename?: 'MedicalDrugResults', results?: Array<{ __typename?: 'MedicalDrug', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalDrugMutationVariables = Exact<{
   medicalDrug: MedicalDrugUpdateInput;
@@ -14165,14 +14165,14 @@ export type GetMedicalDrugClassQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalDrugClassesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugClassFilter>;
 }>;
 
 
-export type QueryMedicalDrugClassesQuery = { __typename?: 'Query', medicalDrugClasses?: { __typename?: 'MedicalDrugClassResults', results?: Array<{ __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalDrugClassesQuery = { __typename?: 'Query', medicalDrugClasses?: { __typename?: 'MedicalDrugClassResults', results?: Array<{ __typename?: 'MedicalDrugClass', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalDrugClassMutationVariables = Exact<{
   medicalDrugClass: MedicalDrugClassUpdateInput;
@@ -14224,14 +14224,14 @@ export type GetMedicalGuidelineQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalGuidelinesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalGuidelineFilter>;
 }>;
 
 
-export type QueryMedicalGuidelinesQuery = { __typename?: 'Query', medicalGuidelines?: { __typename?: 'MedicalGuidelineResults', results?: Array<{ __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalGuidelinesQuery = { __typename?: 'Query', medicalGuidelines?: { __typename?: 'MedicalGuidelineResults', results?: Array<{ __typename?: 'MedicalGuideline', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalGuidelineMutationVariables = Exact<{
   medicalGuideline: MedicalGuidelineUpdateInput;
@@ -14283,14 +14283,14 @@ export type GetMedicalIndicationQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalIndicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalIndicationFilter>;
 }>;
 
 
-export type QueryMedicalIndicationsQuery = { __typename?: 'Query', medicalIndications?: { __typename?: 'MedicalIndicationResults', results?: Array<{ __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalIndicationsQuery = { __typename?: 'Query', medicalIndications?: { __typename?: 'MedicalIndicationResults', results?: Array<{ __typename?: 'MedicalIndication', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalIndicationMutationVariables = Exact<{
   medicalIndication: MedicalIndicationUpdateInput;
@@ -14342,14 +14342,14 @@ export type GetMedicalProcedureQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalProceduresQueryVariables = Exact<{
   filter?: InputMaybe<MedicalProcedureFilter>;
 }>;
 
 
-export type QueryMedicalProceduresQuery = { __typename?: 'Query', medicalProcedures?: { __typename?: 'MedicalProcedureResults', results?: Array<{ __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalProceduresQuery = { __typename?: 'Query', medicalProcedures?: { __typename?: 'MedicalProcedureResults', results?: Array<{ __typename?: 'MedicalProcedure', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalProcedureMutationVariables = Exact<{
   medicalProcedure: MedicalProcedureUpdateInput;
@@ -14401,14 +14401,14 @@ export type GetMedicalStudyQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryMedicalStudiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalStudyFilter>;
 }>;
 
 
-export type QueryMedicalStudiesQuery = { __typename?: 'Query', medicalStudies?: { __typename?: 'MedicalStudyResults', results?: Array<{ __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryMedicalStudiesQuery = { __typename?: 'Query', medicalStudies?: { __typename?: 'MedicalStudyResults', results?: Array<{ __typename?: 'MedicalStudy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateMedicalStudyMutationVariables = Exact<{
   medicalStudy: MedicalStudyUpdateInput;
@@ -14460,14 +14460,14 @@ export type GetMedicalTestQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalTestsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTestFilter>;
 }>;
 
 
-export type QueryMedicalTestsQuery = { __typename?: 'Query', medicalTests?: { __typename?: 'MedicalTestResults', results?: Array<{ __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalTestsQuery = { __typename?: 'Query', medicalTests?: { __typename?: 'MedicalTestResults', results?: Array<{ __typename?: 'MedicalTest', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalTestMutationVariables = Exact<{
   medicalTest: MedicalTestUpdateInput;
@@ -14519,14 +14519,14 @@ export type GetMedicalTherapyQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryMedicalTherapiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTherapyFilter>;
 }>;
 
 
-export type QueryMedicalTherapiesQuery = { __typename?: 'Query', medicalTherapies?: { __typename?: 'MedicalTherapyResults', results?: Array<{ __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryMedicalTherapiesQuery = { __typename?: 'Query', medicalTherapies?: { __typename?: 'MedicalTherapyResults', results?: Array<{ __typename?: 'MedicalTherapy', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateMedicalTherapyMutationVariables = Exact<{
   medicalTherapy: MedicalTherapyUpdateInput;
@@ -14599,14 +14599,14 @@ export type GetOrganizationQueryVariables = Exact<{
 }>;
 
 
-export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryOrganizationsQueryVariables = Exact<{
   filter?: InputMaybe<OrganizationFilter>;
 }>;
 
 
-export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateOrganizationMutationVariables = Exact<{
   organization: OrganizationUpdateInput;
@@ -14658,14 +14658,14 @@ export type GetPersonQueryVariables = Exact<{
 }>;
 
 
-export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPersonsQueryVariables = Exact<{
   filter?: InputMaybe<PersonFilter>;
 }>;
 
 
-export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePersonMutationVariables = Exact<{
   person: PersonUpdateInput;
@@ -14717,14 +14717,14 @@ export type GetPlaceQueryVariables = Exact<{
 }>;
 
 
-export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPlacesQueryVariables = Exact<{
   filter?: InputMaybe<PlaceFilter>;
 }>;
 
 
-export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePlaceMutationVariables = Exact<{
   place: PlaceUpdateInput;
@@ -14776,14 +14776,14 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryProductsQueryVariables = Exact<{
   filter?: InputMaybe<ProductFilter>;
 }>;
 
 
-export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateProductMutationVariables = Exact<{
   product: ProductUpdateInput;
@@ -14880,14 +14880,14 @@ export type GetRepoQueryVariables = Exact<{
 }>;
 
 
-export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null };
+export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null };
 
 export type QueryReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
 }>;
 
 
-export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null } | null> | null } | null };
+export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null } | null> | null } | null };
 
 export type UpdateRepoMutationVariables = Exact<{
   repo: RepoUpdateInput;
@@ -14959,14 +14959,14 @@ export type GetSoftwareQueryVariables = Exact<{
 }>;
 
 
-export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null };
+export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null };
 
 export type QuerySoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
 }>;
 
 
-export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null> | null } | null };
+export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, alternateNames?: Array<string | null> | null, creationDate: any, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, relevance?: number | null, releaseDate?: any | null, developer?: string | null } | null> | null } | null };
 
 export type UpdateSoftwareMutationVariables = Exact<{
   software: SoftwareUpdateInput;
