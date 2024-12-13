@@ -2211,7 +2211,6 @@ export const CompleteConversation = gql`
         modelService
         model
       }
-      assistantMessage
     }
   }
 }
@@ -2519,7 +2518,6 @@ export const ContinueConversation = gql`
         modelService
         model
       }
-      assistantMessage
     }
   }
 }
@@ -2874,7 +2872,6 @@ export const FormatConversation = gql`
         modelService
         model
       }
-      assistantMessage
     }
   }
 }
@@ -3597,7 +3594,6 @@ export const PromptConversation = gql`
         modelService
         model
       }
-      assistantMessage
     }
   }
 }
@@ -7041,6 +7037,7 @@ export const GetSpecification = gql`
       completionTokenLimit
       model
       key
+      endpoint
       modelName
       temperature
       probability
@@ -7346,6 +7343,7 @@ export const QuerySpecifications = gql`
         completionTokenLimit
         model
         key
+        endpoint
         modelName
         temperature
         probability
