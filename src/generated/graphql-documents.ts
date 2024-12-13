@@ -2070,6 +2070,149 @@ export const CompleteConversation = gql`
         relation
       }
     }
+    details {
+      modelService
+      model
+      supportsToolCalling
+      sourceCount
+      observableCount
+      toolCount
+      renderedSourceCount
+      renderedObservableCount
+      renderedToolCount
+      rankedSourceCount
+      rankedObservableCount
+      rankedToolCount
+      tokenLimit
+      completionTokenLimit
+      sources
+      formattedSources
+      formattedObservables
+      formattedInstructions
+      formattedTools
+      messages {
+        role
+        author
+        message
+        citations {
+          content {
+            id
+            name
+            state
+            originalDate
+            identifier
+            uri
+            type
+            fileType
+            mimeType
+            format
+            formatName
+            fileExtension
+            fileName
+            fileSize
+            masterUri
+            imageUri
+            textUri
+            audioUri
+            transcriptUri
+            summary
+            customSummary
+            keywords
+            bullets
+            headlines
+            posts
+            chapters
+            questions
+            video {
+              width
+              height
+              duration
+              make
+              model
+              software
+              title
+              description
+              keywords
+              author
+            }
+            audio {
+              keywords
+              author
+              series
+              episode
+              episodeType
+              season
+              publisher
+              copyright
+              genre
+              title
+              description
+              bitrate
+              channels
+              sampleRate
+              bitsPerSample
+              duration
+            }
+            image {
+              width
+              height
+              resolutionX
+              resolutionY
+              bitsPerComponent
+              components
+              projectionType
+              orientation
+              description
+              make
+              model
+              software
+              lens
+              focalLength
+              exposureTime
+              fNumber
+              iso
+              heading
+              pitch
+            }
+            document {
+              title
+              subject
+              summary
+              author
+              publisher
+              description
+              keywords
+              pageCount
+              worksheetCount
+              slideCount
+              wordCount
+              lineCount
+              paragraphCount
+              isEncrypted
+              hasDigitalSignature
+            }
+          }
+          index
+          text
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+        toolCalls {
+          id
+          name
+          arguments
+        }
+        tokens
+        throughput
+        completionTime
+        timestamp
+        modelService
+        model
+      }
+      assistantMessage
+    }
   }
 }
     `;
@@ -2234,6 +2377,149 @@ export const ContinueConversation = gql`
         to
         relation
       }
+    }
+    details {
+      modelService
+      model
+      supportsToolCalling
+      sourceCount
+      observableCount
+      toolCount
+      renderedSourceCount
+      renderedObservableCount
+      renderedToolCount
+      rankedSourceCount
+      rankedObservableCount
+      rankedToolCount
+      tokenLimit
+      completionTokenLimit
+      sources
+      formattedSources
+      formattedObservables
+      formattedInstructions
+      formattedTools
+      messages {
+        role
+        author
+        message
+        citations {
+          content {
+            id
+            name
+            state
+            originalDate
+            identifier
+            uri
+            type
+            fileType
+            mimeType
+            format
+            formatName
+            fileExtension
+            fileName
+            fileSize
+            masterUri
+            imageUri
+            textUri
+            audioUri
+            transcriptUri
+            summary
+            customSummary
+            keywords
+            bullets
+            headlines
+            posts
+            chapters
+            questions
+            video {
+              width
+              height
+              duration
+              make
+              model
+              software
+              title
+              description
+              keywords
+              author
+            }
+            audio {
+              keywords
+              author
+              series
+              episode
+              episodeType
+              season
+              publisher
+              copyright
+              genre
+              title
+              description
+              bitrate
+              channels
+              sampleRate
+              bitsPerSample
+              duration
+            }
+            image {
+              width
+              height
+              resolutionX
+              resolutionY
+              bitsPerComponent
+              components
+              projectionType
+              orientation
+              description
+              make
+              model
+              software
+              lens
+              focalLength
+              exposureTime
+              fNumber
+              iso
+              heading
+              pitch
+            }
+            document {
+              title
+              subject
+              summary
+              author
+              publisher
+              description
+              keywords
+              pageCount
+              worksheetCount
+              slideCount
+              wordCount
+              lineCount
+              paragraphCount
+              isEncrypted
+              hasDigitalSignature
+            }
+          }
+          index
+          text
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+        toolCalls {
+          id
+          name
+          arguments
+        }
+        tokens
+        throughput
+        completionTime
+        timestamp
+        modelService
+        model
+      }
+      assistantMessage
     }
   }
 }
@@ -2446,6 +2732,149 @@ export const FormatConversation = gql`
         to
         relation
       }
+    }
+    details {
+      modelService
+      model
+      supportsToolCalling
+      sourceCount
+      observableCount
+      toolCount
+      renderedSourceCount
+      renderedObservableCount
+      renderedToolCount
+      rankedSourceCount
+      rankedObservableCount
+      rankedToolCount
+      tokenLimit
+      completionTokenLimit
+      sources
+      formattedSources
+      formattedObservables
+      formattedInstructions
+      formattedTools
+      messages {
+        role
+        author
+        message
+        citations {
+          content {
+            id
+            name
+            state
+            originalDate
+            identifier
+            uri
+            type
+            fileType
+            mimeType
+            format
+            formatName
+            fileExtension
+            fileName
+            fileSize
+            masterUri
+            imageUri
+            textUri
+            audioUri
+            transcriptUri
+            summary
+            customSummary
+            keywords
+            bullets
+            headlines
+            posts
+            chapters
+            questions
+            video {
+              width
+              height
+              duration
+              make
+              model
+              software
+              title
+              description
+              keywords
+              author
+            }
+            audio {
+              keywords
+              author
+              series
+              episode
+              episodeType
+              season
+              publisher
+              copyright
+              genre
+              title
+              description
+              bitrate
+              channels
+              sampleRate
+              bitsPerSample
+              duration
+            }
+            image {
+              width
+              height
+              resolutionX
+              resolutionY
+              bitsPerComponent
+              components
+              projectionType
+              orientation
+              description
+              make
+              model
+              software
+              lens
+              focalLength
+              exposureTime
+              fNumber
+              iso
+              heading
+              pitch
+            }
+            document {
+              title
+              subject
+              summary
+              author
+              publisher
+              description
+              keywords
+              pageCount
+              worksheetCount
+              slideCount
+              wordCount
+              lineCount
+              paragraphCount
+              isEncrypted
+              hasDigitalSignature
+            }
+          }
+          index
+          text
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+        toolCalls {
+          id
+          name
+          arguments
+        }
+        tokens
+        throughput
+        completionTime
+        timestamp
+        modelService
+        model
+      }
+      assistantMessage
     }
   }
 }
@@ -3026,6 +3455,149 @@ export const PromptConversation = gql`
         to
         relation
       }
+    }
+    details {
+      modelService
+      model
+      supportsToolCalling
+      sourceCount
+      observableCount
+      toolCount
+      renderedSourceCount
+      renderedObservableCount
+      renderedToolCount
+      rankedSourceCount
+      rankedObservableCount
+      rankedToolCount
+      tokenLimit
+      completionTokenLimit
+      sources
+      formattedSources
+      formattedObservables
+      formattedInstructions
+      formattedTools
+      messages {
+        role
+        author
+        message
+        citations {
+          content {
+            id
+            name
+            state
+            originalDate
+            identifier
+            uri
+            type
+            fileType
+            mimeType
+            format
+            formatName
+            fileExtension
+            fileName
+            fileSize
+            masterUri
+            imageUri
+            textUri
+            audioUri
+            transcriptUri
+            summary
+            customSummary
+            keywords
+            bullets
+            headlines
+            posts
+            chapters
+            questions
+            video {
+              width
+              height
+              duration
+              make
+              model
+              software
+              title
+              description
+              keywords
+              author
+            }
+            audio {
+              keywords
+              author
+              series
+              episode
+              episodeType
+              season
+              publisher
+              copyright
+              genre
+              title
+              description
+              bitrate
+              channels
+              sampleRate
+              bitsPerSample
+              duration
+            }
+            image {
+              width
+              height
+              resolutionX
+              resolutionY
+              bitsPerComponent
+              components
+              projectionType
+              orientation
+              description
+              make
+              model
+              software
+              lens
+              focalLength
+              exposureTime
+              fNumber
+              iso
+              heading
+              pitch
+            }
+            document {
+              title
+              subject
+              summary
+              author
+              publisher
+              description
+              keywords
+              pageCount
+              worksheetCount
+              slideCount
+              wordCount
+              lineCount
+              paragraphCount
+              isEncrypted
+              hasDigitalSignature
+            }
+          }
+          index
+          text
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+        toolCalls {
+          id
+          name
+          arguments
+        }
+        tokens
+        throughput
+        completionTime
+        timestamp
+        modelService
+        model
+      }
+      assistantMessage
     }
   }
 }
