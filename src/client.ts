@@ -548,10 +548,10 @@ class Graphlit {
     );
   }
 
-  public async formatConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.FormatConversationMutation> {
-    return this.mutateAndCheckError<Types.FormatConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async formatConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, includeDetails?: boolean, correlationId?: string): Promise<Types.FormatConversationMutation> {
+    return this.mutateAndCheckError<Types.FormatConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, includeDetails?: boolean, correlationId?: string }>(
       Documents.FormatConversation,
-      { prompt: prompt, id: id, specification: specification, correlationId: correlationId }
+      { prompt: prompt, id: id, specification: specification, includeDetails: includeDetails, correlationId: correlationId }
     );
   }
 
@@ -562,10 +562,10 @@ class Graphlit {
     );
   }
 
-  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
-    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, correlationId?: string }>(
+  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, includeDetails?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
+    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, includeDetails?: boolean, correlationId?: string }>(
       Documents.PromptConversation,
-      { prompt: prompt, id: id, specification: specification, tools: tools, requireTool: requireTool, correlationId: correlationId }
+      { prompt: prompt, id: id, specification: specification, tools: tools, requireTool: requireTool, includeDetails: includeDetails, correlationId: correlationId }
     );
   }
 

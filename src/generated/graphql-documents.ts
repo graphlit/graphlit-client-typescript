@@ -2284,11 +2284,12 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $includeDetails: Boolean, $correlationId: String) {
   formatConversation(
     prompt: $prompt
     id: $id
     specification: $specification
+    includeDetails: $includeDetails
     correlationId: $correlationId
   ) {
     conversation {
@@ -2861,13 +2862,14 @@ export const Prompt = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $correlationId: String) {
+    mutation PromptConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String) {
   promptConversation(
     prompt: $prompt
     id: $id
     specification: $specification
     tools: $tools
     requireTool: $requireTool
+    includeDetails: $includeDetails
     correlationId: $correlationId
   ) {
     conversation {
@@ -6427,6 +6429,7 @@ export const GetSpecification = gql`
       embedCitations
       flattenCitations
       enableFacets
+      disableGuardrails
       messagesWeight
       contentsWeight
     }
@@ -6731,6 +6734,7 @@ export const QuerySpecifications = gql`
         embedCitations
         flattenCitations
         enableFacets
+        disableGuardrails
         messagesWeight
         contentsWeight
       }

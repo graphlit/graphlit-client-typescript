@@ -599,6 +599,10 @@ export enum AzureDocumentIntelligenceModels {
   ReadOcr = 'READ_OCR',
   /** Receipt */
   Receipt = 'RECEIPT',
+  /** Bank Check (US) */
+  UsBankCheck = 'US_BANK_CHECK',
+  /** Bank Statement (US) */
+  UsBankStatement = 'US_BANK_STATEMENT',
   /** Health Insurance Card (US) */
   UsHealthInsuranceCard = 'US_HEALTH_INSURANCE_CARD',
   /** Marriage Certificate (US) */
@@ -609,6 +613,8 @@ export enum AzureDocumentIntelligenceModels {
   UsMortgage1008 = 'US_MORTGAGE1008',
   /** Mortgage closing disclosure (US) */
   UsMortgageDisclosure = 'US_MORTGAGE_DISCLOSURE',
+  /** Pay Stub (US) */
+  UsPayStub = 'US_PAY_STUB',
   /** 1098 Form (US) */
   UsTaxForm1098 = 'US_TAX_FORM1098',
   /** 1098E Form (US) */
@@ -1823,6 +1829,53 @@ export type ConversationCitation = {
   text: Scalars['String']['output'];
 };
 
+/** Represents the RAG pipeline details for a prompted conversation. */
+export type ConversationDetails = {
+  __typename?: 'ConversationDetails';
+  /** The LLM assistant message, prior to parsing JSON guardrails. */
+  assistantMessage?: Maybe<Scalars['String']['output']>;
+  /** The LLM completion token limit. */
+  completionTokenLimit?: Maybe<Scalars['Int']['output']>;
+  /** The formatted RAG instructions. */
+  formattedInstructions?: Maybe<Scalars['String']['output']>;
+  /** The formatted observed entities. */
+  formattedObservables?: Maybe<Scalars['String']['output']>;
+  /** The formatted sources. */
+  formattedSources?: Maybe<Scalars['String']['output']>;
+  /** The formatted LLM tools. */
+  formattedTools?: Maybe<Scalars['String']['output']>;
+  /** The LLM conversation messages. */
+  messages?: Maybe<Array<Maybe<ConversationMessage>>>;
+  /** The LLM model description. */
+  model?: Maybe<Scalars['String']['output']>;
+  /** The LLM service type. */
+  modelService?: Maybe<ModelServiceTypes>;
+  /** The number of observable entities after retrieval. */
+  observableCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of observable entities after reranking. */
+  rankedObservableCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of content sources after reranking. */
+  rankedSourceCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of tools after reranking. */
+  rankedToolCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of observable entities after rendering. */
+  renderedObservableCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of content sources after rendering. */
+  renderedSourceCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of tools after rendering. */
+  renderedToolCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of content sources after retrieval. */
+  sourceCount?: Maybe<Scalars['Int']['output']>;
+  /** JSON representation of the source to content mapping. */
+  sources?: Maybe<Scalars['String']['output']>;
+  /** Whether the LLM supports tool calling. */
+  supportsToolCalling?: Maybe<Scalars['Boolean']['output']>;
+  /** The LLM prompt token limit. */
+  tokenLimit?: Maybe<Scalars['Int']['output']>;
+  /** The number of tools. */
+  toolCount?: Maybe<Scalars['Int']['output']>;
+};
+
 /** Represents a filter for conversations. */
 export type ConversationFilter = {
   /** Filter by similar conversations. */
@@ -1882,7 +1935,7 @@ export type ConversationMessage = {
   completionTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The conversation message. */
   message?: Maybe<Scalars['String']['output']>;
-  /** The LLM description, only provided with assistant role. */
+  /** The LLM model description, only provided with assistant role. */
   model?: Maybe<Scalars['String']['output']>;
   /** The LLM service type, only provided with assistant role. */
   modelService?: Maybe<ModelServiceTypes>;
@@ -1938,6 +1991,8 @@ export type ConversationStrategy = {
   __typename?: 'ConversationStrategy';
   /** The weight of contents within prompt context, in range [0.0 - 1.0]. */
   contentsWeight?: Maybe<Scalars['Float']['output']>;
+  /** Disable JSON guardrails, if system prompt asks for non-JSON output format. */
+  disableGuardrails?: Maybe<Scalars['Boolean']['output']>;
   /** Embed content citations into completed converation messages. */
   embedCitations?: Maybe<Scalars['Boolean']['output']>;
   /** Provide content facets with completed conversation. */
@@ -1956,6 +2011,8 @@ export type ConversationStrategy = {
 export type ConversationStrategyInput = {
   /** The weight of contents within prompt context, in range [0.0 - 1.0]. */
   contentsWeight?: InputMaybe<Scalars['Float']['input']>;
+  /** Disable JSON guardrails, if system prompt asks for non-JSON output format. */
+  disableGuardrails?: InputMaybe<Scalars['Boolean']['input']>;
   /** Embed content citations into completed converation messages. */
   embedCitations?: InputMaybe<Scalars['Boolean']['input']>;
   /** Provide content facets with completed conversation. */
@@ -1982,6 +2039,8 @@ export enum ConversationStrategyTypes {
 export type ConversationStrategyUpdateInput = {
   /** The weight of contents within prompt context, in range [0.0 - 1.0]. */
   contentsWeight?: InputMaybe<Scalars['Float']['input']>;
+  /** Disable JSON guardrails, if system prompt asks for non-JSON output format. */
+  disableGuardrails?: InputMaybe<Scalars['Boolean']['input']>;
   /** Embed content citations into completed converation messages. */
   embedCitations?: InputMaybe<Scalars['Boolean']['input']>;
   /** Provide content facets with completed conversation. */
@@ -3854,7 +3913,9 @@ export enum GoogleModels {
   /** Gemini 1.5 Pro (001 version) */
   Gemini_1_5Pro_001 = 'GEMINI_1_5_PRO_001',
   /** Gemini 1.5 Pro (002 version) */
-  Gemini_1_5Pro_002 = 'GEMINI_1_5_PRO_002'
+  Gemini_1_5Pro_002 = 'GEMINI_1_5_PRO_002',
+  /** Gemini 2.0 Flash (Experimental) */
+  Gemini_2_0FlashExperimental = 'GEMINI_2_0_FLASH_EXPERIMENTAL'
 }
 
 /** Represents a knowledge graph. */
@@ -7313,6 +7374,7 @@ export type MutationCompleteConversationArgs = {
 export type MutationContinueConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   responses: Array<ConversationToolResponseInput>;
 };
 
@@ -8005,6 +8067,7 @@ export type MutationExtractTextArgs = {
 export type MutationFormatConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   prompt: Scalars['String']['input'];
   specification?: InputMaybe<EntityReferenceInput>;
 };
@@ -8106,6 +8169,7 @@ export type MutationPromptArgs = {
 export type MutationPromptConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   prompt: Scalars['String']['input'];
   requireTool?: InputMaybe<Scalars['Boolean']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
@@ -10231,6 +10295,8 @@ export type PromptConversation = {
   __typename?: 'PromptConversation';
   /** The completed conversation. */
   conversation?: Maybe<EntityReference>;
+  /** The RAG pipeline details for debugging purposes. */
+  details?: Maybe<ConversationDetails>;
   /** The content facets referenced by the completed conversation message. */
   facets?: Maybe<Array<Maybe<ContentFacet>>>;
   /** The knowledge graph generated from the retrieved contents. */
@@ -13525,6 +13591,7 @@ export type FormatConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -13554,6 +13621,7 @@ export type PromptConversationMutationVariables = Exact<{
   specification?: InputMaybe<EntityReferenceInput>;
   tools?: InputMaybe<Array<ToolDefinitionInput> | ToolDefinitionInput>;
   requireTool?: InputMaybe<Scalars['Boolean']['input']>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -15018,7 +15086,7 @@ export type GetSpecificationQueryVariables = Exact<{
 }>;
 
 
-export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null };
+export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, disableGuardrails?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null };
 
 export type PromptSpecificationsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -15033,7 +15101,7 @@ export type QuerySpecificationsQueryVariables = Exact<{
 }>;
 
 
-export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null> | null } | null };
+export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, disableGuardrails?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null> | null } | null };
 
 export type UpdateSpecificationMutationVariables = Exact<{
   specification: SpecificationUpdateInput;
