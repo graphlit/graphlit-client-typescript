@@ -1980,9 +1980,11 @@ export enum ConversationRoleTypes {
 
 /** Conversation search type */
 export enum ConversationSearchTypes {
-  /** Hybrid (Vector similarity using search text) */
+  /** Hybrid (Vector similarity using user prompt + Keyword search) */
   Hybrid = 'HYBRID',
-  /** Vector similarity */
+  /** Ignore user prompt for content retrieval */
+  None = 'NONE',
+  /** Vector similarity using user prompt */
   Vector = 'VECTOR'
 }
 
