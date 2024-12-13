@@ -2090,6 +2090,7 @@ export const CompleteConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      specification
       messages {
         role
         author
@@ -2397,6 +2398,7 @@ export const ContinueConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      specification
       messages {
         role
         author
@@ -2751,6 +2753,7 @@ export const FormatConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      specification
       messages {
         role
         author
@@ -3473,6 +3476,7 @@ export const PromptConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      specification
       messages {
         role
         author
@@ -6997,7 +7001,6 @@ export const GetSpecification = gql`
       embedCitations
       flattenCitations
       enableFacets
-      disableGuardrails
       messagesWeight
       contentsWeight
     }
@@ -7303,7 +7306,6 @@ export const QuerySpecifications = gql`
         embedCitations
         flattenCitations
         enableFacets
-        disableGuardrails
         messagesWeight
         contentsWeight
       }
