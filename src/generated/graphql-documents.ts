@@ -81,10 +81,12 @@ export const GetAlert = gql`
         from
         to
       }
+      inLast
       creationDateRange {
         from
         to
       }
+      createdInLast
       types
       fileTypes
       contents {
@@ -189,10 +191,12 @@ export const QueryAlerts = gql`
           from
           to
         }
+        inLast
         creationDateRange {
           from
           to
         }
+        createdInLast
         types
         fileTypes
         contents {
@@ -3022,10 +3026,12 @@ export const GetConversation = gql`
         from
         to
       }
+      inLast
       creationDateRange {
         from
         to
       }
+      createdInLast
       types
       fileTypes
       contents {
@@ -3089,10 +3095,12 @@ export const GetConversation = gql`
         from
         to
       }
+      inLast
       creationDateRange {
         from
         to
       }
+      createdInLast
       types
       fileTypes
       contents {
@@ -3773,10 +3781,12 @@ export const QueryConversations = gql`
           from
           to
         }
+        inLast
         creationDateRange {
           from
           to
         }
+        createdInLast
         types
         fileTypes
         contents {
@@ -3840,10 +3850,12 @@ export const QueryConversations = gql`
           from
           to
         }
+        inLast
         creationDateRange {
           from
           to
         }
+        createdInLast
         types
         fileTypes
         contents {
@@ -4708,15 +4720,31 @@ export const GetFeed = gql`
       }
       oneDrive {
         folderId
+        files
         clientId
         clientSecret
         refreshToken
       }
       googleDrive {
         folderId
+        files
         refreshToken
         clientId
         clientSecret
+      }
+      dropbox {
+        path
+        appKey
+        appSecret
+        refreshToken
+        redirectUri
+      }
+      box {
+        folderId
+        clientId
+        clientSecret
+        refreshToken
+        redirectUri
       }
       github {
         uri
@@ -4765,6 +4793,13 @@ export const GetFeed = gql`
         refreshToken
         personalAccessToken
       }
+      intercom {
+        accessToken
+      }
+      zendesk {
+        subdomain
+        accessToken
+      }
       readLimit
     }
     rss {
@@ -4792,6 +4827,15 @@ export const GetFeed = gql`
       token
       identifiers
       type
+    }
+    intercom {
+      readLimit
+      accessToken
+    }
+    zendesk {
+      readLimit
+      subdomain
+      accessToken
     }
     youtube {
       readLimit
@@ -4907,15 +4951,31 @@ export const QueryFeeds = gql`
         }
         oneDrive {
           folderId
+          files
           clientId
           clientSecret
           refreshToken
         }
         googleDrive {
           folderId
+          files
           refreshToken
           clientId
           clientSecret
+        }
+        dropbox {
+          path
+          appKey
+          appSecret
+          refreshToken
+          redirectUri
+        }
+        box {
+          folderId
+          clientId
+          clientSecret
+          refreshToken
+          redirectUri
         }
         github {
           uri
@@ -4964,6 +5024,13 @@ export const QueryFeeds = gql`
           refreshToken
           personalAccessToken
         }
+        intercom {
+          accessToken
+        }
+        zendesk {
+          subdomain
+          accessToken
+        }
         readLimit
       }
       rss {
@@ -4991,6 +5058,15 @@ export const QueryFeeds = gql`
         token
         identifiers
         type
+      }
+      intercom {
+        readLimit
+        accessToken
+      }
+      zendesk {
+        readLimit
+        subdomain
+        accessToken
       }
       youtube {
         readLimit
