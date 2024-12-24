@@ -1100,6 +1100,34 @@ export const IngestBatch = gql`
       id
       name
     }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
+    }
   }
 }
     `;
@@ -1125,6 +1153,34 @@ export const IngestEncodedFile = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
   }
 }
@@ -1153,6 +1209,34 @@ export const IngestText = gql`
       id
       name
     }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
+    }
   }
 }
     `;
@@ -1175,6 +1259,34 @@ export const IngestTextBatch = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
   }
 }
@@ -1200,6 +1312,34 @@ export const IngestUri = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
   }
 }
@@ -1236,6 +1376,34 @@ export const PublishContents = gql`
       id
       name
     }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
+    }
     textUri
     audioUri
     markdown
@@ -1263,6 +1431,34 @@ export const PublishText = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
     textUri
     audioUri
@@ -1825,6 +2021,34 @@ export const ScreenshotPage = gql`
       id
       name
     }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
+    }
   }
 }
     `;
@@ -1888,6 +2112,34 @@ export const UpdateContent = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
   }
 }
@@ -3630,6 +3882,34 @@ export const PublishConversation = gql`
     collections {
       id
       name
+    }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
     }
     textUri
     audioUri

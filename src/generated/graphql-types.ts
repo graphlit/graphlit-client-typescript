@@ -8298,6 +8298,7 @@ export type MutationFormatConversationArgs = {
 export type MutationIngestBatchArgs = {
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  observations?: InputMaybe<Array<ObservationReferenceInput>>;
   uris: Array<Scalars['URL']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
 };
@@ -8311,6 +8312,7 @@ export type MutationIngestEncodedFileArgs = {
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   mimeType: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  observations?: InputMaybe<Array<ObservationReferenceInput>>;
   workflow?: InputMaybe<EntityReferenceInput>;
 };
 
@@ -8343,6 +8345,7 @@ export type MutationIngestTextArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  observations?: InputMaybe<Array<ObservationReferenceInput>>;
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
   uri?: InputMaybe<Scalars['URL']['input']>;
@@ -8354,6 +8357,7 @@ export type MutationIngestTextBatchArgs = {
   batch: Array<TextContentInput>;
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  observations?: InputMaybe<Array<ObservationReferenceInput>>;
   textType?: InputMaybe<TextTypes>;
   workflow?: InputMaybe<EntityReferenceInput>;
 };
@@ -8365,6 +8369,7 @@ export type MutationIngestUriArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  observations?: InputMaybe<Array<ObservationReferenceInput>>;
   uri: Scalars['URL']['input'];
   workflow?: InputMaybe<EntityReferenceInput>;
 };
@@ -8913,6 +8918,14 @@ export type ObservationReferenceFilter = {
   /** Filter observation(s) by their states. */
   states?: InputMaybe<Array<InputMaybe<EntityState>>>;
   /** Filter by observed entity type. */
+  type: ObservableTypes;
+};
+
+/** Represents an observation reference. */
+export type ObservationReferenceInput = {
+  /** The observed entity. */
+  observable: NamedEntityReferenceInput;
+  /** The observed entity type. */
   type: ObservableTypes;
 };
 
@@ -13678,7 +13691,7 @@ export type IngestBatchMutationVariables = Exact<{
 }>;
 
 
-export type IngestBatchMutation = { __typename?: 'Mutation', ingestBatch?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null> | null };
+export type IngestBatchMutation = { __typename?: 'Mutation', ingestBatch?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null };
 
 export type IngestEncodedFileMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -13692,7 +13705,7 @@ export type IngestEncodedFileMutationVariables = Exact<{
 }>;
 
 
-export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type IngestTextMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -13707,7 +13720,7 @@ export type IngestTextMutationVariables = Exact<{
 }>;
 
 
-export type IngestTextMutation = { __typename?: 'Mutation', ingestText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type IngestTextMutation = { __typename?: 'Mutation', ingestText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type IngestTextBatchMutationVariables = Exact<{
   batch: Array<TextContentInput> | TextContentInput;
@@ -13718,7 +13731,7 @@ export type IngestTextBatchMutationVariables = Exact<{
 }>;
 
 
-export type IngestTextBatchMutation = { __typename?: 'Mutation', ingestTextBatch?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null> | null };
+export type IngestTextBatchMutation = { __typename?: 'Mutation', ingestTextBatch?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null };
 
 export type IngestUriMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']['input']>;
@@ -13731,7 +13744,7 @@ export type IngestUriMutationVariables = Exact<{
 }>;
 
 
-export type IngestUriMutation = { __typename?: 'Mutation', ingestUri?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type IngestUriMutation = { __typename?: 'Mutation', ingestUri?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type IsContentDoneQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -13754,7 +13767,7 @@ export type PublishContentsMutationVariables = Exact<{
 }>;
 
 
-export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type PublishTextMutationVariables = Exact<{
   text: Scalars['String']['input'];
@@ -13767,7 +13780,7 @@ export type PublishTextMutationVariables = Exact<{
 }>;
 
 
-export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type QueryContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -13802,7 +13815,7 @@ export type ScreenshotPageMutationVariables = Exact<{
 }>;
 
 
-export type ScreenshotPageMutation = { __typename?: 'Mutation', screenshotPage?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type ScreenshotPageMutation = { __typename?: 'Mutation', screenshotPage?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type SummarizeContentsMutationVariables = Exact<{
   summarizations: Array<SummarizationStrategyInput> | SummarizationStrategyInput;
@@ -13828,7 +13841,7 @@ export type UpdateContentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateContentMutation = { __typename?: 'Mutation', updateContent?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type UpdateContentMutation = { __typename?: 'Mutation', updateContent?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type ClearConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -13952,7 +13965,7 @@ export type PublishConversationMutationVariables = Exact<{
 }>;
 
 
-export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type QueryConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
