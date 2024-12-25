@@ -312,31 +312,38 @@ class Graphlit {
     );
   }
 
-  public async ingestBatch(uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestBatchMutation> {
-    return this.mutateAndCheckError<Types.IngestBatchMutation, { uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+  public async ingestTextBatch(batch: [Types.TextContentInput], textType: Types.TextTypes, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestTextBatchMutation> {
+    return this.mutateAndCheckError<Types.IngestTextBatchMutation, { batch: [Types.TextContentInput], textType: Types.TextTypes, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
+      Documents.IngestTextBatch,
+      { batch: batch, textType: textType, collections: collections, observations: observations, correlationId: correlationId }
+    );
+  }
+
+  public async ingestBatch(uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestBatchMutation> {
+    return this.mutateAndCheckError<Types.IngestBatchMutation, { uris: [string], workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
       Documents.IngestBatch,
-      { uris: uris, workflow: workflow, collections: collections, correlationId: correlationId }
+      { uris: uris, workflow: workflow, collections: collections, observations: observations, correlationId: correlationId }
     );
   }
 
-  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestUriMutation> {
-    return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+  public async ingestUri(uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestUriMutation> {
+    return this.mutateAndCheckError<Types.IngestUriMutation, { uri: string, name?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
       Documents.IngestUri,
-      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
+      { uri: uri, name: name, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, observations: observations, correlationId: correlationId }
     );
   }
 
-  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestTextMutation> {
-    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestTextMutation> {
+    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
       Documents.IngestText,
-      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
+      { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, observations: observations, correlationId: correlationId }
     );
   }
 
-  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestEncodedFileMutation> {
-    return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+  public async ingestEncodedFile(name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestEncodedFileMutation> {
+    return this.mutateAndCheckError<Types.IngestEncodedFileMutation, { name: string, data: string, mimeType: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
       Documents.IngestEncodedFile,
-      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, correlationId: correlationId }
+      { name: name, data: data, mimeType: mimeType, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, observations: observations, correlationId: correlationId }
     );
   }
 

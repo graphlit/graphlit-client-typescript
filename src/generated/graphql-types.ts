@@ -13687,6 +13687,7 @@ export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -13700,6 +13701,7 @@ export type IngestEncodedFileMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -13716,6 +13718,7 @@ export type IngestTextMutationVariables = Exact<{
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -13727,6 +13730,7 @@ export type IngestTextBatchMutationVariables = Exact<{
   textType?: InputMaybe<TextTypes>;
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -13740,6 +13744,7 @@ export type IngestUriMutationVariables = Exact<{
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 

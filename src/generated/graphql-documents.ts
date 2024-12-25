@@ -1082,11 +1082,12 @@ export const GetContent = gql`
 }
     `;
 export const IngestBatch = gql`
-    mutation IngestBatch($uris: [URL!]!, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestBatch($uris: [URL!]!, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestBatch(
     uris: $uris
     workflow: $workflow
     collections: $collections
+    observations: $observations
     correlationId: $correlationId
   ) {
     id
@@ -1132,7 +1133,7 @@ export const IngestBatch = gql`
 }
     `;
 export const IngestEncodedFile = gql`
-    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
   ingestEncodedFile(
     name: $name
     data: $data
@@ -1140,6 +1141,7 @@ export const IngestEncodedFile = gql`
     id: $id
     isSynchronous: $isSynchronous
     collections: $collections
+    observations: $observations
     workflow: $workflow
     correlationId: $correlationId
   ) {
@@ -1186,7 +1188,7 @@ export const IngestEncodedFile = gql`
 }
     `;
 export const IngestText = gql`
-    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestText($name: String!, $text: String!, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestText(
     name: $name
     text: $text
@@ -1196,6 +1198,7 @@ export const IngestText = gql`
     isSynchronous: $isSynchronous
     workflow: $workflow
     collections: $collections
+    observations: $observations
     correlationId: $correlationId
   ) {
     id
@@ -1241,12 +1244,13 @@ export const IngestText = gql`
 }
     `;
 export const IngestTextBatch = gql`
-    mutation IngestTextBatch($batch: [TextContentInput!]!, $textType: TextTypes, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestTextBatch($batch: [TextContentInput!]!, $textType: TextTypes, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestTextBatch(
     batch: $batch
     workflow: $workflow
     textType: $textType
     collections: $collections
+    observations: $observations
     correlationId: $correlationId
   ) {
     id
@@ -1292,13 +1296,14 @@ export const IngestTextBatch = gql`
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
     id: $id
     workflow: $workflow
     collections: $collections
+    observations: $observations
     isSynchronous: $isSynchronous
     correlationId: $correlationId
   ) {
