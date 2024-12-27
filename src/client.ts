@@ -401,26 +401,26 @@ class Graphlit {
     );
   }
 
-  public async publishContents(summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput,
-    publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
-    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishContentsMutation> {
+  public async publishContents(publishPrompt: string, connector: Types.ContentPublishingConnectorInput,
+    summaryPrompt?: string, summarySpecification?: Types.EntityReferenceInput, publishSpecification?: Types.EntityReferenceInput,
+    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string): Promise<Types.PublishContentsMutation> {
     return this.mutateAndCheckError<Types.PublishContentsMutation, {
-      summaryPrompt: string, summarySpecification: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, publishPrompt?: string, publishSpecification?: Types.EntityReferenceInput,
-      name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, correlationId?: string
+      summaryPrompt?: string, summarySpecification?: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, publishPrompt: string, publishSpecification?: Types.EntityReferenceInput,
+      name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string
     }>(
       Documents.PublishContents,
-      { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, correlationId: correlationId }
+      { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
   public async publishText(text: string, textType: Types.TextTypes, connector: Types.ContentPublishingConnectorInput,
-    name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishTextMutation> {
+    name?: string, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string): Promise<Types.PublishTextMutation> {
     return this.mutateAndCheckError<Types.PublishTextMutation, {
       text: string, textType: Types.TextTypes, connector: Types.ContentPublishingConnectorInput,
-      name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string
+      name?: string, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string
     }>(
       Documents.PublishText,
-      { text: text, textType: textType, connector: connector, name: name, workflow: workflow, correlationId: correlationId }
+      { text: text, textType: textType, connector: connector, name: name, workflow: workflow, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -583,10 +583,10 @@ class Graphlit {
     );
   }
 
-  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.PublishConversationMutation> {
-    return this.mutateAndCheckError<Types.PublishConversationMutation, { id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, correlationId?: string }>(
+  public async publishConversation(id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string): Promise<Types.PublishConversationMutation> {
+    return this.mutateAndCheckError<Types.PublishConversationMutation, { id: string, connector: Types.ContentPublishingConnectorInput, name?: string, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, correlationId?: string }>(
       Documents.PublishConversation,
-      { id: id, connector: connector, name: name, workflow: workflow, correlationId: correlationId }
+      { id: id, connector: connector, name: name, workflow: workflow, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
