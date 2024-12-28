@@ -3278,6 +3278,10 @@ export const GetConversation = gql`
       id
       name
     }
+    fallbacks {
+      id
+      name
+    }
     filter {
       dateRange {
         from
@@ -4058,6 +4062,10 @@ export const QueryConversations = gql`
         model
       }
       specification {
+        id
+        name
+      }
+      fallbacks {
         id
         name
       }
@@ -7642,6 +7650,35 @@ export const PromptSpecifications = gql`
   }
 }
     `;
+export const QueryModels = gql`
+    query QueryModels {
+  models {
+    results {
+      type
+      serviceType
+      model
+      description
+      availableOn
+      features {
+        keyFeatures
+        strengths
+        useCases
+      }
+      metadata {
+        multilingual
+        multimodal
+        knowledgeCutoff
+        promptCostPerMillion
+        completionCostPerMillion
+        embeddingsCostPerMillion
+        rerankingCostPerMillion
+        contextWindowTokens
+        maxOutputTokens
+      }
+    }
+  }
+}
+    `;
 export const QuerySpecifications = gql`
     query QuerySpecifications($filter: SpecificationFilter) {
   specifications(filter: $filter) {
@@ -7851,6 +7888,13 @@ export const CreateWorkflow = gql`
       collections {
         id
       }
+      observations {
+        type
+        observable {
+          id
+          name
+        }
+      }
     }
     indexing {
       jobs {
@@ -7862,6 +7906,7 @@ export const CreateWorkflow = gql`
       }
     }
     preparation {
+      enableUnblockedCapture
       disableSmartCapture
       summarizations {
         type
@@ -8018,6 +8063,13 @@ export const GetWorkflow = gql`
       collections {
         id
       }
+      observations {
+        type
+        observable {
+          id
+          name
+        }
+      }
     }
     indexing {
       jobs {
@@ -8029,6 +8081,7 @@ export const GetWorkflow = gql`
       }
     }
     preparation {
+      enableUnblockedCapture
       disableSmartCapture
       summarizations {
         type
@@ -8158,6 +8211,13 @@ export const QueryWorkflows = gql`
         collections {
           id
         }
+        observations {
+          type
+          observable {
+            id
+            name
+          }
+        }
       }
       indexing {
         jobs {
@@ -8169,6 +8229,7 @@ export const QueryWorkflows = gql`
         }
       }
       preparation {
+        enableUnblockedCapture
         disableSmartCapture
         summarizations {
           type
@@ -8293,6 +8354,13 @@ export const UpdateWorkflow = gql`
       collections {
         id
       }
+      observations {
+        type
+        observable {
+          id
+          name
+        }
+      }
     }
     indexing {
       jobs {
@@ -8304,6 +8372,7 @@ export const UpdateWorkflow = gql`
       }
     }
     preparation {
+      enableUnblockedCapture
       disableSmartCapture
       summarizations {
         type
