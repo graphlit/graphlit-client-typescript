@@ -13895,6 +13895,7 @@ export type PublishContentsMutationVariables = Exact<{
   publishPrompt: Scalars['String']['input'];
   connector: ContentPublishingConnectorInput;
   filter?: InputMaybe<ContentFilter>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
