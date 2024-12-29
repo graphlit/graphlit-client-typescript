@@ -7548,7 +7548,7 @@ export type Mutation = {
   /** Prompts one or more LLM specifications, 10 maximum. */
   promptSpecifications?: Maybe<Array<Maybe<PromptCompletion>>>;
   /** Publish contents based on the provided filter criteria into different content format. */
-  publishContents?: Maybe<Content>;
+  publishContents?: Maybe<PublishContents>;
   /** Publish conversation. */
   publishConversation?: Maybe<Content>;
   /** Publish text into different content format. */
@@ -8499,6 +8499,7 @@ export type MutationPublishContentsArgs = {
   connector: ContentPublishingConnectorInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ContentFilter>;
+  includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   publishPrompt: Scalars['String']['input'];
@@ -10714,6 +10715,36 @@ export type PromptSummarization = {
   specification?: Maybe<EntityReference>;
   /** The summarization type. */
   type: SummarizationTypes;
+};
+
+/** Represents a publish contents result. */
+export type PublishContents = {
+  __typename?: 'PublishContents';
+  /** The published content. */
+  content?: Maybe<Content>;
+  /** The publishing details for debugging purposes. */
+  details?: Maybe<PublishingDetails>;
+};
+
+/** Represents the publishing details. */
+export type PublishingDetails = {
+  __typename?: 'PublishingDetails';
+  /** The retrieved contents. */
+  contents?: Maybe<Array<Maybe<EntityReference>>>;
+  /** JSON representation of the LLM publish specification. */
+  publishSpecification?: Maybe<Scalars['String']['output']>;
+  /** The time to publish the summaries. */
+  publishTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The list of content summaries. */
+  summaries?: Maybe<Array<Maybe<TextPage>>>;
+  /** JSON representation of the LLM summary specification. */
+  summarySpecification?: Maybe<Scalars['String']['output']>;
+  /** The time to summarize the retrieved contents. */
+  summaryTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The published text. */
+  text?: Maybe<Scalars['String']['output']>;
+  /** The published text type. */
+  textType?: Maybe<TextTypes>;
 };
 
 export type Query = {
@@ -13873,7 +13904,7 @@ export type PublishContentsMutationVariables = Exact<{
 }>;
 
 
-export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'PublishContents', content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, markdown?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null, details?: { __typename?: 'PublishingDetails', text?: string | null, textType?: TextTypes | null, summarySpecification?: string | null, publishSpecification?: string | null, summaryTime?: any | null, publishTime?: any | null, contents?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, summaries?: Array<{ __typename?: 'TextPage', index?: number | null, relevance?: number | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, relevance?: number | null } | null> | null } | null> | null } | null } | null };
 
 export type PublishTextMutationVariables = Exact<{
   text: Scalars['String']['input'];
@@ -13886,7 +13917,7 @@ export type PublishTextMutationVariables = Exact<{
 }>;
 
 
-export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, markdown?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null };
 
 export type QueryContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -14071,7 +14102,7 @@ export type PublishConversationMutationVariables = Exact<{
 }>;
 
 
-export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, textUri?: any | null, audioUri?: any | null, markdown?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+export type PublishConversationMutation = { __typename?: 'Mutation', publishConversation?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, markdown?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null };
 
 export type QueryConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
@@ -15532,7 +15563,7 @@ export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpec
 export type QueryModelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QueryModelsQuery = { __typename?: 'Query', models?: { __typename?: 'ModelCardResults', results?: Array<{ __typename?: 'ModelCard', type?: ModelTypes | null, serviceType?: ModelServiceTypes | null, model?: string | null, description?: string | null, availableOn?: Array<string | null> | null, features?: { __typename?: 'ModelFeatures', keyFeatures?: Array<string | null> | null, strengths?: Array<string | null> | null, useCases?: Array<string | null> | null } | null, metadata?: { __typename?: 'ModelMetadata', multilingual?: boolean | null, multimodal?: boolean | null, knowledgeCutoff?: any | null, promptCostPerMillion?: number | null, completionCostPerMillion?: number | null, embeddingsCostPerMillion?: number | null, rerankingCostPerMillion?: number | null, contextWindowTokens?: number | null, maxOutputTokens?: number | null } | null }> | null } | null };
+export type QueryModelsQuery = { __typename?: 'Query', models?: { __typename?: 'ModelCardResults', results?: Array<{ __typename?: 'ModelCard', name: string, type?: ModelTypes | null, serviceType?: ModelServiceTypes | null, model?: string | null, description?: string | null, availableOn?: Array<string | null> | null, features?: { __typename?: 'ModelFeatures', keyFeatures?: Array<string | null> | null, strengths?: Array<string | null> | null, useCases?: Array<string | null> | null } | null, metadata?: { __typename?: 'ModelMetadata', multilingual?: boolean | null, multimodal?: boolean | null, knowledgeCutoff?: any | null, promptCostPerMillion?: number | null, completionCostPerMillion?: number | null, embeddingsCostPerMillion?: number | null, rerankingCostPerMillion?: number | null, contextWindowTokens?: number | null, maxOutputTokens?: number | null } | null }> | null } | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
