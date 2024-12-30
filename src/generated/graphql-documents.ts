@@ -1053,6 +1053,7 @@ export const GetContent = gql`
     }
     pages {
       index
+      text
       relevance
       chunks {
         index
@@ -1473,20 +1474,7 @@ export const PublishContents = gql`
       contents {
         id
       }
-      summaries {
-        index
-        relevance
-        chunks {
-          index
-          pageIndex
-          rowIndex
-          columnIndex
-          confidence
-          text
-          role
-          relevance
-        }
-      }
+      summaries
       text
       textType
       summarySpecification
@@ -1827,6 +1815,7 @@ export const QueryContents = gql`
       }
       pages {
         index
+        text
         relevance
         chunks {
           index
@@ -2076,6 +2065,7 @@ export const QueryContentsFacets = gql`
       }
       pages {
         index
+        text
         relevance
         chunks {
           index
