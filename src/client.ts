@@ -403,10 +403,10 @@ class Graphlit {
 
   public async publishContents(publishPrompt: string, connector: Types.ContentPublishingConnectorInput,
     summaryPrompt?: string, summarySpecification?: Types.EntityReferenceInput, publishSpecification?: Types.EntityReferenceInput,
-    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, includeDetails?: string, correlationId?: string): Promise<Types.PublishContentsMutation> {
+    name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, includeDetails?: boolean, correlationId?: string): Promise<Types.PublishContentsMutation> {
     return this.mutateAndCheckError<Types.PublishContentsMutation, {
       summaryPrompt?: string, summarySpecification?: Types.EntityReferenceInput, connector: Types.ContentPublishingConnectorInput, publishPrompt: string, publishSpecification?: Types.EntityReferenceInput,
-      name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, includeDetails?: string, correlationId?: string
+      name?: string, filter?: Types.ContentFilter, workflow?: Types.EntityReferenceInput, isSynchronous?: boolean, includeDetails?: boolean, correlationId?: string
     }>(
       Documents.PublishContents,
       { summaryPrompt: summaryPrompt, summarySpecification: summarySpecification, connector: connector, publishPrompt: publishPrompt, publishSpecification: publishSpecification, name: name, filter: filter, workflow: workflow, isSynchronous: isSynchronous, includeDetails: includeDetails, correlationId: correlationId }
