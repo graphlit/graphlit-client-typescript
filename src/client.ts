@@ -569,6 +569,13 @@ class Graphlit {
     );
   }
 
+  public async askGraphlit(prompt: string, type?: Types.SdkTypes, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string): Promise<Types.AskGraphlitMutation> {
+    return this.mutateAndCheckError<Types.AskGraphlitMutation, { prompt: string, type?: Types.SdkTypes, id?: string, specification?: Types.EntityReferenceInput, correlationId?: string }>(
+      Documents.AskGraphlit,
+      { prompt: prompt, type: type, id: id, specification: specification, correlationId: correlationId }
+    );
+  }
+
   public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, includeDetails?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, includeDetails?: boolean, correlationId?: string }>(
       Documents.PromptConversation,

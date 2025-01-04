@@ -2275,6 +2275,143 @@ export const UpdateContent = gql`
   }
 }
     `;
+export const AskGraphlit = gql`
+    mutation AskGraphlit($prompt: String!, $type: SdkTypes, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  askGraphlit(
+    prompt: $prompt
+    type: $type
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    conversation {
+      id
+    }
+    message {
+      role
+      author
+      message
+      citations {
+        content {
+          id
+          name
+          state
+          originalDate
+          identifier
+          uri
+          type
+          fileType
+          mimeType
+          format
+          formatName
+          fileExtension
+          fileName
+          fileSize
+          masterUri
+          imageUri
+          textUri
+          audioUri
+          transcriptUri
+          summary
+          customSummary
+          keywords
+          bullets
+          headlines
+          posts
+          chapters
+          questions
+          video {
+            width
+            height
+            duration
+            make
+            model
+            software
+            title
+            description
+            keywords
+            author
+          }
+          audio {
+            keywords
+            author
+            series
+            episode
+            episodeType
+            season
+            publisher
+            copyright
+            genre
+            title
+            description
+            bitrate
+            channels
+            sampleRate
+            bitsPerSample
+            duration
+          }
+          image {
+            width
+            height
+            resolutionX
+            resolutionY
+            bitsPerComponent
+            components
+            projectionType
+            orientation
+            description
+            make
+            model
+            software
+            lens
+            focalLength
+            exposureTime
+            fNumber
+            iso
+            heading
+            pitch
+          }
+          document {
+            title
+            subject
+            summary
+            author
+            publisher
+            description
+            keywords
+            pageCount
+            worksheetCount
+            slideCount
+            wordCount
+            lineCount
+            paragraphCount
+            isEncrypted
+            hasDigitalSignature
+          }
+        }
+        index
+        text
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+      toolCalls {
+        id
+        name
+        arguments
+      }
+      tokens
+      throughput
+      completionTime
+      timestamp
+      modelService
+      model
+    }
+    messageCount
+  }
+}
+    `;
 export const ClearConversation = gql`
     mutation ClearConversation($id: ID!) {
   clearConversation(id: $id) {
@@ -5619,10 +5756,10 @@ export const QueryOneDriveFolders = gql`
 }
     `;
 export const QuerySharePointFolders = gql`
-    query QuerySharePointFolders($properties: SharePointFoldersInput!, $driveId: ID!, $folderId: ID) {
+    query QuerySharePointFolders($properties: SharePointFoldersInput!, $libraryId: ID!, $folderId: ID) {
   sharePointFolders(
     properties: $properties
-    driveId: $driveId
+    libraryId: $libraryId
     folderId: $folderId
   ) {
     accountName
@@ -8182,6 +8319,12 @@ export const CreateWorkflow = gql`
         }
       }
     }
+    storage {
+      policy {
+        type
+        allowDuplicates
+      }
+    }
     actions {
       connector {
         type
@@ -8357,6 +8500,12 @@ export const GetWorkflow = gql`
         }
       }
     }
+    storage {
+      policy {
+        type
+        allowDuplicates
+      }
+    }
     actions {
       connector {
         type
@@ -8505,6 +8654,12 @@ export const QueryWorkflows = gql`
           }
         }
       }
+      storage {
+        policy {
+          type
+          allowDuplicates
+        }
+      }
       actions {
         connector {
           type
@@ -8646,6 +8801,12 @@ export const UpdateWorkflow = gql`
             endpoint
           }
         }
+      }
+    }
+    storage {
+      policy {
+        type
+        allowDuplicates
       }
     }
     actions {
