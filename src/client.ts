@@ -726,6 +726,13 @@ class Graphlit {
     );
   }
 
+  public async queryModels(filter?: Types.ModelFilter): Promise<Types.QueryModelsQuery> {
+    return this.queryAndCheckError<Types.QueryModelsQuery, { filter?: Types.ModelFilter }>(
+      Documents.QueryModels,
+      { filter: filter }
+    );
+  }
+
   public async createWorkflow(workflow: Types.WorkflowInput): Promise<Types.CreateWorkflowMutation> {
     return this.mutateAndCheckError<Types.CreateWorkflowMutation, { workflow: Types.WorkflowInput }>(
       Documents.CreateWorkflow,

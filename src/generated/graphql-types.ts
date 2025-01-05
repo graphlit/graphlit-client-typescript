@@ -1077,8 +1077,8 @@ export enum CerebrasModels {
   Custom = 'CUSTOM',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
-  /** LLaMA 3.1 70b */
-  Llama_3_1_70B = 'LLAMA_3_1_70B'
+  /** LLaMA 3.3 70b */
+  Llama_3_3_70B = 'LLAMA_3_3_70B'
 }
 
 /** Represents Cohere model properties. */
@@ -4224,29 +4224,12 @@ export enum GroqModels {
   Custom = 'CUSTOM',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
-  /**
-   * LLaMA 3.1 70b
-   * @deprecated Use Llama 3.3 70b instead.
-   */
-  Llama_3_1_70B = 'LLAMA_3_1_70B',
-  /** LLaMA 3.1 405b */
-  Llama_3_1_405B = 'LLAMA_3_1_405B',
   /** LLaMA 3.2 1b Preview */
   Llama_3_2_1BPreview = 'LLAMA_3_2_1B_PREVIEW',
   /** LLaMA 3.2 3b Preview */
   Llama_3_2_3BPreview = 'LLAMA_3_2_3B_PREVIEW',
-  /**
-   * LLaMA 3.2 11b Text Preview
-   * @deprecated Use Llama 3.2 11b Vision Preview instead.
-   */
-  Llama_3_2_11BTextPreview = 'LLAMA_3_2_11B_TEXT_PREVIEW',
   /** LLaMA 3.2 11b Vision Preview */
   Llama_3_2_11BVisionPreview = 'LLAMA_3_2_11B_VISION_PREVIEW',
-  /**
-   * LLaMA 3.2 90b Text Preview
-   * @deprecated Use Llama 3.2 90b Vision Preview instead.
-   */
-  Llama_3_2_90BTextPreview = 'LLAMA_3_2_90B_TEXT_PREVIEW',
   /** LLaMA 3.2 90b Vision Preview */
   Llama_3_2_90BVisionPreview = 'LLAMA_3_2_90B_VISION_PREVIEW',
   /** LLaMA 3.3 70b */
@@ -4255,11 +4238,6 @@ export enum GroqModels {
   Llama_3_8B = 'LLAMA_3_8B',
   /** LLaMA 3 70b */
   Llama_3_70B = 'LLAMA_3_70B',
-  /**
-   * LLaVA 1.5 7B Preview
-   * @deprecated Use Llama 3.2 11b Vision Preview instead.
-   */
-  Llava_1_5_7BPreview = 'LLAVA_1_5_7B_PREVIEW',
   /** Mixtral 8x7b Instruct */
   Mixtral_8X7BInstruct = 'MIXTRAL_8X7B_INSTRUCT'
 }
@@ -7144,14 +7122,18 @@ export type ModelCard = {
   features?: Maybe<ModelFeatures>;
   /** The model metadata, including pricing information per million tokens. */
   metadata?: Maybe<ModelMetadata>;
-  /** The model enum to use with the specification. */
+  /** The model enum to use with the specification, i.e. GPT4O_128K. */
   model?: Maybe<Scalars['String']['output']>;
+  /** The model enum type to use with the specification, i.e. OpenAIModels. */
+  modelType?: Maybe<Scalars['String']['output']>;
   /** The model name. */
   name: Scalars['String']['output'];
   /** The model service type. */
   serviceType?: Maybe<ModelServiceTypes>;
   /** The type of model, i.e. completion, text embedding, reranking. */
   type?: Maybe<ModelTypes>;
+  /** The model card URI. */
+  uri?: Maybe<Scalars['URL']['output']>;
 };
 
 /** Represents a list of model card results. */
@@ -7183,6 +7165,14 @@ export type ModelFeatures = {
   strengths?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Potential use cases for the model. */
   useCases?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** Represents a filter for LLM models. */
+export type ModelFilter = {
+  /** Filter by LLM service types. */
+  serviceTypes?: InputMaybe<Array<InputMaybe<ModelServiceTypes>>>;
+  /** Filter by LLM model types. */
+  types?: InputMaybe<Array<InputMaybe<ModelTypes>>>;
 };
 
 /** Represents an LLM image entity extraction connector. */
@@ -11439,6 +11429,11 @@ export type QueryMicrosoftTeamsTeamsArgs = {
 };
 
 
+export type QueryModelsArgs = {
+  filter?: InputMaybe<ModelFilter>;
+};
+
+
 export type QueryObservationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -13296,8 +13291,12 @@ export enum VoyageModels {
   Voyage = 'VOYAGE',
   /** Voyage 3.0 */
   Voyage_3_0 = 'VOYAGE_3_0',
+  /** Voyage 3.0 Large */
+  Voyage_3_0Large = 'VOYAGE_3_0_LARGE',
   /** Voyage Code 2.0 */
   VoyageCode_2_0 = 'VOYAGE_CODE_2_0',
+  /** Voyage Code 3.0 */
+  VoyageCode_3_0 = 'VOYAGE_CODE_3_0',
   /** Voyage Finance 2.0 */
   VoyageFinance_2_0 = 'VOYAGE_FINANCE_2_0',
   /** Voyage Law 2.0 */
@@ -15643,10 +15642,12 @@ export type PromptSpecificationsMutationVariables = Exact<{
 
 export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null> | null };
 
-export type QueryModelsQueryVariables = Exact<{ [key: string]: never; }>;
+export type QueryModelsQueryVariables = Exact<{
+  filter?: InputMaybe<ModelFilter>;
+}>;
 
 
-export type QueryModelsQuery = { __typename?: 'Query', models?: { __typename?: 'ModelCardResults', results?: Array<{ __typename?: 'ModelCard', name: string, type?: ModelTypes | null, serviceType?: ModelServiceTypes | null, model?: string | null, description?: string | null, availableOn?: Array<string | null> | null, features?: { __typename?: 'ModelFeatures', keyFeatures?: Array<string | null> | null, strengths?: Array<string | null> | null, useCases?: Array<string | null> | null } | null, metadata?: { __typename?: 'ModelMetadata', multilingual?: boolean | null, multimodal?: boolean | null, knowledgeCutoff?: any | null, promptCostPerMillion?: number | null, completionCostPerMillion?: number | null, embeddingsCostPerMillion?: number | null, rerankingCostPerMillion?: number | null, contextWindowTokens?: number | null, maxOutputTokens?: number | null } | null }> | null } | null };
+export type QueryModelsQuery = { __typename?: 'Query', models?: { __typename?: 'ModelCardResults', results?: Array<{ __typename?: 'ModelCard', uri?: any | null, name: string, type?: ModelTypes | null, serviceType?: ModelServiceTypes | null, model?: string | null, modelType?: string | null, description?: string | null, availableOn?: Array<string | null> | null, features?: { __typename?: 'ModelFeatures', keyFeatures?: Array<string | null> | null, strengths?: Array<string | null> | null, useCases?: Array<string | null> | null } | null, metadata?: { __typename?: 'ModelMetadata', multilingual?: boolean | null, multimodal?: boolean | null, knowledgeCutoff?: any | null, promptCostPerMillion?: number | null, completionCostPerMillion?: number | null, embeddingsCostPerMillion?: number | null, rerankingCostPerMillion?: number | null, contextWindowTokens?: number | null, maxOutputTokens?: number | null } | null }> | null } | null };
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;

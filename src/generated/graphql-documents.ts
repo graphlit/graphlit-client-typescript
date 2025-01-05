@@ -7968,13 +7968,15 @@ export const PromptSpecifications = gql`
 }
     `;
 export const QueryModels = gql`
-    query QueryModels {
-  models {
+    query QueryModels($filter: ModelFilter) {
+  models(filter: $filter) {
     results {
+      uri
       name
       type
       serviceType
       model
+      modelType
       description
       availableOn
       features {
