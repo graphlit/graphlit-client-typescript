@@ -780,6 +780,55 @@ class Graphlit {
     );
   }
 
+  public async createUser(user: Types.UserInput): Promise<Types.CreateUserMutation> {
+    return this.mutateAndCheckError<Types.CreateUserMutation, { user: Types.UserInput }>(
+      Documents.CreateUser,
+      { user: user }
+    );
+  }
+
+  public async updateUser(user: Types.UserUpdateInput): Promise<Types.UpdateUserMutation> {
+    return this.mutateAndCheckError<Types.UpdateUserMutation, { user: Types.UserUpdateInput }>(
+      Documents.UpdateUser,
+      { user: user }
+    );
+  }
+
+  public async deleteUser(id: string): Promise<Types.DeleteUserMutation> {
+    return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
+      Documents.DeleteUser,
+      { id: id }
+    );
+  }
+  
+  public async getUser(): Promise<Types.GetUserQuery> {
+    return this.queryAndCheckError<Types.GetUserQuery, { }>(
+      Documents.GetUser,
+      { }
+    );
+  }
+
+  public async queryUsers(filter?: Types.UserFilter): Promise<Types.QueryUsersQuery> {
+    return this.queryAndCheckError<Types.QueryUsersQuery, { filter?: Types.UserFilter }>(
+      Documents.QueryUsers,
+      { filter: filter }
+    );
+  }
+
+  public async enableUser(id: string): Promise<Types.EnableUserMutation> {
+    return this.mutateAndCheckError<Types.EnableUserMutation, { id: string }>(
+      Documents.EnableUser,
+      { id: id }
+    );
+  }
+
+  public async disableUser(id: string): Promise<Types.DeleteUserMutation> {
+    return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
+      Documents.DisableUser,
+      { id: id }
+    );
+  }
+
   public async createCategory(category: Types.CategoryInput): Promise<Types.CreateCategoryMutation> {
     return this.mutateAndCheckError<Types.CreateCategoryMutation, { category: Types.CategoryInput }>(
       Documents.CreateCategory,

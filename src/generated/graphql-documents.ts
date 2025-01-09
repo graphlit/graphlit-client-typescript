@@ -8185,6 +8185,145 @@ export const UpdateSpecification = gql`
   }
 }
     `;
+export const CountUsers = gql`
+    query CountUsers($filter: UserFilter) {
+  countUsers(filter: $filter) {
+    count
+  }
+}
+    `;
+export const CreateUser = gql`
+    mutation CreateUser($user: UserInput!) {
+  createUser(user: $user) {
+    id
+    name
+    state
+    type
+    identifier
+  }
+}
+    `;
+export const DeleteUser = gql`
+    mutation DeleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DisableUser = gql`
+    mutation DisableUser($id: ID!) {
+  disableUser(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const EnableUser = gql`
+    mutation EnableUser($id: ID!) {
+  enableUser(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetUser = gql`
+    query GetUser {
+  user {
+    id
+    name
+    creationDate
+    relevance
+    owner {
+      id
+    }
+    state
+    type
+    identifier
+    connectors {
+      id
+      name
+      state
+      type
+      authentication {
+        type
+        microsoft {
+          tenantId
+          clientId
+          clientSecret
+        }
+        google {
+          clientId
+          clientSecret
+        }
+      }
+      integration {
+        type
+        uri
+        slack {
+          token
+          channel
+        }
+      }
+    }
+  }
+}
+    `;
+export const QueryUsers = gql`
+    query QueryUsers($filter: UserFilter) {
+  users(filter: $filter) {
+    results {
+      id
+      name
+      creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      type
+      identifier
+      connectors {
+        id
+        name
+        state
+        type
+        authentication {
+          type
+          microsoft {
+            tenantId
+            clientId
+            clientSecret
+          }
+          google {
+            clientId
+            clientSecret
+          }
+        }
+        integration {
+          type
+          uri
+          slack {
+            token
+            channel
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const UpdateUser = gql`
+    mutation UpdateUser($user: UserUpdateInput!) {
+  updateUser(user: $user) {
+    id
+    name
+    state
+    type
+    identifier
+  }
+}
+    `;
 export const CountWorkflows = gql`
     query CountWorkflows($filter: WorkflowFilter) {
   countWorkflows(filter: $filter) {
@@ -8317,6 +8456,9 @@ export const CreateWorkflow = gql`
           enrichedTypes
           fhir {
             endpoint
+          }
+          diffbot {
+            key
           }
         }
       }
@@ -8499,6 +8641,9 @@ export const GetWorkflow = gql`
           fhir {
             endpoint
           }
+          diffbot {
+            key
+          }
         }
       }
     }
@@ -8653,6 +8798,9 @@ export const QueryWorkflows = gql`
             fhir {
               endpoint
             }
+            diffbot {
+              key
+            }
           }
         }
       }
@@ -8801,6 +8949,9 @@ export const UpdateWorkflow = gql`
           enrichedTypes
           fhir {
             endpoint
+          }
+          diffbot {
+            key
           }
         }
       }
