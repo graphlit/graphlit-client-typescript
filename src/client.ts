@@ -548,10 +548,10 @@ class Graphlit {
     );
   }
 
-  public async prompt(prompt: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput], correlationId?: string): Promise<Types.PromptMutation> {
-    return this.mutateAndCheckError<Types.PromptMutation, { prompt: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput?], correlationId?: string }>(
+  public async prompt(prompt?: string, mimeType?: string, data?: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput], correlationId?: string): Promise<Types.PromptMutation> {
+    return this.mutateAndCheckError<Types.PromptMutation, { prompt?: string, mimeType?: string, data?: string, specification?: Types.EntityReferenceInput, messages?: [Types.ConversationMessageInput?], correlationId?: string }>(
       Documents.Prompt,
-      { prompt: prompt, specification: specification, messages: messages, correlationId: correlationId }
+      { prompt: prompt, mimeType: mimeType, data: data, specification: specification, messages: messages, correlationId: correlationId }
     );
   }
 

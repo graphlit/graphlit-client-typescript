@@ -652,6 +652,8 @@ export const DescribeEncodedImage = gql`
     timestamp
     modelService
     model
+    data
+    mimeType
   }
 }
     `;
@@ -782,6 +784,8 @@ export const DescribeImage = gql`
     timestamp
     modelService
     model
+    data
+    mimeType
   }
 }
     `;
@@ -2407,6 +2411,8 @@ export const AskGraphlit = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
   }
@@ -2562,6 +2568,8 @@ export const CompleteConversation = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
     facets {
@@ -2735,6 +2743,8 @@ export const CompleteConversation = gql`
         timestamp
         modelService
         model
+        data
+        mimeType
       }
     }
   }
@@ -2870,6 +2880,8 @@ export const ContinueConversation = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
     facets {
@@ -3043,6 +3055,8 @@ export const ContinueConversation = gql`
         timestamp
         modelService
         model
+        data
+        mimeType
       }
     }
   }
@@ -3225,6 +3239,8 @@ export const FormatConversation = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
     facets {
@@ -3398,6 +3414,8 @@ export const FormatConversation = gql`
         timestamp
         modelService
         model
+        data
+        mimeType
       }
     }
   }
@@ -3536,6 +3554,8 @@ export const GetConversation = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     specification {
       id
@@ -3687,9 +3707,11 @@ export const GetConversation = gql`
 }
     `;
 export const Prompt = gql`
-    mutation Prompt($prompt: String!, $specification: EntityReferenceInput, $messages: [ConversationMessageInput!], $correlationId: String) {
+    mutation Prompt($prompt: String!, $mimeType: String, $data: String, $specification: EntityReferenceInput, $messages: [ConversationMessageInput!], $correlationId: String) {
   prompt(
     prompt: $prompt
+    mimeType: $mimeType
+    data: $data
     specification: $specification
     messages: $messages
     correlationId: $correlationId
@@ -3817,6 +3839,8 @@ export const Prompt = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     error
   }
@@ -3956,6 +3980,8 @@ export const PromptConversation = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
     facets {
@@ -4129,6 +4155,8 @@ export const PromptConversation = gql`
         timestamp
         modelService
         model
+        data
+        mimeType
       }
     }
   }
@@ -4377,6 +4405,8 @@ export const QueryConversations = gql`
         timestamp
         modelService
         model
+        data
+        mimeType
       }
       specification {
         id
@@ -4660,6 +4690,8 @@ export const ReviseContent = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
   }
@@ -4798,6 +4830,8 @@ export const ReviseEncodedImage = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
   }
@@ -4935,6 +4969,8 @@ export const ReviseImage = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
   }
@@ -5072,6 +5108,8 @@ export const ReviseText = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     messageCount
   }
@@ -5370,12 +5408,20 @@ export const GetFeed = gql`
       includeAttachments
       google {
         type
+        includeSpam
+        excludeSentItems
+        includeDeletedItems
+        inboxOnly
         refreshToken
         clientId
         clientSecret
       }
       microsoft {
         type
+        includeSpam
+        excludeSentItems
+        includeDeletedItems
+        inboxOnly
         refreshToken
         clientId
         clientSecret
@@ -5601,12 +5647,20 @@ export const QueryFeeds = gql`
         includeAttachments
         google {
           type
+          includeSpam
+          excludeSentItems
+          includeDeletedItems
+          inboxOnly
           refreshToken
           clientId
           clientSecret
         }
         microsoft {
           type
+          includeSpam
+          excludeSentItems
+          includeDeletedItems
+          inboxOnly
           refreshToken
           clientId
           clientSecret
@@ -7962,6 +8016,8 @@ export const PromptSpecifications = gql`
       timestamp
       modelService
       model
+      data
+      mimeType
     }
     error
   }
