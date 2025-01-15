@@ -101,6 +101,9 @@ export const GetAlert = gql`
       collections {
         id
       }
+      users {
+        id
+      }
       observations {
         type
         observable {
@@ -116,6 +119,9 @@ export const GetAlert = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -134,6 +140,9 @@ export const GetAlert = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -211,6 +220,9 @@ export const QueryAlerts = gql`
         collections {
           id
         }
+        users {
+          id
+        }
         observations {
           type
           observable {
@@ -226,6 +238,9 @@ export const QueryAlerts = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {
@@ -244,6 +259,9 @@ export const QueryAlerts = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {
@@ -3590,6 +3608,9 @@ export const GetConversation = gql`
       collections {
         id
       }
+      users {
+        id
+      }
       observations {
         type
         observable {
@@ -3605,6 +3626,9 @@ export const GetConversation = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -3623,6 +3647,9 @@ export const GetConversation = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -3659,6 +3686,9 @@ export const GetConversation = gql`
       collections {
         id
       }
+      users {
+        id
+      }
       observations {
         type
         observable {
@@ -3674,6 +3704,9 @@ export const GetConversation = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -3692,6 +3725,9 @@ export const GetConversation = gql`
           id
         }
         collections {
+          id
+        }
+        users {
           id
         }
         observations {
@@ -4441,6 +4477,9 @@ export const QueryConversations = gql`
         collections {
           id
         }
+        users {
+          id
+        }
         observations {
           type
           observable {
@@ -4456,6 +4495,9 @@ export const QueryConversations = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {
@@ -4474,6 +4516,9 @@ export const QueryConversations = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {
@@ -4510,6 +4555,9 @@ export const QueryConversations = gql`
         collections {
           id
         }
+        users {
+          id
+        }
         observations {
           type
           observable {
@@ -4525,6 +4573,9 @@ export const QueryConversations = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {
@@ -4543,6 +4594,9 @@ export const QueryConversations = gql`
             id
           }
           collections {
+            id
+          }
+          users {
             id
           }
           observations {

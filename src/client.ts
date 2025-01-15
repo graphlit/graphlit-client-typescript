@@ -190,15 +190,17 @@ class Graphlit {
     );
   }
 
-  public async deleteAlerts(): Promise<Types.DeleteAlertsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAlertsMutation>(
-      Documents.DeleteAlerts
+  public async deleteAlerts(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteAlertsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAlertsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteAlerts,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllAlerts(): Promise<Types.DeleteAllAlertsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllAlertsMutation>(
-      Documents.DeleteAllAlerts
+  public async deleteAllAlerts(filter?: Types.AlertFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllAlertsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllAlertsMutation, { filter?: Types.AlertFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllAlerts,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -251,15 +253,17 @@ class Graphlit {
     );
   }
 
-  public async deleteCollections(): Promise<Types.DeleteCollectionsMutation> {
-    return this.mutateAndCheckError<Types.DeleteCollectionsMutation>(
-      Documents.DeleteCollections
+  public async deleteCollections(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteCollectionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteCollectionsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteCollections,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllCollections(): Promise<Types.DeleteAllCollectionsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllCollectionsMutation>(
-      Documents.DeleteAllCollections
+  public async deleteAllCollections(filter?: Types.CollectionFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllCollectionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllCollectionsMutation, { filter?: Types.CollectionFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllCollections,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -361,15 +365,17 @@ class Graphlit {
     );
   }
 
-  public async deleteContents(): Promise<Types.DeleteContentsMutation> {
-    return this.mutateAndCheckError<Types.DeleteContentsMutation>(
-      Documents.DeleteContents
+  public async deleteContents(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteContentsMutation> {
+    return this.mutateAndCheckError<Types.DeleteContentsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteContents,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllContents(): Promise<Types.DeleteAllContentsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllContentsMutation>(
-      Documents.DeleteAllContents
+  public async deleteAllContents(filter?: Types.ContentFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllContentsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllContentsMutation, { filter?: Types.ContentFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllContents,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -480,15 +486,17 @@ class Graphlit {
     );
   }
 
-  public async deleteConversations(): Promise<Types.DeleteConversationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteConversationsMutation>(
-      Documents.DeleteConversations
+  public async deleteConversations(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteConversationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteConversationsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteConversations,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllConversations(): Promise<Types.DeleteAllConversationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllConversationsMutation>(
-      Documents.DeleteAllConversations
+  public async deleteAllConversations(filter?: Types.ConversationFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllConversationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllConversationsMutation, { filter?: Types.ConversationFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllConversations,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -625,15 +633,17 @@ class Graphlit {
     );
   }
 
-  public async deleteFeeds(): Promise<Types.DeleteFeedsMutation> {
-    return this.mutateAndCheckError<Types.DeleteFeedsMutation>(
-      Documents.DeleteFeeds
+  public async deleteFeeds(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteFeedsMutation> {
+    return this.mutateAndCheckError<Types.DeleteFeedsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteFeeds,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllFeeds(): Promise<Types.DeleteAllFeedsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllFeedsMutation>(
-      Documents.DeleteAllFeeds
+  public async deleteAllFeeds(filter?: Types.FeedFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllFeedsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllFeedsMutation, { filter?: Types.FeedFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllFeeds,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -700,15 +710,17 @@ class Graphlit {
     );
   }
 
-  public async deleteSpecifications(): Promise<Types.DeleteSpecificationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteSpecificationsMutation>(
-      Documents.DeleteSpecifications
+  public async deleteSpecifications(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteSpecificationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteSpecificationsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteSpecifications,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllSpecifications(): Promise<Types.DeleteAllSpecificationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllSpecificationsMutation>(
-      Documents.DeleteAllSpecifications
+  public async deleteAllSpecifications(filter?: Types.SpecificationFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllSpecificationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllSpecificationsMutation, { filter?: Types.SpecificationFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllSpecifications,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -754,18 +766,20 @@ class Graphlit {
     );
   }
 
-  public async deleteWorkflows(): Promise<Types.DeleteWorkflowsMutation> {
-    return this.mutateAndCheckError<Types.DeleteWorkflowsMutation>(
-      Documents.DeleteWorkflows
+  public async deleteWorkflows(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteWorkflowsMutation> {
+    return this.mutateAndCheckError<Types.DeleteWorkflowsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteWorkflows,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllWorkflows(): Promise<Types.DeleteAllWorkflowsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllWorkflowsMutation>(
-      Documents.DeleteAllWorkflows
+  public async deleteAllWorkflows(filter?: Types.WorkflowFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllWorkflowsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllWorkflowsMutation, { filter?: Types.WorkflowFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllWorkflows,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getWorkflow(id: string): Promise<Types.GetWorkflowQuery> {
     return this.queryAndCheckError<Types.GetWorkflowQuery, { id: string }>(
       Documents.GetWorkflow,
@@ -850,18 +864,20 @@ class Graphlit {
     );
   }
 
-  public async deleteCategories(): Promise<Types.DeleteCategoriesMutation> {
-    return this.mutateAndCheckError<Types.DeleteCategoriesMutation>(
-      Documents.DeleteCategories
+ public async deleteCategories(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteCategoriesMutation> {
+    return this.mutateAndCheckError<Types.DeleteCategoriesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteCategories,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllCategories(): Promise<Types.DeleteAllCategoriesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllCategoriesMutation>(
-      Documents.DeleteAllCategories
+  public async deleteAllCategories(filter?: Types.CategoryFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllCategoriesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllCategoriesMutation, { filter?: Types.CategoryFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllCategories,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getCategory(id: string): Promise<Types.GetCategoryQuery> {
     return this.queryAndCheckError<Types.GetCategoryQuery, { id: string }>(
       Documents.GetCategory,
@@ -897,15 +913,17 @@ class Graphlit {
     );
   }
 
-  public async deleteLabels(): Promise<Types.DeleteLabelsMutation> {
-    return this.mutateAndCheckError<Types.DeleteLabelsMutation>(
-      Documents.DeleteLabels
+  public async deleteLabels(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteLabelsMutation> {
+    return this.mutateAndCheckError<Types.DeleteLabelsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteLabels,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllLabels(): Promise<Types.DeleteAllLabelsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllLabelsMutation>(
-      Documents.DeleteAllLabels
+  public async deleteAllLabels(filter?: Types.LabelFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllLabelsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllLabelsMutation, { filter?: Types.LabelFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllLabels,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -944,15 +962,17 @@ class Graphlit {
     );
   }
 
-  public async deletePersons(): Promise<Types.DeletePersonsMutation> {
-    return this.mutateAndCheckError<Types.DeletePersonsMutation>(
-      Documents.DeletePersons
+  public async deletePersons(ids: [string], isSynchronous?: boolean): Promise<Types.DeletePersonsMutation> {
+    return this.mutateAndCheckError<Types.DeletePersonsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeletePersons,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllPersons(): Promise<Types.DeleteAllPersonsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllPersonsMutation>(
-      Documents.DeleteAllPersons
+  public async deleteAllPersons(filter?: Types.PersonFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllPersonsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllPersonsMutation, { filter?: Types.PersonFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllPersons,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -991,15 +1011,17 @@ class Graphlit {
     );
   }
 
-  public async deleteOrganizations(): Promise<Types.DeleteOrganizationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteOrganizationsMutation>(
-      Documents.DeleteOrganizations
+  public async deleteOrganizations(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteOrganizationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteOrganizationsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteOrganizations,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllOrganizations(): Promise<Types.DeleteAllOrganizationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllOrganizationsMutation>(
-      Documents.DeleteAllOrganizations
+  public async deleteAllOrganizations(filter?: Types.OrganizationFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllOrganizationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllOrganizationsMutation, { filter?: Types.OrganizationFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllOrganizations,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1038,18 +1060,20 @@ class Graphlit {
     );
   }
 
-  public async deletePlaces(): Promise<Types.DeletePlacesMutation> {
-    return this.mutateAndCheckError<Types.DeletePlacesMutation>(
-      Documents.DeletePlaces
+  public async deletePlaces(ids: [string], isSynchronous?: boolean): Promise<Types.DeletePlacesMutation> {
+    return this.mutateAndCheckError<Types.DeletePlacesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeletePlaces,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllPlaces(): Promise<Types.DeleteAllPlacesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllPlacesMutation>(
-      Documents.DeleteAllPlaces
+  public async deleteAllPlaces(filter?: Types.PlaceFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllPlacesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllPlacesMutation, { filter?: Types.PlaceFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllPlaces,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getPlace(id: string): Promise<Types.GetPlaceQuery> {
     return this.queryAndCheckError<Types.GetPlaceQuery, { id: string }>(
       Documents.GetPlace,
@@ -1085,18 +1109,20 @@ class Graphlit {
     );
   }
 
-  public async deleteEvents(): Promise<Types.DeleteEventsMutation> {
-    return this.mutateAndCheckError<Types.DeleteEventsMutation>(
-      Documents.DeleteEvents
+  public async deleteEvents(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteEventsMutation> {
+    return this.mutateAndCheckError<Types.DeleteEventsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteEvents,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllEvents(): Promise<Types.DeleteAllEventsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllEventsMutation>(
-      Documents.DeleteAllEvents
+  public async deleteAllEvents(filter?: Types.EventFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllEventsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllEventsMutation, { filter?: Types.EventFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllEvents,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+ 
   public async getEvent(id: string): Promise<Types.GetEventQuery> {
     return this.queryAndCheckError<Types.GetEventQuery, { id: string }>(
       Documents.GetEvent,
@@ -1132,15 +1158,17 @@ class Graphlit {
     );
   }
 
-  public async deleteProducts(): Promise<Types.DeleteProductsMutation> {
-    return this.mutateAndCheckError<Types.DeleteProductsMutation>(
-      Documents.DeleteProducts
+  public async deleteProducts(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteProductsMutation> {
+    return this.mutateAndCheckError<Types.DeleteProductsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteProducts,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllProducts(): Promise<Types.DeleteAllProductsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllProductsMutation>(
-      Documents.DeleteAllProducts
+  public async deleteAllProducts(filter?: Types.ProductFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllProductsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllProductsMutation, { filter?: Types.ProductFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllProducts,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1179,15 +1207,17 @@ class Graphlit {
     );
   }
 
-  public async deleteRepos(): Promise<Types.DeleteReposMutation> {
-    return this.mutateAndCheckError<Types.DeleteReposMutation>(
-      Documents.DeleteRepos
+  public async deleteRepos(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteReposMutation> {
+    return this.mutateAndCheckError<Types.DeleteReposMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteRepos,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllRepos(): Promise<Types.DeleteAllReposMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllReposMutation>(
-      Documents.DeleteAllRepos
+  public async deleteAllRepos(filter?: Types.RepoFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllReposMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllReposMutation, { filter?: Types.RepoFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllRepos,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1226,18 +1256,20 @@ class Graphlit {
     );
   }
 
-  public async deleteSoftwares(): Promise<Types.DeleteSoftwaresMutation> {
-    return this.mutateAndCheckError<Types.DeleteSoftwaresMutation>(
-      Documents.DeleteSoftwares
+  public async deleteSoftwares(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteSoftwaresMutation> {
+    return this.mutateAndCheckError<Types.DeleteSoftwaresMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteSoftwares,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllSoftwares(): Promise<Types.DeleteAllSoftwaresMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllSoftwaresMutation>(
-      Documents.DeleteAllSoftwares
+  public async deleteAllSoftwares(filter?: Types.SoftwareFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllSoftwaresMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllSoftwaresMutation, { filter?: Types.SoftwareFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllSoftwares,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getSoftware(id: string): Promise<Types.GetSoftwareQuery> {
     return this.queryAndCheckError<Types.GetSoftwareQuery, { id: string }>(
       Documents.GetSoftware,
@@ -1273,18 +1305,20 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalConditions(): Promise<Types.DeleteMedicalConditionsMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalConditionsMutation>(
-      Documents.DeleteMedicalConditions
+  public async deleteMedicalConditions(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalConditionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalConditionsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalConditions,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalConditions(): Promise<Types.DeleteAllMedicalConditionsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalConditionsMutation>(
-      Documents.DeleteAllMedicalConditions
+  public async deleteAllMedicalConditions(filter?: Types.MedicalConditionFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalConditionsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalConditionsMutation, { filter?: Types.MedicalConditionFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalConditions,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+ 
   public async getMedicalCondition(id: string): Promise<Types.GetMedicalConditionQuery> {
     return this.queryAndCheckError<Types.GetMedicalConditionQuery, { id: string }>(
       Documents.GetMedicalCondition,
@@ -1320,15 +1354,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalGuidelines(): Promise<Types.DeleteMedicalGuidelinesMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalGuidelinesMutation>(
-      Documents.DeleteMedicalGuidelines
+  public async deleteMedicalGuidelines(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalGuidelinesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalGuidelinesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalGuidelines,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalGuidelines(): Promise<Types.DeleteAllMedicalGuidelinesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalGuidelinesMutation>(
-      Documents.DeleteAllMedicalGuidelines
+  public async deleteAllMedicalGuidelines(filter?: Types.MedicalGuidelineFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalGuidelinesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalGuidelinesMutation, { filter?: Types.MedicalGuidelineFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalGuidelines,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1367,15 +1403,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalDrugs(): Promise<Types.DeleteMedicalDrugsMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalDrugsMutation>(
-      Documents.DeleteMedicalDrugs
+  public async deleteMedicalDrugs(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalDrugsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalDrugs,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalDrugs(): Promise<Types.DeleteAllMedicalDrugsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugsMutation>(
-      Documents.DeleteAllMedicalDrugs
+  public async deleteAllMedicalDrugs(filter?: Types.MedicalDrugFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalDrugsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugsMutation, { filter?: Types.MedicalDrugFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalDrugs,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1414,18 +1452,20 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalIndications(): Promise<Types.DeleteMedicalIndicationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalIndicationsMutation>(
-      Documents.DeleteMedicalIndications
+  public async deleteMedicalIndications(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalIndicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalIndicationsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalIndications,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalIndications(): Promise<Types.DeleteAllMedicalIndicationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalIndicationsMutation>(
-      Documents.DeleteAllMedicalIndications
+  public async deleteAllMedicalIndications(filter?: Types.MedicalIndicationFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalIndicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalIndicationsMutation, { filter?: Types.MedicalIndicationFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalIndications,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getMedicalIndication(id: string): Promise<Types.GetMedicalIndicationQuery> {
     return this.queryAndCheckError<Types.GetMedicalIndicationQuery, { id: string }>(
       Documents.GetMedicalIndication,
@@ -1461,15 +1501,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalContraindications(): Promise<Types.DeleteMedicalContraindicationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalContraindicationsMutation>(
-      Documents.DeleteMedicalContraindications
+  public async deleteMedicalContraindications(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalContraindicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalContraindicationsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalContraindications,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalContraindications(): Promise<Types.DeleteAllMedicalContraindicationsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalContraindicationsMutation>(
-      Documents.DeleteAllMedicalContraindications
+  public async deleteAllMedicalContraindications(filter?: Types.MedicalContraindicationFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalContraindicationsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalContraindicationsMutation, { filter?: Types.MedicalContraindicationFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalContraindications,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1508,15 +1550,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalTests(): Promise<Types.DeleteMedicalTestsMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalTestsMutation>(
-      Documents.DeleteMedicalTests
+  public async deleteMedicalTests(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalTestsMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTestsMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalTests,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalTests(): Promise<Types.DeleteAllMedicalTestsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalTestsMutation>(
-      Documents.DeleteAllMedicalTests
+  public async deleteAllMedicalTests(filter?: Types.MedicalTestFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalTestsMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalTestsMutation, { filter?: Types.MedicalTestFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalTests,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1555,15 +1599,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalDevices(): Promise<Types.DeleteMedicalDevicesMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalDevicesMutation>(
-      Documents.DeleteMedicalDevices
+  public async deleteMedicalDevices(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalDevicesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDevicesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalDevices,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalDevices(): Promise<Types.DeleteAllMedicalDevicesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalDevicesMutation>(
-      Documents.DeleteAllMedicalDevices
+  public async deleteAllMedicalDevices(filter?: Types.MedicalDeviceFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalDevicesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDevicesMutation, { filter?: Types.MedicalDeviceFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalDevices,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1602,18 +1648,20 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalProcedures(): Promise<Types.DeleteMedicalProceduresMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalProceduresMutation>(
-      Documents.DeleteMedicalProcedures
+  public async deleteMedicalProcedures(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalProceduresMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalProceduresMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalProcedures,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalProcedures(): Promise<Types.DeleteAllMedicalProceduresMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalProceduresMutation>(
-      Documents.DeleteAllMedicalProcedures
+  public async deleteAllMedicalProcedures(filter?: Types.MedicalProcedureFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalProceduresMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalProceduresMutation, { filter?: Types.MedicalProcedureFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalProcedures,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getMedicalProcedure(id: string): Promise<Types.GetMedicalProcedureQuery> {
     return this.queryAndCheckError<Types.GetMedicalProcedureQuery, { id: string }>(
       Documents.GetMedicalProcedure,
@@ -1649,15 +1697,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalStudies(): Promise<Types.DeleteMedicalStudiesMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalStudiesMutation>(
-      Documents.DeleteMedicalStudies
+  public async deleteMedicalStudies(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalStudiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalStudiesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalStudies,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalStudies(): Promise<Types.DeleteAllMedicalStudiesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalStudiesMutation>(
-      Documents.DeleteAllMedicalStudies
+  public async deleteAllMedicalStudies(filter?: Types.MedicalStudyFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalStudiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalStudiesMutation, { filter?: Types.MedicalStudyFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalStudies,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
@@ -1696,18 +1746,20 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalDrugClasses(): Promise<Types.DeleteMedicalDrugClassesMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalDrugClassesMutation>(
-      Documents.DeleteMedicalDrugClasses
+  public async deleteMedicalDrugClasses(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalDrugClassesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalDrugClassesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalDrugClasses,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalDrugClasses(): Promise<Types.DeleteAllMedicalDrugClassesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugClassesMutation>(
-      Documents.DeleteAllMedicalDrugClasses
+  public async deleteAllMedicalDrugClasses(filter?: Types.MedicalDrugClassFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalDrugClassesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalDrugClassesMutation, { filter?: Types.MedicalDrugClassFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalDrugClasses,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
-
+  
   public async getMedicalDrugClass(id: string): Promise<Types.GetMedicalDrugClassQuery> {
     return this.queryAndCheckError<Types.GetMedicalDrugClassQuery, { id: string }>(
       Documents.GetMedicalDrugClass,
@@ -1743,15 +1795,17 @@ class Graphlit {
     );
   }
 
-  public async deleteMedicalTherapies(): Promise<Types.DeleteMedicalTherapiesMutation> {
-    return this.mutateAndCheckError<Types.DeleteMedicalTherapiesMutation>(
-      Documents.DeleteMedicalTherapies
+  public async deleteMedicalTherapies(ids: [string], isSynchronous?: boolean): Promise<Types.DeleteMedicalTherapiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteMedicalTherapiesMutation, { ids: [string], isSynchronous?: boolean }>(
+      Documents.DeleteMedicalTherapies,
+      { ids: ids, isSynchronous: isSynchronous }
     );
   }
 
-  public async deleteAllMedicalTherapies(): Promise<Types.DeleteAllMedicalTherapiesMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllMedicalTherapiesMutation>(
-      Documents.DeleteAllMedicalTherapies
+  public async deleteAllMedicalTherapies(filter?: Types.MedicalTherapyFilter, isSynchronous?: boolean, correlationId?: string): Promise<Types.DeleteAllMedicalTherapiesMutation> {
+    return this.mutateAndCheckError<Types.DeleteAllMedicalTherapiesMutation, { filter?: Types.MedicalTherapyFilter, isSynchronous?: boolean, correlationId?: string }>(
+      Documents.DeleteAllMedicalTherapies,
+      { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId }
     );
   }
 
