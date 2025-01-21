@@ -2471,10 +2471,15 @@ export type DeepseekModelPropertiesUpdateInput = {
 export enum DeepseekModels {
   /** Deepseek Chat */
   Chat = 'CHAT',
-  /** Deepseek Coder */
+  /**
+   * Deepseek Coder
+   * @deprecated Deepseek Coder has been merged with Deepseek Chat, as of v2.5. Use Deepseek Chat instead.
+   */
   Coder = 'CODER',
   /** Developer-specified model */
-  Custom = 'CUSTOM'
+  Custom = 'CUSTOM',
+  /** Deepseek Reasoner */
+  Reasoner = 'REASONER'
 }
 
 /** Capture device type */

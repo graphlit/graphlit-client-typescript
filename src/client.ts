@@ -584,10 +584,10 @@ class Graphlit {
     );
   }
 
-  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, includeDetails?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
-    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, includeDetails?: boolean, correlationId?: string }>(
+  public async promptConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, mimeType?: string, data?: string, tools?: [Types.ToolDefinitionInput], requireTool?: boolean, includeDetails?: boolean, correlationId?: string): Promise<Types.PromptConversationMutation> {
+    return this.mutateAndCheckError<Types.PromptConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, mimeType?: string, data?: string, tools?: [Types.ToolDefinitionInput?], requireTool?: boolean, includeDetails?: boolean, correlationId?: string }>(
       Documents.PromptConversation,
-      { prompt: prompt, id: id, specification: specification, tools: tools, requireTool: requireTool, includeDetails: includeDetails, correlationId: correlationId }
+      { prompt: prompt, id: id, specification: specification, mimeType: mimeType, data: data, tools: tools, requireTool: requireTool, includeDetails: includeDetails, correlationId: correlationId }
     );
   }
 
