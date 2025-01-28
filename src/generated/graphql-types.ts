@@ -14049,6 +14049,7 @@ export type ZendeskTicketsFeedPropertiesUpdateInput = {
 
 export type CountAlertsQueryVariables = Exact<{
   filter?: InputMaybe<AlertFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14102,6 +14103,7 @@ export type EnableAlertMutation = { __typename?: 'Mutation', enableAlert?: { __t
 
 export type GetAlertQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14109,6 +14111,7 @@ export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Aler
 
 export type QueryAlertsQueryVariables = Exact<{
   filter?: InputMaybe<AlertFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14123,6 +14126,7 @@ export type UpdateAlertMutation = { __typename?: 'Mutation', updateAlert?: { __t
 
 export type CountCategoriesQueryVariables = Exact<{
   filter?: InputMaybe<CategoryFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14161,6 +14165,7 @@ export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory?:
 
 export type GetCategoryQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14168,6 +14173,7 @@ export type GetCategoryQuery = { __typename?: 'Query', category?: { __typename?:
 
 export type QueryCategoriesQueryVariables = Exact<{
   filter?: InputMaybe<CategoryFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14190,6 +14196,7 @@ export type AddContentsToCollectionsMutation = { __typename?: 'Mutation', addCon
 
 export type CountCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14228,6 +14235,7 @@ export type DeleteCollectionsMutation = { __typename?: 'Mutation', deleteCollect
 
 export type GetCollectionQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14235,6 +14243,7 @@ export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typena
 
 export type QueryCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14257,6 +14266,7 @@ export type UpdateCollectionMutation = { __typename?: 'Mutation', updateCollecti
 
 export type CountContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14332,6 +14342,7 @@ export type ExtractTextMutation = { __typename?: 'Mutation', extractText?: Array
 
 export type GetContentQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14444,6 +14455,7 @@ export type PublishTextMutation = { __typename?: 'Mutation', publishText?: { __t
 
 export type QueryContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14452,6 +14464,7 @@ export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename
 export type QueryContentsFacetsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
   facets?: InputMaybe<Array<ContentFacetInput> | ContentFacetInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14460,6 +14473,7 @@ export type QueryContentsFacetsQuery = { __typename?: 'Query', contents?: { __ty
 export type QueryContentsGraphQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
   graph?: InputMaybe<ContentGraphInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14548,6 +14562,7 @@ export type ContinueConversationMutation = { __typename?: 'Mutation', continueCo
 
 export type CountConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14598,6 +14613,7 @@ export type FormatConversationMutation = { __typename?: 'Mutation', formatConver
 
 export type GetConversationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14642,6 +14658,7 @@ export type PublishConversationMutation = { __typename?: 'Mutation', publishConv
 
 export type QueryConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14711,6 +14728,7 @@ export type UpdateConversationMutation = { __typename?: 'Mutation', updateConver
 
 export type CountEventsQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14749,6 +14767,7 @@ export type DeleteEventsMutation = { __typename?: 'Mutation', deleteEvents?: Arr
 
 export type GetEventQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14756,6 +14775,7 @@ export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Even
 
 export type QueryEventsQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14770,6 +14790,7 @@ export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __t
 
 export type CountFeedsQueryVariables = Exact<{
   filter?: InputMaybe<FeedFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14823,6 +14844,7 @@ export type EnableFeedMutation = { __typename?: 'Mutation', enableFeed?: { __typ
 
 export type GetFeedQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14844,6 +14866,7 @@ export type IsFeedDoneQuery = { __typename?: 'Query', isFeedDone?: { __typename?
 
 export type QueryFeedsQueryVariables = Exact<{
   filter?: InputMaybe<FeedFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14897,6 +14920,7 @@ export type UpdateFeedMutation = { __typename?: 'Mutation', updateFeed?: { __typ
 
 export type CountLabelsQueryVariables = Exact<{
   filter?: InputMaybe<LabelFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14935,6 +14959,7 @@ export type DeleteLabelsMutation = { __typename?: 'Mutation', deleteLabels?: Arr
 
 export type GetLabelQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14942,6 +14967,7 @@ export type GetLabelQuery = { __typename?: 'Query', label?: { __typename?: 'Labe
 
 export type QueryLabelsQueryVariables = Exact<{
   filter?: InputMaybe<LabelFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14956,6 +14982,7 @@ export type UpdateLabelMutation = { __typename?: 'Mutation', updateLabel?: { __t
 
 export type CountMedicalConditionsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalConditionFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -14994,6 +15021,7 @@ export type DeleteMedicalConditionsMutation = { __typename?: 'Mutation', deleteM
 
 export type GetMedicalConditionQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15001,6 +15029,7 @@ export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?
 
 export type QueryMedicalConditionsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalConditionFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15015,6 +15044,7 @@ export type UpdateMedicalConditionMutation = { __typename?: 'Mutation', updateMe
 
 export type CountMedicalContraindicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalContraindicationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15053,6 +15083,7 @@ export type DeleteMedicalContraindicationsMutation = { __typename?: 'Mutation', 
 
 export type GetMedicalContraindicationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15060,6 +15091,7 @@ export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalCon
 
 export type QueryMedicalContraindicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalContraindicationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15074,6 +15106,7 @@ export type UpdateMedicalContraindicationMutation = { __typename?: 'Mutation', u
 
 export type CountMedicalDevicesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDeviceFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15112,6 +15145,7 @@ export type DeleteMedicalDevicesMutation = { __typename?: 'Mutation', deleteMedi
 
 export type GetMedicalDeviceQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15119,6 +15153,7 @@ export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __
 
 export type QueryMedicalDevicesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDeviceFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15133,6 +15168,7 @@ export type UpdateMedicalDeviceMutation = { __typename?: 'Mutation', updateMedic
 
 export type CountMedicalDrugsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15171,6 +15207,7 @@ export type DeleteMedicalDrugsMutation = { __typename?: 'Mutation', deleteMedica
 
 export type GetMedicalDrugQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15178,6 +15215,7 @@ export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __type
 
 export type QueryMedicalDrugsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15192,6 +15230,7 @@ export type UpdateMedicalDrugMutation = { __typename?: 'Mutation', updateMedical
 
 export type CountMedicalDrugClassesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugClassFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15230,6 +15269,7 @@ export type DeleteMedicalDrugClassesMutation = { __typename?: 'Mutation', delete
 
 export type GetMedicalDrugClassQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15237,6 +15277,7 @@ export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?
 
 export type QueryMedicalDrugClassesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugClassFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15251,6 +15292,7 @@ export type UpdateMedicalDrugClassMutation = { __typename?: 'Mutation', updateMe
 
 export type CountMedicalGuidelinesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalGuidelineFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15289,6 +15331,7 @@ export type DeleteMedicalGuidelinesMutation = { __typename?: 'Mutation', deleteM
 
 export type GetMedicalGuidelineQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15296,6 +15339,7 @@ export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?
 
 export type QueryMedicalGuidelinesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalGuidelineFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15310,6 +15354,7 @@ export type UpdateMedicalGuidelineMutation = { __typename?: 'Mutation', updateMe
 
 export type CountMedicalIndicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalIndicationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15348,6 +15393,7 @@ export type DeleteMedicalIndicationsMutation = { __typename?: 'Mutation', delete
 
 export type GetMedicalIndicationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15355,6 +15401,7 @@ export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndicatio
 
 export type QueryMedicalIndicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalIndicationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15369,6 +15416,7 @@ export type UpdateMedicalIndicationMutation = { __typename?: 'Mutation', updateM
 
 export type CountMedicalProceduresQueryVariables = Exact<{
   filter?: InputMaybe<MedicalProcedureFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15407,6 +15455,7 @@ export type DeleteMedicalProceduresMutation = { __typename?: 'Mutation', deleteM
 
 export type GetMedicalProcedureQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15414,6 +15463,7 @@ export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?
 
 export type QueryMedicalProceduresQueryVariables = Exact<{
   filter?: InputMaybe<MedicalProcedureFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15466,6 +15516,7 @@ export type DeleteMedicalStudyMutation = { __typename?: 'Mutation', deleteMedica
 
 export type GetMedicalStudyQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15473,6 +15524,7 @@ export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __ty
 
 export type QueryMedicalStudiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalStudyFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15487,6 +15539,7 @@ export type UpdateMedicalStudyMutation = { __typename?: 'Mutation', updateMedica
 
 export type CountMedicalTestsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTestFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15525,6 +15578,7 @@ export type DeleteMedicalTestsMutation = { __typename?: 'Mutation', deleteMedica
 
 export type GetMedicalTestQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15532,6 +15586,7 @@ export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __type
 
 export type QueryMedicalTestsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTestFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15546,6 +15601,7 @@ export type UpdateMedicalTestMutation = { __typename?: 'Mutation', updateMedical
 
 export type CountMedicalTherapiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTherapyFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15584,6 +15640,7 @@ export type DeleteMedicalTherapyMutation = { __typename?: 'Mutation', deleteMedi
 
 export type GetMedicalTherapyQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15591,6 +15648,7 @@ export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { 
 
 export type QueryMedicalTherapiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTherapyFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15626,6 +15684,7 @@ export type UpdateObservationMutation = { __typename?: 'Mutation', updateObserva
 
 export type CountOrganizationsQueryVariables = Exact<{
   filter?: InputMaybe<OrganizationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15664,6 +15723,7 @@ export type DeleteOrganizationsMutation = { __typename?: 'Mutation', deleteOrgan
 
 export type GetOrganizationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15671,6 +15731,7 @@ export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __ty
 
 export type QueryOrganizationsQueryVariables = Exact<{
   filter?: InputMaybe<OrganizationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15685,6 +15746,7 @@ export type UpdateOrganizationMutation = { __typename?: 'Mutation', updateOrgani
 
 export type CountPersonsQueryVariables = Exact<{
   filter?: InputMaybe<PersonFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15723,6 +15785,7 @@ export type DeletePersonsMutation = { __typename?: 'Mutation', deletePersons?: A
 
 export type GetPersonQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15730,6 +15793,7 @@ export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Pe
 
 export type QueryPersonsQueryVariables = Exact<{
   filter?: InputMaybe<PersonFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15744,6 +15808,7 @@ export type UpdatePersonMutation = { __typename?: 'Mutation', updatePerson?: { _
 
 export type CountPlacesQueryVariables = Exact<{
   filter?: InputMaybe<PlaceFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15782,6 +15847,7 @@ export type DeletePlacesMutation = { __typename?: 'Mutation', deletePlaces?: Arr
 
 export type GetPlaceQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15789,6 +15855,7 @@ export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Plac
 
 export type QueryPlacesQueryVariables = Exact<{
   filter?: InputMaybe<PlaceFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15803,6 +15870,7 @@ export type UpdatePlaceMutation = { __typename?: 'Mutation', updatePlace?: { __t
 
 export type CountProductsQueryVariables = Exact<{
   filter?: InputMaybe<ProductFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15841,6 +15909,7 @@ export type DeleteProductsMutation = { __typename?: 'Mutation', deleteProducts?:
 
 export type GetProductQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15848,6 +15917,7 @@ export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: '
 
 export type QueryProductsQueryVariables = Exact<{
   filter?: InputMaybe<ProductFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15907,6 +15977,7 @@ export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject?: {
 
 export type CountReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15945,6 +16016,7 @@ export type DeleteReposMutation = { __typename?: 'Mutation', deleteRepos?: Array
 
 export type GetRepoQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15952,6 +16024,7 @@ export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo',
 
 export type QueryReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -15986,6 +16059,7 @@ export type SearchWebQuery = { __typename?: 'Query', searchWeb?: { __typename?: 
 
 export type CountSoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16024,6 +16098,7 @@ export type DeleteSoftwaresMutation = { __typename?: 'Mutation', deleteSoftwares
 
 export type GetSoftwareQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16031,6 +16106,7 @@ export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?:
 
 export type QuerySoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16045,6 +16121,7 @@ export type UpdateSoftwareMutation = { __typename?: 'Mutation', updateSoftware?:
 
 export type CountSpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16083,6 +16160,7 @@ export type DeleteSpecificationsMutation = { __typename?: 'Mutation', deleteSpec
 
 export type GetSpecificationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16105,6 +16183,7 @@ export type QueryModelsQuery = { __typename?: 'Query', models?: { __typename?: '
 
 export type QuerySpecificationsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16119,6 +16198,7 @@ export type UpdateSpecificationMutation = { __typename?: 'Mutation', updateSpeci
 
 export type CountUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16159,6 +16239,7 @@ export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User',
 
 export type QueryUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16173,6 +16254,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typ
 
 export type CountWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16211,6 +16293,7 @@ export type DeleteWorkflowsMutation = { __typename?: 'Mutation', deleteWorkflows
 
 export type GetWorkflowQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -16218,6 +16301,7 @@ export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?:
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 

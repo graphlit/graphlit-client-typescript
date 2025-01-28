@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const CountAlerts = gql`
-    query CountAlerts($filter: AlertFilter) {
-  countAlerts(filter: $filter) {
+    query CountAlerts($filter: AlertFilter, $correlationId: String) {
+  countAlerts(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -62,8 +62,8 @@ export const EnableAlert = gql`
 }
     `;
 export const GetAlert = gql`
-    query GetAlert($id: ID!) {
-  alert(id: $id) {
+    query GetAlert($id: ID!, $correlationId: String) {
+  alert(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -180,8 +180,8 @@ export const GetAlert = gql`
 }
     `;
 export const QueryAlerts = gql`
-    query QueryAlerts($filter: AlertFilter) {
-  alerts(filter: $filter) {
+    query QueryAlerts($filter: AlertFilter, $correlationId: String) {
+  alerts(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -310,8 +310,8 @@ export const UpdateAlert = gql`
 }
     `;
 export const CountCategories = gql`
-    query CountCategories($filter: CategoryFilter) {
-  countCategories(filter: $filter) {
+    query CountCategories($filter: CategoryFilter, $correlationId: String) {
+  countCategories(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -353,8 +353,8 @@ export const DeleteCategory = gql`
 }
     `;
 export const GetCategory = gql`
-    query GetCategory($id: ID!) {
-  category(id: $id) {
+    query GetCategory($id: ID!, $correlationId: String) {
+  category(id: $id, correlationId: $correlationId) {
     id
     name
     description
@@ -364,8 +364,8 @@ export const GetCategory = gql`
 }
     `;
 export const QueryCategories = gql`
-    query QueryCategories($filter: CategoryFilter) {
-  categories(filter: $filter) {
+    query QueryCategories($filter: CategoryFilter, $correlationId: String) {
+  categories(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -399,8 +399,8 @@ export const AddContentsToCollections = gql`
 }
     `;
 export const CountCollections = gql`
-    query CountCollections($filter: CollectionFilter) {
-  countCollections(filter: $filter) {
+    query CountCollections($filter: CollectionFilter, $correlationId: String) {
+  countCollections(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -444,8 +444,8 @@ export const DeleteCollections = gql`
 }
     `;
 export const GetCollection = gql`
-    query GetCollection($id: ID!) {
-  collection(id: $id) {
+    query GetCollection($id: ID!, $correlationId: String) {
+  collection(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -463,8 +463,8 @@ export const GetCollection = gql`
 }
     `;
 export const QueryCollections = gql`
-    query QueryCollections($filter: CollectionFilter) {
-  collections(filter: $filter) {
+    query QueryCollections($filter: CollectionFilter, $correlationId: String) {
+  collections(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -508,8 +508,8 @@ export const UpdateCollection = gql`
 }
     `;
 export const CountContents = gql`
-    query CountContents($filter: ContentFilter) {
-  countContents(filter: $filter) {
+    query CountContents($filter: ContentFilter, $correlationId: String) {
+  countContents(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -857,8 +857,8 @@ export const ExtractText = gql`
 }
     `;
 export const GetContent = gql`
-    query GetContent($id: ID!) {
-  content(id: $id) {
+    query GetContent($id: ID!, $correlationId: String) {
+  content(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -1618,8 +1618,8 @@ export const PublishText = gql`
 }
     `;
 export const QueryContents = gql`
-    query QueryContents($filter: ContentFilter) {
-  contents(filter: $filter) {
+    query QueryContents($filter: ContentFilter, $correlationId: String) {
+  contents(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -1868,8 +1868,8 @@ export const QueryContents = gql`
 }
     `;
 export const QueryContentsFacets = gql`
-    query QueryContentsFacets($filter: ContentFilter, $facets: [ContentFacetInput!]) {
-  contents(filter: $filter, facets: $facets) {
+    query QueryContentsFacets($filter: ContentFilter, $facets: [ContentFacetInput!], $correlationId: String) {
+  contents(filter: $filter, facets: $facets, correlationId: $correlationId) {
     results {
       id
       name
@@ -2135,8 +2135,8 @@ export const QueryContentsFacets = gql`
 }
     `;
 export const QueryContentsGraph = gql`
-    query QueryContentsGraph($filter: ContentFilter, $graph: ContentGraphInput) {
-  contents(filter: $filter, graph: $graph) {
+    query QueryContentsGraph($filter: ContentFilter, $graph: ContentGraphInput, $correlationId: String) {
+  contents(filter: $filter, graph: $graph, correlationId: $correlationId) {
     graph {
       nodes {
         id
@@ -3081,8 +3081,8 @@ export const ContinueConversation = gql`
 }
     `;
 export const CountConversations = gql`
-    query CountConversations($filter: ConversationFilter) {
-  countConversations(filter: $filter) {
+    query CountConversations($filter: ConversationFilter, $correlationId: String) {
+  countConversations(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -3440,8 +3440,8 @@ export const FormatConversation = gql`
 }
     `;
 export const GetConversation = gql`
-    query GetConversation($id: ID!) {
-  conversation(id: $id) {
+    query GetConversation($id: ID!, $correlationId: String) {
+  conversation(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -4308,8 +4308,8 @@ export const PublishConversation = gql`
 }
     `;
 export const QueryConversations = gql`
-    query QueryConversations($filter: ConversationFilter) {
-  conversations(filter: $filter) {
+    query QueryConversations($filter: ConversationFilter, $correlationId: String) {
+  conversations(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -5192,8 +5192,8 @@ export const UpdateConversation = gql`
 }
     `;
 export const CountEvents = gql`
-    query CountEvents($filter: EventFilter) {
-  countEvents(filter: $filter) {
+    query CountEvents($filter: EventFilter, $correlationId: String) {
+  countEvents(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -5235,8 +5235,8 @@ export const DeleteEvents = gql`
 }
     `;
 export const GetEvent = gql`
-    query GetEvent($id: ID!) {
-  event(id: $id) {
+    query GetEvent($id: ID!, $correlationId: String) {
+  event(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -5267,8 +5267,8 @@ export const GetEvent = gql`
 }
     `;
 export const QueryEvents = gql`
-    query QueryEvents($filter: EventFilter) {
-  events(filter: $filter) {
+    query QueryEvents($filter: EventFilter, $correlationId: String) {
+  events(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -5309,8 +5309,8 @@ export const UpdateEvent = gql`
 }
     `;
 export const CountFeeds = gql`
-    query CountFeeds($filter: FeedFilter) {
-  countFeeds(filter: $filter) {
+    query CountFeeds($filter: FeedFilter, $correlationId: String) {
+  countFeeds(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -5370,8 +5370,8 @@ export const EnableFeed = gql`
 }
     `;
 export const GetFeed = gql`
-    query GetFeed($id: ID!) {
-  feed(id: $id) {
+    query GetFeed($id: ID!, $correlationId: String) {
+  feed(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -5608,8 +5608,8 @@ export const IsFeedDone = gql`
 }
     `;
 export const QueryFeeds = gql`
-    query QueryFeeds($filter: FeedFilter) {
-  feeds(filter: $filter) {
+    query QueryFeeds($filter: FeedFilter, $correlationId: String) {
+  feeds(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -5902,8 +5902,8 @@ export const UpdateFeed = gql`
 }
     `;
 export const CountLabels = gql`
-    query CountLabels($filter: LabelFilter) {
-  countLabels(filter: $filter) {
+    query CountLabels($filter: LabelFilter, $correlationId: String) {
+  countLabels(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -5945,8 +5945,8 @@ export const DeleteLabels = gql`
 }
     `;
 export const GetLabel = gql`
-    query GetLabel($id: ID!) {
-  label(id: $id) {
+    query GetLabel($id: ID!, $correlationId: String) {
+  label(id: $id, correlationId: $correlationId) {
     id
     name
     description
@@ -5956,8 +5956,8 @@ export const GetLabel = gql`
 }
     `;
 export const QueryLabels = gql`
-    query QueryLabels($filter: LabelFilter) {
-  labels(filter: $filter) {
+    query QueryLabels($filter: LabelFilter, $correlationId: String) {
+  labels(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -5977,8 +5977,8 @@ export const UpdateLabel = gql`
 }
     `;
 export const CountMedicalConditions = gql`
-    query CountMedicalConditions($filter: MedicalConditionFilter) {
-  countMedicalConditions(filter: $filter) {
+    query CountMedicalConditions($filter: MedicalConditionFilter, $correlationId: String) {
+  countMedicalConditions(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6020,8 +6020,8 @@ export const DeleteMedicalConditions = gql`
 }
     `;
 export const GetMedicalCondition = gql`
-    query GetMedicalCondition($id: ID!) {
-  medicalCondition(id: $id) {
+    query GetMedicalCondition($id: ID!, $correlationId: String) {
+  medicalCondition(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6035,8 +6035,8 @@ export const GetMedicalCondition = gql`
 }
     `;
 export const QueryMedicalConditions = gql`
-    query QueryMedicalConditions($filter: MedicalConditionFilter) {
-  medicalConditions(filter: $filter) {
+    query QueryMedicalConditions($filter: MedicalConditionFilter, $correlationId: String) {
+  medicalConditions(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6060,8 +6060,8 @@ export const UpdateMedicalCondition = gql`
 }
     `;
 export const CountMedicalContraindications = gql`
-    query CountMedicalContraindications($filter: MedicalContraindicationFilter) {
-  countMedicalContraindications(filter: $filter) {
+    query CountMedicalContraindications($filter: MedicalContraindicationFilter, $correlationId: String) {
+  countMedicalContraindications(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6103,8 +6103,8 @@ export const DeleteMedicalContraindications = gql`
 }
     `;
 export const GetMedicalContraindication = gql`
-    query GetMedicalContraindication($id: ID!) {
-  medicalContraindication(id: $id) {
+    query GetMedicalContraindication($id: ID!, $correlationId: String) {
+  medicalContraindication(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6118,8 +6118,8 @@ export const GetMedicalContraindication = gql`
 }
     `;
 export const QueryMedicalContraindications = gql`
-    query QueryMedicalContraindications($filter: MedicalContraindicationFilter) {
-  medicalContraindications(filter: $filter) {
+    query QueryMedicalContraindications($filter: MedicalContraindicationFilter, $correlationId: String) {
+  medicalContraindications(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6143,8 +6143,8 @@ export const UpdateMedicalContraindication = gql`
 }
     `;
 export const CountMedicalDevices = gql`
-    query CountMedicalDevices($filter: MedicalDeviceFilter) {
-  countMedicalDevices(filter: $filter) {
+    query CountMedicalDevices($filter: MedicalDeviceFilter, $correlationId: String) {
+  countMedicalDevices(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6186,8 +6186,8 @@ export const DeleteMedicalDevices = gql`
 }
     `;
 export const GetMedicalDevice = gql`
-    query GetMedicalDevice($id: ID!) {
-  medicalDevice(id: $id) {
+    query GetMedicalDevice($id: ID!, $correlationId: String) {
+  medicalDevice(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6201,8 +6201,8 @@ export const GetMedicalDevice = gql`
 }
     `;
 export const QueryMedicalDevices = gql`
-    query QueryMedicalDevices($filter: MedicalDeviceFilter) {
-  medicalDevices(filter: $filter) {
+    query QueryMedicalDevices($filter: MedicalDeviceFilter, $correlationId: String) {
+  medicalDevices(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6226,8 +6226,8 @@ export const UpdateMedicalDevice = gql`
 }
     `;
 export const CountMedicalDrugs = gql`
-    query CountMedicalDrugs($filter: MedicalDrugFilter) {
-  countMedicalDrugs(filter: $filter) {
+    query CountMedicalDrugs($filter: MedicalDrugFilter, $correlationId: String) {
+  countMedicalDrugs(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6269,8 +6269,8 @@ export const DeleteMedicalDrugs = gql`
 }
     `;
 export const GetMedicalDrug = gql`
-    query GetMedicalDrug($id: ID!) {
-  medicalDrug(id: $id) {
+    query GetMedicalDrug($id: ID!, $correlationId: String) {
+  medicalDrug(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6284,8 +6284,8 @@ export const GetMedicalDrug = gql`
 }
     `;
 export const QueryMedicalDrugs = gql`
-    query QueryMedicalDrugs($filter: MedicalDrugFilter) {
-  medicalDrugs(filter: $filter) {
+    query QueryMedicalDrugs($filter: MedicalDrugFilter, $correlationId: String) {
+  medicalDrugs(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6309,8 +6309,8 @@ export const UpdateMedicalDrug = gql`
 }
     `;
 export const CountMedicalDrugClasses = gql`
-    query CountMedicalDrugClasses($filter: MedicalDrugClassFilter) {
-  countMedicalDrugClasses(filter: $filter) {
+    query CountMedicalDrugClasses($filter: MedicalDrugClassFilter, $correlationId: String) {
+  countMedicalDrugClasses(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6352,8 +6352,8 @@ export const DeleteMedicalDrugClasses = gql`
 }
     `;
 export const GetMedicalDrugClass = gql`
-    query GetMedicalDrugClass($id: ID!) {
-  medicalDrugClass(id: $id) {
+    query GetMedicalDrugClass($id: ID!, $correlationId: String) {
+  medicalDrugClass(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6367,8 +6367,8 @@ export const GetMedicalDrugClass = gql`
 }
     `;
 export const QueryMedicalDrugClasses = gql`
-    query QueryMedicalDrugClasses($filter: MedicalDrugClassFilter) {
-  medicalDrugClasses(filter: $filter) {
+    query QueryMedicalDrugClasses($filter: MedicalDrugClassFilter, $correlationId: String) {
+  medicalDrugClasses(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6392,8 +6392,8 @@ export const UpdateMedicalDrugClass = gql`
 }
     `;
 export const CountMedicalGuidelines = gql`
-    query CountMedicalGuidelines($filter: MedicalGuidelineFilter) {
-  countMedicalGuidelines(filter: $filter) {
+    query CountMedicalGuidelines($filter: MedicalGuidelineFilter, $correlationId: String) {
+  countMedicalGuidelines(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6435,8 +6435,8 @@ export const DeleteMedicalGuidelines = gql`
 }
     `;
 export const GetMedicalGuideline = gql`
-    query GetMedicalGuideline($id: ID!) {
-  medicalGuideline(id: $id) {
+    query GetMedicalGuideline($id: ID!, $correlationId: String) {
+  medicalGuideline(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6450,8 +6450,8 @@ export const GetMedicalGuideline = gql`
 }
     `;
 export const QueryMedicalGuidelines = gql`
-    query QueryMedicalGuidelines($filter: MedicalGuidelineFilter) {
-  medicalGuidelines(filter: $filter) {
+    query QueryMedicalGuidelines($filter: MedicalGuidelineFilter, $correlationId: String) {
+  medicalGuidelines(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6475,8 +6475,8 @@ export const UpdateMedicalGuideline = gql`
 }
     `;
 export const CountMedicalIndications = gql`
-    query CountMedicalIndications($filter: MedicalIndicationFilter) {
-  countMedicalIndications(filter: $filter) {
+    query CountMedicalIndications($filter: MedicalIndicationFilter, $correlationId: String) {
+  countMedicalIndications(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6518,8 +6518,8 @@ export const DeleteMedicalIndications = gql`
 }
     `;
 export const GetMedicalIndication = gql`
-    query GetMedicalIndication($id: ID!) {
-  medicalIndication(id: $id) {
+    query GetMedicalIndication($id: ID!, $correlationId: String) {
+  medicalIndication(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6533,8 +6533,8 @@ export const GetMedicalIndication = gql`
 }
     `;
 export const QueryMedicalIndications = gql`
-    query QueryMedicalIndications($filter: MedicalIndicationFilter) {
-  medicalIndications(filter: $filter) {
+    query QueryMedicalIndications($filter: MedicalIndicationFilter, $correlationId: String) {
+  medicalIndications(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6558,8 +6558,8 @@ export const UpdateMedicalIndication = gql`
 }
     `;
 export const CountMedicalProcedures = gql`
-    query CountMedicalProcedures($filter: MedicalProcedureFilter) {
-  countMedicalProcedures(filter: $filter) {
+    query CountMedicalProcedures($filter: MedicalProcedureFilter, $correlationId: String) {
+  countMedicalProcedures(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6601,8 +6601,8 @@ export const DeleteMedicalProcedures = gql`
 }
     `;
 export const GetMedicalProcedure = gql`
-    query GetMedicalProcedure($id: ID!) {
-  medicalProcedure(id: $id) {
+    query GetMedicalProcedure($id: ID!, $correlationId: String) {
+  medicalProcedure(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6616,8 +6616,8 @@ export const GetMedicalProcedure = gql`
 }
     `;
 export const QueryMedicalProcedures = gql`
-    query QueryMedicalProcedures($filter: MedicalProcedureFilter) {
-  medicalProcedures(filter: $filter) {
+    query QueryMedicalProcedures($filter: MedicalProcedureFilter, $correlationId: String) {
+  medicalProcedures(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6684,8 +6684,8 @@ export const DeleteMedicalStudy = gql`
 }
     `;
 export const GetMedicalStudy = gql`
-    query GetMedicalStudy($id: ID!) {
-  medicalStudy(id: $id) {
+    query GetMedicalStudy($id: ID!, $correlationId: String) {
+  medicalStudy(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6706,8 +6706,8 @@ export const GetMedicalStudy = gql`
 }
     `;
 export const QueryMedicalStudies = gql`
-    query QueryMedicalStudies($filter: MedicalStudyFilter) {
-  medicalStudies(filter: $filter) {
+    query QueryMedicalStudies($filter: MedicalStudyFilter, $correlationId: String) {
+  medicalStudies(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6738,8 +6738,8 @@ export const UpdateMedicalStudy = gql`
 }
     `;
 export const CountMedicalTests = gql`
-    query CountMedicalTests($filter: MedicalTestFilter) {
-  countMedicalTests(filter: $filter) {
+    query CountMedicalTests($filter: MedicalTestFilter, $correlationId: String) {
+  countMedicalTests(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6781,8 +6781,8 @@ export const DeleteMedicalTests = gql`
 }
     `;
 export const GetMedicalTest = gql`
-    query GetMedicalTest($id: ID!) {
-  medicalTest(id: $id) {
+    query GetMedicalTest($id: ID!, $correlationId: String) {
+  medicalTest(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6796,8 +6796,8 @@ export const GetMedicalTest = gql`
 }
     `;
 export const QueryMedicalTests = gql`
-    query QueryMedicalTests($filter: MedicalTestFilter) {
-  medicalTests(filter: $filter) {
+    query QueryMedicalTests($filter: MedicalTestFilter, $correlationId: String) {
+  medicalTests(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6821,8 +6821,8 @@ export const UpdateMedicalTest = gql`
 }
     `;
 export const CountMedicalTherapies = gql`
-    query CountMedicalTherapies($filter: MedicalTherapyFilter) {
-  countMedicalTherapies(filter: $filter) {
+    query CountMedicalTherapies($filter: MedicalTherapyFilter, $correlationId: String) {
+  countMedicalTherapies(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6864,8 +6864,8 @@ export const DeleteMedicalTherapy = gql`
 }
     `;
 export const GetMedicalTherapy = gql`
-    query GetMedicalTherapy($id: ID!) {
-  medicalTherapy(id: $id) {
+    query GetMedicalTherapy($id: ID!, $correlationId: String) {
+  medicalTherapy(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6879,8 +6879,8 @@ export const GetMedicalTherapy = gql`
 }
     `;
 export const QueryMedicalTherapies = gql`
-    query QueryMedicalTherapies($filter: MedicalTherapyFilter) {
-  medicalTherapies(filter: $filter) {
+    query QueryMedicalTherapies($filter: MedicalTherapyFilter, $correlationId: String) {
+  medicalTherapies(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -6928,8 +6928,8 @@ export const UpdateObservation = gql`
 }
     `;
 export const CountOrganizations = gql`
-    query CountOrganizations($filter: OrganizationFilter) {
-  countOrganizations(filter: $filter) {
+    query CountOrganizations($filter: OrganizationFilter, $correlationId: String) {
+  countOrganizations(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -6971,8 +6971,8 @@ export const DeleteOrganizations = gql`
 }
     `;
 export const GetOrganization = gql`
-    query GetOrganization($id: ID!) {
-  organization(id: $id) {
+    query GetOrganization($id: ID!, $correlationId: String) {
+  organization(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -6999,8 +6999,8 @@ export const GetOrganization = gql`
 }
     `;
 export const QueryOrganizations = gql`
-    query QueryOrganizations($filter: OrganizationFilter) {
-  organizations(filter: $filter) {
+    query QueryOrganizations($filter: OrganizationFilter, $correlationId: String) {
+  organizations(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7037,8 +7037,8 @@ export const UpdateOrganization = gql`
 }
     `;
 export const CountPersons = gql`
-    query CountPersons($filter: PersonFilter) {
-  countPersons(filter: $filter) {
+    query CountPersons($filter: PersonFilter, $correlationId: String) {
+  countPersons(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7080,8 +7080,8 @@ export const DeletePersons = gql`
 }
     `;
 export const GetPerson = gql`
-    query GetPerson($id: ID!) {
-  person(id: $id) {
+    query GetPerson($id: ID!, $correlationId: String) {
+  person(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -7110,8 +7110,8 @@ export const GetPerson = gql`
 }
     `;
 export const QueryPersons = gql`
-    query QueryPersons($filter: PersonFilter) {
-  persons(filter: $filter) {
+    query QueryPersons($filter: PersonFilter, $correlationId: String) {
+  persons(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7150,8 +7150,8 @@ export const UpdatePerson = gql`
 }
     `;
 export const CountPlaces = gql`
-    query CountPlaces($filter: PlaceFilter) {
-  countPlaces(filter: $filter) {
+    query CountPlaces($filter: PlaceFilter, $correlationId: String) {
+  countPlaces(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7193,8 +7193,8 @@ export const DeletePlaces = gql`
 }
     `;
 export const GetPlace = gql`
-    query GetPlace($id: ID!) {
-  place(id: $id) {
+    query GetPlace($id: ID!, $correlationId: String) {
+  place(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -7215,8 +7215,8 @@ export const GetPlace = gql`
 }
     `;
 export const QueryPlaces = gql`
-    query QueryPlaces($filter: PlaceFilter) {
-  places(filter: $filter) {
+    query QueryPlaces($filter: PlaceFilter, $correlationId: String) {
+  places(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7247,8 +7247,8 @@ export const UpdatePlace = gql`
 }
     `;
 export const CountProducts = gql`
-    query CountProducts($filter: ProductFilter) {
-  countProducts(filter: $filter) {
+    query CountProducts($filter: ProductFilter, $correlationId: String) {
+  countProducts(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7290,8 +7290,8 @@ export const DeleteProducts = gql`
 }
     `;
 export const GetProduct = gql`
-    query GetProduct($id: ID!) {
-  product(id: $id) {
+    query GetProduct($id: ID!, $correlationId: String) {
+  product(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -7319,8 +7319,8 @@ export const GetProduct = gql`
 }
     `;
 export const QueryProducts = gql`
-    query QueryProducts($filter: ProductFilter) {
-  products(filter: $filter) {
+    query QueryProducts($filter: ProductFilter, $correlationId: String) {
+  products(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7527,8 +7527,8 @@ export const UpdateProject = gql`
 }
     `;
 export const CountRepos = gql`
-    query CountRepos($filter: RepoFilter) {
-  countRepos(filter: $filter) {
+    query CountRepos($filter: RepoFilter, $correlationId: String) {
+  countRepos(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7570,8 +7570,8 @@ export const DeleteRepos = gql`
 }
     `;
 export const GetRepo = gql`
-    query GetRepo($id: ID!) {
-  repo(id: $id) {
+    query GetRepo($id: ID!, $correlationId: String) {
+  repo(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -7585,8 +7585,8 @@ export const GetRepo = gql`
 }
     `;
 export const QueryRepos = gql`
-    query QueryRepos($filter: RepoFilter) {
-  repos(filter: $filter) {
+    query QueryRepos($filter: RepoFilter, $correlationId: String) {
+  repos(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7639,8 +7639,8 @@ export const SearchWeb = gql`
 }
     `;
 export const CountSoftwares = gql`
-    query CountSoftwares($filter: SoftwareFilter) {
-  countSoftwares(filter: $filter) {
+    query CountSoftwares($filter: SoftwareFilter, $correlationId: String) {
+  countSoftwares(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7682,8 +7682,8 @@ export const DeleteSoftwares = gql`
 }
     `;
 export const GetSoftware = gql`
-    query GetSoftware($id: ID!) {
-  software(id: $id) {
+    query GetSoftware($id: ID!, $correlationId: String) {
+  software(id: $id, correlationId: $correlationId) {
     id
     name
     alternateNames
@@ -7699,8 +7699,8 @@ export const GetSoftware = gql`
 }
     `;
 export const QuerySoftwares = gql`
-    query QuerySoftwares($filter: SoftwareFilter) {
-  softwares(filter: $filter) {
+    query QuerySoftwares($filter: SoftwareFilter, $correlationId: String) {
+  softwares(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -7726,8 +7726,8 @@ export const UpdateSoftware = gql`
 }
     `;
 export const CountSpecifications = gql`
-    query CountSpecifications($filter: SpecificationFilter) {
-  countSpecifications(filter: $filter) {
+    query CountSpecifications($filter: SpecificationFilter, $correlationId: String) {
+  countSpecifications(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -7772,8 +7772,8 @@ export const DeleteSpecifications = gql`
 }
     `;
 export const GetSpecification = gql`
-    query GetSpecification($id: ID!) {
-  specification(id: $id) {
+    query GetSpecification($id: ID!, $correlationId: String) {
+  specification(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -8110,8 +8110,8 @@ export const QueryModels = gql`
 }
     `;
 export const QuerySpecifications = gql`
-    query QuerySpecifications($filter: SpecificationFilter) {
-  specifications(filter: $filter) {
+    query QuerySpecifications($filter: SpecificationFilter, $correlationId: String) {
+  specifications(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -8296,8 +8296,8 @@ export const UpdateSpecification = gql`
 }
     `;
 export const CountUsers = gql`
-    query CountUsers($filter: UserFilter) {
-  countUsers(filter: $filter) {
+    query CountUsers($filter: UserFilter, $correlationId: String) {
+  countUsers(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -8380,8 +8380,8 @@ export const GetUser = gql`
 }
     `;
 export const QueryUsers = gql`
-    query QueryUsers($filter: UserFilter) {
-  users(filter: $filter) {
+    query QueryUsers($filter: UserFilter, $correlationId: String) {
+  users(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
@@ -8435,8 +8435,8 @@ export const UpdateUser = gql`
 }
     `;
 export const CountWorkflows = gql`
-    query CountWorkflows($filter: WorkflowFilter) {
-  countWorkflows(filter: $filter) {
+    query CountWorkflows($filter: WorkflowFilter, $correlationId: String) {
+  countWorkflows(filter: $filter, correlationId: $correlationId) {
     count
   }
 }
@@ -8621,8 +8621,8 @@ export const DeleteWorkflows = gql`
 }
     `;
 export const GetWorkflow = gql`
-    query GetWorkflow($id: ID!) {
-  workflow(id: $id) {
+    query GetWorkflow($id: ID!, $correlationId: String) {
+  workflow(id: $id, correlationId: $correlationId) {
     id
     name
     creationDate
@@ -8777,8 +8777,8 @@ export const GetWorkflow = gql`
 }
     `;
 export const QueryWorkflows = gql`
-    query QueryWorkflows($filter: WorkflowFilter) {
-  workflows(filter: $filter) {
+    query QueryWorkflows($filter: WorkflowFilter, $correlationId: String) {
+  workflows(filter: $filter, correlationId: $correlationId) {
     results {
       id
       name
