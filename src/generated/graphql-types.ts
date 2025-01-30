@@ -4286,7 +4286,9 @@ export enum GoogleModels {
   /** Gemini 2.0 Flash (Experimental) */
   Gemini_2_0FlashExperimental = 'GEMINI_2_0_FLASH_EXPERIMENTAL',
   /** Gemini 2.0 Flash Thinking (Experimental) */
-  Gemini_2_0FlashThinkingExperimental = 'GEMINI_2_0_FLASH_THINKING_EXPERIMENTAL'
+  Gemini_2_0FlashThinkingExperimental = 'GEMINI_2_0_FLASH_THINKING_EXPERIMENTAL',
+  /** Gemini 2.0 Pro (Experimental) */
+  Gemini_2_0ProExperimental = 'GEMINI_2_0_PRO_EXPERIMENTAL'
 }
 
 /** Represents a knowledge graph. */
@@ -4428,6 +4430,8 @@ export type GroqModelPropertiesUpdateInput = {
 export enum GroqModels {
   /** Developer-specified model */
   Custom = 'CUSTOM',
+  /** Deepseek R1 Distill Llama 70b Preview */
+  DeepseekR1Llama_70BPreview = 'DEEPSEEK_R1_LLAMA_70B_PREVIEW',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
   /** LLaMA 3.2 1b Preview */
