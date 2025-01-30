@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
-import { DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLError } from 'graphql';
 import * as Types from './generated/graphql-types';
 import * as Documents from './generated/graphql-documents';
 import * as dotenv from 'dotenv';
@@ -1845,6 +1845,27 @@ class Graphlit {
   }
 
   // helper functions
+  private prettyPrintGraphQLError(err: GraphQLError): string {
+    if (!err) return 'Unknown error';
+    
+    const parts: string[] = [];
+    
+    // Add the base error message
+    parts.push(err.message);
+    
+    // Add location info if available
+    if (err.locations && err.locations.length > 0) {
+      parts.push(`at line ${err.locations[0].line}, column ${err.locations[0].column}`);
+    }
+    
+    // Add path info if available
+    if (err.path) {
+      parts.push(`\n- Path: ${err.path.join('.')}`);
+    }
+
+    return parts.join(' ');
+  }
+
   private async mutateAndCheckError<TData, TVariables extends OperationVariables = OperationVariables>(
     mutation: DocumentNode,
     variables?: TVariables
@@ -1859,7 +1880,7 @@ class Graphlit {
       });
 
       if (result.errors) {
-        const errorMessage = result.errors.map(err => err.message).join("\n");
+        const errorMessage = result.errors.map(err => this.prettyPrintGraphQLError(err)).join("\n");
         throw new Error(errorMessage);
       }
 
@@ -1870,7 +1891,7 @@ class Graphlit {
       return result.data;
     } catch (error) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
-        const errorMessage = error.graphQLErrors.map(err => err.message).join("\n");
+        const errorMessage = error.graphQLErrors.map(err => this.prettyPrintGraphQLError(err)).join("\n");
         console.error(errorMessage);
         throw new Error(errorMessage);
       } if (error instanceof Error) {
@@ -1897,7 +1918,7 @@ class Graphlit {
       });
 
       if (result.errors) {
-        const errorMessage = result.errors.map(err => err.message).join("\n");
+        const errorMessage = result.errors.map(err => this.prettyPrintGraphQLError(err)).join("\n");
         throw new Error(errorMessage);
       }
 
@@ -1908,7 +1929,7 @@ class Graphlit {
       return result.data;
     } catch (error: unknown) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
-        const errorMessage = error.graphQLErrors.map(err => err.message).join("\n");
+        const errorMessage = error.graphQLErrors.map(err => this.prettyPrintGraphQLError(err)).join("\n");
         console.error(errorMessage);
         throw new Error(errorMessage);
       } if (error instanceof Error) {
