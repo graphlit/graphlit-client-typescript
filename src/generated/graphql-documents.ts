@@ -3743,7 +3743,7 @@ export const GetConversation = gql`
 }
     `;
 export const Prompt = gql`
-    mutation Prompt($prompt: String!, $mimeType: String, $data: String, $specification: EntityReferenceInput, $messages: [ConversationMessageInput!], $correlationId: String) {
+    mutation Prompt($prompt: String, $mimeType: String, $data: String, $specification: EntityReferenceInput, $messages: [ConversationMessageInput!], $correlationId: String) {
   prompt(
     prompt: $prompt
     mimeType: $mimeType
