@@ -9630,7 +9630,11 @@ export enum OpenAiModels {
   /** o1 Preview 128k (Latest) */
   O1Preview_128K = 'O1_PREVIEW_128K',
   /** o1 Preview 128k (2024-09-12 version) */
-  O1Preview_128K_20240912 = 'O1_PREVIEW_128K_20240912'
+  O1Preview_128K_20240912 = 'O1_PREVIEW_128K_20240912',
+  /** o3 Mini 200k (Latest) */
+  O3Mini_200K = 'O3_MINI_200K',
+  /** o3 Mini 200k (2025-01-31 version) */
+  O3Mini_200K_20250131 = 'O3_MINI_200K_20250131'
 }
 
 /** OpenAI vision model detail levels */
