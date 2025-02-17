@@ -387,6 +387,47 @@ export type AskGraphlit = {
   messageCount?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Represents the Assembly.AI preparation properties. */
+export type AssemblyAiAudioPreparationProperties = {
+  __typename?: 'AssemblyAIAudioPreparationProperties';
+  /** Whether to auto-detect the speaker(s) language during Assembly.AI audio transcription. */
+  detectLanguage?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether to enable redaction during Assembly.AI audio transcription. */
+  enableRedaction?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether to enable speaker diarization during Assembly.AI audio transcription. */
+  enableSpeakerDiarization?: Maybe<Scalars['Boolean']['output']>;
+  /** The Assembly.AI API key. */
+  key?: Maybe<Scalars['String']['output']>;
+  /** Specify the language to transcribe during Assembly.AI audio transcription. Expected language in BCP 47 format, such as 'en' or 'en-US'. */
+  language?: Maybe<Scalars['String']['output']>;
+  /** The Assembly.AI transcription model. */
+  model?: Maybe<AssemblyAiModels>;
+};
+
+/** Represents the Assembly.AI preparation properties. */
+export type AssemblyAiAudioPreparationPropertiesInput = {
+  /** Whether to auto-detect the speaker(s) language during Assembly.AI audio transcription. */
+  detectLanguage?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether to enable redaction during Assembly.AI audio transcription. */
+  enableRedaction?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether to enable speaker diarization during Assembly.AI audio transcription. */
+  enableSpeakerDiarization?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The Assembly.AI API key, optional. */
+  key?: InputMaybe<Scalars['String']['input']>;
+  /** Specify the language to transcribe during Assembly.AI audio transcription. Expected language in BCP 47 format, such as 'en' or 'en-US'. */
+  language?: InputMaybe<Scalars['String']['input']>;
+  /** The Assembly.AI transcription model. */
+  model?: InputMaybe<AssemblyAiModels>;
+};
+
+/** Assembly.AI models */
+export enum AssemblyAiModels {
+  /** Best */
+  Best = 'BEST',
+  /** Nano */
+  Nano = 'NANO'
+}
+
 /** Represents Atlassian Jira feed properties. */
 export type AtlassianJiraFeedProperties = {
   __typename?: 'AtlassianJiraFeedProperties';
@@ -2400,6 +2441,8 @@ export enum DeepgramModels {
   Nova2Video = 'NOVA2_VIDEO',
   /** Nova 2 (Voicemail) */
   Nova2Voicemail = 'NOVA2_VOICEMAIL',
+  /** Nova 3 (General) */
+  Nova3 = 'NOVA3',
   /** Whisper (Base) */
   WhisperBase = 'WHISPER_BASE',
   /** Whisper (Large) */
@@ -3776,6 +3819,8 @@ export enum FeedServiceTypes {
   S3Blob = 'S3_BLOB',
   /** Microsoft SharePoint feed service */
   SharePoint = 'SHARE_POINT',
+  /** Trello feed service */
+  Trello = 'TRELLO',
   /** Zendesk Articles feed service */
   ZendeskArticles = 'ZENDESK_ARTICLES',
   /** Zendesk Tickets feed service */
@@ -3824,6 +3869,8 @@ export type FeedUpdateInput = {
   email?: InputMaybe<EmailFeedPropertiesUpdateInput>;
   /** The ID of the feed to update. */
   id: Scalars['ID']['input'];
+  /** The Intercom feed properties. */
+  intercom?: InputMaybe<IntercomFeedPropertiesUpdateInput>;
   /** The issue feed properties. */
   issue?: InputMaybe<IssueFeedPropertiesUpdateInput>;
   /** The Microsoft Teams feed properties. */
@@ -3852,11 +3899,15 @@ export type FeedUpdateInput = {
   workflow?: InputMaybe<EntityReferenceInput>;
   /** The YouTube feed properties. */
   youtube?: InputMaybe<YouTubeFeedPropertiesUpdateInput>;
+  /** The Zendesk feed properties. */
+  zendesk?: InputMaybe<ZendeskFeedPropertiesUpdateInput>;
 };
 
 /** Represents a file preparation connector. */
 export type FilePreparationConnector = {
   __typename?: 'FilePreparationConnector';
+  /** The specific properties for Assembly.AI preparation. */
+  assemblyAI?: Maybe<AssemblyAiAudioPreparationProperties>;
   /** The specific properties for Azure Document Intelligence preparation. */
   azureDocument?: Maybe<AzureDocumentPreparationProperties>;
   /** The specific properties for Deepgram preparation. */
@@ -3875,6 +3926,8 @@ export type FilePreparationConnector = {
 
 /** Represents a file preparation connector. */
 export type FilePreparationConnectorInput = {
+  /** The specific properties for Assembly.AI preparation. */
+  assemblyAI?: InputMaybe<AssemblyAiAudioPreparationPropertiesInput>;
   /** The specific properties for Azure Document Intelligence preparation. */
   azureDocument?: InputMaybe<AzureDocumentPreparationPropertiesInput>;
   /** The specific properties for Deepgram preparation. */
@@ -3893,6 +3946,8 @@ export type FilePreparationConnectorInput = {
 
 /** File preparation service type */
 export enum FilePreparationServiceTypes {
+  /** Assembly.AI Audio Transcription */
+  AssemblyAi = 'ASSEMBLY_AI',
   /** Azure AI Document Intelligence */
   AzureDocumentIntelligence = 'AZURE_DOCUMENT_INTELLIGENCE',
   /** Deepgram Audio Transcription */
@@ -4283,6 +4338,10 @@ export enum GoogleModels {
   Gemini_1_5Pro_001 = 'GEMINI_1_5_PRO_001',
   /** Gemini 1.5 Pro (002 version) */
   Gemini_1_5Pro_002 = 'GEMINI_1_5_PRO_002',
+  /** Gemini 2.0 Flash (Latest) */
+  Gemini_2_0Flash = 'GEMINI_2_0_FLASH',
+  /** Gemini 2.0 Flash (001 version) */
+  Gemini_2_0Flash_001 = 'GEMINI_2_0_FLASH_001',
   /** Gemini 2.0 Flash (Experimental) */
   Gemini_2_0FlashExperimental = 'GEMINI_2_0_FLASH_EXPERIMENTAL',
   /** Gemini 2.0 Flash Thinking (Experimental) */
@@ -4815,6 +4874,14 @@ export type IntercomFeedPropertiesInput = {
   readLimit?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Represents Intercom feed properties. */
+export type IntercomFeedPropertiesUpdateInput = {
+  /** Intercom access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** Represents Intercom Tickets feed properties. */
 export type IntercomTicketsFeedProperties = {
   __typename?: 'IntercomTicketsFeedProperties';
@@ -4851,6 +4918,8 @@ export type IssueFeedProperties = {
   linear?: Maybe<LinearFeedProperties>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
+  /** Trello properties. */
+  trello?: Maybe<TrelloFeedProperties>;
   /** Feed service type. */
   type: FeedServiceTypes;
   /** Zendesk Tickets properties. */
@@ -4871,6 +4940,8 @@ export type IssueFeedPropertiesInput = {
   linear?: InputMaybe<LinearFeedPropertiesInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** Trello properties. */
+  trello?: InputMaybe<TrelloFeedPropertiesInput>;
   /** Feed service type. */
   type: FeedServiceTypes;
   /** Zendesk Tickets properties. */
@@ -4891,6 +4962,8 @@ export type IssueFeedPropertiesUpdateInput = {
   linear?: InputMaybe<LinearFeedPropertiesUpdateInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** Trello properties. */
+  trello?: InputMaybe<TrelloFeedPropertiesUpdateInput>;
   /** Zendesk Tickets properties. */
   zendesk?: InputMaybe<ZendeskTicketsFeedPropertiesUpdateInput>;
 };
@@ -9473,6 +9546,8 @@ export type OpenAiModelProperties = {
   modelName?: Maybe<Scalars['String']['output']>;
   /** The model token probability. */
   probability?: Maybe<Scalars['Float']['output']>;
+  /** The OpenAI reasoning effort level. Only applies when using OpenAI o1 or newer reasoning models. */
+  reasoningEffort?: Maybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: Maybe<Scalars['Float']['output']>;
   /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
@@ -9497,6 +9572,8 @@ export type OpenAiModelPropertiesInput = {
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
   probability?: InputMaybe<Scalars['Float']['input']>;
+  /** The OpenAI reasoning effort level. Only applies when using OpenAI o1 or newer reasoning models. */
+  reasoningEffort?: InputMaybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
   /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
@@ -9521,6 +9598,8 @@ export type OpenAiModelPropertiesUpdateInput = {
   modelName?: InputMaybe<Scalars['String']['input']>;
   /** The model token probability. */
   probability?: InputMaybe<Scalars['Float']['input']>;
+  /** The OpenAI reasoning effort level. Only applies when using OpenAI o1 or newer reasoning models. */
+  reasoningEffort?: InputMaybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
   /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
@@ -9635,6 +9714,16 @@ export enum OpenAiModels {
   O3Mini_200K = 'O3_MINI_200K',
   /** o3 Mini 200k (2025-01-31 version) */
   O3Mini_200K_20250131 = 'O3_MINI_200K_20250131'
+}
+
+/** OpenAI reasoning effort levels */
+export enum OpenAiReasoningEffortLevels {
+  /** High effort */
+  High = 'HIGH',
+  /** Low effort */
+  Low = 'LOW',
+  /** Medium effort */
+  Medium = 'MEDIUM'
 }
 
 /** OpenAI vision model detail levels */
@@ -13503,6 +13592,50 @@ export type ToolDefinitionInput = {
   schema: Scalars['String']['input'];
 };
 
+/** Represents Trello feed properties. */
+export type TrelloFeedProperties = {
+  __typename?: 'TrelloFeedProperties';
+  /** The Trello identifiers. */
+  identifiers: Array<Scalars['String']['output']>;
+  /** The Trello API key. */
+  key: Scalars['String']['output'];
+  /** The Trello integration token. */
+  token: Scalars['String']['output'];
+  /** The Trello object type, i.e. card or board. */
+  type: TrelloTypes;
+};
+
+/** Represents Trello feed properties. */
+export type TrelloFeedPropertiesInput = {
+  /** The Trello identifiers. */
+  identifiers: Array<Scalars['String']['input']>;
+  /** The Trello API key. */
+  key: Scalars['String']['input'];
+  /** The Trello integration token. */
+  token: Scalars['String']['input'];
+  /** The Trello object type, i.e. card or board. */
+  type: TrelloTypes;
+};
+
+/** Represents Trello feed properties. */
+export type TrelloFeedPropertiesUpdateInput = {
+  /** The Trello identifiers. */
+  identifiers?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The Trello API key. */
+  key?: InputMaybe<Scalars['String']['input']>;
+  /** The Trello integration token. */
+  token?: InputMaybe<Scalars['String']['input']>;
+  /** The Trello object type, i.e. card or board. */
+  type?: InputMaybe<TrelloTypes>;
+};
+
+export enum TrelloTypes {
+  /** Trello Board */
+  Board = 'BOARD',
+  /** Trello Card */
+  Card = 'CARD'
+}
+
 /** Unit types */
 export enum UnitTypes {
   /** Angstrom */
@@ -14028,6 +14161,16 @@ export type ZendeskFeedPropertiesInput = {
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Zendesk subdomain. */
   subdomain: Scalars['String']['input'];
+};
+
+/** Represents Zendesk feed properties. */
+export type ZendeskFeedPropertiesUpdateInput = {
+  /** Zendesk access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** Zendesk subdomain. */
+  subdomain?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Zendesk Tickets feed properties. */
