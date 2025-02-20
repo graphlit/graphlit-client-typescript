@@ -4612,6 +4612,27 @@ export const QueryConversations = gql`
   }
 }
     `;
+export const RetrieveSources = gql`
+    mutation RetrieveSources($prompt: String!, $filter: ContentFilter, $augmentedFilter: ContentFilter, $retrievalStrategy: RetrievalStrategyInput, $rerankingStrategy: RerankingStrategyInput, $correlationId: String) {
+  retrieveSources(
+    prompt: $prompt
+    filter: $filter
+    augmentedFilter: $augmentedFilter
+    retrievalStrategy: $retrievalStrategy
+    rerankingStrategy: $rerankingStrategy
+    correlationId: $correlationId
+  ) {
+    results {
+      content {
+        id
+      }
+      text
+      metadata
+      relevance
+    }
+  }
+}
+    `;
 export const ReviseContent = gql`
     mutation ReviseContent($prompt: String!, $content: EntityReferenceInput!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
   reviseContent(

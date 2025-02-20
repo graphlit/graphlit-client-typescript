@@ -1953,6 +1953,26 @@ export type ContentResults = {
   results?: Maybe<Array<Maybe<Content>>>;
 };
 
+/** Represents a content source. */
+export type ContentSource = {
+  __typename?: 'ContentSource';
+  /** The content source. */
+  content?: Maybe<EntityReference>;
+  /** The content source metadata. */
+  metadata?: Maybe<Scalars['String']['output']>;
+  /** The relevance score of the content source. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The content source text. */
+  text?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents content source results. */
+export type ContentSourceResults = {
+  __typename?: 'ContentSourceResults';
+  /** The retrieved content sources. */
+  results?: Maybe<Array<Maybe<ContentSource>>>;
+};
+
 /** Content type */
 export enum ContentTypes {
   /** Email */
@@ -7911,6 +7931,8 @@ export type Mutation = {
   restartAllContents?: Maybe<Array<Maybe<Content>>>;
   /** Restarts workflow on content. */
   restartContent?: Maybe<Content>;
+  /** Retrieve content sources. */
+  retrieveSources?: Maybe<ContentSourceResults>;
   /** Revise content via prompted conversation. */
   reviseContent?: Maybe<ReviseContent>;
   /** Revise encoded image via prompted conversation. */
@@ -8945,6 +8967,16 @@ export type MutationRestartAllContentsArgs = {
 
 export type MutationRestartContentArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationRetrieveSourcesArgs = {
+  augmentedFilter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ContentFilter>;
+  prompt: Scalars['String']['input'];
+  rerankingStrategy?: InputMaybe<RerankingStrategyInput>;
+  retrievalStrategy?: InputMaybe<RetrievalStrategyInput>;
 };
 
 
@@ -14814,6 +14846,18 @@ export type QueryConversationsQueryVariables = Exact<{
 
 
 export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null> | null } | null };
+
+export type RetrieveSourcesMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  filter?: InputMaybe<ContentFilter>;
+  augmentedFilter?: InputMaybe<ContentFilter>;
+  retrievalStrategy?: InputMaybe<RetrievalStrategyInput>;
+  rerankingStrategy?: InputMaybe<RerankingStrategyInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', text?: string | null, metadata?: string | null, relevance?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
 
 export type ReviseContentMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
