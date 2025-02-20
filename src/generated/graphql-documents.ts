@@ -5510,6 +5510,12 @@ export const GetFeed = gql`
         subdomain
         accessToken
       }
+      trello {
+        key
+        token
+        identifiers
+        type
+      }
       readLimit
     }
     rss {
@@ -5748,6 +5754,12 @@ export const QueryFeeds = gql`
         zendesk {
           subdomain
           accessToken
+        }
+        trello {
+          key
+          token
+          identifiers
+          type
         }
         readLimit
       }
@@ -7839,6 +7851,8 @@ export const GetSpecification = gql`
       temperature
       probability
       chunkTokenLimit
+      detailLevel
+      reasoningEffort
     }
     azureOpenAI {
       tokenLimit
@@ -8178,6 +8192,8 @@ export const QuerySpecifications = gql`
         temperature
         probability
         chunkTokenLimit
+        detailLevel
+        reasoningEffort
       }
       azureOpenAI {
         tokenLimit
@@ -8504,6 +8520,14 @@ export const CreateWorkflow = gql`
             detectLanguage
             language
           }
+          assemblyAI {
+            model
+            key
+            enableRedaction
+            enableSpeakerDiarization
+            detectLanguage
+            language
+          }
           document {
             includeImages
           }
@@ -8688,6 +8712,14 @@ export const GetWorkflow = gql`
             detectLanguage
             language
           }
+          assemblyAI {
+            model
+            key
+            enableRedaction
+            enableSpeakerDiarization
+            detectLanguage
+            language
+          }
           document {
             includeImages
           }
@@ -8845,6 +8877,14 @@ export const QueryWorkflows = gql`
               detectLanguage
               language
             }
+            assemblyAI {
+              model
+              key
+              enableRedaction
+              enableSpeakerDiarization
+              detectLanguage
+              language
+            }
             document {
               includeImages
             }
@@ -8990,6 +9030,14 @@ export const UpdateWorkflow = gql`
             key
           }
           deepgram {
+            model
+            key
+            enableRedaction
+            enableSpeakerDiarization
+            detectLanguage
+            language
+          }
+          assemblyAI {
             model
             key
             enableRedaction
