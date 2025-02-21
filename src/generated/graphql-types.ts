@@ -14874,7 +14874,7 @@ export type RetrieveSourcesMutationVariables = Exact<{
 }>;
 
 
-export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', text: string, metadata?: string | null, relevance: number, content: { __typename?: 'EntityReference', id: string } } | null> | null } | null };
+export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', type?: ContentSourceTypes | null, text: string, metadata?: string | null, relevance: number, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content: { __typename?: 'EntityReference', id: string } } | null> | null } | null };
 
 export type ReviseContentMutationVariables = Exact<{
   prompt: Scalars['String']['input'];

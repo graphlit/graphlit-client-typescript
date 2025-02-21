@@ -4623,12 +4623,17 @@ export const RetrieveSources = gql`
     correlationId: $correlationId
   ) {
     results {
+      type
       content {
         id
       }
       text
       metadata
       relevance
+      startTime
+      endTime
+      pageNumber
+      frameNumber
     }
   }
 }
