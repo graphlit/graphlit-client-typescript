@@ -1957,13 +1957,23 @@ export type ContentResults = {
 export type ContentSource = {
   __typename?: 'ContentSource';
   /** The content source. */
-  content?: Maybe<EntityReference>;
-  /** The content source metadata. */
+  content: EntityReference;
+  /** The end time of the audio transcript segment. */
+  endTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The frame number of the image sequence. */
+  frameNumber?: Maybe<Scalars['Int']['output']>;
+  /** The content source metadata, in XML format. */
   metadata?: Maybe<Scalars['String']['output']>;
+  /** The page number of the text document. */
+  pageNumber?: Maybe<Scalars['Int']['output']>;
   /** The relevance score of the content source. */
-  relevance?: Maybe<Scalars['Float']['output']>;
+  relevance: Scalars['Float']['output'];
+  /** The start time of the audio transcript segment. */
+  startTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The content source text. */
-  text?: Maybe<Scalars['String']['output']>;
+  text: Scalars['String']['output'];
+  /** The content source type. Determines which of the index properties are assigned, i.e. startTime, pageNumber. */
+  type?: Maybe<ContentSourceTypes>;
 };
 
 /** Represents content source results. */
@@ -1972,6 +1982,13 @@ export type ContentSourceResults = {
   /** The retrieved content sources. */
   results?: Maybe<Array<Maybe<ContentSource>>>;
 };
+
+/** Content Source Types */
+export enum ContentSourceTypes {
+  Document = 'DOCUMENT',
+  Frame = 'FRAME',
+  Transcript = 'TRANSCRIPT'
+}
 
 /** Content type */
 export enum ContentTypes {
@@ -14857,7 +14874,7 @@ export type RetrieveSourcesMutationVariables = Exact<{
 }>;
 
 
-export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', text?: string | null, metadata?: string | null, relevance?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
+export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', text: string, metadata?: string | null, relevance: number, content: { __typename?: 'EntityReference', id: string } } | null> | null } | null };
 
 export type ReviseContentMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
