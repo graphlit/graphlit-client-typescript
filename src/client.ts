@@ -563,6 +563,13 @@ class Graphlit {
     );
   }
 
+  public async retrieveSources(prompt: string, filter?: Types.ContentFilter, augmentedFilter?: Types.ContentFilter, retrievalStrategy?: Types.RetrievalStrategyInput, rerankingStrategy?: Types.RerankingStrategyInput, correlationId?: string): Promise<Types.RetrieveSourcesMutation> {
+    return this.mutateAndCheckError<Types.RetrieveSourcesMutation, { prompt: string, filter?: Types.ContentFilter, augmentedFilter?: Types.ContentFilter, retrievalStrategy?: Types.RetrievalStrategyInput, rerankingStrategy?: Types.RerankingStrategyInput, correlationId?: string }>(
+      Documents.RetrieveSources,
+      { prompt: prompt, filter: filter, augmentedFilter: augmentedFilter, retrievalStrategy: retrievalStrategy, rerankingStrategy: rerankingStrategy, correlationId: correlationId }
+    );
+  }
+
   public async formatConversation(prompt: string, id?: string, specification?: Types.EntityReferenceInput, includeDetails?: boolean, correlationId?: string): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<Types.FormatConversationMutation, { prompt: string, id?: string, specification?: Types.EntityReferenceInput, includeDetails?: boolean, correlationId?: string }>(
       Documents.FormatConversation,

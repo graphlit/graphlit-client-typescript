@@ -1085,6 +1085,7 @@ export const GetContent = gql`
         confidence
         text
         role
+        language
         relevance
       }
     }
@@ -1847,6 +1848,7 @@ export const QueryContents = gql`
           confidence
           text
           role
+          language
           relevance
         }
       }
@@ -2097,6 +2099,7 @@ export const QueryContentsFacets = gql`
           confidence
           text
           role
+          language
           relevance
         }
       }
