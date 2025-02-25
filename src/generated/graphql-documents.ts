@@ -7912,6 +7912,8 @@ export const GetSpecification = gql`
       modelName
       temperature
       probability
+      enableThinking
+      thinkingTokenLimit
     }
     google {
       tokenLimit
@@ -8253,6 +8255,8 @@ export const QuerySpecifications = gql`
         modelName
         temperature
         probability
+        enableThinking
+        thinkingTokenLimit
       }
       google {
         tokenLimit
