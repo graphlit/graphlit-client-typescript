@@ -15145,6 +15145,13 @@ export type QuerySharePointLibrariesQueryVariables = Exact<{
 
 export type QuerySharePointLibrariesQuery = { __typename?: 'Query', sharePointLibraries?: { __typename?: 'SharePointLibraryResults', accountName?: string | null, results?: Array<{ __typename?: 'SharePointLibraryResult', libraryName?: string | null, libraryId?: string | null, siteName?: string | null, siteId?: string | null } | null> | null } | null };
 
+export type QuerySlackChannelsQueryVariables = Exact<{
+  properties: SlackChannelsInput;
+}>;
+
+
+export type QuerySlackChannelsQuery = { __typename?: 'Query', slackChannels?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
+
 export type UpdateFeedMutationVariables = Exact<{
   feed: FeedUpdateInput;
 }>;

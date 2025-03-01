@@ -619,6 +619,13 @@ class Graphlit {
     );
   }
 
+  public async querySlackChannels(properties: Types.SlackChannelsInput): Promise<Types.QuerySlackChannelsQuery> {
+    return this.queryAndCheckError<Types.QuerySlackChannelsQuery, { properties: Types.SlackChannelsInput }>(
+      Documents.QuerySlackChannels,
+      { properties: properties }
+    );
+  }
+
   public async createFeed(feed: Types.FeedInput, correlationId?: string): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<Types.CreateFeedMutation, { feed: Types.FeedInput, correlationId?: string }>(
       Documents.CreateFeed,

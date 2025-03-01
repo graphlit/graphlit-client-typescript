@@ -5932,6 +5932,13 @@ export const QuerySharePointLibraries = gql`
   }
 }
     `;
+export const QuerySlackChannels = gql`
+    query QuerySlackChannels($properties: SlackChannelsInput!) {
+  slackChannels(properties: $properties) {
+    results
+  }
+}
+    `;
 export const UpdateFeed = gql`
     mutation UpdateFeed($feed: FeedUpdateInput!) {
   updateFeed(feed: $feed) {
