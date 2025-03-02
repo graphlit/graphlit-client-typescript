@@ -619,6 +619,41 @@ class Graphlit {
     );
   }
 
+  public async queryOneDriveFolders(properties: Types.OneDriveFoldersInput, folderId?: string): Promise<Types.QueryOneDriveFoldersQuery> {
+    return this.queryAndCheckError<Types.QueryOneDriveFoldersQuery, { properties: Types.OneDriveFoldersInput, folderId?: string }>(
+      Documents.QueryOneDriveFolders,
+      { properties: properties, folderId: folderId }
+    );
+  }
+
+  public async querySharePointFolders(properties: Types.SharePointFoldersInput, libraryId: string, folderId?: string): Promise<Types.QuerySharePointFoldersQuery> {
+    return this.queryAndCheckError<Types.QuerySharePointFoldersQuery, { properties: Types.SharePointFoldersInput, libraryId: string, folderId?: string }>(
+      Documents.QuerySharePointFolders,
+      { properties: properties, libraryId: libraryId, folderId: folderId }
+    );
+  }
+
+  public async querySharePointLibraries(properties: Types.SharePointLibrariesInput): Promise<Types.QuerySharePointLibrariesQuery> {
+    return this.queryAndCheckError<Types.QuerySharePointLibrariesQuery, { properties: Types.SharePointLibrariesInput }>(
+      Documents.QuerySharePointLibraries,
+      { properties: properties }
+    );
+  }
+
+  public async queryMicrosoftTeamsTeams(properties: Types.MicrosoftTeamsTeamsInput): Promise<Types.QueryMicrosoftTeamsTeamsQuery> {
+    return this.queryAndCheckError<Types.QueryMicrosoftTeamsTeamsQuery, { properties: Types.MicrosoftTeamsTeamsInput }>(
+      Documents.QueryMicrosoftTeamsTeams,
+      { properties: properties }
+    );
+  }
+  
+  public async queryMicrosoftTeamsChannels(properties: Types.MicrosoftTeamsChannelsInput, teamId: string): Promise<Types.QueryMicrosoftTeamsChannelsQuery> {
+    return this.queryAndCheckError<Types.QueryMicrosoftTeamsChannelsQuery, { properties: Types.MicrosoftTeamsChannelsInput, teamId: string }>(
+      Documents.QueryMicrosoftTeamsChannels,
+      { properties: properties, teamId: teamId }
+    );
+  }
+
   public async querySlackChannels(properties: Types.SlackChannelsInput): Promise<Types.QuerySlackChannelsQuery> {
     return this.queryAndCheckError<Types.QuerySlackChannelsQuery, { properties: Types.SlackChannelsInput }>(
       Documents.QuerySlackChannels,
