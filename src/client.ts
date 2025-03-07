@@ -661,6 +661,13 @@ class Graphlit {
     );
   }
 
+  public async queryLinearProjects(properties: Types.LinearProjectsInput): Promise<Types.QueryLinearProjectsQuery> {
+    return this.queryAndCheckError<Types.QueryLinearProjectsQuery, { properties: Types.LinearProjectsInput }>(
+      Documents.QueryLinearProjects,
+      { properties: properties }
+    );
+  }
+
   public async createFeed(feed: Types.FeedInput, correlationId?: string): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<Types.CreateFeedMutation, { feed: Types.FeedInput, correlationId?: string }>(
       Documents.CreateFeed,
