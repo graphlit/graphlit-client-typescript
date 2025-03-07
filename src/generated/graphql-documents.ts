@@ -1077,6 +1077,15 @@ export const GetContent = gql`
       index
       text
       relevance
+      images {
+        id
+        mimeType
+        data
+        left
+        right
+        top
+        bottom
+      }
       chunks {
         index
         pageIndex
@@ -1840,6 +1849,15 @@ export const QueryContents = gql`
         index
         text
         relevance
+        images {
+          id
+          mimeType
+          data
+          left
+          right
+          top
+          bottom
+        }
         chunks {
           index
           pageIndex
@@ -2091,6 +2109,15 @@ export const QueryContentsFacets = gql`
         index
         text
         relevance
+        images {
+          id
+          mimeType
+          data
+          left
+          right
+          top
+          bottom
+        }
         chunks {
           index
           pageIndex
@@ -5874,6 +5901,13 @@ export const QueryFeeds = gql`
   }
 }
     `;
+export const QueryLinearProjects = gql`
+    query QueryLinearProjects($properties: LinearProjectsInput!) {
+  linearProjects(properties: $properties) {
+    results
+  }
+}
+    `;
 export const QueryMicrosoftTeamsChannels = gql`
     query QueryMicrosoftTeamsChannels($properties: MicrosoftTeamsChannelsInput!, $teamId: ID!) {
   microsoftTeamsChannels(properties: $properties, teamId: $teamId) {
@@ -8579,6 +8613,9 @@ export const CreateWorkflow = gql`
               id
             }
           }
+          mistral {
+            key
+          }
         }
       }
     }
@@ -8771,6 +8808,9 @@ export const GetWorkflow = gql`
               id
             }
           }
+          mistral {
+            key
+          }
         }
       }
     }
@@ -8936,6 +8976,9 @@ export const QueryWorkflows = gql`
                 id
               }
             }
+            mistral {
+              key
+            }
           }
         }
       }
@@ -9095,6 +9138,9 @@ export const UpdateWorkflow = gql`
             specification {
               id
             }
+          }
+          mistral {
+            key
           }
         }
       }
