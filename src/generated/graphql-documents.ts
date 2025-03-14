@@ -161,6 +161,11 @@ export const GetAlert = gql`
         token
         channel
       }
+      email {
+        from
+        subject
+        to
+      }
     }
     publishing {
       type
@@ -279,6 +284,11 @@ export const QueryAlerts = gql`
         slack {
           token
           channel
+        }
+        email {
+          from
+          subject
+          to
         }
       }
       publishing {
@@ -6985,6 +6995,13 @@ export const UpdateMedicalTherapy = gql`
   }
 }
     `;
+export const SendNotification = gql`
+    mutation SendNotification($connector: IntegrationConnectorInput!, $text: String!, $textType: TextTypes) {
+  sendNotification(connector: $connector, text: $text, textType: $textType) {
+    result
+  }
+}
+    `;
 export const CreateObservation = gql`
     mutation CreateObservation($observation: ObservationInput!) {
   createObservation(observation: $observation) {
@@ -7494,6 +7511,7 @@ export const LookupCredits = gql`
     indexingRatio
     preparationRatio
     extractionRatio
+    classificationRatio
     enrichmentRatio
     publishingRatio
     searchRatio
@@ -7551,6 +7569,7 @@ export const QueryCredits = gql`
     indexingRatio
     preparationRatio
     extractionRatio
+    classificationRatio
     enrichmentRatio
     publishingRatio
     searchRatio
@@ -8464,6 +8483,11 @@ export const GetUser = gql`
           token
           channel
         }
+        email {
+          from
+          subject
+          to
+        }
       }
     }
   }
@@ -8506,6 +8530,11 @@ export const QueryUsers = gql`
           slack {
             token
             channel
+          }
+          email {
+            from
+            subject
+            to
           }
         }
       }
@@ -8647,6 +8676,32 @@ export const CreateWorkflow = gql`
         }
       }
     }
+    classification {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+          model {
+            specification {
+              id
+            }
+            rules {
+              then
+              if
+            }
+          }
+          regex {
+            rules {
+              then
+              type
+              path
+              matches
+            }
+          }
+        }
+      }
+    }
     enrichment {
       link {
         enableCrawling
@@ -8687,6 +8742,11 @@ export const CreateWorkflow = gql`
         slack {
           token
           channel
+        }
+        email {
+          from
+          subject
+          to
         }
       }
     }
@@ -8842,6 +8902,32 @@ export const GetWorkflow = gql`
         }
       }
     }
+    classification {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+          model {
+            specification {
+              id
+            }
+            rules {
+              then
+              if
+            }
+          }
+          regex {
+            rules {
+              then
+              type
+              path
+              matches
+            }
+          }
+        }
+      }
+    }
     enrichment {
       link {
         enableCrawling
@@ -8882,6 +8968,11 @@ export const GetWorkflow = gql`
         slack {
           token
           channel
+        }
+        email {
+          from
+          subject
+          to
         }
       }
     }
@@ -9010,6 +9101,32 @@ export const QueryWorkflows = gql`
           }
         }
       }
+      classification {
+        jobs {
+          connector {
+            type
+            contentType
+            fileType
+            model {
+              specification {
+                id
+              }
+              rules {
+                then
+                if
+              }
+            }
+            regex {
+              rules {
+                then
+                type
+                path
+                matches
+              }
+            }
+          }
+        }
+      }
       enrichment {
         link {
           enableCrawling
@@ -9050,6 +9167,11 @@ export const QueryWorkflows = gql`
           slack {
             token
             channel
+          }
+          email {
+            from
+            subject
+            to
           }
         }
       }
@@ -9173,6 +9295,32 @@ export const UpdateWorkflow = gql`
         }
       }
     }
+    classification {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+          model {
+            specification {
+              id
+            }
+            rules {
+              then
+              if
+            }
+          }
+          regex {
+            rules {
+              then
+              type
+              path
+              matches
+            }
+          }
+        }
+      }
+    }
     enrichment {
       link {
         enableCrawling
@@ -9213,6 +9361,11 @@ export const UpdateWorkflow = gql`
         slack {
           token
           channel
+        }
+        email {
+          from
+          subject
+          to
         }
       }
     }
