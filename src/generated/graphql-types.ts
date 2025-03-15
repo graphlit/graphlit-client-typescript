@@ -114,7 +114,7 @@ export type AlertFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter alert(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of alert(s) to be returned. */
+  /** Limit the number of alert(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter alert(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -122,7 +122,7 @@ export type AlertFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter alert(s) by searching for specific text. */
+  /** Filter alert(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter alert(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -1067,7 +1067,7 @@ export type CategoryFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter category(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of category(s) to be returned. */
+  /** Limit the number of category(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter category(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1075,7 +1075,7 @@ export type CategoryFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter category(s) by searching for specific text. */
+  /** Filter category(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter category(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -1333,7 +1333,7 @@ export type CollectionFilter = {
   disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter collection(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of collection(s) to be returned. */
+  /** Limit the number of collection(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter collection(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1341,7 +1341,7 @@ export type CollectionFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter collection(s) by searching for specific text. */
+  /** Filter collection(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter collection(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -1421,7 +1421,7 @@ export type ConnectorFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter connector(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of connector(s) to be returned. */
+  /** Limit the number of connector(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter connector(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1429,7 +1429,7 @@ export type ConnectorFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter connector(s) by searching for specific text. */
+  /** Filter connector(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter connector(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -1875,15 +1875,17 @@ export type ContentFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Filter contents by their external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
+  /** Filter content(s) by searching for similar image. Accepts Base64-encoded image, which is used to generate image embeddings for similarity search. */
+  image?: InputMaybe<Scalars['String']['input']>;
   /** Filter by original date recent timespan. For example, a timespan of one day will return content authored in the last 24 hours. */
   inLast?: InputMaybe<Scalars['TimeSpan']['input']>;
-  /** Limit the number of content(s) to be returned. */
+  /** Limit the number of content(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter content(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observations. */
   observations?: InputMaybe<Array<ObservationReferenceFilter>>;
@@ -1897,7 +1899,7 @@ export type ContentFilter = {
   originalDateRange?: InputMaybe<DateRangeFilter>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter content(s) by searching for specific text. */
+  /** Filter content(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -2262,11 +2264,11 @@ export type ConversationFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter conversation(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of conversation(s) to be returned. */
+  /** Limit the number of conversation(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter conversation(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of conversation(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2274,7 +2276,7 @@ export type ConversationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter conversation(s) by searching for specific text. */
+  /** Filter conversation(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -3267,9 +3269,7 @@ export enum EntityExtractionServiceTypes {
    * OpenAI Image
    * @deprecated Use MODEL_IMAGE instead.
    */
-  OpenAiImage = 'OPEN_AI_IMAGE',
-  /** Roboflow Image */
-  RoboflowImage = 'ROBOFLOW_IMAGE'
+  OpenAiImage = 'OPEN_AI_IMAGE'
 }
 
 /** Represents an entity reference. */
@@ -3547,7 +3547,7 @@ export type EventFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Filter by if the event is accessible for free. */
   isAccessibleForFree?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Limit the number of event(s) to be returned. */
+  /** Limit the number of event(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
@@ -3557,7 +3557,7 @@ export type EventFilter = {
   minPrice?: InputMaybe<Scalars['Decimal']['input']>;
   /** Filter event(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of event(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3569,7 +3569,7 @@ export type EventFilter = {
   priceCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter event(s) by searching for specific text. */
+  /** Filter event(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -3850,7 +3850,7 @@ export type FeedFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter feed(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of feed(s) to be returned. */
+  /** Limit the number of feed(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter feed(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -3858,7 +3858,7 @@ export type FeedFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter feed(s) by searching for specific text. */
+  /** Filter feed(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter feed(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -5318,7 +5318,7 @@ export type LabelFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter label(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of label(s) to be returned. */
+  /** Limit the number of label(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter label(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -5326,7 +5326,7 @@ export type LabelFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter label(s) by searching for specific text. */
+  /** Filter label(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter label(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -5691,13 +5691,13 @@ export type MedicalConditionFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicalcondition(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicalcondition(s) to be returned. */
+  /** Limit the number of medicalcondition(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalcondition(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalcondition(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -5705,7 +5705,7 @@ export type MedicalConditionFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalcondition(s) by searching for specific text. */
+  /** Filter medicalcondition(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -5842,13 +5842,13 @@ export type MedicalContraindicationFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicalcontraindication(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicalcontraindication(s) to be returned. */
+  /** Limit the number of medicalcontraindication(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalcontraindication(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalcontraindication(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -5856,7 +5856,7 @@ export type MedicalContraindicationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalcontraindication(s) by searching for specific text. */
+  /** Filter medicalcontraindication(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -5993,13 +5993,13 @@ export type MedicalDeviceFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicaldevice(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicaldevice(s) to be returned. */
+  /** Limit the number of medicaldevice(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicaldevice(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicaldevice(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6007,7 +6007,7 @@ export type MedicalDeviceFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicaldevice(s) by searching for specific text. */
+  /** Filter medicaldevice(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6181,13 +6181,13 @@ export type MedicalDrugClassFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicaldrugclass(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicaldrugclass(s) to be returned. */
+  /** Limit the number of medicaldrugclass(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicaldrugclass(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicaldrugclass(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6195,7 +6195,7 @@ export type MedicalDrugClassFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicaldrugclass(s) by searching for specific text. */
+  /** Filter medicaldrugclass(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6295,13 +6295,13 @@ export type MedicalDrugFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicaldrug(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicaldrug(s) to be returned. */
+  /** Limit the number of medicaldrug(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicaldrug(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicaldrug(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6309,7 +6309,7 @@ export type MedicalDrugFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicaldrug(s) by searching for specific text. */
+  /** Filter medicaldrug(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6446,13 +6446,13 @@ export type MedicalGuidelineFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicalguideline(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicalguideline(s) to be returned. */
+  /** Limit the number of medicalguideline(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalguideline(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalguideline(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6460,7 +6460,7 @@ export type MedicalGuidelineFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalguideline(s) by searching for specific text. */
+  /** Filter medicalguideline(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6597,13 +6597,13 @@ export type MedicalIndicationFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Filter by similar medical indications. */
   indications?: InputMaybe<Array<EntityReferenceFilter>>;
-  /** Limit the number of medicalindication(s) to be returned. */
+  /** Limit the number of medicalindication(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalindication(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalindication(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6611,7 +6611,7 @@ export type MedicalIndicationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalindication(s) by searching for specific text. */
+  /** Filter medicalindication(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6746,13 +6746,13 @@ export type MedicalProcedureFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicalprocedure(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicalprocedure(s) to be returned. */
+  /** Limit the number of medicalprocedure(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalprocedure(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalprocedure(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6762,7 +6762,7 @@ export type MedicalProcedureFilter = {
   procedures?: InputMaybe<Array<EntityReferenceFilter>>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalprocedure(s) by searching for specific text. */
+  /** Filter medicalprocedure(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -6899,13 +6899,13 @@ export type MedicalStudyFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicalstudy(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicalstudy(s) to be returned. */
+  /** Limit the number of medicalstudy(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicalstudy(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicalstudy(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -6913,7 +6913,7 @@ export type MedicalStudyFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicalstudy(s) by searching for specific text. */
+  /** Filter medicalstudy(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -7056,13 +7056,13 @@ export type MedicalTestFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicaltest(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicaltest(s) to be returned. */
+  /** Limit the number of medicaltest(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicaltest(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicaltest(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -7070,7 +7070,7 @@ export type MedicalTestFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicaltest(s) by searching for specific text. */
+  /** Filter medicaltest(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -7207,13 +7207,13 @@ export type MedicalTherapyFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter medicaltherapy(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of medicaltherapy(s) to be returned. */
+  /** Limit the number of medicaltherapy(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter medicaltherapy(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of medicaltherapy(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -7221,7 +7221,7 @@ export type MedicalTherapyFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter medicaltherapy(s) by searching for specific text. */
+  /** Filter medicaltherapy(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -7317,7 +7317,7 @@ export type MetadataFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter metadata(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of metadata(s) to be returned. */
+  /** Limit the number of metadata(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by metadata types. */
   metadataTypes?: InputMaybe<Array<InputMaybe<MetadataTypes>>>;
@@ -7327,7 +7327,7 @@ export type MetadataFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter metadata(s) by searching for specific text. */
+  /** Filter metadata(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter metadata(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -8221,6 +8221,14 @@ export type Mutation = {
   updateUser?: Maybe<User>;
   /** Updates an existing content workflow. */
   updateWorkflow?: Maybe<Workflow>;
+  /** Upserts a category. */
+  upsertCategory?: Maybe<Category>;
+  /** Upserts a label. */
+  upsertLabel?: Maybe<Label>;
+  /** Upserts an LLM specification. */
+  upsertSpecification?: Maybe<Specification>;
+  /** Upserts a content workflow. */
+  upsertWorkflow?: Maybe<Workflow>;
 };
 
 
@@ -9424,6 +9432,26 @@ export type MutationUpdateWorkflowArgs = {
   workflow: WorkflowUpdateInput;
 };
 
+
+export type MutationUpsertCategoryArgs = {
+  category: CategoryInput;
+};
+
+
+export type MutationUpsertLabelArgs = {
+  label: LabelInput;
+};
+
+
+export type MutationUpsertSpecificationArgs = {
+  specification: SpecificationInput;
+};
+
+
+export type MutationUpsertWorkflowArgs = {
+  workflow: WorkflowInput;
+};
+
 /** Represents a named entity reference. */
 export type NamedEntityReference = {
   __typename?: 'NamedEntityReference';
@@ -10110,13 +10138,13 @@ export type OrganizationFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter organization(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of organization(s) to be returned. */
+  /** Limit the number of organization(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter organization(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of organization(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -10126,7 +10154,7 @@ export type OrganizationFilter = {
   organizations?: InputMaybe<Array<EntityReferenceFilter>>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter organization(s) by searching for specific text. */
+  /** Filter organization(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -10369,13 +10397,13 @@ export type PersonFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter person(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of person(s) to be returned. */
+  /** Limit the number of person(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter person(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of person(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -10387,7 +10415,7 @@ export type PersonFilter = {
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter person(s) by searching for specific text. */
+  /** Filter person(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -10577,13 +10605,13 @@ export type PlaceFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter place(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of place(s) to be returned. */
+  /** Limit the number of place(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter place(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of place(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -10593,7 +10621,7 @@ export type PlaceFilter = {
   places?: InputMaybe<Array<EntityReferenceFilter>>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter place(s) by searching for specific text. */
+  /** Filter place(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -10858,7 +10886,7 @@ export type ProductFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter product(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of product(s) to be returned. */
+  /** Limit the number of product(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
@@ -10868,7 +10896,7 @@ export type ProductFilter = {
   model?: InputMaybe<Scalars['String']['input']>;
   /** Filter product(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of product(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -10882,7 +10910,7 @@ export type ProductFilter = {
   queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter by release date range. */
   releaseDateRange?: InputMaybe<DateRangeFilter>;
-  /** Filter product(s) by searching for specific text. */
+  /** Filter product(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -11059,7 +11087,7 @@ export type ProjectFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter project(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of project(s) to be returned. */
+  /** Limit the number of project(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter project(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -11067,7 +11095,7 @@ export type ProjectFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter project(s) by searching for specific text. */
+  /** Filter project(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter project(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -11531,6 +11559,8 @@ export type Query = {
   events?: Maybe<EventResults>;
   /** Lookup a feed given its ID. */
   feed?: Maybe<Feed>;
+  /** Returns whether any feed exists based on the provided filter criteria. */
+  feedExists?: Maybe<BooleanResult>;
   /** Retrieves feeds based on the provided filter criteria. */
   feeds?: Maybe<FeedResults>;
   /** Returns if ingested content has finished (or errored). */
@@ -11645,6 +11675,8 @@ export type Query = {
   softwares?: Maybe<SoftwareResults>;
   /** Lookup a specification given its ID. */
   specification?: Maybe<Specification>;
+  /** Returns whether any specification exists based on the provided filter criteria. */
+  specificationExists?: Maybe<BooleanResult>;
   /** Retrieves specifications based on the provided filter criteria. */
   specifications?: Maybe<SpecificationResults>;
   /** Retrieves project usage. */
@@ -11657,6 +11689,8 @@ export type Query = {
   users?: Maybe<UserResults>;
   /** Lookup a workflow given its ID. */
   workflow?: Maybe<Workflow>;
+  /** Returns whether any workflow exists based on the provided filter criteria. */
+  workflowExists?: Maybe<BooleanResult>;
   /** Retrieves workflows based on the provided filter criteria. */
   workflows?: Maybe<WorkflowResults>;
 };
@@ -11927,6 +11961,12 @@ export type QueryEventsArgs = {
 export type QueryFeedArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryFeedExistsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<FeedFilter>;
 };
 
 
@@ -12286,6 +12326,12 @@ export type QuerySpecificationArgs = {
 };
 
 
+export type QuerySpecificationExistsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SpecificationFilter>;
+};
+
+
 export type QuerySpecificationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SpecificationFilter>;
@@ -12321,6 +12367,12 @@ export type QueryUsersArgs = {
 export type QueryWorkflowArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryWorkflowExistsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<WorkflowFilter>;
 };
 
 
@@ -12629,13 +12681,13 @@ export type RepoFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter repo(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of repo(s) to be returned. */
+  /** Limit the number of repo(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter repo(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of repo(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -12645,7 +12697,7 @@ export type RepoFilter = {
   queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter by similar code repositories. */
   repos?: InputMaybe<Array<EntityReferenceFilter>>;
-  /** Filter repo(s) by searching for specific text. */
+  /** Filter repo(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -12877,6 +12929,8 @@ export enum SearchQueryTypes {
 export enum SearchServiceTypes {
   /** Exa search feed service */
   Exa = 'EXA',
+  /** Podscan search feed service */
+  Podscan = 'PODSCAN',
   /** Tavily search feed service */
   Tavily = 'TAVILY'
 }
@@ -13295,13 +13349,13 @@ export type SoftwareFilter = {
   h3?: InputMaybe<H3Filter>;
   /** Filter software(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of software(s) to be returned. */
+  /** Limit the number of software(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
   /** Filter software(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** When using similarity search, the number of similar items to be returned. Defaults to 10. */
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of software(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -13309,7 +13363,7 @@ export type SoftwareFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
-  /** Filter software(s) by searching for specific text. */
+  /** Filter software(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
@@ -13399,7 +13453,7 @@ export type Specification = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the specification. */
   name: Scalars['String']['output'];
-  /** The number of similar items to be returned from content search. Defaults to 1000. */
+  /** The number of similar items to be returned from content search. Defaults to 100. */
   numberSimilar?: Maybe<Scalars['Int']['output']>;
   /** The OpenAI model properties. */
   openAI?: Maybe<OpenAiModelProperties>;
@@ -13445,7 +13499,7 @@ export type SpecificationFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter specification(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of specification(s) to be returned. */
+  /** Limit the number of specification(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter specification(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -13453,7 +13507,7 @@ export type SpecificationFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter specification(s) by searching for specific text. */
+  /** Filter specification(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter by LLM service types. */
   serviceTypes?: InputMaybe<Array<InputMaybe<ModelServiceTypes>>>;
@@ -13493,7 +13547,7 @@ export type SpecificationInput = {
   mistral?: InputMaybe<MistralModelPropertiesInput>;
   /** The name of the specification. */
   name: Scalars['String']['input'];
-  /** The number of similar items to be returned from content search. Defaults to 1000. */
+  /** The number of similar items to be returned from content search. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** The OpenAI model properties. */
   openAI?: InputMaybe<OpenAiModelPropertiesInput>;
@@ -13576,7 +13630,7 @@ export type SpecificationUpdateInput = {
   mistral?: InputMaybe<MistralModelPropertiesUpdateInput>;
   /** The name of the specification. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** The number of similar items to be returned from content search. Defaults to 1000. */
+  /** The number of similar items to be returned from content search. Defaults to 100. */
   numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** The OpenAI model properties. */
   openAI?: InputMaybe<OpenAiModelPropertiesUpdateInput>;
@@ -14070,7 +14124,7 @@ export type UserFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Filter users by their external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
-  /** Limit the number of user(s) to be returned. */
+  /** Limit the number of user(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter user(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -14078,7 +14132,7 @@ export type UserFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter user(s) by searching for specific text. */
+  /** Filter user(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter user(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -14283,9 +14337,9 @@ export type WebSearchResult = {
   score?: Maybe<Scalars['Float']['output']>;
   /** The relevant web page text. */
   text?: Maybe<Scalars['String']['output']>;
-  /** The web page title. */
+  /** The content title. */
   title?: Maybe<Scalars['String']['output']>;
-  /** The web page URI. */
+  /** The web search result URI, may be a web page or podcast episode. */
   uri: Scalars['URL']['output'];
 };
 
@@ -14354,7 +14408,7 @@ export type WorkflowFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter workflow(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
-  /** Limit the number of workflow(s) to be returned. */
+  /** Limit the number of workflow(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter workflow(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
@@ -14362,7 +14416,7 @@ export type WorkflowFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
-  /** Filter workflow(s) by searching for specific text. */
+  /** Filter workflow(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter workflow(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
@@ -14676,6 +14730,13 @@ export type UpdateCategoryMutationVariables = Exact<{
 
 export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory?: { __typename?: 'Category', id: string, name: string } | null };
 
+export type UpsertCategoryMutationVariables = Exact<{
+  category: CategoryInput;
+}>;
+
+
+export type UpsertCategoryMutation = { __typename?: 'Mutation', upsertCategory?: { __typename?: 'Category', id: string, name: string } | null };
+
 export type AddContentsToCollectionsMutationVariables = Exact<{
   contents: Array<EntityReferenceInput> | EntityReferenceInput;
   collections: Array<EntityReferenceInput> | EntityReferenceInput;
@@ -14836,7 +14897,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
 
 export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
@@ -14949,7 +15010,7 @@ export type QueryContentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
+export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
 
 export type QueryContentsFacetsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -14958,7 +15019,7 @@ export type QueryContentsFacetsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsFacetsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null, facets?: Array<{ __typename?: 'ContentFacet', facet?: ContentFacetTypes | null, count?: any | null, type?: FacetValueTypes | null, value?: string | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
+export type QueryContentsFacetsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', facets?: Array<{ __typename?: 'ContentFacet', facet?: ContentFacetTypes | null, count?: any | null, type?: FacetValueTypes | null, value?: string | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null } | null };
 
 export type QueryContentsGraphQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -15344,6 +15405,14 @@ export type EnableFeedMutationVariables = Exact<{
 
 export type EnableFeedMutation = { __typename?: 'Mutation', enableFeed?: { __typename?: 'Feed', id: string, state: EntityState } | null };
 
+export type FeedExistsQueryVariables = Exact<{
+  filter?: InputMaybe<FeedFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FeedExistsQuery = { __typename?: 'Query', feedExists?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
+
 export type GetFeedQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -15495,6 +15564,13 @@ export type UpdateLabelMutationVariables = Exact<{
 
 
 export type UpdateLabelMutation = { __typename?: 'Mutation', updateLabel?: { __typename?: 'Label', id: string, name: string } | null };
+
+export type UpsertLabelMutationVariables = Exact<{
+  label: LabelInput;
+}>;
+
+
+export type UpsertLabelMutation = { __typename?: 'Mutation', upsertLabel?: { __typename?: 'Label', id: string, name: string } | null };
 
 export type CountMedicalConditionsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalConditionFilter>;
@@ -16714,12 +16790,27 @@ export type QuerySpecificationsQueryVariables = Exact<{
 
 export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, endpoint?: any | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, reasoningEffort?: OpenAiReasoningEffortLevels | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null> | null } | null };
 
+export type SpecificationExistsQueryVariables = Exact<{
+  filter?: InputMaybe<SpecificationFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SpecificationExistsQuery = { __typename?: 'Query', specificationExists?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
+
 export type UpdateSpecificationMutationVariables = Exact<{
   specification: SpecificationUpdateInput;
 }>;
 
 
 export type UpdateSpecificationMutation = { __typename?: 'Mutation', updateSpecification?: { __typename?: 'Specification', id: string, name: string, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null } | null };
+
+export type UpsertSpecificationMutationVariables = Exact<{
+  specification: SpecificationInput;
+}>;
+
+
+export type UpsertSpecificationMutation = { __typename?: 'Mutation', upsertSpecification?: { __typename?: 'Specification', id: string, name: string, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null } | null };
 
 export type CountUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
@@ -16838,3 +16929,18 @@ export type UpdateWorkflowMutationVariables = Exact<{
 
 
 export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null } | null } | null> | null } | null };
+
+export type UpsertWorkflowMutationVariables = Exact<{
+  workflow: WorkflowInput;
+}>;
+
+
+export type UpsertWorkflowMutation = { __typename?: 'Mutation', upsertWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null } | null } | null> | null } | null };
+
+export type WorkflowExistsQueryVariables = Exact<{
+  filter?: InputMaybe<WorkflowFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type WorkflowExistsQuery = { __typename?: 'Query', workflowExists?: { __typename?: 'BooleanResult', result?: boolean | null } | null };

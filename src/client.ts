@@ -738,6 +738,13 @@ class Graphlit {
     );
   }
 
+  public async feedExists(filter?: Types.FeedFilter): Promise<Types.FeedExistsQuery> {
+    return this.queryAndCheckError<Types.FeedExistsQuery, { filter?: Types.FeedFilter }>(
+      Documents.FeedExists,
+      { filter: filter }
+    );
+  }
+
   public async isFeedDone(id: string): Promise<Types.IsFeedDoneQuery> {
     return this.queryAndCheckError<Types.IsFeedDoneQuery, { id: string }>(
       Documents.IsFeedDone,
@@ -762,6 +769,13 @@ class Graphlit {
   public async updateSpecification(specification: Types.SpecificationUpdateInput): Promise<Types.UpdateSpecificationMutation> {
     return this.mutateAndCheckError<Types.UpdateSpecificationMutation, { specification: Types.SpecificationUpdateInput }>(
       Documents.UpdateSpecification,
+      { specification: specification }
+    );
+  }
+
+  public async upsertSpecification(specification: Types.SpecificationInput): Promise<Types.UpsertSpecificationMutation> {
+    return this.mutateAndCheckError<Types.UpsertSpecificationMutation, { specification: Types.SpecificationInput }>(
+      Documents.UpsertSpecification,
       { specification: specification }
     );
   }
@@ -801,6 +815,13 @@ class Graphlit {
     );
   }
 
+  public async specificationExists(filter?: Types.SpecificationFilter): Promise<Types.SpecificationExistsQuery> {
+    return this.queryAndCheckError<Types.QuerySpecificationsQuery, { filter?: Types.SpecificationFilter }>(
+      Documents.SpecificationExists,
+      { filter: filter }
+    );
+  }
+
   public async queryModels(filter?: Types.ModelFilter): Promise<Types.QueryModelsQuery> {
     return this.queryAndCheckError<Types.QueryModelsQuery, { filter?: Types.ModelFilter }>(
       Documents.QueryModels,
@@ -818,6 +839,13 @@ class Graphlit {
   public async updateWorkflow(workflow: Types.WorkflowUpdateInput): Promise<Types.UpdateWorkflowMutation> {
     return this.mutateAndCheckError<Types.UpdateWorkflowMutation, { workflow: Types.WorkflowUpdateInput }>(
       Documents.UpdateWorkflow,
+      { workflow: workflow }
+    );
+  }
+
+  public async upsertWorkflow(workflow: Types.WorkflowInput): Promise<Types.UpsertWorkflowMutation> {
+    return this.mutateAndCheckError<Types.UpsertWorkflowMutation, { workflow: Types.WorkflowInput }>(
+      Documents.UpsertWorkflow,
       { workflow: workflow }
     );
   }
@@ -853,6 +881,13 @@ class Graphlit {
   public async queryWorkflows(filter?: Types.WorkflowFilter): Promise<Types.QueryWorkflowsQuery> {
     return this.queryAndCheckError<Types.QueryWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
       Documents.QueryWorkflows,
+      { filter: filter }
+    );
+  }
+
+  public async workflowExists(filter?: Types.WorkflowFilter): Promise<Types.WorkflowExistsQuery> {
+    return this.queryAndCheckError<Types.QueryWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
+      Documents.WorkflowExists,
       { filter: filter }
     );
   }
@@ -920,6 +955,13 @@ class Graphlit {
     );
   }
 
+  public async upsertCategory(category: Types.CategoryInput): Promise<Types.UpsertCategoryMutation> {
+    return this.mutateAndCheckError<Types.UpsertCategoryMutation, { category: Types.CategoryInput }>(
+      Documents.UpsertCategory,
+      { category: category }
+    );
+  }
+
   public async deleteCategory(id: string): Promise<Types.DeleteCategoryMutation> {
     return this.mutateAndCheckError<Types.DeleteCategoryMutation, { id: string }>(
       Documents.DeleteCategory,
@@ -965,6 +1007,13 @@ class Graphlit {
   public async updateLabel(label: Types.LabelUpdateInput): Promise<Types.UpdateLabelMutation> {
     return this.mutateAndCheckError<Types.UpdateLabelMutation, { label: Types.LabelUpdateInput }>(
       Documents.UpdateLabel,
+      { label: label }
+    );
+  }
+
+  public async upsertLabel(label: Types.LabelInput): Promise<Types.UpsertLabelMutation> {
+    return this.mutateAndCheckError<Types.UpsertLabelMutation, { label: Types.LabelInput }>(
+      Documents.UpsertLabel,
       { label: label }
     );
   }

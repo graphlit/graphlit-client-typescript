@@ -394,6 +394,14 @@ export const UpdateCategory = gql`
   }
 }
     `;
+export const UpsertCategory = gql`
+    mutation UpsertCategory($category: CategoryInput!) {
+  upsertCategory(category: $category) {
+    id
+    name
+  }
+}
+    `;
 export const AddContentsToCollections = gql`
     mutation AddContentsToCollections($contents: [EntityReferenceInput!]!, $collections: [EntityReferenceInput!]!) {
   addContentsToCollections(contents: $contents, collections: $collections) {
@@ -872,7 +880,6 @@ export const GetContent = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -1655,7 +1662,6 @@ export const QueryContents = gql`
       uri
       description
       identifier
-      markdown
       address {
         streetAddress
         city
@@ -1802,14 +1808,6 @@ export const QueryContents = gql`
       }
       language {
         languages
-      }
-      parent {
-        id
-        name
-      }
-      children {
-        id
-        name
       }
       feed {
         id
@@ -1900,260 +1898,6 @@ export const QueryContents = gql`
 export const QueryContentsFacets = gql`
     query QueryContentsFacets($filter: ContentFilter, $facets: [ContentFacetInput!], $correlationId: String) {
   contents(filter: $filter, facets: $facets, correlationId: $correlationId) {
-    results {
-      id
-      name
-      creationDate
-      relevance
-      owner {
-        id
-      }
-      state
-      originalDate
-      finishedDate
-      workflowDuration
-      uri
-      description
-      identifier
-      markdown
-      address {
-        streetAddress
-        city
-        region
-        country
-        postalCode
-      }
-      location {
-        latitude
-        longitude
-      }
-      type
-      fileType
-      mimeType
-      fileName
-      fileSize
-      masterUri
-      imageUri
-      textUri
-      audioUri
-      transcriptUri
-      summary
-      customSummary
-      keywords
-      bullets
-      headlines
-      posts
-      chapters
-      questions
-      video {
-        width
-        height
-        duration
-        make
-        model
-        software
-        title
-        description
-        keywords
-        author
-      }
-      audio {
-        keywords
-        author
-        series
-        episode
-        episodeType
-        season
-        publisher
-        copyright
-        genre
-        title
-        description
-        bitrate
-        channels
-        sampleRate
-        bitsPerSample
-        duration
-      }
-      image {
-        width
-        height
-        resolutionX
-        resolutionY
-        bitsPerComponent
-        components
-        projectionType
-        orientation
-        description
-        make
-        model
-        software
-        lens
-        focalLength
-        exposureTime
-        fNumber
-        iso
-        heading
-        pitch
-      }
-      document {
-        title
-        subject
-        summary
-        author
-        publisher
-        description
-        keywords
-        pageCount
-        worksheetCount
-        slideCount
-        wordCount
-        lineCount
-        paragraphCount
-        isEncrypted
-        hasDigitalSignature
-      }
-      email {
-        identifier
-        subject
-        labels
-        sensitivity
-        priority
-        importance
-        from {
-          name
-          email
-          givenName
-          familyName
-        }
-        to {
-          name
-          email
-          givenName
-          familyName
-        }
-        cc {
-          name
-          email
-          givenName
-          familyName
-        }
-        bcc {
-          name
-          email
-          givenName
-          familyName
-        }
-      }
-      issue {
-        identifier
-        title
-        project
-        team
-        status
-        priority
-        type
-        labels
-      }
-      package {
-        fileCount
-        folderCount
-        isEncrypted
-      }
-      language {
-        languages
-      }
-      parent {
-        id
-        name
-      }
-      children {
-        id
-        name
-      }
-      feed {
-        id
-        name
-      }
-      collections {
-        id
-        name
-      }
-      links {
-        uri
-        linkType
-      }
-      observations {
-        id
-        type
-        observable {
-          id
-          name
-        }
-        related {
-          id
-          name
-        }
-        relatedType
-        relation
-        occurrences {
-          type
-          confidence
-          startTime
-          endTime
-          pageIndex
-          boundingBox {
-            left
-            top
-            width
-            height
-          }
-        }
-        state
-      }
-      workflow {
-        id
-        name
-      }
-      pages {
-        index
-        text
-        relevance
-        images {
-          id
-          mimeType
-          data
-          left
-          right
-          top
-          bottom
-        }
-        chunks {
-          index
-          pageIndex
-          rowIndex
-          columnIndex
-          confidence
-          text
-          role
-          language
-          relevance
-        }
-      }
-      segments {
-        startTime
-        endTime
-        text
-        relevance
-      }
-      frames {
-        index
-        description
-        text
-        relevance
-      }
-      error
-    }
     facets {
       facet
       count
@@ -5435,6 +5179,13 @@ export const EnableFeed = gql`
   }
 }
     `;
+export const FeedExists = gql`
+    query FeedExists($filter: FeedFilter, $correlationId: String) {
+  feedExists(filter: $filter, correlationId: $correlationId) {
+    result
+  }
+}
+    `;
 export const GetFeed = gql`
     query GetFeed($id: ID!, $correlationId: String) {
   feed(id: $id, correlationId: $correlationId) {
@@ -6063,6 +5814,14 @@ export const QueryLabels = gql`
 export const UpdateLabel = gql`
     mutation UpdateLabel($label: LabelUpdateInput!) {
   updateLabel(label: $label) {
+    id
+    name
+  }
+}
+    `;
+export const UpsertLabel = gql`
+    mutation UpsertLabel($label: LabelInput!) {
+  upsertLabel(label: $label) {
     id
     name
   }
@@ -8393,9 +8152,27 @@ export const QuerySpecifications = gql`
   }
 }
     `;
+export const SpecificationExists = gql`
+    query SpecificationExists($filter: SpecificationFilter, $correlationId: String) {
+  specificationExists(filter: $filter, correlationId: $correlationId) {
+    result
+  }
+}
+    `;
 export const UpdateSpecification = gql`
     mutation UpdateSpecification($specification: SpecificationUpdateInput!) {
   updateSpecification(specification: $specification) {
+    id
+    name
+    state
+    type
+    serviceType
+  }
+}
+    `;
+export const UpsertSpecification = gql`
+    mutation UpsertSpecification($specification: SpecificationInput!) {
+  upsertSpecification(specification: $specification) {
     id
     name
     state
@@ -9369,6 +9146,206 @@ export const UpdateWorkflow = gql`
         }
       }
     }
+  }
+}
+    `;
+export const UpsertWorkflow = gql`
+    mutation UpsertWorkflow($workflow: WorkflowInput!) {
+  upsertWorkflow(workflow: $workflow) {
+    id
+    name
+    state
+    ingestion {
+      if {
+        types
+        fileTypes
+        allowedPaths
+        excludedPaths
+      }
+      collections {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+          name
+        }
+      }
+    }
+    indexing {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+        }
+      }
+    }
+    preparation {
+      enableUnblockedCapture
+      disableSmartCapture
+      summarizations {
+        type
+        specification {
+          id
+        }
+        tokens
+        items
+        prompt
+      }
+      jobs {
+        connector {
+          type
+          fileTypes
+          azureDocument {
+            version
+            model
+            endpoint
+            key
+          }
+          deepgram {
+            model
+            key
+            enableRedaction
+            enableSpeakerDiarization
+            detectLanguage
+            language
+          }
+          assemblyAI {
+            model
+            key
+            enableRedaction
+            enableSpeakerDiarization
+            detectLanguage
+            language
+          }
+          document {
+            includeImages
+          }
+          email {
+            includeAttachments
+          }
+          modelDocument {
+            specification {
+              id
+            }
+          }
+          mistral {
+            key
+          }
+        }
+      }
+    }
+    extraction {
+      jobs {
+        connector {
+          type
+          contentTypes
+          fileTypes
+          extractedTypes
+          extractedCount
+          azureText {
+            confidenceThreshold
+            enablePII
+          }
+          azureImage {
+            confidenceThreshold
+          }
+          modelImage {
+            specification {
+              id
+            }
+          }
+          modelText {
+            specification {
+              id
+            }
+          }
+        }
+      }
+    }
+    classification {
+      jobs {
+        connector {
+          type
+          contentType
+          fileType
+          model {
+            specification {
+              id
+            }
+            rules {
+              then
+              if
+            }
+          }
+          regex {
+            rules {
+              then
+              type
+              path
+              matches
+            }
+          }
+        }
+      }
+    }
+    enrichment {
+      link {
+        enableCrawling
+        allowedDomains
+        excludedDomains
+        allowedPaths
+        excludedPaths
+        allowedLinks
+        excludedLinks
+        allowedFiles
+        excludedFiles
+        allowContentDomain
+        maximumLinks
+      }
+      jobs {
+        connector {
+          type
+          enrichedTypes
+          fhir {
+            endpoint
+          }
+          diffbot {
+            key
+          }
+        }
+      }
+    }
+    storage {
+      policy {
+        type
+        allowDuplicates
+      }
+    }
+    actions {
+      connector {
+        type
+        uri
+        slack {
+          token
+          channel
+        }
+        email {
+          from
+          subject
+          to
+        }
+      }
+    }
+  }
+}
+    `;
+export const WorkflowExists = gql`
+    query WorkflowExists($filter: WorkflowFilter, $correlationId: String) {
+  workflowExists(filter: $filter, correlationId: $correlationId) {
+    result
   }
 }
     `;
