@@ -1875,8 +1875,10 @@ export type ContentFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Filter contents by their external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
-  /** Filter content(s) by searching for similar image. Accepts Base64-encoded image, which is used to generate image embeddings for similarity search. */
-  image?: InputMaybe<Scalars['String']['input']>;
+  /** Filter content(s) by searching for similar Base64-encoded image. Accepts Base64-encoded image as string, which is used to generate image embeddings for similarity search. */
+  imageData?: InputMaybe<Scalars['String']['input']>;
+  /** MIME type of Base64-encoded image for similarity search. */
+  imageMimeType?: InputMaybe<Scalars['String']['input']>;
   /** Filter by original date recent timespan. For example, a timespan of one day will return content authored in the last 24 hours. */
   inLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Limit the number of content(s) to be returned. Defaults to 100. */
