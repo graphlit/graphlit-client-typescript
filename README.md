@@ -7,7 +7,7 @@ The Graphlit Client for Node.js enables straightforward interactions with the Gr
 
 Before you begin, ensure you have the following:
 
-- Node.js installed on your system (recommended version 14.x or higher).
+- Node.js installed on your system (recommended version 18.x or higher).
 - An active account on the [Graphlit Platform](https://portal.graphlit.dev) with access to the API settings dashboard.
 
 ## Installation
