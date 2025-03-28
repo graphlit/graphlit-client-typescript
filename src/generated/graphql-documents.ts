@@ -89,6 +89,8 @@ export const GetAlert = gql`
       createdInLast
       types
       fileTypes
+      formats
+      fileExtensions
       contents {
         id
       }
@@ -213,6 +215,8 @@ export const QueryAlerts = gql`
         createdInLast
         types
         fileTypes
+        formats
+        fileExtensions
         contents {
           id
         }
@@ -3380,6 +3384,8 @@ export const GetConversation = gql`
       createdInLast
       types
       fileTypes
+      formats
+      fileExtensions
       contents {
         id
       }
@@ -3458,6 +3464,8 @@ export const GetConversation = gql`
       createdInLast
       types
       fileTypes
+      formats
+      fileExtensions
       contents {
         id
       }
@@ -4249,6 +4257,8 @@ export const QueryConversations = gql`
         createdInLast
         types
         fileTypes
+        formats
+        fileExtensions
         contents {
           id
         }
@@ -4327,6 +4337,8 @@ export const QueryConversations = gql`
         createdInLast
         types
         fileTypes
+        formats
+        fileExtensions
         contents {
           id
         }
@@ -5378,6 +5390,14 @@ export const GetFeed = gql`
       channelIdentifier
       playlistIdentifier
     }
+    twitter {
+      readLimit
+      token
+      type
+      userName
+      query
+      includeAttachments
+    }
     slack {
       readLimit
       type
@@ -5622,6 +5642,14 @@ export const QueryFeeds = gql`
         videoIdentifiers
         channelIdentifier
         playlistIdentifier
+      }
+      twitter {
+        readLimit
+        token
+        type
+        userName
+        query
+        includeAttachments
       }
       slack {
         readLimit
@@ -8347,6 +8375,8 @@ export const CreateWorkflow = gql`
       if {
         types
         fileTypes
+        formats
+        fileExtensions
         allowedPaths
         excludedPaths
       }
@@ -8573,6 +8603,8 @@ export const GetWorkflow = gql`
       if {
         types
         fileTypes
+        formats
+        fileExtensions
         allowedPaths
         excludedPaths
       }
@@ -8772,6 +8804,8 @@ export const QueryWorkflows = gql`
         if {
           types
           fileTypes
+          formats
+          fileExtensions
           allowedPaths
           excludedPaths
         }
@@ -8966,6 +9000,8 @@ export const UpdateWorkflow = gql`
       if {
         types
         fileTypes
+        formats
+        fileExtensions
         allowedPaths
         excludedPaths
       }
@@ -9159,6 +9195,8 @@ export const UpsertWorkflow = gql`
       if {
         types
         fileTypes
+        formats
+        fileExtensions
         allowedPaths
         excludedPaths
       }
