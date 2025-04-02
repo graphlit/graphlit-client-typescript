@@ -32,16 +32,16 @@
   "author": "Unstruk Data Inc.",
   "license": "MIT",
   "dependencies": {
-    "@apollo/client": "^3.9.11",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/typescript": "^4.0.6",
-    "@graphql-codegen/typescript-operations": "^4.2.0",
-    "graphql": "^16.8.1",
+    "@apollo/client": "^3.13.5",
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-operations": "^4.6.0",
+    "graphql": "^16.10.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@graphql-codegen/typescript-document-nodes": "^4.0.6",
-    "@types/jsonwebtoken": "^9.0.6",
-    "typescript": "^5.4.5"
+    "@graphql-codegen/typescript-document-nodes": "^4.0.16",
+    "@types/jsonwebtoken": "^9.0.9",
+    "typescript": "^5.8.2"
   }
 }

@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
-import { DocumentNode, GraphQLError } from 'graphql';
+import { DocumentNode, GraphQLFormattedError } from 'graphql';
 import * as Types from './generated/graphql-types';
 import * as Documents from './generated/graphql-documents';
 import * as dotenv from 'dotenv';
@@ -1957,7 +1957,7 @@ class Graphlit {
   }
 
   // helper functions
-  private prettyPrintGraphQLError(err: GraphQLError): string {
+  private prettyPrintGraphQLError(err: GraphQLFormattedError): string {
     if (!err) return 'Unknown error';
     
     const parts: string[] = [];
