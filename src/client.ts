@@ -675,6 +675,20 @@ class Graphlit {
     );
   }
 
+  public async queryNotionDatabases(properties: Types.NotionDatabasesInput): Promise<Types.QueryNotionDatabasesQuery> {
+    return this.queryAndCheckError<Types.QueryNotionDatabasesQuery, { properties: Types.NotionDatabasesInput }>(
+      Documents.QueryNotionDatabases,
+      { properties: properties }
+    );
+  }
+
+  public async queryNotionPages(properties: Types.NotionPagesInput, identifier: string): Promise<Types.QueryNotionPagesQuery> {
+    return this.queryAndCheckError<Types.QueryNotionPagesQuery, { properties: Types.NotionPagesInput, identifier: string }>(
+      Documents.QueryNotionPages,
+      { properties: properties, identifier: identifier }
+    );
+  }
+
   public async createFeed(feed: Types.FeedInput, correlationId?: string): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<Types.CreateFeedMutation, { feed: Types.FeedInput, correlationId?: string }>(
       Documents.CreateFeed,

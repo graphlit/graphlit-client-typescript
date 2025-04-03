@@ -168,6 +168,12 @@ export const GetAlert = gql`
         subject
         to
       }
+      twitter {
+        consumerKey
+        consumerSecret
+        accessTokenKey
+        accessTokenSecret
+      }
     }
     publishing {
       type
@@ -293,6 +299,12 @@ export const QueryAlerts = gql`
           from
           subject
           to
+        }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
         }
       }
       publishing {
@@ -5717,6 +5729,20 @@ export const QueryMicrosoftTeamsTeams = gql`
   }
 }
     `;
+export const QueryNotionDatabases = gql`
+    query QueryNotionDatabases($properties: NotionDatabasesInput!) {
+  notionDatabases(properties: $properties) {
+    results
+  }
+}
+    `;
+export const QueryNotionPages = gql`
+    query QueryNotionPages($properties: NotionPagesInput!, $identifier: String!) {
+  notionPages(properties: $properties, identifier: $identifier) {
+    results
+  }
+}
+    `;
 export const QueryOneDriveFolders = gql`
     query QueryOneDriveFolders($properties: OneDriveFoldersInput!, $folderId: ID) {
   oneDriveFolders(properties: $properties, folderId: $folderId) {
@@ -8293,6 +8319,12 @@ export const GetUser = gql`
           subject
           to
         }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
+        }
       }
     }
   }
@@ -8340,6 +8372,12 @@ export const QueryUsers = gql`
             from
             subject
             to
+          }
+          twitter {
+            consumerKey
+            consumerSecret
+            accessTokenKey
+            accessTokenSecret
           }
         }
       }
@@ -8554,6 +8592,12 @@ export const CreateWorkflow = gql`
           from
           subject
           to
+        }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
         }
       }
     }
@@ -8783,6 +8827,12 @@ export const GetWorkflow = gql`
           subject
           to
         }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
+        }
       }
     }
   }
@@ -8984,6 +9034,12 @@ export const QueryWorkflows = gql`
             subject
             to
           }
+          twitter {
+            consumerKey
+            consumerSecret
+            accessTokenKey
+            accessTokenSecret
+          }
         }
       }
     }
@@ -9180,6 +9236,12 @@ export const UpdateWorkflow = gql`
           subject
           to
         }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
+        }
       }
     }
   }
@@ -9374,6 +9436,12 @@ export const UpsertWorkflow = gql`
           from
           subject
           to
+        }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
         }
       }
     }
