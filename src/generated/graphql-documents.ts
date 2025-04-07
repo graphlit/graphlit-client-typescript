@@ -1006,6 +1006,7 @@ export const GetContent = gql`
     }
     email {
       identifier
+      threadIdentifier
       subject
       labels
       sensitivity
@@ -1777,6 +1778,7 @@ export const QueryContents = gql`
       }
       email {
         identifier
+        threadIdentifier
         subject
         labels
         sensitivity
@@ -8428,6 +8430,7 @@ export const CreateWorkflow = gql`
           name
         }
       }
+      enableEmailCollections
     }
     indexing {
       jobs {
@@ -8662,6 +8665,7 @@ export const GetWorkflow = gql`
           name
         }
       }
+      enableEmailCollections
     }
     indexing {
       jobs {
@@ -8869,6 +8873,7 @@ export const QueryWorkflows = gql`
             name
           }
         }
+        enableEmailCollections
       }
       indexing {
         jobs {
@@ -9071,6 +9076,7 @@ export const UpdateWorkflow = gql`
           name
         }
       }
+      enableEmailCollections
     }
     indexing {
       jobs {
@@ -9272,6 +9278,7 @@ export const UpsertWorkflow = gql`
           name
         }
       }
+      enableEmailCollections
     }
     indexing {
       jobs {
