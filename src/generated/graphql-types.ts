@@ -4535,7 +4535,9 @@ export enum GoogleModels {
    */
   Gemini_2_0ProExperimental = 'GEMINI_2_0_PRO_EXPERIMENTAL',
   /** Gemini 2.5 Pro (Experimental) */
-  Gemini_2_5ProExperimental = 'GEMINI_2_5_PRO_EXPERIMENTAL'
+  Gemini_2_5ProExperimental = 'GEMINI_2_5_PRO_EXPERIMENTAL',
+  /** Gemini 2.5 Pro (Preview) */
+  Gemini_2_5ProPreview = 'GEMINI_2_5_PRO_PREVIEW'
 }
 
 /** Represents a knowledge graph. */
@@ -4681,13 +4683,25 @@ export enum GroqModels {
   DeepseekR1Llama_70BPreview = 'DEEPSEEK_R1_LLAMA_70B_PREVIEW',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
-  /** LLaMA 3.2 1b Preview */
+  /**
+   * LLaMA 3.2 1b Preview
+   * @deprecated Use LLaMa 3.3 or newer model
+   */
   Llama_3_2_1BPreview = 'LLAMA_3_2_1B_PREVIEW',
-  /** LLaMA 3.2 3b Preview */
+  /**
+   * LLaMA 3.2 3b Preview
+   * @deprecated Use LLaMa 3.3 or newer model
+   */
   Llama_3_2_3BPreview = 'LLAMA_3_2_3B_PREVIEW',
-  /** LLaMA 3.2 11b Vision Preview */
+  /**
+   * LLaMA 3.2 11b Vision Preview
+   * @deprecated Use LLaMa 3.3 or newer model
+   */
   Llama_3_2_11BVisionPreview = 'LLAMA_3_2_11B_VISION_PREVIEW',
-  /** LLaMA 3.2 90b Vision Preview */
+  /**
+   * LLaMA 3.2 90b Vision Preview
+   * @deprecated Use LLaMa 3.3 or newer model
+   */
   Llama_3_2_90BVisionPreview = 'LLAMA_3_2_90B_VISION_PREVIEW',
   /** LLaMA 3.3 70b */
   Llama_3_3_70B = 'LLAMA_3_3_70B',
