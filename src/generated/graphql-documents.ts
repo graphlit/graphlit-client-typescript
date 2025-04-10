@@ -5271,11 +5271,13 @@ export const GetFeed = gql`
         refreshToken
       }
       googleDrive {
+        authenticationType
         folderId
         files
         refreshToken
         clientId
         clientSecret
+        serviceAccountJson
       }
       dropbox {
         path
@@ -5524,11 +5526,13 @@ export const QueryFeeds = gql`
           refreshToken
         }
         googleDrive {
+          authenticationType
           folderId
           files
           refreshToken
           clientId
           clientSecret
+          serviceAccountJson
         }
         dropbox {
           path
