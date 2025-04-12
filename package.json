@@ -6,7 +6,7 @@
   "types": "dist/client.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/graphlit/graphlit-client-typescript"
+    "url": "git+https://github.com/graphlit/graphlit-client-typescript.git"
   },
   "contributors": [
     "Kirk Marple (https://github.com/kirk-marple)"

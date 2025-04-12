@@ -344,10 +344,17 @@ class Graphlit {
     );
   }
 
-  public async ingestText(name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestTextMutation> {
-    return this.mutateAndCheckError<Types.IngestTextMutation, { name: string, text: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
+  public async ingestText(text: string, name?: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string): Promise<Types.IngestTextMutation> {
+    return this.mutateAndCheckError<Types.IngestTextMutation, { text: string, name?: string, textType?: Types.TextTypes, uri?: string, id?: string, isSynchronous?: boolean, workflow?: Types.EntityReferenceInput, collections?: [Types.EntityReferenceInput], observations?: [Types.ObservationReferenceInput], correlationId?: string }>(
       Documents.IngestText,
       { name: name, text: text, textType: textType, uri: uri, id: id, isSynchronous: isSynchronous, workflow: workflow, collections: collections, observations: observations, correlationId: correlationId }
+    );
+  }
+
+  public async ingestMemory(text: string, name?: string, textType?: Types.TextTypes, collections?: [Types.EntityReferenceInput], correlationId?: string): Promise<Types.IngestMemoryMutation> {
+    return this.mutateAndCheckError<Types.IngestMemoryMutation, { text: string, name?: string, textType?: Types.TextTypes, collections?: [Types.EntityReferenceInput], correlationId?: string }>(
+      Documents.IngestMemory,
+      { name: name, text: text, textType: textType, collections: collections, correlationId: correlationId }
     );
   }
 

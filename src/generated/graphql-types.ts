@@ -2097,6 +2097,8 @@ export enum ContentTypes {
   File = 'FILE',
   /** Issue (i.e. JIRA, Linear, GitHub) */
   Issue = 'ISSUE',
+  /** Memory (i.e. Agent or User memory) */
+  Memory = 'MEMORY',
   /** Message (i.e. Slack, Microsoft Teams) */
   Message = 'MESSAGE',
   /** Web page */
@@ -8176,6 +8178,8 @@ export type Mutation = {
    * @deprecated Use ingestUri instead.
    */
   ingestFile?: Maybe<Content>;
+  /** Ingests user or agent memory. */
+  ingestMemory?: Maybe<Content>;
   /**
    * Ingests a webpage by URI.
    * @deprecated Use ingestUri instead.
@@ -9116,6 +9120,15 @@ export type MutationIngestFileArgs = {
 };
 
 
+export type MutationIngestMemoryArgs = {
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
+};
+
+
 export type MutationIngestPageArgs = {
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -9132,7 +9145,7 @@ export type MutationIngestTextArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   observations?: InputMaybe<Array<ObservationReferenceInput>>;
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
@@ -11258,6 +11271,8 @@ export type ProjectStorage = {
   file?: Maybe<ProjectStorageFileContentFacet>;
   /** The issue content type storage facet. */
   issue?: Maybe<ProjectStorageContentFacet>;
+  /** The memory content type storage facet. */
+  memory?: Maybe<ProjectStorageContentFacet>;
   /** The message content type storage facet. */
   message?: Maybe<ProjectStorageContentFacet>;
   /** The page content type storage facet. */
@@ -15108,9 +15123,20 @@ export type IngestEncodedFileMutationVariables = Exact<{
 
 export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
-export type IngestTextMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+export type IngestMemoryMutationVariables = Exact<{
   text: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  textType?: InputMaybe<TextTypes>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type IngestMemoryMutation = { __typename?: 'Mutation', ingestMemory?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+
+export type IngestTextMutationVariables = Exact<{
+  text: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   textType?: InputMaybe<TextTypes>;
   uri?: InputMaybe<Scalars['URL']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
