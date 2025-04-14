@@ -10074,9 +10074,27 @@ export enum OpenAiModels {
    * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
    */
   Gpt35Turbo_16K_1106 = 'GPT35_TURBO_16K_1106',
-  /** GPT 4.5 Preview 128k (Latest) */
+  /** GPT 4.1 1024k (Latest) */
+  Gpt41_1024K = 'GPT41_1024K',
+  /** GPT 4.1 1024k (2025-04-14 version) */
+  Gpt41_1024K_20250414 = 'GPT41_1024K_20250414',
+  /** GPT Mini 4.1 1024k (Latest) */
+  Gpt41Mini_1024K = 'GPT41_MINI_1024K',
+  /** GPT 4.1 Mini 1024k (2025-04-14 version) */
+  Gpt41Mini_1024K_20250414 = 'GPT41_MINI_1024K_20250414',
+  /** GPT Nano 4.1 1024k (Latest) */
+  Gpt41Nano_1024K = 'GPT41_NANO_1024K',
+  /** GPT 4.1 Nano 1024k (2025-04-14 version) */
+  Gpt41Nano_1024K_20250414 = 'GPT41_NANO_1024K_20250414',
+  /**
+   * GPT 4.5 Preview 128k (Latest)
+   * @deprecated OpenAI has deprecated this model. Use the GPT 4.1 model instead.
+   */
   Gpt45Preview_128K = 'GPT45_PREVIEW_128K',
-  /** GPT 4.5 Preview 128k (2025-02-27 version) */
+  /**
+   * GPT 4.5 Preview 128k (2025-02-27 version)
+   * @deprecated OpenAI has deprecated this model. Use the GPT 4.1 model instead.
+   */
   Gpt45Preview_128K_20250227 = 'GPT45_PREVIEW_128K_20250227',
   /** o1 200k (Latest) */
   O1_200K = 'O1_200K',
