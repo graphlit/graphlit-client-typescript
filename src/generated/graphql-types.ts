@@ -4349,16 +4349,20 @@ export type GoogleDriveFeedPropertiesInput = {
 
 /** Represents Google Drive properties. */
 export type GoogleDriveFeedPropertiesUpdateInput = {
-  /** Google client identifier. */
+  /** Google Drive authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
+  /** Google client identifier, when using User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Google client secret. */
+  /** Google client secret, when using User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** Google refresh token. */
+  /** Google refresh token, when using User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Google service account JSON, when using ServiceAccount authentication type. */
+  serviceAccountJson?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Email feed properties. */
@@ -10108,10 +10112,18 @@ export enum OpenAiModels {
   O1Preview_128K = 'O1_PREVIEW_128K',
   /** o1 Preview 128k (2024-09-12 version) */
   O1Preview_128K_20240912 = 'O1_PREVIEW_128K_20240912',
+  /** o3 200k (Latest) */
+  O3_200K = 'O3_200K',
+  /** o3 200k (2025-04-16 version) */
+  O3_200K_20250416 = 'O3_200K_20250416',
   /** o3 Mini 200k (Latest) */
   O3Mini_200K = 'O3_MINI_200K',
   /** o3 Mini 200k (2025-01-31 version) */
-  O3Mini_200K_20250131 = 'O3_MINI_200K_20250131'
+  O3Mini_200K_20250131 = 'O3_MINI_200K_20250131',
+  /** o4 Mini 200k (Latest) */
+  O4Mini_200K = 'O4_MINI_200K',
+  /** o4 Mini 200k (2025-04-16 version) */
+  O4Mini_200K_20250416 = 'O4_MINI_200K_20250416'
 }
 
 /** OpenAI reasoning effort levels */
