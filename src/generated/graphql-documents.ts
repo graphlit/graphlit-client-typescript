@@ -7854,6 +7854,8 @@ export const GetSpecification = gql`
       temperature
       probability
       chunkTokenLimit
+      enableThinking
+      thinkingTokenLimit
     }
     replicate {
       tokenLimit
@@ -8197,6 +8199,8 @@ export const QuerySpecifications = gql`
         temperature
         probability
         chunkTokenLimit
+        enableThinking
+        thinkingTokenLimit
       }
       replicate {
         tokenLimit
