@@ -181,6 +181,9 @@ export const GetAlert = gql`
         model
         voice
       }
+      openAIImage {
+        model
+      }
     }
     summarySpecification {
       id
@@ -312,6 +315,9 @@ export const QueryAlerts = gql`
         elevenLabs {
           model
           voice
+        }
+        openAIImage {
+          model
         }
       }
       summarySpecification {
@@ -7377,6 +7383,7 @@ export const LookupCredits = gql`
     computeRatio
     embeddingRatio
     completionRatio
+    generationRatio
     ingestionRatio
     indexingRatio
     preparationRatio
@@ -7435,6 +7442,7 @@ export const QueryCredits = gql`
     computeRatio
     embeddingRatio
     completionRatio
+    generationRatio
     ingestionRatio
     indexingRatio
     preparationRatio

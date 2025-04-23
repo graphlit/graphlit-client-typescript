@@ -844,7 +844,7 @@ export type AzureOpenAiModelProperties = {
   probability?: Maybe<Scalars['Float']['output']>;
   /** The model temperature. */
   temperature?: Maybe<Scalars['Float']['output']>;
-  /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
+  /** The number of tokens which can provided to the OpenAI-compatible model, if using developer's own account. */
   tokenLimit?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -1990,30 +1990,36 @@ export type ContentInput = {
 /** Represents a content publishing connector. */
 export type ContentPublishingConnector = {
   __typename?: 'ContentPublishingConnector';
-  /** The specific properties for ElevenLabs publishing. */
+  /** The specific properties for ElevenLabs Audio publishing. */
   elevenLabs?: Maybe<ElevenLabsPublishingProperties>;
   /** The content publishing format, i.e. MP3, Markdown. */
   format: ContentPublishingFormats;
+  /** The specific properties for OpenAI Image publishing. */
+  openAIImage?: Maybe<OpenAiImagePublishingProperties>;
   /** The content publishing service type. */
   type: ContentPublishingServiceTypes;
 };
 
 /** Represents a content publishing connector. */
 export type ContentPublishingConnectorInput = {
-  /** The specific properties for ElevenLabs publishing. */
+  /** The specific properties for ElevenLabs Audio publishing. */
   elevenLabs?: InputMaybe<ElevenLabsPublishingPropertiesInput>;
   /** The content publishing format, i.e. MP3, Markdown. */
   format: ContentPublishingFormats;
+  /** The specific properties for OpenAI Image publishing. */
+  openAIImage?: InputMaybe<OpenAiImagePublishingPropertiesInput>;
   /** The content publishing service type. */
   type: ContentPublishingServiceTypes;
 };
 
 /** Represents a content publishing connector. */
 export type ContentPublishingConnectorUpdateInput = {
-  /** The specific properties for ElevenLabs publishing. */
+  /** The specific properties for ElevenLabs Audio publishing. */
   elevenLabs?: InputMaybe<ElevenLabsPublishingPropertiesInput>;
   /** The content publishing format, i.e. MP3, Markdown. */
   format?: InputMaybe<ContentPublishingFormats>;
+  /** The specific properties for OpenAI Image publishing. */
+  openAIImage?: InputMaybe<OpenAiImagePublishingPropertiesInput>;
   /** The content publishing service type. */
   type?: InputMaybe<ContentPublishingServiceTypes>;
 };
@@ -2021,18 +2027,26 @@ export type ContentPublishingConnectorUpdateInput = {
 export enum ContentPublishingFormats {
   /** HTML */
   Html = 'HTML',
+  /** JPEG */
+  Jpeg = 'JPEG',
   /** Markdown */
   Markdown = 'MARKDOWN',
   /** MP3 */
   Mp3 = 'MP3',
+  /** PNG */
+  Png = 'PNG',
   /** Plain Text */
-  Text = 'TEXT'
+  Text = 'TEXT',
+  /** WEBP */
+  Webp = 'WEBP'
 }
 
 /** Content publishing service type */
 export enum ContentPublishingServiceTypes {
   /** ElevenLabs Audio publishing */
   ElevenLabsAudio = 'ELEVEN_LABS_AUDIO',
+  /** OpenAI Image publishing */
+  OpenAiImage = 'OPEN_AI_IMAGE',
   /** Text publishing */
   Text = 'TEXT'
 }
@@ -2979,7 +2993,7 @@ export enum ElevenLabsModels {
   TurboV2_5 = 'TURBO_V2_5'
 }
 
-/** Represents the ElevenLabs publishing properties. */
+/** Represents the ElevenLabs Audio publishing properties. */
 export type ElevenLabsPublishingProperties = {
   __typename?: 'ElevenLabsPublishingProperties';
   /** The ElevenLabs model. */
@@ -2988,7 +3002,7 @@ export type ElevenLabsPublishingProperties = {
   voice?: Maybe<Scalars['String']['output']>;
 };
 
-/** Represents the ElevenLabs publishing properties. */
+/** Represents the ElevenLabs Audio publishing properties. */
 export type ElevenLabsPublishingPropertiesInput = {
   /** The ElevenLabs model. */
   model?: InputMaybe<ElevenLabsModels>;
@@ -9921,6 +9935,27 @@ export type OpenAiImageExtractionProperties = {
   detailLevel?: Maybe<OpenAiVisionDetailLevels>;
 };
 
+/** OpenAI Image model type */
+export enum OpenAiImageModels {
+  /** Developer-specified model */
+  Custom = 'CUSTOM',
+  /** GPT Image-1 */
+  GptImage_1 = 'GPT_IMAGE_1'
+}
+
+/** Represents the OpenAI Image publishing properties. */
+export type OpenAiImagePublishingProperties = {
+  __typename?: 'OpenAIImagePublishingProperties';
+  /** The OpenAI Image model. */
+  model?: Maybe<OpenAiImageModels>;
+};
+
+/** Represents the OpenAI Image publishing properties. */
+export type OpenAiImagePublishingPropertiesInput = {
+  /** The OpenAI Image model. */
+  model?: InputMaybe<OpenAiImageModels>;
+};
+
 /** Represents OpenAI model properties. */
 export type OpenAiModelProperties = {
   __typename?: 'OpenAIModelProperties';
@@ -9944,7 +9979,7 @@ export type OpenAiModelProperties = {
   reasoningEffort?: Maybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: Maybe<Scalars['Float']['output']>;
-  /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
+  /** The number of tokens which can provided to the OpenAI-compatible model, if using developer's own account. */
   tokenLimit?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -9970,7 +10005,7 @@ export type OpenAiModelPropertiesInput = {
   reasoningEffort?: InputMaybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
-  /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
+  /** The number of tokens which can provided to the OpenAI-compatible model, if using developer's own account. */
   tokenLimit?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -9996,7 +10031,7 @@ export type OpenAiModelPropertiesUpdateInput = {
   reasoningEffort?: InputMaybe<OpenAiReasoningEffortLevels>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
-  /** The number of tokens which can provided to the OpenAI model, if using developer's own account. */
+  /** The number of tokens which can provided to the OpenAI-compatible model, if using developer's own account. */
   tokenLimit?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -11206,6 +11241,8 @@ export type ProjectCredits = {
   enrichmentRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The content extraction ratio of credits. */
   extractionRatio?: Maybe<Scalars['Decimal']['output']>;
+  /** The LLM generation ratio of credits. */
+  generationRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The content indexing ratio of credits. */
   indexingRatio?: Maybe<Scalars['Decimal']['output']>;
   /** The content ingestion ratio of credits. */
@@ -14893,7 +14930,7 @@ export type GetAlertQueryVariables = Exact<{
 }>;
 
 
-export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null };
+export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null };
 
 export type QueryAlertsQueryVariables = Exact<{
   filter?: InputMaybe<AlertFilter>;
@@ -14901,7 +14938,7 @@ export type QueryAlertsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
+export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
 
 export type UpdateAlertMutationVariables = Exact<{
   alert: AlertUpdateInput;
@@ -16809,7 +16846,7 @@ export type LookupCreditsQueryVariables = Exact<{
 }>;
 
 
-export type LookupCreditsQuery = { __typename?: 'Query', lookupCredits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, classificationRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
+export type LookupCreditsQuery = { __typename?: 'Query', lookupCredits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, generationRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, classificationRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
 
 export type LookupUsageQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
@@ -16824,7 +16861,7 @@ export type QueryCreditsQueryVariables = Exact<{
 }>;
 
 
-export type QueryCreditsQuery = { __typename?: 'Query', credits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, classificationRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
+export type QueryCreditsQuery = { __typename?: 'Query', credits?: { __typename?: 'ProjectCredits', correlationId?: string | null, ownerId?: string | null, credits?: any | null, storageRatio?: any | null, computeRatio?: any | null, embeddingRatio?: any | null, completionRatio?: any | null, generationRatio?: any | null, ingestionRatio?: any | null, indexingRatio?: any | null, preparationRatio?: any | null, extractionRatio?: any | null, classificationRatio?: any | null, enrichmentRatio?: any | null, publishingRatio?: any | null, searchRatio?: any | null, conversationRatio?: any | null } | null };
 
 export type QueryUsageQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
