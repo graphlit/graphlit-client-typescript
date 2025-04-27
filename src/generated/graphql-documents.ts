@@ -91,6 +91,9 @@ export const GetAlert = gql`
       fileTypes
       formats
       fileExtensions
+      similarContents {
+        id
+      }
       contents {
         id
       }
@@ -226,6 +229,9 @@ export const QueryAlerts = gql`
         fileTypes
         formats
         fileExtensions
+        similarContents {
+          id
+        }
         contents {
           id
         }
@@ -3457,6 +3463,9 @@ export const GetConversation = gql`
       fileTypes
       formats
       fileExtensions
+      similarContents {
+        id
+      }
       contents {
         id
       }
@@ -3537,6 +3546,9 @@ export const GetConversation = gql`
       fileTypes
       formats
       fileExtensions
+      similarContents {
+        id
+      }
       contents {
         id
       }
@@ -4330,6 +4342,9 @@ export const QueryConversations = gql`
         fileTypes
         formats
         fileExtensions
+        similarContents {
+          id
+        }
         contents {
           id
         }
@@ -4410,6 +4425,9 @@ export const QueryConversations = gql`
         fileTypes
         formats
         fileExtensions
+        similarContents {
+          id
+        }
         contents {
           id
         }
