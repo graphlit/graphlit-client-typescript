@@ -148,8 +148,8 @@ class Graphlit {
     );
   }
 
-  public async queryProjectUsage(startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'], names: [string], offset?: Types.Scalars['Int']['input'], limit?: Types.Scalars['Int']['input']): Promise<Types.QueryUsageQuery> {
-    return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'], names: [string], offset?: Types.Scalars['Int']['input'], limit?: Types.Scalars['Int']['input'] }>(
+  public async queryProjectUsage(startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'], names?: [string], offset?: Types.Scalars['Int']['input'], limit?: Types.Scalars['Int']['input']): Promise<Types.QueryUsageQuery> {
+    return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'], names?: [string], offset?: Types.Scalars['Int']['input'], limit?: Types.Scalars['Int']['input'] }>(
       Documents.QueryUsage,
       { startDate: startDate, duration: duration, names: names, offset: offset, limit: limit }
     );
