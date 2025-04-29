@@ -9278,6 +9278,7 @@ export type MutationIngestUriArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  mimeType?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   observations?: InputMaybe<Array<ObservationReferenceInput>>;
   uri: Scalars['URL']['input'];
@@ -12663,6 +12664,7 @@ export type QueryTokensArgs = {
 
 export type QueryUsageArgs = {
   duration: Scalars['TimeSpan']['input'];
+  excludedNames?: InputMaybe<Array<Scalars['String']['input']>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   names?: InputMaybe<Array<Scalars['String']['input']>>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -15377,6 +15379,7 @@ export type IngestUriMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']['input']>;
   uri: Scalars['URL']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;
+  mimeType?: InputMaybe<Scalars['String']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
@@ -17005,6 +17008,7 @@ export type QueryUsageQueryVariables = Exact<{
   startDate: Scalars['DateTime']['input'];
   duration: Scalars['TimeSpan']['input'];
   names?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  excludedNames?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;

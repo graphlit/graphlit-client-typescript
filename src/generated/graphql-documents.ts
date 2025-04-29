@@ -1426,11 +1426,12 @@ export const IngestTextBatch = gql`
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $mimeType: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
     id: $id
+    mimeType: $mimeType
     workflow: $workflow
     collections: $collections
     observations: $observations
@@ -7496,11 +7497,12 @@ export const QueryTokens = gql`
 }
     `;
 export const QueryUsage = gql`
-    query QueryUsage($startDate: DateTime!, $duration: TimeSpan!, $names: [String!], $offset: Int, $limit: Int) {
+    query QueryUsage($startDate: DateTime!, $duration: TimeSpan!, $names: [String!], $excludedNames: [String!], $offset: Int, $limit: Int) {
   usage(
     startDate: $startDate
     duration: $duration
     names: $names
+    excludedNames: $excludedNames
     offset: $offset
     limit: $limit
   ) {
