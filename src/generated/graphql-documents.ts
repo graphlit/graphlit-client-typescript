@@ -7473,6 +7473,28 @@ export const QueryCredits = gql`
   }
 }
     `;
+export const QueryTokens = gql`
+    query QueryTokens($startDate: DateTime!, $duration: TimeSpan!) {
+  tokens(startDate: $startDate, duration: $duration) {
+    correlationId
+    ownerId
+    embeddingInputTokens
+    embeddingModelServices
+    completionInputTokens
+    completionOutputTokens
+    completionModelServices
+    preparationInputTokens
+    preparationOutputTokens
+    preparationModelServices
+    extractionInputTokens
+    extractionOutputTokens
+    extractionModelServices
+    generationInputTokens
+    generationOutputTokens
+    generationModelServices
+  }
+}
+    `;
 export const QueryUsage = gql`
     query QueryUsage($startDate: DateTime!, $duration: TimeSpan!, $names: [String!], $offset: Int, $limit: Int) {
   usage(
@@ -7903,6 +7925,16 @@ export const GetSpecification = gql`
       probability
       chunkTokenLimit
     }
+    bedrock {
+      tokenLimit
+      completionTokenLimit
+      model
+      accessKey
+      secretAccessKey
+      modelName
+      temperature
+      probability
+    }
     groq {
       tokenLimit
       completionTokenLimit
@@ -8247,6 +8279,16 @@ export const QuerySpecifications = gql`
         temperature
         probability
         chunkTokenLimit
+      }
+      bedrock {
+        tokenLimit
+        completionTokenLimit
+        model
+        accessKey
+        secretAccessKey
+        modelName
+        temperature
+        probability
       }
       groq {
         tokenLimit
