@@ -141,22 +141,22 @@ class Graphlit {
     );
   }
 
-  public async queryProjectTokens(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryTokensQuery> {
-    return this.queryAndCheckError<Types.QueryTokensQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+  public async queryProjectTokens(startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input']): Promise<Types.QueryTokensQuery> {
+    return this.queryAndCheckError<Types.QueryTokensQuery, { startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'] }>(
       Documents.QueryTokens,
       { startDate: startDate, duration: duration }
     );
   }
 
-  public async queryProjectUsage(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryUsageQuery> {
-    return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+  public async queryProjectUsage(startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input']): Promise<Types.QueryUsageQuery> {
+    return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'] }>(
       Documents.QueryUsage,
       { startDate: startDate, duration: duration }
     );
   }
 
-  public async queryProjectCredits(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryCreditsQuery> {
-    return this.queryAndCheckError<Types.QueryCreditsQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+  public async queryProjectCredits(startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input']): Promise<Types.QueryCreditsQuery> {
+    return this.queryAndCheckError<Types.QueryCreditsQuery, { startDate: Types.Scalars['DateTime']['input'], duration: Types.Scalars['TimeSpan']['input'] }>(
       Documents.QueryCredits,
       { startDate: startDate, duration: duration }
     );
