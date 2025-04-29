@@ -141,6 +141,13 @@ class Graphlit {
     );
   }
 
+  public async queryProjectTokens(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryTokensQuery> {
+    return this.queryAndCheckError<Types.QueryTokensQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
+      Documents.QueryTokens,
+      { startDate: startDate, duration: duration }
+    );
+  }
+
   public async queryProjectUsage(startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan']): Promise<Types.QueryUsageQuery> {
     return this.queryAndCheckError<Types.QueryUsageQuery, { startDate: Types.Scalars['DateTime'], duration: Types.Scalars['TimeSpan'] }>(
       Documents.QueryUsage,
