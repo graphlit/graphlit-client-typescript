@@ -15607,6 +15607,8 @@ export type PromptMutation = { __typename?: 'Mutation', prompt?: { __typename?: 
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
+  mimeType?: InputMaybe<Scalars['String']['input']>;
+  data?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
   tools?: InputMaybe<Array<ToolDefinitionInput> | ToolDefinitionInput>;
