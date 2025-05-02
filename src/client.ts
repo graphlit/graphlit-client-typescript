@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, NormalizedCacheObject, OperationVariables, ApolloQueryResult, FetchResult, ApolloError } from '@apollo/client/core';
 import { DocumentNode, GraphQLFormattedError } from 'graphql';
-import * as Types from './generated/graphql-types';
-import * as Documents from './generated/graphql-documents';
+import * as Types from './generated/graphql-types.js';
+import * as Documents from './generated/graphql-documents.js';
 import * as dotenv from 'dotenv';
 
 // Define the Graphlit class
@@ -2084,4 +2084,4 @@ class Graphlit {
 }
 
 export { Graphlit };
-export * as Types from './generated/graphql-types';
+export * as Types from './generated/graphql-types.js';
