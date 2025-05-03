@@ -186,6 +186,10 @@ export const GetAlert = gql`
       }
       openAIImage {
         model
+        count
+        seed {
+          id
+        }
       }
     }
     summarySpecification {
@@ -324,6 +328,10 @@ export const QueryAlerts = gql`
         }
         openAIImage {
           model
+          count
+          seed {
+            id
+          }
         }
       }
       summarySpecification {
@@ -1502,7 +1510,7 @@ export const PublishContents = gql`
     publishSpecification: $publishSpecification
     workflow: $workflow
   ) {
-    content {
+    contents {
       id
       name
       state
