@@ -10221,7 +10221,7 @@ export enum OpenAiModels {
   Gpt41_1024K = 'GPT41_1024K',
   /** GPT 4.1 1024k (2025-04-14 version) */
   Gpt41_1024K_20250414 = 'GPT41_1024K_20250414',
-  /** GPT Mini 4.1 1024k (Latest) */
+  /** GPT 4.1 Mini 1024k (Latest) */
   Gpt41Mini_1024K = 'GPT41_MINI_1024K',
   /** GPT 4.1 Mini 1024k (2025-04-14 version) */
   Gpt41Mini_1024K_20250414 = 'GPT41_MINI_1024K_20250414',
