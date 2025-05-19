@@ -726,6 +726,8 @@ export const DescribeEncodedImage = gql`
     model
     data
     mimeType
+    toolCallId
+    toolCallResponse
   }
 }
     `;
@@ -858,6 +860,8 @@ export const DescribeImage = gql`
     model
     data
     mimeType
+    toolCallId
+    toolCallResponse
   }
 }
     `;
@@ -2319,6 +2323,8 @@ export const AskGraphlit = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
   }
@@ -2476,6 +2482,8 @@ export const CompleteConversation = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
     facets {
@@ -2651,6 +2659,8 @@ export const CompleteConversation = gql`
         model
         data
         mimeType
+        toolCallId
+        toolCallResponse
       }
     }
   }
@@ -2788,6 +2798,8 @@ export const ContinueConversation = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
     facets {
@@ -2963,6 +2975,8 @@ export const ContinueConversation = gql`
         model
         data
         mimeType
+        toolCallId
+        toolCallResponse
       }
     }
   }
@@ -3147,6 +3161,8 @@ export const FormatConversation = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
     facets {
@@ -3322,6 +3338,8 @@ export const FormatConversation = gql`
         model
         data
         mimeType
+        toolCallId
+        toolCallResponse
       }
     }
   }
@@ -3462,6 +3480,8 @@ export const GetConversation = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     specification {
       id
@@ -3775,6 +3795,8 @@ export const Prompt = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     error
   }
@@ -3918,6 +3940,8 @@ export const PromptConversation = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
     facets {
@@ -4093,6 +4117,8 @@ export const PromptConversation = gql`
         model
         data
         mimeType
+        toolCallId
+        toolCallResponse
       }
     }
   }
@@ -4357,6 +4383,8 @@ export const QueryConversations = gql`
         model
         data
         mimeType
+        toolCallId
+        toolCallResponse
       }
       specification {
         id
@@ -4696,6 +4724,8 @@ export const ReviseContent = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
   }
@@ -4836,6 +4866,8 @@ export const ReviseEncodedImage = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
   }
@@ -4975,6 +5007,8 @@ export const ReviseImage = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
   }
@@ -5114,6 +5148,8 @@ export const ReviseText = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     messageCount
   }
@@ -8147,6 +8183,8 @@ export const PromptSpecifications = gql`
       model
       data
       mimeType
+      toolCallId
+      toolCallResponse
     }
     error
   }
