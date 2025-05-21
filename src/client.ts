@@ -246,6 +246,13 @@ class Graphlit {
     );
   }
 
+  public async countAlerts(filter?: Types.AlertFilter): Promise<Types.CountAlertsQuery> {
+    return this.queryAndCheckError<Types.CountAlertsQuery, { filter?: Types.AlertFilter }>(
+      Documents.CountAlerts,
+      { filter: filter }
+    );
+  }
+
   public async createCollection(collection: Types.CollectionInput): Promise<Types.CreateCollectionMutation> {
     return this.mutateAndCheckError<Types.CreateCollectionMutation, { collection: Types.CollectionInput }>(
       Documents.CreateCollection,
@@ -305,6 +312,13 @@ class Graphlit {
   public async queryCollections(filter?: Types.CollectionFilter): Promise<Types.QueryCollectionsQuery> {
     return this.queryAndCheckError<Types.QueryCollectionsQuery, { filter?: Types.CollectionFilter }>(
       Documents.QueryCollections,
+      { filter: filter }
+    );
+  }
+
+  public async countCollections(filter?: Types.CollectionFilter): Promise<Types.CountCollectionsQuery> {
+    return this.queryAndCheckError<Types.CountCollectionsQuery, { filter?: Types.CollectionFilter }>(
+      Documents.CountCollections,
       { filter: filter }
     );
   }
@@ -479,6 +493,13 @@ class Graphlit {
     );
   }
 
+  public async countContents(filter?: Types.ContentFilter): Promise<Types.CountContentsQuery> {
+    return this.queryAndCheckError<Types.CountContentsQuery, { filter?: Types.ContentFilter }>(
+      Documents.CountContents,
+      { filter: filter }
+    );
+  }    
+  
   public async isContentDone(id: string): Promise<Types.IsContentDoneQuery> {
     return this.queryAndCheckError<Types.IsContentDoneQuery, { id: string }>(
       Documents.IsContentDone,
@@ -545,6 +566,13 @@ class Graphlit {
   public async queryConversations(filter?: Types.ConversationFilter): Promise<Types.QueryConversationsQuery> {
     return this.queryAndCheckError<Types.QueryConversationsQuery, { filter?: Types.ConversationFilter }>(
       Documents.QueryConversations,
+      { filter: filter }
+    );
+  }
+
+  public async countConversations(filter?: Types.ConversationFilter): Promise<Types.CountConversationsQuery> {
+    return this.queryAndCheckError<Types.CountConversationsQuery, { filter?: Types.ConversationFilter }>(
+      Documents.CountConversations,
       { filter: filter }
     );
   }
@@ -766,6 +794,13 @@ class Graphlit {
     );
   }
 
+  public async countFeeds(filter?: Types.FeedFilter): Promise<Types.CountFeedsQuery> {
+    return this.queryAndCheckError<Types.CountFeedsQuery, { filter?: Types.FeedFilter }>(
+      Documents.CountFeeds,
+      { filter: filter }
+    );
+  }
+
   public async feedExists(filter?: Types.FeedFilter): Promise<Types.FeedExistsQuery> {
     return this.queryAndCheckError<Types.FeedExistsQuery, { filter?: Types.FeedFilter }>(
       Documents.FeedExists,
@@ -843,6 +878,13 @@ class Graphlit {
     );
   }
 
+  public async countSpecifications(filter?: Types.SpecificationFilter): Promise<Types.CountSpecificationsQuery> {
+    return this.queryAndCheckError<Types.CountSpecificationsQuery, { filter?: Types.SpecificationFilter }>(
+      Documents.CountSpecifications,
+      { filter: filter }
+    );
+  }
+
   public async specificationExists(filter?: Types.SpecificationFilter): Promise<Types.SpecificationExistsQuery> {
     return this.queryAndCheckError<Types.QuerySpecificationsQuery, { filter?: Types.SpecificationFilter }>(
       Documents.SpecificationExists,
@@ -913,6 +955,13 @@ class Graphlit {
     );
   }
 
+  public async countWorkflows(filter?: Types.WorkflowFilter): Promise<Types.CountWorkflowsQuery> {
+    return this.queryAndCheckError<Types.CountWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
+      Documents.CountWorkflows,
+      { filter: filter }
+    );
+  }
+
   public async workflowExists(filter?: Types.WorkflowFilter): Promise<Types.WorkflowExistsQuery> {
     return this.queryAndCheckError<Types.QueryWorkflowsQuery, { filter?: Types.WorkflowFilter }>(
       Documents.WorkflowExists,
@@ -955,6 +1004,13 @@ class Graphlit {
     );
   }
 
+  public async countUsers(filter?: Types.UserFilter): Promise<Types.CountUsersQuery> {
+    return this.queryAndCheckError<Types.CountUsersQuery, { filter?: Types.UserFilter }>(
+      Documents.CountUsers,
+      { filter: filter }
+    );
+  }
+  
   public async enableUser(id: string): Promise<Types.EnableUserMutation> {
     return this.mutateAndCheckError<Types.EnableUserMutation, { id: string }>(
       Documents.EnableUser,
