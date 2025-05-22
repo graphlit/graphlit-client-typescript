@@ -378,6 +378,14 @@ export enum AnthropicModels {
   Claude_3Sonnet = 'CLAUDE_3_SONNET',
   /** Claude 3 Sonnet (02-29-2024 version) */
   Claude_3Sonnet_20240229 = 'CLAUDE_3_SONNET_20240229',
+  /** Claude 4 Opus (Latest) */
+  Claude_4Opus = 'CLAUDE_4_OPUS',
+  /** Claude 4 Opus (05-14-2025 version) */
+  Claude_4Opus_20250514 = 'CLAUDE_4_OPUS_20250514',
+  /** Claude 4 Sonnet (Latest) */
+  Claude_4Sonnet = 'CLAUDE_4_SONNET',
+  /** Claude 4 Sonnet (05-14-2025 version) */
+  Claude_4Sonnet_20250514 = 'CLAUDE_4_SONNET_20250514',
   /** @deprecated Use Claude 3.5 Haiku instead. */
   ClaudeInstant_1 = 'CLAUDE_INSTANT_1',
   /** @deprecated Use Claude 3.5 Haiku instead. */
