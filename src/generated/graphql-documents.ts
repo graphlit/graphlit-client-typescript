@@ -942,9 +942,12 @@ export const GetContent = gql`
       latitude
       longitude
     }
+    c4id
     type
     fileType
     mimeType
+    format
+    formatName
     fileName
     fileSize
     masterUri
@@ -8684,6 +8687,9 @@ export const CreateWorkflow = gql`
             detectLanguage
             language
           }
+          page {
+            enableScreenshot
+          }
           document {
             includeImages
           }
@@ -8919,6 +8925,9 @@ export const GetWorkflow = gql`
             detectLanguage
             language
           }
+          page {
+            enableScreenshot
+          }
           document {
             includeImages
           }
@@ -9127,6 +9136,9 @@ export const QueryWorkflows = gql`
               detectLanguage
               language
             }
+            page {
+              enableScreenshot
+            }
             document {
               includeImages
             }
@@ -9330,6 +9342,9 @@ export const UpdateWorkflow = gql`
             detectLanguage
             language
           }
+          page {
+            enableScreenshot
+          }
           document {
             includeImages
           }
@@ -9531,6 +9546,9 @@ export const UpsertWorkflow = gql`
             enableSpeakerDiarization
             detectLanguage
             language
+          }
+          page {
+            enableScreenshot
           }
           document {
             includeImages
