@@ -717,10 +717,40 @@ class Graphlit {
     });
   }
 
+  public async ingestEvent(
+    markdown: string,
+    name?: string,
+    description?: string,
+    eventDate?: Types.Scalars["DateTime"]["input"],
+    collections?: Types.EntityReferenceInput[],
+    correlationId?: string
+  ): Promise<Types.IngestEventMutation> {
+    return this.mutateAndCheckError<
+      Types.IngestEventMutation,
+      {
+        markdown: string;
+        name?: string;
+        description?: string;
+        eventDate?: Types.Scalars["DateTime"]["input"];
+        collections?: Types.EntityReferenceInput[];
+        correlationId?: string;
+      }
+    >(Documents.IngestEvent, {
+      name: name,
+      markdown: markdown,
+      description: description,
+      eventDate: eventDate,
+      collections: collections,
+      correlationId: correlationId,
+    });
+  }
+
   public async ingestEncodedFile(
     name: string,
     data: string,
     mimeType: string,
+    fileCreationDate?: Types.Scalars["DateTime"]["input"],
+    fileModifiedDate?: Types.Scalars["DateTime"]["input"],
     id?: string,
     isSynchronous?: boolean,
     workflow?: Types.EntityReferenceInput,
@@ -734,6 +764,8 @@ class Graphlit {
         name: string;
         data: string;
         mimeType: string;
+        fileCreationDate?: Types.Scalars["DateTime"]["input"];
+        fileModifiedDate?: Types.Scalars["DateTime"]["input"];
         id?: string;
         isSynchronous?: boolean;
         workflow?: Types.EntityReferenceInput;
@@ -745,6 +777,8 @@ class Graphlit {
       name: name,
       data: data,
       mimeType: mimeType,
+      fileCreationDate: fileCreationDate,
+      fileModifiedDate: fileModifiedDate,
       id: id,
       isSynchronous: isSynchronous,
       workflow: workflow,
