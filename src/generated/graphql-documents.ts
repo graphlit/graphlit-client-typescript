@@ -8459,6 +8459,7 @@ export const CreateUser = gql`
     name
     state
     type
+    description
     identifier
   }
 }
@@ -8500,6 +8501,61 @@ export const GetUser = gql`
     state
     type
     identifier
+    description
+    connectors {
+      id
+      name
+      state
+      type
+      authentication {
+        type
+        microsoft {
+          tenantId
+          clientId
+          clientSecret
+        }
+        google {
+          clientId
+          clientSecret
+        }
+      }
+      integration {
+        type
+        uri
+        slack {
+          token
+          channel
+        }
+        email {
+          from
+          subject
+          to
+        }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetUserByIdentifier = gql`
+    query GetUserByIdentifier($identifier: String!) {
+  userByIdentifier(identifier: $identifier) {
+    id
+    name
+    creationDate
+    relevance
+    owner {
+      id
+    }
+    state
+    type
+    identifier
+    description
     connectors {
       id
       name
@@ -8554,6 +8610,7 @@ export const QueryUsers = gql`
       state
       type
       identifier
+      description
       connectors {
         id
         name
@@ -8602,6 +8659,7 @@ export const UpdateUser = gql`
     name
     state
     type
+    description
     identifier
   }
 }

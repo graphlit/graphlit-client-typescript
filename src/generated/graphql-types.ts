@@ -17339,7 +17339,7 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, name: string, state: EntityState, type?: UserTypes | null, identifier: string } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, name: string, state: EntityState, type?: UserTypes | null, description?: string | null, identifier: string } | null };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -17365,7 +17365,14 @@ export type EnableUserMutation = { __typename?: 'Mutation', enableUser?: { __typ
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+
+export type GetUserByIdentifierQueryVariables = Exact<{
+  identifier: Scalars['String']['input'];
+}>;
+
+
+export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type QueryUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
@@ -17373,14 +17380,14 @@ export type QueryUsersQueryVariables = Exact<{
 }>;
 
 
-export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null> | null } | null };
+export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null> | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   user: UserUpdateInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, state: EntityState, type?: UserTypes | null, identifier: string } | null };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, state: EntityState, type?: UserTypes | null, description?: string | null, identifier: string } | null };
 
 export type CountWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
