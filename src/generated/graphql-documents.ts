@@ -1286,12 +1286,13 @@ export const IngestEncodedFile = gql`
 }
     `;
 export const IngestEvent = gql`
-    mutation IngestEvent($markdown: String!, $name: String, $description: String, $eventDate: DateTime, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestEvent($markdown: String!, $name: String, $description: String, $eventDate: DateTime, $id: ID, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestEvent(
     name: $name
     description: $description
     eventDate: $eventDate
     markdown: $markdown
+    id: $id
     collections: $collections
     correlationId: $correlationId
   ) {
@@ -1338,11 +1339,12 @@ export const IngestEvent = gql`
 }
     `;
 export const IngestMemory = gql`
-    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $id: ID, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestMemory(
     name: $name
     text: $text
     textType: $textType
+    id: $id
     collections: $collections
     correlationId: $correlationId
   ) {

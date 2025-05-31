@@ -9274,6 +9274,7 @@ export type MutationIngestEventArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   eventDate?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   markdown: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9293,6 +9294,7 @@ export type MutationIngestFileArgs = {
 export type MutationIngestMemoryArgs = {
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   text: Scalars['String']['input'];
   textType?: InputMaybe<TextTypes>;
@@ -15434,6 +15436,7 @@ export type IngestEventMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   eventDate?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -15445,6 +15448,7 @@ export type IngestMemoryMutationVariables = Exact<{
   text: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   textType?: InputMaybe<TextTypes>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;

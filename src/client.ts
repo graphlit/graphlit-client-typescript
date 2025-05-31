@@ -696,6 +696,7 @@ class Graphlit {
     text: string,
     name?: string,
     textType?: Types.TextTypes,
+    id?: string,
     collections?: Types.EntityReferenceInput[],
     correlationId?: string
   ): Promise<Types.IngestMemoryMutation> {
@@ -705,6 +706,7 @@ class Graphlit {
         text: string;
         name?: string;
         textType?: Types.TextTypes;
+        id?: string;
         collections?: Types.EntityReferenceInput[];
         correlationId?: string;
       }
@@ -712,6 +714,7 @@ class Graphlit {
       name: name,
       text: text,
       textType: textType,
+      id: id,
       collections: collections,
       correlationId: correlationId,
     });
@@ -722,6 +725,7 @@ class Graphlit {
     name?: string,
     description?: string,
     eventDate?: Types.Scalars["DateTime"]["input"],
+    id?: string,
     collections?: Types.EntityReferenceInput[],
     correlationId?: string
   ): Promise<Types.IngestEventMutation> {
@@ -732,6 +736,7 @@ class Graphlit {
         name?: string;
         description?: string;
         eventDate?: Types.Scalars["DateTime"]["input"];
+        id?: string;
         collections?: Types.EntityReferenceInput[];
         correlationId?: string;
       }
@@ -740,6 +745,7 @@ class Graphlit {
       markdown: markdown,
       description: description,
       eventDate: eventDate,
+      id: id,
       collections: collections,
       correlationId: correlationId,
     });
