@@ -24,6 +24,7 @@ class Graphlit {
   private organizationId: string | undefined;
   private environmentId: string | undefined;
   private ownerId: string | undefined;
+  private userId: string | undefined;
   private jwtSecret: string | undefined;
 
   constructor(
@@ -31,6 +32,7 @@ class Graphlit {
     environmentId?: string,
     jwtSecret?: string,
     ownerId?: string,
+    userId?: string,
     apiUri?: string
   ) {
     this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
@@ -45,6 +47,7 @@ class Graphlit {
 
       // optional: for multi-tenant support
       this.ownerId = ownerId || process.env.GRAPHLIT_OWNER_ID;
+      this.userId = userId || process.env.GRAPHLIT_USER_ID;
     } else {
       this.organizationId = organizationId;
       this.environmentId = environmentId;
@@ -52,6 +55,7 @@ class Graphlit {
 
       // optional: for multi-tenant support
       this.ownerId = ownerId;
+      this.userId = userId;
     }
 
     if (!this.organizationId) {
@@ -119,6 +123,7 @@ class Graphlit {
         "x-graphlit-organization-id": this.organizationId,
         "x-graphlit-environment-id": this.environmentId,
         ...(this.ownerId && { "x-graphlit-owner-id": this.ownerId }),
+        ...(this.userId && { "x-graphlit-user-id": this.userId }),
         "x-graphlit-role": "Owner",
       },
       exp: expiration,
