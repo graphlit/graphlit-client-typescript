@@ -992,8 +992,13 @@ class Graphlit {
   ): Promise<Types.QueryContentsGraphQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsGraphQuery,
-      { filter?: Types.ContentFilter }
-    >(Documents.QueryContentsGraph, { filter: filter });
+      { filter?: Types.ContentFilter; graph?: Types.ContentGraphInput }
+    >(Documents.QueryContentsGraph, {
+      filter: filter,
+      graph: {
+        /* return everything */
+      },
+    });
   }
 
   public async countContents(
