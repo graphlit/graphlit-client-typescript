@@ -1602,8 +1602,12 @@ export type Content = {
   error?: Maybe<Scalars['String']['output']>;
   /** The feed where this content was sourced from. */
   feed?: Maybe<Feed>;
+  /** The date when the file was created. */
+  fileCreationDate?: Maybe<Scalars['DateTime']['output']>;
   /** The content file extension. */
   fileExtension?: Maybe<Scalars['String']['output']>;
+  /** The date when the file was last modified. */
+  fileModifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The content file name. */
   fileName?: Maybe<Scalars['String']['output']>;
   /** The content file size. */
@@ -2066,6 +2070,10 @@ export enum ContentIndexingServiceTypes {
 export type ContentInput = {
   /** The content description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The date when the file was created. */
+  fileCreationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The date when the file was last modified. */
+  fileModifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The content external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** The name of the content. */
@@ -2234,6 +2242,10 @@ export type ContentUpdateInput = {
   drawing?: InputMaybe<DrawingMetadataInput>;
   /** The content email metadata. */
   email?: InputMaybe<EmailMetadataInput>;
+  /** The date when the file was created. */
+  fileCreationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The date when the file was last modified. */
+  fileModifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The content geometry metadata. */
   geometry?: InputMaybe<GeometryMetadataInput>;
   /** The summarized content headlines. */
@@ -8317,6 +8329,8 @@ export type Mutation = {
   ingestBatch?: Maybe<Array<Maybe<Content>>>;
   /** Ingests a file from Base64-encoded data. */
   ingestEncodedFile?: Maybe<Content>;
+  /** Ingests calendar event. */
+  ingestEvent?: Maybe<Content>;
   /**
    * Ingests a file by URI.
    * @deprecated Use ingestUri instead.
@@ -9244,12 +9258,24 @@ export type MutationIngestEncodedFileArgs = {
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   data: Scalars['String']['input'];
+  fileCreationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  fileModifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   mimeType: Scalars['String']['input'];
   name: Scalars['String']['input'];
   observations?: InputMaybe<Array<ObservationReferenceInput>>;
   workflow?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationIngestEventArgs = {
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  eventDate?: InputMaybe<Scalars['DateTime']['input']>;
+  markdown: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -15373,7 +15399,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
 
 export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
@@ -15391,6 +15417,8 @@ export type IngestEncodedFileMutationVariables = Exact<{
   data: Scalars['String']['input'];
   mimeType: Scalars['String']['input'];
   id?: InputMaybe<Scalars['ID']['input']>;
+  fileCreationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  fileModifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
@@ -15400,6 +15428,18 @@ export type IngestEncodedFileMutationVariables = Exact<{
 
 
 export type IngestEncodedFileMutation = { __typename?: 'Mutation', ingestEncodedFile?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+
+export type IngestEventMutationVariables = Exact<{
+  markdown: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  eventDate?: InputMaybe<Scalars['DateTime']['input']>;
+  collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type IngestEventMutation = { __typename?: 'Mutation', ingestEvent?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
 
 export type IngestMemoryMutationVariables = Exact<{
   text: Scalars['String']['input'];
