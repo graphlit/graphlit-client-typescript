@@ -41,6 +41,11 @@ export async function streamWithOpenAI(
       //top_p: specification.openAI?.probability,
       max_completion_tokens: specification.openAI?.completionTokenLimit,
     };
+    
+    // Debug logging for O3 models
+    if (modelName === "o3" || modelName === "o3-mini") {
+      console.log(`🔍 O3 Debug - Model: ${modelName}, Temperature: ${streamConfig.temperature}, Tools: ${tools?.length || 0}`);
+    }
 
 
     // Add tools if provided
