@@ -1,4 +1,8 @@
-import { ConversationMessage, ConversationRoleTypes, ConversationToolCall } from "../generated/graphql-types.js";
+import {
+  ConversationMessage,
+  ConversationRoleTypes,
+  ConversationToolCall,
+} from "../generated/graphql-types.js";
 
 /**
  * OpenAI message format
@@ -22,15 +26,17 @@ export interface OpenAIMessage {
  */
 export interface AnthropicMessage {
   role: "user" | "assistant";
-  content: string | Array<{
-    type: "text" | "tool_use" | "tool_result";
-    text?: string;
-    id?: string;
-    name?: string;
-    input?: unknown;
-    tool_use_id?: string;
-    content?: string;
-  }>;
+  content:
+    | string
+    | Array<{
+        type: "text" | "tool_use" | "tool_result";
+        text?: string;
+        id?: string;
+        name?: string;
+        input?: unknown;
+        tool_use_id?: string;
+        content?: string;
+      }>;
 }
 
 /**
@@ -54,37 +60,41 @@ export interface GoogleMessage {
 /**
  * Format GraphQL conversation messages for OpenAI SDK
  */
-export function formatMessagesForOpenAI(messages: ConversationMessage[]): OpenAIMessage[] {
+export function formatMessagesForOpenAI(
+  messages: ConversationMessage[]
+): OpenAIMessage[] {
   const formattedMessages: OpenAIMessage[] = [];
 
   for (const message of messages) {
-    if (!message.role || !message.message) continue;
+    if (!message.role || !message.message?.trim()) continue;
+
+    const trimmedMessage = message.message.trim();
 
     switch (message.role) {
       case ConversationRoleTypes.System:
         formattedMessages.push({
           role: "system",
-          content: message.message
+          content: trimmedMessage,
         });
         break;
 
       case ConversationRoleTypes.Assistant:
         const assistantMessage: OpenAIMessage = {
           role: "assistant",
-          content: message.message
+          content: trimmedMessage,
         };
 
         // Add tool calls if present
         if (message.toolCalls && message.toolCalls.length > 0) {
           assistantMessage.tool_calls = message.toolCalls
             .filter((tc): tc is ConversationToolCall => tc !== null)
-            .map(toolCall => ({
+            .map((toolCall) => ({
               id: toolCall.id,
               type: "function" as const,
               function: {
                 name: toolCall.name,
-                arguments: toolCall.arguments
-              }
+                arguments: toolCall.arguments,
+              },
             }));
         }
 
@@ -94,7 +104,7 @@ export function formatMessagesForOpenAI(messages: ConversationMessage[]): OpenAI
       default: // User messages
         formattedMessages.push({
           role: "user",
-          content: message.message
+          content: trimmedMessage,
         });
         break;
     }
@@ -106,29 +116,34 @@ export function formatMessagesForOpenAI(messages: ConversationMessage[]): OpenAI
 /**
  * Format GraphQL conversation messages for Anthropic SDK
  */
-export function formatMessagesForAnthropic(messages: ConversationMessage[]): { 
-  system?: string; 
-  messages: AnthropicMessage[] 
+export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
+  system?: string;
+  messages: AnthropicMessage[];
 } {
   let systemPrompt: string | undefined;
   const formattedMessages: AnthropicMessage[] = [];
 
+  console.log(`🔍 formatMessagesForAnthropic: Processing ${messages.length} messages`);
+
   for (const message of messages) {
-    if (!message.role || !message.message) continue;
+    if (!message.role || !message.message?.trim()) continue;
+
+    const trimmedMessage = message.message.trim();
+    console.log(`  📝 Message role: ${message.role}, length: ${trimmedMessage.length}`);
 
     switch (message.role) {
       case ConversationRoleTypes.System:
-        systemPrompt = message.message;
+        systemPrompt = trimmedMessage;
         break;
 
       case ConversationRoleTypes.Assistant:
         const content: AnthropicMessage["content"] = [];
 
         // Add text content
-        if (message.message) {
+        if (trimmedMessage) {
           content.push({
             type: "text",
-            text: message.message
+            text: trimmedMessage,
           });
         }
 
@@ -140,7 +155,7 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
                 type: "tool_use",
                 id: toolCall.id,
                 name: toolCall.name,
-                input: toolCall.arguments ? JSON.parse(toolCall.arguments) : {}
+                input: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
               });
             }
           }
@@ -148,37 +163,46 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
 
         formattedMessages.push({
           role: "assistant",
-          content
+          content,
         });
         break;
 
       default: // User messages
         formattedMessages.push({
           role: "user",
-          content: message.message
+          content: trimmedMessage,
         });
         break;
     }
   }
 
-  return { system: systemPrompt, messages: formattedMessages };
+  const result = { system: systemPrompt, messages: formattedMessages };
+  console.log(`  ✅ Formatted ${formattedMessages.length} messages for Anthropic`);
+  if (systemPrompt) {
+    console.log(`  📋 System prompt length: ${systemPrompt.length}`);
+  }
+  return result;
 }
 
 /**
  * Format GraphQL conversation messages for Google SDK
  */
-export function formatMessagesForGoogle(messages: ConversationMessage[]): GoogleMessage[] {
+export function formatMessagesForGoogle(
+  messages: ConversationMessage[]
+): GoogleMessage[] {
   const formattedMessages: GoogleMessage[] = [];
 
   for (const message of messages) {
-    if (!message.role || !message.message) continue;
+    if (!message.role || !message.message?.trim()) continue;
+
+    const trimmedMessage = message.message.trim();
 
     switch (message.role) {
       case ConversationRoleTypes.System:
         // Google handles system prompts differently, usually as part of the first user message
         formattedMessages.push({
           role: "user",
-          parts: [{ text: message.message }]
+          parts: [{ text: trimmedMessage }],
         });
         break;
 
@@ -186,8 +210,8 @@ export function formatMessagesForGoogle(messages: ConversationMessage[]): Google
         const parts: GoogleMessage["parts"] = [];
 
         // Add text content
-        if (message.message) {
-          parts.push({ text: message.message });
+        if (trimmedMessage) {
+          parts.push({ text: trimmedMessage });
         }
 
         // Add function calls if present
@@ -197,8 +221,10 @@ export function formatMessagesForGoogle(messages: ConversationMessage[]): Google
               parts.push({
                 functionCall: {
                   name: toolCall.name,
-                  args: toolCall.arguments ? JSON.parse(toolCall.arguments) : {}
-                }
+                  args: toolCall.arguments
+                    ? JSON.parse(toolCall.arguments)
+                    : {},
+                },
               });
             }
           }
@@ -206,14 +232,14 @@ export function formatMessagesForGoogle(messages: ConversationMessage[]): Google
 
         formattedMessages.push({
           role: "model",
-          parts
+          parts,
         });
         break;
 
       default: // User messages
         formattedMessages.push({
           role: "user",
-          parts: [{ text: message.message }]
+          parts: [{ text: trimmedMessage }],
         });
         break;
     }

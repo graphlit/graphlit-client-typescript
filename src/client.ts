@@ -4053,7 +4053,7 @@ class Graphlit {
 
     // Complete the conversation
     if (fullMessage) {
-      await this.completeConversation(fullMessage, conversationId, correlationId);
+      await this.completeConversation(fullMessage.trim(), conversationId, correlationId);
     }
 
     // Emit completion event
@@ -4071,19 +4071,33 @@ class Graphlit {
     specification: Types.Specification,
     currentPrompt: string
   ): Promise<Types.ConversationMessage[]> {
+    console.log('[buildMessageArray] Starting to build message array', {
+      conversationId,
+      specificationId: specification.id,
+      currentPromptLength: currentPrompt.length,
+      hasSystemPrompt: !!specification.systemPrompt
+    });
+
     const messages: Types.ConversationMessage[] = [];
 
     // Add system prompt if present
     if (specification.systemPrompt) {
-      messages.push({
-        __typename: "ConversationMessage",
+      const systemMessage = {
+        __typename: "ConversationMessage" as const,
         role: Types.ConversationRoleTypes.System,
         message: specification.systemPrompt,
         timestamp: new Date().toISOString()
+      };
+      messages.push(systemMessage);
+      console.log('[buildMessageArray] Added system message', {
+        role: systemMessage.role,
+        messageLength: systemMessage.message.length,
+        messagePreview: systemMessage.message.substring(0, 100) + '...'
       });
     }
 
     // Get conversation history
+    console.log('[buildMessageArray] Fetching conversation history...');
     const conversationResponse = await this.getConversation(conversationId);
     const conversation = conversationResponse.conversation;
 
@@ -4091,14 +4105,41 @@ class Graphlit {
       // Add previous messages (excluding the current one)
       const previousMessages = conversation.messages.slice(0, -1) as Types.ConversationMessage[];
       messages.push(...previousMessages);
+      console.log('[buildMessageArray] Added previous messages from history', {
+        count: previousMessages.length,
+        messages: previousMessages.map((msg, idx) => ({
+          index: idx,
+          role: msg.role,
+          messageLength: msg.message?.length || 0,
+          messagePreview: msg.message ? msg.message.substring(0, 50) + '...' : 'No message content',
+          timestamp: msg.timestamp
+        }))
+      });
+    } else {
+      console.log('[buildMessageArray] No previous messages in conversation history');
     }
 
     // Add current user message
-    messages.push({
-      __typename: "ConversationMessage",
-      role: Types.ConversationRoleTypes.Assistant, // This comes from formatConversation
+    const currentMessage = {
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.User, // Current prompt is from the user
       message: currentPrompt,
       timestamp: new Date().toISOString()
+    };
+    messages.push(currentMessage);
+    console.log('[buildMessageArray] Added current message', {
+      role: currentMessage.role,
+      messageLength: currentMessage.message.length,
+      messagePreview: currentMessage.message.substring(0, 100) + '...',
+      timestamp: currentMessage.timestamp
+    });
+
+    console.log('[buildMessageArray] Message array built successfully', {
+      totalMessages: messages.length,
+      messagesByRole: messages.reduce((acc, msg) => {
+        acc[msg.role] = (acc[msg.role] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>)
     });
 
     return messages;

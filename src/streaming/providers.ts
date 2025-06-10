@@ -172,6 +172,15 @@ export async function streamWithAnthropic(
       }));
     }
 
+    console.log(`🚀 Anthropic stream config:`, {
+      model: streamConfig.model,
+      messageCount: streamConfig.messages.length,
+      hasSystem: !!streamConfig.system,
+      temperature: streamConfig.temperature,
+      max_tokens: streamConfig.max_tokens,
+      toolCount: streamConfig.tools?.length || 0
+    });
+
     const stream = await anthropicClient.messages.create(streamConfig);
 
     for await (const chunk of stream) {
@@ -227,6 +236,10 @@ export async function streamWithAnthropic(
       }
     }
 
+    console.log(`✅ Anthropic streaming complete. Message length: ${fullMessage.length}`);
+    if (fullMessage.length === 0) {
+      console.warn(`⚠️ Empty response from Anthropic!`);
+    }
     onComplete(fullMessage, toolCalls);
   } catch (error) {
     onEvent({
