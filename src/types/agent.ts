@@ -5,7 +5,7 @@ export type ToolHandler = (args: any) => Promise<any>;
 
 // Agent options for non-streaming calls
 export interface AgentOptions {
-  maxToolRounds?: number; // default: 10
+  maxToolRounds?: number; // default: 1000
   timeout?: number; // milliseconds
 }
 
@@ -18,11 +18,11 @@ export interface AgentResult {
 
 // Options for streamAgent
 export interface StreamAgentOptions {
-  maxToolRounds?: number; // default: 100
+  maxToolRounds?: number; // default: 1000
   abortSignal?: AbortSignal;
   showTokenStream?: boolean; // default: true
   smoothingEnabled?: boolean; // default: true
-  chunkingStrategy?: 'character' | 'word' | 'sentence'; // default: 'word'
+  chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
 }
 

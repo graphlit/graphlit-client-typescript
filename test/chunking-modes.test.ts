@@ -137,7 +137,7 @@ And a final line to test chunking behavior across multiple segments."`;
       {
         name: "No Chunking (Disabled)",
         config: {
-          maxToolRounds: 100,
+          maxToolRounds: 1000,
           enabled: false,
         },
         // Note: Even with chunking disabled, the streaming still produces chunks
@@ -652,7 +652,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       // Test 1: Native streaming
       console.log("\n🚀 Testing NATIVE streaming with chunking...");
-      console.log(`   Streaming maxToolRounds: 100`);
+      console.log(`   Streaming maxToolRounds: 1000`);
       const nativeEvents: AgentStreamEvent[] = [];
       const nativeChunks: string[] = [];
       let nativePrevText = "";
@@ -1133,7 +1133,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       createdSpecifications.push(specId);
 
       const strategies = [
-        { name: "No Chunking", config: { maxToolRounds: 100 } },
+        { name: "No Chunking", config: { maxToolRounds: 1000 } },
         {
           name: "Character",
           config: {

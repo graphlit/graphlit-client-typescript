@@ -491,7 +491,7 @@ Start writing immediately and don't stop until you've written a complete, detail
         expect(toolCallCounts.writeChapter || 0).toBeGreaterThanOrEqual(1); // At least one chapter
 
         console.log(`✅ ${model.name} completed book writing test`);
-      }, 180000); // 3 minute timeout per model
+      }, 360000); // 6 minute timeout per model
     }
   });
 

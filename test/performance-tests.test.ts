@@ -247,20 +247,24 @@ describe("Performance Tests", () => {
       const lengthTests = [
         {
           tokens: 50,
+          tokenLimit: 100,
           prompt: "In exactly 2 sentences, explain what a computer is.",
         },
         {
           tokens: 200,
+          tokenLimit: 300,
           prompt:
             "In one paragraph, explain the concept of artificial intelligence.",
         },
         {
           tokens: 500,
+          tokenLimit: 700,
           prompt:
             "Write a detailed explanation of machine learning, including supervised and unsupervised learning.",
         },
         {
           tokens: 1000,
+          tokenLimit: 1500,
           prompt:
             "Write a comprehensive essay about the history and future of space exploration.",
         },
@@ -274,18 +278,26 @@ describe("Performance Tests", () => {
       }[] = [];
 
       for (const test of lengthTests) {
-        console.log(`\n📝 Testing ~${test.tokens} token response...`);
+        console.log(
+          `\n📝 Testing ~${test.tokens} token response (limit: ${test.tokenLimit})...`
+        );
 
-        // Update specification for this test
+        // Update specification with new token limit
         await client.updateSpecification({
-          id: specId,
           serviceType: Types.ModelServiceTypes.OpenAi,
+          id: specId,
+          openAI: {
+            model: Types.OpenAiModels.Gpt4OMini_128K,
+            temperature: 0.3,
+            completionTokenLimit: test.tokenLimit,
+          },
         });
 
         const startTime = Date.now();
         let firstTokenTime = 0;
         let totalTime = 0;
-        let tokenCount = 0;
+        let messageUpdateCount = 0;
+        let finalMessage = "";
 
         // Check if streaming is supported
         if (!client.supportsStreaming()) {
@@ -299,27 +311,36 @@ describe("Performance Tests", () => {
             if (event.type === "conversation_started") {
               createdConversations.push(event.conversationId);
             } else if (event.type === "message_update") {
-              tokenCount++;
+              messageUpdateCount++;
               if (firstTokenTime === 0) {
                 firstTokenTime = Date.now() - startTime;
               }
+              finalMessage = event.message.message;
             } else if (event.type === "conversation_completed") {
               totalTime = Date.now() - startTime;
+              finalMessage = event.message.message;
             }
           },
           undefined,
           { id: specId }
         );
 
-        const tps = tokenCount / (totalTime / 1000);
+        // Rough token estimate: ~1.3 tokens per word, ~4 chars per word
+        const estimatedTokens = Math.round(finalMessage.length / 3);
+        const tps = estimatedTokens / (totalTime / 1000);
+
         lengthMetrics.push({
           targetTokens: test.tokens,
-          actualTokens: tokenCount,
+          actualTokens: estimatedTokens,
           tps: tps,
           ttft: firstTokenTime,
         });
 
-        console.log(`  Target: ${test.tokens}, Actual: ${tokenCount}`);
+        console.log(
+          `  Target: ${test.tokens}, Actual: ~${estimatedTokens} tokens`
+        );
+        console.log(`  Response length: ${finalMessage.length} chars`);
+        console.log(`  Message updates: ${messageUpdateCount}`);
         console.log(`  TTFT: ${firstTokenTime}ms`);
         console.log(`  TPS: ${tps.toFixed(2)}`);
       }
