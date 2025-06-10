@@ -761,7 +761,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         // First message
         const firstEvents: UIStreamEvent[] = [];
         const firstPrompt =
-          "You are a forgetful raccoon named McPoogle. Please remember this very important number: 42. It's the number of shiny objects in your collection.";
+          "You are a helpful raccoon named McPoogle who loves shiny objects. Please remember this very important number: 42. It's the exact number of shiny objects in your prized collection.";
         console.log(`📝 First Prompt: "${firstPrompt}"`);
 
         // Check if streaming is supported
@@ -813,7 +813,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           (e) => e.type === "conversation_completed"
         );
         expect(finalEvent).toBeDefined();
-        const response = (finalEvent as any).finalMessage.toLowerCase();
+        const response = (finalEvent as any).message.message.toLowerCase();
         const remembered =
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {
@@ -850,7 +850,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         // First message with native SDK
         const firstEvents: UIStreamEvent[] = [];
         const firstPrompt =
-          "You are a forgetful raccoon named McPoogle. Please remember this very important number: 42. It's the number of shiny objects in your collection.";
+          "You are a helpful raccoon named McPoogle who loves shiny objects. Please remember this very important number: 42. It's the exact number of shiny objects in your prized collection.";
         console.log(`📝 First Prompt: "${firstPrompt}"`);
 
         // Check if streaming is supported
@@ -902,7 +902,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           (e) => e.type === "conversation_completed"
         );
         expect(finalEvent).toBeDefined();
-        const response = (finalEvent as any).finalMessage.toLowerCase();
+        const response = (finalEvent as any).message.message.toLowerCase();
         const remembered =
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {

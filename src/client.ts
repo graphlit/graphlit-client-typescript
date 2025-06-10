@@ -3967,7 +3967,7 @@ class Graphlit {
       throw new Error("Failed to format conversation");
     }
 
-    // Build initial message array locally - no backend fetching
+    // Build message array with conversation history
     const messages: Types.ConversationMessage[] = [];
 
     // Add system prompt if specified
@@ -3980,13 +3980,23 @@ class Graphlit {
       });
     }
 
-    // Add the current user message
-    messages.push({
-      __typename: "ConversationMessage" as const,
-      role: Types.ConversationRoleTypes.User,
-      message: formattedPrompt,
-      timestamp: new Date().toISOString(),
-    });
+    // Get conversation history to maintain context
+    const conversationResponse = await this.getConversation(conversationId);
+    const conversation = conversationResponse.conversation;
+
+    if (conversation?.messages && conversation.messages.length > 0) {
+      // Add all previous messages (formatConversation already added the current prompt)
+      const previousMessages = conversation.messages as Types.ConversationMessage[];
+      messages.push(...previousMessages);
+    } else {
+      // If no history, just add the current user message
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.User,
+        message: formattedPrompt,
+        timestamp: new Date().toISOString(),
+      });
+    }
 
     const serviceType = getServiceType(specification);
 
