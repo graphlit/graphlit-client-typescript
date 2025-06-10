@@ -3,6 +3,22 @@ import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { AgentStreamEvent } from "../src/types/ui-events";
 
+// Type definitions for tool handlers
+interface TreeNode {
+  id: string;
+  name: string;
+  type: string;
+  metadata?: {
+    size?: number;
+    created?: string;
+    modified?: string;
+    permissions?: string;
+    owner?: string;
+    tags?: string[];
+  };
+  children?: TreeNode[];
+}
+
 /**
  * MCP-style complex tool schema test suite
  * Tests various JSON Schema features that MCP tools might use
@@ -34,6 +50,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         console.log(
           "✅ Using native OpenAI streaming for MCP tool schema tests"
         );
+        client.setOpenAIClient(openaiClient);
       } catch (e) {
         console.log("⚠️ OpenAI SDK not available, using fallback streaming");
       }
@@ -182,7 +199,28 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        operation: string;
+        path: string;
+        options?: {
+          recursive?: boolean;
+          permissions?: {
+            owner: { read: boolean; write: boolean; execute: boolean };
+            group: { read: boolean; write: boolean; execute: boolean };
+            others: { read: boolean; write: boolean; execute: boolean };
+          };
+          metadata?: {
+            tags?: string[];
+            attributes?: Record<string, string>;
+            timestamps?: {
+              created?: string;
+              modified?: string;
+              accessed?: string;
+            };
+          };
+        };
+        content?: string;
+      }) => {
         console.log("📁 File system operation:", JSON.stringify(args, null, 2));
 
         // Validate nested structure was preserved
@@ -378,7 +416,33 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        source: {
+          type: string;
+          connectionString?: string;
+          query?: string;
+          parameters?: (string | number | boolean | null)[];
+          timeout?: number;
+          url?: string;
+          method?: string;
+          headers?: Record<string, string>;
+          body?: string | object | object[];
+          auth?: {
+            type: string;
+            token?: string;
+            username?: string;
+            password?: string;
+          };
+          path?: string;
+          encoding?: string;
+          format?: string;
+        };
+        transform?: {
+          filter?: string;
+          map?: string;
+          limit?: number;
+        };
+      }) => {
         console.log("🔌 Data source access:", JSON.stringify(args, null, 2));
 
         // Validate the union type was correctly resolved
@@ -627,7 +691,39 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        items: Array<{
+          id: string;
+          priority: number;
+          tags: string[];
+          data: {
+            value: number;
+            metadata?: Array<{
+              key: string;
+              value: string;
+              confidence?: number;
+            }>;
+          };
+          schedule?: {
+            startDate: string;
+            endDate?: string;
+            recurrence?: {
+              frequency: string;
+              interval?: number;
+              daysOfWeek?: number[];
+            };
+          };
+        }>;
+        processingOptions?: {
+          parallel?: boolean;
+          batchSize?: number;
+          errorHandling?: string;
+          transformations?: Array<{
+            field: string;
+            operation: string;
+          }>;
+        };
+      }) => {
         console.log("🔄 Batch processing:", JSON.stringify(args, null, 2));
 
         // Validate array constraints were applied
@@ -635,7 +731,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         expect(args.items.length).toBeGreaterThanOrEqual(1);
 
         // Process each item
-        const results = args.items.map((item: any) => {
+        const results = args.items.map((item) => {
           // Validate item structure
           expect(item.id).toMatch(/^[A-Z]{2}-\d{6}$/);
           expect(item.priority).toBeGreaterThanOrEqual(1);
@@ -823,10 +919,25 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        email: string;
+        phone?: string;
+        ipAddress?: string;
+        url?: string;
+        uuid?: string;
+        creditCard?: string;
+        postalCode?: {
+          country: string;
+          code: string;
+        };
+        customId?: string;
+      }) => {
         console.log("✅ Validation input:", JSON.stringify(args, null, 2));
 
-        const results: any = {
+        const results: {
+          valid: Array<{ field: string; value: unknown; message: string }>;
+          invalid: Array<{ field: string; value: unknown; message: string }>;
+        } = {
           valid: [],
           invalid: [],
         };
@@ -978,7 +1089,34 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        amount: number;
+        currency: string;
+        method: string;
+        details: {
+          cardNumber?: string;
+          expiryMonth?: number;
+          expiryYear?: number;
+          cvv?: string;
+          billingAddress?: {
+            street: string;
+            city: string;
+            state: string;
+            country: string;
+            postalCode: string;
+          };
+          accountType?: string;
+          routingNumber?: string;
+          accountNumber?: string;
+          bankName?: string;
+          swift?: string;
+          cryptocurrency?: string;
+          walletAddress?: string;
+          network?: string;
+          email?: string;
+          phoneNumber?: string;
+        };
+      }) => {
         console.log("💳 Payment processing:", JSON.stringify(args, null, 2));
 
         // Validate method-specific details were provided
@@ -1116,7 +1254,10 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }),
       };
 
-      const toolHandler = async (args: any) => {
+      const toolHandler = async (args: {
+        operation: string;
+        tree: TreeNode;
+      }) => {
         console.log("🌳 Tree operation:", JSON.stringify(args, null, 2));
 
         // Validate recursive structure
@@ -1125,7 +1266,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         expect(args.tree).toHaveProperty("type");
 
         // Count nodes recursively
-        const countNodes = (node: any): number => {
+        const countNodes = (node: TreeNode): number => {
           let count = 1;
           if (node.children && Array.isArray(node.children)) {
             for (const child of node.children) {
@@ -1147,7 +1288,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
           },
         };
 
-        function calculateDepth(node: any): number {
+        function calculateDepth(node: TreeNode): number {
           if (!node.children || node.children.length === 0) return 1;
           return 1 + Math.max(...node.children.map(calculateDepth));
         }

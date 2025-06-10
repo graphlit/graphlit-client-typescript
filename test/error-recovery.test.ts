@@ -32,6 +32,7 @@ describe("Error Recovery", () => {
       try {
         const { default: OpenAI } = await import("openai");
         const openaiClient = new OpenAI({ apiKey: openaiKey });
+        client.setOpenAIClient(openaiClient);
       } catch (e) {}
     } else {
     }

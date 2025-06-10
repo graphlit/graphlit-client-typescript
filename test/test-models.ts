@@ -273,9 +273,16 @@ export const TEST_MODELS: TestModelConfig[] = [
  * These are generally faster and more suitable for repeated tests
  */
 export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
-  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3 Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
-  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1 Mini")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Opus")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
 ];
 
 /**
@@ -283,10 +290,15 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
  * These models have good tool calling support
  */
 export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
+  TEST_MODELS.find((m) => m.name === "OpenAI o3")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3 Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1 Mini")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Opus")!,
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
-  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
 ];
 

@@ -46,6 +46,8 @@ describe("Tool Calling Limits", () => {
         console.log(
           "✅ Using native OpenAI streaming for tool calling limits tests"
         );
+
+        client.setOpenAIClient(openaiClient);
       } catch (e) {
         console.log("⚠️ OpenAI SDK not available, using fallback streaming");
       }
