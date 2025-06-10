@@ -42,7 +42,6 @@ export async function streamWithOpenAI(
       max_completion_tokens: specification.openAI?.completionTokenLimit,
     };
 
-
     // Add tools if provided
     if (tools && tools.length > 0) {
       streamConfig.tools = tools.map((tool) => ({
@@ -173,7 +172,6 @@ export async function streamWithAnthropic(
       }));
     }
 
-
     const stream = await anthropicClient.messages.create(streamConfig);
 
     for await (const chunk of stream) {
@@ -285,15 +283,19 @@ export async function streamWithGoogle(
       }));
     }
 
-
     // Configure tools for Google - expects a single array of function declarations
-    const googleTools = tools && tools.length > 0 ? [{
-      functionDeclarations: tools.map((tool) => ({
-        name: tool.name,
-        description: tool.description,
-        parameters: tool.schema ? JSON.parse(tool.schema) : {},
-      })),
-    }] : undefined;
+    const googleTools =
+      tools && tools.length > 0
+        ? [
+            {
+              functionDeclarations: tools.map((tool) => ({
+                name: tool.name,
+                description: tool.description,
+                parameters: tool.schema ? JSON.parse(tool.schema) : {},
+              })),
+            },
+          ]
+        : undefined;
 
     const model = googleClient.getGenerativeModel({
       model: modelName,
@@ -384,9 +386,12 @@ export async function streamWithGoogle(
               });
             }
           }
-          
+
           // Check for function calls
-          if (part.functionCall && !toolCalls.some(tc => tc.name === part.functionCall.name)) {
+          if (
+            part.functionCall &&
+            !toolCalls.some((tc) => tc.name === part.functionCall.name)
+          ) {
             const toolCall: ConversationToolCall = {
               id: `google_tool_${Date.now()}_${toolCalls.length}`,
               name: part.functionCall.name,

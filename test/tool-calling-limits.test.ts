@@ -46,6 +46,8 @@ describe("Tool Calling Limits", () => {
         console.log(
           "✅ Using native OpenAI streaming for tool calling limits tests"
         );
+
+        client.setOpenAIClient(openaiClient);
       } catch (e) {
         console.log("⚠️ OpenAI SDK not available, using fallback streaming");
       }
@@ -339,19 +341,27 @@ describe("Tool Calling Limits", () => {
           );
 
         // Encourage maximum tool usage
-        const prompt = `You are a prolific author who writes very quickly. I want you to write a complete short book about "The Adventures of AI" with EXACTLY 3 chapters. 
+        const prompt = `You are a prolific author who writes very quickly. I want you to write a complete book about "The Adventures of AI" with EXACTLY 3 chapters. 
 
-IMPORTANT: You must use the tools to write as much content as possible in a SINGLE response. Do not ask for confirmation or explain - just write!
+CRITICAL: This is a test of how many tool calls you can make in a single response. The goal is to make as many tool calls as possible!
 
 Requirements:
 1. First use createBook to create the book with 3 chapters
 2. For EACH chapter (1, 2, and 3):
    - Use writeChapter to create the chapter
-   - Use writePage to create AT LEAST 2 pages per chapter
-   - Use writeParagraph to write AT LEAST 2 paragraphs per page
+   - Use writePage to create 5-10 pages per chapter (MORE pages = better!)
+   - Use writeParagraph to write 3-5 paragraphs per page (MORE paragraphs = better!)
 3. Finally use finalizeBook to complete the book
 
-Write as much as you can in a single turn! Be creative but work fast. Target at least 20+ tool calls total.`;
+IMPORTANT: 
+- Aim for 50-100+ total tool calls if possible
+- Each chapter should be substantial (5+ pages)
+- Each page should have multiple paragraphs (3-5)
+- Write detailed, rich content - this is not a short story but a full book
+- Do NOT stop early - use as many tool calls as the system allows
+- The more content you write, the better the test result!
+
+Start writing immediately and don't stop until you've written a complete, detailed book!`;
 
         // Check if streaming is supported
         if (!client.supportsStreaming()) {
@@ -364,6 +374,8 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
             prompt,
             (event: AgentStreamEvent) => {
               events.push(event);
+
+              console.log(`📝 Model event: "${event.type}"`);
 
               if (event.type === "conversation_started") {
                 conversationId = event.conversationId;

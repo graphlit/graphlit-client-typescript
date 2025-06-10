@@ -32,6 +32,8 @@ describe("Complex Tool Schemas", () => {
       try {
         const { default: OpenAI } = await import("openai");
         const openaiClient = new OpenAI({ apiKey: openaiKey });
+
+        client.setOpenAIClient(openaiClient);
       } catch (e) {}
     } else {
     }
@@ -182,8 +184,38 @@ describe("Complex Tool Schemas", () => {
         }),
       };
 
-      const toolCalls: any[] = [];
-      const fileSystemHandler = async (args: any) => {
+      const toolCalls: Array<{
+        operation: string;
+        path: string;
+        options?: {
+          recursive?: boolean;
+          force?: boolean;
+          permissions?: {
+            owner: { read: boolean; write: boolean; execute: boolean };
+            group: { read: boolean; write: boolean; execute: boolean };
+            others: { read: boolean; write: boolean; execute: boolean };
+          };
+          encoding?: string;
+        };
+        content?: string;
+        destination?: string;
+      }> = [];
+      const fileSystemHandler = async (args: {
+        operation: string;
+        path: string;
+        options?: {
+          recursive?: boolean;
+          force?: boolean;
+          permissions?: {
+            owner: { read: boolean; write: boolean; execute: boolean };
+            group: { read: boolean; write: boolean; execute: boolean };
+            others: { read: boolean; write: boolean; execute: boolean };
+          };
+          encoding?: string;
+        };
+        content?: string;
+        destination?: string;
+      }) => {
         console.log(`📁 File system operation:`, JSON.stringify(args, null, 2));
         toolCalls.push(args);
 
@@ -409,8 +441,34 @@ describe("Complex Tool Schemas", () => {
         }),
       };
 
-      const dbCalls: any[] = [];
-      const databaseHandler = async (args: any) => {
+      const dbCalls: Array<{
+        operation: string;
+        table: string;
+        conditions?: Array<{
+          field: string;
+          operator: string;
+          value: string | number | boolean | null | (string | number)[];
+          value2?: string | number;
+        }>;
+        fields?: Array<string | { name: string; alias?: string } | { function: string; field: string; alias?: string }>;
+        orderBy?: Array<{ field: string; direction: string }>;
+        limit?: number;
+        offset?: number;
+      }> = [];
+      const databaseHandler = async (args: {
+        operation: string;
+        table: string;
+        conditions?: Array<{
+          field: string;
+          operator: string;
+          value: string | number | boolean | null | (string | number)[];
+          value2?: string | number;
+        }>;
+        fields?: Array<string | { name: string; alias?: string } | { function: string; field: string; alias?: string }>;
+        orderBy?: Array<{ field: string; direction: string }>;
+        limit?: number;
+        offset?: number;
+      }) => {
         console.log(`🗄️ Database operation:`, JSON.stringify(args, null, 2));
         dbCalls.push(args);
 
@@ -691,8 +749,82 @@ describe("Complex Tool Schemas", () => {
         }),
       };
 
-      const notificationCalls: any[] = [];
-      const notificationHandler = async (args: any) => {
+      const notificationCalls: Array<{
+        recipient: {
+          type: string;
+          data: {
+            userId?: string;
+            preferredChannel?: string;
+            groupId?: string;
+            excludeUsers?: string[];
+            channelName?: string;
+            platform?: string;
+            url?: string;
+            headers?: Record<string, string>;
+            retryPolicy?: {
+              maxRetries?: number;
+              backoffMultiplier?: number;
+            };
+          };
+        };
+        message: {
+          format: string;
+          content: string | { templateId: string; variables?: Record<string, unknown> } | { title: string; body?: string; image?: string; actions?: Array<{ type: string; label: string; value: string }> };
+          priority?: string;
+          metadata?: {
+            category?: string;
+            tags?: string[];
+            expiresAt?: string;
+            deduplicationKey?: string;
+            [key: string]: unknown;
+          };
+        };
+        scheduling?: {
+          type: string;
+          sendAt?: string;
+          cron?: string;
+          timezone?: string;
+          endDate?: string;
+        };
+      }> = [];
+      const notificationHandler = async (args: {
+        recipient: {
+          type: string;
+          data: {
+            userId?: string;
+            preferredChannel?: string;
+            groupId?: string;
+            excludeUsers?: string[];
+            channelName?: string;
+            platform?: string;
+            url?: string;
+            headers?: Record<string, string>;
+            retryPolicy?: {
+              maxRetries?: number;
+              backoffMultiplier?: number;
+            };
+          };
+        };
+        message: {
+          format: string;
+          content: string | { templateId: string; variables?: Record<string, unknown> } | { title: string; body?: string; image?: string; actions?: Array<{ type: string; label: string; value: string }> };
+          priority?: string;
+          metadata?: {
+            category?: string;
+            tags?: string[];
+            expiresAt?: string;
+            deduplicationKey?: string;
+            [key: string]: unknown;
+          };
+        };
+        scheduling?: {
+          type: string;
+          sendAt?: string;
+          cron?: string;
+          timezone?: string;
+          endDate?: string;
+        };
+      }) => {
         console.log(`📬 Notification:`, JSON.stringify(args, null, 2));
         notificationCalls.push(args);
 
@@ -957,8 +1089,70 @@ describe("Complex Tool Schemas", () => {
         }),
       };
 
-      const configCalls: any[] = [];
-      const configHandler = async (args: any) => {
+      const configCalls: Array<{
+        action: string;
+        namespace: string;
+        config?: {
+          appName?: string;
+          port?: number;
+          apiUrl?: string;
+          email?: string;
+          version?: string;
+          allowedOrigins?: string[];
+          rateLimits?: {
+            global?: { requests: number; window: number };
+            perUser?: { requests: number; window: number };
+          };
+          authentication?: {
+            type: string;
+            realm?: string;
+            clientId?: string;
+            clientSecret?: string;
+            scopes?: string[];
+            issuer?: string;
+            audience?: string;
+            algorithm?: string;
+          };
+          performance?: {
+            minWorkers?: number;
+            maxWorkers?: number;
+            targetCpu?: number;
+            memoryLimit?: number;
+          };
+        };
+      }> = [];
+      const configHandler = async (args: {
+        action: string;
+        namespace: string;
+        config?: {
+          appName?: string;
+          port?: number;
+          apiUrl?: string;
+          email?: string;
+          version?: string;
+          allowedOrigins?: string[];
+          rateLimits?: {
+            global?: { requests: number; window: number };
+            perUser?: { requests: number; window: number };
+          };
+          authentication?: {
+            type: string;
+            realm?: string;
+            clientId?: string;
+            clientSecret?: string;
+            scopes?: string[];
+            issuer?: string;
+            audience?: string;
+            algorithm?: string;
+          };
+          performance?: {
+            minWorkers?: number;
+            maxWorkers?: number;
+            targetCpu?: number;
+            memoryLimit?: number;
+          };
+        };
+      }) => {
         console.log(`⚙️ Configuration:`, JSON.stringify(args, null, 2));
         configCalls.push(args);
 
@@ -1223,8 +1417,38 @@ describe("Complex Tool Schemas", () => {
         }),
       };
 
-      const apiCalls: any[] = [];
-      const apiHandler = async (args: any) => {
+      const apiCalls: Array<{
+        action: string;
+        endpoint?: {
+          method: string;
+          path: string;
+          pathParams?: Record<string, { type: string; required?: boolean; pattern?: string; example?: string }>;
+          queryParams?: Record<string, { type: string; required?: boolean; default?: unknown; enum?: unknown[]; minLength?: number; maxLength?: number; minimum?: number; maximum?: number }>;
+          headers?: Record<string, string | { value: string; required?: boolean; pattern?: string }>;
+          requestBody?: {
+            contentType: string;
+            schema?: unknown;
+          };
+          responses?: Record<string, { description: string; schema?: unknown }>;
+        };
+        testData?: Record<string, unknown>;
+      }> = [];
+      const apiHandler = async (args: {
+        action: string;
+        endpoint?: {
+          method: string;
+          path: string;
+          pathParams?: Record<string, { type: string; required?: boolean; pattern?: string; example?: string }>;
+          queryParams?: Record<string, { type: string; required?: boolean; default?: unknown; enum?: unknown[]; minLength?: number; maxLength?: number; minimum?: number; maximum?: number }>;
+          headers?: Record<string, string | { value: string; required?: boolean; pattern?: string }>;
+          requestBody?: {
+            contentType: string;
+            schema?: unknown;
+          };
+          responses?: Record<string, { description: string; schema?: unknown }>;
+        };
+        testData?: Record<string, unknown>;
+      }) => {
         console.log(`🔌 API Builder:`, JSON.stringify(args, null, 2));
         apiCalls.push(args);
 

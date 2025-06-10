@@ -34,9 +34,9 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
   let client: Graphlit;
   const createdSpecifications: string[] = [];
-  let openaiClient: any;
-  let anthropicClient: any;
-  let googleClient: any;
+  let openaiClient: unknown;
+  let anthropicClient: unknown;
+  let googleClient: unknown;
   const allMetrics: { modelName: string; metrics: StreamingMetrics }[] = [];
 
   beforeAll(async () => {
@@ -579,7 +579,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             (e) => e.type === "conversation_completed"
           );
           const response = finalEvent
-            ? (finalEvent as any).finalMessage
+            ? finalEvent.message.message
             : "No response";
           console.error(
             `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response}"`
@@ -815,7 +815,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           (e) => e.type === "conversation_completed"
         );
         expect(finalEvent).toBeDefined();
-        const response = (finalEvent as any).message.message.toLowerCase();
+        const response = finalEvent.message.message.toLowerCase();
         const remembered =
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {
@@ -904,7 +904,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           (e) => e.type === "conversation_completed"
         );
         expect(finalEvent).toBeDefined();
-        const response = (finalEvent as any).message.message.toLowerCase();
+        const response = finalEvent.message.message.toLowerCase();
         const remembered =
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {

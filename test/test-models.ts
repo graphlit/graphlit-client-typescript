@@ -24,7 +24,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.O3_200K,
         temperature: 1.0,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -41,7 +40,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.O3Mini_200K,
         temperature: 1.0,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -58,7 +56,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.Gpt41_1024K,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -75,7 +72,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.Gpt41Mini_1024K,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -92,7 +88,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.Gpt4O_128K,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -109,7 +104,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       openAI: {
         model: Types.OpenAiModels.Gpt4OMini_128K,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -128,7 +122,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       anthropic: {
         model: Types.AnthropicModels.Claude_4Opus,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -145,7 +138,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       anthropic: {
         model: Types.AnthropicModels.Claude_4Sonnet,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -162,7 +154,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       anthropic: {
         model: Types.AnthropicModels.Claude_3_7Sonnet,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -179,7 +170,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       anthropic: {
         model: Types.AnthropicModels.Claude_3_5Haiku,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -198,7 +188,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       google: {
         model: Types.GoogleModels.Gemini_2_5ProPreview,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -215,7 +204,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       google: {
         model: Types.GoogleModels.Gemini_2_5FlashPreview,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
       retrievalStrategy: {
         type: Types.RetrievalStrategyTypes.Section,
@@ -235,7 +223,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       deepseek: {
         model: Types.DeepseekModels.Chat,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
     },
   },
@@ -248,7 +235,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       groq: {
         model: Types.GroqModels.Llama_3_3_70B,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
     },
   },
@@ -261,7 +247,6 @@ export const TEST_MODELS: TestModelConfig[] = [
       cerebras: {
         model: Types.CerebrasModels.Llama_3_3_70B,
         temperature: 0.7,
-        completionTokenLimit: 1000,
       },
     },
   },
@@ -273,9 +258,16 @@ export const TEST_MODELS: TestModelConfig[] = [
  * These are generally faster and more suitable for repeated tests
  */
 export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
-  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3 Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
-  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1 Mini")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Opus")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
 ];
 
 /**
@@ -283,10 +275,15 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
  * These models have good tool calling support
  */
 export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
+  TEST_MODELS.find((m) => m.name === "OpenAI o3")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI o3 Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1 Mini")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Opus")!,
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
-  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
 ];
 
