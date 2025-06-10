@@ -34,6 +34,7 @@ steps:
       TargetFolder: "$(Build.ArtifactStagingDirectory)/dist"
 
   - task: Npm@1
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     inputs:
       command: publish
       publishRegistry: useExternalRegistry
