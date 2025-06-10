@@ -3962,17 +3962,6 @@ class Graphlit {
       correlationId
     );
 
-    console.log("[executeStreamingAgent] formatConversation response", {
-      hasMessage: !!formatResponse.formatConversation?.message,
-      messageRole: formatResponse.formatConversation?.message?.role,
-      messageLength:
-        formatResponse.formatConversation?.message?.message?.length,
-      hasToolCalls:
-        !!formatResponse.formatConversation?.message?.toolCalls?.length,
-      toolCallCount:
-        formatResponse.formatConversation?.message?.toolCalls?.length || 0,
-    });
-
     const formattedPrompt = formatResponse.formatConversation?.message?.message;
     if (!formattedPrompt) {
       throw new Error("Failed to format conversation");
@@ -4045,12 +4034,16 @@ class Graphlit {
         GoogleGenerativeAI
       ) {
         const googleMessages = formatMessagesForGoogle(messages);
+        // Google doesn't use system prompts separately, they're incorporated into messages
         await this.streamWithGoogle(
           specification,
           googleMessages,
+          undefined, // systemPrompt - Google handles this differently
+          tools,
           uiAdapter,
-          (message) => {
+          (message, calls) => {
             roundMessage = message;
+            toolCalls = calls;
           }
         );
       } else {
@@ -4078,13 +4071,6 @@ class Graphlit {
 
       // Execute tools and prepare for next round
       if (toolHandlers && toolCalls.length > 0) {
-        console.log(
-          `[executeStreamingAgent] Adding assistant message with ${toolCalls.length} tool calls`
-        );
-        console.log(
-          `[executeStreamingAgent] Assistant role value: ${Types.ConversationRoleTypes.Assistant}`
-        );
-
         // Add assistant message with tool calls to conversation
         const assistantMessage = {
           __typename: "ConversationMessage" as const,
@@ -4093,15 +4079,7 @@ class Graphlit {
           toolCalls: toolCalls,
           timestamp: new Date().toISOString(),
         };
-        console.log(`[executeStreamingAgent] Assistant message to add:`, {
-          role: assistantMessage.role,
-          hasToolCalls: !!assistantMessage.toolCalls?.length,
-        });
         messages.push(assistantMessage);
-
-        console.log(
-          `[executeStreamingAgent] Messages after adding assistant: ${messages.map((m) => m.role).join(", ")}`
-        );
 
         // Execute tools and add responses
         for (const toolCall of toolCalls) {
@@ -4156,10 +4134,6 @@ class Graphlit {
             });
           }
         }
-
-        console.log(
-          `[executeStreamingAgent] Messages after adding tool responses: ${messages.map((m) => m.role).join(", ")}`
-        );
       }
 
       currentRound++;
@@ -4167,10 +4141,6 @@ class Graphlit {
 
     // Complete the conversation
     if (fullMessage) {
-      console.log(
-        `[executeStreamingAgent] Completing conversation ${conversationId}.`
-      );
-
       await this.completeConversation(
         fullMessage.trim(),
         conversationId,
@@ -4193,13 +4163,6 @@ class Graphlit {
     specification: Types.Specification,
     currentPrompt: string
   ): Promise<Types.ConversationMessage[]> {
-    console.log("[buildMessageArray] Starting to build message array", {
-      conversationId,
-      specificationId: specification.id,
-      currentPromptLength: currentPrompt.length,
-      hasSystemPrompt: !!specification.systemPrompt,
-    });
-
     const messages: Types.ConversationMessage[] = [];
 
     // Add system prompt if present
@@ -4211,29 +4174,11 @@ class Graphlit {
         timestamp: new Date().toISOString(),
       };
       messages.push(systemMessage);
-      console.log("[buildMessageArray] Added system message", {
-        role: systemMessage.role,
-        messageLength: systemMessage.message.length,
-        messagePreview: systemMessage.message.substring(0, 100) + "...",
-      });
     }
 
     // Get conversation history
-    console.log("[buildMessageArray] Fetching conversation history...");
     const conversationResponse = await this.getConversation(conversationId);
     const conversation = conversationResponse.conversation;
-
-    console.log("[buildMessageArray] Fetched conversation", {
-      id: conversation?.id,
-      messageCount: conversation?.messages?.length || 0,
-      messages: conversation?.messages?.map((msg, idx) => ({
-        index: idx,
-        role: msg?.role,
-        hasMessage: !!msg?.message,
-        hasToolCalls: !!msg?.toolCalls?.length,
-        toolCallCount: msg?.toolCalls?.length || 0,
-      })),
-    });
 
     if (conversation?.messages && conversation.messages.length > 0) {
       // Add previous messages (excluding the current one)
@@ -4242,29 +4187,6 @@ class Graphlit {
         -1
       ) as Types.ConversationMessage[];
       messages.push(...previousMessages);
-      console.log("[buildMessageArray] Added previous messages from history", {
-        count: previousMessages.length,
-        messages: previousMessages.map((msg, idx) => ({
-          index: idx,
-          role: msg.role,
-          messageLength: msg.message?.length || 0,
-          messagePreview: msg.message
-            ? msg.message.substring(0, 50) + "..."
-            : "No message content",
-          timestamp: msg.timestamp,
-          hasToolCalls: !!msg.toolCalls?.length,
-          toolCallCount: msg.toolCalls?.length || 0,
-          toolCalls: msg.toolCalls?.map((tc) => ({
-            id: tc?.id,
-            name: tc?.name,
-            hasArguments: !!tc?.arguments,
-          })),
-        })),
-      });
-    } else {
-      console.log(
-        "[buildMessageArray] No previous messages in conversation history"
-      );
     }
 
     // Add current user message
@@ -4275,23 +4197,6 @@ class Graphlit {
       timestamp: new Date().toISOString(),
     };
     messages.push(currentMessage);
-    console.log("[buildMessageArray] Added current message", {
-      role: currentMessage.role,
-      messageLength: currentMessage.message.length,
-      messagePreview: currentMessage.message.substring(0, 100) + "...",
-      timestamp: currentMessage.timestamp,
-    });
-
-    console.log("[buildMessageArray] Message array built successfully", {
-      totalMessages: messages.length,
-      messagesByRole: messages.reduce(
-        (acc, msg) => {
-          acc[msg.role] = (acc[msg.role] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      ),
-    });
 
     return messages;
   }
@@ -4476,8 +4381,13 @@ class Graphlit {
   private async streamWithGoogle(
     specification: Types.Specification,
     messages: GoogleMessage[],
+    systemPrompt: string | undefined,
+    tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
-    onComplete: (message: string) => void
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
   ): Promise<void> {
     if (!GoogleGenerativeAI) {
       throw new Error("Google GenerativeAI client not available");
@@ -4490,6 +4400,8 @@ class Graphlit {
     await streamWithGoogle(
       specification,
       messages,
+      systemPrompt,
+      tools,
       googleClient,
       (event) => uiAdapter.handleEvent(event),
       onComplete

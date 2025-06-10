@@ -194,6 +194,8 @@ And a final line to test chunking behavior across multiple segments."`;
     for (const chunkingConfig of chunkingConfigs) {
       it(`should handle ${chunkingConfig.name}`, async () => {
         console.log(`\n📝 Testing ${chunkingConfig.name}...`);
+        console.log(`  🎯 Model: ${testModel.name}`);
+        console.log(`  📤 Prompt length: ${TEST_PROMPT.length} chars`);
 
         // Create specification
         const createResponse = await client.createSpecification(
@@ -989,10 +991,14 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
 
       const events: UIStreamEvent[] = [];
       const chunks: string[] = [];
+      let finalMessage = "";
 
       // Generate a prompt that will produce continuous text
       const continuousPrompt =
-        "Output exactly 200 zeros with no spaces or line breaks: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        "Generate a long continuous string of at least 100 characters without any spaces. You can use letters, numbers, or repeating patterns. Example: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789...";
+
+      console.log(`  📝 Sending prompt: "${continuousPrompt}"`);
+      console.log(`  🎯 Using model: ${testModel.name}`);
 
       await client.streamAgent(
         continuousPrompt,
@@ -1010,6 +1016,8 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
                 `  Chunk ${chunks.length}: "${newChunk}" (${newChunk.length} chars)`
               );
             }
+          } else if (event.type === "conversation_completed") {
+            finalMessage = event.message.message;
           }
         },
         undefined,
@@ -1024,17 +1032,34 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       );
 
       console.log(`\n📊 Continuous text results:`);
+      console.log(`  Final message length: ${finalMessage.length}`);
       console.log(`  Total chunks: ${chunks.length}`);
       console.log(`  Chunk sizes: ${chunks.map((c) => c.length).join(", ")}`);
+      
+      // Show first part of the response for debugging
+      if (finalMessage.length > 0) {
+        console.log(`  Response preview: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? '...' : ''}"`);
+      }
+
+      // Check if we got a response at all
+      if (finalMessage.length === 0) {
+        console.error("❌ No response received from model");
+        console.error("   This could mean:");
+        console.error("   - The model refused the prompt");
+        console.error("   - There was a streaming error");
+        console.error("   - The test timed out");
+      }
 
       // Word mode should break continuous text into manageable chunks
       expect(chunks.length).toBeGreaterThan(0);
+      expect(finalMessage.length).toBeGreaterThan(50); // At least some content
+      
       // Since this is continuous text with no word breaks, chunks may be larger
-      // The important thing is that it doesn't try to buffer the entire 200 character string
+      // The important thing is that it doesn't try to buffer the entire string
       if (chunks.length > 1) {
         console.log("✅ Continuous text chunked into multiple pieces");
-      } else if (chunks[0] && chunks[0].length < 200) {
-        console.log("✅ Continuous text chunked before completion");
+      } else if (chunks[0] && chunks[0].length < finalMessage.length) {
+        console.log("✅ Continuous text partially chunked");
       } else {
         console.log("⚠️  Warning: Continuous text was not chunked as expected");
       }

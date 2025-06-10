@@ -904,10 +904,10 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      // MCP-style payment processing with conditional validation
+      // MCP-style payment processing - simplified for OpenAI compatibility
       const paymentTool: Types.ToolDefinitionInput = {
         name: "payment",
-        description: "Process payments with method-specific validation",
+        description: "Process payments with method-specific validation. Details object should contain method-specific fields: credit_card needs cardNumber, expiryMonth, expiryYear, cvv, billingAddress; bank_transfer needs accountType, routingNumber, accountNumber, bankName; crypto needs cryptocurrency, walletAddress, network; paypal needs email or phoneNumber",
         schema: JSON.stringify({
           type: "object",
           properties: {
@@ -926,156 +926,42 @@ describe("MCP-Style Complex Tool Schemas", () => {
             },
             details: {
               type: "object",
+              description: "Method-specific payment details",
+              properties: {
+                // Credit card fields
+                cardNumber: { type: "string", pattern: "^[0-9]{13,19}$" },
+                expiryMonth: { type: "integer", minimum: 1, maximum: 12 },
+                expiryYear: { type: "integer", minimum: 2024, maximum: 2050 },
+                cvv: { type: "string", pattern: "^[0-9]{3,4}$" },
+                billingAddress: { 
+                  type: "object",
+                  properties: {
+                    street: { type: "string" },
+                    city: { type: "string" },
+                    state: { type: "string" },
+                    country: { type: "string" },
+                    postalCode: { type: "string" }
+                  }
+                },
+                // Bank transfer fields
+                accountType: { type: "string", enum: ["checking", "savings"] },
+                routingNumber: { type: "string", pattern: "^[0-9]{9}$" },
+                accountNumber: { type: "string", pattern: "^[0-9]{4,17}$" },
+                bankName: { type: "string" },
+                swift: { type: "string", pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$" },
+                // Crypto fields
+                cryptocurrency: { type: "string", enum: ["BTC", "ETH", "USDT", "USDC"] },
+                walletAddress: { type: "string", minLength: 26, maxLength: 62 },
+                network: { type: "string", enum: ["mainnet", "testnet", "polygon", "bsc"] },
+                // PayPal fields
+                email: { type: "string", format: "email" },
+                phoneNumber: { type: "string", pattern: "^\\+?[1-9]\\d{1,14}$" }
+              },
+              additionalProperties: false
             },
           },
           required: ["amount", "currency", "method", "details"],
-          allOf: [
-            {
-              if: {
-                properties: { method: { const: "credit_card" } },
-              },
-              then: {
-                properties: {
-                  details: {
-                    type: "object",
-                    properties: {
-                      cardNumber: {
-                        type: "string",
-                        pattern: "^[0-9]{13,19}$",
-                      },
-                      expiryMonth: {
-                        type: "integer",
-                        minimum: 1,
-                        maximum: 12,
-                      },
-                      expiryYear: {
-                        type: "integer",
-                        minimum: 2024,
-                        maximum: 2050,
-                      },
-                      cvv: {
-                        type: "string",
-                        pattern: "^[0-9]{3,4}$",
-                      },
-                      billingAddress: {
-                        type: "object",
-                        properties: {
-                          street: { type: "string" },
-                          city: { type: "string" },
-                          state: { type: "string" },
-                          country: { type: "string" },
-                          zip: { type: "string" },
-                        },
-                        required: ["street", "city", "country", "zip"],
-                      },
-                    },
-                    required: [
-                      "cardNumber",
-                      "expiryMonth",
-                      "expiryYear",
-                      "cvv",
-                      "billingAddress",
-                    ],
-                  },
-                },
-              },
-            },
-            {
-              if: {
-                properties: { method: { const: "bank_transfer" } },
-              },
-              then: {
-                properties: {
-                  details: {
-                    type: "object",
-                    properties: {
-                      accountType: {
-                        type: "string",
-                        enum: ["checking", "savings"],
-                      },
-                      routingNumber: {
-                        type: "string",
-                        pattern: "^[0-9]{9}$",
-                      },
-                      accountNumber: {
-                        type: "string",
-                        pattern: "^[0-9]{4,17}$",
-                      },
-                      bankName: { type: "string" },
-                      swift: {
-                        type: "string",
-                        pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
-                      },
-                    },
-                    required: [
-                      "accountType",
-                      "routingNumber",
-                      "accountNumber",
-                      "bankName",
-                    ],
-                  },
-                },
-              },
-            },
-            {
-              if: {
-                properties: { method: { const: "crypto" } },
-              },
-              then: {
-                properties: {
-                  details: {
-                    type: "object",
-                    properties: {
-                      cryptocurrency: {
-                        type: "string",
-                        enum: ["BTC", "ETH", "USDT", "USDC"],
-                      },
-                      walletAddress: {
-                        type: "string",
-                        minLength: 26,
-                        maxLength: 62,
-                      },
-                      network: {
-                        type: "string",
-                        enum: ["mainnet", "testnet", "polygon", "arbitrum"],
-                      },
-                      memo: {
-                        type: "string",
-                        maxLength: 100,
-                      },
-                    },
-                    required: ["cryptocurrency", "walletAddress", "network"],
-                  },
-                },
-              },
-            },
-            {
-              if: {
-                properties: { method: { const: "paypal" } },
-              },
-              then: {
-                properties: {
-                  details: {
-                    type: "object",
-                    properties: {
-                      email: {
-                        type: "string",
-                        format: "email",
-                      },
-                      phoneNumber: {
-                        type: "string",
-                        pattern: "^\\+?[1-9]\\d{1,14}$",
-                      },
-                    },
-                    oneOf: [
-                      { required: ["email"] },
-                      { required: ["phoneNumber"] },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
+          additionalProperties: false
         }),
       };
 
@@ -1125,8 +1011,8 @@ describe("MCP-Style Complex Tool Schemas", () => {
 
       await client.streamAgent(
         `Process two payments:
-         1. Credit card payment of $150.00 USD with card number 4532015112830366, expiry 12/2025, CVV 123, billing address: 123 Main St, San Francisco, CA, USA, 94105
-         2. Crypto payment of 0.005 BTC to wallet address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa on mainnet`,
+         1. Credit card payment of $150.00 USD with card number 4532015112830366, expiry month 12, expiry year 2025, CVV 123, billing address: street "123 Main St", city "San Francisco", state "CA", country "USA", postalCode "94105"
+         2. Crypto payment of 0.005 BTC to wallet address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa on mainnet network`,
         (event: UIStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {

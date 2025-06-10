@@ -1,4 +1,5 @@
 import {
+  ConversationToolCall,
   Specification,
   ToolDefinitionInput,
 } from "../generated/graphql-types.js";
@@ -19,10 +20,10 @@ export async function streamWithOpenAI(
   tools: ToolDefinitionInput[] | undefined,
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: any[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
 ): Promise<void> {
   let fullMessage = "";
-  let toolCalls: any[] = [];
+  let toolCalls: ConversationToolCall[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -40,6 +41,7 @@ export async function streamWithOpenAI(
       //top_p: specification.openAI?.probability,
       max_completion_tokens: specification.openAI?.completionTokenLimit,
     };
+
 
     // Add tools if provided
     if (tools && tools.length > 0) {
@@ -60,7 +62,6 @@ export async function streamWithOpenAI(
 
       if (delta?.content) {
         fullMessage += delta.content;
-        console.log(`🔍 OpenAI raw token: "${delta.content}"`);
         onEvent({
           type: "token",
           token: delta.content,
@@ -137,10 +138,10 @@ export async function streamWithAnthropic(
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: any, // Anthropic client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: any[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
 ): Promise<void> {
   let fullMessage = "";
-  let toolCalls: any[] = [];
+  let toolCalls: ConversationToolCall[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -172,14 +173,6 @@ export async function streamWithAnthropic(
       }));
     }
 
-    console.log(`🚀 Anthropic stream config:`, {
-      model: streamConfig.model,
-      messageCount: streamConfig.messages.length,
-      hasSystem: !!streamConfig.system,
-      temperature: streamConfig.temperature,
-      max_tokens: streamConfig.max_tokens,
-      toolCount: streamConfig.tools?.length || 0
-    });
 
     const stream = await anthropicClient.messages.create(streamConfig);
 
@@ -236,10 +229,6 @@ export async function streamWithAnthropic(
       }
     }
 
-    console.log(`✅ Anthropic streaming complete. Message length: ${fullMessage.length}`);
-    if (fullMessage.length === 0) {
-      console.warn(`⚠️ Empty response from Anthropic!`);
-    }
     onComplete(fullMessage, toolCalls);
   } catch (error) {
     onEvent({
@@ -257,11 +246,14 @@ export async function streamWithAnthropic(
 export async function streamWithGoogle(
   specification: Specification,
   messages: GoogleMessage[],
+  systemPrompt: string | undefined,
+  tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
 ): Promise<void> {
   let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -271,13 +263,45 @@ export async function streamWithGoogle(
       );
     }
 
+    const streamConfig: any = {
+      model: modelName,
+      messages,
+      stream: true,
+      temperature: specification.google?.temperature,
+      //top_p: specification.google?.probability,
+      max_tokens: specification.google?.completionTokenLimit,
+    };
+
+    if (systemPrompt) {
+      streamConfig.system = systemPrompt;
+    }
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      streamConfig.tools = tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        input_schema: tool.schema ? JSON.parse(tool.schema) : {},
+      }));
+    }
+
+
+    // Configure tools for Google - expects a single array of function declarations
+    const googleTools = tools && tools.length > 0 ? [{
+      functionDeclarations: tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        parameters: tool.schema ? JSON.parse(tool.schema) : {},
+      })),
+    }] : undefined;
+
     const model = googleClient.getGenerativeModel({
       model: modelName,
       generationConfig: {
-        temperature: specification.google?.temperature ?? 0.1,
-        maxOutputTokens: specification.google?.completionTokenLimit ?? 4096,
-        topP: specification.google?.probability,
+        temperature: streamConfig.temperature ?? 0.1,
+        maxOutputTokens: streamConfig.max_tokens ?? 4096,
       },
+      tools: googleTools,
     });
 
     // Convert messages to Google chat format
@@ -296,9 +320,91 @@ export async function streamWithGoogle(
           token: text,
         });
       }
+
+      // Google streams function calls as part of the candidates
+      // Check if this chunk contains function calls
+      try {
+        const candidate = chunk.candidates?.[0];
+        if (candidate?.content?.parts) {
+          for (const part of candidate.content.parts) {
+            if (part.functionCall) {
+              const toolCall: ConversationToolCall = {
+                id: `google_tool_${Date.now()}_${toolCalls.length}`,
+                name: part.functionCall.name,
+                arguments: JSON.stringify(part.functionCall.args || {}),
+              };
+              toolCalls.push(toolCall);
+
+              // Emit tool call events
+              onEvent({
+                type: "tool_call_start",
+                toolCall: {
+                  id: toolCall.id,
+                  name: toolCall.name,
+                },
+              });
+
+              onEvent({
+                type: "tool_call_delta",
+                toolCallId: toolCall.id,
+                argumentDelta: toolCall.arguments,
+              });
+
+              onEvent({
+                type: "tool_call_complete",
+                toolCall: {
+                  id: toolCall.id,
+                  name: toolCall.name,
+                  arguments: toolCall.arguments,
+                },
+              });
+            }
+          }
+        }
+      } catch (error) {
+        // Silently ignore parsing errors
+      }
     }
 
-    onComplete(fullMessage);
+    // Google might also return function calls in the final response
+    try {
+      const response = await result.response;
+      const candidate = response.candidates?.[0];
+      if (candidate?.content?.parts) {
+        for (const part of candidate.content.parts) {
+          if (part.functionCall && !toolCalls.some(tc => tc.name === part.functionCall.name)) {
+            const toolCall: ConversationToolCall = {
+              id: `google_tool_${Date.now()}_${toolCalls.length}`,
+              name: part.functionCall.name,
+              arguments: JSON.stringify(part.functionCall.args || {}),
+            };
+            toolCalls.push(toolCall);
+
+            // Emit events for function calls found in final response
+            onEvent({
+              type: "tool_call_start",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+              },
+            });
+
+            onEvent({
+              type: "tool_call_complete",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+                arguments: toolCall.arguments,
+              },
+            });
+          }
+        }
+      }
+    } catch (error) {
+      // Silently ignore parsing errors
+    }
+
+    onComplete(fullMessage, toolCalls);
   } catch (error) {
     onEvent({
       type: "error",
