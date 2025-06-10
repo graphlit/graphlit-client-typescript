@@ -1,5 +1,17 @@
-mutation ReviseContent($prompt: String!, $content: EntityReferenceInput!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
-  reviseContent(prompt: $prompt, content: $content, id: $id, specification: $specification, correlationId: $correlationId) {
+mutation ReviseContent(
+  $prompt: String!
+  $content: EntityReferenceInput!
+  $id: ID
+  $specification: EntityReferenceInput
+  $correlationId: String
+) {
+  reviseContent(
+    prompt: $prompt
+    content: $content
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
     conversation {
       id
     }

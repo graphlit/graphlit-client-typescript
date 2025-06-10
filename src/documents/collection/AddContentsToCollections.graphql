@@ -1,4 +1,7 @@
-mutation AddContentsToCollections($contents: [EntityReferenceInput!]!, $collections: [EntityReferenceInput!]!) {
+mutation AddContentsToCollections(
+  $contents: [EntityReferenceInput!]!
+  $collections: [EntityReferenceInput!]!
+) {
   addContentsToCollections(contents: $contents, collections: $collections) {
     id
     name

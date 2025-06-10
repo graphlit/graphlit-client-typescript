@@ -1,4 +1,7 @@
-mutation RemoveContentsFromCollection($contents: [EntityReferenceInput!]!, $collection: EntityReferenceInput!) {
+mutation RemoveContentsFromCollection(
+  $contents: [EntityReferenceInput!]!
+  $collection: EntityReferenceInput!
+) {
   removeContentsFromCollection(contents: $contents, collection: $collection) {
     id
     name
