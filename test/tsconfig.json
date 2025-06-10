@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": ["vitest/globals", "node"],
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": ["*.ts", "*.test.ts", "../src/**/*"],
+  "exclude": ["node_modules", "dist", "coverage"]
+}

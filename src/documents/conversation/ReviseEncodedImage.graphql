@@ -1,5 +1,19 @@
-mutation ReviseEncodedImage($prompt: String!, $mimeType: String!, $data: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
-  reviseEncodedImage(prompt: $prompt, mimeType: $mimeType, data: $data, id: $id, specification: $specification, correlationId: $correlationId) {
+mutation ReviseEncodedImage(
+  $prompt: String!
+  $mimeType: String!
+  $data: String!
+  $id: ID
+  $specification: EntityReferenceInput
+  $correlationId: String
+) {
+  reviseEncodedImage(
+    prompt: $prompt
+    mimeType: $mimeType
+    data: $data
+    id: $id
+    specification: $specification
+    correlationId: $correlationId
+  ) {
     conversation {
       id
     }

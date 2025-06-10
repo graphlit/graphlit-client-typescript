@@ -1,5 +1,13 @@
-mutation DeleteAllConversations($filter: ConversationFilter, $isSynchronous: Boolean, $correlationId: String) {
-  deleteAllConversations(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
+mutation DeleteAllConversations(
+  $filter: ConversationFilter
+  $isSynchronous: Boolean
+  $correlationId: String
+) {
+  deleteAllConversations(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }

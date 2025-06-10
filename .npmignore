@@ -1,19 +1,58 @@
-# Source TypeScript files
+# Source TypeScript files (ship only compiled)
 src/
+*.ts
+!*.d.ts
 
 # Tests and examples
+test/
 tests/
 examples/
+*.test.*
+*.spec.*
+coverage/
+.nyc_output/
 
 # Configuration files
 tsconfig.json
+vitest.config.ts
+.eslintrc*
+.prettierrc*
 .jest/
-.nyc_output/
-coverage/
-
-# Environment files
-.env.example
-.env
-
 codegen.yml
 azure-pipelines.yml
+
+# Environment files
+.env
+.env.*
+.env.example
+
+# Documentation (keep README, CHANGELOG, LICENSE)
+docs/
+*.md
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+# Development
+CLAUDE.md
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+.npmignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml

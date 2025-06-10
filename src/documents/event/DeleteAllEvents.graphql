@@ -1,5 +1,13 @@
-mutation DeleteAllEvents($filter: EventFilter, $isSynchronous: Boolean, $correlationId: String) {
-  deleteAllEvents(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
+mutation DeleteAllEvents(
+  $filter: EventFilter
+  $isSynchronous: Boolean
+  $correlationId: String
+) {
+  deleteAllEvents(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }

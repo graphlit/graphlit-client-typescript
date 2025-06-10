@@ -14,6 +14,119 @@ import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
 import * as dotenv from "dotenv";
+import {
+  getModelName,
+  isStreamingSupported,
+  getServiceType,
+} from "./model-mapping.js";
+import {
+  AgentOptions,
+  AgentResult,
+  StreamAgentOptions,
+  ToolCallResult,
+  ToolHandler,
+} from "./types/agent.js";
+import { AgentStreamEvent } from "./types/ui-events.js";
+import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
+import {
+  formatMessagesForOpenAI,
+  formatMessagesForAnthropic,
+  formatMessagesForGoogle,
+  OpenAIMessage,
+  AnthropicMessage,
+  GoogleMessage,
+} from "./streaming/llm-formatters.js";
+import {
+  streamWithOpenAI,
+  streamWithAnthropic,
+  streamWithGoogle,
+} from "./streaming/providers.js";
+// Optional imports for streaming LLM clients
+// These are peer dependencies and may not be installed
+let OpenAI: typeof import("openai").default | undefined;
+let Anthropic: typeof import("@anthropic-ai/sdk").default | undefined;
+let GoogleGenerativeAI:
+  | typeof import("@google/generative-ai").GoogleGenerativeAI
+  | undefined;
+
+try {
+  OpenAI = require("openai").default || require("openai");
+} catch (e) {
+  // OpenAI not installed
+}
+
+try {
+  Anthropic =
+    require("@anthropic-ai/sdk").default || require("@anthropic-ai/sdk");
+} catch (e) {
+  // Anthropic SDK not installed
+}
+
+try {
+  GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
+} catch (e) {
+  // Google Generative AI not installed
+}
+
+// Provider categorization for streaming capabilities
+const STREAMING_PROVIDERS = {
+  // Native streaming with dedicated SDKs
+  NATIVE: [
+    Types.ModelServiceTypes.OpenAi,
+    Types.ModelServiceTypes.Anthropic,
+    Types.ModelServiceTypes.Google,
+  ] as Types.ModelServiceTypes[],
+
+  // OpenAI-compatible streaming (use OpenAI SDK)
+  OPENAI_COMPATIBLE: [
+    Types.ModelServiceTypes.Groq,
+    Types.ModelServiceTypes.Cerebras,
+    Types.ModelServiceTypes.Mistral,
+    Types.ModelServiceTypes.Deepseek,
+  ] as Types.ModelServiceTypes[],
+
+  // May require fallback simulation
+  FALLBACK_CANDIDATES: [
+    Types.ModelServiceTypes.AzureAi,
+    Types.ModelServiceTypes.AzureOpenAi,
+    Types.ModelServiceTypes.Cohere,
+    Types.ModelServiceTypes.Bedrock,
+    Types.ModelServiceTypes.Jina,
+    Types.ModelServiceTypes.Replicate,
+    Types.ModelServiceTypes.Voyage,
+  ] as Types.ModelServiceTypes[],
+};
+
+// Smooth streaming buffer implementation
+
+// Helper to create smooth event handler
+
+// Stream event types for streamConversation
+export type StreamEvent =
+  | { type: "start"; conversationId: string }
+  | { type: "token"; token: string }
+  | { type: "message"; message: string }
+  | { type: "tool_call_start"; toolCall: { id: string; name: string } }
+  | { type: "tool_call_delta"; toolCallId: string; argumentDelta: string }
+  | {
+      type: "tool_call_complete";
+      toolCall: { id: string; name: string; arguments: string };
+    }
+  | { type: "complete"; messageId?: string; conversationId?: string }
+  | { type: "error"; error: string };
+
+// Re-export agent types
+export type {
+  AgentOptions,
+  AgentResult,
+  StreamAgentOptions,
+  ToolCallResult,
+  UsageInfo,
+  AgentError,
+} from "./types/agent.js";
+
+// Re-export UI event types
+export type { AgentStreamEvent } from "./types/ui-events.js";
 
 // Define the Graphlit class
 class Graphlit {
@@ -27,6 +140,11 @@ class Graphlit {
   private userId: string | undefined;
   private jwtSecret: string | undefined;
 
+  // Streaming client instances (optional - can be provided by user)
+  private openaiClient?: any;
+  private anthropicClient?: any;
+  private googleClient?: any;
+
   constructor(
     organizationId?: string,
     environmentId?: string,
@@ -35,7 +153,12 @@ class Graphlit {
     userId?: string,
     apiUri?: string
   ) {
-    this.apiUri = apiUri || "https://data-scus.graphlit.io/api/v1/graphql";
+    this.apiUri =
+      apiUri ||
+      (typeof process !== "undefined"
+        ? process.env.GRAPHLIT_API_URL
+        : undefined) ||
+      "https://data-scus.graphlit.io/api/v1/graphql";
 
     if (typeof process !== "undefined") {
       dotenv.config();
@@ -109,6 +232,30 @@ class Graphlit {
         },
       },
     });
+  }
+
+  /**
+   * Set a custom OpenAI client instance for streaming
+   * @param client - OpenAI client instance (e.g., new OpenAI({ apiKey: "..." }))
+   */
+  setOpenAIClient(client: any): void {
+    this.openaiClient = client;
+  }
+
+  /**
+   * Set a custom Anthropic client instance for streaming
+   * @param client - Anthropic client instance (e.g., new Anthropic({ apiKey: "..." }))
+   */
+  setAnthropicClient(client: any): void {
+    this.anthropicClient = client;
+  }
+
+  /**
+   * Set a custom Google Generative AI client instance for streaming
+   * @param client - Google GenerativeAI client instance (e.g., new GoogleGenerativeAI(apiKey))
+   */
+  setGoogleClient(client: any): void {
+    this.googleClient = client;
   }
 
   private generateToken() {
@@ -1333,6 +1480,7 @@ class Graphlit {
     prompt: string,
     id?: string,
     specification?: Types.EntityReferenceInput,
+    tools?: Types.ToolDefinitionInput[],
     includeDetails?: boolean,
     correlationId?: string
   ): Promise<Types.FormatConversationMutation> {
@@ -1342,6 +1490,7 @@ class Graphlit {
         prompt: string;
         id?: string;
         specification?: Types.EntityReferenceInput;
+        tools?: Types.ToolDefinitionInput[];
         includeDetails?: boolean;
         correlationId?: string;
       }
@@ -1349,6 +1498,7 @@ class Graphlit {
       prompt: prompt,
       id: id,
       specification: specification,
+      tools: tools,
       includeDetails: includeDetails,
       correlationId: correlationId,
     });
@@ -3523,6 +3673,855 @@ class Graphlit {
     >(Documents.DeleteObservation, { id: id });
   }
 
+  /**
+   * Creates an event handler that supports UI streaming mode
+   * @internal
+   */
+
+  /**
+   * Check if streaming is supported with the current configuration
+   * @param specification - Optional specification to check compatibility
+   * @returns true if streaming is available, false otherwise
+   */
+  public supportsStreaming(
+    specification?: Types.Specification | Types.EntityReferenceInput
+  ): boolean {
+    // If we have a full specification, check its service type
+    if (specification && "modelService" in specification) {
+      const serviceType = specification.modelService;
+
+      switch (serviceType) {
+        case Types.ModelServiceTypes.OpenAi:
+          return typeof OpenAI !== "undefined";
+        case Types.ModelServiceTypes.Anthropic:
+          return typeof Anthropic !== "undefined";
+        case Types.ModelServiceTypes.Google:
+          return typeof GoogleGenerativeAI !== "undefined";
+        default:
+          return false;
+      }
+    }
+
+    // If we only have a reference or no specification, check if any client is available
+    const hasOpenAI = typeof OpenAI !== "undefined";
+    const hasAnthropic = typeof Anthropic !== "undefined";
+    const hasGoogle = typeof GoogleGenerativeAI !== "undefined";
+
+    return hasOpenAI || hasAnthropic || hasGoogle;
+  }
+
+  /**
+   * Execute an agent with non-streaming response
+   * @param prompt - The user prompt
+   * @param conversationId - Optional conversation ID to continue
+   * @param specification - Optional specification for the LLM
+   * @param tools - Optional tool definitions
+   * @param toolHandlers - Optional tool handler functions
+   * @param options - Agent options
+   * @returns Complete agent result with message and tool calls
+   */
+  public async promptAgent(
+    prompt: string,
+    conversationId?: string,
+    specification?: Types.EntityReferenceInput,
+    tools?: Types.ToolDefinitionInput[],
+    toolHandlers?: Record<string, ToolHandler>,
+    options?: AgentOptions,
+    mimeType?: string,
+    data?: string, // base64 encoded
+    correlationId?: string
+  ): Promise<AgentResult> {
+    const startTime = Date.now();
+    const maxRounds = options?.maxToolRounds || 10;
+    const timeout = options?.timeout || 300000; // 5 minutes default
+
+    // Create abort controller for timeout
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), timeout);
+
+    try {
+      // 1. Ensure conversation exists
+      let actualConversationId = conversationId;
+      if (!actualConversationId) {
+        const createResponse = await this.createConversation(
+          {
+            name: `Agent conversation`,
+            specification: specification,
+            tools: tools,
+          },
+          correlationId
+        );
+        actualConversationId = createResponse.createConversation?.id;
+        if (!actualConversationId) {
+          throw new Error("Failed to create conversation");
+        }
+      }
+
+      // 2. Initial prompt
+      const promptResponse = await this.promptConversation(
+        prompt,
+        actualConversationId,
+        specification,
+        mimeType,
+        data,
+        tools,
+        false, // requireTool
+        false, // includeDetails
+        correlationId
+      );
+
+      let currentMessage = promptResponse.promptConversation?.message;
+      if (!currentMessage) {
+        throw new Error("No message in prompt response");
+      }
+
+      // 3. Tool calling loop
+      const allToolCalls: ToolCallResult[] = [];
+      let rounds = 0;
+      let totalTokens = 0;
+
+      while (
+        currentMessage.toolCalls?.length &&
+        rounds < maxRounds &&
+        !abortController.signal.aborted
+      ) {
+        rounds++;
+
+        // Execute tools
+        const toolResults = await this.executeToolsForPromptAgent(
+          currentMessage.toolCalls.filter(
+            (tc): tc is Types.ConversationToolCall => tc !== null
+          ),
+          toolHandlers || {},
+          allToolCalls,
+          abortController.signal
+        );
+
+        if (abortController.signal.aborted) {
+          throw new Error("Operation timed out");
+        }
+
+        // Continue conversation
+        const continueResponse = await this.continueConversation(
+          actualConversationId,
+          toolResults,
+          correlationId
+        );
+
+        currentMessage = continueResponse.continueConversation?.message;
+        if (!currentMessage) break;
+
+        // Track token usage
+        if (continueResponse.continueConversation?.message?.tokens) {
+          totalTokens += continueResponse.continueConversation.message.tokens;
+        }
+      }
+
+      return {
+        message: currentMessage?.message || "",
+        conversationId: actualConversationId,
+      };
+    } catch (error: any) {
+      // Return partial result with error
+      const isTimeout = error.message === "Operation timed out";
+
+      return {
+        message: "",
+        conversationId: conversationId || "",
+        error: {
+          message: error.message || "Unknown error",
+          code: error.code || (isTimeout ? "TIMEOUT" : "UNKNOWN"),
+          recoverable: isTimeout || error.code === "RATE_LIMIT",
+          details: error.response?.data,
+        },
+      };
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  /**
+   * Execute an agent with streaming response
+   * @param prompt - The user prompt
+   * @param onEvent - Event handler for streaming events
+   * @param conversationId - Optional conversation ID to continue
+   * @param specification - Optional specification for the LLM
+   * @param tools - Optional tool definitions
+   * @param toolHandlers - Optional tool handler functions
+   * @param options - Stream agent options
+   * @throws Error if streaming is not supported
+   */
+  public async streamAgent(
+    prompt: string,
+    onEvent: (event: StreamEvent | AgentStreamEvent) => void,
+    conversationId?: string,
+    specification?: Types.EntityReferenceInput,
+    tools?: Types.ToolDefinitionInput[],
+    toolHandlers?: Record<string, ToolHandler>,
+    options?: StreamAgentOptions,
+    mimeType?: string,
+    data?: string, // base64 encoded
+    correlationId?: string
+  ): Promise<void> {
+    const maxRounds = options?.maxToolRounds || 100;
+    const abortSignal = options?.abortSignal;
+    let uiAdapter: UIEventAdapter | undefined;
+
+    // Check if already aborted
+    if (abortSignal?.aborted) {
+      throw new Error("Operation aborted");
+    }
+
+    try {
+      // Get full specification if needed
+      const fullSpec = specification?.id
+        ? ((await this.getSpecification(specification.id))
+            .specification as Types.Specification)
+        : undefined;
+
+      // Check streaming support
+      if (!this.supportsStreaming(fullSpec)) {
+        throw new Error(
+          "Streaming is not supported for this specification. " +
+            "Use promptAgent() instead or configure a streaming client."
+        );
+      }
+
+      // Ensure conversation
+      let actualConversationId = conversationId;
+      if (!actualConversationId) {
+        const createResponse = await this.createConversation(
+          {
+            name: `Streaming agent conversation`,
+            specification: specification,
+            tools: tools,
+          },
+          correlationId
+        );
+        actualConversationId = createResponse.createConversation?.id;
+        if (!actualConversationId) {
+          throw new Error("Failed to create conversation");
+        }
+      }
+
+      // Create UI event adapter
+      uiAdapter = new UIEventAdapter(
+        onEvent as (event: AgentStreamEvent) => void,
+        actualConversationId,
+        {
+          showTokenStream: options?.showTokenStream ?? true,
+          smoothingEnabled: options?.smoothingEnabled ?? true,
+          chunkingStrategy: options?.chunkingStrategy ?? "word",
+          smoothingDelay: options?.smoothingDelay ?? 30,
+        }
+      );
+
+      // Start the streaming conversation
+      await this.executeStreamingAgent(
+        prompt,
+        actualConversationId,
+        fullSpec!,
+        tools,
+        toolHandlers,
+        uiAdapter,
+        maxRounds,
+        abortSignal,
+        mimeType,
+        data,
+        correlationId
+      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Streaming failed";
+
+      if (uiAdapter) {
+        uiAdapter.handleEvent({
+          type: "error",
+          error: errorMessage,
+        });
+      } else {
+        // Fallback error event
+        (onEvent as (event: AgentStreamEvent) => void)({
+          type: "error",
+          error: {
+            message: errorMessage,
+            recoverable: false,
+          },
+          conversationId: conversationId || "",
+          timestamp: new Date(),
+        });
+      }
+
+      throw error;
+    } finally {
+      // Clean up adapter
+      if (uiAdapter) {
+        uiAdapter.dispose();
+      }
+    }
+  }
+
+  /**
+   * Execute the streaming agent workflow with tool calling loop
+   */
+  private async executeStreamingAgent(
+    prompt: string,
+    conversationId: string,
+    specification: Types.Specification,
+    tools: Types.ToolDefinitionInput[] | undefined,
+    toolHandlers: Record<string, ToolHandler> | undefined,
+    uiAdapter: UIEventAdapter,
+    maxRounds: number,
+    abortSignal: AbortSignal | undefined,
+    mimeType?: string,
+    data?: string,
+    correlationId?: string
+  ): Promise<void> {
+    let currentRound = 0;
+    let fullMessage = "";
+
+    // Start the conversation
+    uiAdapter.handleEvent({
+      type: "start",
+      conversationId,
+    });
+
+    // Format conversation once at the beginning
+    const formatResponse = await this.formatConversation(
+      prompt,
+      conversationId,
+      { id: specification.id },
+      tools,
+      true,
+      correlationId
+    );
+
+    const formattedPrompt = formatResponse.formatConversation?.message?.message;
+    if (!formattedPrompt) {
+      throw new Error("Failed to format conversation");
+    }
+
+    // Build message array with conversation history
+    const messages: Types.ConversationMessage[] = [];
+
+    // Add system prompt if specified
+    if (specification.systemPrompt) {
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.System,
+        message: specification.systemPrompt,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Get conversation history to maintain context
+    const conversationResponse = await this.getConversation(conversationId);
+    const conversation = conversationResponse.conversation;
+
+    if (conversation?.messages && conversation.messages.length > 0) {
+      // Add all previous messages (formatConversation already added the current prompt)
+      const previousMessages =
+        conversation.messages as Types.ConversationMessage[];
+      messages.push(...previousMessages);
+    } else {
+      // If no history, just add the current user message
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.User,
+        message: formattedPrompt,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    const serviceType = getServiceType(specification);
+
+    // Handle tool calling loop locally
+    while (currentRound < maxRounds) {
+      if (abortSignal?.aborted) {
+        throw new Error("Operation aborted");
+      }
+
+      let toolCalls: Types.ConversationToolCall[] = [];
+      let roundMessage = "";
+
+      // Stream with appropriate provider
+      if (serviceType === Types.ModelServiceTypes.OpenAi && OpenAI) {
+        const openaiMessages = formatMessagesForOpenAI(messages);
+        await this.streamWithOpenAI(
+          specification,
+          openaiMessages,
+          tools,
+          uiAdapter,
+          (message, calls) => {
+            roundMessage = message;
+            toolCalls = calls;
+          }
+        );
+      } else if (
+        serviceType === Types.ModelServiceTypes.Anthropic &&
+        Anthropic
+      ) {
+        const { system, messages: anthropicMessages } =
+          formatMessagesForAnthropic(messages);
+        await this.streamWithAnthropic(
+          specification,
+          anthropicMessages,
+          system,
+          tools,
+          uiAdapter,
+          (message, calls) => {
+            roundMessage = message;
+            toolCalls = calls;
+          }
+        );
+      } else if (
+        serviceType === Types.ModelServiceTypes.Google &&
+        GoogleGenerativeAI
+      ) {
+        const googleMessages = formatMessagesForGoogle(messages);
+        // Google doesn't use system prompts separately, they're incorporated into messages
+        await this.streamWithGoogle(
+          specification,
+          googleMessages,
+          undefined, // systemPrompt - Google handles this differently
+          tools,
+          uiAdapter,
+          (message, calls) => {
+            roundMessage = message;
+            toolCalls = calls;
+          }
+        );
+      } else {
+        // Fallback to non-streaming
+        await this.fallbackToNonStreaming(
+          prompt,
+          conversationId,
+          specification,
+          tools,
+          mimeType,
+          data,
+          uiAdapter,
+          correlationId
+        );
+        break;
+      }
+
+      // Update the full message
+      fullMessage = roundMessage;
+
+      // If no tool calls, we're done
+      if (!toolCalls || toolCalls.length === 0) {
+        break;
+      }
+
+      // Execute tools and prepare for next round
+      if (toolHandlers && toolCalls.length > 0) {
+        // Add assistant message with tool calls to conversation
+        const assistantMessage = {
+          __typename: "ConversationMessage" as const,
+          role: Types.ConversationRoleTypes.Assistant,
+          message: roundMessage,
+          toolCalls: toolCalls,
+          timestamp: new Date().toISOString(),
+        };
+        messages.push(assistantMessage);
+
+        // Execute tools and add responses
+        for (const toolCall of toolCalls) {
+          const handler = toolHandlers[toolCall.name];
+          if (!handler) {
+            console.warn(`No handler for tool: ${toolCall.name}`);
+            continue;
+          }
+
+          try {
+            const args = JSON.parse(toolCall.arguments);
+
+            // Update UI
+            uiAdapter.handleEvent({
+              type: "tool_call_start",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+              },
+            });
+
+            // Execute tool
+            const result = await handler(args);
+
+            // Update UI
+            uiAdapter.setToolResult(toolCall.id, result);
+
+            // Add tool response to messages
+            messages.push({
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.Tool,
+              message:
+                typeof result === "string" ? result : JSON.stringify(result),
+              toolCallId: toolCall.id,
+              timestamp: new Date().toISOString(),
+            });
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error ? error.message : "Unknown error";
+            console.error(`Tool execution error for ${toolCall.name}:`, error);
+
+            // Update UI with error
+            uiAdapter.setToolResult(toolCall.id, undefined, errorMessage);
+
+            // Add error response
+            messages.push({
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.Tool,
+              message: `Error: ${errorMessage}`,
+              toolCallId: toolCall.id,
+              timestamp: new Date().toISOString(),
+            });
+          }
+        }
+      }
+
+      currentRound++;
+    }
+
+    // Complete the conversation
+    if (fullMessage) {
+      await this.completeConversation(
+        fullMessage.trim(),
+        conversationId,
+        correlationId
+      );
+    }
+
+    // Emit completion event
+    uiAdapter.handleEvent({
+      type: "complete",
+      conversationId,
+    });
+  }
+
+  /**
+   * Build message array for LLM from conversation history
+   */
+  private async buildMessageArray(
+    conversationId: string,
+    specification: Types.Specification,
+    currentPrompt: string
+  ): Promise<Types.ConversationMessage[]> {
+    const messages: Types.ConversationMessage[] = [];
+
+    // Add system prompt if present
+    if (specification.systemPrompt) {
+      const systemMessage = {
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.System,
+        message: specification.systemPrompt,
+        timestamp: new Date().toISOString(),
+      };
+      messages.push(systemMessage);
+    }
+
+    // Get conversation history
+    const conversationResponse = await this.getConversation(conversationId);
+    const conversation = conversationResponse.conversation;
+
+    if (conversation?.messages && conversation.messages.length > 0) {
+      // Add previous messages (excluding the current one)
+      const previousMessages = conversation.messages.slice(
+        0,
+        -1
+      ) as Types.ConversationMessage[];
+      messages.push(...previousMessages);
+    }
+
+    // Add current user message
+    const currentMessage = {
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.User, // Current prompt is from the user
+      message: currentPrompt,
+      timestamp: new Date().toISOString(),
+    };
+    messages.push(currentMessage);
+
+    return messages;
+  }
+
+  /**
+   * Execute tools during streaming with proper event emission
+   */
+  private async executeToolsInStream(
+    toolCalls: Types.ConversationToolCall[],
+    toolHandlers: Record<string, ToolHandler>,
+    uiAdapter: UIEventAdapter,
+    abortSignal: AbortSignal | undefined
+  ): Promise<void> {
+    const toolPromises = toolCalls.map(async (toolCall) => {
+      if (abortSignal?.aborted) return;
+
+      const handler = toolHandlers[toolCall.name];
+      if (!handler) {
+        uiAdapter.setToolResult(
+          toolCall.id,
+          null,
+          `No handler for tool: ${toolCall.name}`
+        );
+        return;
+      }
+
+      try {
+        const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
+        const result = await handler(args);
+        uiAdapter.setToolResult(toolCall.id, result);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Tool execution failed";
+        uiAdapter.setToolResult(toolCall.id, null, errorMessage);
+      }
+    });
+
+    await Promise.all(toolPromises);
+  }
+
+  /**
+   * Format tool results for API
+   */
+  private async formatToolResults(
+    toolCalls: Types.ConversationToolCall[],
+    toolHandlers: Record<string, ToolHandler>
+  ): Promise<Types.ConversationToolResponseInput[]> {
+    const results: Types.ConversationToolResponseInput[] = [];
+
+    for (const toolCall of toolCalls) {
+      const handler = toolHandlers[toolCall.name];
+      if (handler) {
+        try {
+          const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
+          const result = await handler(args);
+          results.push({
+            id: toolCall.id,
+            content: JSON.stringify(result),
+          });
+        } catch (error) {
+          results.push({
+            id: toolCall.id,
+            content: JSON.stringify({
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Tool execution failed",
+            }),
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Fallback to non-streaming when streaming is not available
+   */
+  private async fallbackToNonStreaming(
+    prompt: string,
+    conversationId: string,
+    specification: Types.Specification,
+    tools: Types.ToolDefinitionInput[] | undefined,
+    mimeType: string | undefined,
+    data: string | undefined,
+    uiAdapter: UIEventAdapter,
+    correlationId: string | undefined
+  ): Promise<void> {
+    const response = await this.promptConversation(
+      prompt,
+      conversationId,
+      { id: specification.id },
+      mimeType,
+      data,
+      tools,
+      false,
+      false,
+      correlationId
+    );
+
+    const message = response.promptConversation?.message;
+    if (message?.message) {
+      // Simulate streaming by emitting tokens
+      const words = message.message.split(" ");
+      for (let i = 0; i < words.length; i++) {
+        const token = i === 0 ? words[i] : " " + words[i];
+        uiAdapter.handleEvent({ type: "token", token });
+      }
+
+      uiAdapter.handleEvent({ type: "message", message: message.message });
+    }
+  }
+
+  /**
+   * Stream with OpenAI client
+   */
+  private async streamWithOpenAI(
+    specification: Types.Specification,
+    messages: OpenAIMessage[],
+    tools: Types.ToolDefinitionInput[] | undefined,
+    uiAdapter: UIEventAdapter,
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
+  ): Promise<void> {
+    if (!OpenAI) {
+      throw new Error("OpenAI client not available");
+    }
+
+    // Use provided client or create a new one
+    const openaiClient =
+      this.openaiClient ||
+      new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY || "",
+      });
+
+    await streamWithOpenAI(
+      specification,
+      messages,
+      tools,
+      openaiClient,
+      (event) => uiAdapter.handleEvent(event),
+      onComplete
+    );
+  }
+
+  /**
+   * Stream with Anthropic client
+   */
+  private async streamWithAnthropic(
+    specification: Types.Specification,
+    messages: AnthropicMessage[],
+    systemPrompt: string | undefined,
+    tools: Types.ToolDefinitionInput[] | undefined,
+    uiAdapter: UIEventAdapter,
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
+  ): Promise<void> {
+    if (!Anthropic) {
+      throw new Error("Anthropic client not available");
+    }
+
+    // Use provided client or create a new one
+    const anthropicClient =
+      this.anthropicClient ||
+      new Anthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY || "",
+      });
+
+    await streamWithAnthropic(
+      specification,
+      messages,
+      systemPrompt,
+      tools,
+      anthropicClient,
+      (event) => uiAdapter.handleEvent(event),
+      onComplete
+    );
+  }
+
+  /**
+   * Stream with Google client
+   */
+  private async streamWithGoogle(
+    specification: Types.Specification,
+    messages: GoogleMessage[],
+    systemPrompt: string | undefined,
+    tools: Types.ToolDefinitionInput[] | undefined,
+    uiAdapter: UIEventAdapter,
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
+  ): Promise<void> {
+    if (!GoogleGenerativeAI) {
+      throw new Error("Google GenerativeAI client not available");
+    }
+
+    // Use provided client or create a new one
+    const googleClient =
+      this.googleClient ||
+      new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+
+    await streamWithGoogle(
+      specification,
+      messages,
+      systemPrompt,
+      tools,
+      googleClient,
+      (event) => uiAdapter.handleEvent(event),
+      onComplete
+    );
+  }
+
+  // Helper method to execute tools for promptAgent
+  private async executeToolsForPromptAgent(
+    toolCalls: Types.ConversationToolCall[],
+    toolHandlers: Record<string, ToolHandler>,
+    allToolCalls: ToolCallResult[],
+    signal: AbortSignal
+  ): Promise<Types.ConversationToolResponseInput[]> {
+    const responses: Types.ConversationToolResponseInput[] = [];
+
+    // Execute tools in parallel for better performance
+    const toolPromises = toolCalls.map(async (toolCall) => {
+      if (!toolCall || signal.aborted) return null;
+
+      const startTime = Date.now();
+      const handler = toolHandlers[toolCall.name || ""];
+
+      let result: any;
+      let error: string | undefined;
+
+      try {
+        if (!handler) {
+          throw new Error(`No handler found for tool: ${toolCall.name}`);
+        }
+
+        const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
+
+        // Add timeout for individual tool calls (30 seconds)
+        const toolTimeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Tool execution timeout")), 30000)
+        );
+
+        result = await Promise.race([handler(args), toolTimeout]);
+      } catch (e: any) {
+        error = e.message || "Tool execution failed";
+        console.error(`Tool ${toolCall.name} failed:`, e);
+      }
+
+      // Record for result
+      const toolResult: ToolCallResult = {
+        id: toolCall.id,
+        name: toolCall.name || "",
+        arguments: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
+        result,
+        error,
+        duration: Date.now() - startTime,
+      };
+
+      allToolCalls.push(toolResult);
+
+      // Response for API
+      return {
+        id: toolCall.id,
+        content: error ? error : result ? JSON.stringify(result) : "",
+      };
+    });
+
+    const results = await Promise.all(toolPromises);
+    return results.filter(
+      (r): r is Types.ConversationToolResponseInput => r !== null
+    ) as Types.ConversationToolResponseInput[];
+  }
+
   // helper functions
   private prettyPrintGraphQLError(err: GraphQLFormattedError): string {
     if (!err) return "Unknown error";
@@ -3549,7 +4548,7 @@ class Graphlit {
 
   private async mutateAndCheckError<
     TData,
-    TVariables extends OperationVariables = OperationVariables
+    TVariables extends OperationVariables = OperationVariables,
   >(mutation: DocumentNode, variables?: TVariables): Promise<TData> {
     if (this.client === undefined)
       throw new Error("Apollo Client not configured.");
@@ -3594,7 +4593,7 @@ class Graphlit {
 
   private async queryAndCheckError<
     TData,
-    TVariables extends OperationVariables = OperationVariables
+    TVariables extends OperationVariables = OperationVariables,
   >(query: DocumentNode, variables?: TVariables): Promise<TData> {
     if (this.client === undefined)
       throw new Error("Apollo Client not configured.");
@@ -3640,3 +4639,16 @@ class Graphlit {
 
 export { Graphlit };
 export * as Types from "./generated/graphql-types.js";
+
+// Export streaming helpers
+export {
+  StreamEventAggregator,
+  AggregatedEvent,
+  formatSSEEvent,
+  createSSEStream,
+  wrapToolHandlers,
+  enhanceToolCalls,
+  ConversationMetrics,
+  ToolResultEmitter,
+  ServerMapping,
+} from "./stream-helpers.js";

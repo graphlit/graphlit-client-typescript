@@ -1,5 +1,13 @@
-mutation DeleteAllPlaces($filter: PlaceFilter, $isSynchronous: Boolean, $correlationId: String) {
-  deleteAllPlaces(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
+mutation DeleteAllPlaces(
+  $filter: PlaceFilter
+  $isSynchronous: Boolean
+  $correlationId: String
+) {
+  deleteAllPlaces(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
     id
     state
   }
