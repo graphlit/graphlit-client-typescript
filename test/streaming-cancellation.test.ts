@@ -105,7 +105,8 @@ describe("Streaming Cancellation", () => {
             console.log(`🆔 Conversation started: ${conversationId}`);
           } else if (event.type === "message_update") {
             // Cancel after receiving some content
-            if (events.filter((e) => e.type === "message_update").length >= 3) {
+            const messageUpdateCount = events.filter((e) => e.type === "message_update").length;
+            if (messageUpdateCount === 3 && !cancelledByUs) {
               console.log("🛑 Cancelling stream after 3 message updates...");
               cancelledByUs = true;
               abortController.abort();
@@ -119,7 +120,10 @@ describe("Streaming Cancellation", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
+        undefined, // tools
+        undefined, // toolHandlers
+        { abortSignal: abortController.signal } // Pass the abort signal here!
       );
 
       // Wait for the stream to complete (should be cancelled)
@@ -219,7 +223,10 @@ describe("Streaming Cancellation", () => {
               }
             },
             undefined,
-            { id: specId }
+            { id: specId },
+            undefined,
+            undefined,
+            { abortSignal: abortController.signal }
           );
         } catch (error) {
           console.log(`  ✅ Cancelled successfully with error`);
@@ -324,7 +331,8 @@ describe("Streaming Cancellation", () => {
         undefined,
         { id: specId },
         [slowTool],
-        { slowCalculation: toolHandler }
+        { slowCalculation: toolHandler },
+        { abortSignal: abortController.signal }
       );
 
       try {
@@ -414,7 +422,10 @@ describe("Streaming Cancellation", () => {
               }
             },
             undefined,
-            { id: specId }
+            { id: specId },
+            undefined,
+            undefined,
+            { abortSignal: conv.controller.signal }
           )
           .catch((error) => {
             if (conv.cancelled) {
@@ -507,7 +518,10 @@ describe("Streaming Cancellation", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
+        undefined,
+        undefined,
+        { abortSignal: abortController.signal }
       );
 
       try {
@@ -561,7 +575,10 @@ describe("Streaming Cancellation", () => {
             }
           },
           undefined,
-          { id: specId }
+          { id: specId },
+          undefined,
+          undefined,
+          { abortSignal: abortController.signal }
         );
       } catch (error) {
         console.log("✅ Pre-aborted stream rejected immediately");

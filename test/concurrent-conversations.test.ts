@@ -383,8 +383,11 @@ describe("Concurrent Conversations", () => {
         return;
       }
 
+      const prompt1 = `You are a helpful assistant playing a memory game. The special number for this game session is ${conversation1.secretNumber}. Please acknowledge that you understand the game and mention the special number.`;
+      console.log(`📝 Conv 1 Initial Prompt: "${prompt1}"`);
+
       await client.streamAgent(
-        `Remember this secret number: ${conversation1.secretNumber}. Confirm you've memorized it.`,
+        prompt1,
         (event: UIStreamEvent) => {
           if (event.type === "conversation_started") {
             conversation1.id = event.conversationId;
@@ -398,8 +401,11 @@ describe("Concurrent Conversations", () => {
       );
 
       // Start second conversation
+      const prompt2 = `You are a helpful assistant playing a memory game. The special number for this game session is ${conversation2.secretNumber}. Please acknowledge that you understand the game and mention the special number.`;
+      console.log(`📝 Conv 2 Initial Prompt: "${prompt2}"`);
+
       await client.streamAgent(
-        `Remember this secret number: ${conversation2.secretNumber}. Confirm you've memorized it.`,
+        prompt2,
         (event: UIStreamEvent) => {
           if (event.type === "conversation_started") {
             conversation2.id = event.conversationId;
@@ -420,9 +426,12 @@ describe("Concurrent Conversations", () => {
       console.log(`📝 Conv 2 ID: ${conversation2.id}`);
 
       // Now ask each conversation to recall their number concurrently
+      const recallPrompt = "In our memory game, what was the special number I mentioned?";
+      console.log(`\n📝 Recall Prompt: "${recallPrompt}"`);
+      
       const recallPromises = [
         client.streamAgent(
-          "What was the secret number I asked you to remember?",
+          recallPrompt,
           (event: UIStreamEvent) => {
             if (event.type === "conversation_completed") {
               conversation1.responses.push(event.message.message);
@@ -432,7 +441,7 @@ describe("Concurrent Conversations", () => {
           { id: specId }
         ),
         client.streamAgent(
-          "What was the secret number I asked you to remember?",
+          recallPrompt,
           (event: UIStreamEvent) => {
             if (event.type === "conversation_completed") {
               conversation2.responses.push(event.message.message);

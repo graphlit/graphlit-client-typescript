@@ -9,14 +9,12 @@ export default defineConfig({
     exclude: ["node_modules"],
     testTimeout: 60000, // 60 seconds for real API calls
     // Run tests sequentially instead of in parallel
-    pool: 'forks',
+    pool: "forks",
     poolOptions: {
       forks: {
-        singleFork: true
-      }
+        singleFork: false,
+      },
     },
-    // Alternative: use maxConcurrency
-    // maxConcurrency: 1,
   },
   resolve: {
     alias: {

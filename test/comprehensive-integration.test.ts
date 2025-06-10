@@ -249,7 +249,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           streamType: "fallback",
         };
 
-        const prompt = `Please introduce yourself as a helpful raccoon named McPoogle who loves to collect shiny objects`;
+        const prompt = `Please introduce yourself by name as a helpful raccoon named McPoogle who loves to collect shiny objects`;
         console.log(`📝 Prompt: "${prompt}"`);
 
         // Check if streaming is supported
@@ -329,10 +329,11 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const mentionsMcPoogle = lowerMessage.includes("mcpoogle");
         const isValidResponse = mentionsRaccoon || mentionsMcPoogle;
 
-        expect(isValidResponse).toBe(true);
         console.log(
-          `✅ ${testSpec.name}: Response includes character reference (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
+          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
         );
+
+        expect(isValidResponse).toBe(true);
 
         // Display performance metrics
         displayMetrics(metrics, testSpec.name);
@@ -376,7 +377,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           streamType: "native",
         };
 
-        const prompt = `Please introduce yourself as a helpful raccoon named McPoogle who loves to collect shiny objects`;
+        const prompt = `Please introduce yourself by name as a helpful raccoon named McPoogle who loves to collect shiny objects`;
         console.log(`📝 Prompt: "${prompt}"`);
 
         // Check if streaming is supported
@@ -452,10 +453,11 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const mentionsMcPoogle = lowerMessage.includes("mcpoogle");
         const isValidResponse = mentionsRaccoon || mentionsMcPoogle;
 
-        expect(isValidResponse).toBe(true);
         console.log(
-          `✅ ${testSpec.name}: Response includes character reference (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
+          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
         );
+
+        expect(isValidResponse).toBe(true);
 
         // Display performance metrics
         displayMetrics(metrics, testSpec.name);

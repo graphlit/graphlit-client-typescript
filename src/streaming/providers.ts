@@ -366,12 +366,26 @@ export async function streamWithGoogle(
       }
     }
 
-    // Google might also return function calls in the final response
+    // Google might also return function calls or additional text in the final response
     try {
       const response = await result.response;
       const candidate = response.candidates?.[0];
       if (candidate?.content?.parts) {
         for (const part of candidate.content.parts) {
+          // Check for any final text we might have missed
+          if (part.text) {
+            const finalText = part.text;
+            // Only add if it's not already included in fullMessage
+            if (!fullMessage.endsWith(finalText)) {
+              fullMessage += finalText;
+              onEvent({
+                type: "token",
+                token: finalText,
+              });
+            }
+          }
+          
+          // Check for function calls
           if (part.functionCall && !toolCalls.some(tc => tc.name === part.functionCall.name)) {
             const toolCall: ConversationToolCall = {
               id: `google_tool_${Date.now()}_${toolCalls.length}`,

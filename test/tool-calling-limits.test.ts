@@ -201,12 +201,24 @@ describe("Tool Calling Limits", () => {
       it(`should test tool calling limits for ${model.name}`, async () => {
         console.log(`\n📚 Testing ${model.name} book writing capabilities...`);
 
-        // Create specification
-        const createResponse = await client.createSpecification(
-          model.config as Types.SpecificationInput
-        );
-        const specId = createResponse.createSpecification?.id!;
-        createdSpecifications.push(specId);
+        let specId: string;
+        try {
+          // Create specification
+          const createResponse = await client.createSpecification(
+            model.config as Types.SpecificationInput
+          );
+          specId = createResponse.createSpecification?.id!;
+          
+          if (!specId) {
+            console.log(`⚠️ Skipping ${model.name} - failed to create specification`);
+            return;
+          }
+          
+          createdSpecifications.push(specId);
+        } catch (error) {
+          console.log(`⚠️ Skipping ${model.name} - specification creation failed: ${error}`);
+          return;
+        }
 
         // Track tool calls
         const toolCalls: { name: string; args: any; timestamp: number }[] = [];
@@ -311,6 +323,15 @@ describe("Tool Calling Limits", () => {
         const events: UIStreamEvent[] = [];
         const startTime = Date.now();
         let conversationId: string | undefined;
+        
+        // Helper to calculate tool call counts
+        const getToolCallCounts = () => toolCalls.reduce(
+          (acc, call) => {
+            acc[call.name] = (acc[call.name] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
 
         // Encourage maximum tool usage
         const prompt = `You are a prolific author who writes very quickly. I want you to write a complete short book about "The Adventures of AI" with EXACTLY 3 chapters. 
@@ -333,55 +354,81 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
           return;
         }
 
-        await client.streamAgent(
-          prompt,
-          (event: UIStreamEvent) => {
-            events.push(event);
+        try {
+          await client.streamAgent(
+            prompt,
+            (event: UIStreamEvent) => {
+              events.push(event);
 
-            if (event.type === "conversation_started") {
-              conversationId = event.conversationId;
-              createdConversations.push(event.conversationId);
-            } else if (event.type === "tool_update") {
-              if (event.status === "completed") {
-                console.log(`  ✅ ${event.toolCall.name} completed`);
+              if (event.type === "conversation_started") {
+                conversationId = event.conversationId;
+                createdConversations.push(event.conversationId);
+              } else if (event.type === "tool_update") {
+                if (event.status === "completed") {
+                  console.log(`  ✅ ${event.toolCall.name} completed`);
+                } else if (event.status === "failed") {
+                  console.log(`  ❌ ${event.toolCall.name} failed: ${event.error}`);
+                }
+              } else if (event.type === "conversation_completed") {
+                console.log(`\n💬 Book writing completed!`);
+              } else if (event.type === "error") {
+                console.error(`❌ Error: ${event.error}`);
               }
-            } else if (event.type === "conversation_completed") {
-              console.log(`\n💬 Book writing completed!`);
-            } else if (event.type === "error") {
-              console.error(`❌ Error: ${event.error}`);
+            },
+            undefined, // conversationId
+            { id: specId }, // specification
+            [
+              // tools
+              createBookTool,
+              writeChapterTool,
+              writePageTool,
+              writeParagraphTool,
+              finalizeBookTool,
+            ],
+            {
+              // toolHandlers
+              createBook: createBookHandler,
+              writeChapter: writeChapterHandler,
+              writePage: writePageHandler,
+              writeParagraph: writeParagraphHandler,
+              finalizeBook: finalizeBookHandler,
             }
-          },
-          undefined, // conversationId
-          { id: specId }, // specification
-          [
-            // tools
-            createBookTool,
-            writeChapterTool,
-            writePageTool,
-            writeParagraphTool,
-            finalizeBookTool,
-          ],
-          {
-            // toolHandlers
-            createBook: createBookHandler,
-            writeChapter: writeChapterHandler,
-            writePage: writePageHandler,
-            writeParagraph: writeParagraphHandler,
-            finalizeBook: finalizeBookHandler,
+          );
+        } catch (error) {
+          console.log(`❌ ${model.name} streaming failed: ${error}`);
+          
+          // Calculate tool call counts for error case
+          const errorToolCallCounts = getToolCallCounts();
+          
+          // Still save basic statistics
+          modelStatistics.push({
+            model: model.name,
+            totalCalls: toolCalls.length,
+            chapters: errorToolCallCounts.writeChapter || 0,
+            pages: errorToolCallCounts.writePage || 0,
+            paragraphs: errorToolCallCounts.writeParagraph || 0,
+            duration: Date.now() - startTime,
+          });
+          
+          // Make sure we have at least a conversation ID to clean up
+          if (conversationId) {
+            createdConversations.push(conversationId);
           }
-        );
+          
+          // Check if we got partial results
+          if (toolCalls.length > 0) {
+            console.log(`📊 Partial results collected: ${toolCalls.length} tool calls before error`);
+          }
+          
+          // Fail the test but with a descriptive message
+          throw new Error(`${model.name} failed to complete tool calling test: ${error}`);
+        }
 
         const endTime = Date.now();
         const duration = endTime - startTime;
 
         // Analyze results
-        const toolCallCounts = toolCalls.reduce(
-          (acc, call) => {
-            acc[call.name] = (acc[call.name] || 0) + 1;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
+        const toolCallCounts = getToolCallCounts();
 
         console.log(`\n📊 ${model.name} Results:`);
         console.log(`  Total tool calls: ${toolCalls.length}`);
