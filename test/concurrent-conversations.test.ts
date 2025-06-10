@@ -469,7 +469,7 @@ describe("Concurrent Conversations", () => {
       expect(conv2Mentions42).toBe(false);
 
       console.log(`\n✅ Conversations maintained proper isolation`);
-    }, 60000);
+    }, 90000);
   });
 
   describe("Resource Contention", () => {

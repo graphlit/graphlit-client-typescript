@@ -339,7 +339,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 60000); // 60 second timeout per test
+      }, 90000); // 60 second timeout per test
     });
   });
 
@@ -462,7 +462,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 60000);
+      }, 90000);
     });
   });
 
@@ -601,7 +601,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 60000);
+      }, 90000);
     });
   });
 
@@ -737,7 +737,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 60000);
+      }, 90000);
     });
   });
 
@@ -826,7 +826,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(actualConversationId);
-      }, 60000);
+      }, 90000);
     });
   });
 
@@ -917,7 +917,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(actualConversationId);
-      }, 60000);
+      }, 90000);
     });
   });
 });

@@ -60,7 +60,7 @@ describe("Complex Tool Schemas", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 60000);
+  }, 90000);
 
   describe("Nested Object Schemas", () => {
     it("should handle deeply nested object structures", async () => {
@@ -388,10 +388,10 @@ describe("Complex Tool Schemas", () => {
                 type: "object",
                 properties: {
                   field: { type: "string" },
-                  direction: { type: "string", enum: ["ASC", "DESC"] }
+                  direction: { type: "string", enum: ["ASC", "DESC"] },
                 },
                 required: ["field", "direction"],
-                additionalProperties: false
+                additionalProperties: false,
               },
             },
             limit: {
@@ -1103,7 +1103,7 @@ describe("Complex Tool Schemas", () => {
                         },
                         required: { type: "boolean", default: false },
                         default: {},
-                        enum: { type: "array" },
+                        enum: { type: "array", items: {} },
                         minLength: { type: "integer" },
                         maxLength: { type: "integer" },
                         minimum: { type: "number" },
@@ -1209,9 +1209,9 @@ describe("Complex Tool Schemas", () => {
                   type: "array",
                   items: { type: "string" },
                 },
-                enum: { 
+                enum: {
                   type: "array",
-                  items: {} // Can be any type
+                  items: {}, // Can be any type
                 },
                 minimum: { type: "number" },
                 maximum: { type: "number" },

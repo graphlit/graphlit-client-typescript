@@ -61,7 +61,7 @@ describe("Multimodal Streaming", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 60000);
+  }, 90000);
 
   // Helper to create a simple test image (1x1 red pixel PNG)
   function createTestImage(): { data: string; mimeType: string } {
@@ -152,7 +152,7 @@ describe("Multimodal Streaming", () => {
 
       expect(hasImageTerms).toBe(true);
       console.log("✅ Image URL analysis completed successfully");
-    }, 60000);
+    }, 90000);
 
     it("should handle base64 encoded image analysis", async () => {
       console.log("\n🖼️ Testing base64 image analysis...");
@@ -253,7 +253,7 @@ describe("Multimodal Streaming", () => {
       }
 
       console.log("✅ Base64 image analysis test completed");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Mixed Text and Image Conversations", () => {
@@ -615,6 +615,6 @@ describe("Multimodal Streaming", () => {
 
       expect(remembersOrange).toBe(true);
       console.log("✅ Image context maintained successfully");
-    }, 60000);
+    }, 90000);
   });
 });

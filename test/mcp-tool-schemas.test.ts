@@ -232,7 +232,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log("✅ Deeply nested object schema handled successfully");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Union Types (oneOf/anyOf)", () => {
@@ -313,7 +313,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
                       oneOf: [
                         { type: "string" },
                         { type: "object" },
-                        { type: "array" },
+                        { type: "array", items: { type: "object" } },
                       ],
                     },
                     auth: {
@@ -444,7 +444,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log("✅ Union type schemas handled successfully");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Complex Array Schemas", () => {
@@ -690,7 +690,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log("✅ Complex array schemas handled successfully");
-    }, 60000);
+    }, 90000);
   });
 
   describe("String Pattern and Format Validation", () => {
@@ -882,7 +882,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
       console.log(
         "✅ String pattern and format validation handled successfully"
       );
-    }, 60000);
+    }, 90000);
   });
 
   describe("Conditional Schemas (if/then/else)", () => {
@@ -1144,7 +1144,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log("✅ Conditional schema validation handled successfully");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Recursive Schemas", () => {
@@ -1286,6 +1286,6 @@ describe("MCP-Style Complex Tool Schemas", () => {
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log("✅ Recursive schema definitions handled successfully");
-    }, 60000);
+    }, 90000);
   });
 });

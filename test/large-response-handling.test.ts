@@ -375,7 +375,7 @@ Please provide detailed explanations, key researchers and their contributions, s
       ).toBeLessThan(2); // Less than 200% degradation
 
       console.log("✅ Extended multi-turn conversation completed successfully");
-    }, 600000); // 10 minute timeout
+    }, 900000); // 10 minute timeout
   });
 
   describe("Event Array Management", () => {

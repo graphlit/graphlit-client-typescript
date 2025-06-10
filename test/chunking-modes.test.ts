@@ -451,7 +451,7 @@ And a final line to test chunking behavior across multiple segments."`;
         }
 
         console.log("✅ Got complete response");
-      }, 60000);
+      }, 90000);
     }
   });
 
@@ -506,10 +506,13 @@ And a final line to test chunking behavior across multiple segments."`;
           undefined,
           {
             smoothingEnabled: true,
-            chunkingStrategy: strategy === SmoothChunkingStrategy.Character ? 'character' :
-                            strategy === SmoothChunkingStrategy.Word ? 'word' : 
-                            'sentence',
-            smoothingDelay: 30
+            chunkingStrategy:
+              strategy === SmoothChunkingStrategy.Character
+                ? "character"
+                : strategy === SmoothChunkingStrategy.Word
+                  ? "word"
+                  : "sentence",
+            smoothingDelay: 30,
           }
         );
 
@@ -588,8 +591,8 @@ And a final line to test chunking behavior across multiple segments."`;
         undefined,
         {
           smoothingEnabled: true,
-          chunkingStrategy: 'word',
-          smoothingDelay: 30
+          chunkingStrategy: "word",
+          smoothingDelay: 30,
         }
       );
 
@@ -807,8 +810,8 @@ And a final line to test chunking behavior across multiple segments."`;
         undefined,
         {
           smoothingEnabled: true,
-          chunkingStrategy: 'character', // Character chunking for fast updates
-          smoothingDelay: 5 // Very fast delay
+          chunkingStrategy: "character", // Character chunking for fast updates
+          smoothingDelay: 5, // Very fast delay
         }
       );
 
@@ -828,7 +831,7 @@ And a final line to test chunking behavior across multiple segments."`;
       }
       expect(updateCount).toBeGreaterThan(20);
       console.log("✅ Fast chunking handled many updates successfully");
-    }, 60000);
+    }, 90000);
 
     it("should handle no delay (immediate chunking)", async () => {
       console.log("\n🏃 Testing immediate chunking (no delay)...");
@@ -864,8 +867,8 @@ And a final line to test chunking behavior across multiple segments."`;
         undefined,
         {
           smoothingEnabled: true,
-          chunkingStrategy: 'character',
-          smoothingDelay: 0 // No delay - immediate chunking
+          chunkingStrategy: "character",
+          smoothingDelay: 0, // No delay - immediate chunking
         }
       );
 
@@ -894,7 +897,7 @@ And a final line to test chunking behavior across multiple segments."`;
       } else {
         console.warn("⚠️  WARNING: No delays measured (single chunk response)");
       }
-    }, 60000);
+    }, 90000);
 
     it("should handle mixed content (code, text, special characters)", async () => {
       console.log("\n🎨 Testing chunking with mixed content...");
@@ -942,8 +945,8 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
         undefined,
         {
           smoothingEnabled: true,
-          chunkingStrategy: 'word', // Word chunking for mixed content
-          smoothingDelay: 30
+          chunkingStrategy: "word", // Word chunking for mixed content
+          smoothingDelay: 30,
         }
       );
 
@@ -974,7 +977,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       if (allPassed) {
         console.log("✅ Mixed content chunked successfully without corruption");
       }
-    }, 60000);
+    }, 90000);
 
     it("should handle continuous text without word breaks", async () => {
       console.log("\n🔢 Testing continuous text (no spaces)...");
@@ -1035,7 +1038,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       } else {
         console.log("⚠️  Warning: Continuous text was not chunked as expected");
       }
-    }, 60000);
+    }, 90000);
 
     it("should handle empty or very short responses", async () => {
       console.log("\n📏 Testing chunking with very short responses...");
@@ -1072,8 +1075,8 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
         undefined,
         {
           smoothingEnabled: true,
-          chunkingStrategy: 'character', // Character chunking to see each letter
-          smoothingDelay: 50
+          chunkingStrategy: "character", // Character chunking to see each letter
+          smoothingDelay: 50,
         }
       );
 
@@ -1088,7 +1091,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       }
       expect(updateCount).toBeGreaterThanOrEqual(1);
       console.log("✅ Short response handled appropriately");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Performance Benchmarks", () => {

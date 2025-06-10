@@ -61,7 +61,7 @@ describe("Streaming Cancellation", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 60000);
+  }, 90000);
 
   describe("Basic Cancellation", () => {
     it("should cancel a streaming conversation using AbortController", async () => {
@@ -240,7 +240,7 @@ describe("Streaming Cancellation", () => {
       }
 
       console.log("\n✅ Stage cancellation tests completed");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Tool Calling Cancellation", () => {
@@ -464,7 +464,7 @@ describe("Streaming Cancellation", () => {
       });
 
       console.log("\n✅ Multiple cancellation test completed");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Cancellation Edge Cases", () => {

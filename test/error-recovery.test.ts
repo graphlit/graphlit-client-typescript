@@ -61,7 +61,7 @@ describe("Error Recovery", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 60000);
+  }, 90000);
 
   describe("Invalid Input Handling", () => {
     it("should handle invalid specification ID gracefully", async () => {
@@ -487,7 +487,7 @@ describe("Error Recovery", () => {
       expect(lastError).toBeNull();
       expect(attemptCount).toBeLessThanOrEqual(maxAttempts);
       console.log(`\n✅ Retry mechanism worked after ${attemptCount} attempts`);
-    }, 60000);
+    }, 90000);
 
     it("should recover conversation state after error", async () => {
       console.log("\n🔄 Testing conversation state recovery...");
@@ -600,7 +600,7 @@ describe("Error Recovery", () => {
       );
 
       console.log("✅ Conversation state recovery successful");
-    }, 60000);
+    }, 90000);
   });
 
   describe("Fallback Strategies", () => {
