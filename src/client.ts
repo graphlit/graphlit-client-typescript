@@ -139,6 +139,11 @@ class Graphlit {
   private ownerId: string | undefined;
   private userId: string | undefined;
   private jwtSecret: string | undefined;
+  
+  // Streaming client instances (optional - can be provided by user)
+  private openaiClient?: any;
+  private anthropicClient?: any;
+  private googleClient?: any;
 
   constructor(
     organizationId?: string,
@@ -227,6 +232,30 @@ class Graphlit {
         },
       },
     });
+  }
+
+  /**
+   * Set a custom OpenAI client instance for streaming
+   * @param client - OpenAI client instance (e.g., new OpenAI({ apiKey: "..." }))
+   */
+  setOpenAIClient(client: any): void {
+    this.openaiClient = client;
+  }
+
+  /**
+   * Set a custom Anthropic client instance for streaming
+   * @param client - Anthropic client instance (e.g., new Anthropic({ apiKey: "..." }))
+   */
+  setAnthropicClient(client: any): void {
+    this.anthropicClient = client;
+  }
+
+  /**
+   * Set a custom Google Generative AI client instance for streaming
+   * @param client - Google GenerativeAI client instance (e.g., new GoogleGenerativeAI(apiKey))
+   */
+  setGoogleClient(client: any): void {
+    this.googleClient = client;
   }
 
   private generateToken() {
@@ -3838,6 +3867,11 @@ class Graphlit {
     const abortSignal = options?.abortSignal;
     let uiAdapter: UIEventAdapter | undefined;
 
+    // Check if already aborted
+    if (abortSignal?.aborted) {
+      throw new Error("Operation aborted");
+    }
+
     try {
       // Get full specification if needed
       const fullSpec = specification?.id
@@ -4338,7 +4372,8 @@ class Graphlit {
       throw new Error("OpenAI client not available");
     }
 
-    const openaiClient = new OpenAI({
+    // Use provided client or create a new one
+    const openaiClient = this.openaiClient || new OpenAI({
       apiKey: process.env.OPENAI_API_KEY || "",
     });
 
@@ -4370,7 +4405,8 @@ class Graphlit {
       throw new Error("Anthropic client not available");
     }
 
-    const anthropicClient = new Anthropic({
+    // Use provided client or create a new one
+    const anthropicClient = this.anthropicClient || new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY || "",
     });
 
@@ -4403,7 +4439,8 @@ class Graphlit {
       throw new Error("Google GenerativeAI client not available");
     }
 
-    const googleClient = new GoogleGenerativeAI(
+    // Use provided client or create a new one
+    const googleClient = this.googleClient || new GoogleGenerativeAI(
       process.env.GOOGLE_API_KEY || ""
     );
 
