@@ -65,10 +65,31 @@ export function formatMessagesForOpenAI(
 ): OpenAIMessage[] {
   const formattedMessages: OpenAIMessage[] = [];
 
-  for (const message of messages) {
-    if (!message.role || !message.message?.trim()) continue;
+  console.log(
+    `🔍 formatMessagesForOpenAI: Processing ${messages.length} messages`
+  );
 
-    const trimmedMessage = message.message.trim();
+  for (const message of messages) {
+    if (!message.role) {
+      console.log(`🔍 formatMessagesForOpenAI: Invalid message role, skipping`);
+      continue;
+    }
+
+    // Allow messages with tool calls even if they have no text content
+    const hasContent = message.message?.trim();
+    const hasToolCalls = message.toolCalls && message.toolCalls.length > 0;
+
+    if (!hasContent && !hasToolCalls) {
+      console.log(
+        `🔍 formatMessagesForOpenAI: Invalid message, no content and no tool calls, skipping`
+      );
+      continue;
+    }
+
+    const trimmedMessage = message.message?.trim() || "";
+    console.log(
+      `  📝 Message role: ${message.role}, hasContent: ${!!hasContent}, hasToolCalls: ${hasToolCalls}, toolCallId: ${message.toolCallId || "none"}`
+    );
 
     switch (message.role) {
       case ConversationRoleTypes.System:
@@ -81,8 +102,12 @@ export function formatMessagesForOpenAI(
       case ConversationRoleTypes.Assistant:
         const assistantMessage: OpenAIMessage = {
           role: "assistant",
-          content: trimmedMessage,
         };
+
+        // Only add content if there's actual text
+        if (trimmedMessage) {
+          assistantMessage.content = trimmedMessage;
+        }
 
         // Add tool calls if present
         if (message.toolCalls && message.toolCalls.length > 0) {
@@ -99,6 +124,14 @@ export function formatMessagesForOpenAI(
         }
 
         formattedMessages.push(assistantMessage);
+        break;
+
+      case ConversationRoleTypes.Tool:
+        formattedMessages.push({
+          role: "tool",
+          content: trimmedMessage,
+          tool_call_id: message.toolCallId || "",
+        });
         break;
 
       default: // User messages
@@ -123,13 +156,23 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
   let systemPrompt: string | undefined;
   const formattedMessages: AnthropicMessage[] = [];
 
-  console.log(`🔍 formatMessagesForAnthropic: Processing ${messages.length} messages`);
+  console.log(
+    `🔍 formatMessagesForAnthropic: Processing ${messages.length} messages`
+  );
 
   for (const message of messages) {
-    if (!message.role || !message.message?.trim()) continue;
+    if (!message.role) continue;
 
-    const trimmedMessage = message.message.trim();
-    console.log(`  📝 Message role: ${message.role}, length: ${trimmedMessage.length}`);
+    // Allow messages with tool calls even if they have no text content
+    const hasContent = message.message?.trim();
+    const hasToolCalls = message.toolCalls && message.toolCalls.length > 0;
+
+    if (!hasContent && !hasToolCalls) continue;
+
+    const trimmedMessage = message.message?.trim() || "";
+    console.log(
+      `  📝 Message role: ${message.role}, hasContent: ${!!hasContent}, hasToolCalls: ${hasToolCalls}, length: ${trimmedMessage.length}`
+    );
 
     switch (message.role) {
       case ConversationRoleTypes.System:
@@ -167,6 +210,20 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         });
         break;
 
+      case ConversationRoleTypes.Tool:
+        // Anthropic expects tool responses as user messages with tool_result content blocks
+        formattedMessages.push({
+          role: "user",
+          content: [
+            {
+              type: "tool_result",
+              tool_use_id: message.toolCallId || "",
+              content: trimmedMessage,
+            },
+          ],
+        });
+        break;
+
       default: // User messages
         formattedMessages.push({
           role: "user",
@@ -177,7 +234,9 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
   }
 
   const result = { system: systemPrompt, messages: formattedMessages };
-  console.log(`  ✅ Formatted ${formattedMessages.length} messages for Anthropic`);
+  console.log(
+    `  ✅ Formatted ${formattedMessages.length} messages for Anthropic`
+  );
   if (systemPrompt) {
     console.log(`  📋 System prompt length: ${systemPrompt.length}`);
   }

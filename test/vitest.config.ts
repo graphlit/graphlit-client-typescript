@@ -8,6 +8,15 @@ export default defineConfig({
     include: ["**/*.test.ts"],
     exclude: ["node_modules"],
     testTimeout: 60000, // 60 seconds for real API calls
+    // Run tests sequentially instead of in parallel
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true
+      }
+    },
+    // Alternative: use maxConcurrency
+    // maxConcurrency: 1,
   },
   resolve: {
     alias: {

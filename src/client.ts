@@ -28,15 +28,19 @@ import {
 } from "./types/agent.js";
 import { UIStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
-import { 
-  formatMessagesForOpenAI, 
-  formatMessagesForAnthropic, 
+import {
+  formatMessagesForOpenAI,
+  formatMessagesForAnthropic,
   formatMessagesForGoogle,
   OpenAIMessage,
   AnthropicMessage,
-  GoogleMessage
+  GoogleMessage,
 } from "./streaming/llm-formatters.js";
-import { streamWithOpenAI, streamWithAnthropic, streamWithGoogle } from "./streaming/providers.js";
+import {
+  streamWithOpenAI,
+  streamWithAnthropic,
+  streamWithGoogle,
+} from "./streaming/providers.js";
 // Optional imports for streaming LLM clients
 // These are peer dependencies and may not be installed
 let OpenAI: typeof import("openai").default | undefined;
@@ -3654,9 +3658,9 @@ class Graphlit {
     specification?: Types.Specification | Types.EntityReferenceInput
   ): boolean {
     // If we have a full specification, check its service type
-    if (specification && 'modelService' in specification) {
+    if (specification && "modelService" in specification) {
       const serviceType = specification.modelService;
-      
+
       switch (serviceType) {
         case Types.ModelServiceTypes.OpenAi:
           return typeof OpenAI !== "undefined";
@@ -3845,7 +3849,7 @@ class Graphlit {
       if (!this.supportsStreaming(fullSpec)) {
         throw new Error(
           "Streaming is not supported for this specification. " +
-          "Use promptAgent() instead or configure a streaming client."
+            "Use promptAgent() instead or configure a streaming client."
         );
       }
 
@@ -3873,8 +3877,8 @@ class Graphlit {
         {
           showTokenStream: options?.showTokenStream ?? true,
           smoothingEnabled: options?.smoothingEnabled ?? true,
-          chunkingStrategy: options?.chunkingStrategy ?? 'word',
-          smoothingDelay: options?.smoothingDelay ?? 30
+          chunkingStrategy: options?.chunkingStrategy ?? "word",
+          smoothingDelay: options?.smoothingDelay ?? 30,
         }
       );
 
@@ -3892,14 +3896,14 @@ class Graphlit {
         data,
         correlationId
       );
-
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Streaming failed";
-      
+      const errorMessage =
+        error instanceof Error ? error.message : "Streaming failed";
+
       if (uiAdapter) {
         uiAdapter.handleEvent({
           type: "error",
-          error: errorMessage
+          error: errorMessage,
         });
       } else {
         // Fallback error event
@@ -3907,10 +3911,10 @@ class Graphlit {
           type: "error",
           error: {
             message: errorMessage,
-            recoverable: false
+            recoverable: false,
           },
           conversationId: conversationId || "",
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
@@ -3945,40 +3949,68 @@ class Graphlit {
     // Start the conversation
     uiAdapter.handleEvent({
       type: "start",
-      conversationId
+      conversationId,
     });
 
+    // Format conversation once at the beginning
+    const formatResponse = await this.formatConversation(
+      prompt,
+      conversationId,
+      { id: specification.id },
+      tools,
+      true,
+      correlationId
+    );
+
+    console.log("[executeStreamingAgent] formatConversation response", {
+      hasMessage: !!formatResponse.formatConversation?.message,
+      messageRole: formatResponse.formatConversation?.message?.role,
+      messageLength:
+        formatResponse.formatConversation?.message?.message?.length,
+      hasToolCalls:
+        !!formatResponse.formatConversation?.message?.toolCalls?.length,
+      toolCallCount:
+        formatResponse.formatConversation?.message?.toolCalls?.length || 0,
+    });
+
+    const formattedPrompt = formatResponse.formatConversation?.message?.message;
+    if (!formattedPrompt) {
+      throw new Error("Failed to format conversation");
+    }
+
+    // Build initial message array locally - no backend fetching
+    const messages: Types.ConversationMessage[] = [];
+
+    // Add system prompt if specified
+    if (specification.systemPrompt) {
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.System,
+        message: specification.systemPrompt,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Add the current user message
+    messages.push({
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.User,
+      message: formattedPrompt,
+      timestamp: new Date().toISOString(),
+    });
+
+    const serviceType = getServiceType(specification);
+
+    // Handle tool calling loop locally
     while (currentRound < maxRounds) {
       if (abortSignal?.aborted) {
         throw new Error("Operation aborted");
       }
 
-      // Format conversation for LLM
-      const formatResponse = await this.formatConversation(
-        prompt,
-        conversationId,
-        { id: specification.id },
-        tools,
-        true,
-        correlationId
-      );
-
-      const formattedPrompt = formatResponse.formatConversation?.message?.message;
-      if (!formattedPrompt) {
-        throw new Error("Failed to format conversation");
-      }
-
-      // Build message array for LLM
-      const messages = await this.buildMessageArray(
-        conversationId,
-        specification,
-        formattedPrompt
-      );
+      let toolCalls: Types.ConversationToolCall[] = [];
+      let roundMessage = "";
 
       // Stream with appropriate provider
-      const serviceType = getServiceType(specification);
-      let toolCalls: Types.ConversationToolCall[] = [];
-
       if (serviceType === Types.ModelServiceTypes.OpenAi && OpenAI) {
         const openaiMessages = formatMessagesForOpenAI(messages);
         await this.streamWithOpenAI(
@@ -3987,12 +4019,16 @@ class Graphlit {
           tools,
           uiAdapter,
           (message, calls) => {
-            fullMessage = message;
+            roundMessage = message;
             toolCalls = calls;
           }
         );
-      } else if (serviceType === Types.ModelServiceTypes.Anthropic && Anthropic) {
-        const { system, messages: anthropicMessages } = formatMessagesForAnthropic(messages);
+      } else if (
+        serviceType === Types.ModelServiceTypes.Anthropic &&
+        Anthropic
+      ) {
+        const { system, messages: anthropicMessages } =
+          formatMessagesForAnthropic(messages);
         await this.streamWithAnthropic(
           specification,
           anthropicMessages,
@@ -4000,18 +4036,21 @@ class Graphlit {
           tools,
           uiAdapter,
           (message, calls) => {
-            fullMessage = message;
+            roundMessage = message;
             toolCalls = calls;
           }
         );
-      } else if (serviceType === Types.ModelServiceTypes.Google && GoogleGenerativeAI) {
+      } else if (
+        serviceType === Types.ModelServiceTypes.Google &&
+        GoogleGenerativeAI
+      ) {
         const googleMessages = formatMessagesForGoogle(messages);
         await this.streamWithGoogle(
           specification,
           googleMessages,
           uiAdapter,
           (message) => {
-            fullMessage = message;
+            roundMessage = message;
           }
         );
       } else {
@@ -4029,23 +4068,98 @@ class Graphlit {
         break;
       }
 
+      // Update the full message
+      fullMessage = roundMessage;
+
       // If no tool calls, we're done
       if (!toolCalls || toolCalls.length === 0) {
         break;
       }
 
-      // Execute tools
-      if (toolHandlers) {
-        await this.executeToolsInStream(
-          toolCalls,
-          toolHandlers,
-          uiAdapter,
-          abortSignal
+      // Execute tools and prepare for next round
+      if (toolHandlers && toolCalls.length > 0) {
+        console.log(
+          `[executeStreamingAgent] Adding assistant message with ${toolCalls.length} tool calls`
+        );
+        console.log(
+          `[executeStreamingAgent] Assistant role value: ${Types.ConversationRoleTypes.Assistant}`
         );
 
-        // Continue conversation with tool results
-        const toolResults = await this.formatToolResults(toolCalls, toolHandlers);
-        await this.continueConversation(conversationId, toolResults, correlationId);
+        // Add assistant message with tool calls to conversation
+        const assistantMessage = {
+          __typename: "ConversationMessage" as const,
+          role: Types.ConversationRoleTypes.Assistant,
+          message: roundMessage,
+          toolCalls: toolCalls,
+          timestamp: new Date().toISOString(),
+        };
+        console.log(`[executeStreamingAgent] Assistant message to add:`, {
+          role: assistantMessage.role,
+          hasToolCalls: !!assistantMessage.toolCalls?.length,
+        });
+        messages.push(assistantMessage);
+
+        console.log(
+          `[executeStreamingAgent] Messages after adding assistant: ${messages.map((m) => m.role).join(", ")}`
+        );
+
+        // Execute tools and add responses
+        for (const toolCall of toolCalls) {
+          const handler = toolHandlers[toolCall.name];
+          if (!handler) {
+            console.warn(`No handler for tool: ${toolCall.name}`);
+            continue;
+          }
+
+          try {
+            const args = JSON.parse(toolCall.arguments);
+
+            // Update UI
+            uiAdapter.handleEvent({
+              type: "tool_call_start",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+              },
+            });
+
+            // Execute tool
+            const result = await handler(args);
+
+            // Update UI
+            uiAdapter.setToolResult(toolCall.id, result);
+
+            // Add tool response to messages
+            messages.push({
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.Tool,
+              message:
+                typeof result === "string" ? result : JSON.stringify(result),
+              toolCallId: toolCall.id,
+              timestamp: new Date().toISOString(),
+            });
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error ? error.message : "Unknown error";
+            console.error(`Tool execution error for ${toolCall.name}:`, error);
+
+            // Update UI with error
+            uiAdapter.setToolResult(toolCall.id, undefined, errorMessage);
+
+            // Add error response
+            messages.push({
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.Tool,
+              message: `Error: ${errorMessage}`,
+              toolCallId: toolCall.id,
+              timestamp: new Date().toISOString(),
+            });
+          }
+        }
+
+        console.log(
+          `[executeStreamingAgent] Messages after adding tool responses: ${messages.map((m) => m.role).join(", ")}`
+        );
       }
 
       currentRound++;
@@ -4053,13 +4167,21 @@ class Graphlit {
 
     // Complete the conversation
     if (fullMessage) {
-      await this.completeConversation(fullMessage.trim(), conversationId, correlationId);
+      console.log(
+        `[executeStreamingAgent] Completing conversation ${conversationId}.`
+      );
+
+      await this.completeConversation(
+        fullMessage.trim(),
+        conversationId,
+        correlationId
+      );
     }
 
     // Emit completion event
     uiAdapter.handleEvent({
       type: "complete",
-      conversationId
+      conversationId,
     });
   }
 
@@ -4071,11 +4193,11 @@ class Graphlit {
     specification: Types.Specification,
     currentPrompt: string
   ): Promise<Types.ConversationMessage[]> {
-    console.log('[buildMessageArray] Starting to build message array', {
+    console.log("[buildMessageArray] Starting to build message array", {
       conversationId,
       specificationId: specification.id,
       currentPromptLength: currentPrompt.length,
-      hasSystemPrompt: !!specification.systemPrompt
+      hasSystemPrompt: !!specification.systemPrompt,
     });
 
     const messages: Types.ConversationMessage[] = [];
@@ -4086,37 +4208,63 @@ class Graphlit {
         __typename: "ConversationMessage" as const,
         role: Types.ConversationRoleTypes.System,
         message: specification.systemPrompt,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
       messages.push(systemMessage);
-      console.log('[buildMessageArray] Added system message', {
+      console.log("[buildMessageArray] Added system message", {
         role: systemMessage.role,
         messageLength: systemMessage.message.length,
-        messagePreview: systemMessage.message.substring(0, 100) + '...'
+        messagePreview: systemMessage.message.substring(0, 100) + "...",
       });
     }
 
     // Get conversation history
-    console.log('[buildMessageArray] Fetching conversation history...');
+    console.log("[buildMessageArray] Fetching conversation history...");
     const conversationResponse = await this.getConversation(conversationId);
     const conversation = conversationResponse.conversation;
 
+    console.log("[buildMessageArray] Fetched conversation", {
+      id: conversation?.id,
+      messageCount: conversation?.messages?.length || 0,
+      messages: conversation?.messages?.map((msg, idx) => ({
+        index: idx,
+        role: msg?.role,
+        hasMessage: !!msg?.message,
+        hasToolCalls: !!msg?.toolCalls?.length,
+        toolCallCount: msg?.toolCalls?.length || 0,
+      })),
+    });
+
     if (conversation?.messages && conversation.messages.length > 0) {
       // Add previous messages (excluding the current one)
-      const previousMessages = conversation.messages.slice(0, -1) as Types.ConversationMessage[];
+      const previousMessages = conversation.messages.slice(
+        0,
+        -1
+      ) as Types.ConversationMessage[];
       messages.push(...previousMessages);
-      console.log('[buildMessageArray] Added previous messages from history', {
+      console.log("[buildMessageArray] Added previous messages from history", {
         count: previousMessages.length,
         messages: previousMessages.map((msg, idx) => ({
           index: idx,
           role: msg.role,
           messageLength: msg.message?.length || 0,
-          messagePreview: msg.message ? msg.message.substring(0, 50) + '...' : 'No message content',
-          timestamp: msg.timestamp
-        }))
+          messagePreview: msg.message
+            ? msg.message.substring(0, 50) + "..."
+            : "No message content",
+          timestamp: msg.timestamp,
+          hasToolCalls: !!msg.toolCalls?.length,
+          toolCallCount: msg.toolCalls?.length || 0,
+          toolCalls: msg.toolCalls?.map((tc) => ({
+            id: tc?.id,
+            name: tc?.name,
+            hasArguments: !!tc?.arguments,
+          })),
+        })),
       });
     } else {
-      console.log('[buildMessageArray] No previous messages in conversation history');
+      console.log(
+        "[buildMessageArray] No previous messages in conversation history"
+      );
     }
 
     // Add current user message
@@ -4124,22 +4272,25 @@ class Graphlit {
       __typename: "ConversationMessage" as const,
       role: Types.ConversationRoleTypes.User, // Current prompt is from the user
       message: currentPrompt,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
     messages.push(currentMessage);
-    console.log('[buildMessageArray] Added current message', {
+    console.log("[buildMessageArray] Added current message", {
       role: currentMessage.role,
       messageLength: currentMessage.message.length,
-      messagePreview: currentMessage.message.substring(0, 100) + '...',
-      timestamp: currentMessage.timestamp
+      messagePreview: currentMessage.message.substring(0, 100) + "...",
+      timestamp: currentMessage.timestamp,
     });
 
-    console.log('[buildMessageArray] Message array built successfully', {
+    console.log("[buildMessageArray] Message array built successfully", {
       totalMessages: messages.length,
-      messagesByRole: messages.reduce((acc, msg) => {
-        acc[msg.role] = (acc[msg.role] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>)
+      messagesByRole: messages.reduce(
+        (acc, msg) => {
+          acc[msg.role] = (acc[msg.role] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
     });
 
     return messages;
@@ -4159,7 +4310,11 @@ class Graphlit {
 
       const handler = toolHandlers[toolCall.name];
       if (!handler) {
-        uiAdapter.setToolResult(toolCall.id, null, `No handler for tool: ${toolCall.name}`);
+        uiAdapter.setToolResult(
+          toolCall.id,
+          null,
+          `No handler for tool: ${toolCall.name}`
+        );
         return;
       }
 
@@ -4168,7 +4323,8 @@ class Graphlit {
         const result = await handler(args);
         uiAdapter.setToolResult(toolCall.id, result);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Tool execution failed";
+        const errorMessage =
+          error instanceof Error ? error.message : "Tool execution failed";
         uiAdapter.setToolResult(toolCall.id, null, errorMessage);
       }
     });
@@ -4193,14 +4349,17 @@ class Graphlit {
           const result = await handler(args);
           results.push({
             id: toolCall.id,
-            content: JSON.stringify(result)
+            content: JSON.stringify(result),
           });
         } catch (error) {
           results.push({
             id: toolCall.id,
             content: JSON.stringify({
-              error: error instanceof Error ? error.message : "Tool execution failed"
-            })
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Tool execution failed",
+            }),
           });
         }
       }
@@ -4255,14 +4414,17 @@ class Graphlit {
     messages: OpenAIMessage[],
     tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
-    onComplete: (message: string, toolCalls: Types.ConversationToolCall[]) => void
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
   ): Promise<void> {
     if (!OpenAI) {
       throw new Error("OpenAI client not available");
     }
 
     const openaiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY || ""
+      apiKey: process.env.OPENAI_API_KEY || "",
     });
 
     await streamWithOpenAI(
@@ -4284,14 +4446,17 @@ class Graphlit {
     systemPrompt: string | undefined,
     tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
-    onComplete: (message: string, toolCalls: Types.ConversationToolCall[]) => void
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[]
+    ) => void
   ): Promise<void> {
     if (!Anthropic) {
       throw new Error("Anthropic client not available");
     }
 
     const anthropicClient = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY || ""
+      apiKey: process.env.ANTHROPIC_API_KEY || "",
     });
 
     await streamWithAnthropic(

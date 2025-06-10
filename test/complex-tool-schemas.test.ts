@@ -381,17 +381,17 @@ describe("Complex Tool Schemas", () => {
               },
               uniqueItems: true,
             },
-            // Sorting with tuple validation
+            // Sorting with array validation
             orderBy: {
               type: "array",
               items: {
-                type: "array",
-                items: [
-                  { type: "string" }, // field name
-                  { type: "string", enum: ["ASC", "DESC"] }, // direction
-                ],
-                minItems: 2,
-                maxItems: 2,
+                type: "object",
+                properties: {
+                  field: { type: "string" },
+                  direction: { type: "string", enum: ["ASC", "DESC"] }
+                },
+                required: ["field", "direction"],
+                additionalProperties: false
               },
             },
             limit: {
@@ -1209,7 +1209,10 @@ describe("Complex Tool Schemas", () => {
                   type: "array",
                   items: { type: "string" },
                 },
-                enum: { type: "array" },
+                enum: { 
+                  type: "array",
+                  items: {} // Can be any type
+                },
                 minimum: { type: "number" },
                 maximum: { type: "number" },
                 minLength: { type: "integer" },
