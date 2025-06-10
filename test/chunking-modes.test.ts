@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import { TEST_MODELS } from "./test-models";
 import { SmoothChunkingStrategy } from "../src/types/streaming";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Comprehensive test suite for streamAgent chunking modes
@@ -204,7 +204,7 @@ And a final line to test chunking behavior across multiple segments."`;
         const specId = createResponse.createSpecification?.id!;
         createdSpecifications.push(specId);
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const chunks: string[] = [];
         let previousText = "";
         let startTime = 0;
@@ -220,7 +220,7 @@ And a final line to test chunking behavior across multiple segments."`;
         try {
           await client.streamAgent(
             TEST_PROMPT,
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               events.push(event);
               const now = Date.now();
               console.log(`📨 Event: ${event.type}`);
@@ -490,7 +490,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
         await client.streamAgent(
           testPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_started") {
               createdConversations.push(event.conversationId);
             } else if (event.type === "message_update") {
@@ -550,7 +550,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       await client.streamAgent(
         testPrompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
@@ -574,7 +574,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       await client.streamAgent(
         testPrompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
@@ -653,7 +653,7 @@ And a final line to test chunking behavior across multiple segments."`;
       // Test 1: Native streaming
       console.log("\n🚀 Testing NATIVE streaming with chunking...");
       console.log(`   Streaming maxToolRounds: 100`);
-      const nativeEvents: UIStreamEvent[] = [];
+      const nativeEvents: AgentStreamEvent[] = [];
       const nativeChunks: string[] = [];
       let nativePrevText = "";
 
@@ -665,7 +665,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       await client.streamAgent(
         "Write a paragraph about artificial intelligence with at least 50 words.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           nativeEvents.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -687,13 +687,13 @@ And a final line to test chunking behavior across multiple segments."`;
 
       // Test 2: Fallback streaming
       console.log("\n📡 Testing FALLBACK streaming with chunking...");
-      const fallbackEvents: UIStreamEvent[] = [];
+      const fallbackEvents: AgentStreamEvent[] = [];
       const fallbackChunks: string[] = [];
       let fallbackPrevText = "";
 
       await client.streamAgent(
         "Write a paragraph about artificial intelligence with at least 50 words.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           fallbackEvents.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -787,7 +787,7 @@ And a final line to test chunking behavior across multiple segments."`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let updateCount = 0;
 
       // Check if streaming is supported
@@ -798,7 +798,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       await client.streamAgent(
         "Count from 1 to 20, each number on a new line.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -844,7 +844,7 @@ And a final line to test chunking behavior across multiple segments."`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const timestamps: number[] = [];
 
       // Check if streaming is supported
@@ -855,7 +855,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
       await client.streamAgent(
         "Say 'Hello World'",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -911,7 +911,7 @@ And a final line to test chunking behavior across multiple segments."`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let finalMessage = "";
 
       const mixedPrompt = `Generate this exact content:
@@ -933,7 +933,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
 
       await client.streamAgent(
         mixedPrompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -989,7 +989,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const chunks: string[] = [];
       let finalMessage = "";
 
@@ -1002,7 +1002,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
 
       await client.streamAgent(
         continuousPrompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -1035,10 +1035,12 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       console.log(`  Final message length: ${finalMessage.length}`);
       console.log(`  Total chunks: ${chunks.length}`);
       console.log(`  Chunk sizes: ${chunks.map((c) => c.length).join(", ")}`);
-      
+
       // Show first part of the response for debugging
       if (finalMessage.length > 0) {
-        console.log(`  Response preview: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? '...' : ''}"`);
+        console.log(
+          `  Response preview: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? "..." : ""}"`
+        );
       }
 
       // Check if we got a response at all
@@ -1053,7 +1055,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       // Word mode should break continuous text into manageable chunks
       expect(chunks.length).toBeGreaterThan(0);
       expect(finalMessage.length).toBeGreaterThan(50); // At least some content
-      
+
       // Since this is continuous text with no word breaks, chunks may be larger
       // The important thing is that it doesn't try to buffer the entire string
       if (chunks.length > 1) {
@@ -1074,7 +1076,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let updateCount = 0;
 
       // Check if streaming is supported
@@ -1085,7 +1087,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
 
       await client.streamAgent(
         "Reply with just 'OK'",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -1177,7 +1179,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
 
         await client.streamAgent(
           longPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_started") {
               createdConversations.push(event.conversationId);
             } else if (event.type === "message_update") {

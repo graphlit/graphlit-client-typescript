@@ -1,5 +1,9 @@
-import { ConversationMessage, ConversationToolCall, ConversationRoleTypes } from "../generated/graphql-types.js";
-import { UIStreamEvent, ToolExecutionStatus } from "../types/ui-events.js";
+import {
+  ConversationMessage,
+  ConversationToolCall,
+  ConversationRoleTypes,
+} from "../generated/graphql-types.js";
+import { AgentStreamEvent, ToolExecutionStatus } from "../types/ui-events.js";
 import { StreamEvent } from "../client.js";
 import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
 
@@ -12,16 +16,19 @@ export class UIEventAdapter {
   private model?: string;
   private currentMessage: string = "";
   private isStreaming: boolean = false;
-  private activeToolCalls: Map<string, { toolCall: ConversationToolCall; status: ToolExecutionStatus }> = new Map();
+  private activeToolCalls: Map<
+    string,
+    { toolCall: ConversationToolCall; status: ToolExecutionStatus }
+  > = new Map();
   private lastUpdateTime: number = 0;
   private updateTimer?: ReturnType<typeof globalThis.setTimeout>;
   private showTokenStream: boolean;
   private chunkBuffer?: ChunkBuffer;
   private smoothingDelay: number = 30;
-  private chunkQueue: string[] = [];  // Queue of chunks waiting to be emitted
+  private chunkQueue: string[] = []; // Queue of chunks waiting to be emitted
 
   constructor(
-    private onEvent: (event: UIStreamEvent) => void,
+    private onEvent: (event: AgentStreamEvent) => void,
     conversationId: string,
     options: {
       showTokenStream?: boolean;
@@ -35,9 +42,7 @@ export class UIEventAdapter {
     this.smoothingDelay = options.smoothingDelay ?? 30;
 
     if (options.smoothingEnabled) {
-      this.chunkBuffer = new ChunkBuffer(
-        options.chunkingStrategy || 'word'
-      );
+      this.chunkBuffer = new ChunkBuffer(options.chunkingStrategy || "word");
     }
   }
 
@@ -85,7 +90,11 @@ export class UIEventAdapter {
   /**
    * Set tool execution result directly (for tool handlers)
    */
-  public setToolResult(toolCallId: string, result: unknown, error?: string): void {
+  public setToolResult(
+    toolCallId: string,
+    result: unknown,
+    error?: string
+  ): void {
     const toolData = this.activeToolCalls.get(toolCallId);
     if (toolData) {
       if (error) {
@@ -94,7 +103,7 @@ export class UIEventAdapter {
           type: "tool_update",
           toolCall: toolData.toolCall,
           status: "failed",
-          error
+          error,
         });
       } else {
         toolData.status = "completed";
@@ -102,7 +111,7 @@ export class UIEventAdapter {
           type: "tool_update",
           toolCall: toolData.toolCall,
           status: "completed",
-          result
+          result,
         });
       }
     }
@@ -116,7 +125,7 @@ export class UIEventAdapter {
       type: "conversation_started",
       conversationId,
       timestamp: new Date(),
-      model: this.model
+      model: this.model,
     });
   }
 
@@ -143,18 +152,18 @@ export class UIEventAdapter {
       __typename: "ConversationToolCall",
       id: toolCall.id,
       name: toolCall.name,
-      arguments: ""
+      arguments: "",
     };
 
     this.activeToolCalls.set(toolCall.id, {
       toolCall: conversationToolCall,
-      status: "preparing"
+      status: "preparing",
     });
 
     this.emitUIEvent({
       type: "tool_update",
       toolCall: conversationToolCall,
-      status: "preparing"
+      status: "preparing",
     });
   }
 
@@ -167,12 +176,16 @@ export class UIEventAdapter {
       this.emitUIEvent({
         type: "tool_update",
         toolCall: toolData.toolCall,
-        status: "executing"
+        status: "executing",
       });
     }
   }
 
-  private handleToolCallComplete(toolCall: { id: string; name: string; arguments: string }): void {
+  private handleToolCallComplete(toolCall: {
+    id: string;
+    name: string;
+    arguments: string;
+  }): void {
     const toolData = this.activeToolCalls.get(toolCall.id);
     if (toolData) {
       toolData.toolCall.arguments = toolCall.arguments;
@@ -181,7 +194,7 @@ export class UIEventAdapter {
       this.emitUIEvent({
         type: "tool_update",
         toolCall: toolData.toolCall,
-        status: "completed"
+        status: "completed",
       });
     }
   }
@@ -214,12 +227,14 @@ export class UIEventAdapter {
       message: this.currentMessage,
       timestamp: new Date().toISOString(),
       tokens: undefined, // Will be set by caller if available
-      toolCalls: Array.from(this.activeToolCalls.values()).map(t => t.toolCall)
+      toolCalls: Array.from(this.activeToolCalls.values()).map(
+        (t) => t.toolCall
+      ),
     };
 
     this.emitUIEvent({
       type: "conversation_completed",
-      message: finalMessage
+      message: finalMessage,
     });
   }
 
@@ -230,10 +245,10 @@ export class UIEventAdapter {
       type: "error",
       error: {
         message: error,
-        recoverable: false
+        recoverable: false,
       },
       conversationId: this.conversationId,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -292,7 +307,7 @@ export class UIEventAdapter {
     // Take one chunk from the queue
     const chunk = this.chunkQueue.shift()!;
     this.currentMessage += chunk;
-    
+
     // Emit the update
     this.emitMessageUpdate(true);
 
@@ -318,17 +333,17 @@ export class UIEventAdapter {
       __typename: "ConversationMessage",
       role: ConversationRoleTypes.Assistant,
       message: this.currentMessage,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.emitUIEvent({
       type: "message_update",
       message,
-      isStreaming
+      isStreaming,
     });
   }
 
-  private emitUIEvent(event: UIStreamEvent): void {
+  private emitUIEvent(event: AgentStreamEvent): void {
     this.onEvent(event);
   }
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Concurrent conversations test suite
@@ -146,7 +146,7 @@ describe("Concurrent Conversations", () => {
 
           await client.streamAgent(
             prompt,
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               result.eventCount++;
 
               if (event.type === "conversation_started") {
@@ -271,7 +271,7 @@ describe("Concurrent Conversations", () => {
 
         await client.streamAgent(
           prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_started") {
               result.conversationId = event.conversationId;
               createdConversations.push(event.conversationId);
@@ -388,7 +388,7 @@ describe("Concurrent Conversations", () => {
 
       await client.streamAgent(
         prompt1,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversation1.id = event.conversationId;
             createdConversations.push(event.conversationId);
@@ -406,7 +406,7 @@ describe("Concurrent Conversations", () => {
 
       await client.streamAgent(
         prompt2,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversation2.id = event.conversationId;
             createdConversations.push(event.conversationId);
@@ -426,13 +426,14 @@ describe("Concurrent Conversations", () => {
       console.log(`📝 Conv 2 ID: ${conversation2.id}`);
 
       // Now ask each conversation to recall their number concurrently
-      const recallPrompt = "In our memory game, what was the special number I mentioned?";
+      const recallPrompt =
+        "In our memory game, what was the special number I mentioned?";
       console.log(`\n📝 Recall Prompt: "${recallPrompt}"`);
-      
+
       const recallPromises = [
         client.streamAgent(
           recallPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_completed") {
               conversation1.responses.push(event.message.message);
             }
@@ -442,7 +443,7 @@ describe("Concurrent Conversations", () => {
         ),
         client.streamAgent(
           recallPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_completed") {
               conversation2.responses.push(event.message.message);
             }
@@ -517,7 +518,7 @@ describe("Concurrent Conversations", () => {
             client
               .streamAgent(
                 `Say "Response ${i + 1}" and nothing else.`,
-                (event: UIStreamEvent) => {
+                (event: AgentStreamEvent) => {
                   if (event.type === "conversation_started") {
                     conversationStarted = true;
                     createdConversations.push(event.conversationId);

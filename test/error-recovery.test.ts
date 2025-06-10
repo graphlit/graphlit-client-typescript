@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Error recovery test suite
@@ -67,7 +67,7 @@ describe("Error Recovery", () => {
     it("should handle invalid specification ID gracefully", async () => {
       console.log("🚫 Testing invalid specification ID...");
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let errorReceived = false;
       let errorMessage = "";
 
@@ -80,7 +80,7 @@ describe("Error Recovery", () => {
 
         await client.streamAgent(
           "This should fail",
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             console.log(`📨 Event: ${event.type}`);
 
@@ -134,7 +134,7 @@ describe("Error Recovery", () => {
 
         await client.streamAgent(
           "Continue our discussion",
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "error") {
               errorReceived = true;
               errorMessage = event.error?.message;
@@ -171,7 +171,7 @@ describe("Error Recovery", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let conversationId: string | undefined;
       let errorReceived = false;
       let completed = false;
@@ -186,16 +186,18 @@ describe("Error Recovery", () => {
 
         await client.streamAgent(
           "", // Empty prompt
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             console.log(`📨 Event: ${event.type}`);
-            
+
             if (event.type === "conversation_started") {
               conversationId = event.conversationId;
               createdConversations.push(event.conversationId);
             } else if (event.type === "error") {
               errorReceived = true;
-              console.log(`❌ Error with empty prompt: ${event.error?.message}`);
+              console.log(
+                `❌ Error with empty prompt: ${event.error?.message}`
+              );
             } else if (event.type === "conversation_completed") {
               completed = true;
               console.log(`💬 Response: "${event.message.message}"`);
@@ -245,7 +247,7 @@ describe("Error Recovery", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let conversationId: string | undefined;
       let toolErrorHandled = false;
 
@@ -276,7 +278,7 @@ describe("Error Recovery", () => {
 
       await client.streamAgent(
         "Calculate 10 + 5 using the faultyCalculator tool",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           console.log(`📨 Event: ${event.type}`);
 
@@ -328,7 +330,7 @@ describe("Error Recovery", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let toolErrorHandled = false;
       let conversationCompleted = false;
       let streamError = false;
@@ -355,7 +357,7 @@ describe("Error Recovery", () => {
 
         await client.streamAgent(
           "Use the orphanTool to process 'hello world'",
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             console.log(`📨 Event: ${event.type}`);
 
@@ -366,7 +368,10 @@ describe("Error Recovery", () => {
               console.log(`❌ Stream Error: ${event.error?.message}`);
             } else if (event.type === "tool_update") {
               console.log(`🔧 Tool ${event.toolCall.name}: ${event.status}`);
-              if (event.status === "failed" && event.toolCall.name === "orphanTool") {
+              if (
+                event.status === "failed" &&
+                event.toolCall.name === "orphanTool"
+              ) {
                 toolErrorHandled = true;
                 console.log("✅ Missing tool handler error handled");
               }
@@ -386,10 +391,14 @@ describe("Error Recovery", () => {
       }
 
       // Should handle the missing tool gracefully
-      console.log(`Tool error handled: ${toolErrorHandled}, Completed: ${conversationCompleted}, Stream error: ${streamError}`);
-      
+      console.log(
+        `Tool error handled: ${toolErrorHandled}, Completed: ${conversationCompleted}, Stream error: ${streamError}`
+      );
+
       // Either should handle tool error gracefully OR complete with explanation OR error at stream level
-      expect(toolErrorHandled || conversationCompleted || streamError).toBe(true);
+      expect(toolErrorHandled || conversationCompleted || streamError).toBe(
+        true
+      );
 
       console.log("✅ Missing tool handler scenario handled");
     }, 30000);
@@ -424,7 +433,7 @@ describe("Error Recovery", () => {
 
       let timeoutError = false;
       let completed = false;
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const startTime = Date.now();
 
       try {
@@ -436,10 +445,12 @@ describe("Error Recovery", () => {
 
         await client.streamAgent(
           "Explain quantum computing in detail with examples and mathematical formulas",
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
-            console.log(`📨 Event: ${event.type} (${Date.now() - startTime}ms)`);
-            
+            console.log(
+              `📨 Event: ${event.type} (${Date.now() - startTime}ms)`
+            );
+
             if (event.type === "conversation_started") {
               createdConversations.push(event.conversationId);
             } else if (event.type === "error") {
@@ -447,7 +458,9 @@ describe("Error Recovery", () => {
               console.log(`⏱️ Timeout error: ${event.error?.message}`);
             } else if (event.type === "conversation_completed") {
               completed = true;
-              console.log(`💬 Completed before timeout: ${event.message.message}`);
+              console.log(
+                `💬 Completed before timeout: ${event.message.message}`
+              );
             }
           },
           undefined,
@@ -456,13 +469,17 @@ describe("Error Recovery", () => {
           undefined,
           { abortSignal: controller.signal }
         );
-        
+
         // If we get here without error, the stream completed normally
-        console.log(`⚡ Stream completed normally in ${Date.now() - startTime}ms`);
+        console.log(
+          `⚡ Stream completed normally in ${Date.now() - startTime}ms`
+        );
       } catch (error) {
         const elapsed = Date.now() - startTime;
         timeoutError = true;
-        console.log(`✅ Timeout handled correctly after ${elapsed}ms: ${error}`);
+        console.log(
+          `✅ Timeout handled correctly after ${elapsed}ms: ${error}`
+        );
       }
 
       const elapsed = Date.now() - startTime;
@@ -475,12 +492,14 @@ describe("Error Recovery", () => {
       // Either should timeout (error) OR complete very quickly due to low token limit
       if (elapsed < timeoutMs + 100) {
         // Completed before timeout or failed quickly - acceptable
-        expect(timeoutError || completed || events.some(e => e.type === "error")).toBe(true);
+        expect(
+          timeoutError || completed || events.some((e) => e.type === "error")
+        ).toBe(true);
       } else {
         // Should have timed out
         expect(timeoutError).toBe(true);
       }
-      
+
       console.log("✅ Timeout scenario handled gracefully");
     }, 10000);
   });
@@ -515,7 +534,7 @@ describe("Error Recovery", () => {
         console.log(`\n🔄 Attempt ${attempt}/${maxAttempts}...`);
 
         try {
-          const events: UIStreamEvent[] = [];
+          const events: AgentStreamEvent[] = [];
 
           // Check if streaming is supported
           if (!client.supportsStreaming()) {
@@ -525,7 +544,7 @@ describe("Error Recovery", () => {
 
           await client.streamAgent(
             "Say 'Success!' if you can hear me",
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               events.push(event);
 
               if (event.type === "conversation_started") {
@@ -593,7 +612,7 @@ describe("Error Recovery", () => {
 
       await client.streamAgent(
         "My favorite color is blue and my lucky number is 7. Please remember these.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversationId = event.conversationId;
             createdConversations.push(event.conversationId);
@@ -636,7 +655,7 @@ describe("Error Recovery", () => {
 
       await client.streamAgent(
         "Use the unreliableMemory tool to recall what my favorite color and lucky number are",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "tool_update") {
             console.log(`🔧 Tool ${event.toolCall.name}: ${event.status}`);
           } else if (event.type === "conversation_completed") {
@@ -656,7 +675,7 @@ describe("Error Recovery", () => {
       console.log("\n📝 Verifying conversation state...");
       await client.streamAgent(
         "Without using any tools, what were my favorite color and lucky number?",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_completed") {
             const response = event.message.message.toLowerCase();
             const hasBlue = response.includes("blue");
@@ -708,7 +727,7 @@ describe("Error Recovery", () => {
       };
 
       let usedFallback = false;
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -718,7 +737,7 @@ describe("Error Recovery", () => {
 
       await client.streamAgent(
         "Tell me a joke",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {

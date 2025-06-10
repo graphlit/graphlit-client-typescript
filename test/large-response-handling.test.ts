@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Large response handling test suite
@@ -139,7 +139,7 @@ Please provide detailed explanations, key researchers and their contributions, s
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           eventCount++;
           const currentTime = Date.now();
 
@@ -299,7 +299,7 @@ Please provide detailed explanations, key researchers and their contributions, s
 
         await client.streamAgent(
           topics[turn],
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             turnEvents++;
 
             if (event.type === "conversation_started" && !conversationId) {
@@ -397,7 +397,7 @@ Please provide detailed explanations, key researchers and their contributions, s
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const allEvents: UIStreamEvent[] = [];
+      const allEvents: AgentStreamEvent[] = [];
       const memoryCheckpoints: { eventCount: number; memory: number }[] = [];
       let conversationId: string | undefined;
 
@@ -423,7 +423,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           allEvents.push(event);
 
           if (event.type === "conversation_started") {
@@ -575,7 +575,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
 
         await client.streamAgent(
           testPrompts[i],
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             eventCount++;
             const currentTime = Date.now();
 

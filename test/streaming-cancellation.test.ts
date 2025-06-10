@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Streaming cancellation test suite
@@ -82,7 +82,7 @@ describe("Streaming Cancellation", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let conversationId: string | undefined;
       const abortController = new AbortController();
       let cancelledByUs = false;
@@ -95,7 +95,7 @@ describe("Streaming Cancellation", () => {
 
       const streamPromise = client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           console.log(`📨 Event ${events.length}: ${event.type}`);
 
@@ -105,7 +105,9 @@ describe("Streaming Cancellation", () => {
             console.log(`🆔 Conversation started: ${conversationId}`);
           } else if (event.type === "message_update") {
             // Cancel after receiving some content
-            const messageUpdateCount = events.filter((e) => e.type === "message_update").length;
+            const messageUpdateCount = events.filter(
+              (e) => e.type === "message_update"
+            ).length;
             if (messageUpdateCount === 3 && !cancelledByUs) {
               console.log("🛑 Cancelling stream after 3 message updates...");
               cancelledByUs = true;
@@ -193,7 +195,7 @@ describe("Streaming Cancellation", () => {
           `\n📍 Testing: ${test.name} (cancel after ${test.cancelAfterEvents} events)`
         );
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const abortController = new AbortController();
         let cancelled = false;
         let conversationId: string | undefined;
@@ -207,7 +209,7 @@ describe("Streaming Cancellation", () => {
 
           await client.streamAgent(
             "Tell me a short story about a robot learning to paint.",
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               events.push(event);
 
               if (event.type === "conversation_started") {
@@ -269,7 +271,7 @@ describe("Streaming Cancellation", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const abortController = new AbortController();
       let toolCallCount = 0;
       let conversationId: string | undefined;
@@ -312,7 +314,7 @@ describe("Streaming Cancellation", () => {
 
       const streamPromise = client.streamAgent(
         "Calculate the sum of these numbers using the slowCalculation tool: [1, 2, 3, 4, 5]. Then multiply the result by 10.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           console.log(`📨 Event: ${event.type}`);
 
@@ -382,7 +384,7 @@ describe("Streaming Cancellation", () => {
       const conversations = Array.from({ length: 5 }, (_, i) => ({
         index: i,
         controller: new AbortController(),
-        events: [] as UIStreamEvent[],
+        events: [] as AgentStreamEvent[],
         cancelAfterMs: (i + 1) * 500, // Cancel at 500ms, 1s, 1.5s, 2s, 2.5s
         cancelled: false,
         completed: false,
@@ -409,7 +411,7 @@ describe("Streaming Cancellation", () => {
         return client
           .streamAgent(
             prompt,
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               conv.events.push(event);
 
               if (event.type === "conversation_started") {
@@ -502,7 +504,7 @@ describe("Streaming Cancellation", () => {
 
       const streamPromise = client.streamAgent(
         "Count from 1 to 100 slowly, with detailed explanations for each number.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
@@ -568,7 +570,7 @@ describe("Streaming Cancellation", () => {
 
         await client.streamAgent(
           "This should not execute",
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             eventCount++;
             if (event.type === "error") {
               errorReceived = true;

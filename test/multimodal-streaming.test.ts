@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Multimodal streaming test suite
@@ -93,7 +93,7 @@ describe("Multimodal Streaming", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let conversationId: string | undefined;
       let finalResponse = "";
 
@@ -109,7 +109,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         `Analyze this image and describe what you see: ${imageUrl}`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           console.log(`📨 Event: ${event.type}`);
 
@@ -204,7 +204,7 @@ describe("Multimodal Streaming", () => {
       }
 
       // Test in streaming conversation context
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let conversationId: string | undefined;
 
       // Check if streaming is supported
@@ -215,7 +215,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         "I'm going to share an image with you shortly. Please be ready to analyze it.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {
@@ -231,11 +231,11 @@ describe("Multimodal Streaming", () => {
 
       // Follow up with image analysis in the same conversation
       if (imageAnalysisResponse) {
-        const followUpEvents: UIStreamEvent[] = [];
+        const followUpEvents: AgentStreamEvent[] = [];
 
         await client.streamAgent(
           `Based on the image analysis that returned "${imageAnalysisResponse}", what can you tell me about working with encoded images?`,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             followUpEvents.push(event);
             if (event.type === "conversation_completed") {
               console.log(
@@ -288,7 +288,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         "Hello! I'm going to show you some images and ask questions about them. Please introduce yourself as an image analysis assistant.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversationId = event.conversationId;
             createdConversations.push(event.conversationId);
@@ -309,7 +309,7 @@ describe("Multimodal Streaming", () => {
       console.log("📝 Step 2: Image concept discussion");
       await client.streamAgent(
         "What are the main challenges in computer vision and image analysis?",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
@@ -327,7 +327,7 @@ describe("Multimodal Streaming", () => {
         "https://via.placeholder.com/400x300/0000ff/ffffff?text=Blue+Square";
       await client.streamAgent(
         `Here's an image for you to consider: ${imageUrl}. What would you typically look for when analyzing an image like this?`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
@@ -343,7 +343,7 @@ describe("Multimodal Streaming", () => {
       console.log("📝 Step 4: Follow-up text");
       await client.streamAgent(
         "Based on our conversation about image analysis, what's the most important thing to remember when working with visual data?",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
@@ -403,7 +403,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         `Quickly describe this small image in one sentence: ${imageUrl}`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           const currentTime = Date.now();
 
           if (event.type === "conversation_started") {
@@ -463,7 +463,7 @@ describe("Multimodal Streaming", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       let finalResponse = "";
 
       // Test with invalid image URL
@@ -478,7 +478,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         `Please analyze this image: ${invalidImageUrl}`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {
@@ -582,7 +582,7 @@ describe("Multimodal Streaming", () => {
 
       await client.streamAgent(
         `I'm showing you an orange square image from ${imageUrl}. Remember that this image is orange colored.`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversationId = event.conversationId;
             createdConversations.push(event.conversationId);
@@ -599,7 +599,7 @@ describe("Multimodal Streaming", () => {
       let contextResponse = "";
       await client.streamAgent(
         "What color was the image I just showed you?",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_completed") {
             contextResponse = event.message.message;
           }

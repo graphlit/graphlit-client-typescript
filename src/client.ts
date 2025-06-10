@@ -26,7 +26,7 @@ import {
   ToolCallResult,
   ToolHandler,
 } from "./types/agent.js";
-import { UIStreamEvent } from "./types/ui-events.js";
+import { AgentStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
   formatMessagesForOpenAI,
@@ -126,7 +126,7 @@ export type {
 } from "./types/agent.js";
 
 // Re-export UI event types
-export type { UIStreamEvent } from "./types/ui-events.js";
+export type { AgentStreamEvent } from "./types/ui-events.js";
 
 // Define the Graphlit class
 class Graphlit {
@@ -139,7 +139,7 @@ class Graphlit {
   private ownerId: string | undefined;
   private userId: string | undefined;
   private jwtSecret: string | undefined;
-  
+
   // Streaming client instances (optional - can be provided by user)
   private openaiClient?: any;
   private anthropicClient?: any;
@@ -3853,7 +3853,7 @@ class Graphlit {
    */
   public async streamAgent(
     prompt: string,
-    onEvent: (event: StreamEvent | UIStreamEvent) => void,
+    onEvent: (event: StreamEvent | AgentStreamEvent) => void,
     conversationId?: string,
     specification?: Types.EntityReferenceInput,
     tools?: Types.ToolDefinitionInput[],
@@ -3906,7 +3906,7 @@ class Graphlit {
 
       // Create UI event adapter
       uiAdapter = new UIEventAdapter(
-        onEvent as (event: UIStreamEvent) => void,
+        onEvent as (event: AgentStreamEvent) => void,
         actualConversationId,
         {
           showTokenStream: options?.showTokenStream ?? true,
@@ -3941,7 +3941,7 @@ class Graphlit {
         });
       } else {
         // Fallback error event
-        (onEvent as (event: UIStreamEvent) => void)({
+        (onEvent as (event: AgentStreamEvent) => void)({
           type: "error",
           error: {
             message: errorMessage,
@@ -4020,7 +4020,8 @@ class Graphlit {
 
     if (conversation?.messages && conversation.messages.length > 0) {
       // Add all previous messages (formatConversation already added the current prompt)
-      const previousMessages = conversation.messages as Types.ConversationMessage[];
+      const previousMessages =
+        conversation.messages as Types.ConversationMessage[];
       messages.push(...previousMessages);
     } else {
       // If no history, just add the current user message
@@ -4373,9 +4374,11 @@ class Graphlit {
     }
 
     // Use provided client or create a new one
-    const openaiClient = this.openaiClient || new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY || "",
-    });
+    const openaiClient =
+      this.openaiClient ||
+      new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY || "",
+      });
 
     await streamWithOpenAI(
       specification,
@@ -4406,9 +4409,11 @@ class Graphlit {
     }
 
     // Use provided client or create a new one
-    const anthropicClient = this.anthropicClient || new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY || "",
-    });
+    const anthropicClient =
+      this.anthropicClient ||
+      new Anthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY || "",
+      });
 
     await streamWithAnthropic(
       specification,
@@ -4440,9 +4445,9 @@ class Graphlit {
     }
 
     // Use provided client or create a new one
-    const googleClient = this.googleClient || new GoogleGenerativeAI(
-      process.env.GOOGLE_API_KEY || ""
-    );
+    const googleClient =
+      this.googleClient ||
+      new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
 
     await streamWithGoogle(
       specification,

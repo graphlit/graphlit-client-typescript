@@ -1,14 +1,21 @@
-import { ConversationMessage, ConversationToolCall } from "../generated/graphql-types.js";
+import {
+  ConversationMessage,
+  ConversationToolCall,
+} from "../generated/graphql-types.js";
 
 /**
  * Tool execution status for streaming
  */
-export type ToolExecutionStatus = "preparing" | "executing" | "completed" | "failed";
+export type ToolExecutionStatus =
+  | "preparing"
+  | "executing"
+  | "completed"
+  | "failed";
 
 /**
  * Simplified UI-focused streaming events using GraphQL types
  */
-export type UIStreamEvent =
+export type AgentStreamEvent =
   | {
       type: "conversation_started";
       conversationId: string;
@@ -17,7 +24,7 @@ export type UIStreamEvent =
     }
   | {
       type: "message_update";
-      message: Partial<ConversationMessage> & { 
+      message: Partial<ConversationMessage> & {
         message: string; // Ensure message text is always present
       };
       isStreaming: boolean;

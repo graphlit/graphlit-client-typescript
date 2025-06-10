@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * MCP-style complex tool schema test suite
@@ -201,7 +201,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         };
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -215,7 +215,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
          group (read: true, write: false, execute: false), 
          others (read: false, write: false, execute: false).
          Add tags: ["important", "draft"] and set a custom attribute "department" to "engineering".`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -413,7 +413,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -427,7 +427,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
          2. Make an HTTP GET request to https://api.example.com/data with bearer token "abc123"
          3. Read a JSON file from /data/config.json
          Please fetch from all three sources.`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -658,7 +658,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         };
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -673,7 +673,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
          3. ID: "CA-345678", priority: 8, tags: ["high-value", "premium", "vip"], value: 750.50
          
          Use parallel processing with a batch size of 2.`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -846,7 +846,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         };
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -863,7 +863,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
          - UUID: 550e8400-e29b-41d4-a716-446655440000
          - US Postal Code: 94105-1234
          - Custom ID: ABC-1234-testing`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -907,7 +907,8 @@ describe("MCP-Style Complex Tool Schemas", () => {
       // MCP-style payment processing - simplified for OpenAI compatibility
       const paymentTool: Types.ToolDefinitionInput = {
         name: "payment",
-        description: "Process payments with method-specific validation. Details object should contain method-specific fields: credit_card needs cardNumber, expiryMonth, expiryYear, cvv, billingAddress; bank_transfer needs accountType, routingNumber, accountNumber, bankName; crypto needs cryptocurrency, walletAddress, network; paypal needs email or phoneNumber",
+        description:
+          "Process payments with method-specific validation. Details object should contain method-specific fields: credit_card needs cardNumber, expiryMonth, expiryYear, cvv, billingAddress; bank_transfer needs accountType, routingNumber, accountNumber, bankName; crypto needs cryptocurrency, walletAddress, network; paypal needs email or phoneNumber",
         schema: JSON.stringify({
           type: "object",
           properties: {
@@ -933,35 +934,47 @@ describe("MCP-Style Complex Tool Schemas", () => {
                 expiryMonth: { type: "integer", minimum: 1, maximum: 12 },
                 expiryYear: { type: "integer", minimum: 2024, maximum: 2050 },
                 cvv: { type: "string", pattern: "^[0-9]{3,4}$" },
-                billingAddress: { 
+                billingAddress: {
                   type: "object",
                   properties: {
                     street: { type: "string" },
                     city: { type: "string" },
                     state: { type: "string" },
                     country: { type: "string" },
-                    postalCode: { type: "string" }
-                  }
+                    postalCode: { type: "string" },
+                  },
                 },
                 // Bank transfer fields
                 accountType: { type: "string", enum: ["checking", "savings"] },
                 routingNumber: { type: "string", pattern: "^[0-9]{9}$" },
                 accountNumber: { type: "string", pattern: "^[0-9]{4,17}$" },
                 bankName: { type: "string" },
-                swift: { type: "string", pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$" },
+                swift: {
+                  type: "string",
+                  pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
+                },
                 // Crypto fields
-                cryptocurrency: { type: "string", enum: ["BTC", "ETH", "USDT", "USDC"] },
+                cryptocurrency: {
+                  type: "string",
+                  enum: ["BTC", "ETH", "USDT", "USDC"],
+                },
                 walletAddress: { type: "string", minLength: 26, maxLength: 62 },
-                network: { type: "string", enum: ["mainnet", "testnet", "polygon", "bsc"] },
+                network: {
+                  type: "string",
+                  enum: ["mainnet", "testnet", "polygon", "bsc"],
+                },
                 // PayPal fields
                 email: { type: "string", format: "email" },
-                phoneNumber: { type: "string", pattern: "^\\+?[1-9]\\d{1,14}$" }
+                phoneNumber: {
+                  type: "string",
+                  pattern: "^\\+?[1-9]\\d{1,14}$",
+                },
               },
-              additionalProperties: false
+              additionalProperties: false,
             },
           },
           required: ["amount", "currency", "method", "details"],
-          additionalProperties: false
+          additionalProperties: false,
         }),
       };
 
@@ -1001,7 +1014,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         };
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -1013,7 +1026,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         `Process two payments:
          1. Credit card payment of $150.00 USD with card number 4532015112830366, expiry month 12, expiry year 2025, CVV 123, billing address: street "123 Main St", city "San Francisco", state "CA", country "USA", postalCode "94105"
          2. Crypto payment of 0.005 BTC to wallet address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa on mainnet network`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
@@ -1140,7 +1153,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         }
       };
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
 
       // Check if streaming is supported
       if (!client.supportsStreaming()) {
@@ -1155,7 +1168,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
            - Folder "tests" with file "main.test.ts"
            - File "README.md"
            - File "package.json"`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);

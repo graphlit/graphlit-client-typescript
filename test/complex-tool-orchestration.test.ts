@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { StreamAgentOptions } from "../src/client";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Complex tool orchestration test suite
@@ -172,7 +172,7 @@ describe("Complex Tool Orchestration", () => {
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const toolCalls: { name: string; args: any; result: any }[] = [];
 
       // Tool handlers
@@ -296,7 +296,7 @@ Please use all the tools and provide a summary of the results.`;
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
           console.log(`📨 Event: ${event.type}`);
 
@@ -363,7 +363,7 @@ Please use all the tools and provide a summary of the results.`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const toolExecutionOrder: string[] = [];
       const toolResults: { [key: string]: any } = {};
 
@@ -418,7 +418,7 @@ Please execute these steps in order and show the progression.`;
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {
@@ -477,7 +477,7 @@ Please execute these steps in order and show the progression.`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const errorCounts: { [key: string]: number } = {};
 
       // Mock API handler that can simulate failures
@@ -537,7 +537,7 @@ Please handle any failures gracefully and use fallback options.`;
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {
@@ -606,7 +606,7 @@ Please handle any failures gracefully and use fallback options.`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const conditionalResults: {
         condition: string;
         result: boolean;
@@ -678,7 +678,7 @@ Please handle any failures gracefully and use fallback options.`;
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {
@@ -741,7 +741,7 @@ Please handle any failures gracefully and use fallback options.`;
       const specId = createResponse.createSpecification?.id!;
       createdSpecifications.push(specId);
 
-      const events: UIStreamEvent[] = [];
+      const events: AgentStreamEvent[] = [];
       const allToolResults: { tool: string; result: any; timestamp: number }[] =
         [];
 
@@ -866,7 +866,7 @@ Use all the appropriate tools and provide a comprehensive financial overview.`;
 
       await client.streamAgent(
         prompt,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           events.push(event);
 
           if (event.type === "conversation_started") {

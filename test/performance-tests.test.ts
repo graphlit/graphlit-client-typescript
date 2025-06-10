@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { PERFORMANCE_TEST_MODELS } from "./test-models";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Performance test suite
@@ -160,7 +160,7 @@ describe("Performance Tests", () => {
 
         await client.streamAgent(
           prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             const currentTime = Date.now();
 
             if (event.type === "conversation_started") {
@@ -294,7 +294,7 @@ describe("Performance Tests", () => {
 
         await client.streamAgent(
           test.prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_started") {
               createdConversations.push(event.conversationId);
             } else if (event.type === "message_update") {
@@ -411,7 +411,7 @@ describe("Performance Tests", () => {
 
             await client.streamAgent(
               `Generate a unique haiku about the number ${idx + 1}`,
-              (event: UIStreamEvent) => {
+              (event: AgentStreamEvent) => {
                 const currentTime = Date.now();
 
                 if (event.type === "conversation_started") {
@@ -560,7 +560,7 @@ describe("Performance Tests", () => {
 
         await client.streamAgent(
           prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             if (event.type === "conversation_started" && !conversationId) {
               conversationId = event.conversationId;
               createdConversations.push(event.conversationId);
@@ -646,7 +646,7 @@ describe("Performance Tests", () => {
 
       await client.streamAgent(
         "Write a very detailed technical analysis of distributed systems, covering consistency models, CAP theorem, consensus algorithms like Raft and Paxos, distributed databases, message queues, and microservices architecture. Include specific examples and implementation details.",
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           const currentTime = Date.now();
           const gap = currentTime - lastEventTime;
 

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { TEST_MODELS } from "./test-models";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 // Performance metrics interface
 interface StreamingMetrics {
@@ -234,7 +234,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         console.log(`📋 Created specification: ${specId}`);
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         let finalMessage = "";
         let conversationId: string | undefined;
 
@@ -260,7 +260,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             const currentTime = Date.now();
 
@@ -362,7 +362,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         console.log(`📋 Created specification: ${specId}`);
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         let finalMessage = "";
         let conversationId: string | undefined;
 
@@ -388,7 +388,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           prompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             const currentTime = Date.now();
 
@@ -481,7 +481,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         expect(specId).toBeDefined();
         createdSpecifications.push(specId!);
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const toolResults: string[] = [];
         let conversationId: string | undefined;
 
@@ -544,7 +544,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           toolPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             console.log(`📨 ${testSpec.name} Tool Event: ${event.type}`);
 
@@ -621,7 +621,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         expect(specId).toBeDefined();
         createdSpecifications.push(specId!);
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const toolResults: string[] = [];
         let conversationId: string | undefined;
 
@@ -684,7 +684,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           toolPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             console.log(`📨 ${testSpec.name} Tool Event: ${event.type}`);
 
@@ -761,7 +761,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         let actualConversationId: string;
 
         // First message
-        const firstEvents: UIStreamEvent[] = [];
+        const firstEvents: AgentStreamEvent[] = [];
         const firstPrompt =
           "You are a helpful raccoon named McPoogle who loves shiny objects. Please remember this very important number: 42. It's the exact number of shiny objects in your prized collection.";
         console.log(`📝 First Prompt: "${firstPrompt}"`);
@@ -774,7 +774,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           firstPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             firstEvents.push(event);
             if (event.type === "conversation_started") {
               actualConversationId = event.conversationId;
@@ -792,14 +792,14 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         expect(actualConversationId).not.toBe("temp-id");
 
         // Follow-up message in same conversation
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const followUpPrompt =
           "McPoogle, how many shiny objects are in your collection? What was that important number?";
         console.log(`📝 Follow-up Prompt: "${followUpPrompt}"`);
 
         await client.streamAgent(
           followUpPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             if (event.type === "conversation_completed") {
               console.log(
@@ -850,7 +850,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         let actualConversationId: string;
 
         // First message with native SDK
-        const firstEvents: UIStreamEvent[] = [];
+        const firstEvents: AgentStreamEvent[] = [];
         const firstPrompt =
           "You are a helpful raccoon named McPoogle who loves shiny objects. Please remember this very important number: 42. It's the exact number of shiny objects in your prized collection.";
         console.log(`📝 First Prompt: "${firstPrompt}"`);
@@ -863,7 +863,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         await client.streamAgent(
           firstPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             firstEvents.push(event);
             if (event.type === "conversation_started") {
               actualConversationId = event.conversationId;
@@ -881,14 +881,14 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         expect(actualConversationId).not.toBe("temp-id");
 
         // Follow-up message in same conversation with native SDK
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const followUpPrompt =
           "McPoogle, how many shiny objects are in your collection? What was that important number?";
         console.log(`📝 Follow-up Prompt: "${followUpPrompt}"`);
 
         await client.streamAgent(
           followUpPrompt,
-          (event: UIStreamEvent) => {
+          (event: AgentStreamEvent) => {
             events.push(event);
             if (event.type === "conversation_completed") {
               console.log(

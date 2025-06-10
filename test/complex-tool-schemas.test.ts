@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Complex tool schema test suite
@@ -233,7 +233,7 @@ describe("Complex Tool Schemas", () => {
 2. Create a new directory /home/user/documents/archive with full permissions for owner only
 3. Write a README.md file in /home/user/documents with content "# My Documents\nOrganized files"
 4. Move any .txt files to the archive directory`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "tool_update") {
@@ -440,7 +440,7 @@ describe("Complex Tool Schemas", () => {
 2. Select their id, name, email, and calculate the average of their scores
 3. Order by registration date descending, limit to 50 results
 4. Also count the total number of users grouped by country`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "tool_update") {
@@ -715,7 +715,7 @@ describe("Complex Tool Schemas", () => {
 1. Send an urgent email to user 123e4567-e89b-12d3-a456-426614174000 about system maintenance
 2. Post a message to the #announcements Slack channel with a card format including title "Scheduled Maintenance" and two action buttons
 3. Schedule a recurring reminder every Monday at 9 AM to the engineering group (group-456) excluding user-789`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "tool_update") {
@@ -992,7 +992,7 @@ describe("Complex Tool Schemas", () => {
 2. Configure authentication for OAuth with clientId "abc123def456" and scopes ["read", "write"]
 3. Set rate limits with 1000 requests per 60 seconds globally and 100 per user
 4. Configure performance with min 2 workers, max 10 workers, and 4GB memory limit`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "tool_update") {
@@ -1257,7 +1257,7 @@ describe("Complex Tool Schemas", () => {
 3. Add required header "X-API-Key" with pattern "^[A-Za-z0-9]{32}$"
 4. Define 200 response with array of user objects (id, name, email, createdAt)
 5. Define 404 response with error message`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             createdConversations.push(event.conversationId);
           } else if (event.type === "tool_update") {

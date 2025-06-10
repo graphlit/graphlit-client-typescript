@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { TOOL_LIMIT_TEST_MODELS } from "./test-models";
-import { UIStreamEvent } from "../src/types/ui-events";
+import { AgentStreamEvent } from "../src/types/ui-events";
 
 /**
  * Tool calling limits test suite
@@ -208,15 +208,19 @@ describe("Tool Calling Limits", () => {
             model.config as Types.SpecificationInput
           );
           specId = createResponse.createSpecification?.id!;
-          
+
           if (!specId) {
-            console.log(`⚠️ Skipping ${model.name} - failed to create specification`);
+            console.log(
+              `⚠️ Skipping ${model.name} - failed to create specification`
+            );
             return;
           }
-          
+
           createdSpecifications.push(specId);
         } catch (error) {
-          console.log(`⚠️ Skipping ${model.name} - specification creation failed: ${error}`);
+          console.log(
+            `⚠️ Skipping ${model.name} - specification creation failed: ${error}`
+          );
           return;
         }
 
@@ -320,18 +324,19 @@ describe("Tool Calling Limits", () => {
           return { success: true, statistics: stats };
         };
 
-        const events: UIStreamEvent[] = [];
+        const events: AgentStreamEvent[] = [];
         const startTime = Date.now();
         let conversationId: string | undefined;
-        
+
         // Helper to calculate tool call counts
-        const getToolCallCounts = () => toolCalls.reduce(
-          (acc, call) => {
-            acc[call.name] = (acc[call.name] || 0) + 1;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
+        const getToolCallCounts = () =>
+          toolCalls.reduce(
+            (acc, call) => {
+              acc[call.name] = (acc[call.name] || 0) + 1;
+              return acc;
+            },
+            {} as Record<string, number>
+          );
 
         // Encourage maximum tool usage
         const prompt = `You are a prolific author who writes very quickly. I want you to write a complete short book about "The Adventures of AI" with EXACTLY 3 chapters. 
@@ -357,7 +362,7 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
         try {
           await client.streamAgent(
             prompt,
-            (event: UIStreamEvent) => {
+            (event: AgentStreamEvent) => {
               events.push(event);
 
               if (event.type === "conversation_started") {
@@ -367,7 +372,9 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
                 if (event.status === "completed") {
                   console.log(`  ✅ ${event.toolCall.name} completed`);
                 } else if (event.status === "failed") {
-                  console.log(`  ❌ ${event.toolCall.name} failed: ${event.error}`);
+                  console.log(
+                    `  ❌ ${event.toolCall.name} failed: ${event.error}`
+                  );
                 }
               } else if (event.type === "conversation_completed") {
                 console.log(`\n💬 Book writing completed!`);
@@ -396,10 +403,10 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
           );
         } catch (error) {
           console.log(`❌ ${model.name} streaming failed: ${error}`);
-          
+
           // Calculate tool call counts for error case
           const errorToolCallCounts = getToolCallCounts();
-          
+
           // Still save basic statistics
           modelStatistics.push({
             model: model.name,
@@ -409,19 +416,23 @@ Write as much as you can in a single turn! Be creative but work fast. Target at 
             paragraphs: errorToolCallCounts.writeParagraph || 0,
             duration: Date.now() - startTime,
           });
-          
+
           // Make sure we have at least a conversation ID to clean up
           if (conversationId) {
             createdConversations.push(conversationId);
           }
-          
+
           // Check if we got partial results
           if (toolCalls.length > 0) {
-            console.log(`📊 Partial results collected: ${toolCalls.length} tool calls before error`);
+            console.log(
+              `📊 Partial results collected: ${toolCalls.length} tool calls before error`
+            );
           }
-          
+
           // Fail the test but with a descriptive message
-          throw new Error(`${model.name} failed to complete tool calling test: ${error}`);
+          throw new Error(
+            `${model.name} failed to complete tool calling test: ${error}`
+          );
         }
 
         const endTime = Date.now();
@@ -545,7 +556,7 @@ CHALLENGE: Try to make at least 50 tool calls! Be creative with the labels. You 
 - Just keep calling the tool with different labels
 
 The goal is to see how many tool calls you can make in one turn. Don't explain, just call the tool repeatedly!`,
-        (event: UIStreamEvent) => {
+        (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversationId = event.conversationId;
             createdConversations.push(event.conversationId);
