@@ -3911,7 +3911,6 @@ class Graphlit {
         onEvent as (event: AgentStreamEvent) => void,
         actualConversationId,
         {
-          showTokenStream: options?.showTokenStream ?? true,
           smoothingEnabled: options?.smoothingEnabled ?? true,
           chunkingStrategy: options?.chunkingStrategy ?? "word",
           smoothingDelay: options?.smoothingDelay ?? 30,

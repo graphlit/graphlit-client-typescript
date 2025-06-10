@@ -20,7 +20,6 @@ export interface AgentResult {
 export interface StreamAgentOptions {
   maxToolRounds?: number; // default: 1000
   abortSignal?: AbortSignal;
-  showTokenStream?: boolean; // default: true
   smoothingEnabled?: boolean; // default: true
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms

@@ -22,7 +22,6 @@ export class UIEventAdapter {
   > = new Map();
   private lastUpdateTime: number = 0;
   private updateTimer?: ReturnType<typeof globalThis.setTimeout>;
-  private showTokenStream: boolean;
   private chunkBuffer?: ChunkBuffer;
   private smoothingDelay: number = 30;
   private chunkQueue: string[] = []; // Queue of chunks waiting to be emitted
@@ -31,14 +30,12 @@ export class UIEventAdapter {
     private onEvent: (event: AgentStreamEvent) => void,
     conversationId: string,
     options: {
-      showTokenStream?: boolean;
       smoothingEnabled?: boolean;
       chunkingStrategy?: ChunkingStrategy;
       smoothingDelay?: number;
     } = {}
   ) {
     this.conversationId = conversationId;
-    this.showTokenStream = options.showTokenStream ?? true;
     this.smoothingDelay = options.smoothingDelay ?? 30;
 
     if (options.smoothingEnabled) {
@@ -56,9 +53,7 @@ export class UIEventAdapter {
         break;
 
       case "token":
-        if (this.showTokenStream) {
-          this.handleToken(event.token);
-        }
+        this.handleToken(event.token);
         break;
 
       case "message":
