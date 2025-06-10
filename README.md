@@ -223,8 +223,7 @@ await client.streamAgent(
   undefined, // tools
   undefined, // toolHandlers
   {
-    maxToolRounds: 10,        // Maximum tool calling rounds (default: 100)
-    showTokenStream: true,    // Show individual tokens (default: true)
+    maxToolRounds: 10,        // Maximum tool calling rounds (default: 1000)
     smoothingEnabled: true,   // Enable smooth streaming (default: true)
     chunkingStrategy: 'word', // 'character' | 'word' | 'sentence' (default: 'word')
     smoothingDelay: 30,       // Milliseconds between chunks (default: 30)

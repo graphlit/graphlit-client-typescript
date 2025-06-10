@@ -68,6 +68,8 @@ try {
   // Google Generative AI not installed
 }
 
+const DEFAULT_MAX_TOOL_ROUNDS: number = 1000;
+
 // Provider categorization for streaming capabilities
 const STREAMING_PROVIDERS = {
   // Native streaming with dedicated SDKs
@@ -3732,7 +3734,7 @@ class Graphlit {
     correlationId?: string
   ): Promise<AgentResult> {
     const startTime = Date.now();
-    const maxRounds = options?.maxToolRounds || 10;
+    const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const timeout = options?.timeout || 300000; // 5 minutes default
 
     // Create abort controller for timeout
@@ -3863,7 +3865,7 @@ class Graphlit {
     data?: string, // base64 encoded
     correlationId?: string
   ): Promise<void> {
-    const maxRounds = options?.maxToolRounds || 100;
+    const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
     let uiAdapter: UIEventAdapter | undefined;
 
@@ -3909,7 +3911,6 @@ class Graphlit {
         onEvent as (event: AgentStreamEvent) => void,
         actualConversationId,
         {
-          showTokenStream: options?.showTokenStream ?? true,
           smoothingEnabled: options?.smoothingEnabled ?? true,
           chunkingStrategy: options?.chunkingStrategy ?? "word",
           smoothingDelay: options?.smoothingDelay ?? 30,
