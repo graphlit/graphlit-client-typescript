@@ -12,6 +12,18 @@ import {
 import { getModelName } from "../model-mapping.js";
 
 /**
+ * Helper to check if a string is valid JSON
+ */
+function isValidJSON(str: string): boolean {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Stream with OpenAI SDK
  */
 export async function streamWithOpenAI(
@@ -161,7 +173,7 @@ export async function streamWithAnthropic(
       stream: true,
       temperature: specification.anthropic?.temperature,
       //top_p: specification.anthropic?.probability,
-      max_tokens: specification.anthropic?.completionTokenLimit || 1024, // required
+      max_tokens: specification.anthropic?.completionTokenLimit || 8192, // required
     };
 
     if (systemPrompt) {
@@ -209,6 +221,17 @@ export async function streamWithAnthropic(
           const currentTool = toolCalls[toolCalls.length - 1];
           if (currentTool) {
             currentTool.arguments += chunk.delta.partial_json;
+
+            // Debug logging for partial JSON accumulation
+            if (process.env.DEBUG_STREAMING) {
+              console.log(
+                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`
+              );
+              console.log(
+                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`
+              );
+            }
+
             onEvent({
               type: "tool_call_delta",
               toolCallId: currentTool.id,
@@ -220,6 +243,42 @@ export async function streamWithAnthropic(
         // Tool call complete
         const currentTool = toolCalls[toolCalls.length - 1];
         if (currentTool) {
+          // Log the final JSON for debugging
+          if (
+            process.env.DEBUG_STREAMING ||
+            !isValidJSON(currentTool.arguments)
+          ) {
+            console.log(
+              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`
+            );
+            console.log(currentTool.arguments);
+
+            // Check if JSON appears truncated
+            const lastChars = currentTool.arguments.slice(-10);
+            if (
+              !lastChars.includes("}") &&
+              currentTool.arguments.length > 100
+            ) {
+              console.warn(
+                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`
+              );
+            }
+
+            // Validate JSON
+            try {
+              JSON.parse(currentTool.arguments);
+              if (process.env.DEBUG_STREAMING) {
+                console.log(
+                  `[Anthropic] ✅ Valid JSON for ${currentTool.name}`
+                );
+              }
+            } catch (e) {
+              console.error(
+                `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`
+              );
+            }
+          }
+
           onEvent({
             type: "tool_call_complete",
             toolCall: {

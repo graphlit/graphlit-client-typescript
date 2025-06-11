@@ -4136,7 +4136,76 @@ class Graphlit {
           }
 
           try {
-            const args = JSON.parse(toolCall.arguments);
+            let args: any;
+            try {
+              args = JSON.parse(toolCall.arguments);
+            } catch (parseError) {
+              console.error(`Failed to parse tool arguments for ${toolCall.name}:`);
+              console.error(`Arguments (${toolCall.arguments.length} chars):`, toolCall.arguments);
+              console.error(`Parse error:`, parseError);
+              
+              // Check for common truncation patterns
+              const lastChars = toolCall.arguments.slice(-20);
+              let isTruncated = false;
+              if (!toolCall.arguments.includes('}') || !lastChars.includes('}')) {
+                console.error(`Possible truncation detected - arguments don't end with '}': ...${lastChars}`);
+                isTruncated = true;
+              }
+              
+              // Try to fix truncated JSON by adding missing closing braces
+              if (isTruncated) {
+                let fixedJson = toolCall.arguments;
+                
+                // Count open braces vs close braces to determine how many we need
+                const openBraces = (fixedJson.match(/\{/g) || []).length;
+                const closeBraces = (fixedJson.match(/\}/g) || []).length;
+                const missingBraces = openBraces - closeBraces;
+                
+                if (missingBraces > 0) {
+                  // Add missing closing quote if the string ends with an unfinished string
+                  if (fixedJson.endsWith('"') === false && fixedJson.includes('"')) {
+                    const lastQuoteIndex = fixedJson.lastIndexOf('"');
+                    const afterLastQuote = fixedJson.slice(lastQuoteIndex + 1);
+                    if (!afterLastQuote.includes('"')) {
+                      fixedJson += '"';
+                    }
+                  }
+                  
+                  // Add missing closing braces
+                  fixedJson += '}'.repeat(missingBraces);
+                  
+                  console.log(`Attempting to fix truncated JSON by adding ${missingBraces} closing brace(s):`);
+                  console.log(fixedJson);
+                  
+                  try {
+                    args = JSON.parse(fixedJson);
+                    console.log(`✅ Successfully fixed truncated JSON for ${toolCall.name}`);
+                  } catch (fixError) {
+                    console.error(`❌ Failed to fix truncated JSON: ${fixError}`);
+                    // Fall through to error handling below
+                  }
+                }
+              }
+              
+              // If we couldn't parse or fix the JSON, log details and continue
+              if (!args) {
+                // Log position mentioned in error if available
+                const errorMsg = parseError instanceof Error ? parseError.message : '';
+                const posMatch = errorMsg.match(/position (\d+)/);
+                if (posMatch) {
+                  const pos = parseInt(posMatch[1]);
+                  const context = toolCall.arguments.slice(Math.max(0, pos - 20), pos + 20);
+                  console.error(`Error context around position ${pos}: ...${context}...`);
+                }
+                
+                // Update UI with error - use StreamEvent error type
+                uiAdapter.handleEvent({
+                  type: "error",
+                  error: `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`,
+                });
+                continue;
+              }
+            }
 
             // Update UI
             uiAdapter.handleEvent({

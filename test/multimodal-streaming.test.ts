@@ -127,7 +127,7 @@ describe("Multimodal Streaming", () => {
               `✅ Final response: "${finalResponse.slice(0, 100)}..."`
             );
           } else if (event.type === "error") {
-            console.error(`❌ Error: ${event.error}`);
+            console.error(`❌ Error: ${event.error.message}`);
           }
         },
         undefined,
@@ -487,7 +487,7 @@ describe("Multimodal Streaming", () => {
           } else if (event.type === "conversation_completed") {
             finalResponse = event.message.message;
           } else if (event.type === "error") {
-            console.log(`⚠️ Expected Error: ${event.error}`);
+            console.log(`⚠️ Expected Error: ${event.error.message}`);
           }
         },
         undefined,

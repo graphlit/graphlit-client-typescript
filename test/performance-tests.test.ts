@@ -701,7 +701,7 @@ describe("Performance Tests", () => {
             }
           } else if (event.type === "error") {
             stabilityMetrics.errors++;
-            console.error(`  ❌ Error: ${event.error}`);
+            console.error(`  ❌ Error: ${event.error.message}`);
           } else if (event.type === "conversation_completed") {
             streaming = false;
             console.log("  ✅ Stream completed");

@@ -391,7 +391,7 @@ Start writing immediately and don't stop until you've written a complete, detail
               } else if (event.type === "conversation_completed") {
                 console.log(`\n💬 Book writing completed!`);
               } else if (event.type === "error") {
-                console.error(`❌ Error: ${event.error}`);
+                console.error(`❌ Error: ${event.error.message}`);
               }
             },
             undefined, // conversationId
@@ -491,7 +491,7 @@ Start writing immediately and don't stop until you've written a complete, detail
         expect(toolCallCounts.writeChapter || 0).toBeGreaterThanOrEqual(1); // At least one chapter
 
         console.log(`✅ ${model.name} completed book writing test`);
-      }, 600000); // 10 minute timeout per model
+      }, 900000); // 15 minute timeout per model
     }
   });
 

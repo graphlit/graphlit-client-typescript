@@ -293,7 +293,7 @@ describe("Error Recovery", () => {
               console.log(`✅ Tool error handled: ${event.error}`);
             }
           } else if (event.type === "error") {
-            console.log(`❌ Stream Error: ${event.error}`);
+            console.log(`❌ Stream Error: ${event.error.message}`);
           } else if (event.type === "conversation_completed") {
             console.log(`💬 Final message: ${event.message.message}`);
           }
