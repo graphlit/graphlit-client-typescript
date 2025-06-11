@@ -1,27 +1,26 @@
-// Runtime import via createRequire
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
-const apollo = require("@apollo/client");
+// Load the core-only CommonJS build (no React, no rehackt)
+const apolloCore = require("@apollo/client/core/core.cjs");
 
-// Runtime value import
-const { ApolloError } = require("@apollo/client/core/core.cjs");
+export const {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  ApolloLink,
+  ApolloError, // runtime value
+} = apolloCore;
 
-// Type-only imports
-import type { ApolloError as ApolloErrorType } from "@apollo/client";
-
-export const { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } =
-  apollo;
-
-// Type-only import
+// ────────────────────────────────────────────────────────────────
+//  Type-only imports (erased at runtime)
+// ────────────────────────────────────────────────────────────────
 import type {
+  ApolloClient as ApolloClientType,
+  ApolloError as ApolloErrorType,
   OperationVariables,
   ApolloQueryResult,
   FetchResult,
-  ApolloClient as ApolloClientType,
-  InMemoryCache as InMemoryCacheType,
-  ApolloLink as ApolloLinkType,
-  createHttpLink as createHttpLinkType,
   NormalizedCacheObject,
 } from "@apollo/client";
 
