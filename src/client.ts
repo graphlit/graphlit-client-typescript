@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url);
 const apollo = require("@apollo/client");
 
 // Runtime value import
-const { ApolloError } = require("@apollo/client");
+const { ApolloError } = require("@apollo/client/core/core.cjs");
 
 // Type-only imports
 import type { ApolloError as ApolloErrorType } from "@apollo/client";
