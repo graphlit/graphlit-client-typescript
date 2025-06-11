@@ -48,9 +48,6 @@
     "jsonwebtoken": "^9.0.2",
     "prettier": "^3.5.3"
   },
-  "peerDependencies": {
-    "jsonwebtoken": ">=9"
-  },
   "peerDependenciesMeta": {
     "openai": {
       "optional": true
@@ -63,12 +60,13 @@
     }
   },
   "optionalDependencies": {
-    "openai": "^5.2.0",
     "@anthropic-ai/sdk": "^0.53.0",
-    "@google/generative-ai": "^0.24.1"
+    "@google/generative-ai": "^0.24.1",
+    "openai": "^5.2.0"
   },
   "devDependencies": {
     "@graphql-codegen/typescript-document-nodes": "^4.0.16",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",
     "dotenv": "^16.5.0",
