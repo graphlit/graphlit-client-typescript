@@ -6,6 +6,7 @@
     "outDir": "dist",
     "declaration": true,
     "strict": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "lib": ["ES2022", "esnext.intl"]

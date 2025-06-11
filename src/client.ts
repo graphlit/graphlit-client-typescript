@@ -1,5 +1,4 @@
-// jwt v9 – use named export
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 // Apollo core (React-free) via createRequire
 import { createRequire } from "node:module";
@@ -274,7 +273,7 @@ class Graphlit {
       aud: "https://portal.graphlit.io",
     };
 
-    this.token = sign(payload, this.jwtSecret, { algorithm: "HS256" });
+    this.token = jwt.sign(payload, this.jwtSecret, { algorithm: "HS256" });
   }
 
   public async getProject(): Promise<Types.GetProjectQuery> {
