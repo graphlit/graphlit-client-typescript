@@ -7,7 +7,8 @@
   "types": "./dist/client.d.ts",
   "exports": {
     ".": "./dist/client.js",
-    "./generated/*": "./dist/generated/*.js"
+    "./generated/*": "./dist/generated/*.js",
+    "./dist/generated/*": "./dist/generated/*.js"
   },
   "files": [
     "dist"
