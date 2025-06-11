@@ -1,15 +1,31 @@
-import * as jwt from "jsonwebtoken";
-import {
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-  ApolloLink,
-  NormalizedCacheObject,
+// Runtime import via createRequire
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+
+const apollo = require("@apollo/client");
+
+// Runtime value import
+const { ApolloError } = require("@apollo/client");
+
+// Type-only imports
+import type { ApolloError as ApolloErrorType } from "@apollo/client";
+
+export const { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } =
+  apollo;
+
+// Type-only import
+import type {
   OperationVariables,
   ApolloQueryResult,
   FetchResult,
-  ApolloError,
+  ApolloClient as ApolloClientType,
+  InMemoryCache as InMemoryCacheType,
+  ApolloLink as ApolloLinkType,
+  createHttpLink as createHttpLinkType,
+  NormalizedCacheObject,
 } from "@apollo/client";
+
+import * as jwt from "jsonwebtoken";
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
@@ -114,7 +130,7 @@ export type { AgentStreamEvent } from "./types/ui-events.js";
 
 // Define the Graphlit class
 class Graphlit {
-  public client: ApolloClient<NormalizedCacheObject> | undefined;
+  public client: ApolloClientType<NormalizedCacheObject> | undefined;
   public token: string | undefined;
 
   private apiUri: string;
@@ -188,7 +204,7 @@ class Graphlit {
       uri: this.apiUri,
     });
 
-    const authLink = new ApolloLink((operation, forward) => {
+    const authLink = new ApolloLink((operation: any, forward: any) => {
       operation.setContext({
         headers: {
           Authorization: this.token ? `Bearer ${this.token}` : "",
@@ -4654,7 +4670,7 @@ class Graphlit {
 
       if (result.errors) {
         const errorMessage = result.errors
-          .map((err) => this.prettyPrintGraphQLError(err))
+          .map((err: any) => this.prettyPrintGraphQLError(err))
           .join("\n");
         throw new Error(errorMessage);
       }
@@ -4665,13 +4681,20 @@ class Graphlit {
 
       return result.data;
     } catch (error) {
-      if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
-        const errorMessage = error.graphQLErrors
-          .map((err) => this.prettyPrintGraphQLError(err))
+      if (
+        error instanceof ApolloError &&
+        (error as ApolloErrorType).graphQLErrors.length > 0
+      ) {
+        const errorMessage = (error as ApolloErrorType).graphQLErrors
+          .map((err: GraphQLFormattedError) =>
+            this.prettyPrintGraphQLError(err)
+          )
           .join("\n");
+
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
+
       if (error instanceof Error) {
         console.error(error.message);
         throw error;
@@ -4699,7 +4722,7 @@ class Graphlit {
 
       if (result.errors) {
         const errorMessage = result.errors
-          .map((err) => this.prettyPrintGraphQLError(err))
+          .map((err: any) => this.prettyPrintGraphQLError(err))
           .join("\n");
         throw new Error(errorMessage);
       }
@@ -4710,9 +4733,12 @@ class Graphlit {
 
       return result.data;
     } catch (error: unknown) {
-      if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
-        const errorMessage = error.graphQLErrors
-          .map((err) => this.prettyPrintGraphQLError(err))
+      if (
+        error instanceof ApolloError &&
+        (error as ApolloErrorType).graphQLErrors.length > 0
+      ) {
+        const errorMessage = (error as ApolloErrorType).graphQLErrors
+          .map((err: any) => this.prettyPrintGraphQLError(err))
           .join("\n");
         console.error(errorMessage);
         throw new Error(errorMessage);
