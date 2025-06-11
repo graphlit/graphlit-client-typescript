@@ -4154,7 +4154,7 @@ class Graphlit {
               
               // Try to fix truncated JSON by adding missing closing braces
               if (isTruncated) {
-                let fixedJson = toolCall.arguments;
+                let fixedJson = toolCall.arguments.trim();
                 
                 // Count open braces vs close braces to determine how many we need
                 const openBraces = (fixedJson.match(/\{/g) || []).length;
@@ -4162,8 +4162,18 @@ class Graphlit {
                 const missingBraces = openBraces - closeBraces;
                 
                 if (missingBraces > 0) {
+                  // Check if we're mid-value (ends with number or boolean)
+                  if (fixedJson.match(/:\s*\d+$/) || fixedJson.match(/:\s*(true|false)$/)) {
+                    // Complete the current property and close
+                    fixedJson += ', "content": ""'; // Add empty content field
+                  }
+                  // Check if we're after a value but missing comma
+                  else if (fixedJson.match(/"\s*:\s*[^,}\s]+$/)) {
+                    // We have a complete value but no comma, add empty content
+                    fixedJson += ', "content": ""';
+                  }
                   // Add missing closing quote if the string ends with an unfinished string
-                  if (fixedJson.endsWith('"') === false && fixedJson.includes('"')) {
+                  else if (fixedJson.endsWith('"') === false && fixedJson.includes('"')) {
                     const lastQuoteIndex = fixedJson.lastIndexOf('"');
                     const afterLastQuote = fixedJson.slice(lastQuoteIndex + 1);
                     if (!afterLastQuote.includes('"')) {

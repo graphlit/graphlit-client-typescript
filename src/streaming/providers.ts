@@ -191,8 +191,16 @@ export async function streamWithAnthropic(
 
     const stream = await anthropicClient.messages.create(streamConfig);
 
+    let activeContentBlock = false;
+    
     for await (const chunk of stream) {
+      // Debug log all chunk types
+      if (process.env.DEBUG_STREAMING) {
+        console.log(`[Anthropic] Received chunk type: ${chunk.type}`);
+      }
+      
       if (chunk.type === "content_block_start") {
+        activeContentBlock = true;
         if (chunk.content_block.type === "tool_use") {
           const toolCall = {
             id: chunk.content_block.id,
@@ -240,6 +248,7 @@ export async function streamWithAnthropic(
           }
         }
       } else if (chunk.type === "content_block_stop") {
+        activeContentBlock = false;
         // Tool call complete
         const currentTool = toolCalls[toolCalls.length - 1];
         if (currentTool) {
@@ -288,10 +297,49 @@ export async function streamWithAnthropic(
             },
           });
         }
+      } else if (chunk.type === "message_stop" && activeContentBlock) {
+        // Handle Anthropic bug: message_stop without content_block_stop
+        console.warn(`[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`);
+        activeContentBlock = false;
+        
+        // Emit synthetic content_block_stop for the current tool
+        const currentTool = toolCalls[toolCalls.length - 1];
+        if (currentTool) {
+          // Log the incomplete tool
+          console.warn(`[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`);
+          
+          // Only emit tool_call_complete if we have valid JSON
+          if (isValidJSON(currentTool.arguments)) {
+            onEvent({
+              type: "tool_call_complete",
+              toolCall: {
+                id: currentTool.id,
+                name: currentTool.name,
+                arguments: currentTool.arguments,
+              },
+            });
+          } else {
+            console.error(`[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`);
+          }
+        }
       }
     }
 
-    onComplete(fullMessage, toolCalls);
+    // Final check: filter out any remaining incomplete tool calls
+    const validToolCalls = toolCalls.filter((tc, idx) => {
+      if (!isValidJSON(tc.arguments)) {
+        console.warn(`[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`);
+        return false;
+      }
+      return true;
+    });
+    
+    if (toolCalls.length !== validToolCalls.length) {
+      console.log(`[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`);
+      console.log(`[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`);
+    }
+
+    onComplete(fullMessage, validToolCalls);
   } catch (error) {
     onEvent({
       type: "error",
