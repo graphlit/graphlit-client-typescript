@@ -2,7 +2,37 @@
 
 ## Overview
 
-The Graphlit Client for Node.js enables straightforward interactions with the Graphlit API, allowing developers to execute GraphQL queries and mutations against the Graphlit service. This document outlines the setup process and provides examples of using the client, including the new streaming capabilities.
+The Graphlit Client for Node.js enables straightforward interactions with the Graphlit API, allowing developers to execute GraphQL queries and mutations against the Graphlit service. This document outlines the setup process and provides examples of using the client, including advanced streaming capabilities with real-time token delivery and tool calling support.
+
+## Quick Start
+
+Get up and running in 2 minutes:
+
+```bash
+# Install the client
+npm install graphlit-client
+
+# Set your credentials (get from https://portal.graphlit.dev)
+export GRAPHLIT_ORGANIZATION_ID=your_org_id
+export GRAPHLIT_ENVIRONMENT_ID=your_env_id  
+export GRAPHLIT_JWT_SECRET=your_secret
+```
+
+```typescript
+import { Graphlit } from "graphlit-client";
+
+const client = new Graphlit();
+
+// Stream a conversation
+await client.streamAgent(
+  "Hello! Tell me a joke",
+  (event) => {
+    if (event.type === "message_update") {
+      console.log(event.message.message);
+    }
+  }
+);
+```
 
 ## Prerequisites
 
@@ -102,17 +132,17 @@ const contents = await client.queryContents({
 
 ### Streaming Conversations with streamAgent
 
-The new `streamAgent` method provides real-time streaming responses with automatic UI event handling:
+The `streamAgent` method provides real-time streaming responses with automatic UI event handling. It supports both native SDK streaming (when LLM clients are configured) and fallback streaming through the Graphlit API:
 
 ```typescript
-import { Graphlit, UIStreamEvent } from "graphlit-client";
+import { Graphlit, AgentStreamEvent } from "graphlit-client";
 
 const client = new Graphlit();
 
 // Basic streaming conversation
 await client.streamAgent(
   "Tell me about artificial intelligence",
-  (event: UIStreamEvent) => {
+  (event: AgentStreamEvent) => {
     switch (event.type) {
       case "conversation_started":
         console.log(`Started conversation: ${event.conversationId}`);
@@ -135,9 +165,27 @@ await client.streamAgent(
 );
 ```
 
+### Non-Streaming Conversations with promptAgent
+
+For simpler use cases without streaming, use `promptAgent`:
+
+```typescript
+const result = await client.promptAgent(
+  "What's the weather like?",
+  undefined, // conversationId (creates new)
+  { id: "your-specification-id" }, // specification
+  tools, // optional tools array
+  toolHandlers, // optional tool handlers
+  { timeout: 30000 } // optional timeout
+);
+
+console.log(result.message); // Complete response
+console.log(result.conversationId); // For continuing the conversation
+```
+
 ### Tool Calling with Streaming
 
-`streamAgent` supports tool calling with automatic execution:
+`streamAgent` supports sophisticated tool calling with automatic execution and parallel processing:
 
 ```typescript
 // Define tools
@@ -164,11 +212,14 @@ const toolHandlers = {
 // Stream with tools
 await client.streamAgent(
   "What's the weather in San Francisco?",
-  (event: UIStreamEvent) => {
+  (event: AgentStreamEvent) => {
     if (event.type === "tool_update") {
       console.log(`Tool ${event.toolCall.name}: ${event.status}`);
       if (event.result) {
         console.log(`Result: ${JSON.stringify(event.result)}`);
+      }
+      if (event.error) {
+        console.error(`Tool error: ${event.error}`);
       }
     } else if (event.type === "conversation_completed") {
       console.log(`Final: ${event.message.message}`);
@@ -306,17 +357,98 @@ client.streamAgent(
 setTimeout(() => controller.abort(), 5000);
 ```
 
+## Advanced Tool Calling
+
+### Multiple Tool Calls
+
+The agent can make multiple tool calls in a single response:
+
+```typescript
+const tools = [
+  {
+    name: "search_web",
+    description: "Search the web for information",
+    schema: JSON.stringify({
+      type: "object",
+      properties: {
+        query: { type: "string" }
+      },
+      required: ["query"]
+    })
+  },
+  {
+    name: "calculate",
+    description: "Perform calculations",
+    schema: JSON.stringify({
+      type: "object",
+      properties: {
+        expression: { type: "string" }
+      },
+      required: ["expression"]
+    })
+  }
+];
+
+const toolHandlers = {
+  search_web: async ({ query }) => {
+    // Implement web search
+    return { results: ["Result 1", "Result 2"] };
+  },
+  calculate: async ({ expression }) => {
+    // Implement calculation
+    return { result: eval(expression) }; // Use a proper math parser in production
+  }
+};
+
+// The agent can use multiple tools to answer complex queries
+await client.streamAgent(
+  "Search for the current GDP of Japan and calculate 2.5% of it",
+  handleStreamEvent,
+  undefined,
+  { id: specId },
+  tools,
+  toolHandlers,
+  { maxToolRounds: 5 } // Allow multiple rounds of tool calls
+);
+```
+
+### Tool Calling with Timeouts
+
+Protect against hanging tools with timeouts:
+
+```typescript
+const toolHandlers = {
+  slow_operation: async (args) => {
+    // This will timeout after 30 seconds (default)
+    await someSlowOperation(args);
+  }
+};
+
+// Or set custom timeout in AgentOptions
+await client.promptAgent(
+  "Run the slow operation",
+  undefined,
+  { id: specId },
+  tools,
+  toolHandlers,
+  { 
+    timeout: 60000, // 60 second timeout for entire operation
+    maxToolRounds: 3 
+  }
+);
+```
+
 ## Stream Event Reference
 
-### UI Stream Events
+### Agent Stream Events
 
 | Event Type | Description | Properties |
 |------------|-------------|------------|
-| `conversation_started` | Conversation initialized | `conversationId`, `timestamp` |
+| `conversation_started` | Conversation initialized | `conversationId`, `timestamp`, `model?` |
 | `message_update` | Message text updated | `message` (complete text), `isStreaming` |
 | `tool_update` | Tool execution status | `toolCall`, `status`, `result?`, `error?` |
 | `conversation_completed` | Streaming finished | `message` (final) |
-| `error` | Error occurred | `error` object with `message`, `code`, `recoverable` |
+| `error` | Error occurred | `error` object with `message`, `code?`, `recoverable` |
 
 ### Tool Execution Statuses
 
@@ -405,12 +537,111 @@ await client.streamAgent(
 );
 ```
 
-## Migration Guide
+## Best Practices
 
-If you're upgrading from `promptConversation` to `streamAgent`:
+### 1. Always Handle Errors
 
 ```typescript
-// Before
+await client.streamAgent(
+  prompt,
+  (event) => {
+    if (event.type === "error") {
+      // Check if error is recoverable
+      if (event.error.recoverable) {
+        // Could retry or fallback
+        console.warn("Recoverable error:", event.error.message);
+      } else {
+        // Fatal error
+        console.error("Fatal error:", event.error.message);
+      }
+    }
+  }
+);
+```
+
+### 2. Clean Up Resources
+
+```typescript
+// Always clean up conversations when done
+let conversationId: string;
+
+try {
+  await client.streamAgent(
+    prompt,
+    (event) => {
+      if (event.type === "conversation_started") {
+        conversationId = event.conversationId;
+      }
+    }
+  );
+} finally {
+  if (conversationId) {
+    await client.deleteConversation(conversationId);
+  }
+}
+```
+
+### 3. Tool Handler Best Practices
+
+```typescript
+const toolHandlers = {
+  // Always validate inputs
+  calculate: async (args) => {
+    if (!args.expression || typeof args.expression !== 'string') {
+      throw new Error("Invalid expression");
+    }
+    
+    // Return structured data
+    return {
+      expression: args.expression,
+      result: evaluateExpression(args.expression),
+      timestamp: new Date().toISOString()
+    };
+  },
+  
+  // Handle errors gracefully
+  fetch_data: async (args) => {
+    try {
+      const data = await fetchFromAPI(args.url);
+      return { success: true, data };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.message,
+        // Help the LLM understand what went wrong
+        suggestion: "The URL might be invalid or the service is down"
+      };
+    }
+  }
+};
+```
+
+### 4. Optimize for Performance
+
+```typescript
+// Use appropriate chunking strategy for your use case
+const options = {
+  // For code generation or technical content
+  chunkingStrategy: 'character' as const,
+  
+  // For natural conversation (default)
+  chunkingStrategy: 'word' as const,
+  
+  // For long-form content
+  chunkingStrategy: 'sentence' as const,
+  
+  // Adjust smoothing delay for your UI
+  smoothingDelay: 20, // Faster updates
+  smoothingDelay: 50, // Smoother updates (default: 30)
+};
+```
+
+## Migration Guide
+
+If you're upgrading from `promptConversation` to `streamAgent` or `promptAgent`:
+
+```typescript
+// Before (v1.0)
 const response = await client.promptConversation(
   "Your prompt",
   undefined,
@@ -418,7 +649,15 @@ const response = await client.promptConversation(
 );
 console.log(response.promptConversation.message.message);
 
-// After
+// After (v1.1) - Non-streaming
+const result = await client.promptAgent(
+  "Your prompt",
+  undefined,
+  { id: specId }
+);
+console.log(result.message);
+
+// After (v1.1) - Streaming
 await client.streamAgent(
   "Your prompt",
   (event) => {
@@ -429,6 +668,69 @@ await client.streamAgent(
   undefined,
   { id: specId }
 );
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### 1. Streaming Not Working
+
+```typescript
+// Check if streaming is supported
+if (!client.supportsStreaming()) {
+  console.log("Streaming not supported - using fallback mode");
+}
+
+// Ensure LLM clients are properly configured
+const hasNativeStreaming = 
+  client.hasOpenAIClient() || 
+  client.hasAnthropicClient() || 
+  client.hasGoogleClient();
+```
+
+#### 2. Tool Calls Not Executing
+
+```typescript
+// Ensure tool schemas are valid JSON Schema
+const validSchema = {
+  type: "object",
+  properties: {
+    param: { type: "string", description: "Parameter description" }
+  },
+  required: ["param"] // Don't forget required fields
+};
+
+// Tool names must match exactly
+const tools = [{ name: "my_tool", /* ... */ }];
+const toolHandlers = { 
+  "my_tool": async (args) => { /* ... */ } // Name must match
+};
+```
+
+#### 3. Incomplete Streaming Responses
+
+Some LLM providers may truncate responses. The client handles this automatically, but you can enable debug logging:
+
+```bash
+DEBUG_STREAMING=true npm start
+```
+
+#### 4. Type Errors
+
+Ensure you're importing the correct types:
+
+```typescript
+import { 
+  Graphlit,
+  AgentStreamEvent,  // For streaming events
+  AgentResult,       // For promptAgent results
+  ToolHandler,       // For tool handler functions
+  StreamAgentOptions // For streaming options
+} from "graphlit-client";
+
+// Also available if needed
+import * as Types from "graphlit-client/generated/graphql-types";
 ```
 
 ## Support
