@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/graphlit/graphlit-client-typescript.git"
