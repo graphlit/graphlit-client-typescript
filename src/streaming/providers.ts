@@ -3,13 +3,13 @@ import {
   Specification,
   ToolDefinitionInput,
 } from "../generated/graphql-types.js";
-import { StreamEvent } from "../client.js";
 import {
   OpenAIMessage,
   AnthropicMessage,
   GoogleMessage,
 } from "./llm-formatters.js";
 import { getModelName } from "../model-mapping.js";
+import { StreamEvent } from "../types/internal.js";
 
 /**
  * Helper to check if a string is valid JSON

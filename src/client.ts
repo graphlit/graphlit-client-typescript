@@ -28,6 +28,7 @@ import {
 } from "./types/agent.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
+import { StreamEvent } from "./types/internal.js";
 import {
   formatMessagesForOpenAI,
   formatMessagesForAnthropic,
@@ -103,19 +104,6 @@ const STREAMING_PROVIDERS = {
 
 // Helper to create smooth event handler
 
-// Stream event types for streamConversation
-export type StreamEvent =
-  | { type: "start"; conversationId: string }
-  | { type: "token"; token: string }
-  | { type: "message"; message: string }
-  | { type: "tool_call_start"; toolCall: { id: string; name: string } }
-  | { type: "tool_call_delta"; toolCallId: string; argumentDelta: string }
-  | {
-      type: "tool_call_complete";
-      toolCall: { id: string; name: string; arguments: string };
-    }
-  | { type: "complete"; messageId?: string; conversationId?: string }
-  | { type: "error"; error: string };
 
 // Re-export agent types
 export type {
@@ -3855,7 +3843,7 @@ class Graphlit {
    */
   public async streamAgent(
     prompt: string,
-    onEvent: (event: StreamEvent | AgentStreamEvent) => void,
+    onEvent: (event: AgentStreamEvent) => void,
     conversationId?: string,
     specification?: Types.EntityReferenceInput,
     tools?: Types.ToolDefinitionInput[],
@@ -4720,15 +4708,3 @@ class Graphlit {
 export { Graphlit };
 export * as Types from "./generated/graphql-types.js";
 
-// Export streaming helpers
-export {
-  StreamEventAggregator,
-  AggregatedEvent,
-  formatSSEEvent,
-  createSSEStream,
-  wrapToolHandlers,
-  enhanceToolCalls,
-  ConversationMetrics,
-  ToolResultEmitter,
-  ServerMapping,
-} from "./stream-helpers.js";

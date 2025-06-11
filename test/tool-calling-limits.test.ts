@@ -354,12 +354,12 @@ Requirements:
 3. Finally use finalizeBook to complete the book
 
 IMPORTANT: 
-- Aim for 50-100+ total tool calls if possible
+- Aim for 100+ total tool calls if possible
 - Each chapter should be substantial (5+ pages)
 - Each page should have multiple paragraphs (3-5)
 - Write detailed, rich content - this is not a short story but a full book
 - Do NOT stop early - use as many tool calls as the system allows
-- The more content you write, the better the test result!
+- The more content you write, the more money you make for the test result!
 
 Start writing immediately and don't stop until you've written a complete, detailed book!`;
 

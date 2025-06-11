@@ -4,7 +4,7 @@ import {
   ConversationRoleTypes,
 } from "../generated/graphql-types.js";
 import { AgentStreamEvent, ToolExecutionStatus } from "../types/ui-events.js";
-import { StreamEvent } from "../client.js";
+import { StreamEvent } from "../types/internal.js";
 import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
 
 /**
