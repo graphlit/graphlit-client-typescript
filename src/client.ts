@@ -9,16 +9,12 @@ import {
   ApolloQueryResult,
   FetchResult,
   ApolloError,
-} from "@apollo/client/core";
+} from "@apollo/client";
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
 import * as dotenv from "dotenv";
-import {
-  getModelName,
-  isStreamingSupported,
-  getServiceType,
-} from "./model-mapping.js";
+import { getServiceType } from "./model-mapping.js";
 import {
   AgentOptions,
   AgentResult,
@@ -28,7 +24,6 @@ import {
 } from "./types/agent.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
-import { StreamEvent } from "./types/internal.js";
 import {
   formatMessagesForOpenAI,
   formatMessagesForAnthropic,
@@ -103,7 +98,6 @@ const STREAMING_PROVIDERS = {
 // Smooth streaming buffer implementation
 
 // Helper to create smooth event handler
-
 
 // Re-export agent types
 export type {
@@ -4128,30 +4122,43 @@ class Graphlit {
             try {
               args = JSON.parse(toolCall.arguments);
             } catch (parseError) {
-              console.error(`Failed to parse tool arguments for ${toolCall.name}:`);
-              console.error(`Arguments (${toolCall.arguments.length} chars):`, toolCall.arguments);
+              console.error(
+                `Failed to parse tool arguments for ${toolCall.name}:`
+              );
+              console.error(
+                `Arguments (${toolCall.arguments.length} chars):`,
+                toolCall.arguments
+              );
               console.error(`Parse error:`, parseError);
-              
+
               // Check for common truncation patterns
               const lastChars = toolCall.arguments.slice(-20);
               let isTruncated = false;
-              if (!toolCall.arguments.includes('}') || !lastChars.includes('}')) {
-                console.error(`Possible truncation detected - arguments don't end with '}': ...${lastChars}`);
+              if (
+                !toolCall.arguments.includes("}") ||
+                !lastChars.includes("}")
+              ) {
+                console.error(
+                  `Possible truncation detected - arguments don't end with '}': ...${lastChars}`
+                );
                 isTruncated = true;
               }
-              
+
               // Try to fix truncated JSON by adding missing closing braces
               if (isTruncated) {
                 let fixedJson = toolCall.arguments.trim();
-                
+
                 // Count open braces vs close braces to determine how many we need
                 const openBraces = (fixedJson.match(/\{/g) || []).length;
                 const closeBraces = (fixedJson.match(/\}/g) || []).length;
                 const missingBraces = openBraces - closeBraces;
-                
+
                 if (missingBraces > 0) {
                   // Check if we're mid-value (ends with number or boolean)
-                  if (fixedJson.match(/:\s*\d+$/) || fixedJson.match(/:\s*(true|false)$/)) {
+                  if (
+                    fixedJson.match(/:\s*\d+$/) ||
+                    fixedJson.match(/:\s*(true|false)$/)
+                  ) {
                     // Complete the current property and close
                     fixedJson += ', "content": ""'; // Add empty content field
                   }
@@ -4161,45 +4168,60 @@ class Graphlit {
                     fixedJson += ', "content": ""';
                   }
                   // Add missing closing quote if the string ends with an unfinished string
-                  else if (fixedJson.endsWith('"') === false && fixedJson.includes('"')) {
+                  else if (
+                    fixedJson.endsWith('"') === false &&
+                    fixedJson.includes('"')
+                  ) {
                     const lastQuoteIndex = fixedJson.lastIndexOf('"');
                     const afterLastQuote = fixedJson.slice(lastQuoteIndex + 1);
                     if (!afterLastQuote.includes('"')) {
                       fixedJson += '"';
                     }
                   }
-                  
+
                   // Add missing closing braces
-                  fixedJson += '}'.repeat(missingBraces);
-                  
-                  console.log(`Attempting to fix truncated JSON by adding ${missingBraces} closing brace(s):`);
+                  fixedJson += "}".repeat(missingBraces);
+
+                  console.log(
+                    `Attempting to fix truncated JSON by adding ${missingBraces} closing brace(s):`
+                  );
                   console.log(fixedJson);
-                  
+
                   try {
                     args = JSON.parse(fixedJson);
-                    console.log(`✅ Successfully fixed truncated JSON for ${toolCall.name}`);
+                    console.log(
+                      `✅ Successfully fixed truncated JSON for ${toolCall.name}`
+                    );
                   } catch (fixError) {
-                    console.error(`❌ Failed to fix truncated JSON: ${fixError}`);
+                    console.error(
+                      `❌ Failed to fix truncated JSON: ${fixError}`
+                    );
                     // Fall through to error handling below
                   }
                 }
               }
-              
+
               // If we couldn't parse or fix the JSON, log details and continue
               if (!args) {
                 // Log position mentioned in error if available
-                const errorMsg = parseError instanceof Error ? parseError.message : '';
+                const errorMsg =
+                  parseError instanceof Error ? parseError.message : "";
                 const posMatch = errorMsg.match(/position (\d+)/);
                 if (posMatch) {
                   const pos = parseInt(posMatch[1]);
-                  const context = toolCall.arguments.slice(Math.max(0, pos - 20), pos + 20);
-                  console.error(`Error context around position ${pos}: ...${context}...`);
+                  const context = toolCall.arguments.slice(
+                    Math.max(0, pos - 20),
+                    pos + 20
+                  );
+                  console.error(
+                    `Error context around position ${pos}: ...${context}...`
+                  );
                 }
-                
+
                 // Update UI with error - use StreamEvent error type
                 uiAdapter.handleEvent({
                   type: "error",
-                  error: `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`,
+                  error: `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : "Unknown error"}`,
                 });
                 continue;
               }
@@ -4707,4 +4729,3 @@ class Graphlit {
 
 export { Graphlit };
 export * as Types from "./generated/graphql-types.js";
-
