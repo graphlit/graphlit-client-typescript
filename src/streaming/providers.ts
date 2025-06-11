@@ -156,8 +156,12 @@ export async function streamWithAnthropic(
       stream: true,
       temperature: specification.anthropic?.temperature,
       //top_p: specification.anthropic?.probability,
-      max_tokens: specification.anthropic?.completionTokenLimit,
     };
+
+    // Only add max_tokens if it's defined
+    if (specification.anthropic?.completionTokenLimit) {
+      streamConfig.max_tokens = specification.anthropic.completionTokenLimit;
+    }
 
     if (systemPrompt) {
       streamConfig.system = systemPrompt;
@@ -300,8 +304,8 @@ export async function streamWithGoogle(
     const model = googleClient.getGenerativeModel({
       model: modelName,
       generationConfig: {
-        temperature: streamConfig.temperature ?? 0.1,
-        maxOutputTokens: streamConfig.max_tokens ?? 4096,
+        temperature: streamConfig.temperature,
+        maxOutputTokens: streamConfig.max_tokens,
       },
       tools: googleTools,
     });
