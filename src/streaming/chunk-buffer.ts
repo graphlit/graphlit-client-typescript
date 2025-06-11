@@ -1,29 +1,34 @@
+/**
+ * Breaks an LLM’s streaming token deltas into character, word, or sentence
+ * chunks – or lets you plug in your own chunker.
+ *
+ * Usage
+ * -----
+ *   const buf = new ChunkBuffer('sentence');
+ *   stream.on('delta', d => buf.addToken(d).forEach(pushToUI));
+ *   stream.on('end',   () => buf.flush().forEach(pushToUI));
+ */
+
 export type ChunkingStrategy =
   | "character"
   | "word"
   | "sentence"
-  // A custom chunker returns processed chunks and the remaining unprocessed text.
   | ((text: string) => { chunks: string[]; remainder: string });
 
+export interface ChunkerOpts {
+  /** Flush “words” longer than this (default = 50 chars). */
+  maxWordLen?: number;
+  /** Force a break after this many chars with no whitespace (default = 400). */
+  maxBufferNoBreak?: number;
+}
+
+const hasSegmenter = typeof Intl !== "undefined" && "Segmenter" in Intl;
+
 export class ChunkBuffer {
-  private buffer = "";
-
-  // ----- Configurable Guards -----
-  private static readonly MAX_WORD_LEN = 50; // Breaks up extremely long "words" (e.g., URLs, code).
-  private static readonly MAX_BUFFER_NO_BREAK = 400; // Hard limit for any run without a natural break.
-  // --------------------------------
-
-  private readonly graphemeSeg: Intl.Segmenter;
-  private readonly wordSeg: Intl.Segmenter;
-  private readonly sentenceSeg: Intl.Segmenter;
-
-  private readonly customChunker?: (text: string) => {
-    chunks: string[];
-    remainder: string;
-  };
-  private readonly strategy: "character" | "word" | "sentence" | "custom";
-
-  constructor(strategy: ChunkingStrategy) {
+  // ────────────────────────────────────────────────────────────────────
+  // public API
+  // ────────────────────────────────────────────────────────────────────
+  constructor(strategy: ChunkingStrategy, opts: ChunkerOpts = {}) {
     if (typeof strategy === "function") {
       this.customChunker = strategy;
       this.strategy = "custom";
@@ -31,167 +36,178 @@ export class ChunkBuffer {
       this.strategy = strategy;
     }
 
-    this.graphemeSeg = new Intl.Segmenter(undefined, {
-      granularity: "grapheme",
-    });
-    this.wordSeg = new Intl.Segmenter(undefined, { granularity: "word" });
-    this.sentenceSeg = new Intl.Segmenter(undefined, {
-      granularity: "sentence",
-    });
+    this.MAX_WORD_LEN = opts.maxWordLen ?? 50;
+    this.MAX_BUFFER_NO_BREAK = opts.maxBufferNoBreak ?? 400;
+
+    if (hasSegmenter) {
+      this.graphemeSeg = new Intl.Segmenter(undefined, {
+        granularity: "grapheme",
+      });
+      this.wordSeg = new Intl.Segmenter(undefined, { granularity: "word" });
+      this.sentenceSeg = new Intl.Segmenter(undefined, {
+        granularity: "sentence",
+      });
+    }
   }
 
-  /** Feed one LLM token, receive zero-or-more flushed chunks. */
+  /** Feed one LLM delta; receive zero‑or‑more flushed chunks. */
   addToken(token: string): string[] {
     this.buffer += token;
 
-    if (this.customChunker) {
-      return this.flushCustom();
-    }
+    if (this.customChunker) return this.flushCustom();
 
-    // Pre-emptively flush any overly long runs of text that haven't found a natural break.
-    const longRunChunks = this.flushLongRuns();
+    // emergency bailout for giant uninterrupted text
+    const forced = this.flushLongRuns();
 
-    let newChunks: string[] = [];
-    switch (this.strategy) {
-      case "character":
-        newChunks = this.flushGraphemes();
-        break;
-      case "word":
-        newChunks = this.flushWords();
-        break;
-      case "sentence":
-        newChunks = this.flushSentences();
-        break;
-    }
-    return [...longRunChunks, ...newChunks];
+    const fresh =
+      this.strategy === "character"
+        ? this.flushGraphemes()
+        : this.strategy === "word"
+          ? this.flushWords()
+          : this.flushSentences();
+
+    return forced.concat(fresh);
   }
 
-  /** Flush whatever is left in the buffer when the stream finishes. */
+  /** Call when the stream closes to emit the final remainder. */
   flush(): string[] {
-    if (!this.buffer) return [];
+    if (!this.buffer.length) return [];
 
-    let finalChunks: string[] = [];
     if (this.customChunker) {
-      // For custom chunkers, flush everything by treating the whole buffer as input.
       const { chunks, remainder } = this.customChunker(this.buffer);
-      finalChunks.push(...chunks);
-      if (remainder) {
-        finalChunks.push(remainder);
-      }
-    } else {
-      // For built-in strategies, the remaining buffer is the final chunk.
-      finalChunks.push(this.buffer);
+      this.buffer = "";
+      return [...chunks, remainder].filter(Boolean);
     }
 
+    // Re‑use the normal strategy until nothing more flushes.
+    const out: string[] = [];
+    while (true) {
+      const next =
+        this.strategy === "character"
+          ? this.flushGraphemes()
+          : this.strategy === "word"
+            ? this.flushWords()
+            : this.flushSentences();
+      if (!next.length) break;
+      out.push(...next);
+    }
+    if (this.buffer) out.push(this.buffer);
     this.buffer = "";
-    // Ensure no empty strings are returned.
-    return finalChunks.filter((c) => c.length > 0);
+    return out;
   }
 
-  // ────────────────────────────────────────────────────────────────
-  //  Internals
-  // ────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────
+  // internals
+  // ────────────────────────────────────────────────────────────────────
+  private buffer = "";
 
+  private readonly strategy: "character" | "word" | "sentence" | "custom";
+  private readonly customChunker?: (t: string) => {
+    chunks: string[];
+    remainder: string;
+  };
+
+  private readonly MAX_WORD_LEN: number;
+  private readonly MAX_BUFFER_NO_BREAK: number;
+
+  // These are only defined when Intl.Segmenter exists.
+  private readonly graphemeSeg?: Intl.Segmenter;
+  private readonly wordSeg?: Intl.Segmenter;
+  private readonly sentenceSeg?: Intl.Segmenter;
+
+  // -- character ------------------------------------------------------
   private flushGraphemes(): string[] {
-    const segments = Array.from(this.graphemeSeg.segment(this.buffer)).map(
+    if (!hasSegmenter) return []; // unreachable on modern runtimes
+
+    const segs = Array.from(this.graphemeSeg!.segment(this.buffer)).map(
       (s) => s.segment
     );
-    // If there's only one segment, it might be incomplete. Wait for more.
-    if (segments.length <= 1) {
-      return [];
-    }
 
-    // Flush all but the last segment, which becomes the new buffer.
-    const chunksToFlush = segments.slice(0, -1);
-    this.buffer = segments[segments.length - 1];
-    return chunksToFlush;
+    /* Strategy: always keep exactly one segment in the buffer.
+       If we only have one segment so far, we don’t know whether it’s
+       complete (could be half a surrogate pair). Wait for more. */
+    if (segs.length <= 1) return [];
+
+    const emit = segs.slice(0, -1);
+    this.buffer = segs[segs.length - 1];
+    return emit;
   }
 
+  // -- word -----------------------------------------------------------
   private flushWords(): string[] {
+    if (!hasSegmenter) return []; // unreachable on modern runtimes
+
     const chunks: string[] = [];
-    let currentWord = ""; // Accumulates the word part (e.g., "quick")
-    let currentNonWord = ""; // Accumulates trailing spaces/punctuation (e.g., " ")
+    let leadNonWord = "";
+    let word = "";
+    let tailNonWord = "";
 
-    // Iterate through all segments of the current buffer.
-    const segments = Array.from(this.wordSeg.segment(this.buffer));
-
-    // Process segments to form "word + non-word" chunks.
-    for (let i = 0; i < segments.length; i++) {
-      const part = segments[i];
-
-      if (part.isWordLike) {
-        // If we just finished a word and accumulated non-word characters,
-        // it means the previous "word + non-word" chunk is complete.
-        if (currentWord.length > 0 && currentNonWord.length > 0) {
-          chunks.push(currentWord + currentNonWord);
-          currentWord = "";
-          currentNonWord = "";
+    for (const s of this.wordSeg!.segment(this.buffer)) {
+      if (s.isWordLike) {
+        if (word && tailNonWord) {
+          // previous word finished
+          chunks.push(word + tailNonWord);
+          word = tailNonWord = "";
         }
-        currentWord += part.segment;
+        word += s.segment;
+        if (word.length > this.MAX_WORD_LEN) {
+          // force‑break huge “word”
+          chunks.push(word + tailNonWord);
+          word = tailNonWord = "";
+        }
       } else {
-        // This is a non-word segment (space, punctuation).
-        currentNonWord += part.segment;
-      }
-
-      // Guard against extremely long words (e.g., a URL) that don't have natural breaks.
-      // This flushes the accumulated word part even if it's not followed by a non-word yet.
-      if (currentWord.length > ChunkBuffer.MAX_WORD_LEN) {
-        chunks.push(currentWord + currentNonWord);
-        currentWord = "";
-        currentNonWord = "";
+        // non‑word segment (space / punctuation)
+        if (!word) {
+          leadNonWord += s.segment; // leading whitespace
+        } else {
+          tailNonWord += s.segment; // trailing whitespace
+        }
       }
     }
 
-    // After the loop, whatever remains in currentWord and currentNonWord
-    // is the incomplete part of the stream. This becomes the new buffer.
-    this.buffer = currentWord + currentNonWord;
+    // flush leading non‑word if present and some word followed
+    if (leadNonWord && word) {
+      chunks.push(leadNonWord);
+      leadNonWord = "";
+    }
 
-    // Filter out any empty strings that might result from edge cases.
-    return chunks.filter((c) => c.length > 0);
+    this.buffer = leadNonWord + word + tailNonWord;
+    return chunks.filter(Boolean);
   }
 
+  // -- sentence -------------------------------------------------------
   private flushSentences(): string[] {
-    // This hybrid approach is more robust for sentence-ending punctuation.
-    // 1. Use a regex to find the last definitive sentence boundary.
-    // This is more reliable than Intl.Segmenter alone for partial streams.
-    const sentenceBoundaryRegex = /.*?[.?!](\s+|$)/g;
-    let lastMatchIndex = -1;
-    let match;
-    while ((match = sentenceBoundaryRegex.exec(this.buffer)) !== null) {
-      lastMatchIndex = match.index + match[0].length;
-    }
+    if (!hasSegmenter) return []; // unreachable on modern runtimes
 
-    if (lastMatchIndex === -1) {
-      // No definitive sentence boundary found yet.
-      return [];
-    }
+    // find last confirmed boundary with regex (includes CJK punctuation)
+    const boundary = /.*?[.?!。！？](\s+|$)/g; // negative‑look‑behind ellipsis left out for perf
+    let last = -1,
+      m: RegExpExecArray | null;
+    while ((m = boundary.exec(this.buffer))) last = boundary.lastIndex;
+    if (last === -1) return [];
 
-    // 2. The text to be flushed is everything up to that boundary.
-    const textToFlush = this.buffer.substring(0, lastMatchIndex);
-    this.buffer = this.buffer.substring(lastMatchIndex);
+    const slice = this.buffer.slice(0, last);
+    this.buffer = this.buffer.slice(last);
 
-    // 3. Now, use Intl.Segmenter on the confirmed text to correctly split it.
-    // This handles cases where `textToFlush` contains multiple sentences.
-    return Array.from(this.sentenceSeg.segment(textToFlush))
+    return Array.from(this.sentenceSeg!.segment(slice))
       .map((s) => s.segment)
-      .filter((c) => c.length > 0);
+      .filter(Boolean);
   }
 
-  /** Fallback guard to break up very long runs of text with no natural breaks. */
+  // -- long‑run bailout ----------------------------------------------
   private flushLongRuns(): string[] {
-    const chunks: string[] = [];
-    // If the buffer is very long and contains no spaces (e.g., a single long word/URL),
-    // force a break to prevent excessive buffering.
     if (
-      this.buffer.length > ChunkBuffer.MAX_BUFFER_NO_BREAK &&
+      this.buffer.length > this.MAX_BUFFER_NO_BREAK &&
       !/\s/.test(this.buffer)
     ) {
-      chunks.push(this.buffer.slice(0, ChunkBuffer.MAX_BUFFER_NO_BREAK));
-      this.buffer = this.buffer.slice(ChunkBuffer.MAX_BUFFER_NO_BREAK);
+      const head = this.buffer.slice(0, this.MAX_BUFFER_NO_BREAK);
+      this.buffer = this.buffer.slice(this.MAX_BUFFER_NO_BREAK);
+      return [head];
     }
-    return chunks;
+    return [];
   }
 
+  // -- custom ---------------------------------------------------------
   private flushCustom(): string[] {
     try {
       const { chunks, remainder } = this.customChunker!(this.buffer);
@@ -199,7 +215,7 @@ export class ChunkBuffer {
       return chunks;
     } catch (err) {
       console.error(
-        "Custom chunker failed. Flushing entire buffer to avoid data loss.",
+        "Custom chunker failed – flushing whole buffer to avoid data loss",
         err
       );
       const all = this.buffer;

@@ -39,8 +39,13 @@ export async function streamWithOpenAI(
       stream: true,
       temperature: specification.openAI?.temperature,
       //top_p: specification.openAI?.probability,
-      max_completion_tokens: specification.openAI?.completionTokenLimit,
     };
+
+    // Only add max_completion_tokens if it's defined
+    if (specification.openAI?.completionTokenLimit) {
+      streamConfig.max_completion_tokens =
+        specification.openAI.completionTokenLimit;
+    }
 
     // Add tools if provided
     if (tools && tools.length > 0) {
@@ -156,7 +161,7 @@ export async function streamWithAnthropic(
       stream: true,
       temperature: specification.anthropic?.temperature,
       //top_p: specification.anthropic?.probability,
-      max_tokens: specification.anthropic?.completionTokenLimit,
+      max_tokens: specification.anthropic?.completionTokenLimit || 1024, // required
     };
 
     if (systemPrompt) {
@@ -267,8 +272,12 @@ export async function streamWithGoogle(
       stream: true,
       temperature: specification.google?.temperature,
       //top_p: specification.google?.probability,
-      max_tokens: specification.google?.completionTokenLimit,
     };
+
+    // Only add max_tokens if it's defined
+    if (specification.google?.completionTokenLimit) {
+      streamConfig.max_tokens = specification.google.completionTokenLimit;
+    }
 
     if (systemPrompt) {
       streamConfig.system = systemPrompt;
@@ -300,8 +309,8 @@ export async function streamWithGoogle(
     const model = googleClient.getGenerativeModel({
       model: modelName,
       generationConfig: {
-        temperature: streamConfig.temperature ?? 0.1,
-        maxOutputTokens: streamConfig.max_tokens ?? 4096,
+        temperature: streamConfig.temperature,
+        maxOutputTokens: streamConfig.max_tokens,
       },
       tools: googleTools,
     });

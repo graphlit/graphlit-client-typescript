@@ -290,7 +290,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             } else if (event.type === "tool_update") {
               console.log(`🔧 Tool: ${event.toolCall.name} - ${event.status}`);
             } else if (event.type === "error") {
-              console.error(`❌ Error: ${event.error}`);
+              console.error(`❌ Error: ${event.error.message}`);
             }
           },
           undefined, // conversationId
@@ -418,7 +418,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             } else if (event.type === "tool_update") {
               console.log(`🔧 Tool: ${event.toolCall.name} - ${event.status}`);
             } else if (event.type === "error") {
-              console.error(`❌ Error: ${event.error}`);
+              console.error(`❌ Error: ${event.error.message}`);
             }
           },
           undefined, // conversationId
@@ -560,7 +560,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             } else if (event.type === "conversation_completed") {
               console.log(`💭 Final response: "${event.message.message}"`);
             } else if (event.type === "error") {
-              console.error(`❌ Error: ${event.error}`);
+              console.error(`❌ Error: ${event.error.message}`);
             }
           },
           undefined, // conversationId
@@ -700,7 +700,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             } else if (event.type === "conversation_completed") {
               console.log(`💭 Final response: "${event.message.message}"`);
             } else if (event.type === "error") {
-              console.error(`❌ Error: ${event.error}`);
+              console.error(`❌ Error: ${event.error.message}`);
             }
           },
           undefined, // conversationId
