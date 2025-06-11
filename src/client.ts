@@ -1,25 +1,21 @@
 import jwt from "jsonwebtoken";
 
-// Apollo core (React-free) via createRequire
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const {
+// Apollo core (React-free) - ESM import
+import {
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   ApolloLink,
   ApolloError,
-} = require("@apollo/client/core/core.cjs");
+} from "@apollo/client/core/index.js";
 
-// type-only info (erased at runtime)
+// Additional Apollo types
 import type {
-  ApolloClient as ApolloClientType,
   OperationVariables,
   ApolloQueryResult,
   FetchResult,
   NormalizedCacheObject,
-  ApolloError as ApolloErrorType,
-} from "@apollo/client";
+} from "@apollo/client/core/index.js";
 
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
@@ -50,6 +46,10 @@ import {
 } from "./streaming/providers.js";
 // Optional imports for streaming LLM clients
 // These are peer dependencies and may not be installed
+// We need to use createRequire for optional dependencies to avoid build errors
+import { createRequire } from "node:module";
+const optionalRequire = createRequire(import.meta.url);
+
 let OpenAI: typeof import("openai").default | undefined;
 let Anthropic: typeof import("@anthropic-ai/sdk").default | undefined;
 let GoogleGenerativeAI:
@@ -57,20 +57,20 @@ let GoogleGenerativeAI:
   | undefined;
 
 try {
-  OpenAI = require("openai").default || require("openai");
+  OpenAI = optionalRequire("openai").default || optionalRequire("openai");
 } catch (e) {
   // OpenAI not installed
 }
 
 try {
   Anthropic =
-    require("@anthropic-ai/sdk").default || require("@anthropic-ai/sdk");
+    optionalRequire("@anthropic-ai/sdk").default || optionalRequire("@anthropic-ai/sdk");
 } catch (e) {
   // Anthropic SDK not installed
 }
 
 try {
-  GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
+  GoogleGenerativeAI = optionalRequire("@google/generative-ai").GoogleGenerativeAI;
 } catch (e) {
   // Google Generative AI not installed
 }
@@ -125,7 +125,7 @@ export type { AgentStreamEvent } from "./types/ui-events.js";
 
 // Define the Graphlit class
 class Graphlit {
-  public client: ApolloClientType<NormalizedCacheObject> | undefined;
+  public client: ApolloClient<NormalizedCacheObject> | undefined;
   public token: string | undefined;
 
   private apiUri: string;
@@ -4678,9 +4678,9 @@ class Graphlit {
     } catch (error) {
       if (
         error instanceof ApolloError &&
-        (error as ApolloErrorType).graphQLErrors.length > 0
+        error.graphQLErrors.length > 0
       ) {
-        const errorMessage = (error as ApolloErrorType).graphQLErrors
+        const errorMessage = error.graphQLErrors
           .map((err: GraphQLFormattedError) =>
             this.prettyPrintGraphQLError(err)
           )
@@ -4730,9 +4730,9 @@ class Graphlit {
     } catch (error: unknown) {
       if (
         error instanceof ApolloError &&
-        (error as ApolloErrorType).graphQLErrors.length > 0
+        error.graphQLErrors.length > 0
       ) {
-        const errorMessage = (error as ApolloErrorType).graphQLErrors
+        const errorMessage = error.graphQLErrors
           .map((err: any) => this.prettyPrintGraphQLError(err))
           .join("\n");
         console.error(errorMessage);
