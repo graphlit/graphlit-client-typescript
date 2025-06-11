@@ -46,6 +46,9 @@
     "jsonwebtoken": "^9.0.2",
     "prettier": "^3.5.3"
   },
+  "peerDependencies": {
+    "jsonwebtoken": ">=9"
+  },
   "peerDependenciesMeta": {
     "openai": {
       "optional": true
@@ -63,6 +66,7 @@
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",
     "dotenv": "^16.5.0",
+    "react": "^19.1.0",
     "typescript": "^5.8.2",
     "vitest": "^1.0.0"
   },
