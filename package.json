@@ -3,9 +3,9 @@
   "version": "1.1.1",
   "description": "Graphlit API Client for TypeScript",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": "./dist/index.js",
+  "main": "./dist/client.js",
+  "types": "./dist/client.d.ts",
+  "exports": "./dist/client.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/graphlit/graphlit-client-typescript.git"
