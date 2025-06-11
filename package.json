@@ -1,9 +1,10 @@
 {
   "name": "graphlit-client",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Graphlit API Client for TypeScript",
-  "main": "dist/client.js",
-  "types": "dist/client.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/graphlit/graphlit-client-typescript.git"
@@ -12,12 +13,13 @@
     "Kirk Marple (https://github.com/kirk-marple)"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "generate": "graphql-codegen --config codegen.yml",
     "format": "prettier --write .",
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
@@ -60,19 +62,17 @@
       "optional": true
     }
   },
+  "optionalDependencies": {
+    "openai": "^5.2.0",
+    "@anthropic-ai/sdk": "^0.53.0",
+    "@google/generative-ai": "^0.24.1"
+  },
   "devDependencies": {
     "@graphql-codegen/typescript-document-nodes": "^4.0.16",
-    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",
     "dotenv": "^16.5.0",
-    "react": "^19.1.0",
     "typescript": "^5.8.2",
     "vitest": "^1.0.0"
-  },
-  "optionalDependencies": {
-    "@anthropic-ai/sdk": "^0.53.0",
-    "@google/generative-ai": "^0.24.1",
-    "openai": "^5.2.0"
   }
 }

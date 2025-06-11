@@ -1,30 +1,26 @@
+// jwt v9 – use named export
+import { sign } from "jsonwebtoken";
+
+// Apollo core (React-free) via createRequire
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
-
-// Load the core-only CommonJS build (no React, no rehackt)
-const apolloCore = require("@apollo/client/core/core.cjs");
-
-export const {
+const {
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   ApolloLink,
-  ApolloError, // runtime value
-} = apolloCore;
+  ApolloError,
+} = require("@apollo/client/core/core.cjs");
 
-// ────────────────────────────────────────────────────────────────
-//  Type-only imports (erased at runtime)
-// ────────────────────────────────────────────────────────────────
+// type-only info (erased at runtime)
 import type {
   ApolloClient as ApolloClientType,
-  ApolloError as ApolloErrorType,
   OperationVariables,
   ApolloQueryResult,
   FetchResult,
   NormalizedCacheObject,
+  ApolloError as ApolloErrorType,
 } from "@apollo/client";
-
-import { sign } from "jsonwebtoken";
 
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
