@@ -33,7 +33,7 @@ export class UIEventAdapter {
       smoothingEnabled?: boolean;
       chunkingStrategy?: ChunkingStrategy;
       smoothingDelay?: number;
-    } = {}
+    } = {},
   ) {
     this.conversationId = conversationId;
     this.smoothingDelay = options.smoothingDelay ?? 30;
@@ -88,7 +88,7 @@ export class UIEventAdapter {
   public setToolResult(
     toolCallId: string,
     result: unknown,
-    error?: string
+    error?: string,
   ): void {
     const toolData = this.activeToolCalls.get(toolCallId);
     if (toolData) {
@@ -223,7 +223,7 @@ export class UIEventAdapter {
       timestamp: new Date().toISOString(),
       tokens: undefined, // Will be set by caller if available
       toolCalls: Array.from(this.activeToolCalls.values()).map(
-        (t) => t.toolCall
+        (t) => t.toolCall,
       ),
     };
 

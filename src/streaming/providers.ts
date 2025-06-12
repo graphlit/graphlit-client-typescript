@@ -32,7 +32,7 @@ export async function streamWithOpenAI(
   tools: ToolDefinitionInput[] | undefined,
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -41,8 +41,18 @@ export async function streamWithOpenAI(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for OpenAI specification: ${specification.name}`
+        `No model name found for OpenAI specification: ${specification.name}`,
       );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🤖 [OpenAI] Model Configuration:");
+      console.log("  Service: OpenAI");
+      console.log("  Model:", modelName);
+      console.log("  Temperature:", specification.openAI?.temperature);
+      console.log("  Max Tokens:", specification.openAI?.completionTokenLimit);
+      console.log("  Tools:", tools?.length || 0);
+      console.log("  Specification Name:", specification.name);
     }
 
     const streamConfig: any = {
@@ -76,8 +86,32 @@ export async function streamWithOpenAI(
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
 
+      // Debug log chunk details
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.log(`[OpenAI] Chunk:`, JSON.stringify(chunk, null, 2));
+        if (delta?.content) {
+          console.log(
+            `[OpenAI] Content delta: "${delta.content}" (${delta.content.length} chars)`,
+          );
+        }
+        if (delta?.tool_calls) {
+          console.log(`[OpenAI] Tool calls:`, delta.tool_calls);
+        }
+        if (chunk.choices[0]?.finish_reason) {
+          console.log(
+            `[OpenAI] Finish reason: ${chunk.choices[0].finish_reason}`,
+          );
+        }
+      }
+
       if (delta?.content) {
         fullMessage += delta.content;
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(
+            `[OpenAI] Message accumulated: ${fullMessage.length} chars total`,
+          );
+          console.log(`[OpenAI] Current full message: "${fullMessage}"`);
+        }
         onEvent({
           type: "token",
           token: delta.content,
@@ -96,6 +130,12 @@ export async function streamWithOpenAI(
               arguments: "",
             };
 
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(
+                `[OpenAI] Starting new tool call: ${toolCalls[index].id}`,
+              );
+            }
+
             onEvent({
               type: "tool_call_start",
               toolCall: {
@@ -107,10 +147,23 @@ export async function streamWithOpenAI(
 
           if (toolCallDelta.function?.name) {
             toolCalls[index].name = toolCallDelta.function.name;
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(`[OpenAI] Tool name: ${toolCallDelta.function.name}`);
+            }
           }
 
           if (toolCallDelta.function?.arguments) {
             toolCalls[index].arguments += toolCallDelta.function.arguments;
+
+            // Debug logging for partial JSON accumulation
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(
+                `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`,
+              );
+              console.log(
+                `[OpenAI] Tool ${toolCalls[index].name} - Total accumulated: ${toolCalls[index].arguments.length} chars`,
+              );
+            }
 
             onEvent({
               type: "tool_call_delta",
@@ -124,6 +177,22 @@ export async function streamWithOpenAI(
 
     // Emit complete events for tool calls
     for (const toolCall of toolCalls) {
+      // Log the final JSON for debugging
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.log(
+          `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
+        );
+        console.log(toolCall.arguments);
+
+        // Validate JSON
+        try {
+          JSON.parse(toolCall.arguments);
+          console.log(`[OpenAI] ✅ Valid JSON for ${toolCall.name}`);
+        } catch (e) {
+          console.error(`[OpenAI] ❌ Invalid JSON for ${toolCall.name}: ${e}`);
+        }
+      }
+
       onEvent({
         type: "tool_call_complete",
         toolCall: {
@@ -134,6 +203,18 @@ export async function streamWithOpenAI(
       });
     }
 
+    // Final summary logging
+    if (process.env.DEBUG_GRAPHLIT_STREAMING && toolCalls.length > 0) {
+      console.log(
+        `[OpenAI] Successfully processed ${toolCalls.length} tool calls`,
+      );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log(
+        `[OpenAI] Streaming complete. Final message: "${fullMessage}" (${fullMessage.length} chars)`,
+      );
+    }
     onComplete(fullMessage, toolCalls);
   } catch (error) {
     onEvent({
@@ -154,7 +235,7 @@ export async function streamWithAnthropic(
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: any, // Anthropic client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -163,8 +244,22 @@ export async function streamWithAnthropic(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Anthropic specification: ${specification.name}`
+        `No model name found for Anthropic specification: ${specification.name}`,
       );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🤖 [Anthropic] Model Configuration:");
+      console.log("  Service: Anthropic");
+      console.log("  Model:", modelName);
+      console.log("  Temperature:", specification.anthropic?.temperature);
+      console.log(
+        "  Max Tokens:",
+        specification.anthropic?.completionTokenLimit || 8192,
+      );
+      console.log("  System Prompt:", systemPrompt ? "Yes" : "No");
+      console.log("  Tools:", tools?.length || 0);
+      console.log("  Specification Name:", specification.name);
     }
 
     const streamConfig: any = {
@@ -192,13 +287,13 @@ export async function streamWithAnthropic(
     const stream = await anthropicClient.messages.create(streamConfig);
 
     let activeContentBlock = false;
-    
+
     for await (const chunk of stream) {
       // Debug log all chunk types
-      if (process.env.DEBUG_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
         console.log(`[Anthropic] Received chunk type: ${chunk.type}`);
       }
-      
+
       if (chunk.type === "content_block_start") {
         activeContentBlock = true;
         if (chunk.content_block.type === "tool_use") {
@@ -219,6 +314,9 @@ export async function streamWithAnthropic(
         }
       } else if (chunk.type === "content_block_delta") {
         if (chunk.delta.type === "text_delta") {
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(`[Anthropic] Text delta: "${chunk.delta.text}"`);
+          }
           fullMessage += chunk.delta.text;
           onEvent({
             type: "token",
@@ -231,12 +329,12 @@ export async function streamWithAnthropic(
             currentTool.arguments += chunk.delta.partial_json;
 
             // Debug logging for partial JSON accumulation
-            if (process.env.DEBUG_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`
+                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`,
               );
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`
+                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`,
               );
             }
 
@@ -254,11 +352,11 @@ export async function streamWithAnthropic(
         if (currentTool) {
           // Log the final JSON for debugging
           if (
-            process.env.DEBUG_STREAMING ||
+            process.env.DEBUG_GRAPHLIT_STREAMING ||
             !isValidJSON(currentTool.arguments)
           ) {
             console.log(
-              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`
+              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`,
             );
             console.log(currentTool.arguments);
 
@@ -269,21 +367,21 @@ export async function streamWithAnthropic(
               currentTool.arguments.length > 100
             ) {
               console.warn(
-                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`
+                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`,
               );
             }
 
             // Validate JSON
             try {
               JSON.parse(currentTool.arguments);
-              if (process.env.DEBUG_STREAMING) {
+              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
                 console.log(
-                  `[Anthropic] ✅ Valid JSON for ${currentTool.name}`
+                  `[Anthropic] ✅ Valid JSON for ${currentTool.name}`,
                 );
               }
             } catch (e) {
               console.error(
-                `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`
+                `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`,
               );
             }
           }
@@ -299,15 +397,19 @@ export async function streamWithAnthropic(
         }
       } else if (chunk.type === "message_stop" && activeContentBlock) {
         // Handle Anthropic bug: message_stop without content_block_stop
-        console.warn(`[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`);
+        console.warn(
+          `[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`,
+        );
         activeContentBlock = false;
-        
+
         // Emit synthetic content_block_stop for the current tool
         const currentTool = toolCalls[toolCalls.length - 1];
         if (currentTool) {
           // Log the incomplete tool
-          console.warn(`[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`);
-          
+          console.warn(
+            `[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`,
+          );
+
           // Only emit tool_call_complete if we have valid JSON
           if (isValidJSON(currentTool.arguments)) {
             onEvent({
@@ -319,7 +421,9 @@ export async function streamWithAnthropic(
               },
             });
           } else {
-            console.error(`[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`);
+            console.error(
+              `[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`,
+            );
           }
         }
       }
@@ -328,15 +432,21 @@ export async function streamWithAnthropic(
     // Final check: filter out any remaining incomplete tool calls
     const validToolCalls = toolCalls.filter((tc, idx) => {
       if (!isValidJSON(tc.arguments)) {
-        console.warn(`[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`);
+        console.warn(
+          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
+        );
         return false;
       }
       return true;
     });
-    
+
     if (toolCalls.length !== validToolCalls.length) {
-      console.log(`[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`);
-      console.log(`[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`);
+      console.log(
+        `[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`,
+      );
+      console.log(
+        `[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`,
+      );
     }
 
     onComplete(fullMessage, validToolCalls);
@@ -360,7 +470,7 @@ export async function streamWithGoogle(
   tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -369,8 +479,19 @@ export async function streamWithGoogle(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Google specification: ${specification.name}`
+        `No model name found for Google specification: ${specification.name}`,
       );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🤖 [Google] Model Configuration:");
+      console.log("  Service: Google");
+      console.log("  Model:", modelName);
+      console.log("  Temperature:", specification.google?.temperature);
+      console.log("  Max Tokens:", specification.google?.completionTokenLimit);
+      console.log("  System Prompt:", systemPrompt ? "Yes" : "No");
+      console.log("  Tools:", tools?.length || 0);
+      console.log("  Specification Name:", specification.name);
     }
 
     const streamConfig: any = {
@@ -431,6 +552,15 @@ export async function streamWithGoogle(
 
     for await (const chunk of result.stream) {
       const text = chunk.text();
+
+      // Debug log chunk details
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.log(`[Google] Raw chunk:`, JSON.stringify(chunk, null, 2));
+        if (text) {
+          console.log(`[Google] Text delta: "${text}" (${text.length} chars)`);
+        }
+      }
+
       if (text) {
         fullMessage += text;
         onEvent({
@@ -446,6 +576,16 @@ export async function streamWithGoogle(
         if (candidate?.content?.parts) {
           for (const part of candidate.content.parts) {
             if (part.functionCall) {
+              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                console.log(
+                  `[Google] Received function call: ${part.functionCall.name}`,
+                );
+                console.log(
+                  `[Google] Function args:`,
+                  JSON.stringify(part.functionCall.args || {}),
+                );
+              }
+
               const toolCall: ConversationToolCall = {
                 id: `google_tool_${Date.now()}_${toolCalls.length}`,
                 name: part.functionCall.name,
@@ -468,6 +608,24 @@ export async function streamWithGoogle(
                 argumentDelta: toolCall.arguments,
               });
 
+              // Log completion and validate JSON
+              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                console.log(
+                  `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
+                );
+                console.log(toolCall.arguments);
+
+                // Validate JSON
+                try {
+                  JSON.parse(toolCall.arguments);
+                  console.log(`[Google] ✅ Valid JSON for ${toolCall.name}`);
+                } catch (e) {
+                  console.error(
+                    `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`,
+                  );
+                }
+              }
+
               onEvent({
                 type: "tool_call_complete",
                 toolCall: {
@@ -481,6 +639,12 @@ export async function streamWithGoogle(
         }
       } catch (error) {
         // Silently ignore parsing errors
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.error(
+            `[Google] Error parsing chunk for function calls:`,
+            error,
+          );
+        }
       }
     }
 
@@ -488,6 +652,13 @@ export async function streamWithGoogle(
     try {
       const response = await result.response;
       const candidate = response.candidates?.[0];
+
+      if (process.env.DEBUG_GRAPHLIT_STREAMING && candidate?.content?.parts) {
+        console.log(
+          `[Google] Processing final response with ${candidate.content.parts.length} parts`,
+        );
+      }
+
       if (candidate?.content?.parts) {
         for (const part of candidate.content.parts) {
           // Check for any final text we might have missed
@@ -495,6 +666,11 @@ export async function streamWithGoogle(
             const finalText = part.text;
             // Only add if it's not already included in fullMessage
             if (!fullMessage.endsWith(finalText)) {
+              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                console.log(
+                  `[Google] Adding final text: ${finalText.length} chars`,
+                );
+              }
               fullMessage += finalText;
               onEvent({
                 type: "token",
@@ -508,6 +684,12 @@ export async function streamWithGoogle(
             part.functionCall &&
             !toolCalls.some((tc) => tc.name === part.functionCall.name)
           ) {
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(
+                `[Google] Found function call in final response: ${part.functionCall.name}`,
+              );
+            }
+
             const toolCall: ConversationToolCall = {
               id: `google_tool_${Date.now()}_${toolCalls.length}`,
               name: part.functionCall.name,
@@ -536,7 +718,17 @@ export async function streamWithGoogle(
         }
       }
     } catch (error) {
-      // Silently ignore parsing errors
+      // Log parsing errors when debugging
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.error(`[Google] Error processing final response:`, error);
+      }
+    }
+
+    // Final summary logging
+    if (process.env.DEBUG_GRAPHLIT_STREAMING && toolCalls.length > 0) {
+      console.log(
+        `[Google] Successfully processed ${toolCalls.length} tool calls`,
+      );
     }
 
     onComplete(fullMessage, toolCalls);

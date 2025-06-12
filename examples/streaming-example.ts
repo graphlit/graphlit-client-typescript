@@ -4,7 +4,7 @@ import { Graphlit, AgentStreamEvent, Types } from "graphlit-client";
 const client = new Graphlit(
   process.env.GRAPHLIT_ORGANIZATION_ID,
   process.env.GRAPHLIT_ENVIRONMENT_ID,
-  process.env.GRAPHLIT_JWT_SECRET
+  process.env.GRAPHLIT_JWT_SECRET,
 );
 
 async function basicStreamingExample() {
@@ -32,7 +32,7 @@ async function basicStreamingExample() {
           console.error(`\n❌ Error: ${event.error.message}`);
           break;
       }
-    }
+    },
   );
 }
 
@@ -62,7 +62,7 @@ async function toolCallingExample() {
   const toolHandlers = {
     calculator: async (args: { operation: string; a: number; b: number }) => {
       console.log(
-        `\n🧮 Calculator called: ${args.a} ${args.operation} ${args.b}`
+        `\n🧮 Calculator called: ${args.a} ${args.operation} ${args.b}`,
       );
 
       switch (args.operation) {
@@ -128,7 +128,7 @@ async function toolCallingExample() {
       undefined, // conversationId
       { id: specId }, // specification
       [calculatorTool], // tools
-      toolHandlers // tool handlers
+      toolHandlers, // tool handlers
     );
   } finally {
     // Clean up
@@ -151,7 +151,7 @@ async function conversationContinuityExample() {
       } else if (event.type === "conversation_completed") {
         console.log(`Assistant: ${event.message.message}`);
       }
-    }
+    },
   );
 
   console.log("\n... continuing conversation ...\n");
@@ -164,7 +164,7 @@ async function conversationContinuityExample() {
         console.log(`Assistant: ${event.message.message}`);
       }
     },
-    conversationId // Continue the same conversation
+    conversationId, // Continue the same conversation
   );
 }
 
@@ -193,7 +193,7 @@ async function customClientExample() {
         if (event.type === "conversation_completed") {
           console.log(`Assistant: ${event.message.message}`);
         }
-      }
+      },
     );
   } catch (e) {
     console.log("⚠️  OpenAI SDK not available for custom client example");

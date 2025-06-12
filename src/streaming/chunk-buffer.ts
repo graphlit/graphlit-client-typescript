@@ -120,7 +120,7 @@ export class ChunkBuffer {
     if (!hasSegmenter) return []; // unreachable on modern runtimes
 
     const segs = Array.from(this.graphemeSeg!.segment(this.buffer)).map(
-      (s) => s.segment
+      (s) => s.segment,
     );
 
     /* Strategy: always keep exactly one segment in the buffer.
@@ -216,7 +216,7 @@ export class ChunkBuffer {
     } catch (err) {
       console.error(
         "Custom chunker failed – flushing whole buffer to avoid data loss",
-        err
+        err,
       );
       const all = this.buffer;
       this.buffer = "";

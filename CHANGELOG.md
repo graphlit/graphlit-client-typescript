@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-01-06
 
 ### Added
+
 - **Real-time streaming support** with the new `streamAgent` method
+
   - Native streaming integration with OpenAI, Anthropic, and Google Gemini models
   - Automatic fallback to regular API calls when streaming providers are not available
   - UI-optimized event stream with automatic message accumulation
@@ -17,12 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Smooth streaming with configurable delays to prevent UI flicker
 
 - **Custom LLM client support**
+
   - `setOpenAIClient()` method to use custom OpenAI instances
-  - `setAnthropicClient()` method to use custom Anthropic instances  
+  - `setAnthropicClient()` method to use custom Anthropic instances
   - `setGoogleClient()` method to use custom Google Generative AI instances
   - Support for proxy configurations and custom endpoints
 
 - **Enhanced streaming features**
+
   - AbortController support for cancelling ongoing streams
   - Conversation continuity - continue streaming in existing conversations
   - Comprehensive error handling with recoverable error detection
@@ -37,11 +41,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `AgentResult`, `ToolCallResult`, `UsageInfo` - Supporting types
 
 ### Changed
+
 - LLM client libraries (openai, @anthropic-ai/sdk, @google/generative-ai) are now optional peer dependencies
 - Improved TypeScript typing throughout the codebase
 - Enhanced error messages for better debugging
 
 ### Fixed
+
 - Message formatting issues with trailing whitespace
 - Tool calling message role assignment
 - Conversation history handling in streaming mode
@@ -49,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Google Gemini streaming text completeness
 
 ### Technical Improvements
+
 - Queue-based chunk emission for consistent streaming behavior
 - Unicode-aware text segmentation using Intl.Segmenter
 - Proper cleanup of resources in test suites
@@ -57,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - Previous Release
 
 ### Initial Features
+
 - GraphQL client for Graphlit API
 - Support for all Graphlit operations (content, conversations, specifications, etc.)
 - JWT-based authentication

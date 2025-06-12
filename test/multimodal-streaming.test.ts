@@ -15,7 +15,7 @@ describe("Multimodal Streaming", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping multimodal tests - missing Graphlit credentials"
+      "⚠️  Skipping multimodal tests - missing Graphlit credentials",
     );
     return;
   }
@@ -41,7 +41,7 @@ describe("Multimodal Streaming", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Multimodal Streaming", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -119,24 +119,24 @@ describe("Multimodal Streaming", () => {
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
             console.log(
-              `💬 Message update: "${event.message.message.slice(0, 100)}..."`
+              `💬 Message update: "${event.message.message.slice(0, 100)}..."`,
             );
           } else if (event.type === "conversation_completed") {
             finalResponse = event.message.message;
             console.log(
-              `✅ Final response: "${finalResponse.slice(0, 100)}..."`
+              `✅ Final response: "${finalResponse.slice(0, 100)}..."`,
             );
           } else if (event.type === "error") {
             console.error(`❌ Error: ${event.error.message}`);
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       // Validate response
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed"
+        (e) => e.type === "conversation_completed",
       );
       expect(completedEvent).toBeDefined();
       expect(finalResponse).toBeTruthy();
@@ -176,7 +176,7 @@ describe("Multimodal Streaming", () => {
       // Test with direct reviseEncodedImage call first
       const testImage = createTestImage();
       console.log(
-        `📤 Using test image: ${testImage.mimeType}, size: ${testImage.data.length} chars`
+        `📤 Using test image: ${testImage.mimeType}, size: ${testImage.data.length} chars`,
       );
 
       let imageAnalysisResponse = "";
@@ -187,12 +187,12 @@ describe("Multimodal Streaming", () => {
           testImage.mimeType,
           testImage.data,
           undefined, // No existing conversation
-          { id: specId }
+          { id: specId },
         );
 
         if (response.reviseEncodedImage?.conversation?.id) {
           createdConversations.push(
-            response.reviseEncodedImage.conversation.id
+            response.reviseEncodedImage.conversation.id,
           );
         }
 
@@ -225,7 +225,7 @@ describe("Multimodal Streaming", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       expect(conversationId).toBeDefined();
@@ -240,16 +240,16 @@ describe("Multimodal Streaming", () => {
             followUpEvents.push(event);
             if (event.type === "conversation_completed") {
               console.log(
-                `💬 Follow-up response: "${event.message.message.slice(0, 100)}..."`
+                `💬 Follow-up response: "${event.message.message.slice(0, 100)}..."`,
               );
             }
           },
           conversationId,
-          { id: specId }
+          { id: specId },
         );
 
         expect(
-          followUpEvents.some((e) => e.type === "conversation_completed")
+          followUpEvents.some((e) => e.type === "conversation_completed"),
         ).toBe(true);
       }
 
@@ -296,12 +296,12 @@ describe("Multimodal Streaming", () => {
           } else if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
-              `📨 Response 1: "${event.message.message.slice(0, 50)}..."`
+              `📨 Response 1: "${event.message.message.slice(0, 50)}..."`,
             );
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       expect(conversationId).toBeDefined();
@@ -314,12 +314,12 @@ describe("Multimodal Streaming", () => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
-              `📨 Response 2: "${event.message.message.slice(0, 50)}..."`
+              `📨 Response 2: "${event.message.message.slice(0, 50)}..."`,
             );
           }
         },
         conversationId,
-        { id: specId }
+        { id: specId },
       );
 
       // Step 3: Reference to image (even if we can't process it)
@@ -332,12 +332,12 @@ describe("Multimodal Streaming", () => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
-              `📨 Response 3: "${event.message.message.slice(0, 50)}..."`
+              `📨 Response 3: "${event.message.message.slice(0, 50)}..."`,
             );
           }
         },
         conversationId,
-        { id: specId }
+        { id: specId },
       );
 
       // Step 4: Follow-up text question
@@ -348,12 +348,12 @@ describe("Multimodal Streaming", () => {
           if (event.type === "conversation_completed") {
             messageHistory.push(event.message.message);
             console.log(
-              `📨 Response 4: "${event.message.message.slice(0, 50)}..."`
+              `📨 Response 4: "${event.message.message.slice(0, 50)}..."`,
             );
           }
         },
         conversationId,
-        { id: specId }
+        { id: specId },
       );
 
       // Validate conversation flow
@@ -419,7 +419,7 @@ describe("Multimodal Streaming", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       // Performance analysis
@@ -430,7 +430,7 @@ describe("Multimodal Streaming", () => {
 
       if (tokenCount > 0) {
         const tokensPerSecond = (tokenCount / (completionTime / 1000)).toFixed(
-          2
+          2,
         );
         console.log(`  Tokens per second: ${tokensPerSecond}`);
       }
@@ -491,7 +491,7 @@ describe("Multimodal Streaming", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       // Should complete even with invalid image
@@ -537,7 +537,7 @@ describe("Multimodal Streaming", () => {
           "image/png",
           "invalid-base64-data-that-is-not-a-real-image!@#$%",
           undefined,
-          { id: specId }
+          { id: specId },
         );
       } catch (error) {
         errorHandled = true;
@@ -590,7 +590,7 @@ describe("Multimodal Streaming", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       expect(conversationId).toBeDefined();
@@ -606,7 +606,7 @@ describe("Multimodal Streaming", () => {
           }
         },
         conversationId,
-        { id: specId }
+        { id: specId },
       );
 
       // Should remember the orange color

@@ -61,7 +61,7 @@ export interface GoogleMessage {
  * Format GraphQL conversation messages for OpenAI SDK
  */
 export function formatMessagesForOpenAI(
-  messages: ConversationMessage[]
+  messages: ConversationMessage[],
 ): OpenAIMessage[] {
   const formattedMessages: OpenAIMessage[] = [];
 
@@ -223,7 +223,7 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
  * Format GraphQL conversation messages for Google SDK
  */
 export function formatMessagesForGoogle(
-  messages: ConversationMessage[]
+  messages: ConversationMessage[],
 ): GoogleMessage[] {
   const formattedMessages: GoogleMessage[] = [];
 

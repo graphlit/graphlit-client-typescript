@@ -8,17 +8,20 @@ The official TypeScript/JavaScript SDK for the [Graphlit Platform](https://www.g
 ## 🚀 What is Graphlit?
 
 Graphlit is a cloud platform that handles the complex parts of building AI applications:
+
 - **Ingest any content** - PDFs, websites, audio, video, and more
 - **Chat with your data** - Using RAG (Retrieval-Augmented Generation)
 - **Extract insights** - Summaries, entities, and metadata
 - **Build knowledge graphs** - Automatically connect related information
 
 ## ✨ What's New in v1.1.0
+
 - **Real-time streaming** - Watch AI responses appear word-by-word
 - **Tool calling** - Let AI execute functions and retrieve data
 - **Better performance** - Native integration with OpenAI, Anthropic, and Google
 
 ## 📋 Table of Contents
+
 - [Quick Start](#quick-start)
 - [Basic Examples](#basic-examples)
 - [Common Use Cases](#common-use-cases)
@@ -35,7 +38,7 @@ npm install graphlit-client
 
 # Set your credentials (get free account at https://portal.graphlit.dev)
 export GRAPHLIT_ORGANIZATION_ID=your_org_id
-export GRAPHLIT_ENVIRONMENT_ID=your_env_id  
+export GRAPHLIT_ENVIRONMENT_ID=your_env_id
 export GRAPHLIT_JWT_SECRET=your_secret
 ```
 
@@ -50,8 +53,8 @@ const spec = await client.createSpecification({
   type: Types.SpecificationTypes.Completion,
   serviceType: Types.ModelServiceTypes.OpenAi,
   openAI: {
-    model: Types.OpenAiModels.Gpt4O_128K
-  }
+    model: Types.OpenAiModels.Gpt4O_128K,
+  },
 });
 
 // Start chatting with AI
@@ -63,7 +66,7 @@ await client.streamAgent(
     }
   },
   undefined, // conversationId (optional)
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -81,7 +84,7 @@ Install the LLM SDK for streaming responses:
 # For OpenAI streaming
 npm install openai
 
-# For Anthropic streaming  
+# For Anthropic streaming
 npm install @anthropic-ai/sdk
 
 # For Google streaming
@@ -121,8 +124,8 @@ const spec = await client.createSpecification({
   serviceType: Types.ModelServiceTypes.OpenAi,
   openAI: {
     model: Types.OpenAiModels.Gpt4O_128K,
-    temperature: 0.7
-  }
+    temperature: 0.7,
+  },
 });
 
 // Chat with streaming
@@ -135,7 +138,7 @@ await client.streamAgent(
     }
   },
   undefined, // conversationId
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -154,8 +157,8 @@ const spec = await client.createSpecification({
   type: Types.SpecificationTypes.Completion,
   serviceType: Types.ModelServiceTypes.OpenAi,
   openAI: {
-    model: Types.OpenAiModels.Gpt4O_128K
-  }
+    model: Types.OpenAiModels.Gpt4O_128K,
+  },
 });
 
 // Upload a PDF synchronously to ensure it's ready
@@ -163,17 +166,17 @@ const content = await client.ingestUri(
   "https://arxiv.org/pdf/1706.03762.pdf", // Attention Is All You Need paper
   "AI Research Paper", // name
   undefined, // id
-  true // isSynchronous - waits for processing
+  true, // isSynchronous - waits for processing
 );
 
 console.log(`✅ Uploaded: ${content.ingestUri.id}`);
 
 // Wait a moment for content to be fully indexed
-await new Promise(resolve => setTimeout(resolve, 5000));
+await new Promise((resolve) => setTimeout(resolve, 5000));
 
 // Create a conversation that filters to this specific content
 const conversation = await client.createConversation({
-  filter: { contents: [{ id: content.ingestUri.id }] }
+  filter: { contents: [{ id: content.ingestUri.id }] },
 });
 
 // Ask questions about the PDF
@@ -185,7 +188,7 @@ await client.streamAgent(
     }
   },
   conversation.createConversation.id, // conversationId with content filter
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -199,22 +202,22 @@ const webpage = await client.ingestUri(
   "https://en.wikipedia.org/wiki/Artificial_intelligence", // uri
   "AI Wikipedia Page", // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 
 // Wait for content to be indexed
-await new Promise(resolve => setTimeout(resolve, 5000));
+await new Promise((resolve) => setTimeout(resolve, 5000));
 
 // Create a conversation filtered to this content
 const conversation = await client.createConversation({
-  filter: { contents: [{ id: webpage.ingestUri.id }] }
+  filter: { contents: [{ id: webpage.ingestUri.id }] },
 });
 
 // Ask about the specific content
 const response = await client.promptAgent(
   "Summarize the key points about AI from this Wikipedia page",
   conversation.createConversation.id, // conversationId with filter
-  { id: spec.createSpecification.id } // specification (create one as shown above)
+  { id: spec.createSpecification.id }, // specification (create one as shown above)
 );
 
 console.log(response.message);
@@ -236,22 +239,22 @@ const weatherTool: Types.ToolDefinitionInput = {
   schema: JSON.stringify({
     type: "object",
     properties: {
-      city: { type: "string", description: "City name" }
+      city: { type: "string", description: "City name" },
     },
-    required: ["city"]
-  })
+    required: ["city"],
+  }),
 };
 
 // Tool implementation
 const toolHandlers = {
   get_weather: async (args: { city: string }) => {
     // Call your weather API here
-    return { 
+    return {
       city: args.city,
-      temperature: 72, 
-      condition: "sunny" 
+      temperature: 72,
+      condition: "sunny",
     };
-  }
+  },
 };
 
 // Create a specification for tool calling
@@ -260,8 +263,8 @@ const spec = await client.createSpecification({
   type: Types.SpecificationTypes.Completion,
   serviceType: Types.ModelServiceTypes.OpenAi,
   openAI: {
-    model: Types.OpenAiModels.Gpt4O_128K
-  }
+    model: Types.OpenAiModels.Gpt4O_128K,
+  },
 });
 
 // Chat with tools
@@ -277,7 +280,7 @@ await client.streamAgent(
   undefined, // conversationId
   { id: spec.createSpecification.id }, // specification
   [weatherTool], // tools
-  toolHandlers // handlers
+  toolHandlers, // handlers
 );
 ```
 
@@ -308,40 +311,40 @@ class KnowledgeAssistant {
       serviceType: Types.ModelServiceTypes.OpenAi,
       openAI: {
         model: Types.OpenAiModels.Gpt4O_128K,
-        temperature: 0.7
-      }
+        temperature: 0.7,
+      },
     });
     this.specificationId = spec.createSpecification?.id;
   }
 
   async uploadDocuments(urls: string[]) {
     console.log("📚 Uploading documents...");
-    
+
     for (const url of urls) {
       const content = await this.client.ingestUri(
         url, // uri
-        url.split('/').pop() || "Document", // name
+        url.split("/").pop() || "Document", // name
         undefined, // id
-        true // isSynchronous - wait for processing
+        true, // isSynchronous - wait for processing
       );
       this.contentIds.push(content.ingestUri.id);
     }
-    
+
     console.log("✅ Documents uploaded!");
-    
+
     // Wait for content to be indexed
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 
   async ask(question: string) {
     // Create conversation with content filter if not exists
     if (!this.conversationId && this.contentIds.length > 0) {
       const conversation = await this.client.createConversation({
-        filter: { contents: this.contentIds.map(id => ({ id })) }
+        filter: { contents: this.contentIds.map((id) => ({ id })) },
       });
       this.conversationId = conversation.createConversation?.id;
     }
-    
+
     await this.client.streamAgent(
       question,
       (event) => {
@@ -352,7 +355,7 @@ class KnowledgeAssistant {
         }
       },
       this.conversationId, // Maintains conversation context
-      { id: this.specificationId! } // specification
+      { id: this.specificationId! }, // specification
     );
   }
 }
@@ -364,7 +367,7 @@ await assistant.initialize();
 // Upload your documents
 await assistant.uploadDocuments([
   "https://arxiv.org/pdf/2103.15348.pdf",
-  "https://arxiv.org/pdf/1706.03762.pdf"
+  "https://arxiv.org/pdf/1706.03762.pdf",
 ]);
 
 // Ask questions
@@ -382,18 +385,18 @@ const document = await client.ingestUri(
   "https://example.com/document.pdf", // uri
   "Document #12345", // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 
 // Wait for content to be indexed
-await new Promise(resolve => setTimeout(resolve, 5000));
+await new Promise((resolve) => setTimeout(resolve, 5000));
 
 // Extract specific data
 const extraction = await client.extractContents(
   "Extract the key information from this document",
   undefined, // tools
   undefined, // specification
-  { contents: [{ id: document.ingestUri.id }] } // filter
+  { contents: [{ id: document.ingestUri.id }] }, // filter
 );
 
 console.log("Extracted data:", extraction.extractContents);
@@ -410,20 +413,22 @@ const ids: string[] = [];
 for (const url of documentUrls) {
   const content = await client.ingestUri(
     url, // uri
-    url.split('/').pop() || "Document", // name
+    url.split("/").pop() || "Document", // name
     undefined, // id
-    true // isSynchronous
+    true, // isSynchronous
   );
   ids.push(content.ingestUri.id);
 }
 
 // Generate a summary across all documents
 const summary = await client.summarizeContents(
-  [{
-    type: Types.SummarizationTypes.Custom,
-    prompt: "Create an executive summary of these documents"
-  }], // summarizations
-  { contents: ids.map(id => ({ id })) } // filter
+  [
+    {
+      type: Types.SummarizationTypes.Custom,
+      prompt: "Create an executive summary of these documents",
+    },
+  ], // summarizations
+  { contents: ids.map((id) => ({ id })) }, // filter
 );
 
 console.log("Summary:", summary.summarizeContents);
@@ -437,13 +442,13 @@ const content = await client.ingestUri(
   "https://example.com/large-document.pdf", // uri
   undefined, // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 console.log("✅ Content ready!");
 
 // Option 2: Asynchronous processing (for large files)
 const content = await client.ingestUri(
-  "https://example.com/very-large-video.mp4" // uri
+  "https://example.com/very-large-video.mp4", // uri
   // isSynchronous defaults to false
 );
 
@@ -452,13 +457,114 @@ let isReady = false;
 while (!isReady) {
   const status = await client.isContentDone(content.ingestUri.id);
   isReady = status.isContentDone?.result || false;
-  
+
   if (!isReady) {
     console.log("⏳ Still processing...");
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 }
 console.log("✅ Content ready!");
+```
+
+## Advanced Agent Features
+
+### Using Content Filters
+
+Control what content the agent can access during conversations:
+
+```typescript
+// Example 1: Chat with specific documents only
+const result = await client.promptAgent(
+  "What are the main points in these documents?",
+  undefined, // conversationId - will create new
+  { id: specificationId },
+  undefined, // tools
+  undefined, // toolHandlers
+  undefined, // options
+  undefined, // mimeType
+  undefined, // data
+  {
+    // Only allow retrieval from specific content
+    contents: [{ id: "content-id-1" }, { id: "content-id-2" }],
+  },
+);
+
+// Example 2: Streaming with content filter
+await client.streamAgent(
+  "Explain the technical details",
+  (event) => {
+    if (event.type === "message_update") {
+      process.stdout.write(event.message.message);
+    }
+  },
+  undefined, // conversationId
+  { id: specificationId },
+  undefined, // tools
+  undefined, // toolHandlers
+  undefined, // options
+  undefined, // mimeType
+  undefined, // data
+  {
+    // Filter by collection
+    collections: [{ id: "technical-docs-collection" }],
+  },
+);
+```
+
+### Using Augmented Filters
+
+Force specific content into the LLM context without retrieval:
+
+```typescript
+// Example: Chat with a specific file always in context
+const fileContent = await client.getContent("file-content-id");
+
+await client.streamAgent(
+  "What patterns do you see in this code?",
+  (event) => {
+    if (event.type === "message_update") {
+      process.stdout.write(event.message.message);
+    }
+  },
+  undefined, // conversationId
+  { id: specificationId },
+  undefined, // tools
+  undefined, // toolHandlers
+  undefined, // options
+  undefined, // mimeType
+  undefined, // data
+  undefined, // contentFilter
+  {
+    // Force this content into context
+    contents: [{ id: fileContent.content.id }],
+  },
+);
+```
+
+### Combining Filters
+
+Use both filters for precise control:
+
+```typescript
+// Chat about specific code with documentation available
+await client.promptAgent(
+  "How does this code implement the algorithm described in the docs?",
+  undefined,
+  { id: specificationId },
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  {
+    // Can retrieve from documentation
+    collections: [{ id: "algorithm-docs" }],
+  },
+  {
+    // Always include the specific code file
+    contents: [{ id: "implementation-file-id" }],
+  },
+);
 ```
 
 ## Advanced Workflows
@@ -478,29 +584,31 @@ const summarizationSpec = await client.createSpecification({
   type: Types.SpecificationTypes.Summarization,
   serviceType: Types.ModelServiceTypes.OpenAi,
   openAI: {
-    model: Types.OpenAiModels.Gpt4O_128K
-  }
+    model: Types.OpenAiModels.Gpt4O_128K,
+  },
 });
 
 // Create a workflow that summarizes all content
 const workflow = await client.createWorkflow({
   name: "Document Intelligence",
   preparation: {
-    summarizations: [{
-      type: Types.SummarizationTypes.Summary,
-      specification: { id: summarizationSpec.createSpecification.id }
-    }]
-  }
+    summarizations: [
+      {
+        type: Types.SummarizationTypes.Summary,
+        specification: { id: summarizationSpec.createSpecification.id },
+      },
+    ],
+  },
 });
 
 // Set workflow as default for project
 await client.updateProject({
-  workflow: { id: workflow.createWorkflow.id }
+  workflow: { id: workflow.createWorkflow.id },
 });
 
 // Now all content will be automatically summarized
 const content = await client.ingestUri(
-  "https://example.com/report.pdf" // uri
+  "https://example.com/report.pdf", // uri
 );
 ```
 
@@ -520,8 +628,8 @@ const conversationSpec = await client.createSpecification({
   openAI: {
     model: Types.OpenAiModels.Gpt4O_128K,
     temperature: 0.7,
-    completionTokenLimit: 2000
-  }
+    completionTokenLimit: 2000,
+  },
 });
 
 // Use the specification in conversations
@@ -533,7 +641,7 @@ await client.streamAgent(
     }
   },
   undefined,
-  { id: conversationSpec.createSpecification.id }
+  { id: conversationSpec.createSpecification.id },
 );
 ```
 
@@ -546,6 +654,7 @@ const client = new Graphlit(organizationId?, environmentId?, jwtSecret?);
 ```
 
 #### Content Operations
+
 - `ingestUri(uri, name?, id?, isSynchronous?, ...)` - Ingest content from URL
 - `ingestText(text, name?, textType?, ...)` - Ingest text content directly
 - `queryContents(filter?)` - Search and query content
@@ -555,18 +664,21 @@ const client = new Graphlit(organizationId?, environmentId?, jwtSecret?);
 - `summarizeContents(summarizations, filter?)` - Summarize content
 - `isContentDone(id)` - Check if content processing is complete
 
-#### Conversation Operations  
+#### Conversation Operations
+
 - `createConversation(input?)` - Create a new conversation
 - `streamAgent(prompt, handler, ...)` - Stream AI responses
 - `promptAgent(prompt, ...)` - Get AI response without streaming
 - `deleteConversation(id)` - Delete conversation
 
 #### Specification Operations
+
 - `createSpecification(input)` - Create AI model configuration
 - `querySpecifications(filter?)` - List specifications
 - `deleteSpecification(id)` - Delete specification
 
 #### Workflow Operations
+
 - `createWorkflow(input)` - Create content processing workflow
 - `queryWorkflows(filter?)` - List workflows
 - `updateProject(input)` - Update project settings
@@ -574,12 +686,12 @@ const client = new Graphlit(organizationId?, environmentId?, jwtSecret?);
 ### Event Types
 
 ```typescript
-type AgentStreamEvent = 
+type AgentStreamEvent =
   | { type: "conversation_started"; conversationId: string }
   | { type: "message_update"; message: { message: string } }
   | { type: "tool_update"; toolCall: any; status: string }
   | { type: "conversation_completed"; message: { message: string } }
-  | { type: "error"; error: { message: string; recoverable: boolean } }
+  | { type: "error"; error: { message: string; recoverable: boolean } };
 ```
 
 ## Testing & Examples

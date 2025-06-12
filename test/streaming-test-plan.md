@@ -1,14 +1,17 @@
 # Comprehensive Test Plan for streamConversation Next.js Integration
 
 ## Overview
+
 This test plan outlines additional test scenarios needed before integrating `streamConversation` into production Next.js applications. All tests use real SDK calls without mocks to ensure production reliability.
 
 ## Test Categories
 
 ### 1. Concurrent Conversations & Race Conditions
+
 **Purpose**: Validate multiple simultaneous conversations don't interfere with each other
 
 **Test Cases**:
+
 - Start 5 conversations in parallel with different prompts
 - Ensure each maintains separate context and conversation IDs
 - Verify no event cross-contamination between conversations
@@ -16,15 +19,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Validate proper event routing to correct callbacks
 
 **Key Validations**:
+
 - Unique conversation IDs for each stream
 - Isolated message histories
 - No shared state between instances
 - Correct event handler invocation
 
 ### 2. Streaming Cancellation & Cleanup
+
 **Purpose**: Handle user navigation/cancellation gracefully in React environments
 
 **Test Cases**:
+
 - Start streaming, then cancel mid-response using AbortController
 - Verify proper cleanup (no memory leaks, dangling promises)
 - Test cancellation at different stages:
@@ -36,15 +42,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Test rapid start/cancel cycles
 
 **Key Validations**:
+
 - No console errors on cancellation
 - Event listeners properly removed
 - Memory usage returns to baseline
 - Conversation state preserved for resumption
 
 ### 3. Error Recovery & Resilience
+
 **Purpose**: Handle real-world failures gracefully without crashing the UI
 
 **Test Cases**:
+
 - Network timeout simulation (long delays)
 - API rate limit errors (429 responses)
 - Invalid/expired authentication tokens
@@ -55,6 +64,7 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Invalid specification IDs
 
 **Key Validations**:
+
 - Appropriate error events emitted
 - User-friendly error messages
 - Automatic retry with backoff
@@ -62,9 +72,11 @@ This test plan outlines additional test scenarios needed before integrating `str
 - No infinite loops or hanging states
 
 ### 4. Large Response & Memory Management
+
 **Purpose**: Handle edge cases with content size and long conversations
 
 **Test Cases**:
+
 - Request very long responses (10K+ tokens)
 - Monitor memory usage during extended conversations
 - Test with 100+ messages in single conversation
@@ -73,6 +85,7 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Handle conversations exceeding context windows
 
 **Key Validations**:
+
 - Linear memory growth (no exponential leaks)
 - Consistent streaming performance
 - Proper garbage collection
@@ -80,9 +93,11 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Smooth UI performance maintained
 
 ### 5. Complex Tool Orchestration
+
 **Purpose**: Validate advanced tool calling scenarios common in production
 
 **Test Cases**:
+
 - Multiple tools in single request (e.g., search + calculate + format)
 - Sequential tool chains (output of A feeds into B)
 - Parallel tool execution with dependencies
@@ -93,6 +108,7 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Recursive tool calls with depth limits
 
 **Key Validations**:
+
 - Correct execution order
 - Proper parameter passing
 - Error propagation
@@ -100,9 +116,11 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Result aggregation
 
 ### 6. Multimodal Streaming
+
 **Purpose**: Test image/file handling in streaming conversations
 
 **Test Cases**:
+
 - Stream conversation with image inputs
 - Handle image generation responses
 - Test file upload progress events
@@ -112,15 +130,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Multiple images in single message
 
 **Key Validations**:
+
 - Proper base64 encoding/decoding
 - Progress event accuracy
 - Memory efficiency with large files
 - Correct MIME type handling
 
 ### 7. Real-time Status & Progress
+
 **Purpose**: Validate UI feedback mechanisms for better UX
 
 **Test Cases**:
+
 - Token counting accuracy during streaming
 - Progress indicators for long operations
 - Queue position updates for busy models
@@ -130,15 +151,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Throughput metrics (tokens/second)
 
 **Key Validations**:
+
 - Metric accuracy within 5%
 - Real-time updates without lag
 - No performance impact from monitoring
 - Correct aggregation of metrics
 
 ### 8. Session & State Management
+
 **Purpose**: Test conversation persistence across sessions
 
 **Test Cases**:
+
 - Resume conversation after connection loss
 - Conversation state serialization/deserialization
 - Browser refresh handling
@@ -148,15 +172,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Session timeout handling
 
 **Key Validations**:
+
 - State consistency after recovery
 - No duplicate messages
 - Proper event replay
 - Secure state storage
 
 ### 9. Performance Under Load
+
 **Purpose**: Stress test the streaming infrastructure
 
 **Test Cases**:
+
 - 20 rapid sequential messages
 - 50 concurrent users simulation
 - Memory leak detection over 100+ messages
@@ -166,15 +193,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Network bandwidth optimization
 
 **Key Validations**:
+
 - Response time < 2s for 95th percentile
 - Memory growth < 100MB per conversation
 - No UI freezing or jank
 - Consistent frame rates
 
 ### 10. Next.js Specific Integration
+
 **Purpose**: Validate server/client streaming scenarios
 
 **Test Cases**:
+
 - Server-side streaming through API routes
 - Client-side hydration of ongoing streams
 - Middleware integration for authentication
@@ -185,15 +215,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - ISR/SSG compatibility
 
 **Key Validations**:
+
 - Proper hydration without errors
 - SEO-friendly initial content
 - Edge function size limits
 - Streaming headers correct
 
 ### 11. Advanced Streaming Options
+
 **Purpose**: Test all configuration permutations
 
 **Test Cases**:
+
 - Different chunking strategies under load:
   - Character-by-character
   - Word-by-word
@@ -205,15 +238,18 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Custom retry policies
 
 **Key Validations**:
+
 - Configuration changes apply correctly
 - Performance impact documented
 - No option combinations cause errors
 - Defaults are optimal
 
 ### 12. Conversation Branching
+
 **Purpose**: Test conversation forking functionality
 
 **Test Cases**:
+
 - Branch conversation at specific message
 - Maintain separate contexts for each branch
 - Switch between branches seamlessly
@@ -223,6 +259,7 @@ This test plan outlines additional test scenarios needed before integrating `str
 - Multi-level branching (branch of branch)
 
 **Key Validations**:
+
 - Branch isolation
 - Correct parent references
 - Memory efficiency
@@ -233,23 +270,15 @@ This test plan outlines additional test scenarios needed before integrating `str
 ### Priority Levels
 
 **High Priority** (Week 1):
+
 1. ✅ Concurrent conversations - `concurrent-conversations.test.ts`
 2. ✅ Streaming cancellation - `streaming-cancellation.test.ts`
 3. ✅ Error recovery - `error-recovery.test.ts`
 4. ✅ Basic performance tests - `performance-tests.test.ts`
 
-**Medium Priority** (Week 2):
-5. ✅ Multimodal streaming - `multimodal-streaming.test.ts`
-6. ✅ Complex tool orchestration - `complex-tool-orchestration.test.ts`
-7. ✅ Large response handling - `large-response-handling.test.ts`
-8. Real-time status & progress
-9. Session & state management
+**Medium Priority** (Week 2): 5. ✅ Multimodal streaming - `multimodal-streaming.test.ts` 6. ✅ Complex tool orchestration - `complex-tool-orchestration.test.ts` 7. ✅ Large response handling - `large-response-handling.test.ts` 8. Real-time status & progress 9. Session & state management
 
-**Lower Priority** (Week 3):
-10. Next.js specific tests
-11. Advanced options
-12. Conversation branching
-13. Performance under load (extensive)
+**Lower Priority** (Week 3): 10. Next.js specific tests 11. Advanced options 12. Conversation branching 13. Performance under load (extensive)
 
 ### Test Structure
 
@@ -259,22 +288,22 @@ describe("Production Scenarios", () => {
     it("should handle 5 parallel conversations without interference", async () => {
       // Implementation
     });
-    
+
     it("should maintain separate tool contexts", async () => {
       // Implementation
     });
   });
-  
+
   describe("Streaming Cancellation", () => {
     it("should cleanup properly on abort", async () => {
       // Implementation with AbortController
     });
-    
+
     it("should allow resumption after cancel", async () => {
       // Implementation
     });
   });
-  
+
   // Additional test suites...
 });
 ```

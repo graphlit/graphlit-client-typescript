@@ -1,35 +1,42 @@
 # Code Review: streamAgent and promptAgent Implementation
 
 ## Overview
+
 The `streamAgent` and `promptAgent` methods in `client.ts` provide two approaches for executing AI agents:
+
 - `promptAgent`: Non-streaming execution with complete responses
 - `streamAgent`: Real-time streaming with progressive token delivery
 
 ## Strengths
 
 ### 1. **Well-Structured Architecture**
+
 - Clear separation between streaming and non-streaming implementations
 - Good use of helper methods to avoid code duplication
 - Clean abstraction through `UIEventAdapter` for event transformation
 
 ### 2. **Robust Error Handling**
+
 - Comprehensive error recovery mechanisms
 - Proper timeout handling with AbortController
 - Graceful degradation when streaming isn't available
 - Detailed error context in responses
 
 ### 3. **Multi-Provider Support**
+
 - Supports OpenAI, Anthropic, and Google models
 - Dynamic provider detection based on specification
 - Provider-specific formatting through dedicated formatter functions
 
 ### 4. **Tool Calling Implementation**
+
 - Sophisticated tool execution with parallel processing
 - Proper error recovery for individual tool failures
 - JSON argument parsing with truncation detection and recovery
 - Tool result tracking and metrics collection
 
 ### 5. **Type Safety**
+
 - Strong TypeScript typing throughout
 - Proper use of GraphQL generated types
 - Clear interface definitions for public APIs
@@ -41,17 +48,18 @@ The `streamAgent` and `promptAgent` methods in `client.ts` provide two approache
 **Issue**: The `executeStreamingAgent` method is quite long (200+ lines) and handles multiple responsibilities.
 
 **Recommendation**: Consider breaking it down into smaller, focused methods:
+
 ```typescript
 private async executeStreamingAgent(...) {
   // Start conversation
   await this.startStreamingConversation(uiAdapter, conversationId);
-  
+
   // Format and prepare messages
   const messages = await this.prepareMessagesForStreaming(prompt, conversationId, specification);
-  
+
   // Execute streaming loop
   const fullMessage = await this.executeStreamingLoop(messages, specification, tools, ...);
-  
+
   // Complete conversation
   await this.completeStreamingConversation(fullMessage, conversationId, uiAdapter);
 }
@@ -62,6 +70,7 @@ private async executeStreamingAgent(...) {
 **Issue**: The JSON parsing error recovery for truncated tool arguments (lines 4142-4199) is complex and could be fragile.
 
 **Recommendation**: Extract this into a dedicated utility function with better structure:
+
 ```typescript
 private parseToolArguments(toolCall: ConversationToolCall): any {
   try {
@@ -82,6 +91,7 @@ private attemptJsonRecovery(json: string, error: Error): any {
 **Issue**: Missing validation for streaming configuration parameters.
 
 **Recommendation**: Add validation for options:
+
 ```typescript
 private validateStreamingOptions(options?: StreamAgentOptions): void {
   if (options?.smoothingDelay && options.smoothingDelay < 0) {
@@ -98,6 +108,7 @@ private validateStreamingOptions(options?: StreamAgentOptions): void {
 **Issue**: The `UIEventAdapter` disposal in the finally block might not handle all edge cases.
 
 **Recommendation**: Ensure comprehensive cleanup:
+
 ```typescript
 finally {
   // Clean up adapter
@@ -108,7 +119,7 @@ finally {
       console.error("Error disposing UIEventAdapter:", disposeError);
     }
   }
-  
+
   // Clear any pending timeouts or intervals
   this.clearPendingOperations();
 }
@@ -119,13 +130,14 @@ finally {
 **Issue**: Some complex logic lacks inline documentation.
 
 **Recommendation**: Add more detailed comments for complex sections:
+
 ```typescript
 /**
  * Execute streaming with provider-specific implementation
- * 
+ *
  * This method handles the provider-specific streaming logic and maintains
  * conversation context through multiple tool-calling rounds.
- * 
+ *
  * @remarks
  * - Messages are accumulated to maintain full conversation context
  * - Tool calls are executed locally without server round-trips
@@ -145,6 +157,7 @@ private async executeStreamingLoop(...) {
 3. **Provider switching**: What if specification changes during execution?
 
 **Recommendation**: Add explicit handling:
+
 ```typescript
 // Handle empty tool responses
 if (!result && !error) {
@@ -152,7 +165,8 @@ if (!result && !error) {
 }
 
 // Verify conversation still exists
-if (currentRound % 5 === 0) { // Check every 5 rounds
+if (currentRound % 5 === 0) {
+  // Check every 5 rounds
   await this.verifyConversationExists(conversationId);
 }
 ```
@@ -162,14 +176,15 @@ if (currentRound % 5 === 0) { // Check every 5 rounds
 **Issue**: Message array grows unbounded in long conversations.
 
 **Recommendation**: Consider implementing message windowing:
+
 ```typescript
 private trimMessageHistory(messages: ConversationMessage[], maxMessages: number = 50): ConversationMessage[] {
   if (messages.length <= maxMessages) return messages;
-  
+
   // Keep system prompt and recent messages
   const systemMessages = messages.filter(m => m.role === ConversationRoleTypes.System);
   const recentMessages = messages.slice(-maxMessages + systemMessages.length);
-  
+
   return [...systemMessages, ...recentMessages];
 }
 ```
@@ -179,6 +194,7 @@ private trimMessageHistory(messages: ConversationMessage[], maxMessages: number 
 **Issue**: Complex streaming logic is difficult to test.
 
 **Recommendation**: Add test hooks or injectable dependencies:
+
 ```typescript
 interface StreamingDependencies {
   openaiClient?: any;
@@ -213,6 +229,7 @@ public async streamAgentWithDeps(
 ## Conclusion
 
 The implementation is solid with good architectural decisions and robust error handling. The main areas for improvement are:
+
 1. Code organization and method size
 2. Edge case handling
 3. More comprehensive documentation

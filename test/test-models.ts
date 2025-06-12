@@ -294,7 +294,7 @@ export const NATIVE_STREAMING_MODELS: TestModelConfig[] = TEST_MODELS.filter(
   (m) =>
     m.name.includes("OpenAI") ||
     m.name.includes("Anthropic") ||
-    m.name.includes("Google")
+    m.name.includes("Google"),
 );
 
 /**
@@ -308,7 +308,7 @@ export function getModelByName(name: string): TestModelConfig | undefined {
  * Get models by service type
  */
 export function getModelsByService(
-  serviceType: Types.ModelServiceTypes
+  serviceType: Types.ModelServiceTypes,
 ): TestModelConfig[] {
   return TEST_MODELS.filter((m) => m.config.serviceType === serviceType);
 }
@@ -318,7 +318,7 @@ export function getModelsByService(
  */
 export function cloneModelConfig(
   model: TestModelConfig,
-  overrides: Partial<Types.SpecificationInput>
+  overrides: Partial<Types.SpecificationInput>,
 ): TestModelConfig {
   return {
     ...model,

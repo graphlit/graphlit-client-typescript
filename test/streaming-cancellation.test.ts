@@ -15,7 +15,7 @@ describe("Streaming Cancellation", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping cancellation tests - missing Graphlit credentials"
+      "⚠️  Skipping cancellation tests - missing Graphlit credentials",
     );
     return;
   }
@@ -41,7 +41,7 @@ describe("Streaming Cancellation", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Streaming Cancellation", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -107,7 +107,7 @@ describe("Streaming Cancellation", () => {
           } else if (event.type === "message_update") {
             // Cancel after receiving some content
             const messageUpdateCount = events.filter(
-              (e) => e.type === "message_update"
+              (e) => e.type === "message_update",
             ).length;
             if (messageUpdateCount === 3 && !cancelledByUs) {
               console.log("🛑 Cancelling stream after 3 message updates...");
@@ -118,7 +118,7 @@ describe("Streaming Cancellation", () => {
             console.log(`⚠️ Error event: ${event.error}`);
           } else if (event.type === "conversation_completed") {
             console.log(
-              "❌ Unexpected completion - should have been cancelled!"
+              "❌ Unexpected completion - should have been cancelled!",
             );
           }
         },
@@ -126,7 +126,7 @@ describe("Streaming Cancellation", () => {
         { id: specId },
         undefined, // tools
         undefined, // toolHandlers
-        { abortSignal: abortController.signal } // Pass the abort signal here!
+        { abortSignal: abortController.signal }, // Pass the abort signal here!
       );
 
       // Wait for the stream to complete (should be cancelled)
@@ -134,7 +134,7 @@ describe("Streaming Cancellation", () => {
         await streamPromise;
         // If we get here without error, check if we got a completion event
         const completedEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         if (completedEvent && cancelledByUs) {
           console.log("⚠️  Stream completed despite cancellation request");
@@ -157,7 +157,7 @@ describe("Streaming Cancellation", () => {
 
       // Should not have completed if we cancelled
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed"
+        (e) => e.type === "conversation_completed",
       );
       if (cancelledByUs) {
         expect(completedEvent).toBeUndefined();
@@ -193,7 +193,7 @@ describe("Streaming Cancellation", () => {
 
       for (const test of cancellationTests) {
         console.log(
-          `\n📍 Testing: ${test.name} (cancel after ${test.cancelAfterEvents} events)`
+          `\n📍 Testing: ${test.name} (cancel after ${test.cancelAfterEvents} events)`,
         );
 
         const events: AgentStreamEvent[] = [];
@@ -229,7 +229,7 @@ describe("Streaming Cancellation", () => {
             { id: specId },
             undefined,
             undefined,
-            { abortSignal: abortController.signal }
+            { abortSignal: abortController.signal },
           );
         } catch (error) {
           console.log(`  ✅ Cancelled successfully with error`);
@@ -237,10 +237,10 @@ describe("Streaming Cancellation", () => {
 
         console.log(`  📊 Results: ${events.length} events received`);
         const hasCompletion = events.some(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         console.log(
-          `  ${hasCompletion ? "⚠️ Completed" : "✅ Not completed"} (cancelled: ${cancelled})`
+          `  ${hasCompletion ? "⚠️ Completed" : "✅ Not completed"} (cancelled: ${cancelled})`,
         );
 
         // If we cancelled early, should not have completion
@@ -335,7 +335,7 @@ describe("Streaming Cancellation", () => {
         { id: specId },
         [slowTool],
         { slowCalculation: toolHandler },
-        { abortSignal: abortController.signal }
+        { abortSignal: abortController.signal },
       );
 
       try {
@@ -347,7 +347,7 @@ describe("Streaming Cancellation", () => {
       // Check results
       const toolEvents = events.filter((e) => e.type === "tool_update");
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed"
+        (e) => e.type === "conversation_completed",
       );
 
       console.log(`\n📊 Tool Cancellation Results:`);
@@ -397,7 +397,7 @@ describe("Streaming Cancellation", () => {
       // Start all conversations
       const streamPromises = conversations.map((conv) => {
         console.log(
-          `🚀 Starting conversation ${conv.index + 1} (cancel after ${conv.cancelAfterMs}ms)`
+          `🚀 Starting conversation ${conv.index + 1} (cancel after ${conv.cancelAfterMs}ms)`,
         );
 
         // Set up cancellation timer
@@ -420,7 +420,7 @@ describe("Streaming Cancellation", () => {
               } else if (event.type === "conversation_completed") {
                 conv.completed = true;
                 console.log(
-                  `✅ Conversation ${conv.index + 1} completed before cancel`
+                  `✅ Conversation ${conv.index + 1} completed before cancel`,
                 );
               }
             },
@@ -428,12 +428,12 @@ describe("Streaming Cancellation", () => {
             { id: specId },
             undefined,
             undefined,
-            { abortSignal: conv.controller.signal }
+            { abortSignal: conv.controller.signal },
           )
           .catch((error) => {
             if (conv.cancelled) {
               console.log(
-                `✅ Conversation ${conv.index + 1} cancelled successfully`
+                `✅ Conversation ${conv.index + 1} cancelled successfully`,
               );
             } else {
               console.log(`❌ Conversation ${conv.index + 1} error: ${error}`);
@@ -448,7 +448,7 @@ describe("Streaming Cancellation", () => {
       console.log("\n📊 Multiple Cancellation Results:");
       conversations.forEach((conv) => {
         const messageEvents = conv.events.filter(
-          (e) => e.type === "message_update"
+          (e) => e.type === "message_update",
         ).length;
         console.log(`  Conv ${conv.index + 1}:`);
         console.log(`    Events: ${conv.events.length}`);
@@ -459,16 +459,16 @@ describe("Streaming Cancellation", () => {
 
       // Verify cancellations worked
       const cancelledConvs = conversations.filter(
-        (c) => c.cancelled && !c.completed
+        (c) => c.cancelled && !c.completed,
       );
       expect(cancelledConvs.length).toBeGreaterThan(0);
 
       // Earlier cancellations should have fewer events
       const sortedByEvents = [...conversations].sort(
-        (a, b) => a.events.length - b.events.length
+        (a, b) => a.events.length - b.events.length,
       );
       const sortedByCancelTime = [...conversations].sort(
-        (a, b) => a.cancelAfterMs - b.cancelAfterMs
+        (a, b) => a.cancelAfterMs - b.cancelAfterMs,
       );
 
       // Generally, earlier cancellations should result in fewer events
@@ -524,7 +524,7 @@ describe("Streaming Cancellation", () => {
         { id: specId },
         undefined,
         undefined,
-        { abortSignal: abortController.signal }
+        { abortSignal: abortController.signal },
       );
 
       try {
@@ -581,7 +581,7 @@ describe("Streaming Cancellation", () => {
           { id: specId },
           undefined,
           undefined,
-          { abortSignal: abortController.signal }
+          { abortSignal: abortController.signal },
         );
       } catch (error) {
         console.log("✅ Pre-aborted stream rejected immediately");

@@ -30,7 +30,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping MCP tool schema tests - missing Graphlit credentials"
+      "⚠️  Skipping MCP tool schema tests - missing Graphlit credentials",
     );
     return;
   }
@@ -48,7 +48,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         const { default: OpenAI } = await import("openai");
         const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
         console.log(
-          "✅ Using native OpenAI streaming for MCP tool schema tests"
+          "✅ Using native OpenAI streaming for MCP tool schema tests",
         );
         client.setOpenAIClient(openaiClient);
       } catch (e) {
@@ -62,7 +62,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -74,7 +74,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -264,7 +264,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [fileSystemTool],
-        { fileSystem: toolHandler }
+        { fileSystem: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");
@@ -502,7 +502,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [dataSourceTool],
-        { dataSource: toolHandler }
+        { dataSource: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");
@@ -780,7 +780,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [batchProcessorTool],
-        { batchProcessor: toolHandler }
+        { batchProcessor: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");
@@ -985,13 +985,13 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [validationTool],
-        { validator: toolHandler }
+        { validator: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");
       expect(toolEvents.length).toBeGreaterThan(0);
       console.log(
-        "✅ String pattern and format validation handled successfully"
+        "✅ String pattern and format validation handled successfully",
       );
     }, 90000);
   });
@@ -1175,7 +1175,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [paymentTool],
-        { payment: toolHandler }
+        { payment: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");
@@ -1320,7 +1320,7 @@ describe("MCP-Style Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [treeTool],
-        { tree: toolHandler }
+        { tree: toolHandler },
       );
 
       const toolEvents = events.filter((e) => e.type === "tool_update");

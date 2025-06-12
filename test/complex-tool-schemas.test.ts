@@ -15,7 +15,7 @@ describe("Complex Tool Schemas", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping complex schema tests - missing Graphlit credentials"
+      "⚠️  Skipping complex schema tests - missing Graphlit credentials",
     );
     return;
   }
@@ -42,7 +42,7 @@ describe("Complex Tool Schemas", () => {
   afterAll(async () => {
     // Clean up
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Complex Tool Schemas", () => {
     }
 
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -275,7 +275,7 @@ describe("Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [fileSystemTool],
-        { fileSystem: fileSystemHandler }
+        { fileSystem: fileSystemHandler },
       );
 
       // Validate complex nested calls
@@ -288,7 +288,7 @@ describe("Complex Tool Schemas", () => {
       // Check for nested options usage
       const withOptions = toolCalls.filter((call) => call.options);
       console.log(
-        `📊 Calls with options: ${withOptions.length}/${toolCalls.length}`
+        `📊 Calls with options: ${withOptions.length}/${toolCalls.length}`,
       );
 
       console.log("✅ Nested object schema test completed");
@@ -450,7 +450,11 @@ describe("Complex Tool Schemas", () => {
           value: string | number | boolean | null | (string | number)[];
           value2?: string | number;
         }>;
-        fields?: Array<string | { name: string; alias?: string } | { function: string; field: string; alias?: string }>;
+        fields?: Array<
+          | string
+          | { name: string; alias?: string }
+          | { function: string; field: string; alias?: string }
+        >;
         orderBy?: Array<{ field: string; direction: string }>;
         limit?: number;
         offset?: number;
@@ -464,7 +468,11 @@ describe("Complex Tool Schemas", () => {
           value: string | number | boolean | null | (string | number)[];
           value2?: string | number;
         }>;
-        fields?: Array<string | { name: string; alias?: string } | { function: string; field: string; alias?: string }>;
+        fields?: Array<
+          | string
+          | { name: string; alias?: string }
+          | { function: string; field: string; alias?: string }
+        >;
         orderBy?: Array<{ field: string; direction: string }>;
         limit?: number;
         offset?: number;
@@ -508,7 +516,7 @@ describe("Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [databaseTool],
-        { database: databaseHandler }
+        { database: databaseHandler },
       );
 
       // Validate complex array handling
@@ -516,7 +524,7 @@ describe("Complex Tool Schemas", () => {
 
       // Check for complex conditions
       const withConditions = dbCalls.filter(
-        (call) => call.conditions && call.conditions.length > 0
+        (call) => call.conditions && call.conditions.length > 0,
       );
       console.log(`\n📊 Calls with conditions: ${withConditions.length}`);
 
@@ -524,7 +532,7 @@ describe("Complex Tool Schemas", () => {
         const firstConditions = withConditions[0].conditions;
         console.log(
           `📊 First query conditions:`,
-          JSON.stringify(firstConditions, null, 2)
+          JSON.stringify(firstConditions, null, 2),
         );
       }
 
@@ -769,7 +777,15 @@ describe("Complex Tool Schemas", () => {
         };
         message: {
           format: string;
-          content: string | { templateId: string; variables?: Record<string, unknown> } | { title: string; body?: string; image?: string; actions?: Array<{ type: string; label: string; value: string }> };
+          content:
+            | string
+            | { templateId: string; variables?: Record<string, unknown> }
+            | {
+                title: string;
+                body?: string;
+                image?: string;
+                actions?: Array<{ type: string; label: string; value: string }>;
+              };
           priority?: string;
           metadata?: {
             category?: string;
@@ -807,7 +823,15 @@ describe("Complex Tool Schemas", () => {
         };
         message: {
           format: string;
-          content: string | { templateId: string; variables?: Record<string, unknown> } | { title: string; body?: string; image?: string; actions?: Array<{ type: string; label: string; value: string }> };
+          content:
+            | string
+            | { templateId: string; variables?: Record<string, unknown> }
+            | {
+                title: string;
+                body?: string;
+                image?: string;
+                actions?: Array<{ type: string; label: string; value: string }>;
+              };
           priority?: string;
           metadata?: {
             category?: string;
@@ -857,7 +881,7 @@ describe("Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [notificationTool],
-        { notification: notificationHandler }
+        { notification: notificationHandler },
       );
 
       // Validate polymorphic handling
@@ -865,13 +889,13 @@ describe("Complex Tool Schemas", () => {
 
       // Check recipient types
       const recipientTypes = notificationCalls.map(
-        (call) => call.recipient?.type
+        (call) => call.recipient?.type,
       );
       console.log(`\n📊 Recipient types: ${recipientTypes.join(", ")}`);
 
       // Check message formats
       const messageFormats = notificationCalls.map(
-        (call) => call.message?.format
+        (call) => call.message?.format,
       );
       console.log(`📊 Message formats: ${messageFormats.join(", ")}`);
 
@@ -1196,7 +1220,7 @@ describe("Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [configTool],
-        { configuration: configHandler }
+        { configuration: configHandler },
       );
 
       // Validate constraint handling
@@ -1422,9 +1446,32 @@ describe("Complex Tool Schemas", () => {
         endpoint?: {
           method: string;
           path: string;
-          pathParams?: Record<string, { type: string; required?: boolean; pattern?: string; example?: string }>;
-          queryParams?: Record<string, { type: string; required?: boolean; default?: unknown; enum?: unknown[]; minLength?: number; maxLength?: number; minimum?: number; maximum?: number }>;
-          headers?: Record<string, string | { value: string; required?: boolean; pattern?: string }>;
+          pathParams?: Record<
+            string,
+            {
+              type: string;
+              required?: boolean;
+              pattern?: string;
+              example?: string;
+            }
+          >;
+          queryParams?: Record<
+            string,
+            {
+              type: string;
+              required?: boolean;
+              default?: unknown;
+              enum?: unknown[];
+              minLength?: number;
+              maxLength?: number;
+              minimum?: number;
+              maximum?: number;
+            }
+          >;
+          headers?: Record<
+            string,
+            string | { value: string; required?: boolean; pattern?: string }
+          >;
           requestBody?: {
             contentType: string;
             schema?: unknown;
@@ -1438,9 +1485,32 @@ describe("Complex Tool Schemas", () => {
         endpoint?: {
           method: string;
           path: string;
-          pathParams?: Record<string, { type: string; required?: boolean; pattern?: string; example?: string }>;
-          queryParams?: Record<string, { type: string; required?: boolean; default?: unknown; enum?: unknown[]; minLength?: number; maxLength?: number; minimum?: number; maximum?: number }>;
-          headers?: Record<string, string | { value: string; required?: boolean; pattern?: string }>;
+          pathParams?: Record<
+            string,
+            {
+              type: string;
+              required?: boolean;
+              pattern?: string;
+              example?: string;
+            }
+          >;
+          queryParams?: Record<
+            string,
+            {
+              type: string;
+              required?: boolean;
+              default?: unknown;
+              enum?: unknown[];
+              minLength?: number;
+              maxLength?: number;
+              minimum?: number;
+              maximum?: number;
+            }
+          >;
+          headers?: Record<
+            string,
+            string | { value: string; required?: boolean; pattern?: string }
+          >;
           requestBody?: {
             contentType: string;
             schema?: unknown;
@@ -1491,7 +1561,7 @@ describe("Complex Tool Schemas", () => {
         undefined,
         { id: specId },
         [apiBuilderTool],
-        { apiBuilder: apiHandler }
+        { apiBuilder: apiHandler },
       );
 
       // Validate dynamic schema handling
@@ -1503,19 +1573,19 @@ describe("Complex Tool Schemas", () => {
       if (defineActions.length > 0) {
         const firstDef = defineActions[0];
         console.log(
-          `📊 Endpoint: ${firstDef.endpoint?.method} ${firstDef.endpoint?.path}`
+          `📊 Endpoint: ${firstDef.endpoint?.method} ${firstDef.endpoint?.path}`,
         );
         console.log(
           `📊 Path params:`,
-          Object.keys(firstDef.endpoint?.pathParams || {})
+          Object.keys(firstDef.endpoint?.pathParams || {}),
         );
         console.log(
           `📊 Query params:`,
-          Object.keys(firstDef.endpoint?.queryParams || {})
+          Object.keys(firstDef.endpoint?.queryParams || {}),
         );
         console.log(
           `📊 Response codes:`,
-          Object.keys(firstDef.endpoint?.responses || {})
+          Object.keys(firstDef.endpoint?.responses || {}),
         );
       }
 

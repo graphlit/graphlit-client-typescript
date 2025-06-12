@@ -15,7 +15,7 @@ describe("Concurrent Conversations", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping concurrent tests - missing Graphlit credentials"
+      "⚠️  Skipping concurrent tests - missing Graphlit credentials",
     );
     return;
   }
@@ -41,7 +41,7 @@ describe("Concurrent Conversations", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Concurrent Conversations", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -154,13 +154,13 @@ describe("Concurrent Conversations", () => {
                 result.conversationId = event.conversationId;
                 createdConversations.push(event.conversationId);
                 console.log(
-                  `🎯 Conv ${index + 1}: Started (${event.conversationId})`
+                  `🎯 Conv ${index + 1}: Started (${event.conversationId})`,
                 );
               } else if (event.type === "conversation_completed") {
                 result.response = event.message.message;
                 result.endTime = Date.now();
                 console.log(
-                  `✅ Conv ${index + 1}: Completed in ${result.endTime - result.startTime}ms`
+                  `✅ Conv ${index + 1}: Completed in ${result.endTime - result.startTime}ms`,
                 );
               } else if (event.type === "error") {
                 result.error = event.error?.message;
@@ -168,7 +168,7 @@ describe("Concurrent Conversations", () => {
               }
             },
             undefined,
-            { id: specId }
+            { id: specId },
           );
         } catch (error) {
           result.error = error instanceof Error ? error.message : String(error);
@@ -189,7 +189,7 @@ describe("Concurrent Conversations", () => {
         console.log(`  Prompt: "${result.prompt}"`);
         console.log(`  Response: "${result.response || "No response"}"`);
         console.log(
-          `  Duration: ${result.endTime ? result.endTime - result.startTime : "N/A"}ms`
+          `  Duration: ${result.endTime ? result.endTime - result.startTime : "N/A"}ms`,
         );
         console.log(`  Events: ${result.eventCount}`);
 
@@ -200,7 +200,7 @@ describe("Concurrent Conversations", () => {
 
       // Assertions
       const successfulConversations = results.filter(
-        (r) => r.response && !r.error
+        (r) => r.response && !r.error,
       );
       expect(successfulConversations.length).toBeGreaterThanOrEqual(4); // At least 4/5 should succeed
 
@@ -219,7 +219,7 @@ describe("Concurrent Conversations", () => {
       });
 
       console.log(
-        `\n✅ Successfully ran ${successfulConversations.length}/5 concurrent conversations`
+        `\n✅ Successfully ran ${successfulConversations.length}/5 concurrent conversations`,
       );
     }, 120000); // 2 minute timeout
 
@@ -286,12 +286,12 @@ describe("Concurrent Conversations", () => {
               result.endTime = Date.now();
               result.position = ++finishPosition;
               console.log(
-                `🏁 Position ${result.position}: Conv ${index + 1} finished in ${result.endTime - result.startTime}ms`
+                `🏁 Position ${result.position}: Conv ${index + 1} finished in ${result.endTime - result.startTime}ms`,
               );
             }
           },
           undefined,
-          { id: specId }
+          { id: specId },
         );
 
         results[index] = result;
@@ -333,10 +333,10 @@ describe("Concurrent Conversations", () => {
       expect(uniqueResponses.size).toBeGreaterThan(5); // Should have variety
 
       console.log(
-        `\n✅ Successfully ran ${successful.length}/10 concurrent conversations`
+        `\n✅ Successfully ran ${successful.length}/10 concurrent conversations`,
       );
       console.log(
-        `📈 Response variety: ${uniqueResponses.size} unique responses`
+        `📈 Response variety: ${uniqueResponses.size} unique responses`,
       );
     }, 180000); // 3 minute timeout
   });
@@ -398,7 +398,7 @@ describe("Concurrent Conversations", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       // Start second conversation
@@ -416,7 +416,7 @@ describe("Concurrent Conversations", () => {
           }
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       expect(conversation1.id).toBeDefined();
@@ -440,7 +440,7 @@ describe("Concurrent Conversations", () => {
             }
           },
           conversation1.id,
-          { id: specId }
+          { id: specId },
         ),
         client.streamAgent(
           recallPrompt,
@@ -450,7 +450,7 @@ describe("Concurrent Conversations", () => {
             }
           },
           conversation2.id,
-          { id: specId }
+          { id: specId },
         ),
       ];
 
@@ -539,7 +539,7 @@ describe("Concurrent Conversations", () => {
                   }
                 },
                 undefined,
-                { id: specId }
+                { id: specId },
               )
               .catch(reject);
           });
@@ -554,7 +554,7 @@ describe("Concurrent Conversations", () => {
         // Log progress every 5 conversations
         if ((i + 1) % 5 === 0) {
           console.log(
-            `  📍 Completed ${i + 1}/${conversationCount} conversations`
+            `  📍 Completed ${i + 1}/${conversationCount} conversations`,
           );
         }
       }
@@ -569,13 +569,13 @@ describe("Concurrent Conversations", () => {
 
       console.log(`\n📊 Rapid Fire Results:`);
       console.log(
-        `  Total time: ${totalTime}ms (${(totalTime / 1000).toFixed(2)}s)`
+        `  Total time: ${totalTime}ms (${(totalTime / 1000).toFixed(2)}s)`,
       );
       console.log(`  Successful: ${successful.length}/${conversationCount}`);
       console.log(`  Failed: ${failed.length}/${conversationCount}`);
       console.log(`  Avg time per conversation: ${avgTime.toFixed(0)}ms`);
       console.log(
-        `  Conversations per second: ${(conversationCount / (totalTime / 1000)).toFixed(2)}`
+        `  Conversations per second: ${(conversationCount / (totalTime / 1000)).toFixed(2)}`,
       );
 
       if (failed.length > 0) {
@@ -585,7 +585,7 @@ describe("Concurrent Conversations", () => {
             acc[r.error || "Unknown"] = (acc[r.error || "Unknown"] || 0) + 1;
             return acc;
           },
-          {} as Record<string, number>
+          {} as Record<string, number>,
         );
 
         Object.entries(errorCounts).forEach(([error, count]) => {

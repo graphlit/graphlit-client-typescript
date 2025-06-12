@@ -27,7 +27,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping comprehensive tests - missing Graphlit credentials"
+      "⚠️  Skipping comprehensive tests - missing Graphlit credentials",
     );
     return;
   }
@@ -81,7 +81,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
   afterAll(async () => {
     // Clean up created specifications
     console.log(
-      `\n🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `\n🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     let cleanupCount = 0;
     for (const specId of createdSpecifications) {
@@ -93,7 +93,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
       }
     }
     console.log(
-      `✅ Successfully cleaned up ${cleanupCount}/${createdSpecifications.length} specifications\n`
+      `✅ Successfully cleaned up ${cleanupCount}/${createdSpecifications.length} specifications\n`,
     );
 
     // Display comparative metrics summary
@@ -105,13 +105,13 @@ describe("Comprehensive streamAgent Integration Tests", () => {
       const sortedByTTFT = [...allMetrics]
         .filter((m) => m.metrics.timeToFirstToken > 0)
         .sort(
-          (a, b) => a.metrics.timeToFirstToken - b.metrics.timeToFirstToken
+          (a, b) => a.metrics.timeToFirstToken - b.metrics.timeToFirstToken,
         );
 
       console.log("\n⚡ Fastest Time to First Token (TTFT):");
       sortedByTTFT.slice(0, 3).forEach((item, idx) => {
         console.log(
-          `  ${idx + 1}. ${item.modelName} (${item.metrics.streamType}): ${item.metrics.timeToFirstToken}ms`
+          `  ${idx + 1}. ${item.modelName} (${item.metrics.streamType}): ${item.metrics.timeToFirstToken}ms`,
         );
       });
 
@@ -130,23 +130,23 @@ describe("Comprehensive streamAgent Integration Tests", () => {
       console.log("\n📈 Highest Tokens Per Second (TPS):");
       withTPS.slice(0, 3).forEach((item, idx) => {
         console.log(
-          `  ${idx + 1}. ${item.modelName} (${item.metrics.streamType}): ${item.tps.toFixed(2)} TPS`
+          `  ${idx + 1}. ${item.modelName} (${item.metrics.streamType}): ${item.tps.toFixed(2)} TPS`,
         );
       });
 
       console.log("\n📊 Native vs Fallback Comparison:");
       const nativeMetrics = allMetrics.filter(
-        (m) => m.metrics.streamType === "native"
+        (m) => m.metrics.streamType === "native",
       );
       const fallbackMetrics = allMetrics.filter(
-        (m) => m.metrics.streamType === "fallback"
+        (m) => m.metrics.streamType === "fallback",
       );
 
       if (nativeMetrics.length > 0) {
         const avgNativeTTFT =
           nativeMetrics.reduce(
             (sum, m) => sum + m.metrics.timeToFirstToken,
-            0
+            0,
           ) / nativeMetrics.length;
         console.log(`  Native Avg TTFT: ${avgNativeTTFT.toFixed(0)}ms`);
       }
@@ -155,7 +155,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const avgFallbackTTFT =
           fallbackMetrics.reduce(
             (sum, m) => sum + m.metrics.timeToFirstToken,
-            0
+            0,
           ) / fallbackMetrics.length;
         console.log(`  Fallback Avg TTFT: ${avgFallbackTTFT.toFixed(0)}ms`);
       }
@@ -197,19 +197,19 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         : "N/A";
 
     console.log(
-      `\n📊 Performance Metrics for ${modelName} (${metrics.streamType}):`
+      `\n📊 Performance Metrics for ${modelName} (${metrics.streamType}):`,
     );
     console.log(
-      `   ⏱️  Time to First Token (TTFT): ${metrics.timeToFirstToken}ms`
+      `   ⏱️  Time to First Token (TTFT): ${metrics.timeToFirstToken}ms`,
     );
     console.log(`   ⏱️  Time to Last Token: ${metrics.timeToLastToken}ms`);
     console.log(`   📈 Tokens Per Second: ${tokensPerSecond} TPS`);
     console.log(`   📊 Total Message Updates: ${metrics.tokenCount}`);
     console.log(
-      `   ⚡ Avg Inter-Token Delay: ${avgInterTokenDelay.toFixed(2)}ms`
+      `   ⚡ Avg Inter-Token Delay: ${avgInterTokenDelay.toFixed(2)}ms`,
     );
     console.log(
-      `   ⚠️  P95 Inter-Token Delay: ${p95InterTokenDelay.toFixed(2)}ms`
+      `   ⚠️  P95 Inter-Token Delay: ${p95InterTokenDelay.toFixed(2)}ms`,
     );
 
     // Save metrics for summary
@@ -226,7 +226,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -279,7 +279,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
               if (metrics.lastEventTime > 0) {
                 metrics.interTokenDelays.push(
-                  currentTime - metrics.lastEventTime
+                  currentTime - metrics.lastEventTime,
                 );
               }
               metrics.lastEventTime = currentTime;
@@ -296,29 +296,29 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           undefined, // conversationId
           { id: specId }, // specification
           undefined, // tools
-          undefined // toolHandlers
+          undefined, // toolHandlers
         );
 
         // Validate event sequence
         expect(events.length).toBeGreaterThan(0);
 
         const startEvent = events.find(
-          (e) => e.type === "conversation_started"
+          (e) => e.type === "conversation_started",
         );
         expect(startEvent).toBeDefined();
         expect(startEvent!.conversationId).not.toBe("new");
         console.log(
-          `✅ ${testSpec.name}: Got conversation_started event with real ID`
+          `✅ ${testSpec.name}: Got conversation_started event with real ID`,
         );
 
         const messageEvents = events.filter((e) => e.type === "message_update");
         expect(messageEvents.length).toBeGreaterThan(0);
         console.log(
-          `✅ ${testSpec.name}: Got ${messageEvents.length} message_update events`
+          `✅ ${testSpec.name}: Got ${messageEvents.length} message_update events`,
         );
 
         const completeEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(completeEvent).toBeDefined();
         console.log(`✅ ${testSpec.name}: Got conversation_completed event`);
@@ -330,7 +330,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const isValidResponse = mentionsRaccoon || mentionsMcPoogle;
 
         console.log(
-          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
+          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`,
         );
 
         expect(isValidResponse).toBe(true);
@@ -354,7 +354,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -407,7 +407,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
               if (metrics.lastEventTime > 0) {
                 metrics.interTokenDelays.push(
-                  currentTime - metrics.lastEventTime
+                  currentTime - metrics.lastEventTime,
                 );
               }
               metrics.lastEventTime = currentTime;
@@ -422,14 +422,14 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             }
           },
           undefined, // conversationId
-          { id: specId } // specification
+          { id: specId }, // specification
         );
 
         // Validate event sequence
         expect(events.length).toBeGreaterThan(0);
 
         const startEvent = events.find(
-          (e) => e.type === "conversation_started"
+          (e) => e.type === "conversation_started",
         );
         expect(startEvent).toBeDefined();
         console.log(`✅ ${testSpec.name}: Got conversation_started event`);
@@ -438,11 +438,11 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const messageEvents = events.filter((e) => e.type === "message_update");
         expect(messageEvents.length).toBeGreaterThan(2); // Expect more granular updates
         console.log(
-          `✅ ${testSpec.name}: Got ${messageEvents.length} message_update events (native streaming)`
+          `✅ ${testSpec.name}: Got ${messageEvents.length} message_update events (native streaming)`,
         );
 
         const completeEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(completeEvent).toBeDefined();
         console.log(`✅ ${testSpec.name}: Got conversation_completed event`);
@@ -454,7 +454,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const isValidResponse = mentionsRaccoon || mentionsMcPoogle;
 
         console.log(
-          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`
+          `✅ ${testSpec.name}: Response may include character references (raccoon: ${mentionsRaccoon}, McPoogle: ${mentionsMcPoogle})`,
         );
 
         expect(isValidResponse).toBe(true);
@@ -475,7 +475,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -566,7 +566,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           undefined, // conversationId
           { id: specId }, // specification
           [calculatorTool], // tools
-          { calculate: toolHandler } // toolHandlers
+          { calculate: toolHandler }, // toolHandlers
         );
 
         // Validate tool execution
@@ -576,13 +576,13 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         // Tool calling should work for all models
         if (toolEvents.length === 0) {
           const finalEvent = events.find(
-            (e) => e.type === "conversation_completed"
+            (e) => e.type === "conversation_completed",
           );
           const response = finalEvent
             ? finalEvent.message.message
             : "No response";
           console.error(
-            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response}"`
+            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response}"`,
           );
         }
         expect(toolEvents.length).toBeGreaterThan(0);
@@ -592,11 +592,11 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         expect(toolResults[0]).toContain("15");
         expect(toolResults[0]).toContain("27");
         console.log(
-          `✅ ${testSpec.name}: Tool executed with correct parameters`
+          `✅ ${testSpec.name}: Tool executed with correct parameters`,
         );
 
         const finalEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(finalEvent).toBeDefined();
         console.log(`✅ ${testSpec.name}: Conversation completed successfully`);
@@ -615,7 +615,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -706,7 +706,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           undefined, // conversationId
           { id: specId }, // specification
           [calculatorTool], // tools
-          { calculate: toolHandler } // toolHandlers
+          { calculate: toolHandler }, // toolHandlers
         );
 
         // Validate tool execution
@@ -715,26 +715,26 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         if (toolEvents.length > 0) {
           console.log(
-            `✅ ${testSpec.name}: Tool calling working with native SDK`
+            `✅ ${testSpec.name}: Tool calling working with native SDK`,
           );
           expect(toolResults.length).toBeGreaterThan(0);
           expect(toolResults[0]).toContain("15");
           expect(toolResults[0]).toContain("27");
           console.log(
-            `✅ ${testSpec.name}: Tool executed with correct parameters`
+            `✅ ${testSpec.name}: Tool executed with correct parameters`,
           );
         } else {
           console.log(
-            `ℹ️  ${testSpec.name}: No tool events (may not support tool calling)`
+            `ℹ️  ${testSpec.name}: No tool events (may not support tool calling)`,
           );
         }
 
         const finalEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(finalEvent).toBeDefined();
         console.log(
-          `✅ ${testSpec.name}: Conversation completed successfully with native SDK`
+          `✅ ${testSpec.name}: Conversation completed successfully with native SDK`,
         );
 
         // Clean up conversation
@@ -747,12 +747,12 @@ describe("Comprehensive streamAgent Integration Tests", () => {
     testSpecifications.forEach((testSpec) => {
       it(`should maintain conversation context with ${testSpec.name} (fallback)`, async () => {
         console.log(
-          `🧪 Testing conversation continuity with ${testSpec.name}...`
+          `🧪 Testing conversation continuity with ${testSpec.name}...`,
         );
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -779,12 +779,12 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             if (event.type === "conversation_started") {
               actualConversationId = event.conversationId;
               console.log(
-                `🆔 ${testSpec.name} Conversation ID: ${actualConversationId}`
+                `🆔 ${testSpec.name} Conversation ID: ${actualConversationId}`,
               );
             }
           },
           undefined, // conversationId
-          { id: specId } // specification
+          { id: specId }, // specification
         );
 
         expect(actualConversationId!).toBeDefined();
@@ -803,16 +803,16 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             events.push(event);
             if (event.type === "conversation_completed") {
               console.log(
-                `💬 ${testSpec.name} Response: "${event.message.message}"`
+                `💬 ${testSpec.name} Response: "${event.message.message}"`,
               );
             }
           },
           actualConversationId, // Continue same conversation
-          { id: specId } // specification
+          { id: specId }, // specification
         );
 
         const finalEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(finalEvent).toBeDefined();
         const response = finalEvent.message.message.toLowerCase();
@@ -820,7 +820,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {
           console.log(
-            `⚠️  ${testSpec.name}: AI may have forgotten or played forgetful character`
+            `⚠️  ${testSpec.name}: AI may have forgotten or played forgetful character`,
           );
         }
         expect(remembered).toBe(true);
@@ -836,12 +836,12 @@ describe("Comprehensive streamAgent Integration Tests", () => {
     testSpecifications.forEach((testSpec) => {
       it(`should maintain conversation context with ${testSpec.name} (native)`, async () => {
         console.log(
-          `🧪 Testing NATIVE conversation continuity with ${testSpec.name}...`
+          `🧪 Testing NATIVE conversation continuity with ${testSpec.name}...`,
         );
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testSpec.config
+          testSpec.config,
         );
         const specId = createResponse.createSpecification?.id;
         expect(specId).toBeDefined();
@@ -868,12 +868,12 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             if (event.type === "conversation_started") {
               actualConversationId = event.conversationId;
               console.log(
-                `🆔 ${testSpec.name} Conversation ID: ${actualConversationId}`
+                `🆔 ${testSpec.name} Conversation ID: ${actualConversationId}`,
               );
             }
           },
           undefined, // conversationId
-          { id: specId } // specification
+          { id: specId }, // specification
         );
 
         expect(actualConversationId!).toBeDefined();
@@ -892,16 +892,16 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             events.push(event);
             if (event.type === "conversation_completed") {
               console.log(
-                `💬 ${testSpec.name} Response: "${event.message.message}"`
+                `💬 ${testSpec.name} Response: "${event.message.message}"`,
               );
             }
           },
           actualConversationId, // Continue same conversation
-          { id: specId } // specification
+          { id: specId }, // specification
         );
 
         const finalEvent = events.find(
-          (e) => e.type === "conversation_completed"
+          (e) => e.type === "conversation_completed",
         );
         expect(finalEvent).toBeDefined();
         const response = finalEvent.message.message.toLowerCase();
@@ -909,12 +909,12 @@ describe("Comprehensive streamAgent Integration Tests", () => {
           response.includes("42") || response.includes("forty-two");
         if (!remembered) {
           console.log(
-            `⚠️  ${testSpec.name}: AI may have forgotten or played forgetful character`
+            `⚠️  ${testSpec.name}: AI may have forgotten or played forgetful character`,
           );
         }
         expect(remembered).toBe(true);
         console.log(
-          `✅ ${testSpec.name}: AI remembered conversation context with native SDK`
+          `✅ ${testSpec.name}: AI remembered conversation context with native SDK`,
         );
 
         // Clean up conversation
