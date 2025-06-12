@@ -127,10 +127,11 @@ describe("Smooth Streaming Chunking Modes", () => {
   }, 120000);
 
   // Test content for consistency
-  const TEST_PROMPT = `Generate exactly this text with proper formatting:
-"The quick brown fox jumps over the lazy dog. This is a test sentence.
-Here is another line with some numbers: 123, 456, 789.
-And a final line to test chunking behavior across multiple segments."`;
+  const TEST_PROMPT = `Please write a short story about a fox and a dog that includes:
+1. A description of the fox jumping
+2. Some numbers between 100 and 999
+3. At least three sentences to test chunking behavior
+Make it engaging but keep it under 200 words.`;
 
   describe("Chunking Strategy Tests", () => {
     const chunkingConfigs = [
@@ -535,7 +536,7 @@ And a final line to test chunking behavior across multiple segments."`;
       createdSpecifications.push(specId);
 
       const testPrompt =
-        "Write exactly: The quick brown fox jumps over the lazy dog.";
+        "Write a single sentence about a quick brown fox and a lazy dog.";
 
       // Test 1: Chunking disabled
       console.log("\n📴 Testing with chunking DISABLED...");
