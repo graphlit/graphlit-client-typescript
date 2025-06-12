@@ -76,7 +76,7 @@ export async function streamWithOpenAI(
       );
     }
 
-    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
@@ -108,7 +108,7 @@ export async function streamWithOpenAI(
       }));
     }
 
-    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `⏱️ [OpenAI] Starting LLM call at: ${new Date().toISOString()}`
       );
@@ -120,7 +120,7 @@ export async function streamWithOpenAI(
       const delta = chunk.choices[0]?.delta;
 
       // Debug log chunk details
-      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`[OpenAI] Chunk:`, JSON.stringify(chunk, null, 2));
         if (delta?.content) {
           console.log(
@@ -146,7 +146,7 @@ export async function streamWithOpenAI(
         // Track TTFT (first token regardless of type)
         if (firstTokenTime === 0) {
           firstTokenTime = currentTime - startTime;
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`
             );
@@ -156,7 +156,7 @@ export async function streamWithOpenAI(
         // Track first meaningful content (excludes tool calls)
         if (firstMeaningfulContentTime === 0 && delta.content.trim()) {
           firstMeaningfulContentTime = currentTime - startTime;
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
             );
@@ -170,7 +170,7 @@ export async function streamWithOpenAI(
         }
         lastEventTime = currentTime;
 
-        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
             `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`
           );
@@ -206,14 +206,14 @@ export async function streamWithOpenAI(
             // Track TTFT for first tool if no content yet
             if (firstTokenTime === 0) {
               firstTokenTime = Date.now() - startTime;
-              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`
                 );
               }
             }
 
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `[OpenAI] Starting new tool call: ${toolCalls[index].id}`
               );
@@ -230,7 +230,7 @@ export async function streamWithOpenAI(
 
           if (toolCallDelta.function?.name) {
             toolCalls[index].name = toolCallDelta.function.name;
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(`[OpenAI] Tool name: ${toolCallDelta.function.name}`);
             }
           }
@@ -244,7 +244,7 @@ export async function streamWithOpenAI(
             );
 
             // Debug logging for partial JSON accumulation
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`
               );
@@ -281,7 +281,7 @@ export async function streamWithOpenAI(
         JSON.parse(toolCall.arguments);
         toolMetrics.successfulTools++;
 
-        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(`[OpenAI] ✅ Valid JSON for ${toolCall.name}`);
         }
       } catch (e) {
@@ -290,7 +290,7 @@ export async function streamWithOpenAI(
       }
 
       // Log the final JSON for debugging
-      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
           `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
         );
@@ -308,7 +308,7 @@ export async function streamWithOpenAI(
     }
 
     // Final summary logging
-    if (process.env.DEBUG_GRAPHLIT_STREAMING && toolCalls.length > 0) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
         `[OpenAI] Successfully processed ${toolCalls.length} tool calls`
       );
@@ -337,7 +337,7 @@ export async function streamWithOpenAI(
       });
     }
 
-    if (process.env.DEBUG_GRAPHLIT_METRICS) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_METRICS) {
       const metricsData = {
         totalTime: `${totalTime}ms`,
         ttft: `${firstTokenTime}ms`,
@@ -472,7 +472,7 @@ export async function streamWithAnthropic(
       );
     }
 
-    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
@@ -500,7 +500,7 @@ export async function streamWithAnthropic(
       }));
     }
 
-    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`
       );
@@ -512,7 +512,7 @@ export async function streamWithAnthropic(
 
     for await (const chunk of stream) {
       // Debug log all chunk types
-      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`[Anthropic] Received chunk type: ${chunk.type}`);
       }
 
@@ -539,7 +539,7 @@ export async function streamWithAnthropic(
           // Track TTFT for first tool if no content yet
           if (firstTokenTime === 0) {
             firstTokenTime = Date.now() - startTime;
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`
               );
@@ -564,7 +564,7 @@ export async function streamWithAnthropic(
           // Track TTFT (first token regardless of type)
           if (firstTokenTime === 0) {
             firstTokenTime = currentTime - startTime;
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`
               );
@@ -574,7 +574,7 @@ export async function streamWithAnthropic(
           // Track first meaningful content (excludes tool calls)
           if (firstMeaningfulContentTime === 0 && chunk.delta.text.trim()) {
             firstMeaningfulContentTime = currentTime - startTime;
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
               );
@@ -588,7 +588,7 @@ export async function streamWithAnthropic(
           }
           lastEventTime = currentTime;
 
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`
             );
@@ -609,7 +609,7 @@ export async function streamWithAnthropic(
             );
 
             // Debug logging for partial JSON accumulation
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`
               );
@@ -646,7 +646,7 @@ export async function streamWithAnthropic(
             JSON.parse(currentTool.arguments);
             toolMetrics.successfulTools++;
 
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(`[Anthropic] ✅ Valid JSON for ${currentTool.name}`);
             }
           } catch (e) {
@@ -658,7 +658,7 @@ export async function streamWithAnthropic(
 
           // Log the final JSON for debugging
           if (
-            process.env.DEBUG_GRAPHLIT_STREAMING ||
+            process.env.DEBUG_GRAPHLIT_SDK_STREAMING ||
             !isValidJSON(currentTool.arguments)
           ) {
             console.log(
@@ -764,7 +764,7 @@ export async function streamWithAnthropic(
       });
     }
 
-    if (process.env.DEBUG_GRAPHLIT_METRICS) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_METRICS) {
       const metricsData = {
         totalTime: `${totalTime}ms`,
         ttft: `${firstTokenTime}ms`,
@@ -900,7 +900,7 @@ export async function streamWithGoogle(
       );
     }
 
-    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
@@ -966,7 +966,7 @@ export async function streamWithGoogle(
       const text = chunk.text();
 
       // Debug log chunk details
-      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`[Google] Raw chunk:`, JSON.stringify(chunk, null, 2));
         if (text) {
           console.log(`[Google] Text delta: "${text}" (${text.length} chars)`);
@@ -982,7 +982,7 @@ export async function streamWithGoogle(
         // Track TTFT (first token regardless of type)
         if (firstTokenTime === 0) {
           firstTokenTime = currentTime - startTime;
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`
             );
@@ -992,7 +992,7 @@ export async function streamWithGoogle(
         // Track first meaningful content
         if (firstMeaningfulContentTime === 0 && text.trim()) {
           firstMeaningfulContentTime = currentTime - startTime;
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
             );
@@ -1012,7 +1012,7 @@ export async function streamWithGoogle(
         if (candidate?.content?.parts) {
           for (const part of candidate.content.parts) {
             if (part.functionCall) {
-              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `[Google] Received function call: ${part.functionCall.name}`
                 );
@@ -1046,7 +1046,7 @@ export async function streamWithGoogle(
               // Track TTFT for first tool if no content yet
               if (firstTokenTime === 0) {
                 firstTokenTime = Date.now() - startTime;
-                if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                   console.log(
                     `\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`
                   );
@@ -1079,7 +1079,7 @@ export async function streamWithGoogle(
               try {
                 JSON.parse(toolCall.arguments);
                 toolMetrics.successfulTools++;
-                if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                   console.log(`[Google] ✅ Valid JSON for ${toolCall.name}`);
                 }
               } catch (e) {
@@ -1090,7 +1090,7 @@ export async function streamWithGoogle(
               }
 
               // Log completion
-              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
                 );
@@ -1110,7 +1110,7 @@ export async function streamWithGoogle(
         }
       } catch (error) {
         // Silently ignore parsing errors
-        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.error(
             `[Google] Error parsing chunk for function calls:`,
             error
@@ -1124,7 +1124,10 @@ export async function streamWithGoogle(
       const response = await result.response;
       const candidate = response.candidates?.[0];
 
-      if (process.env.DEBUG_GRAPHLIT_STREAMING && candidate?.content?.parts) {
+      if (
+        process.env.DEBUG_GRAPHLIT_SDK_STREAMING &&
+        candidate?.content?.parts
+      ) {
         console.log(
           `[Google] Processing final response with ${candidate.content.parts.length} parts`
         );
@@ -1137,7 +1140,7 @@ export async function streamWithGoogle(
             const finalText = part.text;
             // Only add if it's not already included in fullMessage
             if (!fullMessage.endsWith(finalText)) {
-              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `[Google] Adding final text: ${finalText.length} chars`
                 );
@@ -1155,7 +1158,7 @@ export async function streamWithGoogle(
             part.functionCall &&
             !toolCalls.some((tc) => tc.name === part.functionCall.name)
           ) {
-            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `[Google] Found function call in final response: ${part.functionCall.name}`
               );
@@ -1190,13 +1193,13 @@ export async function streamWithGoogle(
       }
     } catch (error) {
       // Log parsing errors when debugging
-      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.error(`[Google] Error processing final response:`, error);
       }
     }
 
     // Final summary logging
-    if (process.env.DEBUG_GRAPHLIT_STREAMING && toolCalls.length > 0) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
         `[Google] Successfully processed ${toolCalls.length} tool calls`
       );
@@ -1225,7 +1228,7 @@ export async function streamWithGoogle(
       });
     }
 
-    if (process.env.DEBUG_GRAPHLIT_METRICS) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_METRICS) {
       const metricsData = {
         totalTime: `${totalTime}ms`,
         ttft: `${firstTokenTime}ms`,
