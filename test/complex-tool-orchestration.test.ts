@@ -15,7 +15,7 @@ describe("Complex Tool Orchestration", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping tool orchestration tests - missing Graphlit credentials"
+      "⚠️  Skipping tool orchestration tests - missing Graphlit credentials",
     );
     return;
   }
@@ -33,7 +33,7 @@ describe("Complex Tool Orchestration", () => {
         const { default: OpenAI } = await import("openai");
         const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
         console.log(
-          "✅ Using native OpenAI streaming for tool orchestration tests"
+          "✅ Using native OpenAI streaming for tool orchestration tests",
         );
       } catch (e) {
         console.log("⚠️ OpenAI SDK not available, using fallback streaming");
@@ -46,7 +46,7 @@ describe("Complex Tool Orchestration", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -58,7 +58,7 @@ describe("Complex Tool Orchestration", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -213,7 +213,7 @@ describe("Complex Tool Orchestration", () => {
         ascending?: boolean;
       }) => {
         console.log(
-          `📊 Data processor: ${args.operation} on [${args.numbers.join(", ")}]`
+          `📊 Data processor: ${args.operation} on [${args.numbers.join(", ")}]`,
         );
         let result: any;
         switch (args.operation) {
@@ -232,7 +232,7 @@ describe("Complex Tool Orchestration", () => {
             break;
           case "sort":
             result = [...args.numbers].sort((a, b) =>
-              args.ascending ? a - b : b - a
+              args.ascending ? a - b : b - a,
             );
             break;
           default:
@@ -306,7 +306,7 @@ Please use all the tools and provide a summary of the results.`;
             console.log(`🔧 Tool ${event.toolCall.name}: ${event.status}`);
           } else if (event.type === "conversation_completed") {
             console.log(
-              `💬 Final: "${event.message.message.slice(0, 100)}..."`
+              `💬 Final: "${event.message.message.slice(0, 100)}..."`,
             );
           }
         },
@@ -317,7 +317,7 @@ Please use all the tools and provide a summary of the results.`;
           calculator: calculatorHandler,
           dataProcessor: dataProcessorHandler,
           formatter: formatterHandler,
-        }
+        },
       );
 
       // Validate tool orchestration
@@ -328,7 +328,7 @@ Please use all the tools and provide a summary of the results.`;
 
       toolCalls.forEach((call, idx) => {
         console.log(
-          `  ${idx + 1}. ${call.name}: ${JSON.stringify(call.args)} → ${JSON.stringify(call.result)}`
+          `  ${idx + 1}. ${call.name}: ${JSON.stringify(call.args)} → ${JSON.stringify(call.result)}`,
         );
       });
 
@@ -434,7 +434,7 @@ Please execute these steps in order and show the progression.`;
           calculator: calculatorHandler,
           dataProcessor: dataProcessorHandler,
           formatter: formatterHandler,
-        }
+        },
       );
 
       // Analyze execution order
@@ -496,7 +496,7 @@ Please execute these steps in order and show the progression.`;
           errorCounts[toolName] = (errorCounts[toolName] || 0) + 1;
           console.log(`💥 ${toolName} deliberately failing`);
           throw new Error(
-            `API endpoint ${args.endpoint} is temporarily unavailable`
+            `API endpoint ${args.endpoint} is temporarily unavailable`,
           );
         }
 
@@ -516,7 +516,7 @@ Please execute these steps in order and show the progression.`;
         b: number;
       }) => {
         console.log(
-          `🔧 Backup calculator used: ${args.a} ${args.operation} ${args.b}`
+          `🔧 Backup calculator used: ${args.a} ${args.operation} ${args.b}`,
         );
         const result =
           args.operation === "add" ? args.a + args.b : args.a * args.b;
@@ -549,7 +549,7 @@ Please handle any failures gracefully and use fallback options.`;
             }
           } else if (event.type === "conversation_completed") {
             console.log(
-              `💬 Final response handles errors: "${event.message.message.slice(0, 150)}..."`
+              `💬 Final response handles errors: "${event.message.message.slice(0, 150)}..."`,
             );
           }
         },
@@ -559,16 +559,16 @@ Please handle any failures gracefully and use fallback options.`;
         {
           mockApi: mockApiHandler,
           calculator: backupCalculatorHandler,
-        }
+        },
       );
 
       // Analyze error handling
       const toolEvents = events.filter((e) => e.type === "tool_update");
       const errorEvents = toolEvents.filter(
-        (e) => e.type === "tool_update" && (e as any).tool?.error
+        (e) => e.type === "tool_update" && (e as any).tool?.error,
       );
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed"
+        (e) => e.type === "conversation_completed",
       );
 
       console.log(`\n📊 Error Handling Results:`);
@@ -693,14 +693,14 @@ Please handle any failures gracefully and use fallback options.`;
         {
           calculator: calculatorHandler,
           conditional: conditionalHandler,
-        }
+        },
       );
 
       // Analyze conditional execution
       console.log(`\n📊 Conditional Execution Results:`);
       conditionalResults.forEach((result, idx) => {
         console.log(
-          `  ${idx + 1}. ${result.condition}: ${result.result} → ${result.action}`
+          `  ${idx + 1}. ${result.condition}: ${result.result} → ${result.action}`,
         );
       });
 
@@ -884,7 +884,7 @@ Use all the appropriate tools and provide a comprehensive financial overview.`;
           calculator: calculatorHandler,
           dataProcessor: dataProcessorHandler,
           formatter: formatterHandler,
-        }
+        },
       );
 
       // Analyze aggregation
@@ -896,19 +896,19 @@ Use all the appropriate tools and provide a comprehensive financial overview.`;
           acc[tr.tool] = (acc[tr.tool] || 0) + 1;
           return acc;
         },
-        {} as { [key: string]: number }
+        {} as { [key: string]: number },
       );
 
       console.log(`  Tool usage breakdown:`, toolCounts);
 
       // Show execution timeline
       const sortedResults = allToolResults.sort(
-        (a, b) => a.timestamp - b.timestamp
+        (a, b) => a.timestamp - b.timestamp,
       );
       console.log(`  Execution timeline:`);
       sortedResults.forEach((tr, idx) => {
         console.log(
-          `    ${idx + 1}. ${tr.tool}: ${JSON.stringify(tr.result).slice(0, 60)}...`
+          `    ${idx + 1}. ${tr.tool}: ${JSON.stringify(tr.result).slice(0, 60)}...`,
         );
       });
 
@@ -918,7 +918,7 @@ Use all the appropriate tools and provide a comprehensive financial overview.`;
       expect(allToolResults.length).toBeGreaterThanOrEqual(4); // Multiple executions
 
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed"
+        (e) => e.type === "conversation_completed",
       );
       expect(completedEvent).toBeDefined();
 

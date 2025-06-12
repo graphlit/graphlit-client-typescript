@@ -9,13 +9,15 @@ import {
  */
 export interface OpenAIMessage {
   role: "system" | "user" | "assistant" | "tool";
-  content?: string | Array<{
-    type: "text" | "image_url";
-    text?: string;
-    image_url?: {
-      url: string; // data:image/jpeg;base64,... format
-    };
-  }>;
+  content?:
+    | string
+    | Array<{
+        type: "text" | "image_url";
+        text?: string;
+        image_url?: {
+          url: string; // data:image/jpeg;base64,... format
+        };
+      }>;
   tool_calls?: Array<{
     id: string;
     type: "function";

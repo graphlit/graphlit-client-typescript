@@ -16,7 +16,7 @@ describe("Performance Tests", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping performance tests - missing Graphlit credentials"
+      "⚠️  Skipping performance tests - missing Graphlit credentials",
     );
     return;
   }
@@ -57,7 +57,7 @@ describe("Performance Tests", () => {
   afterAll(async () => {
     // Clean up
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -68,7 +68,7 @@ describe("Performance Tests", () => {
     }
 
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -86,7 +86,7 @@ describe("Performance Tests", () => {
       // Sort by TTFT
       console.log("\n⚡ Fastest Time to First Token (TTFT):");
       const ttftSorted = [...performanceResults].sort(
-        (a, b) => a.ttft - b.ttft
+        (a, b) => a.ttft - b.ttft,
       );
       ttftSorted.slice(0, 5).forEach((result, idx) => {
         console.log(`  ${idx + 1}. ${result.modelName}: ${result.ttft}ms`);
@@ -97,14 +97,14 @@ describe("Performance Tests", () => {
       const tpsSorted = [...performanceResults].sort((a, b) => b.tps - a.tps);
       tpsSorted.slice(0, 5).forEach((result, idx) => {
         console.log(
-          `  ${idx + 1}. ${result.modelName}: ${result.tps.toFixed(2)} TPS`
+          `  ${idx + 1}. ${result.modelName}: ${result.tps.toFixed(2)} TPS`,
         );
       });
 
       // Sort by consistency (lowest p95 delay)
       console.log("\n🎯 Most Consistent (Lowest P95 Inter-Token Delay):");
       const consistencySorted = [...performanceResults].sort(
-        (a, b) => a.p95Delay - b.p95Delay
+        (a, b) => a.p95Delay - b.p95Delay,
       );
       consistencySorted.slice(0, 5).forEach((result, idx) => {
         console.log(`  ${idx + 1}. ${result.modelName}: ${result.p95Delay}ms`);
@@ -117,7 +117,7 @@ describe("Performance Tests", () => {
   // Helper to calculate percentiles
   function calculatePercentile(
     sortedArray: number[],
-    percentile: number
+    percentile: number,
   ): number {
     if (sortedArray.length === 0) return 0;
     const index = Math.ceil((percentile / 100) * sortedArray.length) - 1;
@@ -139,7 +139,7 @@ describe("Performance Tests", () => {
 
         // Create specification
         const createResponse = await client.createSpecification(
-          model.config as Types.SpecificationInput
+          model.config as Types.SpecificationInput,
         );
         const specId = createResponse.createSpecification?.id!;
         createdSpecifications.push(specId);
@@ -187,7 +187,7 @@ describe("Performance Tests", () => {
             }
           },
           undefined,
-          { id: specId }
+          { id: specId },
         );
 
         // Calculate metrics
@@ -279,7 +279,7 @@ describe("Performance Tests", () => {
 
       for (const test of lengthTests) {
         console.log(
-          `\n📝 Testing ~${test.tokens} token response (limit: ${test.tokenLimit})...`
+          `\n📝 Testing ~${test.tokens} token response (limit: ${test.tokenLimit})...`,
         );
 
         // Update specification with new token limit
@@ -322,7 +322,7 @@ describe("Performance Tests", () => {
             }
           },
           undefined,
-          { id: specId }
+          { id: specId },
         );
 
         // Rough token estimate: ~1.3 tokens per word, ~4 chars per word
@@ -337,7 +337,7 @@ describe("Performance Tests", () => {
         });
 
         console.log(
-          `  Target: ${test.tokens}, Actual: ~${estimatedTokens} tokens`
+          `  Target: ${test.tokens}, Actual: ~${estimatedTokens} tokens`,
         );
         console.log(`  Response length: ${finalMessage.length} chars`);
         console.log(`  Message updates: ${messageUpdateCount}`);
@@ -360,7 +360,7 @@ describe("Performance Tests", () => {
           ).toFixed(1);
 
           console.log(
-            `  ${prevMetric.targetTokens} → ${metric.targetTokens} tokens:`
+            `  ${prevMetric.targetTokens} → ${metric.targetTokens} tokens:`,
           );
           console.log(`    TPS change: ${tpsChange}%`);
           console.log(`    TTFT change: ${ttftChange}%`);
@@ -407,7 +407,7 @@ describe("Performance Tests", () => {
 
       for (const concurrency of loadLevels) {
         console.log(
-          `\n🔥 Testing with ${concurrency} concurrent conversations...`
+          `\n🔥 Testing with ${concurrency} concurrent conversations...`,
         );
 
         const conversationMetrics: {
@@ -449,7 +449,7 @@ describe("Performance Tests", () => {
                 }
               },
               undefined,
-              { id: specId }
+              { id: specId },
             );
           } catch (error) {
             console.error(`  ❌ Conversation ${idx + 1} failed:`, error);
@@ -510,7 +510,7 @@ describe("Performance Tests", () => {
           console.log(`    TTFT degradation: +${ttftDegradation}%`);
           console.log(`    TPS degradation: -${tpsDegradation}%`);
           console.log(
-            `    Success rate: ${(result.successRate * 100).toFixed(1)}%`
+            `    Success rate: ${(result.successRate * 100).toFixed(1)}%`,
           );
         }
       });
@@ -558,10 +558,10 @@ describe("Performance Tests", () => {
 
       console.log("📊 Initial memory state:");
       console.log(
-        `  Heap: ${(initialMemory.heapUsed / 1024 / 1024).toFixed(2)} MB`
+        `  Heap: ${(initialMemory.heapUsed / 1024 / 1024).toFixed(2)} MB`,
       );
       console.log(
-        `  External: ${(initialMemory.external / 1024 / 1024).toFixed(2)} MB`
+        `  External: ${(initialMemory.external / 1024 / 1024).toFixed(2)} MB`,
       );
 
       // Have a multi-turn conversation
@@ -589,7 +589,7 @@ describe("Performance Tests", () => {
             }
           },
           conversationId,
-          { id: specId }
+          { id: specId },
         );
 
         // Take memory snapshot after each turn
@@ -601,7 +601,7 @@ describe("Performance Tests", () => {
         });
 
         console.log(
-          `  Heap: ${(memUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`
+          `  Heap: ${(memUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
         );
       }
 
@@ -696,7 +696,7 @@ describe("Performance Tests", () => {
             // Progress indicator every 20 updates
             if (stabilityMetrics.messageUpdates % 20 === 0) {
               console.log(
-                `  📊 Progress: ${stabilityMetrics.messageUpdates} updates received`
+                `  📊 Progress: ${stabilityMetrics.messageUpdates} updates received`,
               );
             }
           } else if (event.type === "error") {
@@ -710,7 +710,7 @@ describe("Performance Tests", () => {
           lastEventTime = currentTime;
         },
         undefined,
-        { id: specId }
+        { id: specId },
       );
 
       // Analyze stability

@@ -1,1 +1,28 @@
 *.graphql
+
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Package files
+package-lock.json
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+.claude/

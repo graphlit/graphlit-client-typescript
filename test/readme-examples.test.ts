@@ -13,7 +13,7 @@ describe("README Examples Validation", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping README examples tests - missing Graphlit credentials"
+      "⚠️  Skipping README examples tests - missing Graphlit credentials",
     );
     return;
   }
@@ -96,7 +96,7 @@ describe("README Examples Validation", () => {
           }
         },
         undefined, // conversationId
-        { id: spec.createSpecification!.id } // specification
+        { id: spec.createSpecification!.id }, // specification
       );
 
       expect(messageReceived).toBe(true);
@@ -135,7 +135,7 @@ describe("README Examples Validation", () => {
           }
         },
         undefined, // conversationId
-        { id: spec.createSpecification!.id } // specification
+        { id: spec.createSpecification!.id }, // specification
       );
 
       expect(responseReceived).toBe(true);
@@ -160,7 +160,7 @@ describe("README Examples Validation", () => {
         "https://arxiv.org/pdf/1706.03762.pdf", // Attention Is All You Need paper
         "AI Research Paper", // name
         undefined, // id
-        true // isSynchronous
+        true, // isSynchronous
       );
 
       expect(content.ingestUri.id).toBeDefined();
@@ -185,7 +185,7 @@ describe("README Examples Validation", () => {
           }
         },
         conversation.createConversation!.id, // conversationId with filter
-        { id: spec.createSpecification!.id } // specification
+        { id: spec.createSpecification!.id }, // specification
       );
 
       expect(responseReceived).toBe(true);
@@ -210,7 +210,7 @@ describe("README Examples Validation", () => {
         "https://en.wikipedia.org/wiki/Artificial_intelligence", // uri
         "AI Wikipedia Page", // name
         undefined, // id
-        true // isSynchronous
+        true, // isSynchronous
       );
 
       expect(webpage.ingestUri.id).toBeDefined();
@@ -228,7 +228,7 @@ describe("README Examples Validation", () => {
       const response = await client.promptAgent(
         "Summarize the key points about AI from this Wikipedia page",
         conversation.createConversation!.id, // conversationId with filter
-        { id: spec.createSpecification!.id } // specification
+        { id: spec.createSpecification!.id }, // specification
       );
 
       expect(response.message).toBeDefined();
@@ -298,7 +298,7 @@ describe("README Examples Validation", () => {
         undefined, // conversationId
         { id: spec.createSpecification!.id }, // specification
         [weatherTool], // tools
-        toolHandlers // handlers
+        toolHandlers, // handlers
       );
 
       expect(toolCalled).toBe(true);
@@ -322,7 +322,7 @@ describe("README Examples Validation", () => {
           for (const url of urls) {
             const content = await this.client.ingestUri(
               url, // uri
-              url.split("/").pop() || "Document" // name
+              url.split("/").pop() || "Document", // name
             );
             createdContentIds.push(content.ingestUri.id);
           }
@@ -344,7 +344,7 @@ describe("README Examples Validation", () => {
             this.conversationId, // Maintains conversation context
             { id: specificationId }, // specification
             undefined, // tools
-            undefined // toolHandlers
+            undefined, // toolHandlers
           );
         }
       }
@@ -373,7 +373,7 @@ describe("README Examples Validation", () => {
       // Ask questions
       await assistant.ask(
         "What is this document about?",
-        spec.createSpecification!.id
+        spec.createSpecification!.id,
       );
 
       // Verify it works
@@ -386,7 +386,7 @@ describe("README Examples Validation", () => {
         "https://arxiv.org/pdf/2103.15348.pdf", // uri
         "Test Document", // name
         undefined, // id
-        true // isSynchronous
+        true, // isSynchronous
       );
 
       expect(document.ingestUri.id).toBeDefined();
@@ -397,7 +397,7 @@ describe("README Examples Validation", () => {
         "Extract the title, authors, and abstract of this paper",
         undefined, // tools
         undefined, // specification
-        { contents: [{ id: document.ingestUri.id }] } // filter
+        { contents: [{ id: document.ingestUri.id }] }, // filter
       );
 
       expect(extraction.extractContents).toBeDefined();
@@ -419,7 +419,7 @@ describe("README Examples Validation", () => {
           url, // uri
           url.split("/").pop() || "Document", // name
           undefined, // id
-          true // isSynchronous
+          true, // isSynchronous
         );
         ids.push(content.ingestUri.id);
         createdContentIds.push(content.ingestUri.id);
@@ -433,7 +433,7 @@ describe("README Examples Validation", () => {
             prompt: "Create an executive summary of these documents",
           },
         ], // summarizations
-        { contents: ids.map((id) => ({ id })) } // filter
+        { contents: ids.map((id) => ({ id })) }, // filter
       );
 
       expect(summary.summarizeContents).toBeDefined();
@@ -446,7 +446,7 @@ describe("README Examples Validation", () => {
         "https://arxiv.org/pdf/2103.15348.pdf", // uri
         undefined, // name
         undefined, // id
-        true // isSynchronous
+        true, // isSynchronous
       );
       console.log("✅ Content ready!");
       expect(content.ingestUri.id).toBeDefined();
@@ -454,7 +454,7 @@ describe("README Examples Validation", () => {
 
       // Option 2: Asynchronous processing (for large files)
       const content2 = await client.ingestUri(
-        "https://arxiv.org/pdf/1706.03762.pdf" // uri
+        "https://arxiv.org/pdf/1706.03762.pdf", // uri
         // isSynchronous defaults to false
       );
       createdContentIds.push(content2.ingestUri.id);
@@ -520,7 +520,7 @@ describe("README Examples Validation", () => {
         undefined,
         undefined,
         true,
-        { id: workflow.createWorkflow!.id }
+        { id: workflow.createWorkflow!.id },
       );
 
       expect(content.ingestUri.id).toBeDefined();
@@ -561,7 +561,7 @@ describe("README Examples Validation", () => {
           }
         },
         undefined,
-        { id: conversationSpec.createSpecification!.id }
+        { id: conversationSpec.createSpecification!.id },
       );
 
       expect(messageReceived).toBe(true);

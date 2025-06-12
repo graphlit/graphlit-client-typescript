@@ -14,7 +14,7 @@ describe("Content and Augmented Filters", () => {
   beforeAll(async () => {
     console.log(
       "DEBUG_GRAPHLIT_STREAMING env var:",
-      process.env.DEBUG_GRAPHLIT_STREAMING
+      process.env.DEBUG_GRAPHLIT_STREAMING,
     );
     client = new Graphlit();
 
@@ -38,7 +38,7 @@ describe("Content and Augmented Filters", () => {
       Types.TextTypes.Plain, // textType
       undefined, // uri
       undefined, // id
-      true // isSynchronous
+      true, // isSynchronous
     );
     contentId1 = content1.ingestText!.id!;
     createdContentIds.push(contentId1);
@@ -50,7 +50,7 @@ describe("Content and Augmented Filters", () => {
       Types.TextTypes.Plain, // textType
       undefined, // uri
       undefined, // id
-      true // isSynchronous
+      true, // isSynchronous
     );
     contentId2 = content2.ingestText!.id!;
     createdContentIds.push(contentId2);
@@ -62,7 +62,7 @@ describe("Content and Augmented Filters", () => {
       Types.TextTypes.Plain, // textType
       undefined, // uri
       undefined, // id
-      true // isSynchronous
+      true, // isSynchronous
     );
     contentId3 = content3.ingestText!.id!;
     createdContentIds.push(contentId3);
@@ -123,7 +123,7 @@ describe("Content and Augmented Filters", () => {
       {
         // Content filter - only France and Italy
         contents: [{ id: contentId1 }, { id: contentId2 }],
-      }
+      },
     );
 
     expect(result.message).toBeDefined();
@@ -154,7 +154,7 @@ describe("Content and Augmented Filters", () => {
       {
         // Augmented filter - force Spain document
         contents: [{ id: contentId3 }],
-      }
+      },
     );
 
     expect(result.message).toBeDefined();
@@ -187,7 +187,7 @@ describe("Content and Augmented Filters", () => {
       {
         // Augmented filter - force Italy into context
         contents: [{ id: contentId2 }],
-      }
+      },
     );
 
     expect(result.message).toBeDefined();
@@ -212,7 +212,7 @@ describe("Content and Augmented Filters", () => {
       {
         Italy: contentId2,
         Spain: contentId3,
-      }
+      },
     );
 
     const prompt =
@@ -226,7 +226,7 @@ describe("Content and Augmented Filters", () => {
         if (event.type === "message_update") {
           streamedMessage = event.message.message; // Replace, don't append
           console.log(
-            `[Test] Message update: "${streamedMessage}" (${streamedMessage.length} chars)`
+            `[Test] Message update: "${streamedMessage}" (${streamedMessage.length} chars)`,
           );
         } else if (event.type === "conversation_started") {
           console.log("Conversation started with ID:", event.conversationId);
@@ -235,7 +235,7 @@ describe("Content and Augmented Filters", () => {
           if (event.message) {
             streamedMessage = event.message.message;
             console.log(
-              `[Test] Final message from completed event: "${streamedMessage}" (${streamedMessage.length} chars)`
+              `[Test] Final message from completed event: "${streamedMessage}" (${streamedMessage.length} chars)`,
             );
           }
         }
@@ -251,7 +251,7 @@ describe("Content and Augmented Filters", () => {
         // Content filter - only Italy and Spain
         contents: [{ id: contentId2 }, { id: contentId3 }],
       },
-      undefined // augmentedFilter
+      undefined, // augmentedFilter
     );
 
     console.log("✅ StreamAgent call completed");
