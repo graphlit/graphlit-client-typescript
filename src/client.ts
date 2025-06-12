@@ -4035,12 +4035,23 @@ class Graphlit {
     // Use the formatted message from formatConversation which already includes
     // all context, RAG results, and conversation history
     if (formattedMessage) {
-      messages.push({
+      const messageToAdd: Types.ConversationMessage = {
         __typename: "ConversationMessage" as const,
         role: formattedMessage.role || Types.ConversationRoleTypes.User,
         message: formattedMessage.message,
         timestamp: formattedMessage.timestamp || new Date().toISOString(),
-      });
+      };
+
+      // Add image data if provided
+      if (mimeType && data) {
+        messageToAdd.mimeType = mimeType;
+        messageToAdd.data = data;
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n🖼️ [Streaming] Adding image data to message: ${mimeType}, ${data.length} chars`);
+        }
+      }
+
+      messages.push(messageToAdd);
     } else {
       throw new Error("No formatted message returned from formatConversation");
     }
@@ -4556,16 +4567,17 @@ class Graphlit {
       toolCalls: Types.ConversationToolCall[]
     ) => void
   ): Promise<void> {
-    if (!OpenAI) {
+    // Check if we have either the OpenAI module or a provided client
+    if (!OpenAI && !this.openaiClient) {
       throw new Error("OpenAI client not available");
     }
 
     // Use provided client or create a new one
     const openaiClient =
       this.openaiClient ||
-      new OpenAI({
+      (OpenAI ? new OpenAI({
         apiKey: process.env.OPENAI_API_KEY || "",
-      });
+      }) : (() => { throw new Error("OpenAI module not available"); })());
 
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n🚀 [Graphlit SDK] Routing to OpenAI streaming provider");
@@ -4598,16 +4610,17 @@ class Graphlit {
       toolCalls: Types.ConversationToolCall[]
     ) => void
   ): Promise<void> {
-    if (!Anthropic) {
+    // Check if we have either the Anthropic module or a provided client
+    if (!Anthropic && !this.anthropicClient) {
       throw new Error("Anthropic client not available");
     }
 
     // Use provided client or create a new one
     const anthropicClient =
       this.anthropicClient ||
-      new Anthropic({
+      (Anthropic ? new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY || "",
-      });
+      }) : (() => { throw new Error("Anthropic module not available"); })());
 
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n🚀 [Graphlit SDK] Routing to Anthropic streaming provider");
@@ -4642,14 +4655,15 @@ class Graphlit {
       toolCalls: Types.ConversationToolCall[]
     ) => void
   ): Promise<void> {
-    if (!GoogleGenerativeAI) {
+    // Check if we have either the Google module or a provided client
+    if (!GoogleGenerativeAI && !this.googleClient) {
       throw new Error("Google GenerativeAI client not available");
     }
 
     // Use provided client or create a new one
     const googleClient =
       this.googleClient ||
-      new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+      (GoogleGenerativeAI ? new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "") : (() => { throw new Error("Google GenerativeAI module not available"); })());
 
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n🚀 [Graphlit SDK] Routing to Google streaming provider");

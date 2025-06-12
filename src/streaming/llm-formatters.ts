@@ -9,7 +9,13 @@ import {
  */
 export interface OpenAIMessage {
   role: "system" | "user" | "assistant" | "tool";
-  content?: string;
+  content?: string | Array<{
+    type: "text" | "image_url";
+    text?: string;
+    image_url?: {
+      url: string; // data:image/jpeg;base64,... format
+    };
+  }>;
   tool_calls?: Array<{
     id: string;
     type: "function";
@@ -29,8 +35,13 @@ export interface AnthropicMessage {
   content:
     | string
     | Array<{
-        type: "text" | "tool_use" | "tool_result";
+        type: "text" | "image" | "tool_use" | "tool_result";
         text?: string;
+        source?: {
+          type: "base64";
+          media_type: string;
+          data: string;
+        };
         id?: string;
         name?: string;
         input?: unknown;
@@ -46,6 +57,10 @@ export interface GoogleMessage {
   role: "user" | "model";
   parts: Array<{
     text?: string;
+    inlineData?: {
+      mimeType: string;
+      data: string; // base64 encoded
+    };
     functionCall?: {
       name: string;
       args: unknown;
@@ -124,10 +139,42 @@ export function formatMessagesForOpenAI(
         break;
 
       default: // User messages
-        formattedMessages.push({
-          role: "user",
-          content: trimmedMessage,
-        });
+        // Check if this message has image data
+        if (message.mimeType && message.data) {
+          // Multi-modal message with image
+          const contentParts: Array<{
+            type: "text" | "image_url";
+            text?: string;
+            image_url?: { url: string };
+          }> = [];
+
+          // Add text content if present
+          if (trimmedMessage) {
+            contentParts.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+
+          // Add image content
+          contentParts.push({
+            type: "image_url",
+            image_url: {
+              url: `data:${message.mimeType};base64,${message.data}`,
+            },
+          });
+
+          formattedMessages.push({
+            role: "user",
+            content: contentParts,
+          });
+        } else {
+          // Text-only message
+          formattedMessages.push({
+            role: "user",
+            content: trimmedMessage,
+          });
+        }
         break;
     }
   }
@@ -207,10 +254,48 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         break;
 
       default: // User messages
-        formattedMessages.push({
-          role: "user",
-          content: trimmedMessage,
-        });
+        // Check if this message has image data
+        if (message.mimeType && message.data) {
+          // Multi-modal message with image
+          const contentParts: Array<{
+            type: "text" | "image" | "tool_use" | "tool_result";
+            text?: string;
+            source?: {
+              type: "base64";
+              media_type: string;
+              data: string;
+            };
+          }> = [];
+
+          // Add text content if present
+          if (trimmedMessage) {
+            contentParts.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+
+          // Add image content
+          contentParts.push({
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: message.mimeType,
+              data: message.data,
+            },
+          });
+
+          formattedMessages.push({
+            role: "user",
+            content: contentParts,
+          });
+        } else {
+          // Text-only message
+          formattedMessages.push({
+            role: "user",
+            content: trimmedMessage,
+          });
+        }
         break;
     }
   }
@@ -228,9 +313,15 @@ export function formatMessagesForGoogle(
   const formattedMessages: GoogleMessage[] = [];
 
   for (const message of messages) {
-    if (!message.role || !message.message?.trim()) continue;
+    if (!message.role) continue;
 
-    const trimmedMessage = message.message.trim();
+    // Allow messages with image data even if they have no text content
+    const hasContent = message.message?.trim();
+    const hasImageData = message.mimeType && message.data;
+
+    if (!hasContent && !hasImageData) continue;
+
+    const trimmedMessage = message.message?.trim() || "";
 
     switch (message.role) {
       case ConversationRoleTypes.System:
@@ -272,10 +363,35 @@ export function formatMessagesForGoogle(
         break;
 
       default: // User messages
-        formattedMessages.push({
-          role: "user",
-          parts: [{ text: trimmedMessage }],
-        });
+        // Check if this message has image data
+        if (message.mimeType && message.data) {
+          // Multi-modal message with image
+          const parts: GoogleMessage["parts"] = [];
+
+          // Add text content if present
+          if (trimmedMessage) {
+            parts.push({ text: trimmedMessage });
+          }
+
+          // Add image content
+          parts.push({
+            inlineData: {
+              mimeType: message.mimeType,
+              data: message.data,
+            },
+          });
+
+          formattedMessages.push({
+            role: "user",
+            parts,
+          });
+        } else {
+          // Text-only message
+          formattedMessages.push({
+            role: "user",
+            parts: [{ text: trimmedMessage }],
+          });
+        }
         break;
     }
   }
