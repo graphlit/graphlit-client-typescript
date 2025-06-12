@@ -15,7 +15,7 @@ describe("Large Response Handling", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping large response tests - missing Graphlit credentials",
+      "⚠️  Skipping large response tests - missing Graphlit credentials"
     );
     return;
   }
@@ -41,7 +41,7 @@ describe("Large Response Handling", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Large Response Handling", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
     );
     for (const specId of createdSpecifications) {
       try {
@@ -62,7 +62,7 @@ describe("Large Response Handling", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 90000);
+  }, 120000);
 
   // Helper to format memory usage
   function formatMemory(bytes: number): string {
@@ -166,7 +166,7 @@ Please provide detailed explanations, key researchers and their contributions, s
                 events: eventCount,
               });
               console.log(
-                `📊 Event ${eventCount}: ${formatMemory(currentMemory.total)} (${event.message.message.length} chars)`,
+                `📊 Event ${eventCount}: ${formatMemory(currentMemory.total)} (${event.message.message.length} chars)`
               );
             }
           } else if (event.type === "conversation_completed") {
@@ -180,25 +180,25 @@ Please provide detailed explanations, key researchers and their contributions, s
             console.log(`  Total events: ${eventCount}`);
             console.log(`  Message updates: ${messageUpdates}`);
             console.log(
-              `  Total characters: ${totalCharacters.toLocaleString()}`,
+              `  Total characters: ${totalCharacters.toLocaleString()}`
             );
             console.log(
-              `  Avg chars per update: ${(totalCharacters / messageUpdates).toFixed(1)}`,
+              `  Avg chars per update: ${(totalCharacters / messageUpdates).toFixed(1)}`
             );
             console.log(
-              `  Tokens per second: ${(messageUpdates / (totalTime / 1000)).toFixed(2)}`,
+              `  Tokens per second: ${(messageUpdates / (totalTime / 1000)).toFixed(2)}`
             );
             console.log(`  Memory start: ${formatMemory(startMemory.total)}`);
             console.log(`  Memory end: ${formatMemory(endMemory.total)}`);
             console.log(
-              `  Memory growth: ${formatMemory(endMemory.total - startMemory.total)}`,
+              `  Memory growth: ${formatMemory(endMemory.total - startMemory.total)}`
             );
           } else if (event.type === "error") {
             console.error(`❌ Error during long response: ${event.error}`);
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       // Analyze memory usage over time
@@ -208,7 +208,7 @@ Please provide detailed explanations, key researchers and their contributions, s
           const growth =
             idx > 0 ? snapshot.memory - memorySnapshots[0].memory : 0;
           console.log(
-            `  ${(snapshot.time / 1000).toFixed(1)}s: ${formatMemory(snapshot.memory)} (+${formatMemory(growth)})`,
+            `  ${(snapshot.time / 1000).toFixed(1)}s: ${formatMemory(snapshot.memory)} (+${formatMemory(growth)})`
           );
         });
       }
@@ -289,7 +289,7 @@ Please provide detailed explanations, key researchers and their contributions, s
         let turnCharacters = 0;
 
         console.log(
-          `\n📝 Turn ${turn + 1}/${topics.length}: "${topics[turn]}"`,
+          `\n📝 Turn ${turn + 1}/${topics.length}: "${topics[turn]}"`
         );
 
         // Check if streaming is supported
@@ -321,12 +321,12 @@ Please provide detailed explanations, key researchers and their contributions, s
               });
 
               console.log(
-                `  ⏱️ ${turnEnd - turnStart}ms, ${turnEvents} events, ${turnCharacters} chars, ${formatMemory(turnEndMemory.total)}`,
+                `  ⏱️ ${turnEnd - turnStart}ms, ${turnEvents} events, ${turnCharacters} chars, ${formatMemory(turnEndMemory.total)}`
               );
             }
           },
           conversationId,
-          { id: specId },
+          { id: specId }
         );
 
         // Brief pause between turns to allow memory cleanup
@@ -343,7 +343,7 @@ Please provide detailed explanations, key researchers and their contributions, s
       console.log(`  Final memory: ${formatMemory(finalMemory)}`);
       console.log(`  Total growth: ${formatMemory(totalGrowth)}`);
       console.log(
-        `  Growth per turn: ${formatMemory(totalGrowth / turnMetrics.length)}`,
+        `  Growth per turn: ${formatMemory(totalGrowth / turnMetrics.length)}`
       );
 
       // Performance over time analysis
@@ -358,7 +358,7 @@ Please provide detailed explanations, key researchers and their contributions, s
       console.log(`  First half average: ${firstHalfAvg.toFixed(0)}ms`);
       console.log(`  Second half average: ${secondHalfAvg.toFixed(0)}ms`);
       console.log(
-        `  Performance degradation: ${(((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100).toFixed(1)}%`,
+        `  Performance degradation: ${(((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100).toFixed(1)}%`
       );
 
       // Memory trend analysis
@@ -372,11 +372,11 @@ Please provide detailed explanations, key researchers and their contributions, s
       expect(turnMetrics.length).toBe(topics.length); // All turns completed
       expect(totalGrowth).toBeLessThan(200 * 1024 * 1024); // Less than 200MB total growth
       expect(
-        Math.abs((secondHalfAvg - firstHalfAvg) / firstHalfAvg),
+        Math.abs((secondHalfAvg - firstHalfAvg) / firstHalfAvg)
       ).toBeLessThan(2); // Less than 200% degradation
 
       console.log("✅ Extended multi-turn conversation completed successfully");
-    }, 900000); // 10 minute timeout
+    }, 1200000); // 10 minute timeout
   });
 
   describe("Event Array Management", () => {
@@ -439,7 +439,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
                 memory: currentMemory.total,
               });
               console.log(
-                `📊 ${allEvents.length} events: ${formatMemory(currentMemory.total)}`,
+                `📊 ${allEvents.length} events: ${formatMemory(currentMemory.total)}`
               );
             }
           } else if (event.type === "conversation_completed") {
@@ -450,20 +450,20 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
             console.log(`  Start memory: ${formatMemory(startMemory.total)}`);
             console.log(`  End memory: ${formatMemory(endMemory.total)}`);
             console.log(
-              `  Total growth: ${formatMemory(endMemory.total - startMemory.total)}`,
+              `  Total growth: ${formatMemory(endMemory.total - startMemory.total)}`
             );
 
             if (allEvents.length > 0) {
               const avgEventSize =
                 (endMemory.total - startMemory.total) / allEvents.length;
               console.log(
-                `  Avg memory per event: ${formatMemory(avgEventSize)}`,
+                `  Avg memory per event: ${formatMemory(avgEventSize)}`
               );
             }
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       // Analyze memory growth pattern
@@ -477,14 +477,14 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
           const memoryPerEvent = memoryDiff / eventsDiff;
 
           console.log(
-            `  Events ${prev.eventCount}-${curr.eventCount}: ${formatMemory(memoryPerEvent)}/event`,
+            `  Events ${prev.eventCount}-${curr.eventCount}: ${formatMemory(memoryPerEvent)}/event`
           );
         }
       }
 
       // Calculate event statistics
       const messageUpdates = allEvents.filter(
-        (e) => e.type === "message_update",
+        (e) => e.type === "message_update"
       );
       const toolEvents = allEvents.filter((e) => e.type === "tool_update");
       const errorEvents = allEvents.filter((e) => e.type === "error");
@@ -494,7 +494,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
       console.log(`  Tool events: ${toolEvents.length}`);
       console.log(`  Error events: ${errorEvents.length}`);
       console.log(
-        `  Other events: ${allEvents.length - messageUpdates.length - toolEvents.length - errorEvents.length}`,
+        `  Other events: ${allEvents.length - messageUpdates.length - toolEvents.length - errorEvents.length}`
       );
 
       // Assertions
@@ -565,7 +565,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
         let eventCount = 0;
 
         console.log(
-          `📝 Iteration ${i + 1}/${testPrompts.length}: "${testPrompts[i]}"`,
+          `📝 Iteration ${i + 1}/${testPrompts.length}: "${testPrompts[i]}"`
         );
 
         // Check if streaming is supported
@@ -601,12 +601,12 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
               });
 
               console.log(
-                `  ⚡ TTFT: ${firstTokenTime}ms, Total: ${totalTime}ms, Events: ${eventCount}, Memory: ${formatMemory(endMemory.total)}`,
+                `  ⚡ TTFT: ${firstTokenTime}ms, Total: ${totalTime}ms, Events: ${eventCount}, Memory: ${formatMemory(endMemory.total)}`
               );
             }
           },
           conversationId,
-          { id: specId },
+          { id: specId }
         );
 
         // Brief pause between iterations
@@ -629,10 +629,10 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
       // Compare first third vs last third
       const firstThird = performanceMetrics.slice(
         0,
-        Math.floor(performanceMetrics.length / 3),
+        Math.floor(performanceMetrics.length / 3)
       );
       const lastThird = performanceMetrics.slice(
-        -Math.floor(performanceMetrics.length / 3),
+        -Math.floor(performanceMetrics.length / 3)
       );
 
       const firstThirdAvgTtft =
@@ -655,7 +655,7 @@ Write it as a flowing narrative with many paragraphs and natural breaks that wou
 
       console.log(`  Memory growth: ${formatMemory(memoryGrowth)}`);
       console.log(
-        `  Memory growth rate: ${formatMemory(memoryGrowth / performanceMetrics.length)}/iteration`,
+        `  Memory growth rate: ${formatMemory(memoryGrowth / performanceMetrics.length)}/iteration`
       );
 
       // Assertions

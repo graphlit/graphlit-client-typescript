@@ -195,23 +195,18 @@ export class UIEventAdapter {
   }
 
   private handleComplete(): void {
-    // Flush any remaining chunks from buffer
-    if (this.chunkBuffer) {
-      const remaining = this.chunkBuffer.flush();
-      this.chunkQueue.push(...remaining);
-    }
-
     // Clear any pending updates
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);
       this.updateTimer = undefined;
     }
 
-    // Immediately flush all queued chunks
-    while (this.chunkQueue.length > 0) {
-      const chunk = this.chunkQueue.shift()!;
-      this.currentMessage += chunk;
+    // DO NOT re-process chunks here - they should already be in currentMessage
+    // Just clear any remaining state
+    if (this.chunkBuffer) {
+      this.chunkBuffer.flush(); // Clear the buffer but don't use the result
     }
+    this.chunkQueue.length = 0; // Clear any remaining queue
 
     this.isStreaming = false;
 

@@ -3677,30 +3677,31 @@ class Graphlit {
       if (process.env.DEBUG_GRAPHLIT_STREAMING) {
         console.log("[supportsStreaming] Checking support for:", {
           serviceType,
-          hasOpenAI: this.openaiClient !== undefined,
-          hasAnthropic: this.anthropicClient !== undefined,
-          hasGoogle: this.googleClient !== undefined,
+          hasOpenAI: OpenAI !== undefined || this.openaiClient !== undefined,
+          hasAnthropic: Anthropic !== undefined || this.anthropicClient !== undefined,
+          hasGoogle: GoogleGenerativeAI !== undefined || this.googleClient !== undefined,
         });
       }
 
       switch (serviceType) {
         case Types.ModelServiceTypes.OpenAi:
-          return this.openaiClient !== undefined;
+          return OpenAI !== undefined || this.openaiClient !== undefined;
         case Types.ModelServiceTypes.Anthropic:
-          return this.anthropicClient !== undefined;
+          return Anthropic !== undefined || this.anthropicClient !== undefined;
         case Types.ModelServiceTypes.Google:
-          return this.googleClient !== undefined;
+          return GoogleGenerativeAI !== undefined || this.googleClient !== undefined;
         default:
           return false;
       }
     }
 
     // If we have no specification, check if any client is available
-    return (
-      this.openaiClient !== undefined ||
-      this.anthropicClient !== undefined ||
-      this.googleClient !== undefined
-    );
+    // Check both module-level SDKs and instance-level clients
+    const hasOpenAI = OpenAI !== undefined || this.openaiClient !== undefined;
+    const hasAnthropic = Anthropic !== undefined || this.anthropicClient !== undefined;
+    const hasGoogle = GoogleGenerativeAI !== undefined || this.googleClient !== undefined;
+
+    return hasOpenAI || hasAnthropic || hasGoogle;
   }
 
   /**
@@ -4012,11 +4013,9 @@ class Graphlit {
     }
 
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
-      console.log("\n📋 [formatConversation] Response:");
-      console.log("Formatted message:", formattedMessage.message);
       console.log(
-        "Full formatConversation response:",
-        JSON.stringify(formatResponse.formatConversation, null, 2)
+        "\n📋 [formatConversation] Response",
+        formattedMessage.message
       );
     }
 
@@ -4058,7 +4057,17 @@ class Graphlit {
       let roundMessage = "";
 
       // Stream with appropriate provider
-      if (serviceType === Types.ModelServiceTypes.OpenAi && OpenAI) {
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.log(`\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}`);
+        console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
+        console.log(`   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`);
+        console.log(`   Google available: ${!!(GoogleGenerativeAI || this.googleClient)}`);
+      }
+
+      if (serviceType === Types.ModelServiceTypes.OpenAi && (OpenAI || this.openaiClient)) {
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n✅ [Streaming] Using OpenAI native streaming (Round ${currentRound})`);
+        }
         const openaiMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_STREAMING) {
           console.log("\n🔍 [OpenAI] Formatted messages being sent to LLM:");
@@ -4075,10 +4084,16 @@ class Graphlit {
             toolCalls = calls;
           }
         );
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n🏁 [Streaming] OpenAI native streaming completed (Round ${currentRound})`);
+        }
       } else if (
         serviceType === Types.ModelServiceTypes.Anthropic &&
-        Anthropic
+        (Anthropic || this.anthropicClient)
       ) {
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n✅ [Streaming] Using Anthropic native streaming (Round ${currentRound})`);
+        }
         const { system, messages: anthropicMessages } =
           formatMessagesForAnthropic(messages);
         if (process.env.DEBUG_GRAPHLIT_STREAMING) {
@@ -4098,10 +4113,16 @@ class Graphlit {
             toolCalls = calls;
           }
         );
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n🏁 [Streaming] Anthropic native streaming completed (Round ${currentRound})`);
+        }
       } else if (
         serviceType === Types.ModelServiceTypes.Google &&
-        GoogleGenerativeAI
+        (GoogleGenerativeAI || this.googleClient)
       ) {
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n✅ [Streaming] Using Google native streaming (Round ${currentRound})`);
+        }
         const googleMessages = formatMessagesForGoogle(messages);
         if (process.env.DEBUG_GRAPHLIT_STREAMING) {
           console.log("\n🔍 [Google] Formatted messages being sent to LLM:");
@@ -4120,8 +4141,16 @@ class Graphlit {
             toolCalls = calls;
           }
         );
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n🏁 [Streaming] Google native streaming completed (Round ${currentRound})`);
+        }
       } else {
         // Fallback to non-streaming
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`);
+          console.log(`   Falling back to non-streaming promptConversation`);
+          console.log(`   This should NOT happen if clients are properly set!`);
+        }
         await this.fallbackToNonStreaming(
           prompt,
           conversationId,
@@ -4132,6 +4161,9 @@ class Graphlit {
           uiAdapter,
           correlationId
         );
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`);
+        }
         break;
       }
 
@@ -4467,6 +4499,14 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     correlationId: string | undefined
   ): Promise<void> {
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log(`\n🔄 [Fallback] Starting non-streaming fallback`);
+      console.log(`   Conversation ID: ${conversationId}`);
+      console.log(`   Specification: ${specification.name} (${specification.serviceType})`);
+      console.log(`   Prompt: "${prompt.substring(0, 100)}${prompt.length > 100 ? '...' : ''}"`);
+      console.log(`   About to call promptConversation...`);
+    }
+
     const response = await this.promptConversation(
       prompt,
       conversationId,
@@ -4480,6 +4520,13 @@ class Graphlit {
     );
 
     const message = response.promptConversation?.message;
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log(`\n✅ [Fallback] promptConversation completed`);
+      console.log(`   Response message length: ${message?.message?.length || 0} chars`);
+      console.log(`   Response preview: "${message?.message?.substring(0, 100) || 'NO MESSAGE'}${(message?.message?.length || 0) > 100 ? '...' : ''}"`);
+      console.log(`   Now simulating streaming by splitting into tokens...`);
+    }
+
     if (message?.message) {
       // Simulate streaming by emitting tokens
       const words = message.message.split(" ");
@@ -4489,6 +4536,10 @@ class Graphlit {
       }
 
       uiAdapter.handleEvent({ type: "message", message: message.message });
+      
+      if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+        console.log(`\n🎯 [Fallback] Completed token simulation (${words.length} tokens)`);
+      }
     }
   }
 
@@ -4515,6 +4566,13 @@ class Graphlit {
       new OpenAI({
         apiKey: process.env.OPENAI_API_KEY || "",
       });
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🚀 [Graphlit SDK] Routing to OpenAI streaming provider");
+      console.log(`  📋 Specification: ${specification.name} (${specification.id})`);
+      console.log(`  📝 Messages: ${messages.length}`);
+      console.log(`  🔧 Tools: ${tools?.length || 0}`);
+    }
 
     await streamWithOpenAI(
       specification,
@@ -4551,6 +4609,14 @@ class Graphlit {
         apiKey: process.env.ANTHROPIC_API_KEY || "",
       });
 
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🚀 [Graphlit SDK] Routing to Anthropic streaming provider");
+      console.log(`  📋 Specification: ${specification.name} (${specification.id})`);
+      console.log(`  📝 Messages: ${messages.length}`);
+      console.log(`  🔧 Tools: ${tools?.length || 0}`);
+      console.log(`  💬 System Prompt: ${systemPrompt ? 'Yes' : 'No'}`);
+    }
+
     await streamWithAnthropic(
       specification,
       messages,
@@ -4584,6 +4650,14 @@ class Graphlit {
     const googleClient =
       this.googleClient ||
       new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n🚀 [Graphlit SDK] Routing to Google streaming provider");
+      console.log(`  📋 Specification: ${specification.name} (${specification.id})`);
+      console.log(`  📝 Messages: ${messages.length}`);
+      console.log(`  🔧 Tools: ${tools?.length || 0}`);
+      console.log(`  💬 System Prompt: ${systemPrompt ? 'Yes' : 'No'}`);
+    }
 
     await streamWithGoogle(
       specification,

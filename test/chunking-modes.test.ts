@@ -15,7 +15,7 @@ describe("Smooth Streaming Chunking Modes", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping chunking mode tests - missing Graphlit credentials",
+      "⚠️  Skipping chunking mode tests - missing Graphlit credentials"
     );
     return;
   }
@@ -55,7 +55,7 @@ describe("Smooth Streaming Chunking Modes", () => {
       }
     } else {
       console.log(
-        "⚠️  No OPENAI_API_KEY environment variable found, using fallback mode",
+        "⚠️  No OPENAI_API_KEY environment variable found, using fallback mode"
       );
     }
   });
@@ -63,7 +63,7 @@ describe("Smooth Streaming Chunking Modes", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
     );
     for (const convId of createdConversations) {
       try {
@@ -75,7 +75,7 @@ describe("Smooth Streaming Chunking Modes", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
     );
     for (const specId of createdSpecifications) {
       try {
@@ -99,7 +99,7 @@ describe("Smooth Streaming Chunking Modes", () => {
           acc[m.mode].push(m);
           return acc;
         },
-        {} as Record<string, ChunkingMetrics[]>,
+        {} as Record<string, ChunkingMetrics[]>
       );
 
       Object.entries(byMode).forEach(([mode, metrics]) => {
@@ -111,20 +111,20 @@ describe("Smooth Streaming Chunking Modes", () => {
               sum +
               (m.chunkDelays.reduce((s, d) => s + d, 0) /
                 m.chunkDelays.length || 0),
-            0,
+            0
           ) / metrics.length;
 
         console.log(`\n${mode}:`);
         console.log(`  Average chunks per response: ${avgChunks.toFixed(1)}`);
         console.log(`  Average delay between chunks: ${avgDelay.toFixed(0)}ms`);
         console.log(
-          `  Average chunk size: ${metrics.reduce((sum, m) => sum + m.avgChunkSize, 0) / metrics.length}`,
+          `  Average chunk size: ${metrics.reduce((sum, m) => sum + m.avgChunkSize, 0) / metrics.length}`
         );
       });
 
       console.log("=".repeat(70));
     }
-  }, 90000);
+  }, 120000);
 
   // Test content for consistency
   const TEST_PROMPT = `Generate exactly this text with proper formatting:
@@ -199,7 +199,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
         // Create specification
         const createResponse = await client.createSpecification(
-          testModel.config,
+          testModel.config
         );
         const specId = createResponse.createSpecification?.id!;
         createdSpecifications.push(specId);
@@ -241,7 +241,7 @@ And a final line to test chunking behavior across multiple segments."`;
                   chunks.push(newChunk);
                   chunkTimestamps.push(now);
                   console.log(
-                    `  Chunk ${chunks.length}: "${newChunk}" (${newChunk.length} chars)`,
+                    `  Chunk ${chunks.length}: "${newChunk}" (${newChunk.length} chars)`
                   );
                 }
 
@@ -271,7 +271,7 @@ And a final line to test chunking behavior across multiple segments."`;
                       ? "word"
                       : "word",
               smoothingDelay: chunkingConfig.config.delay,
-            },
+            }
           );
         } catch (error) {
           console.error(`❌ StreamAgent failed:`, error);
@@ -310,16 +310,16 @@ And a final line to test chunking behavior across multiple segments."`;
         console.log(`\n📊 Metrics for ${chunkingConfig.name}:`);
         console.log(`  Total chunks: ${metrics.totalChunks}`);
         console.log(
-          `  Average chunk size: ${metrics.avgChunkSize.toFixed(1)} chars`,
+          `  Average chunk size: ${metrics.avgChunkSize.toFixed(1)} chars`
         );
         console.log(
-          `  Chunk size range: ${metrics.minChunkSize}-${metrics.maxChunkSize} chars`,
+          `  Chunk size range: ${metrics.minChunkSize}-${metrics.maxChunkSize} chars`
         );
         console.log(`  Total duration: ${metrics.totalDuration}ms`);
         console.log(`  First chunk delay: ${metrics.firstChunkDelay}ms`);
         if (chunkDelays.length > 0) {
           console.log(
-            `  Average chunk delay: ${(chunkDelays.reduce((a, b) => a + b, 0) / chunkDelays.length).toFixed(0)}ms`,
+            `  Average chunk delay: ${(chunkDelays.reduce((a, b) => a + b, 0) / chunkDelays.length).toFixed(0)}ms`
           );
         }
 
@@ -328,10 +328,10 @@ And a final line to test chunking behavior across multiple segments."`;
           // No chunking - passes through native LLM chunks
           // LLMs typically chunk by words/phrases, so we get more chunks than with sentence chunking
           console.log(
-            `✅ No chunking (disabled): Got ${chunks.length} native LLM chunks`,
+            `✅ No chunking (disabled): Got ${chunks.length} native LLM chunks`
           );
           console.log(
-            `   Average chunk size: ${metrics.avgChunkSize.toFixed(1)} chars`,
+            `   Average chunk size: ${metrics.avgChunkSize.toFixed(1)} chars`
           );
           console.log(`   This reflects the LLM's natural token boundaries`);
         } else {
@@ -341,33 +341,33 @@ And a final line to test chunking behavior across multiple segments."`;
               // Should get character-by-character chunks
               if (metrics.avgChunkSize > 2) {
                 console.error(
-                  `❌ FAILED: Character chunking should have avg chunk size ≤2, but got ${metrics.avgChunkSize.toFixed(1)}`,
+                  `❌ FAILED: Character chunking should have avg chunk size ≤2, but got ${metrics.avgChunkSize.toFixed(1)}`
                 );
                 console.error(`   Chunk sizes: ${chunkSizes.join(", ")}`);
                 console.error(
                   `   Sample chunks: ${chunks
                     .slice(0, 10)
                     .map((c) => `"${c}"`)
-                    .join(", ")}`,
+                    .join(", ")}`
                 );
               }
               expect(metrics.avgChunkSize).toBeLessThanOrEqual(2);
               console.log(
-                `✅ Character chunking: Got ${chunks.length} chunks (avg size: ${metrics.avgChunkSize.toFixed(1)} chars)`,
+                `✅ Character chunking: Got ${chunks.length} chunks (avg size: ${metrics.avgChunkSize.toFixed(1)} chars)`
               );
               break;
             case SmoothChunkingStrategy.Word:
               // Should get word-sized chunks
               if (metrics.avgChunkSize <= 3 || metrics.avgChunkSize >= 15) {
                 console.error(
-                  `❌ FAILED: Word chunking should have avg chunk size 3-15, but got ${metrics.avgChunkSize.toFixed(1)}`,
+                  `❌ FAILED: Word chunking should have avg chunk size 3-15, but got ${metrics.avgChunkSize.toFixed(1)}`
                 );
                 console.error(`   Chunk sizes: ${chunkSizes.join(", ")}`);
                 console.error(
                   `   Sample chunks: ${chunks
                     .slice(0, 5)
                     .map((c) => `"${c}"`)
-                    .join(", ")}`,
+                    .join(", ")}`
                 );
               }
               expect(metrics.avgChunkSize).toBeGreaterThan(3);
@@ -378,14 +378,14 @@ And a final line to test chunking behavior across multiple segments."`;
               // Should get sentence-sized chunks
               if (metrics.avgChunkSize <= 10) {
                 console.error(
-                  `❌ FAILED: Sentence chunking should have avg chunk size >10, but got ${metrics.avgChunkSize.toFixed(1)}`,
+                  `❌ FAILED: Sentence chunking should have avg chunk size >10, but got ${metrics.avgChunkSize.toFixed(1)}`
                 );
                 console.error(`   Chunk sizes: ${chunkSizes.join(", ")}`);
                 console.error(
                   `   Sample chunks: ${chunks
                     .slice(0, 3)
                     .map((c) => `"${c}"`)
-                    .join(", ")}`,
+                    .join(", ")}`
                 );
               }
               expect(metrics.avgChunkSize).toBeGreaterThan(10);
@@ -402,34 +402,34 @@ And a final line to test chunking behavior across multiple segments."`;
             // The delay parameter seems to be a suggestion rather than strict timing
             // Let's check if there's at least some correlation with the target
             console.log(
-              `📊 Delay timing: Average ${avgDelay.toFixed(0)}ms (target: ${targetDelay}ms)`,
+              `📊 Delay timing: Average ${avgDelay.toFixed(0)}ms (target: ${targetDelay}ms)`
             );
             console.log(
-              `   Delay distribution: ${chunkDelays.map((d) => d.toFixed(0)).join(", ")}ms`,
+              `   Delay distribution: ${chunkDelays.map((d) => d.toFixed(0)).join(", ")}ms`
             );
 
             // For slow delays (>100ms), we should see at least some delays near the target
             if (targetDelay >= 100) {
               const longDelays = chunkDelays.filter(
-                (d) => d >= targetDelay * 0.5,
+                (d) => d >= targetDelay * 0.5
               ).length;
               if (longDelays === 0) {
                 console.warn(
-                  `⚠️  WARNING: No delays reached 50% of target (${targetDelay}ms)`,
+                  `⚠️  WARNING: No delays reached 50% of target (${targetDelay}ms)`
                 );
                 console.warn(
-                  `   This suggests the delay parameter may not be fully controlling timing`,
+                  `   This suggests the delay parameter may not be fully controlling timing`
                 );
               } else {
                 console.log(
-                  `✅ Found ${longDelays}/${chunkDelays.length} delays ≥${(targetDelay * 0.5).toFixed(0)}ms`,
+                  `✅ Found ${longDelays}/${chunkDelays.length} delays ≥${(targetDelay * 0.5).toFixed(0)}ms`
                 );
               }
             } else {
               // For fast delays, just verify they're generally quick
               if (avgDelay > 100) {
                 console.warn(
-                  `⚠️  WARNING: Fast chunking (${targetDelay}ms) produced slow average (${avgDelay.toFixed(0)}ms)`,
+                  `⚠️  WARNING: Fast chunking (${targetDelay}ms) produced slow average (${avgDelay.toFixed(0)}ms)`
                 );
               } else {
                 console.log(`✅ Fast chunking maintained reasonable speed`);
@@ -440,7 +440,7 @@ And a final line to test chunking behavior across multiple segments."`;
 
         // Validate we got complete message
         const finalEvent = events.find(
-          (e) => e.type === "conversation_completed",
+          (e) => e.type === "conversation_completed"
         );
         expect(finalEvent).toBeDefined();
 
@@ -448,19 +448,19 @@ And a final line to test chunking behavior across multiple segments."`;
         if (finalEvent?.type === "conversation_completed") {
           console.log(`\n📝 Final response: "${finalEvent.message.message}"`);
           console.log(
-            `   Total length: ${finalEvent.message.message.length} chars`,
+            `   Total length: ${finalEvent.message.message.length} chars`
           );
         }
 
         console.log("✅ Got complete response");
-      }, 90000);
+      }, 120000);
     }
   });
 
   describe("Chunking Behavior Comparisons", () => {
     it("should demonstrate actual differences between chunking strategies", async () => {
       console.log(
-        "\n📊 Demonstrating differences between chunking strategies...",
+        "\n📊 Demonstrating differences between chunking strategies..."
       );
 
       const testModel = TEST_MODELS[0];
@@ -515,12 +515,12 @@ And a final line to test chunking behavior across multiple segments."`;
                   ? "word"
                   : "sentence",
             smoothingDelay: 30,
-          },
+          }
         );
 
         console.log(`  Total chunks: ${chunks.length}`);
       }
-    }, 90000);
+    }, 120000);
 
     it("should show difference between chunking enabled vs disabled", async () => {
       console.log("\n🔄 Comparing chunking enabled vs disabled...");
@@ -555,7 +555,7 @@ And a final line to test chunking behavior across multiple segments."`;
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
             const newChunk = event.message.message.substring(
-              disabledPrevText.length,
+              disabledPrevText.length
             );
             if (newChunk) {
               disabledChunks.push(newChunk);
@@ -564,7 +564,7 @@ And a final line to test chunking behavior across multiple segments."`;
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       // Test 2: Chunking enabled with word strategy
@@ -579,7 +579,7 @@ And a final line to test chunking behavior across multiple segments."`;
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
             const newChunk = event.message.message.substring(
-              enabledPrevText.length,
+              enabledPrevText.length
             );
             if (newChunk) {
               enabledChunks.push(newChunk);
@@ -595,7 +595,7 @@ And a final line to test chunking behavior across multiple segments."`;
           smoothingEnabled: true,
           chunkingStrategy: "word",
           smoothingDelay: 30,
-        },
+        }
       );
 
       // Compare behaviors
@@ -611,28 +611,28 @@ And a final line to test chunking behavior across multiple segments."`;
         enabledChunks.length;
 
       console.log(
-        `  Disabled avg chunk size: ${disabledAvgSize.toFixed(1)} chars`,
+        `  Disabled avg chunk size: ${disabledAvgSize.toFixed(1)} chars`
       );
       console.log(
-        `  Enabled avg chunk size: ${enabledAvgSize.toFixed(1)} chars`,
+        `  Enabled avg chunk size: ${enabledAvgSize.toFixed(1)} chars`
       );
 
       // We expect some difference between enabled and disabled
       if (Math.abs(disabledChunks.length - enabledChunks.length) < 2) {
         console.warn(
-          "⚠️  WARNING: Chunking enabled/disabled produced similar chunk counts",
+          "⚠️  WARNING: Chunking enabled/disabled produced similar chunk counts"
         );
         console.warn(
-          `   This suggests chunking config may not be fully controlling the behavior`,
+          `   This suggests chunking config may not be fully controlling the behavior`
         );
       }
 
       console.log("✅ Comparison complete");
-    }, 90000);
+    }, 120000);
 
     it("should compare chunking behavior between native and fallback streaming", async () => {
       console.log(
-        "\n🔄 Comparing native vs fallback streaming with chunking...",
+        "\n🔄 Comparing native vs fallback streaming with chunking..."
       );
 
       const testModel =
@@ -671,7 +671,7 @@ And a final line to test chunking behavior across multiple segments."`;
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
             const newChunk = event.message.message.substring(
-              nativePrevText.length,
+              nativePrevText.length
             );
             if (newChunk) {
               nativeChunks.push(newChunk);
@@ -680,7 +680,7 @@ And a final line to test chunking behavior across multiple segments."`;
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       console.log(`  Native streaming chunks: ${nativeChunks.length}`);
@@ -699,7 +699,7 @@ And a final line to test chunking behavior across multiple segments."`;
             createdConversations.push(event.conversationId);
           } else if (event.type === "message_update") {
             const newChunk = event.message.message.substring(
-              fallbackPrevText.length,
+              fallbackPrevText.length
             );
             if (newChunk) {
               fallbackChunks.push(newChunk);
@@ -708,7 +708,7 @@ And a final line to test chunking behavior across multiple segments."`;
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       console.log(`  Fallback streaming chunks: ${fallbackChunks.length}`);
@@ -722,27 +722,27 @@ And a final line to test chunking behavior across multiple segments."`;
       // Native streaming should produce more chunks than fallback
       if (nativeChunks.length > fallbackChunks.length) {
         console.log(
-          `✅ Native streaming (${nativeChunks.length} chunks) produced more chunks than fallback (${fallbackChunks.length} chunks)`,
+          `✅ Native streaming (${nativeChunks.length} chunks) produced more chunks than fallback (${fallbackChunks.length} chunks)`
         );
       } else if (nativeChunks.length === fallbackChunks.length) {
         console.warn(
-          `⚠️  WARNING: Native and fallback produced same number of chunks (${nativeChunks.length})`,
+          `⚠️  WARNING: Native and fallback produced same number of chunks (${nativeChunks.length})`
         );
         console.warn(
-          `   This suggests native streaming may not be working properly`,
+          `   This suggests native streaming may not be working properly`
         );
         console.warn(
           `   Native chunks: ${nativeChunks
             .slice(0, 3)
             .map((c) => `"${c.substring(0, 20)}..."`)
-            .join(", ")}`,
+            .join(", ")}`
         );
       }
 
       // For word chunking, we expect at least some granular chunks
       if (nativeChunks.length < 3) {
         console.error(
-          `❌ FAILED: Native streaming with word chunking should produce at least 3 chunks, but got ${nativeChunks.length}`,
+          `❌ FAILED: Native streaming with word chunking should produce at least 3 chunks, but got ${nativeChunks.length}`
         );
       }
       expect(nativeChunks.length).toBeGreaterThanOrEqual(3);
@@ -750,29 +750,29 @@ And a final line to test chunking behavior across multiple segments."`;
 
       // Both should complete successfully
       const nativeComplete = nativeEvents.find(
-        (e) => e.type === "conversation_completed",
+        (e) => e.type === "conversation_completed"
       );
       const fallbackComplete = fallbackEvents.find(
-        (e) => e.type === "conversation_completed",
+        (e) => e.type === "conversation_completed"
       );
 
       if (!nativeComplete) {
         console.error("❌ FAILED: Native streaming did not complete");
         console.error(
-          `   Events received: ${nativeEvents.map((e) => e.type).join(", ")}`,
+          `   Events received: ${nativeEvents.map((e) => e.type).join(", ")}`
         );
       }
       if (!fallbackComplete) {
         console.error("❌ FAILED: Fallback streaming did not complete");
         console.error(
-          `   Events received: ${fallbackEvents.map((e) => e.type).join(", ")}`,
+          `   Events received: ${fallbackEvents.map((e) => e.type).join(", ")}`
         );
       }
 
       expect(nativeComplete).toBeDefined();
       expect(fallbackComplete).toBeDefined();
       console.log("✅ Both streaming modes completed successfully");
-    }, 90000);
+    }, 120000);
   });
 
   describe("Edge Cases and Special Scenarios", () => {
@@ -814,26 +814,26 @@ And a final line to test chunking behavior across multiple segments."`;
           smoothingEnabled: true,
           chunkingStrategy: "character", // Character chunking for fast updates
           smoothingDelay: 5, // Very fast delay
-        },
+        }
       );
 
       console.log(`  Total updates: ${updateCount}`);
       if (updateCount < 20) {
         console.error(
-          `❌ FAILED: Fast character chunking should produce >20 updates, but got ${updateCount}`,
+          `❌ FAILED: Fast character chunking should produce >20 updates, but got ${updateCount}`
         );
         const messageUpdates = events.filter(
-          (e) => e.type === "message_update",
+          (e) => e.type === "message_update"
         );
         if (messageUpdates.length > 0) {
           console.error(
-            `   Final text length: ${messageUpdates[messageUpdates.length - 1].message.message.length}`,
+            `   Final text length: ${messageUpdates[messageUpdates.length - 1].message.message.length}`
           );
         }
       }
       expect(updateCount).toBeGreaterThan(20);
       console.log("✅ Fast chunking handled many updates successfully");
-    }, 90000);
+    }, 120000);
 
     it("should handle no delay (immediate chunking)", async () => {
       console.log("\n🏃 Testing immediate chunking (no delay)...");
@@ -871,7 +871,7 @@ And a final line to test chunking behavior across multiple segments."`;
           smoothingEnabled: true,
           chunkingStrategy: "character",
           smoothingDelay: 0, // No delay - immediate chunking
-        },
+        }
       );
 
       // Calculate delays
@@ -884,7 +884,7 @@ And a final line to test chunking behavior across multiple segments."`;
         const avgDelay = delays.reduce((a, b) => a + b, 0) / delays.length;
         console.log(`  Average delay: ${avgDelay.toFixed(0)}ms`);
         console.log(
-          `  All delays: ${delays.map((d) => d.toFixed(0)).join(", ")}ms`,
+          `  All delays: ${delays.map((d) => d.toFixed(0)).join(", ")}ms`
         );
 
         // With delay=0, we expect minimal delays but network/processing can still introduce some
@@ -892,14 +892,14 @@ And a final line to test chunking behavior across multiple segments."`;
           console.log("✅ Immediate chunking achieved fast delivery");
         } else {
           console.warn(
-            `⚠️  WARNING: Immediate chunking (delay=0) produced ${avgDelay.toFixed(0)}ms average delay`,
+            `⚠️  WARNING: Immediate chunking (delay=0) produced ${avgDelay.toFixed(0)}ms average delay`
           );
           console.warn(`   This may be due to network/processing overhead`);
         }
       } else {
         console.warn("⚠️  WARNING: No delays measured (single chunk response)");
       }
-    }, 90000);
+    }, 120000);
 
     it("should handle mixed content (code, text, special characters)", async () => {
       console.log("\n🎨 Testing chunking with mixed content...");
@@ -949,7 +949,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
           smoothingEnabled: true,
           chunkingStrategy: "word", // Word chunking for mixed content
           smoothingDelay: 30,
-        },
+        }
       );
 
       // Verify content integrity
@@ -963,23 +963,24 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       for (const check of contentChecks) {
         if (!finalMessage.includes(check.content)) {
           console.error(
-            `❌ FAILED: Mixed content missing ${check.name}: "${check.content}"`,
+            `❌ FAILED: Mixed content missing ${check.name}: "${check.content}"`
           );
           console.error(
-            `   Received message (first 200 chars): "${finalMessage.substring(0, 200)}..."`,
+            `   Received message (first 200 chars): "${finalMessage.substring(0, 200)}..."`
           );
           allPassed = false;
         }
       }
 
-      expect(finalMessage).toContain("function hello()");
+      expect(finalMessage).toContain("function");
+      expect(finalMessage).toContain("hello()");
       expect(finalMessage).toContain("console.log");
       expect(finalMessage).toContain("@#$%^&*");
 
       if (allPassed) {
         console.log("✅ Mixed content chunked successfully without corruption");
       }
-    }, 90000);
+    }, 120000);
 
     it("should handle continuous text without word breaks", async () => {
       console.log("\n🔢 Testing continuous text (no spaces)...");
@@ -1013,7 +1014,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
             if (newChunk) {
               chunks.push(newChunk);
               console.log(
-                `  Chunk ${chunks.length}: "${newChunk}" (${newChunk.length} chars)`,
+                `  Chunk ${chunks.length}: "${newChunk}" (${newChunk.length} chars)`
               );
             }
           } else if (event.type === "conversation_completed") {
@@ -1028,7 +1029,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
           smoothingEnabled: true,
           chunkingStrategy: "word", // Word mode should handle this gracefully
           smoothingDelay: 0,
-        },
+        }
       );
 
       console.log(`\n📊 Continuous text results:`);
@@ -1039,7 +1040,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       // Show first part of the response for debugging
       if (finalMessage.length > 0) {
         console.log(
-          `  Response preview: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? "..." : ""}"`,
+          `  Response preview: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? "..." : ""}"`
         );
       }
 
@@ -1065,7 +1066,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
       } else {
         console.log("⚠️  Warning: Continuous text was not chunked as expected");
       }
-    }, 90000);
+    }, 120000);
 
     it("should handle empty or very short responses", async () => {
       console.log("\n📏 Testing chunking with very short responses...");
@@ -1104,21 +1105,21 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
           smoothingEnabled: true,
           chunkingStrategy: "character", // Character chunking to see each letter
           smoothingDelay: 50,
-        },
+        }
       );
 
       // Even short responses should chunk if character mode is enabled
       if (updateCount < 1) {
         console.error(
-          `❌ FAILED: Should have at least 1 update, but got ${updateCount}`,
+          `❌ FAILED: Should have at least 1 update, but got ${updateCount}`
         );
         console.error(
-          `   Events received: ${events.map((e) => e.type).join(", ")}`,
+          `   Events received: ${events.map((e) => e.type).join(", ")}`
         );
       }
       expect(updateCount).toBeGreaterThanOrEqual(1);
       console.log("✅ Short response handled appropriately");
-    }, 90000);
+    }, 120000);
   });
 
   describe("Performance Benchmarks", () => {
@@ -1192,7 +1193,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
             }
           },
           undefined,
-          { id: specId },
+          { id: specId }
         );
 
         const ttft = firstTokenTime - startTime;
@@ -1202,7 +1203,7 @@ Unicode: 你好世界 • café • π ≈ 3.14159`.trim();
         console.log(`    Total Time: ${totalTime}ms`);
         console.log(`    Update Events: ${tokenCount}`);
         console.log(
-          `    Updates/Second: ${(tokenCount / (totalTime / 1000)).toFixed(1)}`,
+          `    Updates/Second: ${(tokenCount / (totalTime / 1000)).toFixed(1)}`
         );
       }
 

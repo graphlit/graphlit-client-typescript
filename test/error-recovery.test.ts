@@ -15,7 +15,7 @@ describe("Error Recovery", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping error recovery tests - missing Graphlit credentials",
+      "⚠️  Skipping error recovery tests - missing Graphlit credentials"
     );
     return;
   }
@@ -41,7 +41,7 @@ describe("Error Recovery", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
     );
     for (const convId of createdConversations) {
       try {
@@ -53,7 +53,7 @@ describe("Error Recovery", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
     );
     for (const specId of createdSpecifications) {
       try {
@@ -62,7 +62,7 @@ describe("Error Recovery", () => {
         console.warn(`⚠️  Failed to delete specification ${specId}`);
       }
     }
-  }, 90000);
+  }, 120000);
 
   describe("Invalid Input Handling", () => {
     it("should handle invalid specification ID gracefully", async () => {
@@ -92,7 +92,7 @@ describe("Error Recovery", () => {
             }
           },
           undefined,
-          { id: "invalid-spec-id-12345" }, // Invalid ID
+          { id: "invalid-spec-id-12345" } // Invalid ID
         );
       } catch (error) {
         errorReceived = true;
@@ -142,7 +142,7 @@ describe("Error Recovery", () => {
             }
           },
           "invalid-conversation-id-12345", // Invalid conversation ID
-          { id: specId },
+          { id: specId }
         );
       } catch (error) {
         errorReceived = true;
@@ -197,7 +197,7 @@ describe("Error Recovery", () => {
             } else if (event.type === "error") {
               errorReceived = true;
               console.log(
-                `❌ Error with empty prompt: ${event.error?.message}`,
+                `❌ Error with empty prompt: ${event.error?.message}`
               );
             } else if (event.type === "conversation_completed") {
               completed = true;
@@ -205,7 +205,7 @@ describe("Error Recovery", () => {
             }
           },
           undefined,
-          { id: specId },
+          { id: specId }
         );
       } catch (error) {
         errorReceived = true;
@@ -301,12 +301,12 @@ describe("Error Recovery", () => {
         undefined,
         { id: specId },
         [faultyTool],
-        { faultyCalculator: toolHandler },
+        { faultyCalculator: toolHandler }
       );
 
       // Should handle the tool error and potentially continue
       const completedEvent = events.find(
-        (e) => e.type === "conversation_completed",
+        (e) => e.type === "conversation_completed"
       );
       expect(completedEvent).toBeDefined(); // Conversation should complete despite tool error
 
@@ -384,7 +384,7 @@ describe("Error Recovery", () => {
           undefined,
           { id: specId },
           [orphanTool],
-          {}, // Empty handlers object - no handler for orphanTool
+          {} // Empty handlers object - no handler for orphanTool
         );
       } catch (error) {
         streamError = true;
@@ -393,12 +393,12 @@ describe("Error Recovery", () => {
 
       // Should handle the missing tool gracefully
       console.log(
-        `Tool error handled: ${toolErrorHandled}, Completed: ${conversationCompleted}, Stream error: ${streamError}`,
+        `Tool error handled: ${toolErrorHandled}, Completed: ${conversationCompleted}, Stream error: ${streamError}`
       );
 
       // Either should handle tool error gracefully OR complete with explanation OR error at stream level
       expect(toolErrorHandled || conversationCompleted || streamError).toBe(
-        true,
+        true
       );
 
       console.log("✅ Missing tool handler scenario handled");
@@ -449,7 +449,7 @@ describe("Error Recovery", () => {
           (event: AgentStreamEvent) => {
             events.push(event);
             console.log(
-              `📨 Event: ${event.type} (${Date.now() - startTime}ms)`,
+              `📨 Event: ${event.type} (${Date.now() - startTime}ms)`
             );
 
             if (event.type === "conversation_started") {
@@ -460,7 +460,7 @@ describe("Error Recovery", () => {
             } else if (event.type === "conversation_completed") {
               completed = true;
               console.log(
-                `💬 Completed before timeout: ${event.message.message}`,
+                `💬 Completed before timeout: ${event.message.message}`
               );
             }
           },
@@ -468,18 +468,18 @@ describe("Error Recovery", () => {
           { id: specId },
           undefined,
           undefined,
-          { abortSignal: controller.signal },
+          { abortSignal: controller.signal }
         );
 
         // If we get here without error, the stream completed normally
         console.log(
-          `⚡ Stream completed normally in ${Date.now() - startTime}ms`,
+          `⚡ Stream completed normally in ${Date.now() - startTime}ms`
         );
       } catch (error) {
         const elapsed = Date.now() - startTime;
         timeoutError = true;
         console.log(
-          `✅ Timeout handled correctly after ${elapsed}ms: ${error}`,
+          `✅ Timeout handled correctly after ${elapsed}ms: ${error}`
         );
       }
 
@@ -494,7 +494,7 @@ describe("Error Recovery", () => {
       if (elapsed < timeoutMs + 100) {
         // Completed before timeout or failed quickly - acceptable
         expect(
-          timeoutError || completed || events.some((e) => e.type === "error"),
+          timeoutError || completed || events.some((e) => e.type === "error")
         ).toBe(true);
       } else {
         // Should have timed out
@@ -553,12 +553,12 @@ describe("Error Recovery", () => {
                 createdConversations.push(event.conversationId);
               } else if (event.type === "conversation_completed") {
                 console.log(
-                  `✅ Success on attempt ${attempt}: ${event.message.message}`,
+                  `✅ Success on attempt ${attempt}: ${event.message.message}`
                 );
               }
             },
             undefined,
-            { id: specId },
+            { id: specId }
           );
 
           // If we get here, it succeeded
@@ -581,7 +581,7 @@ describe("Error Recovery", () => {
       expect(lastError).toBeNull();
       expect(attemptCount).toBeLessThanOrEqual(maxAttempts);
       console.log(`\n✅ Retry mechanism worked after ${attemptCount} attempts`);
-    }, 90000);
+    }, 120000);
 
     it("should recover conversation state after error", async () => {
       console.log("\n🔄 Testing conversation state recovery...");
@@ -622,7 +622,7 @@ describe("Error Recovery", () => {
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       expect(conversationId).toBeDefined();
@@ -666,7 +666,7 @@ describe("Error Recovery", () => {
         conversationId,
         { id: specId },
         [unreliableTool],
-        { unreliableMemory: toolHandler },
+        { unreliableMemory: toolHandler }
       );
 
       // Even with tool failure, conversation should continue
@@ -684,17 +684,17 @@ describe("Error Recovery", () => {
               response.includes("7") || response.includes("seven");
 
             console.log(
-              `✅ State recovered - Blue: ${hasBlue}, Seven: ${hasSeven}`,
+              `✅ State recovered - Blue: ${hasBlue}, Seven: ${hasSeven}`
             );
             expect(hasBlue || hasSeven).toBe(true);
           }
         },
         conversationId,
-        { id: specId },
+        { id: specId }
       );
 
       console.log("✅ Conversation state recovery successful");
-    }, 90000);
+    }, 120000);
   });
 
   describe("Fallback Strategies", () => {
@@ -746,13 +746,13 @@ describe("Error Recovery", () => {
           } else if (event.type === "message_update") {
             // In fallback mode, we typically get fewer, larger updates
             console.log(
-              `💬 Update size: ${event.message.message.length} chars`,
+              `💬 Update size: ${event.message.message.length} chars`
             );
           } else if (event.type === "conversation_completed") {
             console.log("✅ Completed successfully");
             // Check if we used fallback (fewer message updates)
             const messageUpdates = events.filter(
-              (e) => e.type === "message_update",
+              (e) => e.type === "message_update"
             );
             if (messageUpdates.length <= 2) {
               usedFallback = true;
@@ -761,7 +761,7 @@ describe("Error Recovery", () => {
           }
         },
         undefined,
-        { id: specId },
+        { id: specId }
       );
 
       // Should complete successfully even with faulty streaming

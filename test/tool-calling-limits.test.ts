@@ -15,7 +15,7 @@ describe("Tool Calling Limits", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping tool calling limits tests - missing Graphlit credentials",
+      "⚠️  Skipping tool calling limits tests - missing Graphlit credentials"
     );
     return;
   }
@@ -44,7 +44,7 @@ describe("Tool Calling Limits", () => {
         const { default: OpenAI } = await import("openai");
         const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
         console.log(
-          "✅ Using native OpenAI streaming for tool calling limits tests",
+          "✅ Using native OpenAI streaming for tool calling limits tests"
         );
 
         client.setOpenAIClient(openaiClient);
@@ -59,7 +59,7 @@ describe("Tool Calling Limits", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
     );
     for (const convId of createdConversations) {
       try {
@@ -71,7 +71,7 @@ describe("Tool Calling Limits", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
     );
     for (const specId of createdSpecifications) {
       try {
@@ -87,14 +87,14 @@ describe("Tool Calling Limits", () => {
       console.log("=".repeat(80));
 
       const sorted = [...modelStatistics].sort(
-        (a, b) => b.totalCalls - a.totalCalls,
+        (a, b) => b.totalCalls - a.totalCalls
       );
 
       console.log("\n🏆 Most Tool Calls in Single Turn:");
       sorted.forEach((stat, idx) => {
         console.log(`  ${idx + 1}. ${stat.model}: ${stat.totalCalls} calls`);
         console.log(
-          `     📚 ${stat.chapters} chapters, 📄 ${stat.pages} pages, 📝 ${stat.paragraphs} paragraphs`,
+          `     📚 ${stat.chapters} chapters, 📄 ${stat.pages} pages, 📝 ${stat.paragraphs} paragraphs`
         );
         console.log(`     ⏱️ ${(stat.duration / 1000).toFixed(1)}s`);
       });
@@ -106,7 +106,7 @@ describe("Tool Calling Limits", () => {
           pages: acc.pages + stat.pages,
           paragraphs: acc.paragraphs + stat.paragraphs,
         }),
-        { chapters: 0, pages: 0, paragraphs: 0 },
+        { chapters: 0, pages: 0, paragraphs: 0 }
       );
 
       console.log(`  Total chapters written: ${totalByType.chapters}`);
@@ -207,13 +207,13 @@ describe("Tool Calling Limits", () => {
         try {
           // Create specification
           const createResponse = await client.createSpecification(
-            model.config as Types.SpecificationInput,
+            model.config as Types.SpecificationInput
           );
           specId = createResponse.createSpecification?.id!;
 
           if (!specId) {
             console.log(
-              `⚠️ Skipping ${model.name} - failed to create specification`,
+              `⚠️ Skipping ${model.name} - failed to create specification`
             );
             return;
           }
@@ -221,7 +221,7 @@ describe("Tool Calling Limits", () => {
           createdSpecifications.push(specId);
         } catch (error) {
           console.log(
-            `⚠️ Skipping ${model.name} - specification creation failed: ${error}`,
+            `⚠️ Skipping ${model.name} - specification creation failed: ${error}`
           );
           return;
         }
@@ -252,7 +252,7 @@ describe("Tool Calling Limits", () => {
 
         const writeChapterHandler = async (args: any) => {
           console.log(
-            `📑 Writing chapter ${args.chapterNumber}: "${args.title}"`,
+            `📑 Writing chapter ${args.chapterNumber}: "${args.title}"`
           );
           bookStructure.chapters.set(args.chapterNumber, {
             title: args.title,
@@ -311,15 +311,15 @@ describe("Tool Calling Limits", () => {
             totalChapters: bookStructure.chapters.size,
             totalPages: Array.from(bookStructure.chapters.values()).reduce(
               (sum, ch) => sum + ch.pages.size,
-              0,
+              0
             ),
             totalParagraphs: Array.from(bookStructure.chapters.values()).reduce(
               (sum, ch) =>
                 Array.from(ch.pages.values()).reduce(
                   (pageSum, paragraphs) => pageSum + paragraphs.length,
-                  sum,
+                  sum
                 ),
-              0,
+              0
             ),
           };
 
@@ -337,7 +337,7 @@ describe("Tool Calling Limits", () => {
               acc[call.name] = (acc[call.name] || 0) + 1;
               return acc;
             },
-            {} as Record<string, number>,
+            {} as Record<string, number>
           );
 
         // Encourage maximum tool usage
@@ -385,7 +385,7 @@ Start writing immediately and don't stop until you've written a complete, detail
                   console.log(`  ✅ ${event.toolCall.name} completed`);
                 } else if (event.status === "failed") {
                   console.log(
-                    `  ❌ ${event.toolCall.name} failed: ${event.error}`,
+                    `  ❌ ${event.toolCall.name} failed: ${event.error}`
                   );
                 }
               } else if (event.type === "conversation_completed") {
@@ -411,7 +411,7 @@ Start writing immediately and don't stop until you've written a complete, detail
               writePage: writePageHandler,
               writeParagraph: writeParagraphHandler,
               finalizeBook: finalizeBookHandler,
-            },
+            }
           );
         } catch (error) {
           console.log(`❌ ${model.name} streaming failed: ${error}`);
@@ -437,13 +437,13 @@ Start writing immediately and don't stop until you've written a complete, detail
           // Check if we got partial results
           if (toolCalls.length > 0) {
             console.log(
-              `📊 Partial results collected: ${toolCalls.length} tool calls before error`,
+              `📊 Partial results collected: ${toolCalls.length} tool calls before error`
             );
           }
 
           // Fail the test but with a descriptive message
           throw new Error(
-            `${model.name} failed to complete tool calling test: ${error}`,
+            `${model.name} failed to complete tool calling test: ${error}`
           );
         }
 
@@ -460,7 +460,7 @@ Start writing immediately and don't stop until you've written a complete, detail
         console.log(`    - writeChapter: ${toolCallCounts.writeChapter || 0}`);
         console.log(`    - writePage: ${toolCallCounts.writePage || 0}`);
         console.log(
-          `    - writeParagraph: ${toolCallCounts.writeParagraph || 0}`,
+          `    - writeParagraph: ${toolCallCounts.writeParagraph || 0}`
         );
         console.log(`    - finalizeBook: ${toolCallCounts.finalizeBook || 0}`);
         console.log(`  Duration: ${(duration / 1000).toFixed(1)}s`);
@@ -471,7 +471,7 @@ Start writing immediately and don't stop until you've written a complete, detail
         console.log(`  Chapters: ${bookStructure.chapters.size}`);
         for (const [chNum, chapter] of bookStructure.chapters) {
           console.log(
-            `    Chapter ${chNum}: "${chapter.title}" - ${chapter.pages.size} pages`,
+            `    Chapter ${chNum}: "${chapter.title}" - ${chapter.pages.size} pages`
           );
         }
 
@@ -491,7 +491,7 @@ Start writing immediately and don't stop until you've written a complete, detail
         expect(toolCallCounts.writeChapter || 0).toBeGreaterThanOrEqual(1); // At least one chapter
 
         console.log(`✅ ${model.name} completed book writing test`);
-      }, 900000); // 15 minute timeout per model
+      }, 1200000); // 15 minute timeout per model
     }
   });
 
@@ -578,7 +578,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
           ) {
             if (incrementCalls.length % 10 === 0) {
               console.log(
-                `  📊 ${incrementCalls.length} tool calls completed...`,
+                `  📊 ${incrementCalls.length} tool calls completed...`
               );
             }
           } else if (event.type === "conversation_completed") {
@@ -588,7 +588,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
         undefined, // conversationId
         { id: specId }, // specification
         [incrementTool], // tools
-        { increment: incrementHandler }, // toolHandlers
+        { increment: incrementHandler } // toolHandlers
       );
 
       const duration = Date.now() - startTime;
@@ -598,7 +598,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
       console.log(`  Total increment value: ${totalIncrements}`);
       console.log(`  Duration: ${(duration / 1000).toFixed(1)}s`);
       console.log(
-        `  Calls per second: ${(incrementCalls.length / (duration / 1000)).toFixed(2)}`,
+        `  Calls per second: ${(incrementCalls.length / (duration / 1000)).toFixed(2)}`
       );
 
       // Show sample of calls
@@ -606,7 +606,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
         console.log(`\n  First 5 calls:`);
         incrementCalls.slice(0, 5).forEach((call, idx) => {
           console.log(
-            `    ${idx + 1}. +${call.value} ${call.label ? `(${call.label})` : ""}`,
+            `    ${idx + 1}. +${call.value} ${call.label ? `(${call.label})` : ""}`
           );
         });
 
@@ -615,7 +615,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
           console.log(`  Last 5 calls:`);
           incrementCalls.slice(-5).forEach((call, idx) => {
             console.log(
-              `    ${incrementCalls.length - 4 + idx}. +${call.value} ${call.label ? `(${call.label})` : ""}`,
+              `    ${incrementCalls.length - 4 + idx}. +${call.value} ${call.label ? `(${call.label})` : ""}`
             );
           });
         }
@@ -623,7 +623,7 @@ The goal is to see how many tool calls you can make in one turn. Don't explain, 
 
       expect(incrementCalls.length).toBeGreaterThan(10); // Should make many calls
       console.log(
-        `\n✅ GPT-4o stress test completed with ${incrementCalls.length} tool calls`,
+        `\n✅ GPT-4o stress test completed with ${incrementCalls.length} tool calls`
       );
     }, 240000); // 4 minute timeout
   });

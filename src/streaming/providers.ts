@@ -36,6 +36,13 @@ export async function streamWithOpenAI(
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+  let lastEventTime = 0;
+  const interTokenDelays: number[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -81,6 +88,10 @@ export async function streamWithOpenAI(
       }));
     }
 
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n⏱️  [OpenAI] Starting LLM call at:", new Date().toISOString());
+    }
+
     const stream = await openaiClient.chat.completions.create(streamConfig);
 
     for await (const chunk of stream) {
@@ -106,11 +117,29 @@ export async function streamWithOpenAI(
 
       if (delta?.content) {
         fullMessage += delta.content;
+        tokenCount++;
+        
+        const currentTime = Date.now();
+        
+        // Track TTFT
+        if (firstTokenTime === 0) {
+          firstTokenTime = currentTime - startTime;
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(`\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`);
+          }
+        }
+        
+        // Track inter-token delays
+        if (lastEventTime > 0) {
+          const delay = currentTime - lastEventTime;
+          interTokenDelays.push(delay);
+        }
+        lastEventTime = currentTime;
+        
         if (process.env.DEBUG_GRAPHLIT_STREAMING) {
           console.log(
-            `[OpenAI] Message accumulated: ${fullMessage.length} chars total`,
+            `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`,
           );
-          console.log(`[OpenAI] Current full message: "${fullMessage}"`);
         }
         onEvent({
           type: "token",
@@ -210,10 +239,31 @@ export async function streamWithOpenAI(
       );
     }
 
+    // Calculate final metrics
+    const totalTime = Date.now() - startTime;
+    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
-      console.log(
-        `[OpenAI] Streaming complete. Final message: "${fullMessage}" (${fullMessage.length} chars)`,
-      );
+      console.log("\n📊 [OpenAI] Performance Metrics:");
+      console.log(`  ⏱️  Total Time: ${totalTime}ms`);
+      console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
+      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      if (interTokenDelays.length > 0) {
+        const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
+        const sortedDelays = [...interTokenDelays].sort((a, b) => a - b);
+        const p50Delay = sortedDelays[Math.floor(sortedDelays.length * 0.5)];
+        const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
+        const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
+        
+        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`  📊 P50 Delay: ${p50Delay}ms`);
+        console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
+        console.log(`  🚨 P99 Delay: ${p99Delay}ms`);
+      }
+      
+      console.log(`\n✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`);
     }
     onComplete(fullMessage, toolCalls);
   } catch (error) {
@@ -239,6 +289,13 @@ export async function streamWithAnthropic(
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+  let lastEventTime = 0;
+  const interTokenDelays: number[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -284,6 +341,10 @@ export async function streamWithAnthropic(
       }));
     }
 
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n⏱️  [Anthropic] Starting LLM call at:", new Date().toISOString());
+    }
+
     const stream = await anthropicClient.messages.create(streamConfig);
 
     let activeContentBlock = false;
@@ -314,10 +375,31 @@ export async function streamWithAnthropic(
         }
       } else if (chunk.type === "content_block_delta") {
         if (chunk.delta.type === "text_delta") {
-          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
-            console.log(`[Anthropic] Text delta: "${chunk.delta.text}"`);
-          }
           fullMessage += chunk.delta.text;
+          tokenCount++;
+          
+          const currentTime = Date.now();
+          
+          // Track TTFT
+          if (firstTokenTime === 0) {
+            firstTokenTime = currentTime - startTime;
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(`\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`);
+            }
+          }
+          
+          // Track inter-token delays
+          if (lastEventTime > 0) {
+            const delay = currentTime - lastEventTime;
+            interTokenDelays.push(delay);
+          }
+          lastEventTime = currentTime;
+          
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(
+              `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`,
+            );
+          }
           onEvent({
             type: "token",
             token: chunk.delta.text,
@@ -449,6 +531,33 @@ export async function streamWithAnthropic(
       );
     }
 
+    // Calculate final metrics
+    const totalTime = Date.now() - startTime;
+    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n📊 [Anthropic] Performance Metrics:");
+      console.log(`  ⏱️  Total Time: ${totalTime}ms`);
+      console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
+      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      if (interTokenDelays.length > 0) {
+        const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
+        const sortedDelays = [...interTokenDelays].sort((a, b) => a - b);
+        const p50Delay = sortedDelays[Math.floor(sortedDelays.length * 0.5)];
+        const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
+        const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
+        
+        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`  📊 P50 Delay: ${p50Delay}ms`);
+        console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
+        console.log(`  🚨 P99 Delay: ${p99Delay}ms`);
+      }
+      
+      console.log(`\n✅ [Anthropic] Final message (${fullMessage.length} chars): "${fullMessage}"`);
+    }
+    
     onComplete(fullMessage, validToolCalls);
   } catch (error) {
     onEvent({
@@ -474,6 +583,13 @@ export async function streamWithGoogle(
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+  let lastEventTime = 0;
+  const interTokenDelays: number[] = [];
 
   try {
     const modelName = getModelName(specification);
@@ -731,6 +847,33 @@ export async function streamWithGoogle(
       );
     }
 
+    // Calculate final metrics
+    const totalTime = Date.now() - startTime;
+    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    
+    if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+      console.log("\n📊 [Google] Performance Metrics:");
+      console.log(`  ⏱️  Total Time: ${totalTime}ms`);
+      console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
+      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      if (interTokenDelays.length > 0) {
+        const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
+        const sortedDelays = [...interTokenDelays].sort((a, b) => a - b);
+        const p50Delay = sortedDelays[Math.floor(sortedDelays.length * 0.5)];
+        const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
+        const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
+        
+        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`  📊 P50 Delay: ${p50Delay}ms`);
+        console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
+        console.log(`  🚨 P99 Delay: ${p99Delay}ms`);
+      }
+      
+      console.log(`\n✅ [Google] Final message (${fullMessage.length} chars): "${fullMessage}"`);
+    }
+    
     onComplete(fullMessage, toolCalls);
   } catch (error) {
     onEvent({
