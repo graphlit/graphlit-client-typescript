@@ -267,10 +267,7 @@ export async function streamWithOpenAI(
     }
     onComplete(fullMessage, toolCalls);
   } catch (error) {
-    onEvent({
-      type: "error",
-      error: error instanceof Error ? error.message : "OpenAI streaming failed",
-    });
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
@@ -560,11 +557,7 @@ export async function streamWithAnthropic(
     
     onComplete(fullMessage, validToolCalls);
   } catch (error) {
-    onEvent({
-      type: "error",
-      error:
-        error instanceof Error ? error.message : "Anthropic streaming failed",
-    });
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
@@ -876,10 +869,7 @@ export async function streamWithGoogle(
     
     onComplete(fullMessage, toolCalls);
   } catch (error) {
-    onEvent({
-      type: "error",
-      error: error instanceof Error ? error.message : "Google streaming failed",
-    });
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
