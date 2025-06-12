@@ -3664,7 +3664,6 @@ class Graphlit {
    * Creates an event handler that supports UI streaming mode
    * @internal
    */
-
   /**
    * Check if streaming is supported with the current configuration
    * @param specification - Optional specification to check compatibility
@@ -3678,29 +3677,30 @@ class Graphlit {
       if (process.env.DEBUG_GRAPHLIT_STREAMING) {
         console.log("[supportsStreaming] Checking support for:", {
           serviceType,
-          hasOpenAI: OpenAI !== undefined,
-          hasAnthropic: Anthropic !== undefined,
-          hasGoogle: GoogleGenerativeAI !== undefined,
+          hasOpenAI: this.openaiClient !== undefined,
+          hasAnthropic: this.anthropicClient !== undefined,
+          hasGoogle: this.googleClient !== undefined,
         });
       }
 
       switch (serviceType) {
         case Types.ModelServiceTypes.OpenAi:
-          return OpenAI !== undefined;
+          return this.openaiClient !== undefined;
         case Types.ModelServiceTypes.Anthropic:
-          return Anthropic !== undefined;
+          return this.anthropicClient !== undefined;
         case Types.ModelServiceTypes.Google:
-          return GoogleGenerativeAI !== undefined;
+          return this.googleClient !== undefined;
         default:
           return false;
       }
     }
 
-    // If we have no specification, check if OpenAI client is available
-    // We default to OpenAI GPT-4o if no specification provider.
-    const hasOpenAI = OpenAI !== undefined;
-
-    return hasOpenAI;
+    // If we have no specification, check if any client is available
+    return (
+      this.openaiClient !== undefined ||
+      this.anthropicClient !== undefined ||
+      this.googleClient !== undefined
+    );
   }
 
   /**
