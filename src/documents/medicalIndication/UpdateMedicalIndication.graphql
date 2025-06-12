@@ -1,6 +1,4 @@
-mutation UpdateMedicalIndication(
-  $medicalIndication: MedicalIndicationUpdateInput!
-) {
+mutation UpdateMedicalIndication($medicalIndication: MedicalIndicationUpdateInput!) {
   updateMedicalIndication(medicalIndication: $medicalIndication) {
     id
     name

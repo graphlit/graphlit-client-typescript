@@ -1,13 +1,5 @@
-mutation DeleteAllContents(
-  $filter: ContentFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllContents(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllContents($filter: ContentFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllContents(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }

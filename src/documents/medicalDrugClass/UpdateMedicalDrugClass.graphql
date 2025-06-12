@@ -1,6 +1,4 @@
-mutation UpdateMedicalDrugClass(
-  $medicalDrugClass: MedicalDrugClassUpdateInput!
-) {
+mutation UpdateMedicalDrugClass($medicalDrugClass: MedicalDrugClassUpdateInput!) {
   updateMedicalDrugClass(medicalDrugClass: $medicalDrugClass) {
     id
     name

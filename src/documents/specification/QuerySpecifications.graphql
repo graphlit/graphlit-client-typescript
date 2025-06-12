@@ -1,7 +1,4 @@
-query QuerySpecifications(
-  $filter: SpecificationFilter
-  $correlationId: String
-) {
+query QuerySpecifications($filter: SpecificationFilter, $correlationId: String) {
   specifications(filter: $filter, correlationId: $correlationId) {
     results {
       id

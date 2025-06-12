@@ -1,15 +1,5 @@
-mutation DescribeImage(
-  $prompt: String!
-  $uri: URL!
-  $specification: EntityReferenceInput
-  $correlationId: String
-) {
-  describeImage(
-    prompt: $prompt
-    uri: $uri
-    specification: $specification
-    correlationId: $correlationId
-  ) {
+mutation DescribeImage($prompt: String!, $uri: URL!, $specification: EntityReferenceInput, $correlationId: String) {
+  describeImage(prompt: $prompt, uri: $uri, specification: $specification, correlationId: $correlationId) {
     role
     author
     message
@@ -42,6 +32,7 @@ mutation DescribeImage(
         posts
         chapters
         questions
+        quotes
         video {
           width
           height

@@ -1,13 +1,5 @@
-mutation DeleteAllLabels(
-  $filter: LabelFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllLabels(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllLabels($filter: LabelFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllLabels(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }

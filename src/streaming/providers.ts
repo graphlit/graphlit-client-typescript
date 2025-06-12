@@ -40,9 +40,23 @@ export async function streamWithOpenAI(
   // Performance metrics
   const startTime = Date.now();
   let firstTokenTime = 0;
+  let firstMeaningfulContentTime = 0;
   let tokenCount = 0;
+  let toolArgumentTokens = 0;
   let lastEventTime = 0;
   const interTokenDelays: number[] = [];
+  
+  // Tool calling metrics
+  const toolMetrics = {
+    totalTools: 0,
+    successfulTools: 0,
+    failedTools: 0,
+    toolTimes: [] as { name: string; startTime: number; argumentBuildTime: number; totalTime: number }[],
+    currentToolStart: 0,
+    roundStartTime: startTime,
+    rounds: [] as { roundNumber: number; llmTime: number; toolTime: number; toolCount: number }[],
+    currentRound: 1
+  };
 
   try {
     const modelName = getModelName(specification);
@@ -121,11 +135,19 @@ export async function streamWithOpenAI(
         
         const currentTime = Date.now();
         
-        // Track TTFT
+        // Track TTFT (first token regardless of type)
         if (firstTokenTime === 0) {
           firstTokenTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_STREAMING) {
             console.log(`\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`);
+          }
+        }
+        
+        // Track first meaningful content (excludes tool calls)
+        if (firstMeaningfulContentTime === 0 && delta.content.trim()) {
+          firstMeaningfulContentTime = currentTime - startTime;
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(`\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
           }
         }
         
@@ -158,6 +180,24 @@ export async function streamWithOpenAI(
               name: "",
               arguments: "",
             };
+            
+            // Track tool metrics
+            toolMetrics.totalTools++;
+            toolMetrics.currentToolStart = Date.now();
+            toolMetrics.toolTimes.push({
+              name: toolCallDelta.function?.name || "unknown",
+              startTime: toolMetrics.currentToolStart,
+              argumentBuildTime: 0,
+              totalTime: 0
+            });
+            
+            // Track TTFT for first tool if no content yet
+            if (firstTokenTime === 0) {
+              firstTokenTime = Date.now() - startTime;
+              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                console.log(`\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`);
+              }
+            }
 
             if (process.env.DEBUG_GRAPHLIT_STREAMING) {
               console.log(
@@ -183,6 +223,9 @@ export async function streamWithOpenAI(
 
           if (toolCallDelta.function?.arguments) {
             toolCalls[index].arguments += toolCallDelta.function.arguments;
+            
+            // Count tool argument tokens (rough estimate: ~4 chars per token)
+            toolArgumentTokens += Math.ceil(toolCallDelta.function.arguments.length / 4);
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_STREAMING) {
@@ -204,22 +247,38 @@ export async function streamWithOpenAI(
       }
     }
 
-    // Emit complete events for tool calls
-    for (const toolCall of toolCalls) {
+    // Emit complete events for tool calls and finalize metrics
+    for (let i = 0; i < toolCalls.length; i++) {
+      const toolCall = toolCalls[i];
+      const currentTime = Date.now();
+      
+      // Update tool metrics
+      if (i < toolMetrics.toolTimes.length) {
+        const toolTime = toolMetrics.toolTimes[i];
+        toolTime.argumentBuildTime = currentTime - toolTime.startTime;
+        toolTime.totalTime = toolTime.argumentBuildTime; // For streaming, this is the same
+        toolTime.name = toolCall.name; // Update with final name
+      }
+      
+      // Track tool success/failure
+      try {
+        JSON.parse(toolCall.arguments);
+        toolMetrics.successfulTools++;
+        
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(`[OpenAI] ✅ Valid JSON for ${toolCall.name}`);
+        }
+      } catch (e) {
+        toolMetrics.failedTools++;
+        console.error(`[OpenAI] ❌ Invalid JSON for ${toolCall.name}: ${e}`);
+      }
+      
       // Log the final JSON for debugging
       if (process.env.DEBUG_GRAPHLIT_STREAMING) {
         console.log(
           `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
         );
         console.log(toolCall.arguments);
-
-        // Validate JSON
-        try {
-          JSON.parse(toolCall.arguments);
-          console.log(`[OpenAI] ✅ Valid JSON for ${toolCall.name}`);
-        } catch (e) {
-          console.error(`[OpenAI] ❌ Invalid JSON for ${toolCall.name}: ${e}`);
-        }
       }
 
       onEvent({
@@ -239,16 +298,61 @@ export async function streamWithOpenAI(
       );
     }
 
-    // Calculate final metrics
+    // Calculate final metrics including tool calling insights
     const totalTime = Date.now() - startTime;
-    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    const totalTokens = tokenCount + toolArgumentTokens;
+    const tokensPerSecond = totalTokens > 0 ? totalTokens / (totalTime / 1000) : 0;
+    
+    // Finalize round metrics
+    if (toolCalls.length > 0) {
+      const roundEndTime = Date.now();
+      const totalToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0);
+      const llmTime = totalTime - totalToolTime;
+      
+      toolMetrics.rounds.push({
+        roundNumber: toolMetrics.currentRound,
+        llmTime: llmTime,
+        toolTime: totalToolTime,
+        toolCount: toolCalls.length
+      });
+    }
     
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n📊 [OpenAI] Performance Metrics:");
       console.log(`  ⏱️  Total Time: ${totalTime}ms`);
       console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
-      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      
+      if (firstMeaningfulContentTime > 0) {
+        console.log(`  🎯 Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
+      }
+      
+      console.log(`  📈 Content Tokens: ${tokenCount}`);
+      console.log(`  🔧 Tool Argument Tokens: ${toolArgumentTokens}`);
+      console.log(`  📊 Total Tokens: ${totalTokens}`);
       console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      // Tool calling metrics
+      if (toolCalls.length > 0) {
+        console.log(`\n🔧 [OpenAI] Tool Calling Metrics:`);
+        console.log(`  🛠️  Total Tools Called: ${toolMetrics.totalTools}`);
+        console.log(`  ✅ Successful Tools: ${toolMetrics.successfulTools}`);
+        console.log(`  ❌ Failed Tools: ${toolMetrics.failedTools}`);
+        console.log(`  📊 Success Rate: ${((toolMetrics.successfulTools / toolMetrics.totalTools) * 100).toFixed(1)}%`);
+        
+        // Tool timing details
+        toolMetrics.toolTimes.forEach((tool, idx) => {
+          console.log(`  🔨 Tool ${idx + 1} (${tool.name}): ${tool.argumentBuildTime}ms`);
+        });
+        
+        const avgToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0) / toolMetrics.toolTimes.length;
+        console.log(`  ⏱️  Average Tool Time: ${avgToolTime.toFixed(2)}ms`);
+        
+        // Round metrics
+        toolMetrics.rounds.forEach(round => {
+          const efficiency = round.toolCount > 0 ? (round.llmTime / (round.llmTime + round.toolTime) * 100).toFixed(1) : 100;
+          console.log(`  🔄 Round ${round.roundNumber}: LLM=${round.llmTime}ms, Tools=${round.toolTime}ms (${round.toolCount} tools), Efficiency=${efficiency}%`);
+        });
+      }
       
       if (interTokenDelays.length > 0) {
         const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
@@ -257,7 +361,8 @@ export async function streamWithOpenAI(
         const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
         
-        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`\n⏳ [OpenAI] Inter-Token Timing:`);
+        console.log(`  📊 Average Delay: ${avgDelay.toFixed(2)}ms`);
         console.log(`  📊 P50 Delay: ${p50Delay}ms`);
         console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
         console.log(`  🚨 P99 Delay: ${p99Delay}ms`);
@@ -290,9 +395,23 @@ export async function streamWithAnthropic(
   // Performance metrics
   const startTime = Date.now();
   let firstTokenTime = 0;
+  let firstMeaningfulContentTime = 0;
   let tokenCount = 0;
+  let toolArgumentTokens = 0;
   let lastEventTime = 0;
   const interTokenDelays: number[] = [];
+  
+  // Tool calling metrics
+  const toolMetrics = {
+    totalTools: 0,
+    successfulTools: 0,
+    failedTools: 0,
+    toolTimes: [] as { name: string; startTime: number; argumentBuildTime: number; totalTime: number }[],
+    currentToolStart: 0,
+    roundStartTime: startTime,
+    rounds: [] as { roundNumber: number; llmTime: number; toolTime: number; toolCount: number }[],
+    currentRound: 1
+  };
 
   try {
     const modelName = getModelName(specification);
@@ -361,6 +480,24 @@ export async function streamWithAnthropic(
             arguments: "",
           };
           toolCalls.push(toolCall);
+          
+          // Track tool metrics
+          toolMetrics.totalTools++;
+          toolMetrics.currentToolStart = Date.now();
+          toolMetrics.toolTimes.push({
+            name: toolCall.name,
+            startTime: toolMetrics.currentToolStart,
+            argumentBuildTime: 0,
+            totalTime: 0
+          });
+          
+          // Track TTFT for first tool if no content yet
+          if (firstTokenTime === 0) {
+            firstTokenTime = Date.now() - startTime;
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(`\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`);
+            }
+          }
 
           onEvent({
             type: "tool_call_start",
@@ -377,11 +514,19 @@ export async function streamWithAnthropic(
           
           const currentTime = Date.now();
           
-          // Track TTFT
+          // Track TTFT (first token regardless of type)
           if (firstTokenTime === 0) {
             firstTokenTime = currentTime - startTime;
             if (process.env.DEBUG_GRAPHLIT_STREAMING) {
               console.log(`\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`);
+            }
+          }
+          
+          // Track first meaningful content (excludes tool calls)
+          if (firstMeaningfulContentTime === 0 && chunk.delta.text.trim()) {
+            firstMeaningfulContentTime = currentTime - startTime;
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(`\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
             }
           }
           
@@ -406,6 +551,9 @@ export async function streamWithAnthropic(
           const currentTool = toolCalls[toolCalls.length - 1];
           if (currentTool) {
             currentTool.arguments += chunk.delta.partial_json;
+            
+            // Count tool argument tokens (rough estimate: ~4 chars per token)
+            toolArgumentTokens += Math.ceil(chunk.delta.partial_json.length / 4);
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_STREAMING) {
@@ -429,6 +577,30 @@ export async function streamWithAnthropic(
         // Tool call complete
         const currentTool = toolCalls[toolCalls.length - 1];
         if (currentTool) {
+          const currentTime = Date.now();
+          
+          // Update tool metrics
+          const toolIndex = toolCalls.length - 1;
+          if (toolIndex < toolMetrics.toolTimes.length) {
+            const toolTime = toolMetrics.toolTimes[toolIndex];
+            toolTime.argumentBuildTime = currentTime - toolTime.startTime;
+            toolTime.totalTime = toolTime.argumentBuildTime;
+            toolTime.name = currentTool.name;
+          }
+          
+          // Track tool success/failure
+          try {
+            JSON.parse(currentTool.arguments);
+            toolMetrics.successfulTools++;
+            
+            if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+              console.log(`[Anthropic] ✅ Valid JSON for ${currentTool.name}`);
+            }
+          } catch (e) {
+            toolMetrics.failedTools++;
+            console.error(`[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`);
+          }
+          
           // Log the final JSON for debugging
           if (
             process.env.DEBUG_GRAPHLIT_STREAMING ||
@@ -447,20 +619,6 @@ export async function streamWithAnthropic(
             ) {
               console.warn(
                 `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`,
-              );
-            }
-
-            // Validate JSON
-            try {
-              JSON.parse(currentTool.arguments);
-              if (process.env.DEBUG_GRAPHLIT_STREAMING) {
-                console.log(
-                  `[Anthropic] ✅ Valid JSON for ${currentTool.name}`,
-                );
-              }
-            } catch (e) {
-              console.error(
-                `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`,
               );
             }
           }
@@ -528,16 +686,61 @@ export async function streamWithAnthropic(
       );
     }
 
-    // Calculate final metrics
+    // Calculate final metrics including tool calling insights
     const totalTime = Date.now() - startTime;
-    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    const totalTokens = tokenCount + toolArgumentTokens;
+    const tokensPerSecond = totalTokens > 0 ? totalTokens / (totalTime / 1000) : 0;
+    
+    // Finalize round metrics
+    if (validToolCalls.length > 0) {
+      const roundEndTime = Date.now();
+      const totalToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0);
+      const llmTime = totalTime - totalToolTime;
+      
+      toolMetrics.rounds.push({
+        roundNumber: toolMetrics.currentRound,
+        llmTime: llmTime,
+        toolTime: totalToolTime,
+        toolCount: validToolCalls.length
+      });
+    }
     
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n📊 [Anthropic] Performance Metrics:");
       console.log(`  ⏱️  Total Time: ${totalTime}ms`);
       console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
-      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      
+      if (firstMeaningfulContentTime > 0) {
+        console.log(`  🎯 Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
+      }
+      
+      console.log(`  📈 Content Tokens: ${tokenCount}`);
+      console.log(`  🔧 Tool Argument Tokens: ${toolArgumentTokens}`);
+      console.log(`  📊 Total Tokens: ${totalTokens}`);
       console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      // Tool calling metrics
+      if (validToolCalls.length > 0) {
+        console.log(`\n🔧 [Anthropic] Tool Calling Metrics:`);
+        console.log(`  🛠️  Total Tools Called: ${toolMetrics.totalTools}`);
+        console.log(`  ✅ Successful Tools: ${toolMetrics.successfulTools}`);
+        console.log(`  ❌ Failed Tools: ${toolMetrics.failedTools}`);
+        console.log(`  📊 Success Rate: ${((toolMetrics.successfulTools / toolMetrics.totalTools) * 100).toFixed(1)}%`);
+        
+        // Tool timing details
+        toolMetrics.toolTimes.forEach((tool, idx) => {
+          console.log(`  🔨 Tool ${idx + 1} (${tool.name}): ${tool.argumentBuildTime}ms`);
+        });
+        
+        const avgToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0) / toolMetrics.toolTimes.length;
+        console.log(`  ⏱️  Average Tool Time: ${avgToolTime.toFixed(2)}ms`);
+        
+        // Round metrics
+        toolMetrics.rounds.forEach(round => {
+          const efficiency = round.toolCount > 0 ? (round.llmTime / (round.llmTime + round.toolTime) * 100).toFixed(1) : 100;
+          console.log(`  🔄 Round ${round.roundNumber}: LLM=${round.llmTime}ms, Tools=${round.toolTime}ms (${round.toolCount} tools), Efficiency=${efficiency}%`);
+        });
+      }
       
       if (interTokenDelays.length > 0) {
         const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
@@ -546,7 +749,8 @@ export async function streamWithAnthropic(
         const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
         
-        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`\n⏳ [Anthropic] Inter-Token Timing:`);
+        console.log(`  📊 Average Delay: ${avgDelay.toFixed(2)}ms`);
         console.log(`  📊 P50 Delay: ${p50Delay}ms`);
         console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
         console.log(`  🚨 P99 Delay: ${p99Delay}ms`);
@@ -580,9 +784,23 @@ export async function streamWithGoogle(
   // Performance metrics
   const startTime = Date.now();
   let firstTokenTime = 0;
+  let firstMeaningfulContentTime = 0;
   let tokenCount = 0;
+  let toolArgumentTokens = 0;
   let lastEventTime = 0;
   const interTokenDelays: number[] = [];
+  
+  // Tool calling metrics
+  const toolMetrics = {
+    totalTools: 0,
+    successfulTools: 0,
+    failedTools: 0,
+    toolTimes: [] as { name: string; startTime: number; argumentBuildTime: number; totalTime: number }[],
+    currentToolStart: 0,
+    roundStartTime: startTime,
+    rounds: [] as { roundNumber: number; llmTime: number; toolTime: number; toolCount: number }[],
+    currentRound: 1
+  };
 
   try {
     const modelName = getModelName(specification);
@@ -672,6 +890,26 @@ export async function streamWithGoogle(
 
       if (text) {
         fullMessage += text;
+        tokenCount++;
+        
+        const currentTime = Date.now();
+        
+        // Track TTFT (first token regardless of type)
+        if (firstTokenTime === 0) {
+          firstTokenTime = currentTime - startTime;
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(`\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`);
+          }
+        }
+        
+        // Track first meaningful content
+        if (firstMeaningfulContentTime === 0 && text.trim()) {
+          firstMeaningfulContentTime = currentTime - startTime;
+          if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+            console.log(`\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
+          }
+        }
+        
         onEvent({
           type: "token",
           token: text,
@@ -701,6 +939,26 @@ export async function streamWithGoogle(
                 arguments: JSON.stringify(part.functionCall.args || {}),
               };
               toolCalls.push(toolCall);
+              
+              // Track tool metrics
+              toolMetrics.totalTools++;
+              const argumentString = JSON.stringify(part.functionCall.args || {});
+              toolArgumentTokens += Math.ceil(argumentString.length / 4);
+              
+              toolMetrics.toolTimes.push({
+                name: part.functionCall.name,
+                startTime: Date.now(),
+                argumentBuildTime: 0, // Google returns complete args at once
+                totalTime: 0
+              });
+              
+              // Track TTFT for first tool if no content yet
+              if (firstTokenTime === 0) {
+                firstTokenTime = Date.now() - startTime;
+                if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                  console.log(`\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`);
+                }
+              }
 
               // Emit tool call events
               onEvent({
@@ -717,22 +975,31 @@ export async function streamWithGoogle(
                 argumentDelta: toolCall.arguments,
               });
 
-              // Log completion and validate JSON
+              // Update tool metrics and validate JSON
+              const toolIndex = toolCalls.length - 1;
+              if (toolIndex < toolMetrics.toolTimes.length) {
+                const toolTime = toolMetrics.toolTimes[toolIndex];
+                toolTime.totalTime = Date.now() - toolTime.startTime;
+                toolTime.argumentBuildTime = toolTime.totalTime; // Google returns complete args
+              }
+              
+              try {
+                JSON.parse(toolCall.arguments);
+                toolMetrics.successfulTools++;
+                if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+                  console.log(`[Google] ✅ Valid JSON for ${toolCall.name}`);
+                }
+              } catch (e) {
+                toolMetrics.failedTools++;
+                console.error(`[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`);
+              }
+              
+              // Log completion
               if (process.env.DEBUG_GRAPHLIT_STREAMING) {
                 console.log(
                   `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
                 );
                 console.log(toolCall.arguments);
-
-                // Validate JSON
-                try {
-                  JSON.parse(toolCall.arguments);
-                  console.log(`[Google] ✅ Valid JSON for ${toolCall.name}`);
-                } catch (e) {
-                  console.error(
-                    `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`,
-                  );
-                }
               }
 
               onEvent({
@@ -840,16 +1107,61 @@ export async function streamWithGoogle(
       );
     }
 
-    // Calculate final metrics
+    // Calculate final metrics including tool calling insights
     const totalTime = Date.now() - startTime;
-    const tokensPerSecond = tokenCount > 0 ? tokenCount / (totalTime / 1000) : 0;
+    const totalTokens = tokenCount + toolArgumentTokens;
+    const tokensPerSecond = totalTokens > 0 ? totalTokens / (totalTime / 1000) : 0;
+    
+    // Finalize round metrics
+    if (toolCalls.length > 0) {
+      const roundEndTime = Date.now();
+      const totalToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0);
+      const llmTime = totalTime - totalToolTime;
+      
+      toolMetrics.rounds.push({
+        roundNumber: toolMetrics.currentRound,
+        llmTime: llmTime,
+        toolTime: totalToolTime,
+        toolCount: toolCalls.length
+      });
+    }
     
     if (process.env.DEBUG_GRAPHLIT_STREAMING) {
       console.log("\n📊 [Google] Performance Metrics:");
       console.log(`  ⏱️  Total Time: ${totalTime}ms`);
       console.log(`  ⚡ Time to First Token (TTFT): ${firstTokenTime}ms`);
-      console.log(`  📈 Tokens Generated: ${tokenCount}`);
+      
+      if (firstMeaningfulContentTime > 0) {
+        console.log(`  🎯 Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`);
+      }
+      
+      console.log(`  📈 Content Tokens: ${tokenCount}`);
+      console.log(`  🔧 Tool Argument Tokens: ${toolArgumentTokens}`);
+      console.log(`  📊 Total Tokens: ${totalTokens}`);
       console.log(`  💨 Tokens Per Second (TPS): ${tokensPerSecond.toFixed(2)}`);
+      
+      // Tool calling metrics
+      if (toolCalls.length > 0) {
+        console.log(`\n🔧 [Google] Tool Calling Metrics:`);
+        console.log(`  🛠️  Total Tools Called: ${toolMetrics.totalTools}`);
+        console.log(`  ✅ Successful Tools: ${toolMetrics.successfulTools}`);
+        console.log(`  ❌ Failed Tools: ${toolMetrics.failedTools}`);
+        console.log(`  📊 Success Rate: ${((toolMetrics.successfulTools / toolMetrics.totalTools) * 100).toFixed(1)}%`);
+        
+        // Tool timing details
+        toolMetrics.toolTimes.forEach((tool, idx) => {
+          console.log(`  🔨 Tool ${idx + 1} (${tool.name}): ${tool.argumentBuildTime}ms`);
+        });
+        
+        const avgToolTime = toolMetrics.toolTimes.reduce((sum, tool) => sum + tool.totalTime, 0) / toolMetrics.toolTimes.length;
+        console.log(`  ⏱️  Average Tool Time: ${avgToolTime.toFixed(2)}ms`);
+        
+        // Round metrics
+        toolMetrics.rounds.forEach(round => {
+          const efficiency = round.toolCount > 0 ? (round.llmTime / (round.llmTime + round.toolTime) * 100).toFixed(1) : 100;
+          console.log(`  🔄 Round ${round.roundNumber}: LLM=${round.llmTime}ms, Tools=${round.toolTime}ms (${round.toolCount} tools), Efficiency=${efficiency}%`);
+        });
+      }
       
       if (interTokenDelays.length > 0) {
         const avgDelay = interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length;
@@ -858,7 +1170,8 @@ export async function streamWithGoogle(
         const p95Delay = sortedDelays[Math.floor(sortedDelays.length * 0.95)];
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
         
-        console.log(`  ⏳ Average Inter-Token Delay: ${avgDelay.toFixed(2)}ms`);
+        console.log(`\n⏳ [Google] Inter-Token Timing:`);
+        console.log(`  📊 Average Delay: ${avgDelay.toFixed(2)}ms`);
         console.log(`  📊 P50 Delay: ${p50Delay}ms`);
         console.log(`  ⚠️  P95 Delay: ${p95Delay}ms`);
         console.log(`  🚨 P99 Delay: ${p99Delay}ms`);

@@ -1,17 +1,5 @@
-mutation AskGraphlit(
-  $prompt: String!
-  $type: SdkTypes
-  $id: ID
-  $specification: EntityReferenceInput
-  $correlationId: String
-) {
-  askGraphlit(
-    prompt: $prompt
-    type: $type
-    id: $id
-    specification: $specification
-    correlationId: $correlationId
-  ) {
+mutation AskGraphlit($prompt: String!, $type: SdkTypes, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  askGraphlit(prompt: $prompt, type: $type, id: $id, specification: $specification, correlationId: $correlationId) {
     conversation {
       id
     }
@@ -48,6 +36,7 @@ mutation AskGraphlit(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height

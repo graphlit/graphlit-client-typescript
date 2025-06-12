@@ -1,17 +1,5 @@
-mutation DescribeEncodedImage(
-  $prompt: String!
-  $mimeType: String!
-  $data: String!
-  $specification: EntityReferenceInput
-  $correlationId: String
-) {
-  describeEncodedImage(
-    prompt: $prompt
-    mimeType: $mimeType
-    data: $data
-    specification: $specification
-    correlationId: $correlationId
-  ) {
+mutation DescribeEncodedImage($prompt: String!, $mimeType: String!, $data: String!, $specification: EntityReferenceInput, $correlationId: String) {
+  describeEncodedImage(prompt: $prompt, mimeType: $mimeType, data: $data, specification: $specification, correlationId: $correlationId) {
     role
     author
     message
@@ -44,6 +32,7 @@ mutation DescribeEncodedImage(
         posts
         chapters
         questions
+        quotes
         video {
           width
           height

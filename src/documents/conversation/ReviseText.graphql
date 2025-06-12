@@ -1,17 +1,5 @@
-mutation ReviseText(
-  $prompt: String!
-  $text: String!
-  $id: ID
-  $specification: EntityReferenceInput
-  $correlationId: String
-) {
-  reviseText(
-    prompt: $prompt
-    text: $text
-    id: $id
-    specification: $specification
-    correlationId: $correlationId
-  ) {
+mutation ReviseText($prompt: String!, $text: String!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  reviseText(prompt: $prompt, text: $text, id: $id, specification: $specification, correlationId: $correlationId) {
     conversation {
       id
     }
@@ -48,6 +36,7 @@ mutation ReviseText(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height

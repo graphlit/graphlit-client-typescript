@@ -1,13 +1,5 @@
-mutation DeleteAllRepos(
-  $filter: RepoFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllRepos(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllRepos($filter: RepoFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllRepos(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }

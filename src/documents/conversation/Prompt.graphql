@@ -1,19 +1,5 @@
-mutation Prompt(
-  $prompt: String
-  $mimeType: String
-  $data: String
-  $specification: EntityReferenceInput
-  $messages: [ConversationMessageInput!]
-  $correlationId: String
-) {
-  prompt(
-    prompt: $prompt
-    mimeType: $mimeType
-    data: $data
-    specification: $specification
-    messages: $messages
-    correlationId: $correlationId
-  ) {
+mutation Prompt($prompt: String, $mimeType: String, $data: String, $specification: EntityReferenceInput, $messages: [ConversationMessageInput!], $correlationId: String) {
+  prompt(prompt: $prompt, mimeType: $mimeType, data: $data, specification: $specification, messages: $messages, correlationId: $correlationId) {
     specification {
       id
     }
@@ -50,6 +36,7 @@ mutation Prompt(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height

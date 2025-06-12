@@ -1,15 +1,5 @@
-mutation SummarizeText(
-  $summarization: SummarizationStrategyInput!
-  $text: String!
-  $textType: TextTypes
-  $correlationId: String
-) {
-  summarizeText(
-    summarization: $summarization
-    text: $text
-    textType: $textType
-    correlationId: $correlationId
-  ) {
+mutation SummarizeText($summarization: SummarizationStrategyInput!, $text: String!, $textType: TextTypes, $correlationId: String) {
+  summarizeText(summarization: $summarization, text: $text, textType: $textType, correlationId: $correlationId) {
     specification {
       id
     }

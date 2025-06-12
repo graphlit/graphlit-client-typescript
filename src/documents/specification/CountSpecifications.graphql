@@ -1,7 +1,4 @@
-query CountSpecifications(
-  $filter: SpecificationFilter
-  $correlationId: String
-) {
+query CountSpecifications($filter: SpecificationFilter, $correlationId: String) {
   countSpecifications(filter: $filter, correlationId: $correlationId) {
     count
   }

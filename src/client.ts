@@ -3889,15 +3889,7 @@ class Graphlit {
             .specification as Types.Specification)
         : undefined;
 
-      // Check streaming support
-      if (fullSpec && !this.supportsStreaming(fullSpec)) {
-        throw new Error(
-          "Streaming is not supported for this specification. " +
-            "Use promptAgent() instead or configure a streaming client."
-        );
-      }
-
-      // Ensure conversation
+      // Ensure conversation exists first (before streaming check)
       let actualConversationId = conversationId;
       if (!actualConversationId) {
         const createResponse = await this.createConversation(
@@ -3914,6 +3906,66 @@ class Graphlit {
         if (!actualConversationId) {
           throw new Error("Failed to create conversation");
         }
+      }
+
+      // Check streaming support - fallback to promptAgent if not supported
+      if (fullSpec && !this.supportsStreaming(fullSpec)) {
+        if (process.env.DEBUG_GRAPHLIT_STREAMING) {
+          console.log(
+            "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation"
+          );
+        }
+        
+        // Fallback to promptAgent using the same conversation and parameters
+        const promptResult = await this.promptAgent(
+          prompt,
+          actualConversationId, // Preserve conversation
+          specification,
+          tools,
+          toolHandlers,
+          {
+            maxToolRounds: maxRounds,
+          },
+          mimeType,
+          data,
+          contentFilter,
+          augmentedFilter,
+          correlationId
+        );
+        
+        // Convert promptAgent result to streaming events
+        onEvent({
+          type: "conversation_started",
+          conversationId: actualConversationId,
+          timestamp: new Date(),
+        });
+        
+        // Emit the final message as a single update (simulating streaming)
+        onEvent({
+          type: "message_update",
+          message: {
+            __typename: "ConversationMessage" as const,
+            message: promptResult.message,
+            role: Types.ConversationRoleTypes.Assistant,
+            timestamp: new Date().toISOString(),
+            toolCalls: [],
+          },
+          isStreaming: false,
+        });
+        
+        // Emit completion event
+        onEvent({
+          type: "conversation_completed",
+          message: {
+            __typename: "ConversationMessage" as const,
+            message: promptResult.message,
+            role: Types.ConversationRoleTypes.Assistant,
+            timestamp: new Date().toISOString(),
+            toolCalls: [],
+          },
+        });
+        
+        return; // Exit early after successful fallback
       }
 
       // Create UI event adapter

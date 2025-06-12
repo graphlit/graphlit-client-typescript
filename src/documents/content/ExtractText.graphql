@@ -1,19 +1,5 @@
-mutation ExtractText(
-  $prompt: String!
-  $text: String!
-  $textType: TextTypes
-  $specification: EntityReferenceInput
-  $tools: [ToolDefinitionInput!]!
-  $correlationId: String
-) {
-  extractText(
-    prompt: $prompt
-    text: $text
-    textType: $textType
-    specification: $specification
-    tools: $tools
-    correlationId: $correlationId
-  ) {
+mutation ExtractText($prompt: String!, $text: String!, $textType: TextTypes, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
+  extractText(prompt: $prompt, text: $text, textType: $textType, specification: $specification, tools: $tools, correlationId: $correlationId) {
     specification {
       id
     }

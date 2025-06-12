@@ -1,17 +1,5 @@
-mutation ReviseImage(
-  $prompt: String!
-  $uri: URL!
-  $id: ID
-  $specification: EntityReferenceInput
-  $correlationId: String
-) {
-  reviseImage(
-    prompt: $prompt
-    uri: $uri
-    id: $id
-    specification: $specification
-    correlationId: $correlationId
-  ) {
+mutation ReviseImage($prompt: String!, $uri: URL!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
+  reviseImage(prompt: $prompt, uri: $uri, id: $id, specification: $specification, correlationId: $correlationId) {
     conversation {
       id
     }
@@ -48,6 +36,7 @@ mutation ReviseImage(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height

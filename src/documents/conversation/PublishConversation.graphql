@@ -1,19 +1,5 @@
-mutation PublishConversation(
-  $id: ID!
-  $connector: ContentPublishingConnectorInput!
-  $name: String
-  $isSynchronous: Boolean
-  $workflow: EntityReferenceInput
-  $correlationId: String
-) {
-  publishConversation(
-    id: $id
-    connector: $connector
-    name: $name
-    isSynchronous: $isSynchronous
-    workflow: $workflow
-    correlationId: $correlationId
-  ) {
+mutation PublishConversation($id: ID!, $connector: ContentPublishingConnectorInput!, $name: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
+  publishConversation(id: $id, connector: $connector, name: $name, isSynchronous: $isSynchronous, workflow: $workflow, correlationId: $correlationId) {
     contents {
       id
       name
@@ -43,6 +29,7 @@ mutation PublishConversation(
       posts
       chapters
       questions
+      quotes
       video {
         width
         height

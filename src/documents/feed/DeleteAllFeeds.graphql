@@ -1,13 +1,5 @@
-mutation DeleteAllFeeds(
-  $filter: FeedFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllFeeds(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllFeeds($filter: FeedFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllFeeds(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }

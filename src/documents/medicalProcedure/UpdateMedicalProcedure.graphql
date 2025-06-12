@@ -1,6 +1,4 @@
-mutation UpdateMedicalProcedure(
-  $medicalProcedure: MedicalProcedureUpdateInput!
-) {
+mutation UpdateMedicalProcedure($medicalProcedure: MedicalProcedureUpdateInput!) {
   updateMedicalProcedure(medicalProcedure: $medicalProcedure) {
     id
     name

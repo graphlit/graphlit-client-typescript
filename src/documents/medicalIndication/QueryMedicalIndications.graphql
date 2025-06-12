@@ -1,7 +1,4 @@
-query QueryMedicalIndications(
-  $filter: MedicalIndicationFilter
-  $correlationId: String
-) {
+query QueryMedicalIndications($filter: MedicalIndicationFilter, $correlationId: String) {
   medicalIndications(filter: $filter, correlationId: $correlationId) {
     results {
       id

@@ -1,13 +1,5 @@
-mutation ContinueConversation(
-  $id: ID!
-  $responses: [ConversationToolResponseInput!]!
-  $correlationId: String
-) {
-  continueConversation(
-    id: $id
-    responses: $responses
-    correlationId: $correlationId
-  ) {
+mutation ContinueConversation($id: ID!, $responses: [ConversationToolResponseInput!]!, $correlationId: String) {
+  continueConversation(id: $id, responses: $responses, correlationId: $correlationId) {
     conversation {
       id
     }
@@ -44,6 +36,7 @@ mutation ContinueConversation(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height
@@ -221,6 +214,7 @@ mutation ContinueConversation(
             posts
             chapters
             questions
+            quotes
             video {
               width
               height

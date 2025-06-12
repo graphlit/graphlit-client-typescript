@@ -1,15 +1,5 @@
-query SearchWeb(
-  $text: String!
-  $service: SearchServiceTypes
-  $limit: Int
-  $correlationId: String
-) {
-  searchWeb(
-    text: $text
-    service: $service
-    limit: $limit
-    correlationId: $correlationId
-  ) {
+query SearchWeb($text: String!, $service: SearchServiceTypes, $limit: Int, $correlationId: String) {
+  searchWeb(text: $text, service: $service, limit: $limit, correlationId: $correlationId) {
     results {
       uri
       text

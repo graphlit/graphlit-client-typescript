@@ -1,13 +1,5 @@
-mutation DeleteAllMedicalProcedures(
-  $filter: MedicalProcedureFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllMedicalProcedures(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllMedicalProcedures($filter: MedicalProcedureFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllMedicalProcedures(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }

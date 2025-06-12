@@ -1,13 +1,5 @@
-mutation CompleteConversation(
-  $completion: String!
-  $id: ID!
-  $correlationId: String
-) {
-  completeConversation(
-    completion: $completion
-    id: $id
-    correlationId: $correlationId
-  ) {
+mutation CompleteConversation($completion: String!, $id: ID!, $correlationId: String) {
+  completeConversation(completion: $completion, id: $id, correlationId: $correlationId) {
     conversation {
       id
     }
@@ -44,6 +36,7 @@ mutation CompleteConversation(
           posts
           chapters
           questions
+          quotes
           video {
             width
             height
@@ -221,6 +214,7 @@ mutation CompleteConversation(
             posts
             chapters
             questions
+            quotes
             video {
               width
               height

@@ -1,13 +1,5 @@
-mutation DeleteAllCategories(
-  $filter: CategoryFilter
-  $isSynchronous: Boolean
-  $correlationId: String
-) {
-  deleteAllCategories(
-    filter: $filter
-    isSynchronous: $isSynchronous
-    correlationId: $correlationId
-  ) {
+mutation DeleteAllCategories($filter: CategoryFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllCategories(filter: $filter, isSynchronous: $isSynchronous, correlationId: $correlationId) {
     id
     state
   }
