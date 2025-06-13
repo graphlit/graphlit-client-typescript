@@ -3675,13 +3675,15 @@ class Graphlit {
       const serviceType = specification.serviceType;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
-        console.log("[supportsStreaming] Checking support for:", {
+        console.log("[supportsStreaming] Checking support for specification:", {
+          specificationName: specification.name,
           serviceType,
-          hasOpenAI: OpenAI !== undefined || this.openaiClient !== undefined,
-          hasAnthropic:
-            Anthropic !== undefined || this.anthropicClient !== undefined,
-          hasGoogle:
-            GoogleGenerativeAI !== undefined || this.googleClient !== undefined,
+          moduleOpenAI: OpenAI !== undefined,
+          instanceOpenAI: this.openaiClient !== undefined,
+          moduleAnthropic: Anthropic !== undefined,
+          instanceAnthropic: this.anthropicClient !== undefined,
+          moduleGoogle: GoogleGenerativeAI !== undefined,
+          instanceGoogle: this.googleClient !== undefined,
         });
       }
 
