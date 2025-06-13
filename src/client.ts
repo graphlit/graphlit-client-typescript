@@ -1148,6 +1148,15 @@ class Graphlit {
     );
   }
 
+  public async lookupContents(
+    ids: string[]
+  ): Promise<Types.LookupContentsResults> {
+    return this.queryAndCheckError<
+      Types.LookupContentsResults,
+      { ids: string[] }
+    >(Documents.LookupContents, { ids: ids });
+  }
+
   public async queryContents(
     filter?: Types.ContentFilter
   ): Promise<Types.QueryContentsQuery> {
@@ -3979,7 +3988,7 @@ class Graphlit {
       // Create UI event adapter with model information
       const modelName = fullSpec ? getModelName(fullSpec) : undefined;
       const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
-      
+
       uiAdapter = new UIEventAdapter(
         onEvent as (event: AgentStreamEvent) => void,
         actualConversationId,
@@ -4095,7 +4104,9 @@ class Graphlit {
       if (conversationHistory && conversationHistory.length > 0) {
         console.log("📋 [formatConversation] History messages:");
         conversationHistory.forEach((msg, i) => {
-          console.log(`  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`);
+          console.log(
+            `  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`
+          );
         });
       }
     }
