@@ -201,12 +201,31 @@ export class UIEventAdapter {
       this.updateTimer = undefined;
     }
 
-    // DO NOT re-process chunks here - they should already be in currentMessage
-    // Just clear any remaining state
-    if (this.chunkBuffer) {
-      this.chunkBuffer.flush(); // Clear the buffer but don't use the result
+    // Process any remaining chunks before completing
+    if (this.chunkQueue.length > 0) {
+      // Add all remaining chunks to current message
+      const remainingChunks = this.chunkQueue.join('');
+      const chunkCount = this.chunkQueue.length;
+      this.currentMessage += remainingChunks;
+      this.chunkQueue.length = 0; // Clear the queue after processing
+      
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`🔚 [UIEventAdapter] Processed ${chunkCount} remaining chunks: "${remainingChunks}"`);
+      }
     }
-    this.chunkQueue.length = 0; // Clear any remaining queue
+    
+    // Flush any remaining content from the buffer
+    if (this.chunkBuffer) {
+      const finalChunks = this.chunkBuffer.flush();
+      if (finalChunks.length > 0) {
+        const finalContent = finalChunks.join('');
+        this.currentMessage += finalContent;
+        
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`🔚 [UIEventAdapter] Flushed buffer with ${finalChunks.length} chunks: "${finalContent}"`);
+        }
+      }
+    }
 
     this.isStreaming = false;
 

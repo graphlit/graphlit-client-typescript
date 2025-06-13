@@ -4068,15 +4068,31 @@ class Graphlit {
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
+    const conversationHistory =
+      formatResponse.formatConversation?.details?.messages;
+
     if (!formattedMessage?.message) {
       throw new Error("Failed to format conversation");
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        "\n📋 [formatConversation] Response",
+        "\n📋 [formatConversation] Full response:",
+        JSON.stringify(formatResponse, null, 2)
+      );
+      console.log(
+        "\n📋 [formatConversation] Response - current message:",
         formattedMessage.message
       );
+      console.log(
+        `📋 [formatConversation] Conversation history: ${conversationHistory?.length || 0} messages`
+      );
+      if (conversationHistory && conversationHistory.length > 0) {
+        console.log("📋 [formatConversation] History messages:");
+        conversationHistory.forEach((msg, i) => {
+          console.log(`  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`);
+        });
+      }
     }
 
     // Build message array with conversation history
@@ -4092,9 +4108,47 @@ class Graphlit {
       });
     }
 
-    // Use the formatted message from formatConversation which already includes
-    // all context, RAG results, and conversation history
-    if (formattedMessage) {
+    // Use the full conversation history from formatConversation if available
+    if (conversationHistory && conversationHistory.length > 0) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🔄 [formatConversation] Using full conversation history with ${conversationHistory.length} messages`
+        );
+      }
+
+      for (const historyMessage of conversationHistory) {
+        if (historyMessage) {
+          const messageToAdd: Types.ConversationMessage = {
+            __typename: "ConversationMessage" as const,
+            role: historyMessage.role || Types.ConversationRoleTypes.User,
+            message: historyMessage.message || "",
+            timestamp: historyMessage.timestamp || new Date().toISOString(),
+          };
+
+          // Add optional fields if present
+          if (historyMessage.author)
+            messageToAdd.author = historyMessage.author;
+          if (historyMessage.data) messageToAdd.data = historyMessage.data;
+          if (historyMessage.mimeType)
+            messageToAdd.mimeType = historyMessage.mimeType;
+          if (historyMessage.toolCalls)
+            messageToAdd.toolCalls = historyMessage.toolCalls;
+          if (historyMessage.toolCallId)
+            messageToAdd.toolCallId = historyMessage.toolCallId;
+          if (historyMessage.toolCallResponse)
+            messageToAdd.toolCallResponse = historyMessage.toolCallResponse;
+
+          messages.push(messageToAdd);
+        }
+      }
+    } else {
+      // Fallback to single formatted message (for backward compatibility)
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          "⚠️ [formatConversation] No conversation history available, using single formatted message"
+        );
+      }
+
       const messageToAdd: Types.ConversationMessage = {
         __typename: "ConversationMessage" as const,
         role: formattedMessage.role || Types.ConversationRoleTypes.User,
@@ -4114,8 +4168,6 @@ class Graphlit {
       }
 
       messages.push(messageToAdd);
-    } else {
-      throw new Error("No formatted message returned from formatConversation");
     }
 
     const serviceType = getServiceType(specification);
