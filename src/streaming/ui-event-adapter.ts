@@ -14,8 +14,13 @@ import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
 export class UIEventAdapter {
   private conversationId: string;
   private model?: string;
+  private modelService?: string;
+  private tokenCount: number = 0;
   private currentMessage: string = "";
   private isStreaming: boolean = false;
+  private streamStartTime: number = 0;
+  private firstTokenTime: number = 0;
+  private lastTokenTime: number = 0;
   private activeToolCalls: Map<
     string,
     { toolCall: ConversationToolCall; status: ToolExecutionStatus }
@@ -33,10 +38,14 @@ export class UIEventAdapter {
       smoothingEnabled?: boolean;
       chunkingStrategy?: ChunkingStrategy;
       smoothingDelay?: number;
+      model?: string;
+      modelService?: string;
     } = {},
   ) {
     this.conversationId = conversationId;
     this.smoothingDelay = options.smoothingDelay ?? 30;
+    this.model = options.model;
+    this.modelService = options.modelService;
 
     if (options.smoothingEnabled) {
       this.chunkBuffer = new ChunkBuffer(options.chunkingStrategy || "word");
@@ -115,6 +124,9 @@ export class UIEventAdapter {
   private handleStart(conversationId: string): void {
     this.conversationId = conversationId;
     this.isStreaming = true;
+    this.streamStartTime = Date.now();
+    this.firstTokenTime = 0;
+    this.lastTokenTime = 0;
 
     this.emitUIEvent({
       type: "conversation_started",
@@ -125,6 +137,13 @@ export class UIEventAdapter {
   }
 
   private handleToken(token: string): void {
+    // Track timing for first token
+    const now = Date.now();
+    if (this.firstTokenTime === 0) {
+      this.firstTokenTime = now;
+    }
+    this.lastTokenTime = now;
+    
     if (this.chunkBuffer) {
       const chunks = this.chunkBuffer.addToken(token);
       // Add chunks to queue for all chunking modes (character, word, sentence)
@@ -229,7 +248,7 @@ export class UIEventAdapter {
 
     this.isStreaming = false;
 
-    // Create final message
+    // Create final message with metadata
     const finalMessage: ConversationMessage = {
       __typename: "ConversationMessage",
       role: ConversationRoleTypes.Assistant,
@@ -239,7 +258,30 @@ export class UIEventAdapter {
       toolCalls: Array.from(this.activeToolCalls.values()).map(
         (t) => t.toolCall,
       ),
+      model: this.model,
+      modelService: this.modelService as any,
     };
+    
+    // Add final timing metadata
+    if (this.streamStartTime > 0) {
+      const totalTime = Date.now() - this.streamStartTime;
+      
+      // Final throughput (chars/second)
+      finalMessage.throughput = totalTime > 0 
+        ? Math.round((this.currentMessage.length / totalTime) * 1000)
+        : 0;
+      
+      // Total completion time in seconds
+      finalMessage.completionTime = totalTime / 1000;
+      
+      // Add time to first token if we have it (useful metric)
+      if (this.firstTokenTime > 0) {
+        const ttft = this.firstTokenTime - this.streamStartTime;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`⏱️ [UIEventAdapter] TTFT: ${ttft}ms | Total: ${totalTime}ms | Throughput: ${finalMessage.throughput} chars/s`);
+        }
+      }
+    }
 
     this.emitUIEvent({
       type: "conversation_completed",
@@ -344,6 +386,32 @@ export class UIEventAdapter {
       message: this.currentMessage,
       timestamp: new Date().toISOString(),
     };
+
+    // Add model metadata if available
+    if (this.model) {
+      message.model = this.model;
+    }
+    if (this.modelService) {
+      message.modelService = this.modelService as any;
+    }
+    
+    // Add timing metadata if streaming has started
+    if (this.streamStartTime > 0) {
+      const now = Date.now();
+      const elapsedTime = now - this.streamStartTime;
+      
+      // Calculate throughput (chars/second)
+      const throughput = elapsedTime > 0 
+        ? Math.round((this.currentMessage.length / elapsedTime) * 1000)
+        : 0;
+      
+      message.throughput = throughput;
+      
+      // Add completion time if we have it (in seconds to match API)
+      if (elapsedTime > 0) {
+        message.completionTime = elapsedTime / 1000;
+      }
+    }
 
     this.emitUIEvent({
       type: "message_update",
