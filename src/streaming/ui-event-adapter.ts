@@ -18,9 +18,11 @@ export class UIEventAdapter {
   private tokenCount: number = 0;
   private currentMessage: string = "";
   private isStreaming: boolean = false;
-  private streamStartTime: number = 0;
+  private conversationStartTime: number = 0;  // When user sent the message
+  private streamStartTime: number = 0;        // When streaming actually began
   private firstTokenTime: number = 0;
   private lastTokenTime: number = 0;
+  private tokenDelays: number[] = [];
   private activeToolCalls: Map<
     string,
     { toolCall: ConversationToolCall; status: ToolExecutionStatus }
@@ -46,6 +48,7 @@ export class UIEventAdapter {
     this.smoothingDelay = options.smoothingDelay ?? 30;
     this.model = options.model;
     this.modelService = options.modelService;
+    this.conversationStartTime = Date.now(); // Capture when conversation began
 
     if (options.smoothingEnabled) {
       this.chunkBuffer = new ChunkBuffer(options.chunkingStrategy || "word");
@@ -82,7 +85,7 @@ export class UIEventAdapter {
         break;
 
       case "complete":
-        this.handleComplete();
+        this.handleComplete(event.tokens);
         break;
 
       case "error":
@@ -127,6 +130,8 @@ export class UIEventAdapter {
     this.streamStartTime = Date.now();
     this.firstTokenTime = 0;
     this.lastTokenTime = 0;
+    this.tokenCount = 0;
+    this.tokenDelays = [];
 
     this.emitUIEvent({
       type: "conversation_started",
@@ -142,7 +147,13 @@ export class UIEventAdapter {
     if (this.firstTokenTime === 0) {
       this.firstTokenTime = now;
     }
+    
+    // Track inter-token delays
+    if (this.lastTokenTime > 0) {
+      this.tokenDelays.push(now - this.lastTokenTime);
+    }
     this.lastTokenTime = now;
+    this.tokenCount++;
     
     if (this.chunkBuffer) {
       const chunks = this.chunkBuffer.addToken(token);
@@ -213,7 +224,7 @@ export class UIEventAdapter {
     }
   }
 
-  private handleComplete(): void {
+  private handleComplete(tokens?: number): void {
     // Clear any pending updates
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);
@@ -254,7 +265,7 @@ export class UIEventAdapter {
       role: ConversationRoleTypes.Assistant,
       message: this.currentMessage,
       timestamp: new Date().toISOString(),
-      tokens: undefined, // Will be set by caller if available
+      tokens: tokens, // Now we have the actual LLM token count!
       toolCalls: Array.from(this.activeToolCalls.values()).map(
         (t) => t.toolCall,
       ),
@@ -283,9 +294,36 @@ export class UIEventAdapter {
       }
     }
 
+    // Build final metrics
+    const completionTime = Date.now();
+    const finalMetrics: any = {
+      totalTime: this.streamStartTime > 0 ? completionTime - this.streamStartTime : 0,
+      conversationDuration: this.conversationStartTime > 0 ? completionTime - this.conversationStartTime : 0,
+    };
+    
+    // Add TTFT if we have it
+    if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
+      finalMetrics.ttft = this.firstTokenTime - this.streamStartTime;
+    }
+    
+    // Add token counts
+    if (this.tokenCount > 0) {
+      finalMetrics.tokenCount = this.tokenCount;  // Streaming chunks
+    }
+    if (tokens) {
+      finalMetrics.llmTokens = tokens;  // Actual LLM tokens used
+    }
+    
+    // Calculate average token delay
+    if (this.tokenDelays.length > 0) {
+      const avgDelay = this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
+      finalMetrics.avgTokenDelay = Math.round(avgDelay);
+    }
+    
     this.emitUIEvent({
       type: "conversation_completed",
       message: finalMessage,
+      metrics: finalMetrics,
     });
   }
 
@@ -413,10 +451,34 @@ export class UIEventAdapter {
       }
     }
 
+    // Build metrics object
+    const now = Date.now();
+    const metrics: any = {
+      elapsedTime: this.streamStartTime > 0 ? now - this.streamStartTime : 0,
+      conversationDuration: this.conversationStartTime > 0 ? now - this.conversationStartTime : 0,
+    };
+    
+    // Add TTFT if we have it
+    if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
+      metrics.ttft = this.firstTokenTime - this.streamStartTime;
+    }
+    
+    // Add token count if available
+    if (this.tokenCount > 0) {
+      metrics.tokenCount = this.tokenCount;
+    }
+    
+    // Calculate average token delay
+    if (this.tokenDelays.length > 0) {
+      const avgDelay = this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
+      metrics.avgTokenDelay = Math.round(avgDelay);
+    }
+    
     this.emitUIEvent({
       type: "message_update",
       message,
       isStreaming,
+      metrics,
     });
   }
 

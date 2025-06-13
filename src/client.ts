@@ -4517,19 +4517,28 @@ class Graphlit {
       currentRound++;
     }
 
-    // Complete the conversation
+    // Complete the conversation and get token count
+    let finalTokens: number | undefined;
     if (fullMessage) {
-      await this.completeConversation(
+      const completeResponse = await this.completeConversation(
         fullMessage.trim(),
         conversationId,
         correlationId
       );
+      
+      // Extract token count from the response
+      finalTokens = completeResponse.completeConversation?.message?.tokens ?? undefined;
+      
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`📊 [completeConversation] Tokens used: ${finalTokens || 'unknown'}`);
+      }
     }
 
-    // Emit completion event
+    // Emit completion event with token count
     uiAdapter.handleEvent({
       type: "complete",
       conversationId,
+      tokens: finalTokens,
     });
   }
 

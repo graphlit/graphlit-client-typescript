@@ -17,5 +17,5 @@ export type StreamEvent =
       type: "tool_call_complete";
       toolCall: { id: string; name: string; arguments: string };
     }
-  | { type: "complete"; messageId?: string; conversationId?: string }
+  | { type: "complete"; messageId?: string; conversationId?: string; tokens?: number }
   | { type: "error"; error: string };
