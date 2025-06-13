@@ -4342,6 +4342,13 @@ class Graphlit {
 
       // Execute tools and prepare for next round
       if (toolHandlers && toolCalls.length > 0) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`\n🔧 [executeStreamingAgent] Round ${currentRound}: Processing ${toolCalls.length} tool calls`);
+          toolCalls.forEach((tc, idx) => {
+            console.log(`  ${idx + 1}. ${tc.name} (${tc.id}) - Args length: ${tc.arguments.length}`);
+          });
+        }
+        
         // Add assistant message with tool calls to conversation
         const assistantMessage = {
           __typename: "ConversationMessage" as const,
@@ -4470,19 +4477,20 @@ class Graphlit {
               }
             }
 
-            // Update UI
+            // Update UI - emit the full tool call with arguments
             uiAdapter.handleEvent({
-              type: "tool_call_start",
+              type: "tool_call_complete",
               toolCall: {
                 id: toolCall.id,
                 name: toolCall.name,
+                arguments: toolCall.arguments,
               },
             });
 
             // Execute tool
             const result = await handler(args);
 
-            // Update UI
+            // Update UI with result
             uiAdapter.setToolResult(toolCall.id, result);
 
             // Add tool response to messages

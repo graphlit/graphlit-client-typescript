@@ -125,6 +125,11 @@ export class UIEventAdapter {
   }
 
   private handleStart(conversationId: string): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🚀 [UIEventAdapter] Handle start - Conversation ID: ${conversationId}`);
+      console.log(`🚀 [UIEventAdapter] Active tool calls at start: ${this.activeToolCalls.size}`);
+    }
+    
     this.conversationId = conversationId;
     this.isStreaming = true;
     this.streamStartTime = Date.now();
@@ -132,6 +137,13 @@ export class UIEventAdapter {
     this.lastTokenTime = 0;
     this.tokenCount = 0;
     this.tokenDelays = [];
+    
+    // Note: We only clear tool calls here if this is truly a new conversation start
+    // For multi-round tool calling, handleStart is only called once at the beginning
+    if (this.activeToolCalls.size > 0) {
+      console.log(`🚀 [UIEventAdapter] Warning: ${this.activeToolCalls.size} tool calls still active at start`);
+    }
+    this.activeToolCalls.clear();
 
     this.emitUIEvent({
       type: "conversation_started",
@@ -173,6 +185,11 @@ export class UIEventAdapter {
   }
 
   private handleToolCallStart(toolCall: { id: string; name: string }): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔧 [UIEventAdapter] Tool call start - ID: ${toolCall.id}, Name: ${toolCall.name}`);
+      console.log(`🔧 [UIEventAdapter] Active tool calls before: ${this.activeToolCalls.size}`);
+    }
+    
     const conversationToolCall: ConversationToolCall = {
       __typename: "ConversationToolCall",
       id: toolCall.id,
@@ -185,6 +202,10 @@ export class UIEventAdapter {
       status: "preparing",
     });
 
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔧 [UIEventAdapter] Active tool calls after: ${this.activeToolCalls.size}`);
+    }
+
     this.emitUIEvent({
       type: "tool_update",
       toolCall: conversationToolCall,
@@ -193,16 +214,30 @@ export class UIEventAdapter {
   }
 
   private handleToolCallDelta(toolCallId: string, argumentDelta: string): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔧 [UIEventAdapter] Tool call delta - ID: ${toolCallId}, Delta length: ${argumentDelta.length}`);
+      console.log(`🔧 [UIEventAdapter] Delta content: ${argumentDelta.substring(0, 100)}...`);
+    }
+    
     const toolData = this.activeToolCalls.get(toolCallId);
-    if (toolData && toolData.status === "preparing") {
+    if (toolData) {
       toolData.toolCall.arguments += argumentDelta;
-      toolData.status = "executing";
+      
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`🔧 [UIEventAdapter] Tool ${toolCallId} accumulated args length: ${toolData.toolCall.arguments.length}`);
+      }
+      
+      if (toolData.status === "preparing") {
+        toolData.status = "executing";
+      }
 
       this.emitUIEvent({
         type: "tool_update",
         toolCall: toolData.toolCall,
         status: "executing",
       });
+    } else {
+      console.warn(`🔧 [UIEventAdapter] WARNING: Tool call delta for unknown tool ID: ${toolCallId}`);
     }
   }
 
@@ -211,8 +246,15 @@ export class UIEventAdapter {
     name: string;
     arguments: string;
   }): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔧 [UIEventAdapter] Tool call complete - ID: ${toolCall.id}, Name: ${toolCall.name}`);
+      console.log(`🔧 [UIEventAdapter] Final arguments length: ${toolCall.arguments.length}`);
+      console.log(`🔧 [UIEventAdapter] Final arguments: ${toolCall.arguments.substring(0, 200)}...`);
+    }
+    
     const toolData = this.activeToolCalls.get(toolCall.id);
     if (toolData) {
+      // Update the arguments with the final complete version
       toolData.toolCall.arguments = toolCall.arguments;
       toolData.status = "completed";
 
@@ -221,10 +263,38 @@ export class UIEventAdapter {
         toolCall: toolData.toolCall,
         status: "completed",
       });
+    } else {
+      // If we don't have this tool call tracked, create it now
+      console.warn(`🔧 [UIEventAdapter] Tool call complete for untracked tool ID: ${toolCall.id}, creating entry`);
+      
+      const conversationToolCall: ConversationToolCall = {
+        __typename: "ConversationToolCall",
+        id: toolCall.id,
+        name: toolCall.name,
+        arguments: toolCall.arguments,
+      };
+      
+      this.activeToolCalls.set(toolCall.id, {
+        toolCall: conversationToolCall,
+        status: "completed",
+      });
+      
+      this.emitUIEvent({
+        type: "tool_update",
+        toolCall: conversationToolCall,
+        status: "completed",
+      });
     }
   }
 
   private handleComplete(tokens?: number): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔚 [UIEventAdapter] Handle complete - Active tool calls: ${this.activeToolCalls.size}`);
+      this.activeToolCalls.forEach((toolData, id) => {
+        console.log(`🔚 [UIEventAdapter] Tool ${id}: ${toolData.toolCall.name}, Status: ${toolData.status}, Args length: ${toolData.toolCall.arguments.length}`);
+      });
+    }
+    
     // Clear any pending updates
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);

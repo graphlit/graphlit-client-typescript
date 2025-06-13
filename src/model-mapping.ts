@@ -7,13 +7,10 @@ import * as Types from "./generated/graphql-types.js";
 
 // OpenAI model mappings
 const OPENAI_MODEL_MAP: Record<string, string> = {
-  [Types.OpenAiModels.Gpt4]: "gpt-4",
   [Types.OpenAiModels.Gpt4Turbo_128K]: "gpt-4-turbo",
   [Types.OpenAiModels.Gpt4O_128K]: "gpt-4o",
   [Types.OpenAiModels.Gpt4OMini_128K]: "gpt-4o-mini",
   [Types.OpenAiModels.Gpt4OChat_128K]: "chatgpt-4o-latest",
-  [Types.OpenAiModels.Gpt35Turbo]: "gpt-3.5-turbo",
-  [Types.OpenAiModels.Gpt35Turbo_16K]: "gpt-3.5-turbo-16k",
   [Types.OpenAiModels.Gpt41_1024K]: "gpt-4.1",
   [Types.OpenAiModels.Gpt41Mini_1024K]: "gpt-4.1-mini",
   [Types.OpenAiModels.Gpt41Nano_1024K]: "gpt-4.1-nano",
@@ -40,7 +37,6 @@ const GOOGLE_MODEL_MAP: Record<string, string> = {
   [Types.GoogleModels.Gemini_1_5Flash]: "gemini-1.5-flash",
   [Types.GoogleModels.Gemini_1_5Flash_8B]: "gemini-1.5-flash-8b",
   [Types.GoogleModels.Gemini_2_0Flash]: "gemini-2.0-flash-exp",
-  [Types.GoogleModels.Gemini_2_0FlashExperimental]: "gemini-2.0-flash-exp",
   [Types.GoogleModels.Gemini_2_5FlashPreview]: "gemini-2.5-flash-preview-05-20",
   [Types.GoogleModels.Gemini_2_5ProPreview]: "gemini-2.5-pro-preview-06-05",
 };
