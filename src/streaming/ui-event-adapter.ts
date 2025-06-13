@@ -18,8 +18,8 @@ export class UIEventAdapter {
   private tokenCount: number = 0;
   private currentMessage: string = "";
   private isStreaming: boolean = false;
-  private conversationStartTime: number = 0;  // When user sent the message
-  private streamStartTime: number = 0;        // When streaming actually began
+  private conversationStartTime: number = 0; // When user sent the message
+  private streamStartTime: number = 0; // When streaming actually began
   private firstTokenTime: number = 0;
   private lastTokenTime: number = 0;
   private tokenDelays: number[] = [];
@@ -80,8 +80,12 @@ export class UIEventAdapter {
         this.handleToolCallDelta(event.toolCallId, event.argumentDelta);
         break;
 
+      case "tool_call_parsed":
+        this.handleToolCallParsed(event.toolCall);
+        break;
+
       case "tool_call_complete":
-        this.handleToolCallComplete(event.toolCall);
+        this.handleToolCallComplete(event.toolCall, event.result, event.error);
         break;
 
       case "complete":
@@ -94,42 +98,16 @@ export class UIEventAdapter {
     }
   }
 
-  /**
-   * Set tool execution result directly (for tool handlers)
-   */
-  public setToolResult(
-    toolCallId: string,
-    result: unknown,
-    error?: string,
-  ): void {
-    const toolData = this.activeToolCalls.get(toolCallId);
-    if (toolData) {
-      if (error) {
-        toolData.status = "failed";
-        this.emitUIEvent({
-          type: "tool_update",
-          toolCall: toolData.toolCall,
-          status: "failed",
-          error,
-        });
-      } else {
-        toolData.status = "completed";
-        this.emitUIEvent({
-          type: "tool_update",
-          toolCall: toolData.toolCall,
-          status: "completed",
-          result,
-        });
-      }
-    }
-  }
-
   private handleStart(conversationId: string): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🚀 [UIEventAdapter] Handle start - Conversation ID: ${conversationId}`);
-      console.log(`🚀 [UIEventAdapter] Active tool calls at start: ${this.activeToolCalls.size}`);
+      console.log(
+        `🚀 [UIEventAdapter] Handle start - Conversation ID: ${conversationId}`,
+      );
+      console.log(
+        `🚀 [UIEventAdapter] Active tool calls at start: ${this.activeToolCalls.size}`,
+      );
     }
-    
+
     this.conversationId = conversationId;
     this.isStreaming = true;
     this.streamStartTime = Date.now();
@@ -137,11 +115,13 @@ export class UIEventAdapter {
     this.lastTokenTime = 0;
     this.tokenCount = 0;
     this.tokenDelays = [];
-    
+
     // Note: We only clear tool calls here if this is truly a new conversation start
     // For multi-round tool calling, handleStart is only called once at the beginning
     if (this.activeToolCalls.size > 0) {
-      console.log(`🚀 [UIEventAdapter] Warning: ${this.activeToolCalls.size} tool calls still active at start`);
+      console.log(
+        `🚀 [UIEventAdapter] Warning: ${this.activeToolCalls.size} tool calls still active at start`,
+      );
     }
     this.activeToolCalls.clear();
 
@@ -159,14 +139,14 @@ export class UIEventAdapter {
     if (this.firstTokenTime === 0) {
       this.firstTokenTime = now;
     }
-    
+
     // Track inter-token delays
     if (this.lastTokenTime > 0) {
       this.tokenDelays.push(now - this.lastTokenTime);
     }
     this.lastTokenTime = now;
     this.tokenCount++;
-    
+
     if (this.chunkBuffer) {
       const chunks = this.chunkBuffer.addToken(token);
       // Add chunks to queue for all chunking modes (character, word, sentence)
@@ -186,10 +166,14 @@ export class UIEventAdapter {
 
   private handleToolCallStart(toolCall: { id: string; name: string }): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔧 [UIEventAdapter] Tool call start - ID: ${toolCall.id}, Name: ${toolCall.name}`);
-      console.log(`🔧 [UIEventAdapter] Active tool calls before: ${this.activeToolCalls.size}`);
+      console.log(
+        `🔧 [UIEventAdapter] Tool call start - ID: ${toolCall.id}, Name: ${toolCall.name}`,
+      );
+      console.log(
+        `🔧 [UIEventAdapter] Active tool calls before: ${this.activeToolCalls.size}`,
+      );
     }
-    
+
     const conversationToolCall: ConversationToolCall = {
       __typename: "ConversationToolCall",
       id: toolCall.id,
@@ -203,7 +187,9 @@ export class UIEventAdapter {
     });
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔧 [UIEventAdapter] Active tool calls after: ${this.activeToolCalls.size}`);
+      console.log(
+        `🔧 [UIEventAdapter] Active tool calls after: ${this.activeToolCalls.size}`,
+      );
     }
 
     this.emitUIEvent({
@@ -215,18 +201,24 @@ export class UIEventAdapter {
 
   private handleToolCallDelta(toolCallId: string, argumentDelta: string): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔧 [UIEventAdapter] Tool call delta - ID: ${toolCallId}, Delta length: ${argumentDelta.length}`);
-      console.log(`🔧 [UIEventAdapter] Delta content: ${argumentDelta.substring(0, 100)}...`);
+      console.log(
+        `🔧 [UIEventAdapter] Tool call delta - ID: ${toolCallId}, Delta length: ${argumentDelta.length}`,
+      );
+      console.log(
+        `🔧 [UIEventAdapter] Delta content: ${argumentDelta.substring(0, 100)}...`,
+      );
     }
-    
+
     const toolData = this.activeToolCalls.get(toolCallId);
     if (toolData) {
       toolData.toolCall.arguments += argumentDelta;
-      
+
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`🔧 [UIEventAdapter] Tool ${toolCallId} accumulated args length: ${toolData.toolCall.arguments.length}`);
+        console.log(
+          `🔧 [UIEventAdapter] Tool ${toolCallId} accumulated args length: ${toolData.toolCall.arguments.length}`,
+        );
       }
-      
+
       if (toolData.status === "preparing") {
         toolData.status = "executing";
       }
@@ -237,64 +229,116 @@ export class UIEventAdapter {
         status: "executing",
       });
     } else {
-      console.warn(`🔧 [UIEventAdapter] WARNING: Tool call delta for unknown tool ID: ${toolCallId}`);
+      console.warn(
+        `🔧 [UIEventAdapter] WARNING: Tool call delta for unknown tool ID: ${toolCallId}`,
+      );
     }
   }
 
-  private handleToolCallComplete(toolCall: {
+  private handleToolCallParsed(toolCall: {
     id: string;
     name: string;
     arguments: string;
   }): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔧 [UIEventAdapter] Tool call complete - ID: ${toolCall.id}, Name: ${toolCall.name}`);
-      console.log(`🔧 [UIEventAdapter] Final arguments length: ${toolCall.arguments.length}`);
-      console.log(`🔧 [UIEventAdapter] Final arguments: ${toolCall.arguments.substring(0, 200)}...`);
+      console.log(
+        `🔧 [UIEventAdapter] Tool call parsed - ID: ${toolCall.id}, Name: ${toolCall.name}`,
+      );
+      console.log(
+        `🔧 [UIEventAdapter] Final arguments length: ${toolCall.arguments.length}`,
+      );
+      console.log(
+        `🔧 [UIEventAdapter] Final arguments: ${toolCall.arguments.substring(0, 200)}...`,
+      );
     }
-    
+
     const toolData = this.activeToolCalls.get(toolCall.id);
     if (toolData) {
       // Update the arguments with the final complete version
       toolData.toolCall.arguments = toolCall.arguments;
-      toolData.status = "completed";
+      // Mark as ready for execution, not completed
+      toolData.status = "ready";
 
       this.emitUIEvent({
         type: "tool_update",
         toolCall: toolData.toolCall,
-        status: "completed",
+        status: "ready",
       });
     } else {
       // If we don't have this tool call tracked, create it now
-      console.warn(`🔧 [UIEventAdapter] Tool call complete for untracked tool ID: ${toolCall.id}, creating entry`);
-      
+      console.warn(
+        `🔧 [UIEventAdapter] Tool call parsed for untracked tool ID: ${toolCall.id}, creating entry`,
+      );
+
       const conversationToolCall: ConversationToolCall = {
         __typename: "ConversationToolCall",
         id: toolCall.id,
         name: toolCall.name,
         arguments: toolCall.arguments,
       };
-      
+
       this.activeToolCalls.set(toolCall.id, {
         toolCall: conversationToolCall,
-        status: "completed",
+        status: "ready",
       });
-      
+
       this.emitUIEvent({
         type: "tool_update",
         toolCall: conversationToolCall,
-        status: "completed",
+        status: "ready",
       });
+    }
+  }
+
+  private handleToolCallComplete(
+    toolCall: {
+      id: string;
+      name: string;
+      arguments: string;
+    },
+    result?: unknown,
+    error?: string,
+  ): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🔧 [UIEventAdapter] Tool call complete - ID: ${toolCall.id}, Name: ${toolCall.name}`,
+      );
+      console.log(
+        `🔧 [UIEventAdapter] Has result: ${!!result}, Has error: ${!!error}`,
+      );
+    }
+
+    const toolData = this.activeToolCalls.get(toolCall.id);
+    if (toolData) {
+      // Update with execution result
+      toolData.status = error ? "failed" : "completed";
+
+      this.emitUIEvent({
+        type: "tool_update",
+        toolCall: toolData.toolCall,
+        status: toolData.status,
+        result: result,
+        error: error,
+      });
+    } else {
+      console.warn(
+        `🔧 [UIEventAdapter] Tool call complete for unknown tool ID: ${toolCall.id}`,
+      );
     }
   }
 
   private handleComplete(tokens?: number): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔚 [UIEventAdapter] Handle complete - Active tool calls: ${this.activeToolCalls.size}`);
+      console.log(
+        `🔚 [UIEventAdapter] Handle complete - Active tool calls: ${this.activeToolCalls.size}`,
+      );
       this.activeToolCalls.forEach((toolData, id) => {
-        console.log(`🔚 [UIEventAdapter] Tool ${id}: ${toolData.toolCall.name}, Status: ${toolData.status}, Args length: ${toolData.toolCall.arguments.length}`);
+        console.log(
+          `🔚 [UIEventAdapter] Tool ${id}: ${toolData.toolCall.name}, Status: ${toolData.status}, Args length: ${toolData.toolCall.arguments.length}`,
+        );
       });
     }
-    
+
     // Clear any pending updates
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);
@@ -304,25 +348,29 @@ export class UIEventAdapter {
     // Process any remaining chunks before completing
     if (this.chunkQueue.length > 0) {
       // Add all remaining chunks to current message
-      const remainingChunks = this.chunkQueue.join('');
+      const remainingChunks = this.chunkQueue.join("");
       const chunkCount = this.chunkQueue.length;
       this.currentMessage += remainingChunks;
       this.chunkQueue.length = 0; // Clear the queue after processing
-      
+
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`🔚 [UIEventAdapter] Processed ${chunkCount} remaining chunks: "${remainingChunks}"`);
+        console.log(
+          `🔚 [UIEventAdapter] Processed ${chunkCount} remaining chunks: "${remainingChunks}"`,
+        );
       }
     }
-    
+
     // Flush any remaining content from the buffer
     if (this.chunkBuffer) {
       const finalChunks = this.chunkBuffer.flush();
       if (finalChunks.length > 0) {
-        const finalContent = finalChunks.join('');
+        const finalContent = finalChunks.join("");
         this.currentMessage += finalContent;
-        
+
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`🔚 [UIEventAdapter] Flushed buffer with ${finalChunks.length} chunks: "${finalContent}"`);
+          console.log(
+            `🔚 [UIEventAdapter] Flushed buffer with ${finalChunks.length} chunks: "${finalContent}"`,
+          );
         }
       }
     }
@@ -342,24 +390,27 @@ export class UIEventAdapter {
       model: this.model,
       modelService: this.modelService as any,
     };
-    
+
     // Add final timing metadata
     if (this.streamStartTime > 0) {
       const totalTime = Date.now() - this.streamStartTime;
-      
+
       // Final throughput (chars/second)
-      finalMessage.throughput = totalTime > 0 
-        ? Math.round((this.currentMessage.length / totalTime) * 1000)
-        : 0;
-      
+      finalMessage.throughput =
+        totalTime > 0
+          ? Math.round((this.currentMessage.length / totalTime) * 1000)
+          : 0;
+
       // Total completion time in seconds
       finalMessage.completionTime = totalTime / 1000;
-      
+
       // Add time to first token if we have it (useful metric)
       if (this.firstTokenTime > 0) {
         const ttft = this.firstTokenTime - this.streamStartTime;
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`⏱️ [UIEventAdapter] TTFT: ${ttft}ms | Total: ${totalTime}ms | Throughput: ${finalMessage.throughput} chars/s`);
+          console.log(
+            `⏱️ [UIEventAdapter] TTFT: ${ttft}ms | Total: ${totalTime}ms | Throughput: ${finalMessage.throughput} chars/s`,
+          );
         }
       }
     }
@@ -367,29 +418,34 @@ export class UIEventAdapter {
     // Build final metrics
     const completionTime = Date.now();
     const finalMetrics: any = {
-      totalTime: this.streamStartTime > 0 ? completionTime - this.streamStartTime : 0,
-      conversationDuration: this.conversationStartTime > 0 ? completionTime - this.conversationStartTime : 0,
+      totalTime:
+        this.streamStartTime > 0 ? completionTime - this.streamStartTime : 0,
+      conversationDuration:
+        this.conversationStartTime > 0
+          ? completionTime - this.conversationStartTime
+          : 0,
     };
-    
+
     // Add TTFT if we have it
     if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
       finalMetrics.ttft = this.firstTokenTime - this.streamStartTime;
     }
-    
+
     // Add token counts
     if (this.tokenCount > 0) {
-      finalMetrics.tokenCount = this.tokenCount;  // Streaming chunks
+      finalMetrics.tokenCount = this.tokenCount; // Streaming chunks
     }
     if (tokens) {
-      finalMetrics.llmTokens = tokens;  // Actual LLM tokens used
+      finalMetrics.llmTokens = tokens; // Actual LLM tokens used
     }
-    
+
     // Calculate average token delay
     if (this.tokenDelays.length > 0) {
-      const avgDelay = this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
+      const avgDelay =
+        this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
       finalMetrics.avgTokenDelay = Math.round(avgDelay);
     }
-    
+
     this.emitUIEvent({
       type: "conversation_completed",
       message: finalMessage,
@@ -502,19 +558,20 @@ export class UIEventAdapter {
     if (this.modelService) {
       message.modelService = this.modelService as any;
     }
-    
+
     // Add timing metadata if streaming has started
     if (this.streamStartTime > 0) {
       const now = Date.now();
       const elapsedTime = now - this.streamStartTime;
-      
+
       // Calculate throughput (chars/second)
-      const throughput = elapsedTime > 0 
-        ? Math.round((this.currentMessage.length / elapsedTime) * 1000)
-        : 0;
-      
+      const throughput =
+        elapsedTime > 0
+          ? Math.round((this.currentMessage.length / elapsedTime) * 1000)
+          : 0;
+
       message.throughput = throughput;
-      
+
       // Add completion time if we have it (in seconds to match API)
       if (elapsedTime > 0) {
         message.completionTime = elapsedTime / 1000;
@@ -525,25 +582,27 @@ export class UIEventAdapter {
     const now = Date.now();
     const metrics: any = {
       elapsedTime: this.streamStartTime > 0 ? now - this.streamStartTime : 0,
-      conversationDuration: this.conversationStartTime > 0 ? now - this.conversationStartTime : 0,
+      conversationDuration:
+        this.conversationStartTime > 0 ? now - this.conversationStartTime : 0,
     };
-    
+
     // Add TTFT if we have it
     if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
       metrics.ttft = this.firstTokenTime - this.streamStartTime;
     }
-    
+
     // Add token count if available
     if (this.tokenCount > 0) {
       metrics.tokenCount = this.tokenCount;
     }
-    
+
     // Calculate average token delay
     if (this.tokenDelays.length > 0) {
-      const avgDelay = this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
+      const avgDelay =
+        this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
       metrics.avgTokenDelay = Math.round(avgDelay);
     }
-    
+
     this.emitUIEvent({
       type: "message_update",
       message,

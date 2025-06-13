@@ -32,7 +32,7 @@ export async function streamWithOpenAI(
   tools: ToolDefinitionInput[] | undefined,
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -72,13 +72,13 @@ export async function streamWithOpenAI(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for OpenAI specification: ${specification.name}`
+        `No model name found for OpenAI specification: ${specification.name}`,
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
+        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
       );
     }
 
@@ -110,7 +110,7 @@ export async function streamWithOpenAI(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [OpenAI] Starting LLM call at: ${new Date().toISOString()}`
+        `⏱️ [OpenAI] Starting LLM call at: ${new Date().toISOString()}`,
       );
     }
 
@@ -124,7 +124,7 @@ export async function streamWithOpenAI(
         console.log(`[OpenAI] Chunk:`, JSON.stringify(chunk, null, 2));
         if (delta?.content) {
           console.log(
-            `[OpenAI] Content delta: "${delta.content}" (${delta.content.length} chars)`
+            `[OpenAI] Content delta: "${delta.content}" (${delta.content.length} chars)`,
           );
         }
         if (delta?.tool_calls) {
@@ -132,7 +132,7 @@ export async function streamWithOpenAI(
         }
         if (chunk.choices[0]?.finish_reason) {
           console.log(
-            `[OpenAI] Finish reason: ${chunk.choices[0].finish_reason}`
+            `[OpenAI] Finish reason: ${chunk.choices[0].finish_reason}`,
           );
         }
       }
@@ -148,7 +148,7 @@ export async function streamWithOpenAI(
           firstTokenTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`
+              `\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`,
             );
           }
         }
@@ -158,7 +158,7 @@ export async function streamWithOpenAI(
           firstMeaningfulContentTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
+              `\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
             );
           }
         }
@@ -172,7 +172,7 @@ export async function streamWithOpenAI(
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`
+            `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`,
           );
         }
         onEvent({
@@ -208,14 +208,14 @@ export async function streamWithOpenAI(
               firstTokenTime = Date.now() - startTime;
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`
+                  `\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`,
                 );
               }
             }
 
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[OpenAI] Starting new tool call: ${toolCalls[index].id}`
+                `[OpenAI] Starting new tool call: ${toolCalls[index].id}`,
               );
             }
 
@@ -240,16 +240,16 @@ export async function streamWithOpenAI(
 
             // Count tool argument tokens (rough estimate: ~4 chars per token)
             toolArgumentTokens += Math.ceil(
-              toolCallDelta.function.arguments.length / 4
+              toolCallDelta.function.arguments.length / 4,
             );
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`
+                `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`,
               );
               console.log(
-                `[OpenAI] Tool ${toolCalls[index].name} - Total accumulated: ${toolCalls[index].arguments.length} chars`
+                `[OpenAI] Tool ${toolCalls[index].name} - Total accumulated: ${toolCalls[index].arguments.length} chars`,
               );
             }
 
@@ -292,13 +292,13 @@ export async function streamWithOpenAI(
       // Log the final JSON for debugging
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
+          `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
         );
         console.log(toolCall.arguments);
       }
 
       onEvent({
-        type: "tool_call_complete",
+        type: "tool_call_parsed",
         toolCall: {
           id: toolCall.id,
           name: toolCall.name,
@@ -310,7 +310,7 @@ export async function streamWithOpenAI(
     // Final summary logging
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
-        `[OpenAI] Successfully processed ${toolCalls.length} tool calls`
+        `[OpenAI] Successfully processed ${toolCalls.length} tool calls`,
       );
     }
 
@@ -325,7 +325,7 @@ export async function streamWithOpenAI(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0
+        0,
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -351,7 +351,7 @@ export async function streamWithOpenAI(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [OpenAI] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
+        `📊 [OpenAI] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
       );
 
       // Tool calling metrics
@@ -365,7 +365,7 @@ export async function streamWithOpenAI(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [OpenAI] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
+          `🔧 [OpenAI] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
         );
 
         // Tool timing details (consolidated)
@@ -403,12 +403,12 @@ export async function streamWithOpenAI(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [OpenAI] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
+          `⏳ [OpenAI] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
         );
       }
 
       console.log(
-        `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`
+        `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`,
       );
     }
     onComplete(fullMessage, toolCalls);
@@ -428,7 +428,7 @@ export async function streamWithAnthropic(
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: any, // Anthropic client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -468,13 +468,13 @@ export async function streamWithAnthropic(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Anthropic specification: ${specification.name}`
+        `No model name found for Anthropic specification: ${specification.name}`,
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
+        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
       );
     }
 
@@ -502,7 +502,7 @@ export async function streamWithAnthropic(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`
+        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`,
       );
     }
 
@@ -541,7 +541,7 @@ export async function streamWithAnthropic(
             firstTokenTime = Date.now() - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`
+                `\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`,
               );
             }
           }
@@ -566,7 +566,7 @@ export async function streamWithAnthropic(
             firstTokenTime = currentTime - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`
+                `\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`,
               );
             }
           }
@@ -576,7 +576,7 @@ export async function streamWithAnthropic(
             firstMeaningfulContentTime = currentTime - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
+                `\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
               );
             }
           }
@@ -590,7 +590,7 @@ export async function streamWithAnthropic(
 
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`
+              `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`,
             );
           }
           onEvent({
@@ -605,16 +605,16 @@ export async function streamWithAnthropic(
 
             // Count tool argument tokens (rough estimate: ~4 chars per token)
             toolArgumentTokens += Math.ceil(
-              chunk.delta.partial_json.length / 4
+              chunk.delta.partial_json.length / 4,
             );
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`
+                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`,
               );
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`
+                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`,
               );
             }
 
@@ -652,7 +652,7 @@ export async function streamWithAnthropic(
           } catch (e) {
             toolMetrics.failedTools++;
             console.error(
-              `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`
+              `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`,
             );
           }
 
@@ -662,7 +662,7 @@ export async function streamWithAnthropic(
             !isValidJSON(currentTool.arguments)
           ) {
             console.log(
-              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`
+              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`,
             );
             console.log(currentTool.arguments);
 
@@ -673,13 +673,13 @@ export async function streamWithAnthropic(
               currentTool.arguments.length > 100
             ) {
               console.warn(
-                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`
+                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`,
               );
             }
           }
 
           onEvent({
-            type: "tool_call_complete",
+            type: "tool_call_parsed",
             toolCall: {
               id: currentTool.id,
               name: currentTool.name,
@@ -690,7 +690,7 @@ export async function streamWithAnthropic(
       } else if (chunk.type === "message_stop" && activeContentBlock) {
         // Handle Anthropic bug: message_stop without content_block_stop
         console.warn(
-          `[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`
+          `[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`,
         );
         activeContentBlock = false;
 
@@ -699,13 +699,13 @@ export async function streamWithAnthropic(
         if (currentTool) {
           // Log the incomplete tool
           console.warn(
-            `[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`
+            `[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`,
           );
 
           // Only emit tool_call_complete if we have valid JSON
           if (isValidJSON(currentTool.arguments)) {
             onEvent({
-              type: "tool_call_complete",
+              type: "tool_call_parsed",
               toolCall: {
                 id: currentTool.id,
                 name: currentTool.name,
@@ -714,7 +714,7 @@ export async function streamWithAnthropic(
             });
           } else {
             console.error(
-              `[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`
+              `[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`,
             );
           }
         }
@@ -725,7 +725,7 @@ export async function streamWithAnthropic(
     const validToolCalls = toolCalls.filter((tc, idx) => {
       if (!isValidJSON(tc.arguments)) {
         console.warn(
-          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`
+          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
         );
         return false;
       }
@@ -734,10 +734,10 @@ export async function streamWithAnthropic(
 
     if (toolCalls.length !== validToolCalls.length) {
       console.log(
-        `[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`
+        `[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`,
       );
       console.log(
-        `[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`
+        `[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`,
       );
     }
 
@@ -752,7 +752,7 @@ export async function streamWithAnthropic(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0
+        0,
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -778,7 +778,7 @@ export async function streamWithAnthropic(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [Anthropic] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
+        `📊 [Anthropic] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
       );
 
       // Tool calling metrics
@@ -792,7 +792,7 @@ export async function streamWithAnthropic(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [Anthropic] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
+          `🔧 [Anthropic] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
         );
 
         // Tool timing details (consolidated)
@@ -830,12 +830,12 @@ export async function streamWithAnthropic(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [Anthropic] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
+          `⏳ [Anthropic] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
         );
       }
 
       console.log(
-        `✅ [Anthropic] Final message (${fullMessage.length} chars): "${fullMessage}"`
+        `✅ [Anthropic] Final message (${fullMessage.length} chars): "${fullMessage}"`,
       );
     }
 
@@ -856,7 +856,7 @@ export async function streamWithGoogle(
   tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -896,13 +896,13 @@ export async function streamWithGoogle(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Google specification: ${specification.name}`
+        `No model name found for Google specification: ${specification.name}`,
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
+        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
       );
     }
 
@@ -984,7 +984,7 @@ export async function streamWithGoogle(
           firstTokenTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`
+              `\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`,
             );
           }
         }
@@ -994,7 +994,7 @@ export async function streamWithGoogle(
           firstMeaningfulContentTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
+              `\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
             );
           }
         }
@@ -1014,11 +1014,11 @@ export async function streamWithGoogle(
             if (part.functionCall) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Received function call: ${part.functionCall.name}`
+                  `[Google] Received function call: ${part.functionCall.name}`,
                 );
                 console.log(
                   `[Google] Function args:`,
-                  JSON.stringify(part.functionCall.args || {})
+                  JSON.stringify(part.functionCall.args || {}),
                 );
               }
 
@@ -1032,7 +1032,7 @@ export async function streamWithGoogle(
               // Track tool metrics
               toolMetrics.totalTools++;
               const argumentString = JSON.stringify(
-                part.functionCall.args || {}
+                part.functionCall.args || {},
               );
               toolArgumentTokens += Math.ceil(argumentString.length / 4);
 
@@ -1048,7 +1048,7 @@ export async function streamWithGoogle(
                 firstTokenTime = Date.now() - startTime;
                 if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                   console.log(
-                    `\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`
+                    `\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`,
                   );
                 }
               }
@@ -1085,20 +1085,20 @@ export async function streamWithGoogle(
               } catch (e) {
                 toolMetrics.failedTools++;
                 console.error(
-                  `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`
+                  `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`,
                 );
               }
 
               // Log completion
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
+                  `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
                 );
                 console.log(toolCall.arguments);
               }
 
               onEvent({
-                type: "tool_call_complete",
+                type: "tool_call_parsed",
                 toolCall: {
                   id: toolCall.id,
                   name: toolCall.name,
@@ -1113,7 +1113,7 @@ export async function streamWithGoogle(
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.error(
             `[Google] Error parsing chunk for function calls:`,
-            error
+            error,
           );
         }
       }
@@ -1129,7 +1129,7 @@ export async function streamWithGoogle(
         candidate?.content?.parts
       ) {
         console.log(
-          `[Google] Processing final response with ${candidate.content.parts.length} parts`
+          `[Google] Processing final response with ${candidate.content.parts.length} parts`,
         );
       }
 
@@ -1142,7 +1142,7 @@ export async function streamWithGoogle(
             if (!fullMessage.endsWith(finalText)) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Adding final text: ${finalText.length} chars`
+                  `[Google] Adding final text: ${finalText.length} chars`,
                 );
               }
               fullMessage += finalText;
@@ -1160,7 +1160,7 @@ export async function streamWithGoogle(
           ) {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Google] Found function call in final response: ${part.functionCall.name}`
+                `[Google] Found function call in final response: ${part.functionCall.name}`,
               );
             }
 
@@ -1181,7 +1181,7 @@ export async function streamWithGoogle(
             });
 
             onEvent({
-              type: "tool_call_complete",
+              type: "tool_call_parsed",
               toolCall: {
                 id: toolCall.id,
                 name: toolCall.name,
@@ -1201,7 +1201,7 @@ export async function streamWithGoogle(
     // Final summary logging
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
-        `[Google] Successfully processed ${toolCalls.length} tool calls`
+        `[Google] Successfully processed ${toolCalls.length} tool calls`,
       );
     }
 
@@ -1216,7 +1216,7 @@ export async function streamWithGoogle(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0
+        0,
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -1242,7 +1242,7 @@ export async function streamWithGoogle(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [Google] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
+        `📊 [Google] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
       );
 
       // Tool calling metrics
@@ -1256,7 +1256,7 @@ export async function streamWithGoogle(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [Google] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
+          `🔧 [Google] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
         );
 
         // Tool timing details (consolidated)
@@ -1294,12 +1294,12 @@ export async function streamWithGoogle(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [Google] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
+          `⏳ [Google] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
         );
       }
 
       console.log(
-        `✅ [Google] Final message (${fullMessage.length} chars): "${fullMessage}"`
+        `✅ [Google] Final message (${fullMessage.length} chars): "${fullMessage}"`,
       );
     }
 

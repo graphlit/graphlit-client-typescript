@@ -9,6 +9,7 @@ import {
 export type ToolExecutionStatus =
   | "preparing"
   | "executing"
+  | "ready" // Tool has been parsed and is ready for execution
   | "completed"
   | "failed";
 
@@ -29,11 +30,11 @@ export type AgentStreamEvent =
       };
       isStreaming: boolean;
       metrics?: {
-        ttft?: number;               // Time to first token (ms)
-        elapsedTime: number;         // Streaming elapsed time (ms)
+        ttft?: number; // Time to first token (ms)
+        elapsedTime: number; // Streaming elapsed time (ms)
         conversationDuration: number; // Total time from user message to now (ms)
-        tokenCount?: number;         // Number of tokens received
-        avgTokenDelay?: number;      // Average delay between tokens (ms)
+        tokenCount?: number; // Number of tokens received
+        avgTokenDelay?: number; // Average delay between tokens (ms)
       };
     }
   | {
@@ -47,12 +48,12 @@ export type AgentStreamEvent =
       type: "conversation_completed";
       message: ConversationMessage;
       metrics?: {
-        ttft?: number;               // Time to first token (ms)
-        totalTime: number;           // Total streaming time (ms)
+        ttft?: number; // Time to first token (ms)
+        totalTime: number; // Total streaming time (ms)
         conversationDuration: number; // Total time from user message to completion (ms)
-        tokenCount?: number;         // Streaming chunks received
-        llmTokens?: number;          // Actual LLM tokens consumed
-        avgTokenDelay?: number;      // Average delay between tokens (ms)
+        tokenCount?: number; // Streaming chunks received
+        llmTokens?: number; // Actual LLM tokens consumed
+        avgTokenDelay?: number; // Average delay between tokens (ms)
       };
     }
   | {

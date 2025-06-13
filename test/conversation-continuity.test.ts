@@ -14,7 +14,7 @@ describe("Conversation Continuity & Context Preservation", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping conversation continuity tests - missing Graphlit credentials"
+      "⚠️  Skipping conversation continuity tests - missing Graphlit credentials",
     );
     return;
   }
@@ -25,8 +25,7 @@ describe("Conversation Continuity & Context Preservation", () => {
 
   // Test configuration
   const testModel =
-    TEST_MODELS.find((m) => m.name.includes("OpenAI GPT-4o")) ||
-    TEST_MODELS[0];
+    TEST_MODELS.find((m) => m.name.includes("OpenAI GPT-4o")) || TEST_MODELS[0];
 
   beforeAll(async () => {
     client = new Graphlit(orgId, envId, secret);
@@ -36,7 +35,7 @@ describe("Conversation Continuity & Context Preservation", () => {
   afterAll(async () => {
     // Clean up conversations
     console.log(
-      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`
+      `\n🧹 Cleaning up ${createdConversations.length} test conversations...`,
     );
     for (const convId of createdConversations) {
       try {
@@ -48,7 +47,7 @@ describe("Conversation Continuity & Context Preservation", () => {
 
     // Clean up specifications
     console.log(
-      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`
+      `🧹 Cleaning up ${createdSpecifications.length} test specifications...`,
     );
     for (const specId of createdSpecifications) {
       try {
@@ -66,32 +65,38 @@ describe("Conversation Continuity & Context Preservation", () => {
   function extractFinalMessage(events: AgentStreamEvent[]): string {
     // Get all potential messages
     const completedEvent = events.find(
-      (e) => e.type === "conversation_completed"
+      (e) => e.type === "conversation_completed",
     );
     const messageUpdates = events.filter((e) => e.type === "message_update");
     const lastUpdate = messageUpdates[messageUpdates.length - 1];
 
     // Collect all candidate messages
     const candidates: string[] = [];
-    
+
     if (completedEvent?.type === "conversation_completed") {
       candidates.push(completedEvent.message.message);
     }
-    
+
     if (lastUpdate?.type === "message_update") {
       candidates.push(lastUpdate.message.message);
     }
 
     // Return the longest message (most complete)
-    const finalMessage = candidates.reduce((longest, current) => 
-      current.length > longest.length ? current : longest, ""
+    const finalMessage = candidates.reduce(
+      (longest, current) =>
+        current.length > longest.length ? current : longest,
+      "",
     );
 
     // Debug logging for troubleshooting
     if (process.env.DEBUG_EXTRACT_MESSAGE) {
       console.log(`📝 [extractFinalMessage] Found ${events.length} events`);
-      console.log(`📝 [extractFinalMessage] Message updates: ${messageUpdates.length}`);
-      console.log(`📝 [extractFinalMessage] Completed event: ${completedEvent ? "yes" : "no"}`);
+      console.log(
+        `📝 [extractFinalMessage] Message updates: ${messageUpdates.length}`,
+      );
+      console.log(
+        `📝 [extractFinalMessage] Completed event: ${completedEvent ? "yes" : "no"}`,
+      );
       console.log(`📝 [extractFinalMessage] Candidates:`, candidates);
       console.log(`📝 [extractFinalMessage] Final choice: "${finalMessage}"`);
     }
@@ -105,7 +110,7 @@ describe("Conversation Continuity & Context Preservation", () => {
   async function streamMessage(
     prompt: string,
     specId: string,
-    conversationId?: string
+    conversationId?: string,
   ): Promise<{ events: AgentStreamEvent[]; conversationId: string }> {
     const events: AgentStreamEvent[] = [];
     let finalConversationId = conversationId;
@@ -123,7 +128,7 @@ describe("Conversation Continuity & Context Preservation", () => {
         }
       },
       conversationId, // undefined for first message, set for subsequent
-      { id: specId }
+      { id: specId },
     );
 
     if (!finalConversationId) {
@@ -151,7 +156,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("👤 Turn 1: Introducing John...");
       const turn1 = await streamMessage(
         "My friend John loves pizza and works as a software engineer.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -164,7 +169,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "What does he do for work?",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -182,7 +187,7 @@ describe("Conversation Continuity & Context Preservation", () => {
         console.error(`Turn 1 response: "${response1}"`);
         console.error(`Turn 2 response: "${response2}"`);
         console.error(
-          "Turn 2 should reference John or software engineering, but doesn't."
+          "Turn 2 should reference John or software engineering, but doesn't.",
         );
       }
 
@@ -201,7 +206,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("📱 Turn 1: Describing a red iPhone...");
       const turn1 = await streamMessage(
         "I have a red iPhone 15 that I bought last month for $800.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -211,7 +216,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "How much did it cost?",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -243,7 +248,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("👥 Turn 1: Introducing Alice and Bob...");
       const turn1 = await streamMessage(
         "Alice is a doctor who loves hiking. Bob is her brother and works in finance.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -253,7 +258,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "What does Alice like to do in her free time?",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -266,7 +271,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn3 = await streamMessage(
         "What does her brother do?",
         specId,
-        turn2.conversationId
+        turn2.conversationId,
       );
       const response3 = extractFinalMessage(turn3.events);
       console.log(`Response 3: "${response3}"`);
@@ -303,7 +308,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("📝 Turn 1: Setting basic info...");
       const turn1 = await streamMessage(
         "I'm planning a trip to Paris.",
-        specId
+        specId,
       );
       conversationId = turn1.conversationId;
       const response1 = extractFinalMessage(turn1.events);
@@ -314,7 +319,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "I'm going in June for 5 days.",
         specId,
-        conversationId
+        conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -324,7 +329,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn3 = await streamMessage(
         "My budget is $2000 total.",
         specId,
-        conversationId
+        conversationId,
       );
       const response3 = extractFinalMessage(turn3.events);
       console.log(`Response 3: "${response3}"`);
@@ -334,7 +339,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn4 = await streamMessage(
         "Can you summarize my trip plans?",
         specId,
-        conversationId
+        conversationId,
       );
       const response4 = extractFinalMessage(turn4.events);
       console.log(`Response 4: "${response4}"`);
@@ -342,8 +347,10 @@ describe("Conversation Continuity & Context Preservation", () => {
       // Should mention Paris, June, 5 days, and $2000
       const hasParis = response4.toLowerCase().includes("paris");
       const hasJune = response4.toLowerCase().includes("june");
-      const hasDuration = response4.includes("5") || response4.toLowerCase().includes("five");
-      const hasBudget = response4.includes("2000") || response4.includes("2,000");
+      const hasDuration =
+        response4.includes("5") || response4.toLowerCase().includes("five");
+      const hasBudget =
+        response4.includes("2000") || response4.includes("2,000");
 
       console.log(`Has Paris: ${hasParis}`);
       console.log(`Has June: ${hasJune}`);
@@ -373,7 +380,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("❌ Turn 1: Initial incorrect info...");
       const turn1 = await streamMessage(
         "My cat's name is Fluffy and she's 3 years old.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -383,7 +390,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "Actually, I was wrong. Her name is Whiskers, not Fluffy.",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -393,7 +400,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn3 = await streamMessage(
         "What's my cat's name?",
         specId,
-        turn2.conversationId
+        turn2.conversationId,
       );
       const response3 = extractFinalMessage(turn3.events);
       console.log(`Response 3: "${response3}"`);
@@ -431,7 +438,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("🏠 Turn 1: Talking about house renovation...");
       const turn1 = await streamMessage(
         "I'm renovating my kitchen and need to choose between marble and granite countertops.",
-        specId
+        specId,
       );
       conversationId = turn1.conversationId;
       const response1 = extractFinalMessage(turn1.events);
@@ -442,7 +449,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "By the way, is it supposed to rain tomorrow?",
         specId,
-        conversationId
+        conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -452,7 +459,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn3 = await streamMessage(
         "What should I have for lunch?",
         specId,
-        conversationId
+        conversationId,
       );
       const response3 = extractFinalMessage(turn3.events);
       console.log(`Response 3: "${response3}"`);
@@ -462,7 +469,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn4 = await streamMessage(
         "Back to the countertops - which material is more durable?",
         specId,
-        conversationId
+        conversationId,
       );
       const response4 = extractFinalMessage(turn4.events);
       console.log(`Response 4: "${response4}"`);
@@ -475,11 +482,15 @@ describe("Conversation Continuity & Context Preservation", () => {
 
       if (!remembersContext) {
         console.error("❌ NESTED TOPIC CONTEXT LOST!");
-        console.error(`Should mention marble/granite/countertops in: "${response4}"`);
+        console.error(
+          `Should mention marble/granite/countertops in: "${response4}"`,
+        );
       }
 
       expect(remembersContext).toBe(true);
-      console.log("✅ Successfully returned to previous context after nested topics");
+      console.log(
+        "✅ Successfully returned to previous context after nested topics",
+      );
     }, 240000);
 
     it("should maintain context through clarification requests", async () => {
@@ -493,7 +504,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("❓ Turn 1: Ambiguous movie request...");
       const turn1 = await streamMessage(
         "Can you recommend a good movie from the 90s with action and comedy?",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -503,7 +514,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "I prefer movies with Jackie Chan or similar martial arts comedy style.",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
@@ -513,17 +524,17 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn3 = await streamMessage(
         "So what's your top recommendation?",
         specId,
-        turn2.conversationId
+        turn2.conversationId,
       );
       const response3 = extractFinalMessage(turn3.events);
       console.log(`Response 3: "${response3}"`);
 
       // Should incorporate both the 90s action-comedy requirement AND Jackie Chan style
       const remembers90s = response3.toLowerCase().includes("90");
-      const remembersActionComedy = 
+      const remembersActionComedy =
         response3.toLowerCase().includes("action") ||
         response3.toLowerCase().includes("comedy");
-      const remembersJackieChan = 
+      const remembersJackieChan =
         response3.toLowerCase().includes("jackie") ||
         response3.toLowerCase().includes("chan") ||
         response3.toLowerCase().includes("martial");
@@ -558,17 +569,13 @@ describe("Conversation Continuity & Context Preservation", () => {
         "My favorite genre is blues rock, especially BB King style.",
         "I'm also trying to learn some Eric Clapton songs.",
         "My goal is to play at an open mic night next month.",
-        "Do you think I'm ready, given that I've been playing for 3 months total?"
+        "Do you think I'm ready, given that I've been playing for 3 months total?",
       ];
 
       // Send multiple turns building up context
       for (let i = 0; i < topics.length; i++) {
         console.log(`🎸 Turn ${i + 1}: ${topics[i].substring(0, 50)}...`);
-        const result = await streamMessage(
-          topics[i],
-          specId,
-          conversationId
-        );
+        const result = await streamMessage(topics[i], specId, conversationId);
         conversationId = result.conversationId;
         const response = extractFinalMessage(result.events);
         console.log(`Response ${i + 1}: "${response.substring(0, 100)}..."`);
@@ -579,19 +586,21 @@ describe("Conversation Continuity & Context Preservation", () => {
       const finalTurn = await streamMessage(
         "What guitar did I buy?",
         specId,
-        conversationId
+        conversationId,
       );
       const finalResponse = extractFinalMessage(finalTurn.events);
       console.log(`Final response: "${finalResponse}"`);
 
       // Should remember the Fender Stratocaster from turn 1
-      const remembersGuitar = 
+      const remembersGuitar =
         finalResponse.toLowerCase().includes("fender") ||
         finalResponse.toLowerCase().includes("stratocaster");
 
       if (!remembersGuitar) {
         console.error("❌ EARLY CONTEXT LOST IN LONG CONVERSATION!");
-        console.error(`Should mention Fender Stratocaster in: "${finalResponse}"`);
+        console.error(
+          `Should mention Fender Stratocaster in: "${finalResponse}"`,
+        );
       }
 
       expect(remembersGuitar).toBe(true);
@@ -609,7 +618,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("🐕 Turn 1: Introducing dog...");
       const turn1 = await streamMessage(
         "My dog Rex is a 5-year-old Golden Retriever who loves swimming and fetching tennis balls.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -617,16 +626,16 @@ describe("Conversation Continuity & Context Preservation", () => {
       // Rapid questions
       const questions = [
         "How old is he?",
-        "What breed?", 
+        "What breed?",
         "What's his favorite activity?",
-        "What's his name again?"
+        "What's his name again?",
       ];
 
       const expectedAnswers = [
         ["5", "five"],
         ["golden", "retriever"],
         ["swim", "fetch", "tennis", "ball"],
-        ["rex"]
+        ["rex"],
       ];
 
       for (let i = 0; i < questions.length; i++) {
@@ -634,18 +643,20 @@ describe("Conversation Continuity & Context Preservation", () => {
         const result = await streamMessage(
           questions[i],
           specId,
-          turn1.conversationId
+          turn1.conversationId,
         );
         const response = extractFinalMessage(result.events);
         console.log(`Quick response ${i + 1}: "${response}"`);
 
         // Check if response contains expected keywords
-        const hasExpectedAnswer = expectedAnswers[i].some(keyword =>
-          response.toLowerCase().includes(keyword.toLowerCase())
+        const hasExpectedAnswer = expectedAnswers[i].some((keyword) =>
+          response.toLowerCase().includes(keyword.toLowerCase()),
         );
 
         // Debug: Show what we're comparing
-        console.log(`  Checking: "${response.toLowerCase()}" contains any of: ${expectedAnswers[i].map(k => k.toLowerCase()).join(", ")}`);
+        console.log(
+          `  Checking: "${response.toLowerCase()}" contains any of: ${expectedAnswers[i].map((k) => k.toLowerCase()).join(", ")}`,
+        );
         console.log(`  Match found: ${hasExpectedAnswer}`);
 
         if (!hasExpectedAnswer) {
@@ -674,7 +685,7 @@ describe("Conversation Continuity & Context Preservation", () => {
       console.log("👤 Turn 1: Mentioning a person...");
       const turn1 = await streamMessage(
         "My colleague David is working on a new project.",
-        specId
+        specId,
       );
       const response1 = extractFinalMessage(turn1.events);
       console.log(`Response 1: "${response1}"`);
@@ -684,31 +695,37 @@ describe("Conversation Continuity & Context Preservation", () => {
       const turn2 = await streamMessage(
         "What do you think about his approach?",
         specId,
-        turn1.conversationId
+        turn1.conversationId,
       );
       const response2 = extractFinalMessage(turn2.events);
       console.log(`Response 2: "${response2}"`);
 
       // With the original bug, LLM would ask "who you're referring to with 'his'?"
       // With the fix, LLM should understand "his" refers to David
-      const asksForClarification = 
+      const asksForClarification =
         response2.toLowerCase().includes("who") ||
         response2.toLowerCase().includes("referring") ||
-        response2.toLowerCase().includes("his") && response2.includes("?");
+        (response2.toLowerCase().includes("his") && response2.includes("?"));
 
-      const understandsReference = 
+      const understandsReference =
         response2.toLowerCase().includes("david") ||
         response2.toLowerCase().includes("colleague") ||
         !asksForClarification; // If not asking for clarification, likely understood
 
       if (asksForClarification) {
-        console.error("❌ REGRESSION: LLM asking for clarification about 'his'!");
-        console.error(`This suggests the conversation history fix isn't working.`);
+        console.error(
+          "❌ REGRESSION: LLM asking for clarification about 'his'!",
+        );
+        console.error(
+          `This suggests the conversation history fix isn't working.`,
+        );
         console.error(`Response: "${response2}"`);
       }
 
       expect(asksForClarification).toBe(false);
-      console.log("✅ Regression test passed - LLM understands pronoun reference");
+      console.log(
+        "✅ Regression test passed - LLM understands pronoun reference",
+      );
     }, 120000);
   });
 });

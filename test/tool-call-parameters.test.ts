@@ -10,7 +10,7 @@ describe("Tool Call Parameters Test", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping tool parameter tests - missing Graphlit credentials"
+      "⚠️  Skipping tool parameter tests - missing Graphlit credentials",
     );
     return;
   }
@@ -52,7 +52,7 @@ describe("Tool Call Parameters Test", () => {
         console.warn(`⚠️  Failed to delete conversation ${conversationId}`);
       }
     }
-    
+
     if (specId) {
       try {
         await client.deleteSpecification(specId);
@@ -114,7 +114,7 @@ describe("Tool Call Parameters Test", () => {
         if (event.type === "conversation_started") {
           conversationId = event.conversationId;
         }
-        
+
         if (
           event.type === "conversation_completed" &&
           event.message.toolCalls
@@ -134,8 +134,8 @@ describe("Tool Call Parameters Test", () => {
             JSON.stringify(
               capturedToolCalls[capturedToolCalls.length - 1],
               null,
-              2
-            )
+              2,
+            ),
           );
         }
       },
@@ -146,7 +146,7 @@ describe("Tool Call Parameters Test", () => {
       {
         maxToolRounds: 3,
         smoothingEnabled: false,
-      }
+      },
     );
 
     // Check that we have tool calls
