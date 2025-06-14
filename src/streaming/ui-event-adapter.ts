@@ -395,7 +395,7 @@ export class UIEventAdapter {
     if (this.streamStartTime > 0) {
       const totalTime = Date.now() - this.streamStartTime;
 
-      // Final throughput (chars/second)
+      // Final throughput (chars/second) - includes entire duration
       finalMessage.throughput =
         totalTime > 0
           ? Math.round((this.currentMessage.length / totalTime) * 1000)
@@ -444,6 +444,16 @@ export class UIEventAdapter {
       const avgDelay =
         this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
       finalMetrics.avgTokenDelay = Math.round(avgDelay);
+    }
+
+    // Calculate streaming throughput (excludes TTFT)
+    if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
+      const streamingTime = completionTime - this.firstTokenTime;
+      if (streamingTime > 0) {
+        finalMetrics.streamingThroughput = Math.round(
+          (this.currentMessage.length / streamingTime) * 1000
+        );
+      }
     }
 
     this.emitUIEvent({
