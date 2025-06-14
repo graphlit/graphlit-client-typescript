@@ -24,6 +24,31 @@ function isValidJSON(str: string): boolean {
 }
 
 /**
+ * Clean schema for Google Gemini by removing unsupported fields
+ */
+function cleanSchemaForGoogle(schema: any): any {
+  if (typeof schema !== "object" || schema === null) {
+    return schema;
+  }
+
+  if (Array.isArray(schema)) {
+    return schema.map((item) => cleanSchemaForGoogle(item));
+  }
+
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(schema)) {
+    // Skip fields that Google doesn't support
+    if (key === "$schema" || key === "additionalProperties") {
+      continue;
+    }
+    // Recursively clean nested objects
+    cleaned[key] = cleanSchemaForGoogle(value);
+  }
+
+  return cleaned;
+}
+
+/**
  * Stream with OpenAI SDK
  */
 export async function streamWithOpenAI(
@@ -937,11 +962,26 @@ export async function streamWithGoogle(
       tools && tools.length > 0
         ? [
             {
-              functionDeclarations: tools.map((tool) => ({
-                name: tool.name,
-                description: tool.description,
-                parameters: tool.schema ? JSON.parse(tool.schema) : {},
-              })),
+              functionDeclarations: tools.map((tool) => {
+                const rawSchema = tool.schema ? JSON.parse(tool.schema) : {};
+                const cleanedSchema = cleanSchemaForGoogle(rawSchema);
+
+                if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                  const hadCleanup =
+                    JSON.stringify(rawSchema) !== JSON.stringify(cleanedSchema);
+                  if (hadCleanup) {
+                    console.log(
+                      `[Google] Cleaned schema for tool ${tool.name} - removed unsupported fields`,
+                    );
+                  }
+                }
+
+                return {
+                  name: tool.name,
+                  description: tool.description,
+                  parameters: cleanedSchema,
+                };
+              }),
             },
           ]
         : undefined;
