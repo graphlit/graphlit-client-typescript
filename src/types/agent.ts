@@ -1,4 +1,8 @@
 import { SmoothStreamOptions } from "./streaming.js";
+import {
+  ConversationMessage,
+  ConversationToolCall,
+} from "../generated/graphql-types.js";
 
 // Tool handler function type
 export type ToolHandler = (args: any) => Promise<any>;
@@ -9,10 +13,37 @@ export interface AgentOptions {
   timeout?: number; // milliseconds
 }
 
-// Result from promptAgent
+// Performance metrics for agent execution
+export interface AgentMetrics {
+  totalTime: number; // Total execution time in ms
+  llmTime?: number; // Time spent waiting for LLM responses
+  toolTime?: number; // Time spent executing tools
+  ttft?: number; // Time to first token (streaming only)
+  tokensPerSecond?: number; // Token generation rate
+  toolExecutions?: number; // Number of tool executions
+  rounds?: number; // Number of tool calling rounds
+}
+
+// Result from promptAgent with full conversation details
 export interface AgentResult {
-  message: string;
+  // Core response
+  message: string; // The final message text
   conversationId: string;
+  
+  // Full conversation message with metadata
+  conversationMessage?: ConversationMessage;
+  
+  // Tool calling information
+  toolCalls?: ConversationToolCall[];
+  toolResults?: ToolCallResult[];
+  
+  // Performance metrics
+  metrics?: AgentMetrics;
+  
+  // Usage information
+  usage?: UsageInfo;
+  
+  // Error if any
   error?: AgentError;
 }
 

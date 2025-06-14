@@ -28,6 +28,8 @@ import {
   StreamAgentOptions,
   ToolCallResult,
   ToolHandler,
+  AgentMetrics,
+  UsageInfo,
 } from "./types/agent.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
@@ -3798,7 +3800,9 @@ class Graphlit {
       // 3. Tool calling loop
       const allToolCalls: ToolCallResult[] = [];
       let rounds = 0;
-      let totalTokens = 0;
+      let totalTokens = currentMessage?.tokens || 0;
+      const toolStartTime = Date.now();
+      let toolTime = 0;
 
       while (
         currentMessage.toolCalls?.length &&
@@ -3808,6 +3812,7 @@ class Graphlit {
         rounds++;
 
         // Execute tools
+        const toolExecStart = Date.now();
         const toolResults = await this.executeToolsForPromptAgent(
           currentMessage.toolCalls.filter(
             (tc): tc is Types.ConversationToolCall => tc !== null,
@@ -3816,6 +3821,7 @@ class Graphlit {
           allToolCalls,
           abortController.signal,
         );
+        toolTime += Date.now() - toolExecStart;
 
         if (abortController.signal.aborted) {
           throw new Error("Operation timed out");
@@ -3837,9 +3843,36 @@ class Graphlit {
         }
       }
 
+      // Calculate metrics
+      const totalTime = Date.now() - startTime;
+      const llmTime = totalTime - toolTime;
+      
+      const metrics: AgentMetrics = {
+        totalTime,
+        llmTime,
+        toolTime,
+        toolExecutions: allToolCalls.length,
+        rounds,
+      };
+
+      // Build usage info if we have token data
+      const usage: UsageInfo | undefined = totalTokens > 0 ? {
+        promptTokens: 0, // We don't have this breakdown from the API
+        completionTokens: totalTokens,
+        totalTokens: totalTokens,
+        model: currentMessage?.model || undefined,
+      } : undefined;
+
       return {
         message: currentMessage?.message || "",
         conversationId: actualConversationId,
+        conversationMessage: currentMessage ? currentMessage as Types.ConversationMessage : undefined,
+        toolCalls: currentMessage?.toolCalls?.filter(
+          (tc): tc is Types.ConversationToolCall => tc !== null
+        ),
+        toolResults: allToolCalls,
+        metrics,
+        usage,
       };
     } catch (error: any) {
       // Return partial result with error
@@ -3853,6 +3886,14 @@ class Graphlit {
           code: error.code || (isTimeout ? "TIMEOUT" : "UNKNOWN"),
           recoverable: isTimeout || error.code === "RATE_LIMIT",
           details: error.response?.data,
+        },
+        // Include partial metrics if available
+        metrics: {
+          totalTime: Date.now() - startTime,
+          llmTime: 0,
+          toolTime: 0,
+          toolExecutions: 0,
+          rounds: 0,
         },
       };
     } finally {
