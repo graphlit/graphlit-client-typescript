@@ -35,6 +35,7 @@ export type AgentStreamEvent =
         conversationDuration: number; // Total time from user message to now (ms)
         tokenCount?: number; // Number of tokens received
         avgTokenDelay?: number; // Average delay between tokens (ms)
+        streamingThroughput?: number; // Characters per second (excludes TTFT)
       };
     }
   | {
@@ -54,6 +55,7 @@ export type AgentStreamEvent =
         tokenCount?: number; // Streaming chunks received
         llmTokens?: number; // Actual LLM tokens consumed
         avgTokenDelay?: number; // Average delay between tokens (ms)
+        streamingThroughput?: number; // Characters per second (excludes TTFT)
       };
     }
   | {
