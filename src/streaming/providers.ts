@@ -7,6 +7,9 @@ import {
   OpenAIMessage,
   AnthropicMessage,
   GoogleMessage,
+  CohereMessage,
+  MistralMessage,
+  BedrockMessage,
 } from "./llm-formatters.js";
 import { getModelName } from "../model-mapping.js";
 import { StreamEvent } from "../types/internal.js";
@@ -97,7 +100,7 @@ export async function streamWithOpenAI(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for OpenAI specification: ${specification.name}`,
+        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
       );
     }
 
@@ -1346,6 +1349,826 @@ export async function streamWithGoogle(
     onComplete(fullMessage, toolCalls);
   } catch (error) {
     // Don't emit error event here - let the client handle it to avoid duplicates
+    throw error;
+  }
+}
+
+/**
+ * Stream with Groq SDK (OpenAI-compatible)
+ */
+export async function streamWithGroq(
+  specification: Specification,
+  messages: OpenAIMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  groqClient: any, // Groq client instance (OpenAI-compatible)
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  // Groq uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
+  return streamWithOpenAI(
+    specification,
+    messages,
+    tools,
+    groqClient,
+    onEvent,
+    onComplete,
+  );
+}
+
+/**
+ * Stream with Cerebras SDK (OpenAI-compatible)
+ */
+export async function streamWithCerebras(
+  specification: Specification,
+  messages: OpenAIMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  cerebrasClient: any, // OpenAI client instance configured for Cerebras
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  // Cerebras uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
+  return streamWithOpenAI(
+    specification,
+    messages,
+    tools,
+    cerebrasClient,
+    onEvent,
+    onComplete,
+  );
+}
+
+/**
+ * Stream with Deepseek SDK (OpenAI-compatible)
+ */
+export async function streamWithDeepseek(
+  specification: Specification,
+  messages: OpenAIMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  deepseekClient: any, // OpenAI client instance configured for Deepseek
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
+
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let firstMeaningfulContentTime = 0;
+  let tokenCount = 0;
+  let toolArgumentTokens = 0;
+  let lastEventTime = 0;
+  const interTokenDelays: number[] = [];
+
+  // Tool calling metrics
+  const toolMetrics = {
+    totalTools: 0,
+    successfulTools: 0,
+    failedTools: 0,
+    toolTimes: [] as {
+      name: string;
+      startTime: number;
+      argumentBuildTime: number;
+      totalTime: number;
+    }[],
+    currentToolStart: 0,
+    roundStartTime: startTime,
+    rounds: [] as {
+      roundNumber: number;
+      llmTime: number;
+      toolTime: number;
+      toolCount: number;
+    }[],
+    currentRound: 1,
+  };
+
+  try {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔍 [Deepseek] Specification object:`, {
+        name: specification.name,
+        serviceType: specification.serviceType,
+        deepseek: specification.deepseek,
+        hasDeepseekModel: !!specification.deepseek?.model,
+        deepseekModelValue: specification.deepseek?.model
+      });
+    }
+    
+    const modelName = getModelName(specification);
+    if (!modelName) {
+      console.error(`❌ [Deepseek] Model resolution failed:`, {
+        name: specification.name,
+        serviceType: specification.serviceType,
+        deepseek: specification.deepseek,
+        hasCustomModelName: !!specification.deepseek?.modelName
+      });
+      throw new Error(
+        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
+      );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [Deepseek] Model Config: Service=Deepseek | Model=${modelName} | Temperature=${specification.deepseek?.temperature} | MaxTokens=${specification.deepseek?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+      );
+    }
+
+    const streamConfig: any = {
+      model: modelName,
+      messages,
+      stream: true,
+      temperature: specification.deepseek?.temperature,
+    };
+
+    // Only add max_completion_tokens if it's defined
+    if (specification.deepseek?.completionTokenLimit) {
+      streamConfig.max_completion_tokens =
+        specification.deepseek.completionTokenLimit;
+    }
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      streamConfig.tools = tools.map((tool) => ({
+        type: "function",
+        function: {
+          name: tool.name,
+          description: tool.description,
+          parameters: tool.schema ? JSON.parse(tool.schema) : {},
+        },
+      }));
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `⏱️ [Deepseek] Starting LLM call at: ${new Date().toISOString()}`,
+      );
+    }
+
+    const stream = await deepseekClient.chat.completions.create(streamConfig);
+
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta;
+
+      if (!delta) continue;
+
+      const currentTime = Date.now();
+
+      // Track first token time
+      if (firstTokenTime === 0) {
+        firstTokenTime = currentTime - startTime;
+      }
+
+      // Track inter-token delays
+      if (lastEventTime > 0) {
+        const delay = currentTime - lastEventTime;
+        interTokenDelays.push(delay);
+      }
+      lastEventTime = currentTime;
+
+      // Handle message content
+      if (delta.content) {
+        tokenCount++;
+        fullMessage += delta.content;
+
+        // Track first meaningful content
+        if (firstMeaningfulContentTime === 0 && fullMessage.trim().length > 0) {
+          firstMeaningfulContentTime = currentTime - startTime;
+        }
+
+        onEvent({
+          type: "message",
+          message: fullMessage,
+        });
+
+        // Performance metrics tracking (internal only)
+        if (tokenCount % 10 === 0) {
+          const totalTokens = tokenCount + toolArgumentTokens;
+          const tokensPerSecond =
+            totalTokens > 0 ? totalTokens / ((currentTime - startTime) / 1000) : 0;
+          const avgInterTokenDelay =
+            interTokenDelays.length > 0
+              ? interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length
+              : 0;
+        }
+      }
+
+      // Handle tool calls
+      if (delta.tool_calls) {
+        for (const toolCall of delta.tool_calls) {
+          const index = toolCall.index;
+
+          // Initialize tool call if it doesn't exist
+          if (!toolCalls[index]) {
+            toolCalls[index] = {
+              id: toolCall.id || `tool_${index}`,
+              name: toolCall.function?.name || "",
+              arguments: "",
+            };
+
+            // Start tool timing
+            toolMetrics.totalTools++;
+            toolMetrics.currentToolStart = currentTime;
+
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `🔧 [Deepseek] Tool call started: ${toolCalls[index].name}`,
+              );
+            }
+
+            onEvent({
+              type: "tool_call_parsed",
+              toolCall: { ...toolCalls[index] },
+            });
+          }
+
+          // Update tool call name if provided
+          if (toolCall.function?.name) {
+            toolCalls[index].name = toolCall.function.name;
+          }
+
+          // Accumulate arguments
+          if (toolCall.function?.arguments) {
+            toolCalls[index].arguments += toolCall.function.arguments;
+            toolArgumentTokens++;
+          }
+
+          // Update with current state
+          onEvent({
+            type: "tool_call_delta",
+            toolCallId: toolCalls[index].id,
+            argumentDelta: toolCall.function?.arguments || "",
+          });
+        }
+      }
+    }
+
+    // Process completed tool calls
+    const validToolCalls = toolCalls.filter((tc, idx) => {
+      if (!isValidJSON(tc.arguments)) {
+        console.warn(
+          `[Deepseek] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
+        );
+        return false;
+      }
+      return true;
+    });
+
+    if (toolCalls.length !== validToolCalls.length) {
+      console.log(
+        `[Deepseek] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`,
+      );
+    }
+
+    // Final performance metrics
+    const totalTime = Date.now() - startTime;
+    const totalTokens = tokenCount + toolArgumentTokens;
+    const tokensPerSecond =
+      totalTokens > 0 ? totalTokens / (totalTime / 1000) : 0;
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_METRICS) {
+      const metricsData = {
+        totalTime: `${totalTime}ms`,
+        ttft: `${firstTokenTime}ms`,
+        ttfmc:
+          firstMeaningfulContentTime > 0
+            ? `${firstMeaningfulContentTime}ms`
+            : null,
+        contentTokens: tokenCount,
+        toolTokens: toolArgumentTokens,
+        totalTokens: totalTokens,
+        tps: tokensPerSecond.toFixed(2),
+      };
+      console.log(
+        `📊 [Deepseek] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
+      );
+    }
+
+    // Send completion event
+    onEvent({
+      type: "complete",
+      tokens: totalTokens,
+    });
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `✅ [Deepseek] Stream completed: ${fullMessage.length} chars, ${validToolCalls.length} tools`,
+      );
+    }
+
+    onComplete(fullMessage, validToolCalls);
+  } catch (error) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.error(`❌ [Deepseek] Stream error:`, error);
+    }
+    onEvent({
+      type: "error",
+      error: `Deepseek streaming error: ${error}`,
+    });
+    throw error;
+  }
+}
+
+/**
+ * Stream with Cohere SDK
+ */
+export async function streamWithCohere(
+  specification: Specification,
+  messages: CohereMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  cohereClient: any, // CohereClient instance
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
+
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+
+  try {
+    const modelName = getModelName(specification);
+    if (!modelName) {
+      throw new Error(
+        `No model name found for Cohere specification: ${specification.name}`,
+      );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [Cohere] Model Config: Service=Cohere | Model=${modelName} | Temperature=${specification.cohere?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+      );
+    }
+
+    // Prepare the latest user message and chat history
+    const lastMessage = messages[messages.length - 1];
+    const chatHistory = messages.slice(0, -1);
+
+    const streamConfig: any = {
+      model: modelName,
+      message: lastMessage.message,
+      chatHistory: chatHistory,
+      temperature: specification.cohere?.temperature,
+    };
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      streamConfig.tools = tools.map((tool) => {
+        if (!tool.schema) {
+          return {
+            name: tool.name,
+            description: tool.description,
+            parameterDefinitions: {},
+          };
+        }
+
+        // Parse the JSON schema
+        const schema = JSON.parse(tool.schema);
+        
+        // Convert JSON Schema to Cohere's expected format
+        const parameterDefinitions: Record<string, any> = {};
+        
+        if (schema.properties) {
+          for (const [key, value] of Object.entries(schema.properties)) {
+            const prop = value as any;
+            parameterDefinitions[key] = {
+              type: prop.type || "string",
+              description: prop.description || "",
+              required: schema.required?.includes(key) || false,
+            };
+            
+            // Add additional properties that Cohere might expect
+            if (prop.enum) {
+              parameterDefinitions[key].options = prop.enum;
+            }
+            if (prop.default !== undefined) {
+              parameterDefinitions[key].default = prop.default;
+            }
+            if (prop.items) {
+              parameterDefinitions[key].items = prop.items;
+            }
+          }
+        }
+
+        return {
+          name: tool.name,
+          description: tool.description,
+          parameterDefinitions,
+        };
+      });
+    }
+
+    const stream = await cohereClient.chatStream(streamConfig);
+
+    for await (const chunk of stream) {
+      if (chunk.eventType === "text-generation") {
+        const text = chunk.text;
+        if (text) {
+          fullMessage += text;
+          tokenCount++;
+
+          if (firstTokenTime === 0) {
+            firstTokenTime = Date.now() - startTime;
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `⚡ [Cohere] Time to First Token: ${firstTokenTime}ms`,
+              );
+            }
+          }
+
+          onEvent({
+            type: "token",
+            token: text,
+          });
+        }
+      } else if (chunk.eventType === "tool-calls-generation") {
+        // Handle tool calls
+        if (chunk.toolCalls) {
+          for (const toolCall of chunk.toolCalls) {
+            const id = `tool_${Date.now()}_${toolCalls.length}`;
+            const formattedToolCall = {
+              id,
+              name: toolCall.name,
+              arguments: JSON.stringify(toolCall.parameters),
+            };
+            toolCalls.push(formattedToolCall);
+
+            onEvent({
+              type: "tool_call_start",
+              toolCall: { id, name: toolCall.name },
+            });
+
+            onEvent({
+              type: "tool_call_parsed",
+              toolCall: formattedToolCall,
+            });
+          }
+        }
+      }
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `✅ [Cohere] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+      );
+    }
+
+    onComplete(fullMessage, toolCalls);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Stream with Mistral SDK
+ */
+export async function streamWithMistral(
+  specification: Specification,
+  messages: MistralMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  mistralClient: any, // Mistral client instance
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
+
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+
+  try {
+    const modelName = getModelName(specification);
+    if (!modelName) {
+      throw new Error(
+        `No model name found for Mistral specification: ${specification.name}`,
+      );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [Mistral] Model Config: Service=Mistral | Model=${modelName} | Temperature=${specification.mistral?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+      );
+    }
+
+    const streamConfig: any = {
+      model: modelName,
+      messages,
+      temperature: specification.mistral?.temperature,
+    };
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      streamConfig.tools = tools.map((tool) => ({
+        type: "function",
+        function: {
+          name: tool.name,
+          description: tool.description,
+          parameters: tool.schema ? JSON.parse(tool.schema) : {},
+        },
+      }));
+    }
+
+    const stream = await mistralClient.chat.stream(streamConfig);
+
+    for await (const chunk of stream) {
+      const delta = chunk.data.choices[0]?.delta;
+
+      if (delta?.content) {
+        fullMessage += delta.content;
+        tokenCount++;
+
+        if (firstTokenTime === 0) {
+          firstTokenTime = Date.now() - startTime;
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `⚡ [Mistral] Time to First Token: ${firstTokenTime}ms`,
+            );
+          }
+        }
+
+        onEvent({
+          type: "token",
+          token: delta.content,
+        });
+      }
+
+      // Handle tool calls
+      if (delta?.tool_calls) {
+        for (const toolCallDelta of delta.tool_calls) {
+          const index = toolCallDelta.index || 0;
+
+          if (!toolCalls[index]) {
+            toolCalls[index] = {
+              id: toolCallDelta.id || `tool_${Date.now()}_${index}`,
+              name: "",
+              arguments: "",
+            };
+
+            onEvent({
+              type: "tool_call_start",
+              toolCall: {
+                id: toolCalls[index].id,
+                name: toolCallDelta.function?.name || "",
+              },
+            });
+          }
+
+          if (toolCallDelta.function?.name) {
+            toolCalls[index].name = toolCallDelta.function.name;
+          }
+
+          if (toolCallDelta.function?.arguments) {
+            toolCalls[index].arguments += toolCallDelta.function.arguments;
+
+            onEvent({
+              type: "tool_call_delta",
+              toolCallId: toolCalls[index].id,
+              argumentDelta: toolCallDelta.function.arguments,
+            });
+          }
+        }
+      }
+    }
+
+    // Emit complete events for tool calls
+    for (const toolCall of toolCalls) {
+      if (isValidJSON(toolCall.arguments)) {
+        onEvent({
+          type: "tool_call_parsed",
+          toolCall,
+        });
+      }
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `✅ [Mistral] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+      );
+    }
+
+    onComplete(fullMessage, toolCalls);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Stream with Bedrock SDK (for Claude models)
+ */
+export async function streamWithBedrock(
+  specification: Specification,
+  messages: BedrockMessage[],
+  systemPrompt: string | undefined,
+  tools: ToolDefinitionInput[] | undefined,
+  bedrockClient: any, // BedrockRuntimeClient instance
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+): Promise<void> {
+  let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
+  // Map contentBlockIndex to tool calls for proper correlation
+  const toolCallsByIndex = new Map<number, ConversationToolCall>();
+
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+
+  try {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔍 [Bedrock] Specification object:`, JSON.stringify(specification, null, 2));
+    }
+    
+    const modelName = getModelName(specification);
+    if (!modelName) {
+      console.error(`❌ [Bedrock] Model resolution failed for specification:`, {
+        name: specification.name,
+        serviceType: specification.serviceType,
+        bedrock: specification.bedrock,
+        hasCustomModelName: !!specification.bedrock?.modelName
+      });
+      throw new Error(
+        `No model name found for Bedrock specification: ${specification.name} (service: ${specification.serviceType}, bedrock.model: ${specification.bedrock?.model})`,
+      );
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [Bedrock] Model Config: Service=Bedrock | Model=${modelName} | Temperature=${specification.bedrock?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+      );
+    }
+
+    // Import the ConverseStreamCommand for unified API
+    const { ConverseStreamCommand } = await import(
+      "@aws-sdk/client-bedrock-runtime"
+    );
+
+    // Convert messages to Bedrock Converse format
+    // The AWS SDK expects content as an array of content blocks
+    const converseMessages = messages.map((msg: BedrockMessage) => ({
+      role: msg.role,
+      content: [{
+        text: typeof msg.content === 'string' ? msg.content : msg.content.toString()
+      }]
+    }));
+
+    // Prepare the request using Converse API format
+    // Using 'any' type because:
+    // 1. We're dynamically importing the SDK (can't import types at compile time)
+    // 2. The ConverseStreamCommandInput type has complex union types for system/toolConfig
+    // 3. The structure matches the AWS SDK expectations
+    const request: any = {
+      modelId: modelName,
+      messages: converseMessages,
+      inferenceConfig: {
+        temperature: specification.bedrock?.temperature ?? undefined,
+        topP: specification.bedrock?.probability ?? undefined,
+        maxTokens: specification.bedrock?.completionTokenLimit || 1000,
+      },
+    };
+
+    // Add system prompt if provided
+    if (systemPrompt) {
+      request.system = [{ text: systemPrompt }];
+    }
+
+    // Add tools if provided
+    if (tools && tools.length > 0) {
+      request.toolConfig = {
+        tools: tools.map((tool) => ({
+          toolSpec: {
+            name: tool.name,
+            description: tool.description,
+            inputSchema: {
+              json: tool.schema ? JSON.parse(tool.schema) : {},
+            },
+          },
+        })),
+      };
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔍 [Bedrock] Converse request:`, JSON.stringify(request, null, 2));
+    }
+
+    const command = new ConverseStreamCommand(request);
+
+    const response = await bedrockClient.send(command);
+
+    if (response.stream) {
+      for await (const event of response.stream) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`🔍 [Bedrock] Stream event:`, JSON.stringify(event));
+        }
+
+        // Handle different event types from Converse API
+        if (event.contentBlockDelta) {
+          const delta = event.contentBlockDelta.delta;
+          const contentIndex = event.contentBlockDelta.contentBlockIndex;
+          
+          if (delta?.text) {
+            const text = delta.text;
+            fullMessage += text;
+            tokenCount++;
+
+            if (firstTokenTime === 0) {
+              firstTokenTime = Date.now() - startTime;
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(
+                  `⚡ [Bedrock] Time to First Token: ${firstTokenTime}ms`,
+                );
+              }
+            }
+
+            onEvent({
+              type: "token",
+              token: text,
+            });
+
+            onEvent({
+              type: "message",
+              message: fullMessage,
+            });
+          } else if (delta?.toolUse) {
+            // Handle tool use input delta
+            if (delta.toolUse.input && contentIndex !== undefined) {
+              // Find the corresponding tool call by index
+              // Bedrock uses contentBlockIndex to correlate deltas with their starts
+              const toolCall = toolCallsByIndex.get(contentIndex);
+              if (toolCall) {
+                toolCall.arguments += delta.toolUse.input;
+              }
+            }
+          }
+        } else if (event.contentBlockStart) {
+          // Handle tool use start
+          const start = event.contentBlockStart.start;
+          const startIndex = event.contentBlockStart.contentBlockIndex;
+          
+          if (start?.toolUse && startIndex !== undefined) {
+            const toolUse = start.toolUse;
+            const id = toolUse.toolUseId || `tool_${Date.now()}_${toolCalls.length}`;
+            
+            // Initialize the tool call
+            const toolCall: ConversationToolCall = {
+              id,
+              name: toolUse.name || "",
+              arguments: "",
+            };
+            
+            // Store in both array and map
+            toolCalls.push(toolCall);
+            toolCallsByIndex.set(startIndex, toolCall);
+
+            onEvent({
+              type: "tool_call_start",
+              toolCall: { id, name: toolUse.name || "" },
+            });
+          }
+        } else if (event.contentBlockStop) {
+          // Handle tool use completion
+          const stopIndex = event.contentBlockStop.contentBlockIndex;
+          if (stopIndex !== undefined) {
+            const toolCall = toolCallsByIndex.get(stopIndex);
+            if (toolCall) {
+              // Emit tool_call_parsed event when tool arguments are complete
+              onEvent({
+                type: "tool_call_parsed",
+                toolCall: toolCall,
+              });
+            }
+          }
+        } else if (event.metadata) {
+          // Metadata events contain usage information
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`📊 [Bedrock] Metadata:`, event.metadata);
+          }
+        }
+      }
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `✅ [Bedrock] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+      );
+    }
+
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
+
+    onComplete(fullMessage, toolCalls);
+  } catch (error) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.error(`❌ [Bedrock] Stream error:`, error);
+    }
+    onEvent({
+      type: "error",
+      error: `Bedrock streaming error: ${error}`,
+    });
     throw error;
   }
 }

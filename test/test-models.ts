@@ -212,20 +212,7 @@ export const TEST_MODELS: TestModelConfig[] = [
     },
   },
 
-  // Uncomment these if you have API keys configured:
-  /*
-  {
-    name: "Deepseek Chat",
-    config: {
-      name: "Test Deepseek Chat",
-      type: Types.SpecificationTypes.Completion,
-      serviceType: Types.ModelServiceTypes.Deepseek,
-      deepseek: {
-        model: Types.DeepseekModels.Chat,
-        temperature: 0.7,
-      },
-    },
-  },
+  // Groq Models
   {
     name: "Groq LLaMA 3.3 70B",
     config: {
@@ -236,8 +223,14 @@ export const TEST_MODELS: TestModelConfig[] = [
         model: Types.GroqModels.Llama_3_3_70B,
         temperature: 0.7,
       },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
     },
   },
+
+  // Cerebras Models
   {
     name: "Cerebras LLaMA 3.3 70B",
     config: {
@@ -248,9 +241,148 @@ export const TEST_MODELS: TestModelConfig[] = [
         model: Types.CerebrasModels.Llama_3_3_70B,
         temperature: 0.7,
       },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
     },
   },
-  */
+
+  // Cohere Models
+  {
+    name: "Cohere Command R+",
+    config: {
+      name: "Test Cohere Command R+",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Cohere,
+      cohere: {
+        model: Types.CohereModels.CommandRPlus,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "Cohere Command R",
+    config: {
+      name: "Test Cohere Command R",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Cohere,
+      cohere: {
+        model: Types.CohereModels.CommandR,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+
+  // Mistral Models
+  {
+    name: "Mistral Large",
+    config: {
+      name: "Test Mistral Large",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Mistral,
+      mistral: {
+        model: Types.MistralModels.MistralLarge,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "Mistral Small",
+    config: {
+      name: "Test Mistral Small",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Mistral,
+      mistral: {
+        model: Types.MistralModels.MistralSmall,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+
+  // Bedrock Models
+  {
+    name: "Bedrock Nova Premier",
+    config: {
+      name: "Test Bedrock Nova Premier",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Bedrock,
+      bedrock: {
+        model: Types.BedrockModels.NovaPremier,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "Bedrock Claude 3.7 Sonnet",
+    config: {
+      name: "Test Bedrock Claude 3.7 Sonnet",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Bedrock,
+      bedrock: {
+        model: Types.BedrockModels.Claude_3_7Sonnet,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+
+  // Deepseek Models
+  {
+    name: "Deepseek Chat",
+    config: {
+      name: "Test Deepseek Chat",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Deepseek,
+      deepseek: {
+        model: Types.DeepseekModels.Chat,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "Deepseek Reasoner",
+    config: {
+      name: "Test Deepseek Reasoner",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Deepseek,
+      deepseek: {
+        model: Types.DeepseekModels.Reasoner,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
 ];
 
 /**
@@ -268,6 +400,12 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
+  TEST_MODELS.find((m) => m.name === "Groq LLaMA 3.3 70B")!,
+  TEST_MODELS.find((m) => m.name === "Cerebras LLaMA 3.3 70B")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command R+")!,
+  TEST_MODELS.find((m) => m.name === "Mistral Large")!,
+  TEST_MODELS.find((m) => m.name === "Bedrock Nova Premier")!,
+  TEST_MODELS.find((m) => m.name === "Deepseek Chat")!,
 ];
 
 /**
@@ -285,6 +423,12 @@ export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
+  TEST_MODELS.find((m) => m.name === "Groq LLaMA 3.3 70B")!,
+  TEST_MODELS.find((m) => m.name === "Cerebras LLaMA 3.3 70B")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command R+")!,
+  TEST_MODELS.find((m) => m.name === "Mistral Large")!,
+  TEST_MODELS.find((m) => m.name === "Bedrock Claude 3.7 Sonnet")!,
+  TEST_MODELS.find((m) => m.name === "Deepseek Chat")!,
 ];
 
 /**
@@ -294,7 +438,13 @@ export const NATIVE_STREAMING_MODELS: TestModelConfig[] = TEST_MODELS.filter(
   (m) =>
     m.name.includes("OpenAI") ||
     m.name.includes("Anthropic") ||
-    m.name.includes("Google"),
+    m.name.includes("Google") ||
+    m.name.includes("Groq") ||
+    m.name.includes("Cerebras") ||
+    m.name.includes("Cohere") ||
+    m.name.includes("Mistral") ||
+    m.name.includes("Bedrock") ||
+    m.name.includes("Deepseek"),
 );
 
 /**

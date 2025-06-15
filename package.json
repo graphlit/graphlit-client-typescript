@@ -65,11 +65,27 @@
     },
     "@google/generative-ai": {
       "optional": true
+    },
+    "groq-sdk": {
+      "optional": true
+    },
+    "cohere-ai": {
+      "optional": true
+    },
+    "@mistralai/mistralai": {
+      "optional": true
+    },
+    "@aws-sdk/client-bedrock-runtime": {
+      "optional": true
     }
   },
   "optionalDependencies": {
     "@anthropic-ai/sdk": "^0.53.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.828.0",
     "@google/generative-ai": "^0.24.1",
+    "@mistralai/mistralai": "^1.7.2",
+    "cohere-ai": "^7.17.1",
+    "groq-sdk": "^0.25.0",
     "openai": "^5.3.0"
   },
   "devDependencies": {

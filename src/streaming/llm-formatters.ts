@@ -400,3 +400,274 @@ export function formatMessagesForGoogle(
 
   return formattedMessages;
 }
+
+/**
+ * Cohere message format
+ */
+export interface CohereMessage {
+  role: "USER" | "CHATBOT" | "SYSTEM";
+  message: string;
+}
+
+/**
+ * Format GraphQL conversation messages for Cohere SDK
+ */
+export function formatMessagesForCohere(
+  messages: ConversationMessage[],
+): CohereMessage[] {
+  const formattedMessages: CohereMessage[] = [];
+
+  for (const message of messages) {
+    if (!message.role || !message.message?.trim()) continue;
+
+    const trimmedMessage = message.message.trim();
+
+    switch (message.role) {
+      case ConversationRoleTypes.System:
+        formattedMessages.push({
+          role: "SYSTEM",
+          message: trimmedMessage,
+        });
+        break;
+
+      case ConversationRoleTypes.Assistant:
+        formattedMessages.push({
+          role: "CHATBOT",
+          message: trimmedMessage,
+        });
+        break;
+
+      default: // User messages
+        formattedMessages.push({
+          role: "USER",
+          message: trimmedMessage,
+        });
+        break;
+    }
+  }
+
+  return formattedMessages;
+}
+
+/**
+ * Mistral message format
+ */
+export interface MistralMessage {
+  role: "system" | "user" | "assistant" | "tool";
+  content:
+    | string
+    | Array<{
+        type: "text" | "image_url";
+        text?: string;
+        image_url?: string;
+      }>;
+  tool_calls?: Array<{
+    id: string;
+    function: {
+      name: string;
+      arguments: string;
+    };
+  }>;
+  tool_call_id?: string;
+}
+
+/**
+ * Format GraphQL conversation messages for Mistral SDK
+ */
+export function formatMessagesForMistral(
+  messages: ConversationMessage[],
+): MistralMessage[] {
+  const formattedMessages: MistralMessage[] = [];
+
+  for (const message of messages) {
+    if (!message.role) continue;
+
+    const hasContent = message.message?.trim();
+    const hasToolCalls = message.toolCalls && message.toolCalls.length > 0;
+
+    if (!hasContent && !hasToolCalls) continue;
+
+    const trimmedMessage = message.message?.trim() || "";
+
+    switch (message.role) {
+      case ConversationRoleTypes.System:
+        formattedMessages.push({
+          role: "system",
+          content: trimmedMessage,
+        });
+        break;
+
+      case ConversationRoleTypes.Assistant:
+        const assistantMessage: MistralMessage = {
+          role: "assistant",
+          content: trimmedMessage,
+        };
+
+        // Add tool calls if present
+        if (message.toolCalls && message.toolCalls.length > 0) {
+          assistantMessage.tool_calls = message.toolCalls
+            .filter((tc): tc is ConversationToolCall => tc !== null)
+            .map((toolCall) => ({
+              id: toolCall.id,
+              function: {
+                name: toolCall.name,
+                arguments: toolCall.arguments,
+              },
+            }));
+        }
+
+        formattedMessages.push(assistantMessage);
+        break;
+
+      case ConversationRoleTypes.Tool:
+        formattedMessages.push({
+          role: "tool",
+          content: trimmedMessage,
+          tool_call_id: message.toolCallId || "",
+        });
+        break;
+
+      default: // User messages
+        // Check if this message has image data
+        if (message.mimeType && message.data) {
+          // Multi-modal message with image
+          const contentParts: Array<{
+            type: "text" | "image_url";
+            text?: string;
+            image_url?: string;
+          }> = [];
+
+          // Add text content if present
+          if (trimmedMessage) {
+            contentParts.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+
+          // Add image content
+          contentParts.push({
+            type: "image_url",
+            image_url: `data:${message.mimeType};base64,${message.data}`,
+          });
+
+          formattedMessages.push({
+            role: "user",
+            content: contentParts,
+          });
+        } else {
+          // Text-only message
+          formattedMessages.push({
+            role: "user",
+            content: trimmedMessage,
+          });
+        }
+        break;
+    }
+  }
+
+  return formattedMessages;
+}
+
+/**
+ * Bedrock Claude message format (similar to Anthropic)
+ */
+export interface BedrockMessage {
+  role: "user" | "assistant";
+  content:
+    | string
+    | Array<{
+        type: "text" | "image";
+        text?: string;
+        image?: {
+          format: "png" | "jpeg" | "gif" | "webp";
+          source: {
+            bytes: string; // base64
+          };
+        };
+      }>;
+}
+
+/**
+ * Format GraphQL conversation messages for Bedrock SDK (Claude models)
+ */
+export function formatMessagesForBedrock(messages: ConversationMessage[]): {
+  system?: string;
+  messages: BedrockMessage[];
+} {
+  let systemPrompt: string | undefined;
+  const formattedMessages: BedrockMessage[] = [];
+
+  for (const message of messages) {
+    if (!message.role || !message.message?.trim()) continue;
+
+    const trimmedMessage = message.message.trim();
+
+    switch (message.role) {
+      case ConversationRoleTypes.System:
+        systemPrompt = trimmedMessage;
+        break;
+
+      case ConversationRoleTypes.Assistant:
+        formattedMessages.push({
+          role: "assistant",
+          content: trimmedMessage,
+        });
+        break;
+
+      default: // User messages
+        // Check if this message has image data
+        if (message.mimeType && message.data) {
+          // Multi-modal message with image
+          const contentParts: Array<{
+            type: "text" | "image";
+            text?: string;
+            image?: {
+              format: "png" | "jpeg" | "gif" | "webp";
+              source: {
+                bytes: string;
+              };
+            };
+          }> = [];
+
+          // Add text content if present
+          if (trimmedMessage) {
+            contentParts.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+
+          // Add image content
+          const format = message.mimeType.split("/")[1] as
+            | "png"
+            | "jpeg"
+            | "gif"
+            | "webp";
+          contentParts.push({
+            type: "image",
+            image: {
+              format,
+              source: {
+                bytes: message.data,
+              },
+            },
+          });
+
+          formattedMessages.push({
+            role: "user",
+            content: contentParts,
+          });
+        } else {
+          // Text-only message
+          formattedMessages.push({
+            role: "user",
+            content: trimmedMessage,
+          });
+        }
+        break;
+    }
+  }
+
+  return { system: systemPrompt, messages: formattedMessages };
+}

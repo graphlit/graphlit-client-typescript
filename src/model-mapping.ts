@@ -1,3 +1,4 @@
+import { loggerFor } from "openai/internal/utils/log.js";
 import * as Types from "./generated/graphql-types.js";
 
 /**
@@ -96,11 +97,75 @@ const GOOGLE_MODEL_MAP: Record<string, string> = {
   // Gemini 2.0 Flash models
   [Types.GoogleModels.Gemini_2_0Flash]: "gemini-2.0-flash-exp",
   [Types.GoogleModels.Gemini_2_0Flash_001]: "gemini-2.0-flash-001",
-  [Types.GoogleModels.Gemini_2_0FlashExperimental]: "gemini-2.0-flash-exp",
 
   // Gemini 2.5 models
   [Types.GoogleModels.Gemini_2_5FlashPreview]: "gemini-2.5-flash-preview-05-20",
   [Types.GoogleModels.Gemini_2_5ProPreview]: "gemini-2.5-pro-preview-06-05",
+};
+
+// Groq model mappings
+const GROQ_MODEL_MAP: Record<string, string> = {
+  [Types.GroqModels.Llama_4Scout_17B]:
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+  [Types.GroqModels.Llama_4Maverick_17B]:
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
+  [Types.GroqModels.DeepseekR1Llama_70BPreview]:
+    "deepseek-r1-distill-llama-70b",
+  [Types.GroqModels.Llama_3_3_70B]: "llama-3.3-70b-versatile",
+  [Types.GroqModels.Mixtral_8X7BInstruct]: "mixtral-8x7b-32768",
+  [Types.GroqModels.Llama_3_1_8B]: "llama-3.1-8b-instant",
+  [Types.GroqModels.Llama_3_70B]: "llama3-70b-8192",
+  [Types.GroqModels.Llama_3_8B]: "llama3-8b-8192",
+};
+
+// Cerebras model mappings
+const CEREBRAS_MODEL_MAP: Record<string, string> = {
+  [Types.CerebrasModels.Llama_3_3_70B]: "llama3.3-70b",
+  [Types.CerebrasModels.Llama_3_1_8B]: "llama3.1-8b",
+};
+
+// Cohere model mappings
+const COHERE_MODEL_MAP: Record<string, string> = {
+  [Types.CohereModels.CommandRPlus]: "command-r-plus",
+  [Types.CohereModels.CommandRPlus_202404]: "command-r-plus-04-2024",
+  [Types.CohereModels.CommandRPlus_202408]: "command-r-plus-08-2024",
+  [Types.CohereModels.CommandR]: "command-r",
+  [Types.CohereModels.CommandR_202403]: "command-r-03-2024",
+  [Types.CohereModels.CommandR_202408]: "command-r-08-2024",
+  [Types.CohereModels.CommandR7B_202412]: "command-r7b-12-2024",
+  [Types.CohereModels.CommandA]: "command-light",
+  [Types.CohereModels.CommandA_202503]: "command-light-nightly",
+};
+
+// Mistral model mappings
+const MISTRAL_MODEL_MAP: Record<string, string> = {
+  [Types.MistralModels.MistralEmbed]: "mistral-embed",
+  [Types.MistralModels.PixtralLarge]: "pixtral-large-latest",
+  [Types.MistralModels.Pixtral_12B_2409]: "pixtral-12b-2409",
+  [Types.MistralModels.MistralNemo]: "open-mistral-nemo",
+  [Types.MistralModels.MistralSmall]: "mistral-small-latest",
+  [Types.MistralModels.MistralMedium]: "mistral-medium-latest",
+  [Types.MistralModels.MistralLarge]: "mistral-large-latest",
+};
+
+// Bedrock model mappings
+// Note: These use "us." prefix for us-east-2 region. For other regions,
+// use the modelName field in specification to override with correct region prefix
+const BEDROCK_MODEL_MAP: Record<string, string> = {
+  [Types.BedrockModels.NovaPremier]: "us.amazon.nova-premier-v1:0",
+  [Types.BedrockModels.NovaPro]: "us.amazon.nova-pro-v1:0",
+  [Types.BedrockModels.Claude_3_7Sonnet]:
+    "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+  [Types.BedrockModels.Llama_4Scout_17B]:
+    "us.meta.llama4-scout-17b-instruct-v1:0",
+  [Types.BedrockModels.Llama_4Maverick_17B]:
+    "us.meta.llama4-maverick-17b-instruct-v1:0",
+};
+
+// Deepseek model mappings (uses OpenAI-compatible API)
+const DEEPSEEK_MODEL_MAP: Record<string, string> = {
+  [Types.DeepseekModels.Chat]: "deepseek-chat",
+  [Types.DeepseekModels.Reasoner]: "deepseek-reasoner",
 };
 
 /**
@@ -121,6 +186,24 @@ export function getModelName(specification: any): string | undefined {
   if (specification?.google?.modelName) {
     return specification.google.modelName;
   }
+  if (specification?.groq?.modelName) {
+    return specification.groq.modelName;
+  }
+  if (specification?.cerebras?.modelName) {
+    return specification.cerebras.modelName;
+  }
+  if (specification?.cohere?.modelName) {
+    return specification.cohere.modelName;
+  }
+  if (specification?.mistral?.modelName) {
+    return specification.mistral.modelName;
+  }
+  if (specification?.bedrock?.modelName) {
+    return specification.bedrock.modelName;
+  }
+  if (specification?.deepseek?.modelName) {
+    return specification.deepseek.modelName;
+  }
 
   // Map based on service type and model enum
   switch (serviceType) {
@@ -135,6 +218,31 @@ export function getModelName(specification: any): string | undefined {
     case Types.ModelServiceTypes.Google:
       const googleModel = specification?.google?.model;
       return googleModel ? GOOGLE_MODEL_MAP[googleModel] : undefined;
+
+    case Types.ModelServiceTypes.Groq:
+      const groqModel = specification?.groq?.model;
+      return groqModel ? GROQ_MODEL_MAP[groqModel] : undefined;
+
+    case Types.ModelServiceTypes.Cerebras:
+      const cerebrasModel = specification?.cerebras?.model;
+      return cerebrasModel ? CEREBRAS_MODEL_MAP[cerebrasModel] : undefined;
+
+    case Types.ModelServiceTypes.Cohere:
+      const cohereModel = specification?.cohere?.model;
+      return cohereModel ? COHERE_MODEL_MAP[cohereModel] : undefined;
+
+    case Types.ModelServiceTypes.Mistral:
+      const mistralModel = specification?.mistral?.model;
+      return mistralModel ? MISTRAL_MODEL_MAP[mistralModel] : undefined;
+
+    case Types.ModelServiceTypes.Bedrock:
+      // For Bedrock, we use the bedrock model field
+      const bedrockModel = specification?.bedrock?.model;
+      return bedrockModel ? BEDROCK_MODEL_MAP[bedrockModel] : undefined;
+
+    case Types.ModelServiceTypes.Deepseek:
+      const deepseekModel = specification?.deepseek?.model;
+      return deepseekModel ? DEEPSEEK_MODEL_MAP[deepseekModel] : undefined;
 
     default:
       return undefined;
@@ -151,6 +259,12 @@ export function isStreamingSupported(serviceType?: string): boolean {
     Types.ModelServiceTypes.OpenAi,
     Types.ModelServiceTypes.Anthropic,
     Types.ModelServiceTypes.Google,
+    Types.ModelServiceTypes.Groq,
+    Types.ModelServiceTypes.Cerebras,
+    Types.ModelServiceTypes.Cohere,
+    Types.ModelServiceTypes.Mistral,
+    Types.ModelServiceTypes.Bedrock,
+    Types.ModelServiceTypes.Deepseek,
   ];
 
   return streamingServices.includes(serviceType as Types.ModelServiceTypes);
