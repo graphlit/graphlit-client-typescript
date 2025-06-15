@@ -405,8 +405,23 @@ export function formatMessagesForGoogle(
  * Cohere message format
  */
 export interface CohereMessage {
-  role: "USER" | "CHATBOT" | "SYSTEM";
-  message: string;
+  role: "user" | "assistant" | "system" | "tool";
+  content: string;
+  tool_calls?: Array<{
+    id: string;
+    name: string;
+    parameters: Record<string, any>;
+  }>;
+  tool_results?: Array<{
+    call: {
+      id: string;
+      name: string;
+      parameters: Record<string, any>;
+    };
+    outputs: Array<{
+      text: string;
+    }>;
+  }>;
 }
 
 /**
@@ -418,29 +433,66 @@ export function formatMessagesForCohere(
   const formattedMessages: CohereMessage[] = [];
 
   for (const message of messages) {
-    if (!message.role || !message.message?.trim()) continue;
+    if (!message.role) continue;
 
-    const trimmedMessage = message.message.trim();
+    // Allow messages with tool calls even if they have no text content
+    const hasContent = message.message?.trim();
+    const hasToolCalls = message.toolCalls && message.toolCalls.length > 0;
+
+    if (!hasContent && !hasToolCalls) continue;
+
+    const trimmedMessage = message.message?.trim() || "";
 
     switch (message.role) {
       case ConversationRoleTypes.System:
         formattedMessages.push({
-          role: "SYSTEM",
-          message: trimmedMessage,
+          role: "system",
+          content: trimmedMessage,
         });
         break;
 
       case ConversationRoleTypes.Assistant:
+        const assistantMessage: CohereMessage = {
+          role: "assistant",
+          content: trimmedMessage,
+        };
+
+        // Add tool calls if present
+        if (message.toolCalls && message.toolCalls.length > 0) {
+          assistantMessage.tool_calls = message.toolCalls
+            .filter((tc): tc is ConversationToolCall => tc !== null)
+            .map((toolCall) => ({
+              id: toolCall.id,
+              name: toolCall.name,
+              parameters: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
+            }));
+        }
+
+        formattedMessages.push(assistantMessage);
+        break;
+
+      case ConversationRoleTypes.Tool:
+        // Cohere expects tool results as tool messages
         formattedMessages.push({
-          role: "CHATBOT",
-          message: trimmedMessage,
+          role: "tool",
+          content: trimmedMessage,
+          tool_results: [{
+            call: {
+              id: message.toolCallId || "",
+              name: "", // Would need to be tracked from the tool call
+              parameters: {},
+            },
+            outputs: [{
+              text: trimmedMessage,
+            }],
+          }],
         });
         break;
 
       default: // User messages
         formattedMessages.push({
-          role: "USER",
-          message: trimmedMessage,
+          role: "user",
+          content: trimmedMessage,
         });
         break;
     }

@@ -133,8 +133,8 @@ const COHERE_MODEL_MAP: Record<string, string> = {
   [Types.CohereModels.CommandR_202403]: "command-r-03-2024",
   [Types.CohereModels.CommandR_202408]: "command-r-08-2024",
   [Types.CohereModels.CommandR7B_202412]: "command-r7b-12-2024",
-  [Types.CohereModels.CommandA]: "command-light",
-  [Types.CohereModels.CommandA_202503]: "command-light-nightly",
+  [Types.CohereModels.CommandA]: "command-a-03-2025",
+  [Types.CohereModels.CommandA_202503]: "command-a-03-2025",
 };
 
 // Mistral model mappings

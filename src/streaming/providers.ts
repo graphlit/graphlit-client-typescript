@@ -44,6 +44,17 @@ function cleanSchemaForGoogle(schema: any): any {
     if (key === "$schema" || key === "additionalProperties") {
       continue;
     }
+    
+    // Handle format field for string types - Google only supports 'enum' and 'date-time'
+    if (key === "format" && typeof value === "string") {
+      // Only keep supported formats
+      if (value === "enum" || value === "date-time") {
+        cleaned[key] = value;
+      }
+      // Skip unsupported formats like "date", "time", "email", etc.
+      continue;
+    }
+    
     // Recursively clean nested objects
     cleaned[key] = cleanSchemaForGoogle(value);
   }
@@ -1700,16 +1711,24 @@ export async function streamWithCohere(
       );
     }
 
-    // Prepare the latest user message and chat history
-    const lastMessage = messages[messages.length - 1];
-    const chatHistory = messages.slice(0, -1);
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔍 [Cohere] Messages array length: ${messages.length}`);
+      console.log(`🔍 [Cohere] All messages:`, JSON.stringify(messages, null, 2));
+    }
+
+    if (messages.length === 0) {
+      throw new Error("No messages found for Cohere streaming");
+    }
 
     const streamConfig: any = {
       model: modelName,
-      message: lastMessage.message,
-      chatHistory: chatHistory,
-      temperature: specification.cohere?.temperature,
+      messages: messages, // All messages in chronological order
     };
+
+    // Only add temperature if it's defined
+    if (specification.cohere?.temperature !== undefined) {
+      streamConfig.temperature = specification.cohere.temperature;
+    }
 
     // Add tools if provided
     if (tools && tools.length > 0) {
@@ -1718,7 +1737,7 @@ export async function streamWithCohere(
           return {
             name: tool.name,
             description: tool.description,
-            parameterDefinitions: {},
+            parameter_definitions: {},
           };
         }
 
@@ -1726,12 +1745,12 @@ export async function streamWithCohere(
         const schema = JSON.parse(tool.schema);
         
         // Convert JSON Schema to Cohere's expected format
-        const parameterDefinitions: Record<string, any> = {};
+        const parameter_definitions: Record<string, any> = {};
         
         if (schema.properties) {
           for (const [key, value] of Object.entries(schema.properties)) {
             const prop = value as any;
-            parameterDefinitions[key] = {
+            const paramDef: any = {
               type: prop.type || "string",
               description: prop.description || "",
               required: schema.required?.includes(key) || false,
@@ -1739,26 +1758,57 @@ export async function streamWithCohere(
             
             // Add additional properties that Cohere might expect
             if (prop.enum) {
-              parameterDefinitions[key].options = prop.enum;
+              paramDef.options = prop.enum;
             }
             if (prop.default !== undefined) {
-              parameterDefinitions[key].default = prop.default;
+              paramDef.default = prop.default;
             }
             if (prop.items) {
-              parameterDefinitions[key].items = prop.items;
+              paramDef.items = prop.items;
             }
+            
+            parameter_definitions[key] = paramDef;
           }
         }
 
         return {
           name: tool.name,
           description: tool.description,
-          parameterDefinitions,
+          parameter_definitions,  // Use snake_case as expected by Cohere API
         };
       });
     }
 
-    const stream = await cohereClient.chatStream(streamConfig);
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🔍 [Cohere] Final stream config:`, JSON.stringify(streamConfig, null, 2));
+      console.log(`🔍 [Cohere] Cohere client methods available:`, Object.getOwnPropertyNames(cohereClient));
+      console.log(`🔍 [Cohere] Has chatStream method:`, typeof cohereClient.chatStream === 'function');
+      console.log(`🔍 [Cohere] Has chat property:`, !!cohereClient.chat);
+      if (cohereClient.chat) {
+        console.log(`🔍 [Cohere] Chat methods:`, Object.getOwnPropertyNames(cohereClient.chat));
+      }
+      console.log(`⏱️ [Cohere] Starting stream request at: ${new Date().toISOString()}`);
+    }
+
+    let stream;
+    try {
+      stream = await cohereClient.chatStream(streamConfig);
+    } catch (streamError) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.error(`❌ [Cohere] Stream creation failed:`, streamError);
+        if ((streamError as any).response) {
+          console.error(`❌ [Cohere] Stream response status: ${(streamError as any).response.status}`);
+          console.error(`❌ [Cohere] Stream response data:`, (streamError as any).response.data);
+        }
+        if ((streamError as any).status) {
+          console.error(`❌ [Cohere] Direct status: ${(streamError as any).status}`);
+        }
+        if ((streamError as any).body) {
+          console.error(`❌ [Cohere] Response body:`, (streamError as any).body);
+        }
+      }
+      throw streamError;
+    }
 
     for await (const chunk of stream) {
       if (chunk.eventType === "text-generation") {
@@ -1815,6 +1865,18 @@ export async function streamWithCohere(
 
     onComplete(fullMessage, toolCalls);
   } catch (error) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.error(`❌ [Cohere] Stream error:`, error);
+      if (error instanceof Error) {
+        console.error(`❌ [Cohere] Error message: ${error.message}`);
+        console.error(`❌ [Cohere] Error stack: ${error.stack}`);
+      }
+      // Log additional error details if available
+      if ((error as any).response) {
+        console.error(`❌ [Cohere] Response status: ${(error as any).response.status}`);
+        console.error(`❌ [Cohere] Response data:`, (error as any).response.data);
+      }
+    }
     throw error;
   }
 }
