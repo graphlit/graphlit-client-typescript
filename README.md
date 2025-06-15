@@ -16,16 +16,25 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 
 ## ✨ What's New in v1.1.0
 
-- **Real-time streaming** - Watch AI responses appear word-by-word
+- **Real-time streaming** - Watch AI responses appear word-by-word across 9 different providers
 - **Tool calling** - Let AI execute functions and retrieve data
-- **Better performance** - Native integration with OpenAI, Anthropic, and Google
+- **Extended provider support** - Native streaming integration with OpenAI, Anthropic, Google, Groq, Cerebras, Cohere, Mistral, AWS Bedrock, and Deepseek
+- **Better performance** - Optimized streaming with provider-specific SDKs
+- **Network resilience** - Automatic retry logic for transient failures
 
 ## 📋 Table of Contents
 
 - [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Setting Up](#setting-up)
+- [Network Resilience](#network-resilience-new-in-v111)
+- [Streaming Provider Support](#streaming-provider-support)
 - [Basic Examples](#basic-examples)
 - [Common Use Cases](#common-use-cases)
+- [Advanced Agent Features](#advanced-agent-features)
+- [Advanced Workflows](#advanced-workflows)
 - [API Reference](#api-reference)
+- [Testing & Examples](#testing--examples)
 - [Support](#support)
 
 ## Quick Start
@@ -93,7 +102,7 @@ npm install @google/generative-ai
 # For Groq streaming (OpenAI-compatible)
 npm install groq-sdk
 
-# For Cerebras streaming (uses OpenAI SDK with custom base URL)
+# For Cerebras streaming (OpenAI-compatible)
 npm install openai
 
 # For Cohere streaming
@@ -105,7 +114,7 @@ npm install @mistralai/mistralai
 # For AWS Bedrock streaming (Claude models)
 npm install @aws-sdk/client-bedrock-runtime
 
-# For Deepseek streaming (uses OpenAI SDK with custom base URL)
+# For Deepseek streaming (OpenAI-compatible)
 npm install openai
 ```
 
@@ -118,22 +127,22 @@ GRAPHLIT_ORGANIZATION_ID=your_org_id
 GRAPHLIT_ENVIRONMENT_ID=your_env_id
 GRAPHLIT_JWT_SECRET=your_secret
 
-# Optional: For streaming
+# Optional: For streaming with specific providers
 OPENAI_API_KEY=your_key
 ANTHROPIC_API_KEY=your_key
 GOOGLE_API_KEY=your_key
-GROQ_API_KEY=your_key
-CEREBRAS_API_KEY=your_key
-COHERE_API_KEY=your_key
-MISTRAL_API_KEY=your_key
 
-# For AWS Bedrock (requires AWS credentials)
+# Additional streaming providers
+GROQ_API_KEY=your_key          # For Groq models (Llama, Mixtral)
+CEREBRAS_API_KEY=your_key      # For Cerebras models  
+COHERE_API_KEY=your_key        # For Cohere Command models
+MISTRAL_API_KEY=your_key       # For Mistral models
+DEEPSEEK_API_KEY=your_key      # For Deepseek models
+
+# For AWS Bedrock streaming (requires AWS credentials)
 AWS_REGION=us-east-2
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
-
-# For Deepseek streaming
-DEEPSEEK_API_KEY=your_key
 ```
 
 ## Network Resilience (New in v1.1.1)
@@ -205,6 +214,69 @@ const client = new Graphlit({
   }
 });
 ```
+
+## Streaming Provider Support
+
+The Graphlit SDK supports real-time streaming responses from 9 different LLM providers. Each provider requires its specific SDK and API key:
+
+### Supported Providers
+
+| Provider | Models | SDK Required | API Key |
+|----------|--------|--------------|---------|
+| **OpenAI** | GPT-4, GPT-4o, GPT-4.1, O1, O3, O4 | `openai` | `OPENAI_API_KEY` |
+| **Anthropic** | Claude 3, Claude 3.5, Claude 3.7, Claude 4 | `@anthropic-ai/sdk` | `ANTHROPIC_API_KEY` |
+| **Google** | Gemini 1.5, Gemini 2.0, Gemini 2.5 | `@google/generative-ai` | `GOOGLE_API_KEY` |
+| **Groq** | Llama 4, Llama 3.3, Mixtral, Deepseek R1 | `groq-sdk` | `GROQ_API_KEY` |
+| **Cerebras** | Llama 3.3, Llama 3.1 | `openai` | `CEREBRAS_API_KEY` |
+| **Cohere** | Command R+, Command R, Command R7B, Command A | `cohere-ai` | `COHERE_API_KEY` |
+| **Mistral** | Mistral Large, Medium, Small, Nemo, Pixtral | `@mistralai/mistralai` | `MISTRAL_API_KEY` |
+| **AWS Bedrock** | Nova Premier/Pro, Claude 3.7, Llama 4 | `@aws-sdk/client-bedrock-runtime` | AWS credentials |
+| **Deepseek** | Deepseek Chat, Deepseek Reasoner | `openai` | `DEEPSEEK_API_KEY` |
+
+### Setting Up Streaming
+
+Each provider requires both the SDK installation and proper client setup:
+
+```typescript
+import { Graphlit } from "graphlit-client";
+
+const client = new Graphlit();
+
+// Example: Set up multiple streaming providers
+if (process.env.OPENAI_API_KEY) {
+  const { OpenAI } = await import("openai");
+  client.setOpenAIClient(new OpenAI());
+}
+
+if (process.env.COHERE_API_KEY) {
+  const { CohereClient } = await import("cohere-ai");
+  client.setCohereClient(new CohereClient({ token: process.env.COHERE_API_KEY }));
+}
+
+if (process.env.GROQ_API_KEY) {
+  const { Groq } = await import("groq-sdk");
+  client.setGroqClient(new Groq({ apiKey: process.env.GROQ_API_KEY }));
+}
+
+// Then create specifications for any provider
+const spec = await client.createSpecification({
+  name: "Multi-Provider Assistant",
+  type: Types.SpecificationTypes.Completion,
+  serviceType: Types.ModelServiceTypes.Cohere, // or any supported provider
+  cohere: { 
+    model: Types.CohereModels.CommandRPlus,
+    temperature: 0.7 
+  },
+});
+```
+
+### Provider-Specific Notes
+
+- **OpenAI-Compatible**: Groq, Cerebras, and Deepseek use OpenAI-compatible APIs
+- **AWS Bedrock**: Requires AWS credentials and uses the Converse API for streaming
+- **Cohere**: Supports both chat and tool calling with Command models
+- **Google**: Includes advanced multimodal capabilities with Gemini models
+- **Mistral**: Supports both text and vision models (Pixtral)
 
 ## Basic Examples
 
@@ -323,7 +395,73 @@ const response = await client.promptAgent(
 console.log(response.message);
 ```
 
-### 4. Tool Calling
+### 4. Multiple Provider Streaming
+
+Compare responses from different LLM providers:
+
+```typescript
+import { Graphlit, Types } from "graphlit-client";
+
+const client = new Graphlit();
+
+// Set up multiple providers
+if (process.env.OPENAI_API_KEY) {
+  const { OpenAI } = await import("openai");
+  client.setOpenAIClient(new OpenAI());
+}
+
+if (process.env.COHERE_API_KEY) {
+  const { CohereClient } = await import("cohere-ai");
+  client.setCohereClient(new CohereClient({ token: process.env.COHERE_API_KEY }));
+}
+
+if (process.env.GROQ_API_KEY) {
+  const { Groq } = await import("groq-sdk");
+  client.setGroqClient(new Groq({ apiKey: process.env.GROQ_API_KEY }));
+}
+
+// Create specifications for different providers
+const providers = [
+  {
+    name: "OpenAI GPT-4o",
+    serviceType: Types.ModelServiceTypes.OpenAi,
+    openAI: { model: Types.OpenAiModels.Gpt4O_128K }
+  },
+  {
+    name: "Cohere Command R+",
+    serviceType: Types.ModelServiceTypes.Cohere,
+    cohere: { model: Types.CohereModels.CommandRPlus }
+  },
+  {
+    name: "Groq Llama",
+    serviceType: Types.ModelServiceTypes.Groq,
+    groq: { model: Types.GroqModels.Llama_3_3_70B }
+  }
+];
+
+// Compare responses
+for (const provider of providers) {
+  console.log(`\n🤖 ${provider.name}:`);
+  
+  const spec = await client.createSpecification({
+    ...provider,
+    type: Types.SpecificationTypes.Completion,
+  });
+
+  await client.streamAgent(
+    "Explain quantum computing in simple terms",
+    (event) => {
+      if (event.type === "message_update") {
+        process.stdout.write(event.message.message);
+      }
+    },
+    undefined,
+    { id: spec.createSpecification.id }
+  );
+}
+```
+
+### 5. Tool Calling
 
 Let AI call functions to get real-time data:
 
