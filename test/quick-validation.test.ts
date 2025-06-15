@@ -24,7 +24,7 @@ describe("Quick Provider Validation", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping validation tests - missing Graphlit credentials"
+      "⚠️  Skipping validation tests - missing Graphlit credentials",
     );
     return;
   }
@@ -48,7 +48,7 @@ describe("Quick Provider Validation", () => {
         const { default: OpenAI } = await import("openai");
         console.log(`✅ OpenAI imported (${Date.now() - importStart}ms)`);
         client.setOpenAIClient(
-          new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+          new OpenAI({ apiKey: process.env.OPENAI_API_KEY }),
         );
       }
 
@@ -58,14 +58,14 @@ describe("Quick Provider Validation", () => {
         const { default: Anthropic } = await import("@anthropic-ai/sdk");
         console.log(`✅ Anthropic imported (${Date.now() - importStart}ms)`);
         client.setAnthropicClient(
-          new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+          new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
         );
       }
 
       if (process.env.GOOGLE_API_KEY) {
         const { GoogleGenerativeAI } = await import("@google/generative-ai");
         client.setGoogleClient(
-          new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
+          new GoogleGenerativeAI(process.env.GOOGLE_API_KEY),
         );
       }
 
@@ -80,21 +80,21 @@ describe("Quick Provider Validation", () => {
           new OpenAI({
             baseURL: "https://api.cerebras.ai/v1",
             apiKey: process.env.CEREBRAS_API_KEY,
-          })
+          }),
         );
       }
 
       if (process.env.COHERE_API_KEY) {
         const { CohereClient } = await import("cohere-ai");
         client.setCohereClient(
-          new CohereClient({ token: process.env.COHERE_API_KEY })
+          new CohereClient({ token: process.env.COHERE_API_KEY }),
         );
       }
 
       if (process.env.MISTRAL_API_KEY) {
         const { Mistral } = await import("@mistralai/mistralai");
         client.setMistralClient(
-          new Mistral({ apiKey: process.env.MISTRAL_API_KEY })
+          new Mistral({ apiKey: process.env.MISTRAL_API_KEY }),
         );
       }
 
@@ -109,7 +109,7 @@ describe("Quick Provider Validation", () => {
               accessKeyId: process.env.AWS_ACCESS_KEY_ID,
               secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
             },
-          })
+          }),
         );
       }
 
@@ -119,7 +119,7 @@ describe("Quick Provider Validation", () => {
           new OpenAI({
             baseURL: "https://api.deepseek.com",
             apiKey: process.env.DEEPSEEK_API_KEY,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -127,7 +127,7 @@ describe("Quick Provider Validation", () => {
     }
 
     console.log(
-      `✅ beforeAll setup completed (${Date.now() - setupStart}ms total)`
+      `✅ beforeAll setup completed (${Date.now() - setupStart}ms total)`,
     );
   }, 60000);
 
@@ -139,7 +139,7 @@ describe("Quick Provider Validation", () => {
       } catch (error) {
         console.warn(
           `Failed to cleanup conversation ${conversationId}:`,
-          error
+          error,
         );
       }
     }
@@ -245,7 +245,7 @@ describe("Quick Provider Validation", () => {
       // Skip if API key not provided
       if (!process.env[provider.envKey]) {
         console.log(
-          `⏭️  Skipping ${provider.name} - missing ${provider.envKey}`
+          `⏭️  Skipping ${provider.name} - missing ${provider.envKey}`,
         );
         return;
       }
@@ -262,14 +262,14 @@ describe("Quick Provider Validation", () => {
 
       console.log(
         `🔍 [Test] Creating specification for ${provider.name}:`,
-        JSON.stringify(specInput, null, 2)
+        JSON.stringify(specInput, null, 2),
       );
 
       const spec = await client.createSpecification(specInput);
 
       console.log(
         `🔍 [Test] Created specification response for ${provider.name}:`,
-        JSON.stringify(spec.createSpecification, null, 2)
+        JSON.stringify(spec.createSpecification, null, 2),
       );
 
       expect(spec.createSpecification?.id).toBeDefined();
@@ -303,7 +303,7 @@ describe("Quick Provider Validation", () => {
           }
         },
         undefined, // conversationId
-        { id: spec.createSpecification.id }
+        { id: spec.createSpecification.id },
       );
 
       const duration = Date.now() - startTime;
@@ -316,10 +316,10 @@ describe("Quick Provider Validation", () => {
       expect(fullMessage.toLowerCase()).toContain("hello");
 
       console.log(
-        `✅ ${provider.name}: ${tokenCount} tokens, ${fullMessage.length} chars, ${duration}ms`
+        `✅ ${provider.name}: ${tokenCount} tokens, ${fullMessage.length} chars, ${duration}ms`,
       );
       console.log(
-        `   Response: "${fullMessage.substring(0, 100)}${fullMessage.length > 100 ? "..." : ""}"`
+        `   Response: "${fullMessage.substring(0, 100)}${fullMessage.length > 100 ? "..." : ""}"`,
       );
     }, 30000); // 30 second timeout per provider
   }
@@ -339,7 +339,7 @@ describe("Quick Provider Validation", () => {
     }
 
     console.log(
-      `\n🎯 Total: ${availableCount}/${totalCount} providers configured`
+      `\n🎯 Total: ${availableCount}/${totalCount} providers configured`,
     );
 
     if (availableCount === 0) {

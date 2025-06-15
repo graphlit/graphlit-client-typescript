@@ -14,7 +14,7 @@ describe("Apollo Client Retry Functionality", () => {
   describe("Retry Configuration", () => {
     it("should initialize with default retry configuration", () => {
       const client = new Graphlit(mockOrgId, mockEnvId, mockSecret);
-      
+
       // Check that client is initialized (we can't directly access private retryConfig)
       expect(client).toBeDefined();
       expect(client.client).toBeDefined();
@@ -26,14 +26,14 @@ describe("Apollo Client Retry Functionality", () => {
         initialDelay: 1000,
         maxDelay: 60000,
         retryableStatusCodes: [429, 500, 502, 503, 504],
-        jitter: false
+        jitter: false,
       };
 
       const client = new Graphlit({
         organizationId: mockOrgId,
         environmentId: mockEnvId,
         jwtSecret: mockSecret,
-        retryConfig: customRetryConfig
+        retryConfig: customRetryConfig,
       });
 
       expect(client).toBeDefined();
@@ -47,7 +47,7 @@ describe("Apollo Client Retry Functionality", () => {
         mockSecret,
         "owner-id",
         "user-id",
-        "https://custom-api.graphlit.io"
+        "https://custom-api.graphlit.io",
       );
 
       expect(client).toBeDefined();
@@ -56,15 +56,15 @@ describe("Apollo Client Retry Functionality", () => {
 
     it("should update retry configuration at runtime", () => {
       const client = new Graphlit(mockOrgId, mockEnvId, mockSecret);
-      
+
       const newRetryConfig: RetryConfig = {
         maxAttempts: 3,
-        initialDelay: 200
+        initialDelay: 200,
       };
 
       // This should not throw
       expect(() => client.setRetryConfig(newRetryConfig)).not.toThrow();
-      
+
       // Client should be refreshed
       expect(client.client).toBeDefined();
     });
@@ -73,15 +73,15 @@ describe("Apollo Client Retry Functionality", () => {
   describe("Retry Callback", () => {
     it("should call onRetry callback when retry occurs", async () => {
       const onRetryMock = vi.fn();
-      
+
       const client = new Graphlit({
         organizationId: mockOrgId,
         environmentId: mockEnvId,
         jwtSecret: mockSecret,
         retryConfig: {
           maxAttempts: 3,
-          onRetry: onRetryMock
-        }
+          onRetry: onRetryMock,
+        },
       });
 
       // Note: In a real test, we would need to mock the Apollo Client
@@ -98,8 +98,8 @@ describe("Apollo Client Retry Functionality", () => {
         environmentId: mockEnvId,
         jwtSecret: mockSecret,
         retryConfig: {
-          retryableStatusCodes: [429, 503, 504]
-        }
+          retryableStatusCodes: [429, 503, 504],
+        },
       });
 
       // The retry logic is configured to handle these status codes
@@ -113,8 +113,8 @@ describe("Apollo Client Retry Functionality", () => {
         jwtSecret: mockSecret,
         retryConfig: {
           maxAttempts: 5,
-          retryableStatusCodes: [503] // Only retry on 503
-        }
+          retryableStatusCodes: [503], // Only retry on 503
+        },
       });
 
       // Errors with status codes like 400, 401, 404 should not be retried
@@ -130,8 +130,8 @@ describe("Apollo Client Retry Functionality", () => {
         jwtSecret: mockSecret,
         retryConfig: {
           maxAttempts: 3,
-          initialDelay: 100
-        }
+          initialDelay: 100,
+        },
       });
 
       // Verify client methods are available

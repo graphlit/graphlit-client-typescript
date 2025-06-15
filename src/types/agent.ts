@@ -29,20 +29,20 @@ export interface AgentResult {
   // Core response
   message: string; // The final message text
   conversationId: string;
-  
+
   // Full conversation message with metadata
   conversationMessage?: ConversationMessage;
-  
+
   // Tool calling information
   toolCalls?: ConversationToolCall[];
   toolResults?: ToolCallResult[];
-  
+
   // Performance metrics
   metrics?: AgentMetrics;
-  
+
   // Usage information
   usage?: UsageInfo;
-  
+
   // Error if any
   error?: AgentError;
 }

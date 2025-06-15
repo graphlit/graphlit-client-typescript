@@ -36,7 +36,7 @@ describe("Bedrock Tool Calling", () => {
           accessKeyId: process.env.AWS_ACCESS_KEY_ID,
           secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         },
-      })
+      }),
     );
   });
 
@@ -96,7 +96,7 @@ describe("Bedrock Tool Calling", () => {
             break;
           case "tool_update":
             console.log(
-              `🔧 Tool update: ${event.toolCall.name} - ${event.status}`
+              `🔧 Tool update: ${event.toolCall.name} - ${event.status}`,
             );
             if (event.status === "completed") {
               toolCallCount++;
@@ -116,7 +116,7 @@ describe("Bedrock Tool Calling", () => {
       undefined,
       { id: spec.createSpecification.id },
       tools,
-      toolHandlers
+      toolHandlers,
     );
 
     // Cleanup - delete conversation first, then specification
@@ -132,7 +132,7 @@ describe("Bedrock Tool Calling", () => {
     expect(toolArguments).toContain("Tokyo");
 
     console.log(
-      `✅ Bedrock Nova Premier successfully called ${toolCallCount} tool(s)`
+      `✅ Bedrock Nova Premier successfully called ${toolCallCount} tool(s)`,
     );
   }, 60000);
 });

@@ -403,10 +403,13 @@ export function formatMessagesForGoogle(
 
 /**
  * Cohere message format
+ * Note: For Cohere v7 SDK, messages are handled differently:
+ * - Current message is passed as 'message' parameter
+ * - Previous messages are passed as 'chatHistory' array
  */
 export interface CohereMessage {
-  role: "user" | "assistant" | "system" | "tool";
-  content: string;
+  role: "USER" | "CHATBOT" | "SYSTEM" | "TOOL";
+  message: string;
   tool_calls?: Array<{
     id: string;
     name: string;
@@ -414,12 +417,11 @@ export interface CohereMessage {
   }>;
   tool_results?: Array<{
     call: {
-      id: string;
       name: string;
       parameters: Record<string, any>;
     };
     outputs: Array<{
-      text: string;
+      output: string;
     }>;
   }>;
 }
@@ -446,15 +448,15 @@ export function formatMessagesForCohere(
     switch (message.role) {
       case ConversationRoleTypes.System:
         formattedMessages.push({
-          role: "system",
-          content: trimmedMessage,
+          role: "SYSTEM",
+          message: trimmedMessage,
         });
         break;
 
       case ConversationRoleTypes.Assistant:
         const assistantMessage: CohereMessage = {
-          role: "assistant",
-          content: trimmedMessage,
+          role: "CHATBOT",
+          message: trimmedMessage,
         };
 
         // Add tool calls if present
@@ -464,7 +466,9 @@ export function formatMessagesForCohere(
             .map((toolCall) => ({
               id: toolCall.id,
               name: toolCall.name,
-              parameters: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
+              parameters: toolCall.arguments
+                ? JSON.parse(toolCall.arguments)
+                : {},
             }));
         }
 
@@ -472,27 +476,30 @@ export function formatMessagesForCohere(
         break;
 
       case ConversationRoleTypes.Tool:
-        // Cohere expects tool results as tool messages
+        // Cohere expects tool results as TOOL messages
         formattedMessages.push({
-          role: "tool",
-          content: trimmedMessage,
-          tool_results: [{
-            call: {
-              id: message.toolCallId || "",
-              name: "", // Would need to be tracked from the tool call
-              parameters: {},
+          role: "TOOL",
+          message: trimmedMessage,
+          tool_results: [
+            {
+              call: {
+                name: "", // Would need to be tracked from the tool call
+                parameters: {},
+              },
+              outputs: [
+                {
+                  output: trimmedMessage, // Changed from 'text' to 'output'
+                },
+              ],
             },
-            outputs: [{
-              text: trimmedMessage,
-            }],
-          }],
+          ],
         });
         break;
 
       default: // User messages
         formattedMessages.push({
-          role: "user",
-          content: trimmedMessage,
+          role: "USER",
+          message: trimmedMessage,
         });
         break;
     }

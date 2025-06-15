@@ -44,7 +44,7 @@ function cleanSchemaForGoogle(schema: any): any {
     if (key === "$schema" || key === "additionalProperties") {
       continue;
     }
-    
+
     // Handle format field for string types - Google only supports 'enum' and 'date-time'
     if (key === "format" && typeof value === "string") {
       // Only keep supported formats
@@ -54,7 +54,7 @@ function cleanSchemaForGoogle(schema: any): any {
       // Skip unsupported formats like "date", "time", "email", etc.
       continue;
     }
-    
+
     // Recursively clean nested objects
     cleaned[key] = cleanSchemaForGoogle(value);
   }
@@ -451,7 +451,40 @@ export async function streamWithOpenAI(
       );
     }
     onComplete(fullMessage, toolCalls);
-  } catch (error) {
+  } catch (error: any) {
+    // Handle OpenAI-specific errors
+    const errorMessage = error.message || error.toString();
+
+    // Check for rate limit errors
+    if (
+      error.status === 429 ||
+      error.statusCode === 429 ||
+      error.code === "rate_limit_exceeded"
+    ) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [OpenAI] Rate limit hit`);
+      }
+      const rateLimitError: any = new Error("OpenAI rate limit exceeded");
+      rateLimitError.statusCode = 429;
+      throw rateLimitError;
+    }
+
+    // Check for network errors
+    if (
+      errorMessage.includes("fetch failed") ||
+      error.code === "ECONNRESET" ||
+      error.code === "ETIMEDOUT"
+    ) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [OpenAI] Network error: ${errorMessage}`);
+      }
+      const networkError: any = new Error(
+        `OpenAI network error: ${errorMessage}`,
+      );
+      networkError.statusCode = 503; // Service unavailable
+      throw networkError;
+    }
+
     // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
@@ -879,7 +912,38 @@ export async function streamWithAnthropic(
     }
 
     onComplete(fullMessage, validToolCalls);
-  } catch (error) {
+  } catch (error: any) {
+    // Handle Anthropic-specific errors
+    const errorMessage = error.message || error.toString();
+
+    // Check for overloaded errors
+    if (
+      error.type === "overloaded_error" ||
+      errorMessage.includes("Overloaded")
+    ) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Anthropic] Service overloaded`);
+      }
+      // Treat overloaded as a rate limit error for retry logic
+      const overloadError: any = new Error("Anthropic service overloaded");
+      overloadError.statusCode = 503; // Service unavailable
+      throw overloadError;
+    }
+
+    // Check for rate limit errors
+    if (
+      error.status === 429 ||
+      error.statusCode === 429 ||
+      error.type === "rate_limit_error"
+    ) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Anthropic] Rate limit hit`);
+      }
+      const rateLimitError: any = new Error("Anthropic rate limit exceeded");
+      rateLimitError.statusCode = 429;
+      throw rateLimitError;
+    }
+
     // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
@@ -1375,15 +1439,47 @@ export async function streamWithGroq(
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
-  // Groq uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
-  return streamWithOpenAI(
-    specification,
-    messages,
-    tools,
-    groqClient,
-    onEvent,
-    onComplete,
-  );
+  try {
+    // Groq uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
+    return await streamWithOpenAI(
+      specification,
+      messages,
+      tools,
+      groqClient,
+      onEvent,
+      onComplete,
+    );
+  } catch (error: any) {
+    // Handle Groq-specific errors
+    const errorMessage = error.message || error.toString();
+
+    // Check for tool calling errors
+    if (
+      error.status === 400 &&
+      errorMessage.includes("Failed to call a function")
+    ) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Groq] Tool calling error: ${errorMessage}`);
+      }
+      // Groq may have limitations with certain tool schemas
+      // Re-throw with a more descriptive error
+      throw new Error(
+        `Groq tool calling error: ${errorMessage}. The model may not support the provided tool schema format.`,
+      );
+    }
+
+    // Handle rate limits
+    if (error.status === 429 || error.statusCode === 429) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Groq] Rate limit hit (429)`);
+      }
+      const rateLimitError: any = new Error("Groq rate limit exceeded");
+      rateLimitError.statusCode = 429;
+      throw rateLimitError;
+    }
+
+    throw error;
+  }
 }
 
 /**
@@ -1397,15 +1493,29 @@ export async function streamWithCerebras(
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
-  // Cerebras uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
-  return streamWithOpenAI(
-    specification,
-    messages,
-    tools,
-    cerebrasClient,
-    onEvent,
-    onComplete,
-  );
+  try {
+    // Cerebras uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
+    return await streamWithOpenAI(
+      specification,
+      messages,
+      tools,
+      cerebrasClient,
+      onEvent,
+      onComplete,
+    );
+  } catch (error: any) {
+    // Handle Cerebras-specific 429 errors
+    if (error.status === 429 || error.statusCode === 429) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Cerebras] Rate limit hit (429)`);
+      }
+      // Re-throw with proper status code for retry logic
+      const rateLimitError: any = new Error("Cerebras rate limit exceeded");
+      rateLimitError.statusCode = 429;
+      throw rateLimitError;
+    }
+    throw error;
+  }
 }
 
 /**
@@ -1460,17 +1570,17 @@ export async function streamWithDeepseek(
         serviceType: specification.serviceType,
         deepseek: specification.deepseek,
         hasDeepseekModel: !!specification.deepseek?.model,
-        deepseekModelValue: specification.deepseek?.model
+        deepseekModelValue: specification.deepseek?.model,
       });
     }
-    
+
     const modelName = getModelName(specification);
     if (!modelName) {
       console.error(`❌ [Deepseek] Model resolution failed:`, {
         name: specification.name,
         serviceType: specification.serviceType,
         deepseek: specification.deepseek,
-        hasCustomModelName: !!specification.deepseek?.modelName
+        hasCustomModelName: !!specification.deepseek?.modelName,
       });
       throw new Error(
         `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
@@ -1554,10 +1664,13 @@ export async function streamWithDeepseek(
         if (tokenCount % 10 === 0) {
           const totalTokens = tokenCount + toolArgumentTokens;
           const tokensPerSecond =
-            totalTokens > 0 ? totalTokens / ((currentTime - startTime) / 1000) : 0;
+            totalTokens > 0
+              ? totalTokens / ((currentTime - startTime) / 1000)
+              : 0;
           const avgInterTokenDelay =
             interTokenDelays.length > 0
-              ? interTokenDelays.reduce((a, b) => a + b, 0) / interTokenDelays.length
+              ? interTokenDelays.reduce((a, b) => a + b, 0) /
+                interTokenDelays.length
               : 0;
         }
       }
@@ -1713,17 +1826,37 @@ export async function streamWithCohere(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(`🔍 [Cohere] Messages array length: ${messages.length}`);
-      console.log(`🔍 [Cohere] All messages:`, JSON.stringify(messages, null, 2));
+      console.log(
+        `🔍 [Cohere] All messages:`,
+        JSON.stringify(messages, null, 2),
+      );
     }
 
     if (messages.length === 0) {
       throw new Error("No messages found for Cohere streaming");
     }
 
+    // Cohere v7 expects a single message and optional chatHistory
+    // Extract the last message as the current message
+    const lastMessage = messages[messages.length - 1];
+    const chatHistory = messages.slice(0, -1);
+
+    if (!lastMessage || !lastMessage.message) {
+      throw new Error(
+        "Last message must have message property for Cohere streaming",
+      );
+    }
+
     const streamConfig: any = {
       model: modelName,
-      messages: messages, // All messages in chronological order
+      message: lastMessage.message, // Current message (singular)
     };
+
+    // Add chat history if there are previous messages
+    if (chatHistory.length > 0) {
+      // Messages already have 'message' property from formatter
+      streamConfig.chatHistory = chatHistory;
+    }
 
     // Only add temperature if it's defined
     if (specification.cohere?.temperature !== undefined) {
@@ -1743,10 +1876,10 @@ export async function streamWithCohere(
 
         // Parse the JSON schema
         const schema = JSON.parse(tool.schema);
-        
+
         // Convert JSON Schema to Cohere's expected format
         const parameter_definitions: Record<string, any> = {};
-        
+
         if (schema.properties) {
           for (const [key, value] of Object.entries(schema.properties)) {
             const prop = value as any;
@@ -1755,7 +1888,7 @@ export async function streamWithCohere(
               description: prop.description || "",
               required: schema.required?.includes(key) || false,
             };
-            
+
             // Add additional properties that Cohere might expect
             if (prop.enum) {
               paramDef.options = prop.enum;
@@ -1766,7 +1899,7 @@ export async function streamWithCohere(
             if (prop.items) {
               paramDef.items = prop.items;
             }
-            
+
             parameter_definitions[key] = paramDef;
           }
         }
@@ -1774,20 +1907,24 @@ export async function streamWithCohere(
         return {
           name: tool.name,
           description: tool.description,
-          parameter_definitions,  // Use snake_case as expected by Cohere API
+          parameter_definitions, // Use snake_case as expected by Cohere API
         };
       });
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔍 [Cohere] Final stream config:`, JSON.stringify(streamConfig, null, 2));
-      console.log(`🔍 [Cohere] Cohere client methods available:`, Object.getOwnPropertyNames(cohereClient));
-      console.log(`🔍 [Cohere] Has chatStream method:`, typeof cohereClient.chatStream === 'function');
-      console.log(`🔍 [Cohere] Has chat property:`, !!cohereClient.chat);
-      if (cohereClient.chat) {
-        console.log(`🔍 [Cohere] Chat methods:`, Object.getOwnPropertyNames(cohereClient.chat));
-      }
-      console.log(`⏱️ [Cohere] Starting stream request at: ${new Date().toISOString()}`);
+      console.log(
+        `🔍 [Cohere] Final stream config:`,
+        JSON.stringify(streamConfig, null, 2),
+      );
+      console.log(`🔍 [Cohere] Current message: "${streamConfig.message}"`);
+      console.log(
+        `🔍 [Cohere] Chat history length: ${streamConfig.chatHistory?.length || 0}`,
+      );
+      console.log(`🔍 [Cohere] Has tools: ${!!streamConfig.tools}`);
+      console.log(
+        `⏱️ [Cohere] Starting stream request at: ${new Date().toISOString()}`,
+      );
     }
 
     let stream;
@@ -1797,14 +1934,24 @@ export async function streamWithCohere(
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.error(`❌ [Cohere] Stream creation failed:`, streamError);
         if ((streamError as any).response) {
-          console.error(`❌ [Cohere] Stream response status: ${(streamError as any).response.status}`);
-          console.error(`❌ [Cohere] Stream response data:`, (streamError as any).response.data);
+          console.error(
+            `❌ [Cohere] Stream response status: ${(streamError as any).response.status}`,
+          );
+          console.error(
+            `❌ [Cohere] Stream response data:`,
+            (streamError as any).response.data,
+          );
         }
         if ((streamError as any).status) {
-          console.error(`❌ [Cohere] Direct status: ${(streamError as any).status}`);
+          console.error(
+            `❌ [Cohere] Direct status: ${(streamError as any).status}`,
+          );
         }
         if ((streamError as any).body) {
-          console.error(`❌ [Cohere] Response body:`, (streamError as any).body);
+          console.error(
+            `❌ [Cohere] Response body:`,
+            (streamError as any).body,
+          );
         }
       }
       throw streamError;
@@ -1873,8 +2020,13 @@ export async function streamWithCohere(
       }
       // Log additional error details if available
       if ((error as any).response) {
-        console.error(`❌ [Cohere] Response status: ${(error as any).response.status}`);
-        console.error(`❌ [Cohere] Response data:`, (error as any).response.data);
+        console.error(
+          `❌ [Cohere] Response status: ${(error as any).response.status}`,
+        );
+        console.error(
+          `❌ [Cohere] Response data:`,
+          (error as any).response.data,
+        );
       }
     }
     throw error;
@@ -2040,16 +2192,19 @@ export async function streamWithBedrock(
 
   try {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔍 [Bedrock] Specification object:`, JSON.stringify(specification, null, 2));
+      console.log(
+        `🔍 [Bedrock] Specification object:`,
+        JSON.stringify(specification, null, 2),
+      );
     }
-    
+
     const modelName = getModelName(specification);
     if (!modelName) {
       console.error(`❌ [Bedrock] Model resolution failed for specification:`, {
         name: specification.name,
         serviceType: specification.serviceType,
         bedrock: specification.bedrock,
-        hasCustomModelName: !!specification.bedrock?.modelName
+        hasCustomModelName: !!specification.bedrock?.modelName,
       });
       throw new Error(
         `No model name found for Bedrock specification: ${specification.name} (service: ${specification.serviceType}, bedrock.model: ${specification.bedrock?.model})`,
@@ -2071,9 +2226,14 @@ export async function streamWithBedrock(
     // The AWS SDK expects content as an array of content blocks
     const converseMessages = messages.map((msg: BedrockMessage) => ({
       role: msg.role,
-      content: [{
-        text: typeof msg.content === 'string' ? msg.content : msg.content.toString()
-      }]
+      content: [
+        {
+          text:
+            typeof msg.content === "string"
+              ? msg.content
+              : msg.content.toString(),
+        },
+      ],
     }));
 
     // Prepare the request using Converse API format
@@ -2112,7 +2272,10 @@ export async function streamWithBedrock(
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🔍 [Bedrock] Converse request:`, JSON.stringify(request, null, 2));
+      console.log(
+        `🔍 [Bedrock] Converse request:`,
+        JSON.stringify(request, null, 2),
+      );
     }
 
     const command = new ConverseStreamCommand(request);
@@ -2129,7 +2292,7 @@ export async function streamWithBedrock(
         if (event.contentBlockDelta) {
           const delta = event.contentBlockDelta.delta;
           const contentIndex = event.contentBlockDelta.contentBlockIndex;
-          
+
           if (delta?.text) {
             const text = delta.text;
             fullMessage += text;
@@ -2168,18 +2331,19 @@ export async function streamWithBedrock(
           // Handle tool use start
           const start = event.contentBlockStart.start;
           const startIndex = event.contentBlockStart.contentBlockIndex;
-          
+
           if (start?.toolUse && startIndex !== undefined) {
             const toolUse = start.toolUse;
-            const id = toolUse.toolUseId || `tool_${Date.now()}_${toolCalls.length}`;
-            
+            const id =
+              toolUse.toolUseId || `tool_${Date.now()}_${toolCalls.length}`;
+
             // Initialize the tool call
             const toolCall: ConversationToolCall = {
               id,
               name: toolUse.name || "",
               arguments: "",
             };
-            
+
             // Store in both array and map
             toolCalls.push(toolCall);
             toolCallsByIndex.set(startIndex, toolCall);
@@ -2223,13 +2387,34 @@ export async function streamWithBedrock(
     });
 
     onComplete(fullMessage, toolCalls);
-  } catch (error) {
+  } catch (error: any) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Bedrock] Stream error:`, error);
     }
+
+    // Handle specific Bedrock errors
+    const errorMessage = error.message || error.toString();
+    const errorName = error.name || "";
+
+    // Check for throttling errors
+    if (
+      errorName === "ThrottlingException" ||
+      errorMessage.includes("Too many tokens") ||
+      errorMessage.includes("Too many requests")
+    ) {
+      onEvent({
+        type: "error",
+        error: `Bedrock rate limit: ${errorMessage}`,
+      });
+      // Re-throw with a specific error type that the retry logic can handle
+      const rateLimitError: any = new Error(errorMessage);
+      rateLimitError.statusCode = 429; // Treat as rate limit
+      throw rateLimitError;
+    }
+
     onEvent({
       type: "error",
-      error: `Bedrock streaming error: ${error}`,
+      error: `Bedrock streaming error: ${errorMessage}`,
     });
     throw error;
   }

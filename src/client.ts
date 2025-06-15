@@ -107,7 +107,7 @@ try {
 
 try {
   GoogleGenerativeAI = optionalRequire(
-    "@google/generative-ai"
+    "@google/generative-ai",
   ).GoogleGenerativeAI;
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
     console.log("[SDK Loading] Google Generative AI SDK loaded successfully");
@@ -157,7 +157,7 @@ try {
 
 try {
   BedrockRuntimeClient = optionalRequire(
-    "@aws-sdk/client-bedrock-runtime"
+    "@aws-sdk/client-bedrock-runtime",
   ).BedrockRuntimeClient;
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
     console.log("[SDK Loading] Bedrock SDK loaded successfully");
@@ -246,11 +246,14 @@ class Graphlit {
     jwtSecret?: string,
     ownerId?: string,
     userId?: string,
-    apiUri?: string
+    apiUri?: string,
   ) {
     // Handle both old constructor signature and new options object
     let options: GraphlitClientOptions;
-    if (typeof organizationIdOrOptions === 'object' && organizationIdOrOptions !== null) {
+    if (
+      typeof organizationIdOrOptions === "object" &&
+      organizationIdOrOptions !== null
+    ) {
       // New constructor with options object
       options = organizationIdOrOptions;
     } else {
@@ -261,7 +264,7 @@ class Graphlit {
         jwtSecret,
         ownerId,
         userId,
-        apiUri
+        apiUri,
       };
     }
 
@@ -277,7 +280,8 @@ class Graphlit {
 
       this.organizationId =
         options.organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
-      this.environmentId = options.environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
+      this.environmentId =
+        options.environmentId || process.env.GRAPHLIT_ENVIRONMENT_ID;
       this.jwtSecret = options.jwtSecret || process.env.GRAPHLIT_JWT_SECRET;
 
       // optional: for multi-tenant support
@@ -300,7 +304,7 @@ class Graphlit {
       maxDelay: 30000,
       retryableStatusCodes: [429, 502, 503, 504],
       jitter: true,
-      ...options.retryConfig
+      ...options.retryConfig,
     };
 
     if (!this.organizationId) {
@@ -344,21 +348,26 @@ class Graphlit {
           if (!hasNetworkError) return false;
 
           // Get status code from different possible locations
-          const statusCode = 
+          const statusCode =
             error.networkError?.statusCode ||
             error.networkError?.response?.status ||
             error.statusCode;
 
           // Check if status code is retryable
           if (statusCode && this.retryConfig.retryableStatusCodes) {
-            const shouldRetry = this.retryConfig.retryableStatusCodes.includes(statusCode);
-            
+            const shouldRetry =
+              this.retryConfig.retryableStatusCodes.includes(statusCode);
+
             // Call onRetry callback if provided
-            if (shouldRetry && this.retryConfig.onRetry && _operation.getContext().retryCount !== undefined) {
+            if (
+              shouldRetry &&
+              this.retryConfig.onRetry &&
+              _operation.getContext().retryCount !== undefined
+            ) {
               const attempt = _operation.getContext().retryCount + 1;
               this.retryConfig.onRetry(attempt, error, _operation);
             }
-            
+
             return shouldRetry;
           }
 
@@ -478,7 +487,7 @@ class Graphlit {
   setRetryConfig(retryConfig: RetryConfig): void {
     this.retryConfig = {
       ...this.retryConfig,
-      ...retryConfig
+      ...retryConfig,
     };
     // Refresh client to apply new retry configuration
     this.refreshClient();
@@ -510,12 +519,12 @@ class Graphlit {
   public async getProject(): Promise<Types.GetProjectQuery> {
     return this.queryAndCheckError<Types.GetProjectQuery, {}>(
       Documents.GetProject,
-      {}
+      {},
     );
   }
 
   public async updateProject(
-    project: Types.ProjectUpdateInput
+    project: Types.ProjectUpdateInput,
   ): Promise<Types.UpdateProjectMutation> {
     return this.mutateAndCheckError<
       Types.UpdateProjectMutation,
@@ -524,7 +533,7 @@ class Graphlit {
   }
 
   public async lookupProjectUsage(
-    correlationId: string
+    correlationId: string,
   ): Promise<Types.LookupUsageQuery> {
     return this.queryAndCheckError<
       Types.LookupUsageQuery,
@@ -533,7 +542,7 @@ class Graphlit {
   }
 
   public async lookupProjectCredits(
-    correlationId: string
+    correlationId: string,
   ): Promise<Types.LookupCreditsQuery> {
     return this.queryAndCheckError<
       Types.LookupCreditsQuery,
@@ -543,7 +552,7 @@ class Graphlit {
 
   public async queryProjectTokens(
     startDate: Types.Scalars["DateTime"]["input"],
-    duration: Types.Scalars["TimeSpan"]["input"]
+    duration: Types.Scalars["TimeSpan"]["input"],
   ): Promise<Types.QueryTokensQuery> {
     return this.queryAndCheckError<
       Types.QueryTokensQuery,
@@ -560,7 +569,7 @@ class Graphlit {
     names?: string[],
     excludedNames?: string[],
     offset?: Types.Scalars["Int"]["input"],
-    limit?: Types.Scalars["Int"]["input"]
+    limit?: Types.Scalars["Int"]["input"],
   ): Promise<Types.QueryUsageQuery> {
     return this.queryAndCheckError<
       Types.QueryUsageQuery,
@@ -584,7 +593,7 @@ class Graphlit {
 
   public async queryProjectCredits(
     startDate: Types.Scalars["DateTime"]["input"],
-    duration: Types.Scalars["TimeSpan"]["input"]
+    duration: Types.Scalars["TimeSpan"]["input"],
   ): Promise<Types.QueryCreditsQuery> {
     return this.queryAndCheckError<
       Types.QueryCreditsQuery,
@@ -598,7 +607,7 @@ class Graphlit {
   public async sendNotification(
     connector: Types.IntegrationConnectorInput,
     text: string,
-    textType?: Types.TextTypes
+    textType?: Types.TextTypes,
   ): Promise<Types.SendNotificationMutation> {
     return this.mutateAndCheckError<
       Types.SendNotificationMutation,
@@ -618,7 +627,7 @@ class Graphlit {
     uri: string,
     allowedPaths?: string[],
     excludedPaths?: string[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.MapWebQuery> {
     return this.queryAndCheckError<
       Types.MapWebQuery,
@@ -640,7 +649,7 @@ class Graphlit {
     text: string,
     service?: Types.SearchServiceTypes,
     limit?: number,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.SearchWebQuery> {
     return this.queryAndCheckError<
       Types.SearchWebQuery,
@@ -660,7 +669,7 @@ class Graphlit {
 
   public async createAlert(
     alert: Types.AlertInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.CreateAlertMutation> {
     return this.mutateAndCheckError<
       Types.CreateAlertMutation,
@@ -669,7 +678,7 @@ class Graphlit {
   }
 
   public async updateAlert(
-    alert: Types.AlertUpdateInput
+    alert: Types.AlertUpdateInput,
   ): Promise<Types.UpdateAlertMutation> {
     return this.mutateAndCheckError<
       Types.UpdateAlertMutation,
@@ -680,13 +689,13 @@ class Graphlit {
   public async deleteAlert(id: string): Promise<Types.DeleteAlertMutation> {
     return this.mutateAndCheckError<Types.DeleteAlertMutation, { id: string }>(
       Documents.DeleteAlert,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deleteAlerts(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteAlertsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAlertsMutation,
@@ -697,7 +706,7 @@ class Graphlit {
   public async deleteAllAlerts(
     filter?: Types.AlertFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllAlertsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllAlertsMutation,
@@ -716,26 +725,26 @@ class Graphlit {
   public async enableAlert(id: string): Promise<Types.EnableAlertMutation> {
     return this.mutateAndCheckError<Types.EnableAlertMutation, { id: string }>(
       Documents.EnableAlert,
-      { id: id }
+      { id: id },
     );
   }
 
   public async disableAlert(id: string): Promise<Types.DisableAlertMutation> {
     return this.mutateAndCheckError<Types.DisableAlertMutation, { id: string }>(
       Documents.DisableAlert,
-      { id: id }
+      { id: id },
     );
   }
 
   public async getAlert(id: string): Promise<Types.GetAlertQuery> {
     return this.queryAndCheckError<Types.GetAlertQuery, { id: string }>(
       Documents.GetAlert,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryAlerts(
-    filter?: Types.AlertFilter
+    filter?: Types.AlertFilter,
   ): Promise<Types.QueryAlertsQuery> {
     return this.queryAndCheckError<
       Types.QueryAlertsQuery,
@@ -744,7 +753,7 @@ class Graphlit {
   }
 
   public async countAlerts(
-    filter?: Types.AlertFilter
+    filter?: Types.AlertFilter,
   ): Promise<Types.CountAlertsQuery> {
     return this.queryAndCheckError<
       Types.CountAlertsQuery,
@@ -753,7 +762,7 @@ class Graphlit {
   }
 
   public async createCollection(
-    collection: Types.CollectionInput
+    collection: Types.CollectionInput,
   ): Promise<Types.CreateCollectionMutation> {
     return this.mutateAndCheckError<
       Types.CreateCollectionMutation,
@@ -762,7 +771,7 @@ class Graphlit {
   }
 
   public async updateCollection(
-    collection: Types.CollectionUpdateInput
+    collection: Types.CollectionUpdateInput,
   ): Promise<Types.UpdateCollectionMutation> {
     return this.mutateAndCheckError<
       Types.UpdateCollectionMutation,
@@ -771,7 +780,7 @@ class Graphlit {
   }
 
   public async deleteCollection(
-    id: string
+    id: string,
   ): Promise<Types.DeleteCollectionMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCollectionMutation,
@@ -781,7 +790,7 @@ class Graphlit {
 
   public async deleteCollections(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCollectionsMutation,
@@ -792,7 +801,7 @@ class Graphlit {
   public async deleteAllCollections(
     filter?: Types.CollectionFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllCollectionsMutation,
@@ -810,7 +819,7 @@ class Graphlit {
 
   public async addContentsToCollections(
     contents: Types.EntityReferenceInput[],
-    collections: Types.EntityReferenceInput[]
+    collections: Types.EntityReferenceInput[],
   ): Promise<Types.AddContentsToCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.AddContentsToCollectionsMutation,
@@ -826,7 +835,7 @@ class Graphlit {
 
   public async removeContentsFromCollection(
     contents: Types.EntityReferenceInput[],
-    collection: Types.EntityReferenceInput
+    collection: Types.EntityReferenceInput,
   ): Promise<Types.RemoveContentsFromCollectionMutation> {
     return this.mutateAndCheckError<
       Types.RemoveContentsFromCollectionMutation,
@@ -843,12 +852,12 @@ class Graphlit {
   public async getCollection(id: string): Promise<Types.GetCollectionQuery> {
     return this.queryAndCheckError<Types.GetCollectionQuery, { id: string }>(
       Documents.GetCollection,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryCollections(
-    filter?: Types.CollectionFilter
+    filter?: Types.CollectionFilter,
   ): Promise<Types.QueryCollectionsQuery> {
     return this.queryAndCheckError<
       Types.QueryCollectionsQuery,
@@ -857,7 +866,7 @@ class Graphlit {
   }
 
   public async countCollections(
-    filter?: Types.CollectionFilter
+    filter?: Types.CollectionFilter,
   ): Promise<Types.CountCollectionsQuery> {
     return this.queryAndCheckError<
       Types.CountCollectionsQuery,
@@ -869,7 +878,7 @@ class Graphlit {
     prompt: string,
     uri: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DescribeImageMutation> {
     return this.mutateAndCheckError<
       Types.DescribeImageMutation,
@@ -892,7 +901,7 @@ class Graphlit {
     mimeType: string,
     data: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DescribeEncodedImageMutation> {
     return this.mutateAndCheckError<
       Types.DescribeEncodedImageMutation,
@@ -918,7 +927,7 @@ class Graphlit {
     isSynchronous?: boolean,
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ScreenshotPageMutation> {
     return this.mutateAndCheckError<
       Types.ScreenshotPageMutation,
@@ -945,7 +954,7 @@ class Graphlit {
     textType: Types.TextTypes,
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestTextBatchMutation> {
     return this.mutateAndCheckError<
       Types.IngestTextBatchMutation,
@@ -971,7 +980,7 @@ class Graphlit {
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestBatchMutation> {
     return this.mutateAndCheckError<
       Types.IngestBatchMutation,
@@ -999,7 +1008,7 @@ class Graphlit {
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestUriMutation> {
     return this.mutateAndCheckError<
       Types.IngestUriMutation,
@@ -1035,7 +1044,7 @@ class Graphlit {
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestTextMutation> {
     return this.mutateAndCheckError<
       Types.IngestTextMutation,
@@ -1071,7 +1080,7 @@ class Graphlit {
     textType?: Types.TextTypes,
     id?: string,
     collections?: Types.EntityReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestMemoryMutation> {
     return this.mutateAndCheckError<
       Types.IngestMemoryMutation,
@@ -1100,7 +1109,7 @@ class Graphlit {
     eventDate?: Types.Scalars["DateTime"]["input"],
     id?: string,
     collections?: Types.EntityReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestEventMutation> {
     return this.mutateAndCheckError<
       Types.IngestEventMutation,
@@ -1135,7 +1144,7 @@ class Graphlit {
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.IngestEncodedFileMutation> {
     return this.mutateAndCheckError<
       Types.IngestEncodedFileMutation,
@@ -1168,7 +1177,7 @@ class Graphlit {
   }
 
   public async updateContent(
-    content: Types.ContentUpdateInput
+    content: Types.ContentUpdateInput,
   ): Promise<Types.UpdateContentMutation> {
     return this.mutateAndCheckError<
       Types.UpdateContentMutation,
@@ -1185,7 +1194,7 @@ class Graphlit {
 
   public async deleteContents(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteContentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteContentsMutation,
@@ -1196,7 +1205,7 @@ class Graphlit {
   public async deleteAllContents(
     filter?: Types.ContentFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllContentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllContentsMutation,
@@ -1216,7 +1225,7 @@ class Graphlit {
     summarization: Types.SummarizationStrategyInput,
     text: string,
     textType?: Types.TextTypes,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.SummarizeTextMutation> {
     return this.mutateAndCheckError<
       Types.SummarizeTextMutation,
@@ -1237,7 +1246,7 @@ class Graphlit {
   public async summarizeContents(
     summarizations: Types.SummarizationStrategyInput[],
     filter?: Types.ContentFilter,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.SummarizeContentsMutation> {
     return this.mutateAndCheckError<
       Types.SummarizeContentsMutation,
@@ -1259,7 +1268,7 @@ class Graphlit {
     tools: Types.ToolDefinitionInput[],
     specification?: Types.EntityReferenceInput,
     textType?: Types.TextTypes,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ExtractTextMutation> {
     return this.mutateAndCheckError<
       Types.ExtractTextMutation,
@@ -1286,7 +1295,7 @@ class Graphlit {
     tools: Types.ToolDefinitionInput[],
     specification?: Types.EntityReferenceInput,
     filter?: Types.ContentFilter,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ExtractContentsMutation> {
     return this.mutateAndCheckError<
       Types.ExtractContentsMutation,
@@ -1317,7 +1326,7 @@ class Graphlit {
     workflow?: Types.EntityReferenceInput,
     isSynchronous?: boolean,
     includeDetails?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.PublishContentsMutation> {
     return this.mutateAndCheckError<
       Types.PublishContentsMutation,
@@ -1356,7 +1365,7 @@ class Graphlit {
     name?: string,
     workflow?: Types.EntityReferenceInput,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.PublishTextMutation> {
     return this.mutateAndCheckError<
       Types.PublishTextMutation,
@@ -1383,12 +1392,12 @@ class Graphlit {
   public async getContent(id: string): Promise<Types.GetContentQuery> {
     return this.queryAndCheckError<Types.GetContentQuery, { id: string }>(
       Documents.GetContent,
-      { id: id }
+      { id: id },
     );
   }
 
   public async lookupContents(
-    ids: string[]
+    ids: string[],
   ): Promise<Types.LookupContentsResults> {
     return this.queryAndCheckError<
       Types.LookupContentsResults,
@@ -1397,7 +1406,7 @@ class Graphlit {
   }
 
   public async queryContents(
-    filter?: Types.ContentFilter
+    filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsQuery,
@@ -1406,7 +1415,7 @@ class Graphlit {
   }
 
   public async queryContentsFacets(
-    filter?: Types.ContentFilter
+    filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsFacetsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsFacetsQuery,
@@ -1415,7 +1424,7 @@ class Graphlit {
   }
 
   public async queryContentsGraph(
-    filter?: Types.ContentFilter
+    filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsGraphQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsGraphQuery,
@@ -1429,7 +1438,7 @@ class Graphlit {
   }
 
   public async countContents(
-    filter?: Types.ContentFilter
+    filter?: Types.ContentFilter,
   ): Promise<Types.CountContentsQuery> {
     return this.queryAndCheckError<
       Types.CountContentsQuery,
@@ -1440,13 +1449,13 @@ class Graphlit {
   public async isContentDone(id: string): Promise<Types.IsContentDoneQuery> {
     return this.queryAndCheckError<Types.IsContentDoneQuery, { id: string }>(
       Documents.IsContentDone,
-      { id: id }
+      { id: id },
     );
   }
 
   public async createConversation(
     conversation: Types.ConversationInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.CreateConversationMutation> {
     return this.mutateAndCheckError<
       Types.CreateConversationMutation,
@@ -1458,7 +1467,7 @@ class Graphlit {
   }
 
   public async updateConversation(
-    conversation: Types.ConversationUpdateInput
+    conversation: Types.ConversationUpdateInput,
   ): Promise<Types.UpdateConversationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateConversationMutation,
@@ -1467,7 +1476,7 @@ class Graphlit {
   }
 
   public async deleteConversation(
-    id: string
+    id: string,
   ): Promise<Types.DeleteConversationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteConversationMutation,
@@ -1477,7 +1486,7 @@ class Graphlit {
 
   public async deleteConversations(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteConversationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteConversationsMutation,
@@ -1491,7 +1500,7 @@ class Graphlit {
   public async deleteAllConversations(
     filter?: Types.ConversationFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllConversationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllConversationsMutation,
@@ -1508,7 +1517,7 @@ class Graphlit {
   }
 
   public async clearConversation(
-    id: string
+    id: string,
   ): Promise<Types.ClearConversationMutation> {
     return this.mutateAndCheckError<
       Types.ClearConversationMutation,
@@ -1517,7 +1526,7 @@ class Graphlit {
   }
 
   public async closeConversation(
-    id: string
+    id: string,
   ): Promise<Types.CloseConversationMutation> {
     return this.mutateAndCheckError<
       Types.CloseConversationMutation,
@@ -1526,16 +1535,16 @@ class Graphlit {
   }
 
   public async getConversation(
-    id: string
+    id: string,
   ): Promise<Types.GetConversationQuery> {
     return this.queryAndCheckError<Types.GetConversationQuery, { id: string }>(
       Documents.GetConversation,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryConversations(
-    filter?: Types.ConversationFilter
+    filter?: Types.ConversationFilter,
   ): Promise<Types.QueryConversationsQuery> {
     return this.queryAndCheckError<
       Types.QueryConversationsQuery,
@@ -1544,7 +1553,7 @@ class Graphlit {
   }
 
   public async countConversations(
-    filter?: Types.ConversationFilter
+    filter?: Types.ConversationFilter,
   ): Promise<Types.CountConversationsQuery> {
     return this.queryAndCheckError<
       Types.CountConversationsQuery,
@@ -1557,7 +1566,7 @@ class Graphlit {
     uri: string,
     id?: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ReviseImageMutation> {
     return this.mutateAndCheckError<
       Types.ReviseImageMutation,
@@ -1583,7 +1592,7 @@ class Graphlit {
     data: string,
     id?: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ReviseEncodedImageMutation> {
     return this.mutateAndCheckError<
       Types.ReviseEncodedImageMutation,
@@ -1610,7 +1619,7 @@ class Graphlit {
     text: string,
     id?: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ReviseTextMutation> {
     return this.mutateAndCheckError<
       Types.ReviseTextMutation,
@@ -1635,7 +1644,7 @@ class Graphlit {
     content: Types.EntityReferenceInput,
     id?: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ReviseContentMutation> {
     return this.mutateAndCheckError<
       Types.ReviseContentMutation,
@@ -1661,7 +1670,7 @@ class Graphlit {
     data?: string,
     specification?: Types.EntityReferenceInput,
     messages?: Types.ConversationMessageInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.PromptMutation> {
     return this.mutateAndCheckError<
       Types.PromptMutation,
@@ -1689,7 +1698,7 @@ class Graphlit {
     augmentedFilter?: Types.ContentFilter,
     retrievalStrategy?: Types.RetrievalStrategyInput,
     rerankingStrategy?: Types.RerankingStrategyInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.RetrieveSourcesMutation> {
     return this.mutateAndCheckError<
       Types.RetrieveSourcesMutation,
@@ -1717,7 +1726,7 @@ class Graphlit {
     specification?: Types.EntityReferenceInput,
     tools?: Types.ToolDefinitionInput[],
     includeDetails?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
@@ -1742,7 +1751,7 @@ class Graphlit {
   public async completeConversation(
     completion: string,
     id: string,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.CompleteConversationMutation> {
     return this.mutateAndCheckError<
       Types.CompleteConversationMutation,
@@ -1759,7 +1768,7 @@ class Graphlit {
     type?: Types.SdkTypes,
     id?: string,
     specification?: Types.EntityReferenceInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.AskGraphlitMutation> {
     return this.mutateAndCheckError<
       Types.AskGraphlitMutation,
@@ -1788,7 +1797,7 @@ class Graphlit {
     tools?: Types.ToolDefinitionInput[],
     requireTool?: boolean,
     includeDetails?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<
       Types.PromptConversationMutation,
@@ -1819,7 +1828,7 @@ class Graphlit {
   public async continueConversation(
     id: string,
     responses: Types.ConversationToolResponseInput[],
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.ContinueConversationMutation> {
     return this.mutateAndCheckError<
       Types.ContinueConversationMutation,
@@ -1841,7 +1850,7 @@ class Graphlit {
     name?: string,
     workflow?: Types.EntityReferenceInput,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.PublishConversationMutation> {
     return this.mutateAndCheckError<
       Types.PublishConversationMutation,
@@ -1866,7 +1875,7 @@ class Graphlit {
   public async suggestConversation(
     id: string,
     count?: number,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.SuggestConversationMutation> {
     return this.mutateAndCheckError<
       Types.SuggestConversationMutation,
@@ -1880,7 +1889,7 @@ class Graphlit {
 
   public async queryOneDriveFolders(
     properties: Types.OneDriveFoldersInput,
-    folderId?: string
+    folderId?: string,
   ): Promise<Types.QueryOneDriveFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryOneDriveFoldersQuery,
@@ -1894,7 +1903,7 @@ class Graphlit {
   public async querySharePointFolders(
     properties: Types.SharePointFoldersInput,
     libraryId: string,
-    folderId?: string
+    folderId?: string,
   ): Promise<Types.QuerySharePointFoldersQuery> {
     return this.queryAndCheckError<
       Types.QuerySharePointFoldersQuery,
@@ -1911,7 +1920,7 @@ class Graphlit {
   }
 
   public async querySharePointLibraries(
-    properties: Types.SharePointLibrariesInput
+    properties: Types.SharePointLibrariesInput,
   ): Promise<Types.QuerySharePointLibrariesQuery> {
     return this.queryAndCheckError<
       Types.QuerySharePointLibrariesQuery,
@@ -1920,7 +1929,7 @@ class Graphlit {
   }
 
   public async queryMicrosoftTeamsTeams(
-    properties: Types.MicrosoftTeamsTeamsInput
+    properties: Types.MicrosoftTeamsTeamsInput,
   ): Promise<Types.QueryMicrosoftTeamsTeamsQuery> {
     return this.queryAndCheckError<
       Types.QueryMicrosoftTeamsTeamsQuery,
@@ -1930,7 +1939,7 @@ class Graphlit {
 
   public async queryMicrosoftTeamsChannels(
     properties: Types.MicrosoftTeamsChannelsInput,
-    teamId: string
+    teamId: string,
   ): Promise<Types.QueryMicrosoftTeamsChannelsQuery> {
     return this.queryAndCheckError<
       Types.QueryMicrosoftTeamsChannelsQuery,
@@ -1942,7 +1951,7 @@ class Graphlit {
   }
 
   public async querySlackChannels(
-    properties: Types.SlackChannelsInput
+    properties: Types.SlackChannelsInput,
   ): Promise<Types.QuerySlackChannelsQuery> {
     return this.queryAndCheckError<
       Types.QuerySlackChannelsQuery,
@@ -1951,7 +1960,7 @@ class Graphlit {
   }
 
   public async queryLinearProjects(
-    properties: Types.LinearProjectsInput
+    properties: Types.LinearProjectsInput,
   ): Promise<Types.QueryLinearProjectsQuery> {
     return this.queryAndCheckError<
       Types.QueryLinearProjectsQuery,
@@ -1960,7 +1969,7 @@ class Graphlit {
   }
 
   public async queryNotionDatabases(
-    properties: Types.NotionDatabasesInput
+    properties: Types.NotionDatabasesInput,
   ): Promise<Types.QueryNotionDatabasesQuery> {
     return this.queryAndCheckError<
       Types.QueryNotionDatabasesQuery,
@@ -1970,7 +1979,7 @@ class Graphlit {
 
   public async queryNotionPages(
     properties: Types.NotionPagesInput,
-    identifier: string
+    identifier: string,
   ): Promise<Types.QueryNotionPagesQuery> {
     return this.queryAndCheckError<
       Types.QueryNotionPagesQuery,
@@ -1983,7 +1992,7 @@ class Graphlit {
 
   public async createFeed(
     feed: Types.FeedInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<
       Types.CreateFeedMutation,
@@ -1992,7 +2001,7 @@ class Graphlit {
   }
 
   public async updateFeed(
-    feed: Types.FeedUpdateInput
+    feed: Types.FeedUpdateInput,
   ): Promise<Types.UpdateFeedMutation> {
     return this.mutateAndCheckError<
       Types.UpdateFeedMutation,
@@ -2003,13 +2012,13 @@ class Graphlit {
   public async deleteFeed(id: string): Promise<Types.DeleteFeedMutation> {
     return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
       Documents.DeleteFeed,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deleteFeeds(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteFeedsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteFeedsMutation,
@@ -2020,7 +2029,7 @@ class Graphlit {
   public async deleteAllFeeds(
     filter?: Types.FeedFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllFeedsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllFeedsMutation,
@@ -2039,26 +2048,26 @@ class Graphlit {
   public async enableFeed(id: string): Promise<Types.EnableFeedMutation> {
     return this.mutateAndCheckError<Types.EnableFeedMutation, { id: string }>(
       Documents.EnableFeed,
-      { id: id }
+      { id: id },
     );
   }
 
   public async disableFeed(id: string): Promise<Types.DeleteFeedMutation> {
     return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
       Documents.DisableFeed,
-      { id: id }
+      { id: id },
     );
   }
 
   public async getFeed(id: string): Promise<Types.GetFeedQuery> {
     return this.queryAndCheckError<Types.GetFeedQuery, { id: string }>(
       Documents.GetFeed,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryFeeds(
-    filter?: Types.FeedFilter
+    filter?: Types.FeedFilter,
   ): Promise<Types.QueryFeedsQuery> {
     return this.queryAndCheckError<
       Types.QueryFeedsQuery,
@@ -2067,7 +2076,7 @@ class Graphlit {
   }
 
   public async countFeeds(
-    filter?: Types.FeedFilter
+    filter?: Types.FeedFilter,
   ): Promise<Types.CountFeedsQuery> {
     return this.queryAndCheckError<
       Types.CountFeedsQuery,
@@ -2076,7 +2085,7 @@ class Graphlit {
   }
 
   public async feedExists(
-    filter?: Types.FeedFilter
+    filter?: Types.FeedFilter,
   ): Promise<Types.FeedExistsQuery> {
     return this.queryAndCheckError<
       Types.FeedExistsQuery,
@@ -2087,13 +2096,13 @@ class Graphlit {
   public async isFeedDone(id: string): Promise<Types.IsFeedDoneQuery> {
     return this.queryAndCheckError<Types.IsFeedDoneQuery, { id: string }>(
       Documents.IsFeedDone,
-      { id: id }
+      { id: id },
     );
   }
 
   public async promptSpecifications(
     prompt: string,
-    ids: string[]
+    ids: string[],
   ): Promise<Types.PromptSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.PromptSpecificationsMutation,
@@ -2102,7 +2111,7 @@ class Graphlit {
   }
 
   public async createSpecification(
-    specification: Types.SpecificationInput
+    specification: Types.SpecificationInput,
   ): Promise<Types.CreateSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.CreateSpecificationMutation,
@@ -2111,7 +2120,7 @@ class Graphlit {
   }
 
   public async updateSpecification(
-    specification: Types.SpecificationUpdateInput
+    specification: Types.SpecificationUpdateInput,
   ): Promise<Types.UpdateSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateSpecificationMutation,
@@ -2120,7 +2129,7 @@ class Graphlit {
   }
 
   public async upsertSpecification(
-    specification: Types.SpecificationInput
+    specification: Types.SpecificationInput,
   ): Promise<Types.UpsertSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.UpsertSpecificationMutation,
@@ -2129,7 +2138,7 @@ class Graphlit {
   }
 
   public async deleteSpecification(
-    id: string
+    id: string,
   ): Promise<Types.DeleteSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSpecificationMutation,
@@ -2139,7 +2148,7 @@ class Graphlit {
 
   public async deleteSpecifications(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSpecificationsMutation,
@@ -2153,7 +2162,7 @@ class Graphlit {
   public async deleteAllSpecifications(
     filter?: Types.SpecificationFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllSpecificationsMutation,
@@ -2170,16 +2179,16 @@ class Graphlit {
   }
 
   public async getSpecification(
-    id: string
+    id: string,
   ): Promise<Types.GetSpecificationQuery> {
     return this.queryAndCheckError<Types.GetSpecificationQuery, { id: string }>(
       Documents.GetSpecification,
-      { id: id }
+      { id: id },
     );
   }
 
   public async querySpecifications(
-    filter?: Types.SpecificationFilter
+    filter?: Types.SpecificationFilter,
   ): Promise<Types.QuerySpecificationsQuery> {
     return this.queryAndCheckError<
       Types.QuerySpecificationsQuery,
@@ -2188,7 +2197,7 @@ class Graphlit {
   }
 
   public async countSpecifications(
-    filter?: Types.SpecificationFilter
+    filter?: Types.SpecificationFilter,
   ): Promise<Types.CountSpecificationsQuery> {
     return this.queryAndCheckError<
       Types.CountSpecificationsQuery,
@@ -2197,7 +2206,7 @@ class Graphlit {
   }
 
   public async specificationExists(
-    filter?: Types.SpecificationFilter
+    filter?: Types.SpecificationFilter,
   ): Promise<Types.SpecificationExistsQuery> {
     return this.queryAndCheckError<
       Types.QuerySpecificationsQuery,
@@ -2206,7 +2215,7 @@ class Graphlit {
   }
 
   public async queryModels(
-    filter?: Types.ModelFilter
+    filter?: Types.ModelFilter,
   ): Promise<Types.QueryModelsQuery> {
     return this.queryAndCheckError<
       Types.QueryModelsQuery,
@@ -2215,7 +2224,7 @@ class Graphlit {
   }
 
   public async createWorkflow(
-    workflow: Types.WorkflowInput
+    workflow: Types.WorkflowInput,
   ): Promise<Types.CreateWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.CreateWorkflowMutation,
@@ -2224,7 +2233,7 @@ class Graphlit {
   }
 
   public async updateWorkflow(
-    workflow: Types.WorkflowUpdateInput
+    workflow: Types.WorkflowUpdateInput,
   ): Promise<Types.UpdateWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.UpdateWorkflowMutation,
@@ -2233,7 +2242,7 @@ class Graphlit {
   }
 
   public async upsertWorkflow(
-    workflow: Types.WorkflowInput
+    workflow: Types.WorkflowInput,
   ): Promise<Types.UpsertWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.UpsertWorkflowMutation,
@@ -2242,7 +2251,7 @@ class Graphlit {
   }
 
   public async deleteWorkflow(
-    id: string
+    id: string,
   ): Promise<Types.DeleteWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.DeleteWorkflowMutation,
@@ -2252,7 +2261,7 @@ class Graphlit {
 
   public async deleteWorkflows(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteWorkflowsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteWorkflowsMutation,
@@ -2263,7 +2272,7 @@ class Graphlit {
   public async deleteAllWorkflows(
     filter?: Types.WorkflowFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllWorkflowsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllWorkflowsMutation,
@@ -2282,12 +2291,12 @@ class Graphlit {
   public async getWorkflow(id: string): Promise<Types.GetWorkflowQuery> {
     return this.queryAndCheckError<Types.GetWorkflowQuery, { id: string }>(
       Documents.GetWorkflow,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryWorkflows(
-    filter?: Types.WorkflowFilter
+    filter?: Types.WorkflowFilter,
   ): Promise<Types.QueryWorkflowsQuery> {
     return this.queryAndCheckError<
       Types.QueryWorkflowsQuery,
@@ -2296,7 +2305,7 @@ class Graphlit {
   }
 
   public async countWorkflows(
-    filter?: Types.WorkflowFilter
+    filter?: Types.WorkflowFilter,
   ): Promise<Types.CountWorkflowsQuery> {
     return this.queryAndCheckError<
       Types.CountWorkflowsQuery,
@@ -2305,7 +2314,7 @@ class Graphlit {
   }
 
   public async workflowExists(
-    filter?: Types.WorkflowFilter
+    filter?: Types.WorkflowFilter,
   ): Promise<Types.WorkflowExistsQuery> {
     return this.queryAndCheckError<
       Types.QueryWorkflowsQuery,
@@ -2314,7 +2323,7 @@ class Graphlit {
   }
 
   public async createUser(
-    user: Types.UserInput
+    user: Types.UserInput,
   ): Promise<Types.CreateUserMutation> {
     return this.mutateAndCheckError<
       Types.CreateUserMutation,
@@ -2323,7 +2332,7 @@ class Graphlit {
   }
 
   public async updateUser(
-    user: Types.UserUpdateInput
+    user: Types.UserUpdateInput,
   ): Promise<Types.UpdateUserMutation> {
     return this.mutateAndCheckError<
       Types.UpdateUserMutation,
@@ -2334,19 +2343,19 @@ class Graphlit {
   public async deleteUser(id: string): Promise<Types.DeleteUserMutation> {
     return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
       Documents.DeleteUser,
-      { id: id }
+      { id: id },
     );
   }
 
   public async getUser(): Promise<Types.GetUserQuery> {
     return this.queryAndCheckError<Types.GetUserQuery, {}>(
       Documents.GetUser,
-      {}
+      {},
     );
   }
 
   public async queryUsers(
-    filter?: Types.UserFilter
+    filter?: Types.UserFilter,
   ): Promise<Types.QueryUsersQuery> {
     return this.queryAndCheckError<
       Types.QueryUsersQuery,
@@ -2355,7 +2364,7 @@ class Graphlit {
   }
 
   public async countUsers(
-    filter?: Types.UserFilter
+    filter?: Types.UserFilter,
   ): Promise<Types.CountUsersQuery> {
     return this.queryAndCheckError<
       Types.CountUsersQuery,
@@ -2366,19 +2375,19 @@ class Graphlit {
   public async enableUser(id: string): Promise<Types.EnableUserMutation> {
     return this.mutateAndCheckError<Types.EnableUserMutation, { id: string }>(
       Documents.EnableUser,
-      { id: id }
+      { id: id },
     );
   }
 
   public async disableUser(id: string): Promise<Types.DeleteUserMutation> {
     return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
       Documents.DisableUser,
-      { id: id }
+      { id: id },
     );
   }
 
   public async createCategory(
-    category: Types.CategoryInput
+    category: Types.CategoryInput,
   ): Promise<Types.CreateCategoryMutation> {
     return this.mutateAndCheckError<
       Types.CreateCategoryMutation,
@@ -2387,7 +2396,7 @@ class Graphlit {
   }
 
   public async updateCategory(
-    category: Types.CategoryUpdateInput
+    category: Types.CategoryUpdateInput,
   ): Promise<Types.UpdateCategoryMutation> {
     return this.mutateAndCheckError<
       Types.UpdateCategoryMutation,
@@ -2396,7 +2405,7 @@ class Graphlit {
   }
 
   public async upsertCategory(
-    category: Types.CategoryInput
+    category: Types.CategoryInput,
   ): Promise<Types.UpsertCategoryMutation> {
     return this.mutateAndCheckError<
       Types.UpsertCategoryMutation,
@@ -2405,7 +2414,7 @@ class Graphlit {
   }
 
   public async deleteCategory(
-    id: string
+    id: string,
   ): Promise<Types.DeleteCategoryMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCategoryMutation,
@@ -2415,7 +2424,7 @@ class Graphlit {
 
   public async deleteCategories(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteCategoriesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCategoriesMutation,
@@ -2426,7 +2435,7 @@ class Graphlit {
   public async deleteAllCategories(
     filter?: Types.CategoryFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllCategoriesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllCategoriesMutation,
@@ -2445,12 +2454,12 @@ class Graphlit {
   public async getCategory(id: string): Promise<Types.GetCategoryQuery> {
     return this.queryAndCheckError<Types.GetCategoryQuery, { id: string }>(
       Documents.GetCategory,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryCategories(
-    filter?: Types.CategoryFilter
+    filter?: Types.CategoryFilter,
   ): Promise<Types.QueryCategoriesQuery> {
     return this.queryAndCheckError<
       Types.QueryCategoriesQuery,
@@ -2459,7 +2468,7 @@ class Graphlit {
   }
 
   public async createLabel(
-    label: Types.LabelInput
+    label: Types.LabelInput,
   ): Promise<Types.CreateLabelMutation> {
     return this.mutateAndCheckError<
       Types.CreateLabelMutation,
@@ -2468,7 +2477,7 @@ class Graphlit {
   }
 
   public async updateLabel(
-    label: Types.LabelUpdateInput
+    label: Types.LabelUpdateInput,
   ): Promise<Types.UpdateLabelMutation> {
     return this.mutateAndCheckError<
       Types.UpdateLabelMutation,
@@ -2477,7 +2486,7 @@ class Graphlit {
   }
 
   public async upsertLabel(
-    label: Types.LabelInput
+    label: Types.LabelInput,
   ): Promise<Types.UpsertLabelMutation> {
     return this.mutateAndCheckError<
       Types.UpsertLabelMutation,
@@ -2488,13 +2497,13 @@ class Graphlit {
   public async deleteLabel(id: string): Promise<Types.DeleteLabelMutation> {
     return this.mutateAndCheckError<Types.DeleteLabelMutation, { id: string }>(
       Documents.DeleteLabel,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deleteLabels(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteLabelsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteLabelsMutation,
@@ -2505,7 +2514,7 @@ class Graphlit {
   public async deleteAllLabels(
     filter?: Types.LabelFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllLabelsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllLabelsMutation,
@@ -2524,12 +2533,12 @@ class Graphlit {
   public async getLabel(id: string): Promise<Types.GetLabelQuery> {
     return this.queryAndCheckError<Types.GetLabelQuery, { id: string }>(
       Documents.GetLabel,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryLabels(
-    filter?: Types.LabelFilter
+    filter?: Types.LabelFilter,
   ): Promise<Types.QueryLabelsQuery> {
     return this.queryAndCheckError<
       Types.QueryLabelsQuery,
@@ -2538,7 +2547,7 @@ class Graphlit {
   }
 
   public async createPerson(
-    person: Types.PersonInput
+    person: Types.PersonInput,
   ): Promise<Types.CreatePersonMutation> {
     return this.mutateAndCheckError<
       Types.CreatePersonMutation,
@@ -2547,7 +2556,7 @@ class Graphlit {
   }
 
   public async updatePerson(
-    person: Types.PersonUpdateInput
+    person: Types.PersonUpdateInput,
   ): Promise<Types.UpdatePersonMutation> {
     return this.mutateAndCheckError<
       Types.UpdatePersonMutation,
@@ -2558,13 +2567,13 @@ class Graphlit {
   public async deletePerson(id: string): Promise<Types.DeletePersonMutation> {
     return this.mutateAndCheckError<Types.DeletePersonMutation, { id: string }>(
       Documents.DeletePerson,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deletePersons(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeletePersonsMutation> {
     return this.mutateAndCheckError<
       Types.DeletePersonsMutation,
@@ -2575,7 +2584,7 @@ class Graphlit {
   public async deleteAllPersons(
     filter?: Types.PersonFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllPersonsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllPersonsMutation,
@@ -2594,12 +2603,12 @@ class Graphlit {
   public async getPerson(id: string): Promise<Types.GetPersonQuery> {
     return this.queryAndCheckError<Types.GetPersonQuery, { id: string }>(
       Documents.GetPerson,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryPersons(
-    filter?: Types.PersonFilter
+    filter?: Types.PersonFilter,
   ): Promise<Types.QueryPersonsQuery> {
     return this.queryAndCheckError<
       Types.QueryPersonsQuery,
@@ -2608,7 +2617,7 @@ class Graphlit {
   }
 
   public async createOrganization(
-    organization: Types.OrganizationInput
+    organization: Types.OrganizationInput,
   ): Promise<Types.CreateOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.CreateOrganizationMutation,
@@ -2617,7 +2626,7 @@ class Graphlit {
   }
 
   public async updateOrganization(
-    organization: Types.OrganizationUpdateInput
+    organization: Types.OrganizationUpdateInput,
   ): Promise<Types.UpdateOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateOrganizationMutation,
@@ -2626,7 +2635,7 @@ class Graphlit {
   }
 
   public async deleteOrganization(
-    id: string
+    id: string,
   ): Promise<Types.DeleteOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteOrganizationMutation,
@@ -2636,7 +2645,7 @@ class Graphlit {
 
   public async deleteOrganizations(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteOrganizationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteOrganizationsMutation,
@@ -2650,7 +2659,7 @@ class Graphlit {
   public async deleteAllOrganizations(
     filter?: Types.OrganizationFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllOrganizationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllOrganizationsMutation,
@@ -2667,16 +2676,16 @@ class Graphlit {
   }
 
   public async getOrganization(
-    id: string
+    id: string,
   ): Promise<Types.GetOrganizationQuery> {
     return this.queryAndCheckError<Types.GetOrganizationQuery, { id: string }>(
       Documents.GetOrganization,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryOrganizations(
-    filter?: Types.OrganizationFilter
+    filter?: Types.OrganizationFilter,
   ): Promise<Types.QueryOrganizationsQuery> {
     return this.queryAndCheckError<
       Types.QueryOrganizationsQuery,
@@ -2685,7 +2694,7 @@ class Graphlit {
   }
 
   public async createPlace(
-    place: Types.PlaceInput
+    place: Types.PlaceInput,
   ): Promise<Types.CreatePlaceMutation> {
     return this.mutateAndCheckError<
       Types.CreatePlaceMutation,
@@ -2694,7 +2703,7 @@ class Graphlit {
   }
 
   public async updatePlace(
-    place: Types.PlaceUpdateInput
+    place: Types.PlaceUpdateInput,
   ): Promise<Types.UpdatePlaceMutation> {
     return this.mutateAndCheckError<
       Types.UpdatePlaceMutation,
@@ -2705,13 +2714,13 @@ class Graphlit {
   public async deletePlace(id: string): Promise<Types.DeletePlaceMutation> {
     return this.mutateAndCheckError<Types.DeletePlaceMutation, { id: string }>(
       Documents.DeletePlace,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deletePlaces(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeletePlacesMutation> {
     return this.mutateAndCheckError<
       Types.DeletePlacesMutation,
@@ -2722,7 +2731,7 @@ class Graphlit {
   public async deleteAllPlaces(
     filter?: Types.PlaceFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllPlacesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllPlacesMutation,
@@ -2741,12 +2750,12 @@ class Graphlit {
   public async getPlace(id: string): Promise<Types.GetPlaceQuery> {
     return this.queryAndCheckError<Types.GetPlaceQuery, { id: string }>(
       Documents.GetPlace,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryPlaces(
-    filter?: Types.PlaceFilter
+    filter?: Types.PlaceFilter,
   ): Promise<Types.QueryPlacesQuery> {
     return this.queryAndCheckError<
       Types.QueryPlacesQuery,
@@ -2755,7 +2764,7 @@ class Graphlit {
   }
 
   public async createEvent(
-    event: Types.EventInput
+    event: Types.EventInput,
   ): Promise<Types.CreateEventMutation> {
     return this.mutateAndCheckError<
       Types.CreateEventMutation,
@@ -2764,7 +2773,7 @@ class Graphlit {
   }
 
   public async updateEvent(
-    event: Types.EventUpdateInput
+    event: Types.EventUpdateInput,
   ): Promise<Types.UpdateEventMutation> {
     return this.mutateAndCheckError<
       Types.UpdateEventMutation,
@@ -2775,13 +2784,13 @@ class Graphlit {
   public async deleteEvent(id: string): Promise<Types.DeleteEventMutation> {
     return this.mutateAndCheckError<Types.DeleteEventMutation, { id: string }>(
       Documents.DeleteEvent,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deleteEvents(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteEventsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteEventsMutation,
@@ -2792,7 +2801,7 @@ class Graphlit {
   public async deleteAllEvents(
     filter?: Types.EventFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllEventsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllEventsMutation,
@@ -2811,12 +2820,12 @@ class Graphlit {
   public async getEvent(id: string): Promise<Types.GetEventQuery> {
     return this.queryAndCheckError<Types.GetEventQuery, { id: string }>(
       Documents.GetEvent,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryEvents(
-    filter?: Types.EventFilter
+    filter?: Types.EventFilter,
   ): Promise<Types.QueryEventsQuery> {
     return this.queryAndCheckError<
       Types.QueryEventsQuery,
@@ -2825,7 +2834,7 @@ class Graphlit {
   }
 
   public async createProduct(
-    product: Types.ProductInput
+    product: Types.ProductInput,
   ): Promise<Types.CreateProductMutation> {
     return this.mutateAndCheckError<
       Types.CreateProductMutation,
@@ -2834,7 +2843,7 @@ class Graphlit {
   }
 
   public async updateProduct(
-    product: Types.ProductUpdateInput
+    product: Types.ProductUpdateInput,
   ): Promise<Types.UpdateProductMutation> {
     return this.mutateAndCheckError<
       Types.UpdateProductMutation,
@@ -2851,7 +2860,7 @@ class Graphlit {
 
   public async deleteProducts(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteProductsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteProductsMutation,
@@ -2862,7 +2871,7 @@ class Graphlit {
   public async deleteAllProducts(
     filter?: Types.ProductFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllProductsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllProductsMutation,
@@ -2881,12 +2890,12 @@ class Graphlit {
   public async getProduct(id: string): Promise<Types.GetProductQuery> {
     return this.queryAndCheckError<Types.GetProductQuery, { id: string }>(
       Documents.GetProduct,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryProducts(
-    filter?: Types.ProductFilter
+    filter?: Types.ProductFilter,
   ): Promise<Types.QueryProductsQuery> {
     return this.queryAndCheckError<
       Types.QueryProductsQuery,
@@ -2895,7 +2904,7 @@ class Graphlit {
   }
 
   public async createRepo(
-    repo: Types.RepoInput
+    repo: Types.RepoInput,
   ): Promise<Types.CreateRepoMutation> {
     return this.mutateAndCheckError<
       Types.CreateRepoMutation,
@@ -2904,7 +2913,7 @@ class Graphlit {
   }
 
   public async updateRepo(
-    repo: Types.RepoUpdateInput
+    repo: Types.RepoUpdateInput,
   ): Promise<Types.UpdateRepoMutation> {
     return this.mutateAndCheckError<
       Types.UpdateRepoMutation,
@@ -2915,13 +2924,13 @@ class Graphlit {
   public async deleteRepo(id: string): Promise<Types.DeleteRepoMutation> {
     return this.mutateAndCheckError<Types.DeleteRepoMutation, { id: string }>(
       Documents.DeleteRepo,
-      { id: id }
+      { id: id },
     );
   }
 
   public async deleteRepos(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteReposMutation> {
     return this.mutateAndCheckError<
       Types.DeleteReposMutation,
@@ -2932,7 +2941,7 @@ class Graphlit {
   public async deleteAllRepos(
     filter?: Types.RepoFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllReposMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllReposMutation,
@@ -2951,12 +2960,12 @@ class Graphlit {
   public async getRepo(id: string): Promise<Types.GetRepoQuery> {
     return this.queryAndCheckError<Types.GetRepoQuery, { id: string }>(
       Documents.GetRepo,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryRepos(
-    filter?: Types.RepoFilter
+    filter?: Types.RepoFilter,
   ): Promise<Types.QueryReposQuery> {
     return this.queryAndCheckError<
       Types.QueryReposQuery,
@@ -2965,7 +2974,7 @@ class Graphlit {
   }
 
   public async createSoftware(
-    software: Types.SoftwareInput
+    software: Types.SoftwareInput,
   ): Promise<Types.CreateSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.CreateSoftwareMutation,
@@ -2974,7 +2983,7 @@ class Graphlit {
   }
 
   public async updateSoftware(
-    software: Types.SoftwareUpdateInput
+    software: Types.SoftwareUpdateInput,
   ): Promise<Types.UpdateSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.UpdateSoftwareMutation,
@@ -2983,7 +2992,7 @@ class Graphlit {
   }
 
   public async deleteSoftware(
-    id: string
+    id: string,
   ): Promise<Types.DeleteSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSoftwareMutation,
@@ -2993,7 +3002,7 @@ class Graphlit {
 
   public async deleteSoftwares(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteSoftwaresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSoftwaresMutation,
@@ -3004,7 +3013,7 @@ class Graphlit {
   public async deleteAllSoftwares(
     filter?: Types.SoftwareFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllSoftwaresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllSoftwaresMutation,
@@ -3023,12 +3032,12 @@ class Graphlit {
   public async getSoftware(id: string): Promise<Types.GetSoftwareQuery> {
     return this.queryAndCheckError<Types.GetSoftwareQuery, { id: string }>(
       Documents.GetSoftware,
-      { id: id }
+      { id: id },
     );
   }
 
   public async querySoftwares(
-    filter?: Types.SoftwareFilter
+    filter?: Types.SoftwareFilter,
   ): Promise<Types.QuerySoftwaresQuery> {
     return this.queryAndCheckError<
       Types.QuerySoftwaresQuery,
@@ -3037,7 +3046,7 @@ class Graphlit {
   }
 
   public async createMedicalCondition(
-    MedicalCondition: Types.MedicalConditionInput
+    MedicalCondition: Types.MedicalConditionInput,
   ): Promise<Types.CreateMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalConditionMutation,
@@ -3046,7 +3055,7 @@ class Graphlit {
   }
 
   public async updateMedicalCondition(
-    MedicalCondition: Types.MedicalConditionUpdateInput
+    MedicalCondition: Types.MedicalConditionUpdateInput,
   ): Promise<Types.UpdateMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalConditionMutation,
@@ -3055,7 +3064,7 @@ class Graphlit {
   }
 
   public async deleteMedicalCondition(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalConditionMutation,
@@ -3065,7 +3074,7 @@ class Graphlit {
 
   public async deleteMedicalConditions(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalConditionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalConditionsMutation,
@@ -3079,7 +3088,7 @@ class Graphlit {
   public async deleteAllMedicalConditions(
     filter?: Types.MedicalConditionFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalConditionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalConditionsMutation,
@@ -3096,7 +3105,7 @@ class Graphlit {
   }
 
   public async getMedicalCondition(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalConditionQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalConditionQuery,
@@ -3105,7 +3114,7 @@ class Graphlit {
   }
 
   public async queryMedicalConditions(
-    filter?: Types.MedicalConditionFilter
+    filter?: Types.MedicalConditionFilter,
   ): Promise<Types.QueryMedicalConditionsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalConditionsQuery,
@@ -3114,7 +3123,7 @@ class Graphlit {
   }
 
   public async createMedicalGuideline(
-    MedicalGuideline: Types.MedicalGuidelineInput
+    MedicalGuideline: Types.MedicalGuidelineInput,
   ): Promise<Types.CreateMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalGuidelineMutation,
@@ -3123,7 +3132,7 @@ class Graphlit {
   }
 
   public async updateMedicalGuideline(
-    MedicalGuideline: Types.MedicalGuidelineUpdateInput
+    MedicalGuideline: Types.MedicalGuidelineUpdateInput,
   ): Promise<Types.UpdateMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalGuidelineMutation,
@@ -3132,7 +3141,7 @@ class Graphlit {
   }
 
   public async deleteMedicalGuideline(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalGuidelineMutation,
@@ -3142,7 +3151,7 @@ class Graphlit {
 
   public async deleteMedicalGuidelines(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalGuidelinesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalGuidelinesMutation,
@@ -3156,7 +3165,7 @@ class Graphlit {
   public async deleteAllMedicalGuidelines(
     filter?: Types.MedicalGuidelineFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalGuidelinesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalGuidelinesMutation,
@@ -3173,7 +3182,7 @@ class Graphlit {
   }
 
   public async getMedicalGuideline(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalGuidelineQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalGuidelineQuery,
@@ -3182,7 +3191,7 @@ class Graphlit {
   }
 
   public async queryMedicalGuidelines(
-    filter?: Types.MedicalGuidelineFilter
+    filter?: Types.MedicalGuidelineFilter,
   ): Promise<Types.QueryMedicalGuidelinesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalGuidelinesQuery,
@@ -3191,7 +3200,7 @@ class Graphlit {
   }
 
   public async createMedicalDrug(
-    MedicalDrug: Types.MedicalDrugInput
+    MedicalDrug: Types.MedicalDrugInput,
   ): Promise<Types.CreateMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDrugMutation,
@@ -3200,7 +3209,7 @@ class Graphlit {
   }
 
   public async updateMedicalDrug(
-    MedicalDrug: Types.MedicalDrugUpdateInput
+    MedicalDrug: Types.MedicalDrugUpdateInput,
   ): Promise<Types.UpdateMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDrugMutation,
@@ -3209,7 +3218,7 @@ class Graphlit {
   }
 
   public async deleteMedicalDrug(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugMutation,
@@ -3219,7 +3228,7 @@ class Graphlit {
 
   public async deleteMedicalDrugs(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalDrugsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugsMutation,
@@ -3230,7 +3239,7 @@ class Graphlit {
   public async deleteAllMedicalDrugs(
     filter?: Types.MedicalDrugFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalDrugsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDrugsMutation,
@@ -3249,12 +3258,12 @@ class Graphlit {
   public async getMedicalDrug(id: string): Promise<Types.GetMedicalDrugQuery> {
     return this.queryAndCheckError<Types.GetMedicalDrugQuery, { id: string }>(
       Documents.GetMedicalDrug,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryMedicalDrugs(
-    filter?: Types.MedicalDrugFilter
+    filter?: Types.MedicalDrugFilter,
   ): Promise<Types.QueryMedicalDrugsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugsQuery,
@@ -3263,7 +3272,7 @@ class Graphlit {
   }
 
   public async createMedicalIndication(
-    MedicalIndication: Types.MedicalIndicationInput
+    MedicalIndication: Types.MedicalIndicationInput,
   ): Promise<Types.CreateMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalIndicationMutation,
@@ -3274,7 +3283,7 @@ class Graphlit {
   }
 
   public async updateMedicalIndication(
-    MedicalIndication: Types.MedicalIndicationUpdateInput
+    MedicalIndication: Types.MedicalIndicationUpdateInput,
   ): Promise<Types.UpdateMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalIndicationMutation,
@@ -3285,7 +3294,7 @@ class Graphlit {
   }
 
   public async deleteMedicalIndication(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalIndicationMutation,
@@ -3295,7 +3304,7 @@ class Graphlit {
 
   public async deleteMedicalIndications(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalIndicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalIndicationsMutation,
@@ -3309,7 +3318,7 @@ class Graphlit {
   public async deleteAllMedicalIndications(
     filter?: Types.MedicalIndicationFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalIndicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalIndicationsMutation,
@@ -3326,7 +3335,7 @@ class Graphlit {
   }
 
   public async getMedicalIndication(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalIndicationQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalIndicationQuery,
@@ -3335,7 +3344,7 @@ class Graphlit {
   }
 
   public async queryMedicalIndications(
-    filter?: Types.MedicalIndicationFilter
+    filter?: Types.MedicalIndicationFilter,
   ): Promise<Types.QueryMedicalIndicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalIndicationsQuery,
@@ -3344,7 +3353,7 @@ class Graphlit {
   }
 
   public async createMedicalContraindication(
-    MedicalContraindication: Types.MedicalContraindicationInput
+    MedicalContraindication: Types.MedicalContraindicationInput,
   ): Promise<Types.CreateMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalContraindicationMutation,
@@ -3355,7 +3364,7 @@ class Graphlit {
   }
 
   public async updateMedicalContraindication(
-    MedicalContraindication: Types.MedicalContraindicationUpdateInput
+    MedicalContraindication: Types.MedicalContraindicationUpdateInput,
   ): Promise<Types.UpdateMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalContraindicationMutation,
@@ -3366,7 +3375,7 @@ class Graphlit {
   }
 
   public async deleteMedicalContraindication(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalContraindicationMutation,
@@ -3376,7 +3385,7 @@ class Graphlit {
 
   public async deleteMedicalContraindications(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalContraindicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalContraindicationsMutation,
@@ -3390,7 +3399,7 @@ class Graphlit {
   public async deleteAllMedicalContraindications(
     filter?: Types.MedicalContraindicationFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalContraindicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalContraindicationsMutation,
@@ -3407,7 +3416,7 @@ class Graphlit {
   }
 
   public async getMedicalContraindication(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalContraindicationQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalContraindicationQuery,
@@ -3416,7 +3425,7 @@ class Graphlit {
   }
 
   public async queryMedicalContraindications(
-    filter?: Types.MedicalContraindicationFilter
+    filter?: Types.MedicalContraindicationFilter,
   ): Promise<Types.QueryMedicalContraindicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalContraindicationsQuery,
@@ -3425,7 +3434,7 @@ class Graphlit {
   }
 
   public async createMedicalTest(
-    MedicalTest: Types.MedicalTestInput
+    MedicalTest: Types.MedicalTestInput,
   ): Promise<Types.CreateMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalTestMutation,
@@ -3434,7 +3443,7 @@ class Graphlit {
   }
 
   public async updateMedicalTest(
-    MedicalTest: Types.MedicalTestUpdateInput
+    MedicalTest: Types.MedicalTestUpdateInput,
   ): Promise<Types.UpdateMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalTestMutation,
@@ -3443,7 +3452,7 @@ class Graphlit {
   }
 
   public async deleteMedicalTest(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTestMutation,
@@ -3453,7 +3462,7 @@ class Graphlit {
 
   public async deleteMedicalTests(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalTestsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTestsMutation,
@@ -3464,7 +3473,7 @@ class Graphlit {
   public async deleteAllMedicalTests(
     filter?: Types.MedicalTestFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalTestsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalTestsMutation,
@@ -3483,12 +3492,12 @@ class Graphlit {
   public async getMedicalTest(id: string): Promise<Types.GetMedicalTestQuery> {
     return this.queryAndCheckError<Types.GetMedicalTestQuery, { id: string }>(
       Documents.GetMedicalTest,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryMedicalTests(
-    filter?: Types.MedicalTestFilter
+    filter?: Types.MedicalTestFilter,
   ): Promise<Types.QueryMedicalTestsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTestsQuery,
@@ -3497,7 +3506,7 @@ class Graphlit {
   }
 
   public async createMedicalDevice(
-    MedicalDevice: Types.MedicalDeviceInput
+    MedicalDevice: Types.MedicalDeviceInput,
   ): Promise<Types.CreateMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDeviceMutation,
@@ -3506,7 +3515,7 @@ class Graphlit {
   }
 
   public async updateMedicalDevice(
-    MedicalDevice: Types.MedicalDeviceUpdateInput
+    MedicalDevice: Types.MedicalDeviceUpdateInput,
   ): Promise<Types.UpdateMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDeviceMutation,
@@ -3515,7 +3524,7 @@ class Graphlit {
   }
 
   public async deleteMedicalDevice(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDeviceMutation,
@@ -3525,7 +3534,7 @@ class Graphlit {
 
   public async deleteMedicalDevices(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalDevicesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDevicesMutation,
@@ -3539,7 +3548,7 @@ class Graphlit {
   public async deleteAllMedicalDevices(
     filter?: Types.MedicalDeviceFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalDevicesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDevicesMutation,
@@ -3556,16 +3565,16 @@ class Graphlit {
   }
 
   public async getMedicalDevice(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalDeviceQuery> {
     return this.queryAndCheckError<Types.GetMedicalDeviceQuery, { id: string }>(
       Documents.GetMedicalDevice,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryMedicalDevices(
-    filter?: Types.MedicalDeviceFilter
+    filter?: Types.MedicalDeviceFilter,
   ): Promise<Types.QueryMedicalDevicesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDevicesQuery,
@@ -3574,7 +3583,7 @@ class Graphlit {
   }
 
   public async createMedicalProcedure(
-    MedicalProcedure: Types.MedicalProcedureInput
+    MedicalProcedure: Types.MedicalProcedureInput,
   ): Promise<Types.CreateMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalProcedureMutation,
@@ -3583,7 +3592,7 @@ class Graphlit {
   }
 
   public async updateMedicalProcedure(
-    MedicalProcedure: Types.MedicalProcedureUpdateInput
+    MedicalProcedure: Types.MedicalProcedureUpdateInput,
   ): Promise<Types.UpdateMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalProcedureMutation,
@@ -3592,7 +3601,7 @@ class Graphlit {
   }
 
   public async deleteMedicalProcedure(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalProcedureMutation,
@@ -3602,7 +3611,7 @@ class Graphlit {
 
   public async deleteMedicalProcedures(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalProceduresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalProceduresMutation,
@@ -3616,7 +3625,7 @@ class Graphlit {
   public async deleteAllMedicalProcedures(
     filter?: Types.MedicalProcedureFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalProceduresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalProceduresMutation,
@@ -3633,7 +3642,7 @@ class Graphlit {
   }
 
   public async getMedicalProcedure(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalProcedureQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalProcedureQuery,
@@ -3642,7 +3651,7 @@ class Graphlit {
   }
 
   public async queryMedicalProcedures(
-    filter?: Types.MedicalProcedureFilter
+    filter?: Types.MedicalProcedureFilter,
   ): Promise<Types.QueryMedicalProceduresQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalProceduresQuery,
@@ -3651,7 +3660,7 @@ class Graphlit {
   }
 
   public async createMedicalStudy(
-    MedicalStudy: Types.MedicalStudyInput
+    MedicalStudy: Types.MedicalStudyInput,
   ): Promise<Types.CreateMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalStudyMutation,
@@ -3660,7 +3669,7 @@ class Graphlit {
   }
 
   public async updateMedicalStudy(
-    MedicalStudy: Types.MedicalStudyUpdateInput
+    MedicalStudy: Types.MedicalStudyUpdateInput,
   ): Promise<Types.UpdateMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalStudyMutation,
@@ -3669,7 +3678,7 @@ class Graphlit {
   }
 
   public async deleteMedicalStudy(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalStudyMutation,
@@ -3679,7 +3688,7 @@ class Graphlit {
 
   public async deleteMedicalStudies(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalStudiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalStudiesMutation,
@@ -3693,7 +3702,7 @@ class Graphlit {
   public async deleteAllMedicalStudies(
     filter?: Types.MedicalStudyFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalStudiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalStudiesMutation,
@@ -3710,16 +3719,16 @@ class Graphlit {
   }
 
   public async getMedicalStudy(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalStudyQuery> {
     return this.queryAndCheckError<Types.GetMedicalStudyQuery, { id: string }>(
       Documents.GetMedicalStudy,
-      { id: id }
+      { id: id },
     );
   }
 
   public async queryMedicalStudies(
-    filter?: Types.MedicalStudyFilter
+    filter?: Types.MedicalStudyFilter,
   ): Promise<Types.QueryMedicalStudiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalStudiesQuery,
@@ -3728,7 +3737,7 @@ class Graphlit {
   }
 
   public async createMedicalDrugClass(
-    MedicalDrugClass: Types.MedicalDrugClassInput
+    MedicalDrugClass: Types.MedicalDrugClassInput,
   ): Promise<Types.CreateMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDrugClassMutation,
@@ -3737,7 +3746,7 @@ class Graphlit {
   }
 
   public async updateMedicalDrugClass(
-    MedicalDrugClass: Types.MedicalDrugClassUpdateInput
+    MedicalDrugClass: Types.MedicalDrugClassUpdateInput,
   ): Promise<Types.UpdateMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDrugClassMutation,
@@ -3746,7 +3755,7 @@ class Graphlit {
   }
 
   public async deleteMedicalDrugClass(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugClassMutation,
@@ -3756,7 +3765,7 @@ class Graphlit {
 
   public async deleteMedicalDrugClasses(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalDrugClassesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugClassesMutation,
@@ -3770,7 +3779,7 @@ class Graphlit {
   public async deleteAllMedicalDrugClasses(
     filter?: Types.MedicalDrugClassFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalDrugClassesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDrugClassesMutation,
@@ -3787,7 +3796,7 @@ class Graphlit {
   }
 
   public async getMedicalDrugClass(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalDrugClassQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalDrugClassQuery,
@@ -3796,7 +3805,7 @@ class Graphlit {
   }
 
   public async queryMedicalDrugClasses(
-    filter?: Types.MedicalDrugClassFilter
+    filter?: Types.MedicalDrugClassFilter,
   ): Promise<Types.QueryMedicalDrugClassesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugClassesQuery,
@@ -3805,7 +3814,7 @@ class Graphlit {
   }
 
   public async createMedicalTherapy(
-    MedicalTherapy: Types.MedicalTherapyInput
+    MedicalTherapy: Types.MedicalTherapyInput,
   ): Promise<Types.CreateMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalTherapyMutation,
@@ -3814,7 +3823,7 @@ class Graphlit {
   }
 
   public async updateMedicalTherapy(
-    MedicalTherapy: Types.MedicalTherapyUpdateInput
+    MedicalTherapy: Types.MedicalTherapyUpdateInput,
   ): Promise<Types.UpdateMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalTherapyMutation,
@@ -3823,7 +3832,7 @@ class Graphlit {
   }
 
   public async deleteMedicalTherapy(
-    id: string
+    id: string,
   ): Promise<Types.DeleteMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTherapyMutation,
@@ -3833,7 +3842,7 @@ class Graphlit {
 
   public async deleteMedicalTherapies(
     ids: string[],
-    isSynchronous?: boolean
+    isSynchronous?: boolean,
   ): Promise<Types.DeleteMedicalTherapiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTherapiesMutation,
@@ -3847,7 +3856,7 @@ class Graphlit {
   public async deleteAllMedicalTherapies(
     filter?: Types.MedicalTherapyFilter,
     isSynchronous?: boolean,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<Types.DeleteAllMedicalTherapiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalTherapiesMutation,
@@ -3864,7 +3873,7 @@ class Graphlit {
   }
 
   public async getMedicalTherapy(
-    id: string
+    id: string,
   ): Promise<Types.GetMedicalTherapyQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalTherapyQuery,
@@ -3873,7 +3882,7 @@ class Graphlit {
   }
 
   public async queryMedicalTherapies(
-    filter?: Types.MedicalTherapyFilter
+    filter?: Types.MedicalTherapyFilter,
   ): Promise<Types.QueryMedicalTherapiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTherapiesQuery,
@@ -3882,7 +3891,7 @@ class Graphlit {
   }
 
   public async createObservation(
-    observation: Types.ObservationInput
+    observation: Types.ObservationInput,
   ): Promise<Types.CreateObservationMutation> {
     return this.mutateAndCheckError<
       Types.CreateObservationMutation,
@@ -3891,7 +3900,7 @@ class Graphlit {
   }
 
   public async updateObservation(
-    observation: Types.ObservationUpdateInput
+    observation: Types.ObservationUpdateInput,
   ): Promise<Types.UpdateObservationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateObservationMutation,
@@ -3900,7 +3909,7 @@ class Graphlit {
   }
 
   public async deleteObservation(
-    id: string
+    id: string,
   ): Promise<Types.DeleteObservationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteObservationMutation,
@@ -4019,7 +4028,7 @@ class Graphlit {
     data?: string, // base64 encoded
     contentFilter?: Types.ContentCriteriaInput,
     augmentedFilter?: Types.ContentCriteriaInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<AgentResult> {
     const startTime = Date.now();
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
@@ -4041,7 +4050,7 @@ class Graphlit {
             filter: contentFilter,
             augmentedFilter: augmentedFilter,
           },
-          correlationId
+          correlationId,
         );
         actualConversationId = createResponse.createConversation?.id;
         if (!actualConversationId) {
@@ -4059,7 +4068,7 @@ class Graphlit {
         tools,
         false, // requireTool
         false, // includeDetails
-        correlationId
+        correlationId,
       );
 
       let currentMessage = promptResponse.promptConversation?.message;
@@ -4085,11 +4094,11 @@ class Graphlit {
         const toolExecStart = Date.now();
         const toolResults = await this.executeToolsForPromptAgent(
           currentMessage.toolCalls.filter(
-            (tc): tc is Types.ConversationToolCall => tc !== null
+            (tc): tc is Types.ConversationToolCall => tc !== null,
           ),
           toolHandlers || {},
           allToolCalls,
-          abortController.signal
+          abortController.signal,
         );
         toolTime += Date.now() - toolExecStart;
 
@@ -4101,7 +4110,7 @@ class Graphlit {
         const continueResponse = await this.continueConversation(
           actualConversationId,
           toolResults,
-          correlationId
+          correlationId,
         );
 
         currentMessage = continueResponse.continueConversation?.message;
@@ -4143,7 +4152,7 @@ class Graphlit {
           ? (currentMessage as Types.ConversationMessage)
           : undefined,
         toolCalls: currentMessage?.toolCalls?.filter(
-          (tc): tc is Types.ConversationToolCall => tc !== null
+          (tc): tc is Types.ConversationToolCall => tc !== null,
         ),
         toolResults: allToolCalls,
         metrics,
@@ -4204,7 +4213,7 @@ class Graphlit {
     data?: string, // base64 encoded
     contentFilter?: Types.ContentCriteriaInput,
     augmentedFilter?: Types.ContentCriteriaInput,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
@@ -4245,7 +4254,7 @@ class Graphlit {
             filter: contentFilter,
             augmentedFilter: augmentedFilter,
           },
-          correlationId
+          correlationId,
         );
         actualConversationId = createResponse.createConversation?.id;
         if (!actualConversationId) {
@@ -4257,7 +4266,7 @@ class Graphlit {
       if (fullSpec && !this.supportsStreaming(fullSpec)) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation"
+            "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
           );
         }
 
@@ -4275,7 +4284,7 @@ class Graphlit {
           data,
           contentFilter,
           augmentedFilter,
-          correlationId
+          correlationId,
         );
 
         // Convert promptAgent result to streaming events
@@ -4326,7 +4335,7 @@ class Graphlit {
           smoothingDelay: options?.smoothingDelay ?? 30,
           model: modelName,
           modelService: serviceType,
-        }
+        },
       );
 
       // Start the streaming conversation
@@ -4341,7 +4350,7 @@ class Graphlit {
         abortSignal,
         mimeType,
         data,
-        correlationId
+        correlationId,
       );
     } catch (error: unknown) {
       const errorMessage =
@@ -4388,7 +4397,7 @@ class Graphlit {
     abortSignal: AbortSignal | undefined,
     mimeType?: string,
     data?: string,
-    correlationId?: string
+    correlationId?: string,
   ): Promise<void> {
     let currentRound = 0;
     let fullMessage = "";
@@ -4406,7 +4415,7 @@ class Graphlit {
       { id: specification.id },
       tools,
       true,
-      correlationId
+      correlationId,
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
@@ -4420,20 +4429,20 @@ class Graphlit {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_FORMAT) {
       console.log(
         "\n📋 [formatConversation] Full response:",
-        JSON.stringify(formatResponse, null, 2)
+        JSON.stringify(formatResponse, null, 2),
       );
       console.log(
         "\n📋 [formatConversation] Response - current message:",
-        formattedMessage.message
+        formattedMessage.message,
       );
       console.log(
-        `📋 [formatConversation] Conversation history: ${conversationHistory?.length || 0} messages`
+        `📋 [formatConversation] Conversation history: ${conversationHistory?.length || 0} messages`,
       );
       if (conversationHistory && conversationHistory.length > 0) {
         console.log("📋 [formatConversation] History messages:");
         conversationHistory.forEach((msg, i) => {
           console.log(
-            `  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`
+            `  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`,
           );
         });
       }
@@ -4456,7 +4465,7 @@ class Graphlit {
     if (conversationHistory && conversationHistory.length > 0) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `🔄 [formatConversation] Using full conversation history with ${conversationHistory.length} messages`
+          `🔄 [formatConversation] Using full conversation history with ${conversationHistory.length} messages`,
         );
       }
 
@@ -4489,7 +4498,7 @@ class Graphlit {
       // Fallback to single formatted message (for backward compatibility)
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          "⚠️ [formatConversation] No conversation history available, using single formatted message"
+          "⚠️ [formatConversation] No conversation history available, using single formatted message",
         );
       }
 
@@ -4506,7 +4515,7 @@ class Graphlit {
         messageToAdd.data = data;
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🖼️ [Streaming] Adding image data to message: ${mimeType}, ${data.length} chars`
+            `\n🖼️ [Streaming] Adding image data to message: ${mimeType}, ${data.length} chars`,
           );
         }
       }
@@ -4528,14 +4537,14 @@ class Graphlit {
       // Stream with appropriate provider
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}`
+          `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}`,
         );
         console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
         console.log(
-          `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`
+          `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`,
         );
         console.log(
-          `   Google available: ${!!(GoogleGenerativeAI || this.googleClient)}`
+          `   Google available: ${!!(GoogleGenerativeAI || this.googleClient)}`,
         );
       }
 
@@ -4545,13 +4554,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using OpenAI native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using OpenAI native streaming (Round ${currentRound})`,
           );
         }
         const openaiMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`
+            `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`,
           );
         }
         await this.streamWithOpenAI(
@@ -4562,11 +4571,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] OpenAI native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] OpenAI native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4575,14 +4584,14 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Anthropic native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Anthropic native streaming (Round ${currentRound})`,
           );
         }
         const { system, messages: anthropicMessages } =
           formatMessagesForAnthropic(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Anthropic] Sending ${anthropicMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(anthropicMessages)}`
+            `🔍 [Anthropic] Sending ${anthropicMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(anthropicMessages)}`,
           );
         }
         await this.streamWithAnthropic(
@@ -4594,11 +4603,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Anthropic native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Anthropic native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4607,13 +4616,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Google native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Google native streaming (Round ${currentRound})`,
           );
         }
         const googleMessages = formatMessagesForGoogle(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Google] Sending ${googleMessages.length} messages to LLM: ${JSON.stringify(googleMessages)}`
+            `🔍 [Google] Sending ${googleMessages.length} messages to LLM: ${JSON.stringify(googleMessages)}`,
           );
         }
         // Google doesn't use system prompts separately, they're incorporated into messages
@@ -4626,11 +4635,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Google native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Google native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4639,13 +4648,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Groq native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Groq native streaming (Round ${currentRound})`,
           );
         }
         const groqMessages = formatMessagesForOpenAI(messages); // Groq uses OpenAI format
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Groq] Sending ${groqMessages.length} messages to LLM: ${JSON.stringify(groqMessages)}`
+            `🔍 [Groq] Sending ${groqMessages.length} messages to LLM: ${JSON.stringify(groqMessages)}`,
           );
         }
         await this.streamWithGroq(
@@ -4656,11 +4665,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Groq native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Groq native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4669,13 +4678,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Cerebras native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Cerebras native streaming (Round ${currentRound})`,
           );
         }
         const cerebrasMessages = formatMessagesForOpenAI(messages); // Cerebras uses OpenAI format
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Cerebras] Sending ${cerebrasMessages.length} messages to LLM: ${JSON.stringify(cerebrasMessages)}`
+            `🔍 [Cerebras] Sending ${cerebrasMessages.length} messages to LLM: ${JSON.stringify(cerebrasMessages)}`,
           );
         }
         await this.streamWithCerebras(
@@ -4686,11 +4695,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Cerebras native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Cerebras native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4699,13 +4708,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`,
           );
         }
         const cohereMessages = formatMessagesForCohere(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Cohere] Sending ${cohereMessages.length} messages to LLM: ${JSON.stringify(cohereMessages)}`
+            `🔍 [Cohere] Sending ${cohereMessages.length} messages to LLM: ${JSON.stringify(cohereMessages)}`,
           );
         }
         await this.streamWithCohere(
@@ -4716,11 +4725,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Cohere native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Cohere native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4729,13 +4738,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Mistral native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Mistral native streaming (Round ${currentRound})`,
           );
         }
         const mistralMessages = formatMessagesForMistral(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM: ${JSON.stringify(mistralMessages)}`
+            `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM: ${JSON.stringify(mistralMessages)}`,
           );
         }
         await this.streamWithMistral(
@@ -4746,11 +4755,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Mistral native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Mistral native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4759,14 +4768,14 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Bedrock native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Bedrock native streaming (Round ${currentRound})`,
           );
         }
         const { system, messages: bedrockMessages } =
           formatMessagesForBedrock(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Bedrock] Sending ${bedrockMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(bedrockMessages)}`
+            `🔍 [Bedrock] Sending ${bedrockMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(bedrockMessages)}`,
           );
         }
         await this.streamWithBedrock(
@@ -4778,11 +4787,11 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Bedrock native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Bedrock native streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -4791,13 +4800,13 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using Deepseek native streaming (Round ${currentRound})`
+            `\n✅ [Streaming] Using Deepseek native streaming (Round ${currentRound})`,
           );
         }
         const deepseekMessages = formatMessagesForOpenAI(messages); // Deepseek uses OpenAI format
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
-            `🔍 [Deepseek] Sending ${deepseekMessages.length} messages to LLM: ${JSON.stringify(deepseekMessages)}`
+            `🔍 [Deepseek] Sending ${deepseekMessages.length} messages to LLM: ${JSON.stringify(deepseekMessages)}`,
           );
         }
         await this.streamWithDeepseek(
@@ -4808,18 +4817,18 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] Deepseek native streaming completed (Round ${currentRound})`
+            `\n🏁 [Streaming] Deepseek native streaming completed (Round ${currentRound})`,
           );
         }
       } else {
         // Fallback to non-streaming
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`
+            `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`,
           );
           console.log(`   Falling back to non-streaming promptConversation`);
           console.log(`   This should NOT happen if clients are properly set!`);
@@ -4832,11 +4841,11 @@ class Graphlit {
           mimeType,
           data,
           uiAdapter,
-          correlationId
+          correlationId,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`
+            `\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`,
           );
         }
         break;
@@ -4854,11 +4863,11 @@ class Graphlit {
       if (toolHandlers && toolCalls.length > 0) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🔧 [executeStreamingAgent] Round ${currentRound}: Processing ${toolCalls.length} tool calls`
+            `\n🔧 [executeStreamingAgent] Round ${currentRound}: Processing ${toolCalls.length} tool calls`,
           );
           toolCalls.forEach((tc, idx) => {
             console.log(
-              `  ${idx + 1}. ${tc.name} (${tc.id}) - Args length: ${tc.arguments.length}`
+              `  ${idx + 1}. ${tc.name} (${tc.id}) - Args length: ${tc.arguments.length}`,
             );
           });
         }
@@ -4887,11 +4896,11 @@ class Graphlit {
               args = JSON.parse(toolCall.arguments);
             } catch (parseError) {
               console.error(
-                `Failed to parse tool arguments for ${toolCall.name}:`
+                `Failed to parse tool arguments for ${toolCall.name}:`,
               );
               console.error(
                 `Arguments (${toolCall.arguments.length} chars):`,
-                toolCall.arguments
+                toolCall.arguments,
               );
               console.error(`Parse error:`, parseError);
 
@@ -4903,7 +4912,7 @@ class Graphlit {
                 !lastChars.includes("}")
               ) {
                 console.error(
-                  `Possible truncation detected - arguments don't end with '}': ...${lastChars}`
+                  `Possible truncation detected - arguments don't end with '}': ...${lastChars}`,
                 );
                 isTruncated = true;
               }
@@ -4947,18 +4956,18 @@ class Graphlit {
                   fixedJson += "}".repeat(missingBraces);
 
                   console.log(
-                    `Attempting to fix truncated JSON by adding ${missingBraces} closing brace(s):`
+                    `Attempting to fix truncated JSON by adding ${missingBraces} closing brace(s):`,
                   );
                   console.log(fixedJson);
 
                   try {
                     args = JSON.parse(fixedJson);
                     console.log(
-                      `✅ Successfully fixed truncated JSON for ${toolCall.name}`
+                      `✅ Successfully fixed truncated JSON for ${toolCall.name}`,
                     );
                   } catch (fixError) {
                     console.error(
-                      `❌ Failed to fix truncated JSON: ${fixError}`
+                      `❌ Failed to fix truncated JSON: ${fixError}`,
                     );
                     // Fall through to error handling below
                   }
@@ -4975,10 +4984,10 @@ class Graphlit {
                   const pos = parseInt(posMatch[1]);
                   const context = toolCall.arguments.slice(
                     Math.max(0, pos - 20),
-                    pos + 20
+                    pos + 20,
                   );
                   console.error(
-                    `Error context around position ${pos}: ...${context}...`
+                    `Error context around position ${pos}: ...${context}...`,
                   );
                 }
 
@@ -5051,7 +5060,7 @@ class Graphlit {
       const completeResponse = await this.completeConversation(
         fullMessage.trim(),
         conversationId,
-        correlationId
+        correlationId,
       );
 
       // Extract token count from the response
@@ -5060,7 +5069,7 @@ class Graphlit {
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `📊 [completeConversation] Tokens used: ${finalTokens || "unknown"}`
+          `📊 [completeConversation] Tokens used: ${finalTokens || "unknown"}`,
         );
       }
     }
@@ -5079,7 +5088,7 @@ class Graphlit {
   private async buildMessageArray(
     conversationId: string,
     specification: Types.Specification,
-    currentPrompt: string
+    currentPrompt: string,
   ): Promise<Types.ConversationMessage[]> {
     const messages: Types.ConversationMessage[] = [];
 
@@ -5102,7 +5111,7 @@ class Graphlit {
       // Add previous messages (excluding the current one)
       const previousMessages = conversation.messages.slice(
         0,
-        -1
+        -1,
       ) as Types.ConversationMessage[];
       messages.push(...previousMessages);
     }
@@ -5126,7 +5135,7 @@ class Graphlit {
     toolCalls: Types.ConversationToolCall[],
     toolHandlers: Record<string, ToolHandler>,
     uiAdapter: UIEventAdapter,
-    abortSignal: AbortSignal | undefined
+    abortSignal: AbortSignal | undefined,
   ): Promise<void> {
     const toolPromises = toolCalls.map(async (toolCall) => {
       if (abortSignal?.aborted) return;
@@ -5180,7 +5189,7 @@ class Graphlit {
    */
   private async formatToolResults(
     toolCalls: Types.ConversationToolCall[],
-    toolHandlers: Record<string, ToolHandler>
+    toolHandlers: Record<string, ToolHandler>,
   ): Promise<Types.ConversationToolResponseInput[]> {
     const results: Types.ConversationToolResponseInput[] = [];
 
@@ -5222,11 +5231,11 @@ class Graphlit {
     mimeType: string | undefined,
     data: string | undefined,
     uiAdapter: UIEventAdapter,
-    correlationId: string | undefined
+    correlationId: string | undefined,
   ): Promise<void> {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🔄 [Fallback] Starting non-streaming fallback | ConvID: ${conversationId} | Spec: ${specification.name} (${specification.serviceType}) | Prompt: "${prompt.substring(0, 50)}${prompt.length > 50 ? "..." : ""}"`
+        `🔄 [Fallback] Starting non-streaming fallback | ConvID: ${conversationId} | Spec: ${specification.name} (${specification.serviceType}) | Prompt: "${prompt.substring(0, 50)}${prompt.length > 50 ? "..." : ""}"`,
       );
     }
 
@@ -5239,13 +5248,13 @@ class Graphlit {
       tools,
       false,
       false,
-      correlationId
+      correlationId,
     );
 
     const message = response.promptConversation?.message;
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `✅ [Fallback] promptConversation completed | Length: ${message?.message?.length || 0} chars | Preview: "${message?.message?.substring(0, 50) || "NO MESSAGE"}${(message?.message?.length || 0) > 50 ? "..." : ""}"`
+        `✅ [Fallback] promptConversation completed | Length: ${message?.message?.length || 0} chars | Preview: "${message?.message?.substring(0, 50) || "NO MESSAGE"}${(message?.message?.length || 0) > 50 ? "..." : ""}"`,
       );
     }
 
@@ -5261,7 +5270,7 @@ class Graphlit {
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `\n🎯 [Fallback] Completed token simulation (${words.length} tokens)`
+          `\n🎯 [Fallback] Completed token simulation (${words.length} tokens)`,
         );
       }
     }
@@ -5277,8 +5286,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -5298,7 +5307,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to OpenAI streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to OpenAI streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5308,7 +5317,7 @@ class Graphlit {
       tools,
       openaiClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5323,8 +5332,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Anthropic module or a provided client
     if (!Anthropic && !this.anthropicClient) {
@@ -5344,7 +5353,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Anthropic streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`
+        `🚀 [Graphlit SDK] Routing to Anthropic streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`,
       );
     }
 
@@ -5355,7 +5364,7 @@ class Graphlit {
       tools,
       anthropicClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5370,8 +5379,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
     if (!GoogleGenerativeAI && !this.googleClient) {
@@ -5389,7 +5398,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Google streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`
+        `🚀 [Graphlit SDK] Routing to Google streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`,
       );
     }
 
@@ -5400,7 +5409,7 @@ class Graphlit {
       tools,
       googleClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5414,8 +5423,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Groq module or a provided client
     if (!Groq && !this.groqClient) {
@@ -5433,7 +5442,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Groq streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to Groq streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5443,7 +5452,7 @@ class Graphlit {
       tools,
       groqClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5457,8 +5466,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.cerebrasClient) {
@@ -5479,7 +5488,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Cerebras streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to Cerebras streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5489,7 +5498,7 @@ class Graphlit {
       tools,
       cerebrasClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5503,8 +5512,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Cohere module or a provided client
     if (!CohereClient && !this.cohereClient) {
@@ -5522,7 +5531,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Cohere streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to Cohere streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5532,7 +5541,7 @@ class Graphlit {
       tools,
       cohereClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5546,8 +5555,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Mistral module or a provided client
     if (!Mistral && !this.mistralClient) {
@@ -5565,7 +5574,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Mistral streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to Mistral streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5575,7 +5584,7 @@ class Graphlit {
       tools,
       mistralClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5590,8 +5599,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the Bedrock module or a provided client
     if (!BedrockRuntimeClient && !this.bedrockClient) {
@@ -5611,7 +5620,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Bedrock streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`
+        `🚀 [Graphlit SDK] Routing to Bedrock streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0} | SystemPrompt: ${systemPrompt ? "Yes" : "No"}`,
       );
     }
 
@@ -5622,7 +5631,7 @@ class Graphlit {
       tools,
       bedrockClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5636,8 +5645,8 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
-      toolCalls: Types.ConversationToolCall[]
-    ) => void
+      toolCalls: Types.ConversationToolCall[],
+    ) => void,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided Deepseek client
     if (!OpenAI && !this.deepseekClient) {
@@ -5660,7 +5669,7 @@ class Graphlit {
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🚀 [Graphlit SDK] Routing to Deepseek streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`
+        `🚀 [Graphlit SDK] Routing to Deepseek streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
       );
     }
 
@@ -5670,7 +5679,7 @@ class Graphlit {
       tools,
       deepseekClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
     );
   }
 
@@ -5679,7 +5688,7 @@ class Graphlit {
     toolCalls: Types.ConversationToolCall[],
     toolHandlers: Record<string, ToolHandler>,
     allToolCalls: ToolCallResult[],
-    signal: AbortSignal
+    signal: AbortSignal,
   ): Promise<Types.ConversationToolResponseInput[]> {
     const responses: Types.ConversationToolResponseInput[] = [];
 
@@ -5702,7 +5711,7 @@ class Graphlit {
 
         // Add timeout for individual tool calls (30 seconds)
         const toolTimeout = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Tool execution timeout")), 30000)
+          setTimeout(() => reject(new Error("Tool execution timeout")), 30000),
         );
 
         result = await Promise.race([handler(args), toolTimeout]);
@@ -5732,7 +5741,7 @@ class Graphlit {
 
     const results = await Promise.all(toolPromises);
     return results.filter(
-      (r): r is Types.ConversationToolResponseInput => r !== null
+      (r): r is Types.ConversationToolResponseInput => r !== null,
     ) as Types.ConversationToolResponseInput[];
   }
 
@@ -5748,7 +5757,7 @@ class Graphlit {
     // Add location info if available
     if (err.locations && err.locations.length > 0) {
       parts.push(
-        `at line ${err.locations[0].line}, column ${err.locations[0].column}`
+        `at line ${err.locations[0].line}, column ${err.locations[0].column}`,
       );
     }
 
@@ -5792,7 +5801,7 @@ class Graphlit {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
         const errorMessage = error.graphQLErrors
           .map((err: GraphQLFormattedError) =>
-            this.prettyPrintGraphQLError(err)
+            this.prettyPrintGraphQLError(err),
           )
           .join("\n");
 

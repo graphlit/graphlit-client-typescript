@@ -75,7 +75,7 @@ await client.streamAgent(
     }
   },
   undefined, // conversationId (optional)
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -134,7 +134,7 @@ GOOGLE_API_KEY=your_key
 
 # Additional streaming providers
 GROQ_API_KEY=your_key          # For Groq models (Llama, Mixtral)
-CEREBRAS_API_KEY=your_key      # For Cerebras models  
+CEREBRAS_API_KEY=your_key      # For Cerebras models
 COHERE_API_KEY=your_key        # For Cohere Command models
 MISTRAL_API_KEY=your_key       # For Mistral models
 DEEPSEEK_API_KEY=your_key      # For Deepseek models
@@ -152,8 +152,9 @@ The SDK now includes automatic retry logic for network errors and transient fail
 ### Default Retry Configuration
 
 By default, the client will automatically retry on these status codes:
+
 - `429` - Too Many Requests
-- `502` - Bad Gateway  
+- `502` - Bad Gateway
 - `503` - Service Unavailable
 - `504` - Gateway Timeout
 
@@ -168,19 +169,19 @@ Configure retry behavior to match your needs:
 ```typescript
 const client = new Graphlit({
   organizationId: "your_org_id",
-  environmentId: "your_env_id", 
+  environmentId: "your_env_id",
   jwtSecret: "your_secret",
   retryConfig: {
-    maxAttempts: 10,              // Maximum retry attempts (default: 5)
-    initialDelay: 500,            // Initial delay in ms (default: 300)
-    maxDelay: 60000,              // Maximum delay in ms (default: 30000)
-    jitter: true,                 // Add randomness to delays (default: true)
+    maxAttempts: 10, // Maximum retry attempts (default: 5)
+    initialDelay: 500, // Initial delay in ms (default: 300)
+    maxDelay: 60000, // Maximum delay in ms (default: 30000)
+    jitter: true, // Add randomness to delays (default: true)
     retryableStatusCodes: [429, 500, 502, 503, 504], // Custom status codes
     onRetry: (attempt, error, operation) => {
       console.log(`Retry attempt ${attempt} for ${operation.operationName}`);
       console.log(`Error: ${error.message}`);
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -196,7 +197,7 @@ const client = new Graphlit();
 client.setRetryConfig({
   maxAttempts: 20,
   initialDelay: 100,
-  retryableStatusCodes: [429, 500, 502, 503, 504, 521, 522, 524]
+  retryableStatusCodes: [429, 500, 502, 503, 504, 521, 522, 524],
 });
 ```
 
@@ -210,8 +211,8 @@ const client = new Graphlit({
   environmentId: "your_env_id",
   jwtSecret: "your_secret",
   retryConfig: {
-    maxAttempts: 1  // No retries
-  }
+    maxAttempts: 1, // No retries
+  },
 });
 ```
 
@@ -221,17 +222,17 @@ The Graphlit SDK supports real-time streaming responses from 9 different LLM pro
 
 ### Supported Providers
 
-| Provider | Models | SDK Required | API Key |
-|----------|--------|--------------|---------|
-| **OpenAI** | GPT-4, GPT-4o, GPT-4.1, O1, O3, O4 | `openai` | `OPENAI_API_KEY` |
-| **Anthropic** | Claude 3, Claude 3.5, Claude 3.7, Claude 4 | `@anthropic-ai/sdk` | `ANTHROPIC_API_KEY` |
-| **Google** | Gemini 1.5, Gemini 2.0, Gemini 2.5 | `@google/generative-ai` | `GOOGLE_API_KEY` |
-| **Groq** | Llama 4, Llama 3.3, Mixtral, Deepseek R1 | `groq-sdk` | `GROQ_API_KEY` |
-| **Cerebras** | Llama 3.3, Llama 3.1 | `openai` | `CEREBRAS_API_KEY` |
-| **Cohere** | Command R+, Command R, Command R7B, Command A | `cohere-ai` | `COHERE_API_KEY` |
-| **Mistral** | Mistral Large, Medium, Small, Nemo, Pixtral | `@mistralai/mistralai` | `MISTRAL_API_KEY` |
-| **AWS Bedrock** | Nova Premier/Pro, Claude 3.7, Llama 4 | `@aws-sdk/client-bedrock-runtime` | AWS credentials |
-| **Deepseek** | Deepseek Chat, Deepseek Reasoner | `openai` | `DEEPSEEK_API_KEY` |
+| Provider        | Models                                        | SDK Required                      | API Key             |
+| --------------- | --------------------------------------------- | --------------------------------- | ------------------- |
+| **OpenAI**      | GPT-4, GPT-4o, GPT-4.1, O1, O3, O4            | `openai`                          | `OPENAI_API_KEY`    |
+| **Anthropic**   | Claude 3, Claude 3.5, Claude 3.7, Claude 4    | `@anthropic-ai/sdk`               | `ANTHROPIC_API_KEY` |
+| **Google**      | Gemini 1.5, Gemini 2.0, Gemini 2.5            | `@google/generative-ai`           | `GOOGLE_API_KEY`    |
+| **Groq**        | Llama 4, Llama 3.3, Mixtral, Deepseek R1      | `groq-sdk`                        | `GROQ_API_KEY`      |
+| **Cerebras**    | Llama 3.3, Llama 3.1                          | `openai`                          | `CEREBRAS_API_KEY`  |
+| **Cohere**      | Command R+, Command R, Command R7B, Command A | `cohere-ai`                       | `COHERE_API_KEY`    |
+| **Mistral**     | Mistral Large, Medium, Small, Nemo, Pixtral   | `@mistralai/mistralai`            | `MISTRAL_API_KEY`   |
+| **AWS Bedrock** | Nova Premier/Pro, Claude 3.7, Llama 4         | `@aws-sdk/client-bedrock-runtime` | AWS credentials     |
+| **Deepseek**    | Deepseek Chat, Deepseek Reasoner              | `openai`                          | `DEEPSEEK_API_KEY`  |
 
 ### Setting Up Streaming
 
@@ -250,7 +251,9 @@ if (process.env.OPENAI_API_KEY) {
 
 if (process.env.COHERE_API_KEY) {
   const { CohereClient } = await import("cohere-ai");
-  client.setCohereClient(new CohereClient({ token: process.env.COHERE_API_KEY }));
+  client.setCohereClient(
+    new CohereClient({ token: process.env.COHERE_API_KEY }),
+  );
 }
 
 if (process.env.GROQ_API_KEY) {
@@ -263,9 +266,9 @@ const spec = await client.createSpecification({
   name: "Multi-Provider Assistant",
   type: Types.SpecificationTypes.Completion,
   serviceType: Types.ModelServiceTypes.Cohere, // or any supported provider
-  cohere: { 
+  cohere: {
     model: Types.CohereModels.CommandRPlus,
-    temperature: 0.7 
+    temperature: 0.7,
   },
 });
 ```
@@ -310,7 +313,7 @@ await client.streamAgent(
     }
   },
   undefined, // conversationId
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -338,7 +341,7 @@ const content = await client.ingestUri(
   "https://arxiv.org/pdf/1706.03762.pdf", // Attention Is All You Need paper
   "AI Research Paper", // name
   undefined, // id
-  true // isSynchronous - waits for processing
+  true, // isSynchronous - waits for processing
 );
 
 console.log(`✅ Uploaded: ${content.ingestUri.id}`);
@@ -360,7 +363,7 @@ await client.streamAgent(
     }
   },
   conversation.createConversation.id, // conversationId with content filter
-  { id: spec.createSpecification.id } // specification
+  { id: spec.createSpecification.id }, // specification
 );
 ```
 
@@ -374,7 +377,7 @@ const webpage = await client.ingestUri(
   "https://en.wikipedia.org/wiki/Artificial_intelligence", // uri
   "AI Wikipedia Page", // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 
 // Wait for content to be indexed
@@ -389,7 +392,7 @@ const conversation = await client.createConversation({
 const response = await client.promptAgent(
   "Summarize the key points about AI from this Wikipedia page",
   conversation.createConversation.id, // conversationId with filter
-  { id: spec.createSpecification.id } // specification (create one as shown above)
+  { id: spec.createSpecification.id }, // specification (create one as shown above)
 );
 
 console.log(response.message);
@@ -412,7 +415,9 @@ if (process.env.OPENAI_API_KEY) {
 
 if (process.env.COHERE_API_KEY) {
   const { CohereClient } = await import("cohere-ai");
-  client.setCohereClient(new CohereClient({ token: process.env.COHERE_API_KEY }));
+  client.setCohereClient(
+    new CohereClient({ token: process.env.COHERE_API_KEY }),
+  );
 }
 
 if (process.env.GROQ_API_KEY) {
@@ -425,24 +430,24 @@ const providers = [
   {
     name: "OpenAI GPT-4o",
     serviceType: Types.ModelServiceTypes.OpenAi,
-    openAI: { model: Types.OpenAiModels.Gpt4O_128K }
+    openAI: { model: Types.OpenAiModels.Gpt4O_128K },
   },
   {
     name: "Cohere Command R+",
     serviceType: Types.ModelServiceTypes.Cohere,
-    cohere: { model: Types.CohereModels.CommandRPlus }
+    cohere: { model: Types.CohereModels.CommandRPlus },
   },
   {
     name: "Groq Llama",
     serviceType: Types.ModelServiceTypes.Groq,
-    groq: { model: Types.GroqModels.Llama_3_3_70B }
-  }
+    groq: { model: Types.GroqModels.Llama_3_3_70B },
+  },
 ];
 
 // Compare responses
 for (const provider of providers) {
   console.log(`\n🤖 ${provider.name}:`);
-  
+
   const spec = await client.createSpecification({
     ...provider,
     type: Types.SpecificationTypes.Completion,
@@ -456,7 +461,7 @@ for (const provider of providers) {
       }
     },
     undefined,
-    { id: spec.createSpecification.id }
+    { id: spec.createSpecification.id },
   );
 }
 ```
@@ -518,7 +523,7 @@ await client.streamAgent(
   undefined, // conversationId
   { id: spec.createSpecification.id }, // specification
   [weatherTool], // tools
-  toolHandlers // handlers
+  toolHandlers, // handlers
 );
 ```
 
@@ -563,7 +568,7 @@ class KnowledgeAssistant {
         url, // uri
         url.split("/").pop() || "Document", // name
         undefined, // id
-        true // isSynchronous - wait for processing
+        true, // isSynchronous - wait for processing
       );
       this.contentIds.push(content.ingestUri.id);
     }
@@ -593,7 +598,7 @@ class KnowledgeAssistant {
         }
       },
       this.conversationId, // Maintains conversation context
-      { id: this.specificationId! } // specification
+      { id: this.specificationId! }, // specification
     );
   }
 }
@@ -623,7 +628,7 @@ const document = await client.ingestUri(
   "https://example.com/document.pdf", // uri
   "Document #12345", // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 
 // Wait for content to be indexed
@@ -634,7 +639,7 @@ const extraction = await client.extractContents(
   "Extract the key information from this document",
   undefined, // tools
   undefined, // specification
-  { contents: [{ id: document.ingestUri.id }] } // filter
+  { contents: [{ id: document.ingestUri.id }] }, // filter
 );
 
 console.log("Extracted data:", extraction.extractContents);
@@ -653,7 +658,7 @@ for (const url of documentUrls) {
     url, // uri
     url.split("/").pop() || "Document", // name
     undefined, // id
-    true // isSynchronous
+    true, // isSynchronous
   );
   ids.push(content.ingestUri.id);
 }
@@ -666,7 +671,7 @@ const summary = await client.summarizeContents(
       prompt: "Create an executive summary of these documents",
     },
   ], // summarizations
-  { contents: ids.map((id) => ({ id })) } // filter
+  { contents: ids.map((id) => ({ id })) }, // filter
 );
 
 console.log("Summary:", summary.summarizeContents);
@@ -680,13 +685,13 @@ const content = await client.ingestUri(
   "https://example.com/large-document.pdf", // uri
   undefined, // name
   undefined, // id
-  true // isSynchronous
+  true, // isSynchronous
 );
 console.log("✅ Content ready!");
 
 // Option 2: Asynchronous processing (for large files)
 const content = await client.ingestUri(
-  "https://example.com/very-large-video.mp4" // uri
+  "https://example.com/very-large-video.mp4", // uri
   // isSynchronous defaults to false
 );
 
@@ -724,7 +729,7 @@ const result = await client.promptAgent(
   {
     // Only allow retrieval from specific content
     contents: [{ id: "content-id-1" }, { id: "content-id-2" }],
-  }
+  },
 );
 
 // Example 2: Streaming with content filter
@@ -745,7 +750,7 @@ await client.streamAgent(
   {
     // Filter by collection
     collections: [{ id: "technical-docs-collection" }],
-  }
+  },
 );
 ```
 
@@ -775,7 +780,7 @@ await client.streamAgent(
   {
     // Force this content into context
     contents: [{ id: fileContent.content.id }],
-  }
+  },
 );
 ```
 
@@ -801,7 +806,7 @@ await client.promptAgent(
   {
     // Always include the specific code file
     contents: [{ id: "implementation-file-id" }],
-  }
+  },
 );
 ```
 
@@ -846,7 +851,7 @@ await client.updateProject({
 
 // Now all content will be automatically summarized
 const content = await client.ingestUri(
-  "https://example.com/report.pdf" // uri
+  "https://example.com/report.pdf", // uri
 );
 ```
 
@@ -879,7 +884,7 @@ await client.streamAgent(
     }
   },
   undefined,
-  { id: conversationSpec.createSpecification.id }
+  { id: conversationSpec.createSpecification.id },
 );
 ```
 

@@ -13,7 +13,9 @@ describe("Tool Schema Fixes", () => {
   const secret = process.env.GRAPHLIT_JWT_SECRET;
 
   if (!orgId || !envId || !secret) {
-    console.warn("⚠️  Skipping tool schema tests - missing Graphlit credentials");
+    console.warn(
+      "⚠️  Skipping tool schema tests - missing Graphlit credentials",
+    );
     return;
   }
 
@@ -28,14 +30,14 @@ describe("Tool Schema Fixes", () => {
     if (process.env.GOOGLE_API_KEY) {
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
       client.setGoogleClient(
-        new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
+        new GoogleGenerativeAI(process.env.GOOGLE_API_KEY),
       );
     }
 
     if (process.env.COHERE_API_KEY) {
       const { CohereClient } = await import("cohere-ai");
       client.setCohereClient(
-        new CohereClient({ token: process.env.COHERE_API_KEY })
+        new CohereClient({ token: process.env.COHERE_API_KEY }),
       );
     }
   });
@@ -46,7 +48,10 @@ describe("Tool Schema Fixes", () => {
       try {
         await client.deleteConversation(conversationId);
       } catch (error) {
-        console.warn(`Failed to cleanup conversation ${conversationId}:`, error);
+        console.warn(
+          `Failed to cleanup conversation ${conversationId}:`,
+          error,
+        );
       }
     }
 
@@ -82,7 +87,7 @@ describe("Tool Schema Fixes", () => {
       return {
         place: args.placeName,
         hours: "10:00 AM - 6:00 PM",
-        date: args.date || "today"
+        date: args.date || "today",
       };
     },
   };
@@ -93,15 +98,17 @@ describe("Tool Schema Fixes", () => {
       return;
     }
 
-    console.log("\n🧪 Testing Google Gemini 2.5 Flash with fixed tool schema...");
+    console.log(
+      "\n🧪 Testing Google Gemini 2.5 Flash with fixed tool schema...",
+    );
 
     const spec = await client.createSpecification({
       name: "Google Gemini Tool Schema Fix Test",
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Google,
-      google: { 
-        model: Types.GoogleModels.Gemini_2_5FlashPreview, 
-        temperature: 0.7 
+      google: {
+        model: Types.GoogleModels.Gemini_2_5FlashPreview,
+        temperature: 0.7,
       },
     });
 
@@ -137,19 +144,20 @@ describe("Tool Schema Fixes", () => {
       undefined,
       { id: spec.createSpecification.id },
       [PROBLEMATIC_TOOL],
-      TOOL_HANDLERS
+      TOOL_HANDLERS,
     );
 
     if (conversationId) {
       createdConversations.push(conversationId);
     }
 
-    console.log(`📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`);
+    console.log(
+      `📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`,
+    );
 
     // The fix should allow this to work without schema errors
     expect(errorCount).toBe(0);
     expect(messageTokens).toBeGreaterThan(0);
-
   }, 60000);
 
   it("should handle Cohere Command R+ (working model)", async () => {
@@ -164,9 +172,9 @@ describe("Tool Schema Fixes", () => {
       name: "Cohere Command R+ Test",
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Cohere,
-      cohere: { 
-        model: Types.CohereModels.CommandRPlus, 
-        temperature: 0.7 
+      cohere: {
+        model: Types.CohereModels.CommandRPlus,
+        temperature: 0.7,
       },
     });
 
@@ -202,18 +210,19 @@ describe("Tool Schema Fixes", () => {
       undefined,
       { id: spec.createSpecification.id },
       [PROBLEMATIC_TOOL],
-      TOOL_HANDLERS
+      TOOL_HANDLERS,
     );
 
     if (conversationId) {
       createdConversations.push(conversationId);
     }
 
-    console.log(`📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`);
+    console.log(
+      `📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`,
+    );
 
     expect(errorCount).toBe(0);
     expect(messageTokens).toBeGreaterThan(0);
-
   }, 60000);
 
   it("should handle Cohere Command A with fixed model mapping", async () => {
@@ -228,9 +237,9 @@ describe("Tool Schema Fixes", () => {
       name: "Cohere Command A Test",
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Cohere,
-      cohere: { 
-        model: Types.CohereModels.CommandA, 
-        temperature: 0.7 
+      cohere: {
+        model: Types.CohereModels.CommandA,
+        temperature: 0.7,
       },
     });
 
@@ -266,18 +275,19 @@ describe("Tool Schema Fixes", () => {
       undefined,
       { id: spec.createSpecification.id },
       [PROBLEMATIC_TOOL],
-      TOOL_HANDLERS
+      TOOL_HANDLERS,
     );
 
     if (conversationId) {
       createdConversations.push(conversationId);
     }
 
-    console.log(`📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`);
+    console.log(
+      `📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`,
+    );
 
     // With the corrected model mapping, Command A should now work
     expect(errorCount).toBe(0);
     expect(messageTokens).toBeGreaterThan(0);
-
   }, 60000);
 });

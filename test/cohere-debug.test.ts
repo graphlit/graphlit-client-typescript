@@ -13,7 +13,9 @@ describe("Cohere Debug Test", () => {
   const secret = process.env.GRAPHLIT_JWT_SECRET;
 
   if (!orgId || !envId || !secret) {
-    console.warn("⚠️  Skipping Cohere debug test - missing Graphlit credentials");
+    console.warn(
+      "⚠️  Skipping Cohere debug test - missing Graphlit credentials",
+    );
     return;
   }
 
@@ -30,12 +32,12 @@ describe("Cohere Debug Test", () => {
     // Enable debug logging
     process.env.DEBUG_GRAPHLIT_SDK_STREAMING = "true";
     process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES = "true";
-    
+
     client = new Graphlit(orgId, envId, secret);
 
     const { CohereClient } = await import("cohere-ai");
     client.setCohereClient(
-      new CohereClient({ token: process.env.COHERE_API_KEY })
+      new CohereClient({ token: process.env.COHERE_API_KEY }),
     );
   });
 
@@ -45,7 +47,10 @@ describe("Cohere Debug Test", () => {
       try {
         await client.deleteConversation(conversationId);
       } catch (error) {
-        console.warn(`Failed to cleanup conversation ${conversationId}:`, error);
+        console.warn(
+          `Failed to cleanup conversation ${conversationId}:`,
+          error,
+        );
       }
     }
 
@@ -75,7 +80,7 @@ describe("Cohere Debug Test", () => {
       return {
         location: args.location,
         temperature: 22,
-        condition: "Sunny"
+        condition: "Sunny",
       };
     },
   };
@@ -87,9 +92,9 @@ describe("Cohere Debug Test", () => {
       name: "Cohere Command A Debug Test",
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Cohere,
-      cohere: { 
-        model: Types.CohereModels.CommandA, 
-        temperature: 0.7 
+      cohere: {
+        model: Types.CohereModels.CommandA,
+        temperature: 0.7,
       },
     });
 
@@ -107,7 +112,7 @@ describe("Cohere Debug Test", () => {
         "What's the weather like in Tokyo?",
         (event: AgentStreamEvent) => {
           console.log(`📨 Event: ${event.type}`);
-          
+
           switch (event.type) {
             case "conversation_started":
               conversationId = event.conversationId;
@@ -131,7 +136,7 @@ describe("Cohere Debug Test", () => {
         undefined,
         { id: spec.createSpecification.id },
         [SIMPLE_TOOL],
-        TOOL_HANDLERS
+        TOOL_HANDLERS,
       );
     } catch (error: any) {
       console.error(`❌ Stream Agent Error: ${error.message}`);
@@ -143,14 +148,15 @@ describe("Cohere Debug Test", () => {
       createdConversations.push(conversationId);
     }
 
-    console.log(`📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`);
+    console.log(
+      `📊 Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`,
+    );
     if (errorMessage) {
       console.log(`❌ Error message: ${errorMessage}`);
     }
 
     // This test is for debugging - we want to see what happens
     // The error should be resolved with our fixes
-
   }, 60000);
 
   it("should test Cohere Command R+ as a working comparison", async () => {
@@ -160,9 +166,9 @@ describe("Cohere Debug Test", () => {
       name: "Cohere Command R+ Debug Test",
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Cohere,
-      cohere: { 
-        model: Types.CohereModels.CommandRPlus, 
-        temperature: 0.7 
+      cohere: {
+        model: Types.CohereModels.CommandRPlus,
+        temperature: 0.7,
       },
     });
 
@@ -198,17 +204,18 @@ describe("Cohere Debug Test", () => {
       undefined,
       { id: spec.createSpecification.id },
       [SIMPLE_TOOL],
-      TOOL_HANDLERS
+      TOOL_HANDLERS,
     );
 
     if (conversationId) {
       createdConversations.push(conversationId);
     }
 
-    console.log(`📊 Command R+ Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`);
+    console.log(
+      `📊 Command R+ Results: ${messageTokens} tokens, ${toolCallCount} tool calls, ${errorCount} errors`,
+    );
 
     expect(errorCount).toBe(0);
     expect(messageTokens).toBeGreaterThan(0);
-
   }, 60000);
 });

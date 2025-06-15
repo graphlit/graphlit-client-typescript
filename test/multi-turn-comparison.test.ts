@@ -310,7 +310,7 @@ describe("Multi-turn Conversation Comparison", () => {
 
   if (!orgId || !envId || !secret) {
     console.warn(
-      "⚠️  Skipping comparison tests - missing Graphlit credentials"
+      "⚠️  Skipping comparison tests - missing Graphlit credentials",
     );
     return;
   }
@@ -328,21 +328,21 @@ describe("Multi-turn Conversation Comparison", () => {
       if (process.env.OPENAI_API_KEY) {
         const { default: OpenAI } = await import("openai");
         client.setOpenAIClient(
-          new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+          new OpenAI({ apiKey: process.env.OPENAI_API_KEY }),
         );
       }
 
       if (process.env.ANTHROPIC_API_KEY) {
         const { default: Anthropic } = await import("@anthropic-ai/sdk");
         client.setAnthropicClient(
-          new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+          new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }),
         );
       }
 
       if (process.env.GOOGLE_API_KEY) {
         const { GoogleGenerativeAI } = await import("@google/generative-ai");
         client.setGoogleClient(
-          new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
+          new GoogleGenerativeAI(process.env.GOOGLE_API_KEY),
         );
       }
 
@@ -357,21 +357,21 @@ describe("Multi-turn Conversation Comparison", () => {
           new OpenAI({
             baseURL: "https://api.cerebras.ai/v1",
             apiKey: process.env.CEREBRAS_API_KEY,
-          })
+          }),
         );
       }
 
       if (process.env.COHERE_API_KEY) {
         const { CohereClient } = await import("cohere-ai");
         client.setCohereClient(
-          new CohereClient({ token: process.env.COHERE_API_KEY })
+          new CohereClient({ token: process.env.COHERE_API_KEY }),
         );
       }
 
       if (process.env.MISTRAL_API_KEY) {
         const { Mistral } = await import("@mistralai/mistralai");
         client.setMistralClient(
-          new Mistral({ apiKey: process.env.MISTRAL_API_KEY })
+          new Mistral({ apiKey: process.env.MISTRAL_API_KEY }),
         );
       }
 
@@ -386,7 +386,7 @@ describe("Multi-turn Conversation Comparison", () => {
               accessKeyId: process.env.AWS_ACCESS_KEY_ID,
               secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
             },
-          })
+          }),
         );
       }
 
@@ -396,7 +396,7 @@ describe("Multi-turn Conversation Comparison", () => {
           new OpenAI({
             baseURL: "https://api.deepseek.com",
             apiKey: process.env.DEEPSEEK_API_KEY,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -412,7 +412,7 @@ describe("Multi-turn Conversation Comparison", () => {
       } catch (error) {
         console.warn(
           `Failed to cleanup conversation ${conversationId}:`,
-          error
+          error,
         );
       }
     }
@@ -435,13 +435,13 @@ describe("Multi-turn Conversation Comparison", () => {
       // Skip if API key not provided
       if (!process.env[provider.envKey]) {
         console.log(
-          `⏭️  Skipping ${provider.name} - missing ${provider.envKey}`
+          `⏭️  Skipping ${provider.name} - missing ${provider.envKey}`,
         );
         return;
       }
 
       console.log(
-        `\n🧪 Testing multi-turn conversation with ${provider.name}...`
+        `\n🧪 Testing multi-turn conversation with ${provider.name}...`,
       );
 
       // Create specification
@@ -478,7 +478,7 @@ describe("Multi-turn Conversation Comparison", () => {
         const turnNumber = Math.floor(i / 2) + 1;
 
         console.log(
-          `\n  Turn ${turnNumber}: User asks about ${userTurn.expectedTopics?.[0] || "general topic"}...`
+          `\n  Turn ${turnNumber}: User asks about ${userTurn.expectedTopics?.[0] || "general topic"}...`,
         );
 
         const turnMetrics: TurnMetrics = {
@@ -528,13 +528,13 @@ describe("Multi-turn Conversation Comparison", () => {
                     turn: turnNumber,
                     message: event.error.message,
                     code: event.error.code,
-                    timestamp: new Date()
+                    timestamp: new Date(),
                   });
                   break;
               }
             },
             conversationId,
-            { id: spec.createSpecification.id }
+            { id: spec.createSpecification.id },
           );
 
           const turnEndTime = Date.now();
@@ -549,16 +549,16 @@ describe("Multi-turn Conversation Comparison", () => {
           metrics.totalTokens += tokenCount;
 
           console.log(
-            `  ✅ Turn ${turnNumber} complete: ${tokenCount} tokens in ${turnMetrics.totalTime}ms (${turnMetrics.tokensPerSecond.toFixed(1)} TPS)`
+            `  ✅ Turn ${turnNumber} complete: ${tokenCount} tokens in ${turnMetrics.totalTime}ms (${turnMetrics.tokensPerSecond.toFixed(1)} TPS)`,
           );
 
           // Check if response contains expected topics
           if (userTurn.expectedTopics) {
             const topicsFound = userTurn.expectedTopics.filter((topic) =>
-              fullMessage.toLowerCase().includes(topic.toLowerCase())
+              fullMessage.toLowerCase().includes(topic.toLowerCase()),
             );
             console.log(
-              `  📝 Topics covered: ${topicsFound.join(", ")} (${topicsFound.length}/${userTurn.expectedTopics.length})`
+              `  📝 Topics covered: ${topicsFound.join(", ")} (${topicsFound.length}/${userTurn.expectedTopics.length})`,
             );
           }
         } catch (error: any) {
@@ -568,7 +568,7 @@ describe("Multi-turn Conversation Comparison", () => {
             turn: turnNumber,
             message: error.message || String(error),
             code: error.code,
-            timestamp: new Date()
+            timestamp: new Date(),
           });
           turnMetrics.error = error.message || String(error);
           metrics.turns.push(turnMetrics); // Still push the turn metrics even if it failed
@@ -589,10 +589,10 @@ describe("Multi-turn Conversation Comparison", () => {
       console.log(`   Total time: ${(totalTime / 1000).toFixed(1)}s`);
       console.log(`   Total tokens: ${metrics.totalTokens}`);
       console.log(
-        `   Average TPS: ${metrics.averageTokensPerSecond.toFixed(1)}`
+        `   Average TPS: ${metrics.averageTokensPerSecond.toFixed(1)}`,
       );
       console.log(
-        `   Average TTFT: ${metrics.averageTimeToFirstToken.toFixed(0)}ms`
+        `   Average TTFT: ${metrics.averageTimeToFirstToken.toFixed(0)}ms`,
       );
       console.log(`   Tool calls: ${metrics.toolCallsExecuted}`);
       console.log(`   Errors: ${metrics.errors}`);
@@ -629,20 +629,20 @@ async function generateComparisonReport(metrics: ProviderMetrics[]) {
 
   // Sort by average tokens per second
   const sortedBySpeed = [...metrics].sort(
-    (a, b) => b.averageTokensPerSecond - a.averageTokensPerSecond
+    (a, b) => b.averageTokensPerSecond - a.averageTokensPerSecond,
   );
 
   // Sort by time to first token
   const sortedByTTFT = [...metrics].sort(
-    (a, b) => a.averageTimeToFirstToken - b.averageTimeToFirstToken
+    (a, b) => a.averageTimeToFirstToken - b.averageTimeToFirstToken,
   );
 
   // Calculate error statistics
   const totalProviders = metrics.length;
-  const providersWithErrors = metrics.filter(m => m.errors > 0).length;
+  const providersWithErrors = metrics.filter((m) => m.errors > 0).length;
   const totalErrors = metrics.reduce((sum, m) => sum + m.errors, 0);
   const errorsByProvider = metrics
-    .filter(m => m.errors > 0)
+    .filter((m) => m.errors > 0)
     .sort((a, b) => b.errors - a.errors);
 
   // Generate markdown report
@@ -718,22 +718,22 @@ ${errorsByProvider.length} provider(s) experienced errors during testing:
 |----------|-------|--------------|------------|--------------|
 `;
 
-    errorsByProvider.forEach(m => {
+    errorsByProvider.forEach((m) => {
       const errorRate = ((m.errors / 4) * 100).toFixed(1); // 4 turns total
-      const failedTurns = m.errorDetails.map(e => e.turn).join(", ") || "N/A";
-      
+      const failedTurns = m.errorDetails.map((e) => e.turn).join(", ") || "N/A";
+
       report += `| ${m.provider} | ${m.model} | ${m.errors} | ${errorRate}% | ${failedTurns} |\n`;
     });
 
     // Add detailed error information
-    if (errorsByProvider.some(m => m.errorDetails.length > 0)) {
+    if (errorsByProvider.some((m) => m.errorDetails.length > 0)) {
       report += `\n### Detailed Error Messages\n\n`;
-      
-      errorsByProvider.forEach(m => {
+
+      errorsByProvider.forEach((m) => {
         if (m.errorDetails.length > 0) {
           report += `**${m.provider}** (${m.model}):\n`;
-          m.errorDetails.forEach(e => {
-            report += `- Turn ${e.turn}: ${e.message}${e.code ? ` (Code: ${e.code})` : ''}\n`;
+          m.errorDetails.forEach((e) => {
+            report += `- Turn ${e.turn}: ${e.message}${e.code ? ` (Code: ${e.code})` : ""}\n`;
           });
           report += `\n`;
         }
@@ -741,12 +741,16 @@ ${errorsByProvider.length} provider(s) experienced errors during testing:
     }
 
     report += `\n**Common Error Patterns:**\n`;
-    
+
     // Analyze common error patterns
-    const bedrockErrors = errorsByProvider.filter(m => m.provider.includes("Bedrock"));
-    const cohereErrors = errorsByProvider.filter(m => m.provider.includes("Cohere"));
-    const otherErrors = errorsByProvider.filter(m => 
-      !m.provider.includes("Bedrock") && !m.provider.includes("Cohere")
+    const bedrockErrors = errorsByProvider.filter((m) =>
+      m.provider.includes("Bedrock"),
+    );
+    const cohereErrors = errorsByProvider.filter((m) =>
+      m.provider.includes("Cohere"),
+    );
+    const otherErrors = errorsByProvider.filter(
+      (m) => !m.provider.includes("Bedrock") && !m.provider.includes("Cohere"),
     );
 
     if (bedrockErrors.length > 0) {
