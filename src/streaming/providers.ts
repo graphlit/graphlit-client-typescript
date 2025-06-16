@@ -30,6 +30,41 @@ function isValidJSON(str: string): boolean {
 }
 
 /**
+ * Simplify schema for Groq by removing complex features that may cause issues
+ */
+function simplifySchemaForGroq(schema: any): string {
+  if (typeof schema !== "object" || schema === null) {
+    return JSON.stringify(schema);
+  }
+
+  // Remove complex JSON Schema features that Groq might not support
+  const simplified: any = {
+    type: schema.type || "object",
+    properties: {},
+    required: schema.required || []
+  };
+
+  // Only keep basic properties and types
+  if (schema.properties) {
+    for (const [key, value] of Object.entries(schema.properties)) {
+      const prop = value as any;
+      simplified.properties[key] = {
+        type: prop.type || "string",
+        description: prop.description || "",
+        // Remove complex features like patterns, formats, etc.
+      };
+      
+      // Keep enum if present (but simplified)
+      if (prop.enum && Array.isArray(prop.enum)) {
+        simplified.properties[key].enum = prop.enum;
+      }
+    }
+  }
+
+  return JSON.stringify(simplified);
+}
+
+/**
  * Clean schema for Google Gemini by removing unsupported fields
  */
 function cleanSchemaForGoogle(schema: any): any {
@@ -1443,11 +1478,31 @@ export async function streamWithGroq(
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
 ): Promise<void> {
   try {
+    const modelName = getModelName(specification);
+    
+    // Filter or simplify tools for Groq models that have issues
+    let groqTools = tools;
+    if (tools && tools.length > 0) {
+      // LLaMA 3.3 70B seems to have tool calling issues - disable tools for this model
+      if (modelName && (modelName.includes("llama-3.3") || modelName.includes("LLAMA_3_3"))) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`⚠️ [Groq] Disabling tools for ${modelName} due to known compatibility issues`);
+        }
+        groqTools = undefined;
+      } else {
+        // For other models, simplify complex schemas
+        groqTools = tools.map(tool => ({
+          ...tool,
+          schema: tool.schema ? simplifySchemaForGroq(JSON.parse(tool.schema)) : tool.schema
+        }));
+      }
+    }
+    
     // Groq uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
     return await streamWithOpenAI(
       specification,
       messages,
-      tools,
+      groqTools,
       groqClient,
       onEvent,
       onComplete,
@@ -1840,9 +1895,13 @@ export async function streamWithCohere(
     }
 
     // Cohere v7 expects a single message and optional chatHistory
-    // Extract the last message as the current message
-    const lastMessage = messages[messages.length - 1];
-    const chatHistory = messages.slice(0, -1);
+    // Extract system messages for preamble and filter them out of history
+    const systemMessages = messages.filter(msg => msg.role === "SYSTEM");
+    const nonSystemMessages = messages.filter(msg => msg.role !== "SYSTEM");
+    
+    // Extract the last non-system message as the current message
+    const lastMessage = nonSystemMessages[nonSystemMessages.length - 1];
+    const chatHistory = nonSystemMessages.slice(0, -1);
 
     if (!lastMessage || !lastMessage.message) {
       throw new Error(
@@ -1855,10 +1914,17 @@ export async function streamWithCohere(
       model: modelName,
       message: lastMessage.message, // Current message (singular)
     };
+    
+    // Add system message as preamble if present
+    if (systemMessages.length > 0) {
+      // Combine all system messages into preamble
+      streamConfig.preamble = systemMessages.map(msg => msg.message).join("\n\n");
+    }
 
     // Add chat history if there are previous messages
     if (chatHistory.length > 0) {
       // Build properly typed chat history using Cohere SDK Message types
+      // Note: SYSTEM messages are already filtered out and handled as preamble
       const cohereHistory: Cohere.Message[] = chatHistory.map(
         (msg): Cohere.Message => {
           switch (msg.role) {
@@ -1880,11 +1946,6 @@ export async function streamWithCohere(
                 }));
               }
               return chatbotMsg;
-            case "SYSTEM":
-              return {
-                role: "SYSTEM",
-                message: msg.message,
-              } as Cohere.Message.System;
             case "TOOL":
               return {
                 role: "TOOL",
