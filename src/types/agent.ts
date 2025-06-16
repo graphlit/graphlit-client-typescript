@@ -24,6 +24,14 @@ export interface AgentMetrics {
   rounds?: number; // Number of tool calling rounds
 }
 
+// Context window usage information
+export interface ContextWindowUsage {
+  usedTokens: number; // Total tokens in current context
+  maxTokens: number; // Model's context limit
+  percentage: number; // Usage percentage (0-100)
+  remainingTokens: number; // Tokens available for response
+}
+
 // Result from promptAgent with full conversation details
 export interface AgentResult {
   // Core response
@@ -42,6 +50,9 @@ export interface AgentResult {
 
   // Usage information
   usage?: UsageInfo;
+
+  // Context window usage at start of interaction
+  contextWindow?: ContextWindowUsage;
 
   // Error if any
   error?: AgentError;

@@ -14,6 +14,20 @@ export type ToolExecutionStatus =
   | "failed";
 
 /**
+ * Context window usage event - emitted at start of agent interaction
+ */
+export type ContextWindowEvent = {
+  type: "context_window";
+  usage: {
+    usedTokens: number; // Total tokens in current context
+    maxTokens: number; // Model's context limit
+    percentage: number; // Usage percentage (0-100)
+    remainingTokens: number; // Tokens available for response
+  };
+  timestamp: Date;
+};
+
+/**
  * Simplified UI-focused streaming events using GraphQL types
  */
 export type AgentStreamEvent =
@@ -23,6 +37,7 @@ export type AgentStreamEvent =
       timestamp: Date;
       model?: string;
     }
+  | ContextWindowEvent
   | {
       type: "message_update";
       message: Partial<ConversationMessage> & {
@@ -56,6 +71,12 @@ export type AgentStreamEvent =
         llmTokens?: number; // Actual LLM tokens consumed
         avgTokenDelay?: number; // Average delay between tokens (ms)
         streamingThroughput?: number; // Characters per second (excludes TTFT)
+      };
+      contextWindow?: {
+        usedTokens: number; // Total tokens after completion
+        maxTokens: number; // Model's context limit
+        percentage: number; // Usage percentage (0-100)
+        remainingTokens: number; // Tokens available
       };
     }
   | {

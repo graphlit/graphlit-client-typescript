@@ -14,6 +14,9 @@ import {
 import { getModelName } from "../model-mapping.js";
 import { StreamEvent } from "../types/internal.js";
 
+// Import Cohere SDK types for proper typing
+import type { Cohere } from "cohere-ai";
+
 /**
  * Helper to check if a string is valid JSON
  */
@@ -1847,30 +1850,75 @@ export async function streamWithCohere(
       );
     }
 
-    const streamConfig: any = {
+    // Build properly typed request using Cohere SDK types
+    const streamConfig: Cohere.ChatStreamRequest = {
       model: modelName,
       message: lastMessage.message, // Current message (singular)
     };
 
     // Add chat history if there are previous messages
     if (chatHistory.length > 0) {
-      // Messages already have 'message' property from formatter
-      streamConfig.chatHistory = chatHistory;
+      // Build properly typed chat history using Cohere SDK Message types
+      const cohereHistory: Cohere.Message[] = chatHistory.map(
+        (msg): Cohere.Message => {
+          switch (msg.role) {
+            case "USER":
+              return {
+                role: "USER",
+                message: msg.message,
+              } as Cohere.Message.User;
+            case "CHATBOT":
+              const chatbotMsg: Cohere.Message.Chatbot = {
+                role: "CHATBOT",
+                message: msg.message,
+              };
+              // Add tool calls if present
+              if (msg.tool_calls && msg.tool_calls.length > 0) {
+                chatbotMsg.toolCalls = msg.tool_calls.map((tc) => ({
+                  name: tc.name,
+                  parameters: tc.parameters || {},
+                }));
+              }
+              return chatbotMsg;
+            case "SYSTEM":
+              return {
+                role: "SYSTEM",
+                message: msg.message,
+              } as Cohere.Message.System;
+            case "TOOL":
+              return {
+                role: "TOOL",
+                toolResults: msg.tool_results || [],
+              } as Cohere.Message.Tool;
+            default:
+              // Fallback - treat as USER
+              return {
+                role: "USER",
+                message: msg.message,
+              } as Cohere.Message.User;
+          }
+        },
+      );
+
+      streamConfig.chatHistory = cohereHistory;
     }
 
     // Only add temperature if it's defined
-    if (specification.cohere?.temperature !== undefined) {
+    if (
+      specification.cohere?.temperature !== undefined &&
+      specification.cohere.temperature !== null
+    ) {
       streamConfig.temperature = specification.cohere.temperature;
     }
 
     // Add tools if provided
     if (tools && tools.length > 0) {
-      streamConfig.tools = tools.map((tool) => {
+      const cohereTools: Cohere.Tool[] = tools.map((tool): Cohere.Tool => {
         if (!tool.schema) {
           return {
-            name: tool.name,
-            description: tool.description,
-            parameter_definitions: {},
+            name: tool.name || "",
+            description: tool.description || "",
+            parameterDefinitions: {},
           };
         }
 
@@ -1878,38 +1926,32 @@ export async function streamWithCohere(
         const schema = JSON.parse(tool.schema);
 
         // Convert JSON Schema to Cohere's expected format
-        const parameter_definitions: Record<string, any> = {};
+        const parameterDefinitions: Record<
+          string,
+          Cohere.ToolParameterDefinitionsValue
+        > = {};
 
         if (schema.properties) {
           for (const [key, value] of Object.entries(schema.properties)) {
             const prop = value as any;
-            const paramDef: any = {
-              type: prop.type || "string",
+            const paramDef: Cohere.ToolParameterDefinitionsValue = {
+              type: prop.type || "str",
               description: prop.description || "",
               required: schema.required?.includes(key) || false,
             };
 
-            // Add additional properties that Cohere might expect
-            if (prop.enum) {
-              paramDef.options = prop.enum;
-            }
-            if (prop.default !== undefined) {
-              paramDef.default = prop.default;
-            }
-            if (prop.items) {
-              paramDef.items = prop.items;
-            }
-
-            parameter_definitions[key] = paramDef;
+            parameterDefinitions[key] = paramDef;
           }
         }
 
         return {
-          name: tool.name,
-          description: tool.description,
-          parameter_definitions, // Use snake_case as expected by Cohere API
+          name: tool.name || "",
+          description: tool.description || "",
+          parameterDefinitions, // Use camelCase as expected by Cohere SDK
         };
       });
+
+      streamConfig.tools = cohereTools;
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -1929,31 +1971,57 @@ export async function streamWithCohere(
 
     let stream;
     try {
+      // Always log the full config when debugging Command A errors
+      if (
+        modelName.includes("command-a") ||
+        process.env.DEBUG_GRAPHLIT_SDK_STREAMING
+      ) {
+        console.log(
+          `🔍 [Cohere] Full streamConfig for ${modelName}:`,
+          JSON.stringify(streamConfig, null, 2),
+        );
+      }
+
       stream = await cohereClient.chatStream(streamConfig);
-    } catch (streamError) {
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.error(`❌ [Cohere] Stream creation failed:`, streamError);
-        if ((streamError as any).response) {
-          console.error(
-            `❌ [Cohere] Stream response status: ${(streamError as any).response.status}`,
-          );
-          console.error(
-            `❌ [Cohere] Stream response data:`,
-            (streamError as any).response.data,
-          );
-        }
-        if ((streamError as any).status) {
-          console.error(
-            `❌ [Cohere] Direct status: ${(streamError as any).status}`,
-          );
-        }
-        if ((streamError as any).body) {
-          console.error(
-            `❌ [Cohere] Response body:`,
-            (streamError as any).body,
-          );
+    } catch (streamError: any) {
+      // Enhanced error logging
+      console.error(
+        `❌ [Cohere] Stream creation failed for model ${modelName}`,
+      );
+      console.error(`❌ [Cohere] Error type: ${streamError.constructor.name}`);
+      console.error(
+        `❌ [Cohere] Status code: ${streamError.statusCode || streamError.status || "unknown"}`,
+      );
+      console.error(`❌ [Cohere] Error message: ${streamError.message}`);
+
+      // Try to read the body if it's a ReadableStream
+      if (
+        streamError.body &&
+        typeof streamError.body.getReader === "function"
+      ) {
+        try {
+          const reader = streamError.body.getReader();
+          let fullBody = "";
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            fullBody += new TextDecoder().decode(value);
+          }
+          console.error(`❌ [Cohere] Raw error body:`, fullBody);
+          try {
+            const parsed = JSON.parse(fullBody);
+            console.error(
+              `❌ [Cohere] Parsed error details:`,
+              JSON.stringify(parsed, null, 2),
+            );
+          } catch (e) {
+            console.error(`❌ [Cohere] Could not parse error body as JSON`);
+          }
+        } catch (e) {
+          console.error(`❌ [Cohere] Could not read error body:`, e);
         }
       }
+
       throw streamError;
     }
 

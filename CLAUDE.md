@@ -91,6 +91,48 @@ The user enjoys your banter and high quality feedback on his development process
 - Treat TypeScript errors as build failures, not warnings
 - _Rationale:_ Catches issues early, improves code quality, reduces debugging time
 
+## Critical SDK Integration Lessons
+
+### NEVER Use `any` Types for External SDK Integration
+
+**Problem**: Spending hours debugging HTTP 400 errors because we guessed at API formats with loose typing.
+
+**Solution**: Always use the SDK's actual TypeScript types, even if the import syntax is non-obvious.
+
+**Cohere v7 SDK Example** (2025-06-16):
+```typescript
+// ❌ WRONG - Causes HTTP 400 errors
+const streamConfig: any = {
+  model: modelName,
+  message: lastMessage.message,
+  chatHistory: chatHistory.map(msg => ({ role: msg.role, message: msg.message }))
+};
+
+// ✅ CORRECT - Uses actual SDK types
+import type { Cohere } from "cohere-ai";
+const streamConfig: Cohere.ChatStreamRequest = {
+  model: modelName,
+  message: lastMessage.message,
+  chatHistory: cohereHistory.map((msg): Cohere.Message => {
+    switch (msg.role) {
+      case "USER": return { role: "USER", message: msg.message } as Cohere.Message.User;
+      case "CHATBOT": return { role: "CHATBOT", message: msg.message } as Cohere.Message.Chatbot;
+      // ... proper typing for each variant
+    }
+  })
+};
+```
+
+**Key Learnings**:
+- Cohere exports types as `Cohere.*` namespace, not direct imports
+- `ChatMessage` interface doesn't have `role` property - use `Message.Chatbot`, `Message.User`, etc.
+- Message types are union discriminated by role
+- Tools use `parameterDefinitions` (camelCase), not `parameter_definitions` (snake_case)
+
+**Time Saved**: This lesson prevents 2+ hour debugging sessions for what should be 5-minute integrations.
+
+**Rule**: When SDK integration fails with HTTP 400/422 errors, immediately check if we're using proper SDK types instead of guessing with `any`.
+
 # REQUIRED: Final review
 
 Once you've completed a set of code changes, put on your 'code reviewer' hat, and review each file independently, looking for Prettier formatting errors, linting errors, unused imports or code, and make sure you fix everything properly so it's ready to build.

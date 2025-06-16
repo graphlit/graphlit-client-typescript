@@ -32,6 +32,12 @@ export class UIEventAdapter {
   private chunkBuffer?: ChunkBuffer;
   private smoothingDelay: number = 30;
   private chunkQueue: string[] = []; // Queue of chunks waiting to be emitted
+  private contextWindowUsage?: {
+    usedTokens: number;
+    maxTokens: number;
+    percentage: number;
+    remainingTokens: number;
+  };
 
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
@@ -94,6 +100,10 @@ export class UIEventAdapter {
 
       case "error":
         this.handleError(event.error);
+        break;
+
+      case "context_window":
+        this.handleContextWindow(event.usage);
         break;
     }
   }
@@ -456,11 +466,18 @@ export class UIEventAdapter {
       }
     }
 
-    this.emitUIEvent({
+    // Include context window usage if available
+    const event: AgentStreamEvent = {
       type: "conversation_completed",
       message: finalMessage,
       metrics: finalMetrics,
-    });
+    };
+
+    if (this.contextWindowUsage) {
+      event.contextWindow = this.contextWindowUsage;
+    }
+
+    this.emitUIEvent(event);
   }
 
   private handleError(error: string): void {
@@ -633,6 +650,28 @@ export class UIEventAdapter {
 
   private emitUIEvent(event: AgentStreamEvent): void {
     this.onEvent(event);
+  }
+
+  private handleContextWindow(usage: {
+    usedTokens: number;
+    maxTokens: number;
+    percentage: number;
+    remainingTokens: number;
+  }): void {
+    // Store for later inclusion in completion event
+    this.contextWindowUsage = usage;
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `📊 [UIEventAdapter] Context window: ${usage.usedTokens}/${usage.maxTokens} (${usage.percentage}%)`,
+      );
+    }
+
+    this.emitUIEvent({
+      type: "context_window",
+      usage,
+      timestamp: new Date(),
+    });
   }
 
   /**

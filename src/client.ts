@@ -4067,13 +4067,38 @@ class Graphlit {
         data,
         tools,
         false, // requireTool
-        false, // includeDetails
+        true, // includeDetails - needed for context window tracking
         correlationId,
       );
 
       let currentMessage = promptResponse.promptConversation?.message;
       if (!currentMessage) {
         throw new Error("No message in prompt response");
+      }
+
+      // Calculate and return context window usage in result
+      const details = promptResponse.promptConversation?.details;
+      let contextWindowUsage: AgentResult["contextWindow"] | undefined;
+
+      if (details?.tokenLimit && details?.messages) {
+        // Sum up all message tokens
+        const usedTokens = details.messages.reduce(
+          (sum, msg) => sum + (msg?.tokens || 0),
+          0,
+        );
+
+        contextWindowUsage = {
+          usedTokens,
+          maxTokens: details.tokenLimit,
+          percentage: Math.round((usedTokens / details.tokenLimit) * 100),
+          remainingTokens: Math.max(0, details.tokenLimit - usedTokens),
+        };
+
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `📊 [Context Window] Using ${usedTokens.toLocaleString()}/${details.tokenLimit.toLocaleString()} tokens (${Math.round((usedTokens / details.tokenLimit) * 100)}%)`,
+          );
+        }
       }
 
       // 3. Tool calling loop
@@ -4157,6 +4182,7 @@ class Graphlit {
         toolResults: allToolCalls,
         metrics,
         usage,
+        contextWindow: contextWindowUsage,
       };
     } catch (error: any) {
       // Return partial result with error
@@ -4445,6 +4471,32 @@ class Graphlit {
             `  ${i + 1}. [${msg?.role}] ${msg?.message?.substring(0, 100)}...`,
           );
         });
+      }
+    }
+
+    // Emit context window usage event
+    const details = formatResponse.formatConversation?.details;
+    if (details?.tokenLimit && details?.messages) {
+      // Sum up all message tokens
+      const usedTokens = details.messages.reduce(
+        (sum, msg) => sum + (msg?.tokens || 0),
+        0,
+      );
+
+      uiAdapter.handleEvent({
+        type: "context_window",
+        usage: {
+          usedTokens,
+          maxTokens: details.tokenLimit,
+          percentage: Math.round((usedTokens / details.tokenLimit) * 100),
+          remainingTokens: Math.max(0, details.tokenLimit - usedTokens),
+        },
+      });
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `📊 [Context Window] Using ${usedTokens.toLocaleString()}/${details.tokenLimit.toLocaleString()} tokens (${Math.round((usedTokens / details.tokenLimit) * 100)}%)`,
+        );
       }
     }
 

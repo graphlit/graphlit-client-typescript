@@ -29,4 +29,13 @@ export type StreamEvent =
       conversationId?: string;
       tokens?: number;
     }
-  | { type: "error"; error: string };
+  | { type: "error"; error: string }
+  | {
+      type: "context_window";
+      usage: {
+        usedTokens: number;
+        maxTokens: number;
+        percentage: number;
+        remainingTokens: number;
+      };
+    };
