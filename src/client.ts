@@ -5108,9 +5108,10 @@ class Graphlit {
 
     // Complete the conversation and get token count
     let finalTokens: number | undefined;
-    if (fullMessage) {
+    const trimmedMessage = fullMessage?.trim();
+    if (trimmedMessage) {
       const completeResponse = await this.completeConversation(
-        fullMessage.trim(),
+        trimmedMessage,
         conversationId,
         correlationId,
       );
