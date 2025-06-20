@@ -100,12 +100,16 @@ The user enjoys your banter and high quality feedback on his development process
 **Solution**: Always use the SDK's actual TypeScript types, even if the import syntax is non-obvious.
 
 **Cohere v7 SDK Example** (2025-06-16):
+
 ```typescript
 // ❌ WRONG - Causes HTTP 400 errors
 const streamConfig: any = {
   model: modelName,
   message: lastMessage.message,
-  chatHistory: chatHistory.map(msg => ({ role: msg.role, message: msg.message }))
+  chatHistory: chatHistory.map((msg) => ({
+    role: msg.role,
+    message: msg.message,
+  })),
 };
 
 // ✅ CORRECT - Uses actual SDK types
@@ -115,15 +119,21 @@ const streamConfig: Cohere.ChatStreamRequest = {
   message: lastMessage.message,
   chatHistory: cohereHistory.map((msg): Cohere.Message => {
     switch (msg.role) {
-      case "USER": return { role: "USER", message: msg.message } as Cohere.Message.User;
-      case "CHATBOT": return { role: "CHATBOT", message: msg.message } as Cohere.Message.Chatbot;
+      case "USER":
+        return { role: "USER", message: msg.message } as Cohere.Message.User;
+      case "CHATBOT":
+        return {
+          role: "CHATBOT",
+          message: msg.message,
+        } as Cohere.Message.Chatbot;
       // ... proper typing for each variant
     }
-  })
+  }),
 };
 ```
 
 **Key Learnings**:
+
 - Cohere exports types as `Cohere.*` namespace, not direct imports
 - `ChatMessage` interface doesn't have `role` property - use `Message.Chatbot`, `Message.User`, etc.
 - Message types are union discriminated by role

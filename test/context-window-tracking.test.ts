@@ -38,7 +38,7 @@ describe("Context Window Tracking", () => {
       } catch (error) {
         console.warn(
           `Failed to cleanup conversation ${conversationId}:`,
-          error
+          error,
         );
       }
     }
@@ -98,7 +98,7 @@ describe("Context Window Tracking", () => {
         }
       },
       undefined,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     // Verify context window event was emitted
@@ -116,13 +116,13 @@ describe("Context Window Tracking", () => {
     // Log summary
     console.log("\n📈 Context Window Summary:");
     console.log(
-      `   Model limit: ${contextWindowEvent!.usage.maxTokens.toLocaleString()} tokens`
+      `   Model limit: ${contextWindowEvent!.usage.maxTokens.toLocaleString()} tokens`,
     );
     console.log(
-      `   Used: ${contextWindowEvent!.usage.usedTokens.toLocaleString()} tokens (${contextWindowEvent!.usage.percentage}%)`
+      `   Used: ${contextWindowEvent!.usage.usedTokens.toLocaleString()} tokens (${contextWindowEvent!.usage.percentage}%)`,
     );
     console.log(
-      `   Remaining: ${contextWindowEvent!.usage.remainingTokens.toLocaleString()} tokens`
+      `   Remaining: ${contextWindowEvent!.usage.remainingTokens.toLocaleString()} tokens`,
     );
   }, 30000);
 
@@ -146,7 +146,7 @@ describe("Context Window Tracking", () => {
     const result = await client.promptAgent(
       "What is the capital of France? Please provide a brief answer.",
       undefined,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     if (result.conversationId) {
@@ -164,13 +164,13 @@ describe("Context Window Tracking", () => {
     // Log summary
     console.log("\n📈 PromptAgent Context Window:");
     console.log(
-      `   Model limit: ${result.contextWindow!.maxTokens.toLocaleString()} tokens`
+      `   Model limit: ${result.contextWindow!.maxTokens.toLocaleString()} tokens`,
     );
     console.log(
-      `   Used: ${result.contextWindow!.usedTokens.toLocaleString()} tokens (${result.contextWindow!.percentage}%)`
+      `   Used: ${result.contextWindow!.usedTokens.toLocaleString()} tokens (${result.contextWindow!.percentage}%)`,
     );
     console.log(
-      `   Remaining: ${result.contextWindow!.remainingTokens.toLocaleString()} tokens`
+      `   Remaining: ${result.contextWindow!.remainingTokens.toLocaleString()} tokens`,
     );
     console.log(`   Response: ${result.message}`);
   }, 30000);
@@ -209,7 +209,7 @@ describe("Context Window Tracking", () => {
         }
       },
       undefined,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     // Turn 2
@@ -223,7 +223,7 @@ describe("Context Window Tracking", () => {
         }
       },
       conversationId,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     // Turn 3
@@ -237,7 +237,7 @@ describe("Context Window Tracking", () => {
         }
       },
       conversationId,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     // Verify context usage increases with each turn
@@ -248,10 +248,10 @@ describe("Context Window Tracking", () => {
     console.log("\n📈 Context Growth:");
     console.log(`   Turn 1: ${contextUsages[0]} tokens`);
     console.log(
-      `   Turn 2: ${contextUsages[1]} tokens (+${contextUsages[1] - contextUsages[0]})`
+      `   Turn 2: ${contextUsages[1]} tokens (+${contextUsages[1] - contextUsages[0]})`,
     );
     console.log(
-      `   Turn 3: ${contextUsages[2]} tokens (+${contextUsages[2] - contextUsages[1]})`
+      `   Turn 3: ${contextUsages[2]} tokens (+${contextUsages[2] - contextUsages[1]})`,
     );
   }, 60000);
 });

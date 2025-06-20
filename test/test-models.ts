@@ -394,13 +394,13 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
   // OpenAI - Most reliable models
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
-  
+
   // Anthropic - Stable models
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
-  
+
   // Google - Generally reliable
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
-  
+
   // Skip problematic models:
   // - OpenAI o3/o3 Mini (may have availability/rate limit issues)
   // - Claude 4 models (may not be available yet)

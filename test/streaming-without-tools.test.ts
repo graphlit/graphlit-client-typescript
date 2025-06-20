@@ -14,7 +14,9 @@ describe("Streaming Without Tools", () => {
   const secret = process.env.GRAPHLIT_JWT_SECRET;
 
   if (!orgId || !envId || !secret) {
-    console.warn("⚠️  Skipping streaming without tools test - missing credentials");
+    console.warn(
+      "⚠️  Skipping streaming without tools test - missing credentials",
+    );
     return;
   }
 
@@ -38,7 +40,10 @@ describe("Streaming Without Tools", () => {
       try {
         await client.deleteConversation(conversationId);
       } catch (error) {
-        console.warn(`Failed to cleanup conversation ${conversationId}:`, error);
+        console.warn(
+          `Failed to cleanup conversation ${conversationId}:`,
+          error,
+        );
       }
     }
 
@@ -67,13 +72,21 @@ describe("Streaming Without Tools", () => {
     expect(spec.createSpecification?.id).toBeDefined();
     createdSpecifications.push(spec.createSpecification!.id);
 
+    // Check if streaming is supported
+    if (!client.supportsStreaming()) {
+      console.log("⚠️  Skipping test - streaming not supported");
+      return;
+    }
+
     // Track events
     const events: AgentStreamEvent[] = [];
+    let conversationId: string | undefined;
     let conversationStarted = false;
     let messageReceived = false;
     let conversationCompleted = false;
     let errorOccurred = false;
     let errorMessage = "";
+    let finalMessage = "";
 
     await client.streamAgent(
       "What is 2+2? Just give me the number.",
@@ -83,6 +96,7 @@ describe("Streaming Without Tools", () => {
         switch (event.type) {
           case "conversation_started":
             conversationStarted = true;
+            conversationId = event.conversationId;
             createdConversations.push(event.conversationId);
             console.log("✅ Conversation started:", event.conversationId);
             break;
@@ -92,6 +106,7 @@ describe("Streaming Without Tools", () => {
             break;
           case "conversation_completed":
             conversationCompleted = true;
+            finalMessage = event.message.message;
             console.log("✅ Conversation completed successfully");
             console.log("   Final message:", event.message.message);
             console.log("   Tokens used:", event.message.tokens);
@@ -104,7 +119,7 @@ describe("Streaming Without Tools", () => {
         }
       },
       undefined,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     // Verify the conversation completed successfully
@@ -112,18 +127,53 @@ describe("Streaming Without Tools", () => {
     expect(messageReceived).toBe(true);
     expect(conversationCompleted).toBe(true);
     expect(errorOccurred).toBe(false);
-    
+
     if (errorOccurred) {
       console.error("Error details:", errorMessage);
     }
 
     // Verify we got a proper response
-    const completedEvent = events.find(e => e.type === "conversation_completed");
+    const completedEvent = events.find(
+      (e) => e.type === "conversation_completed",
+    );
     expect(completedEvent).toBeDefined();
     if (completedEvent?.type === "conversation_completed") {
       expect(completedEvent.message.message).toContain("4");
       expect(completedEvent.message.tokens).toBeGreaterThan(0);
     }
+
+    // IMPORTANT: Verify conversation messages were properly saved
+    console.log("\n🔍 Verifying conversation was saved properly...");
+    expect(conversationId).toBeDefined();
+
+    const conversation = await client.getConversation(conversationId!);
+    expect(conversation.conversation).toBeDefined();
+    expect(conversation.conversation?.messages).toBeDefined();
+    expect(conversation.conversation?.messages?.length).toBeGreaterThanOrEqual(
+      2,
+    ); // User + Assistant
+
+    // Find user message
+    const userMessage = conversation.conversation?.messages?.find(
+      (m) => m?.role === Types.ConversationRoleTypes.User,
+    );
+    expect(userMessage).toBeDefined();
+    expect(userMessage?.message).toContain("2+2");
+
+    // Find assistant message
+    const assistantMessage = conversation.conversation?.messages?.find(
+      (m) => m?.role === Types.ConversationRoleTypes.Assistant,
+    );
+    expect(assistantMessage).toBeDefined();
+    expect(assistantMessage?.message).toBe(finalMessage);
+    expect(assistantMessage?.message).toContain("4");
+
+    console.log("✅ Conversation messages were saved properly:");
+    console.log(`   User message: "${userMessage?.message}"`);
+    console.log(`   Assistant message: "${assistantMessage?.message}"`);
+    console.log(
+      `   Total messages: ${conversation.conversation?.messages?.length}`,
+    );
   }, 30000);
 
   it("should handle promptAgent when no tools are called", async () => {
@@ -146,7 +196,7 @@ describe("Streaming Without Tools", () => {
     const result = await client.promptAgent(
       "What is the capital of France? Just give me the city name.",
       undefined,
-      { id: spec.createSpecification!.id }
+      { id: spec.createSpecification!.id },
     );
 
     if (result.conversationId) {
@@ -157,7 +207,7 @@ describe("Streaming Without Tools", () => {
     expect(result.message).toBeDefined();
     expect(result.message).toContain("Paris");
     expect(result.conversationMessage?.tokens).toBeGreaterThan(0);
-    
+
     console.log("✅ PromptAgent completed successfully");
     console.log("   Response:", result.message);
     console.log("   Tokens used:", result.conversationMessage?.tokens);

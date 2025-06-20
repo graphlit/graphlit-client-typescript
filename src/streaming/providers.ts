@@ -41,7 +41,7 @@ function simplifySchemaForGroq(schema: any): string {
   const simplified: any = {
     type: schema.type || "object",
     properties: {},
-    required: schema.required || []
+    required: schema.required || [],
   };
 
   // Only keep basic properties and types
@@ -53,7 +53,7 @@ function simplifySchemaForGroq(schema: any): string {
         description: prop.description || "",
         // Remove complex features like patterns, formats, etc.
       };
-      
+
       // Keep enum if present (but simplified)
       if (prop.enum && Array.isArray(prop.enum)) {
         simplified.properties[key].enum = prop.enum;
@@ -1479,25 +1479,32 @@ export async function streamWithGroq(
 ): Promise<void> {
   try {
     const modelName = getModelName(specification);
-    
+
     // Filter or simplify tools for Groq models that have issues
     let groqTools = tools;
     if (tools && tools.length > 0) {
       // LLaMA 3.3 70B seems to have tool calling issues - disable tools for this model
-      if (modelName && (modelName.includes("llama-3.3") || modelName.includes("LLAMA_3_3"))) {
+      if (
+        modelName &&
+        (modelName.includes("llama-3.3") || modelName.includes("LLAMA_3_3"))
+      ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`⚠️ [Groq] Disabling tools for ${modelName} due to known compatibility issues`);
+          console.log(
+            `⚠️ [Groq] Disabling tools for ${modelName} due to known compatibility issues`,
+          );
         }
         groqTools = undefined;
       } else {
         // For other models, simplify complex schemas
-        groqTools = tools.map(tool => ({
+        groqTools = tools.map((tool) => ({
           ...tool,
-          schema: tool.schema ? simplifySchemaForGroq(JSON.parse(tool.schema)) : tool.schema
+          schema: tool.schema
+            ? simplifySchemaForGroq(JSON.parse(tool.schema))
+            : tool.schema,
         }));
       }
     }
-    
+
     // Groq uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
     return await streamWithOpenAI(
       specification,
@@ -1896,9 +1903,9 @@ export async function streamWithCohere(
 
     // Cohere v7 expects a single message and optional chatHistory
     // Extract system messages for preamble and filter them out of history
-    const systemMessages = messages.filter(msg => msg.role === "SYSTEM");
-    const nonSystemMessages = messages.filter(msg => msg.role !== "SYSTEM");
-    
+    const systemMessages = messages.filter((msg) => msg.role === "SYSTEM");
+    const nonSystemMessages = messages.filter((msg) => msg.role !== "SYSTEM");
+
     // Extract the last non-system message as the current message
     const lastMessage = nonSystemMessages[nonSystemMessages.length - 1];
     const chatHistory = nonSystemMessages.slice(0, -1);
@@ -1914,11 +1921,13 @@ export async function streamWithCohere(
       model: modelName,
       message: lastMessage.message, // Current message (singular)
     };
-    
+
     // Add system message as preamble if present
     if (systemMessages.length > 0) {
       // Combine all system messages into preamble
-      streamConfig.preamble = systemMessages.map(msg => msg.message).join("\n\n");
+      streamConfig.preamble = systemMessages
+        .map((msg) => msg.message)
+        .join("\n\n");
     }
 
     // Add chat history if there are previous messages

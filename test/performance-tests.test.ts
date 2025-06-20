@@ -141,9 +141,13 @@ describe("Performance Tests", () => {
           // Add per-model timeout to prevent hanging
           await Promise.race([
             testSingleModel(model),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error(`Model ${model.name} timed out after 60s`)), 60000)
-            )
+            new Promise((_, reject) =>
+              setTimeout(
+                () =>
+                  reject(new Error(`Model ${model.name} timed out after 60s`)),
+                60000,
+              ),
+            ),
           ]);
         } catch (error) {
           console.error(`❌ Failed to test ${model.name}:`, error);
@@ -388,7 +392,7 @@ describe("Performance Tests", () => {
       // TTFT should be relatively consistent regardless of length
       const ttftValues = lengthMetrics.map((m) => m.ttft);
       const ttftVariance = Math.max(...ttftValues) - Math.min(...ttftValues);
-      
+
       // More realistic variance threshold - APIs can have 10+ second variance
       // especially under different load conditions and response lengths
       console.log(`\n📊 TTFT Variance: ${ttftVariance}ms`);
