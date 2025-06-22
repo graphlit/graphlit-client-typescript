@@ -38,6 +38,12 @@ export class UIEventAdapter {
     percentage: number;
     remainingTokens: number;
   };
+  private finalMetrics?: {
+    totalTime: number;
+    ttft?: number;
+    streamingThroughput?: number;
+    [key: string]: any;
+  };
 
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
@@ -466,6 +472,9 @@ export class UIEventAdapter {
       }
     }
 
+    // Store final metrics for later retrieval
+    this.finalMetrics = finalMetrics;
+
     // Include context window usage if available
     const event: AgentStreamEvent = {
       type: "conversation_completed",
@@ -683,5 +692,26 @@ export class UIEventAdapter {
       this.updateTimer = undefined;
     }
     this.activeToolCalls.clear();
+  }
+
+  /**
+   * Get the total completion time in milliseconds
+   */
+  public getCompletionTime(): number | undefined {
+    return this.finalMetrics?.totalTime;
+  }
+
+  /**
+   * Get the time to first token in milliseconds
+   */
+  public getTTFT(): number | undefined {
+    return this.finalMetrics?.ttft;
+  }
+
+  /**
+   * Get the throughput in tokens per second
+   */
+  public getThroughput(): number | undefined {
+    return this.finalMetrics?.streamingThroughput;
   }
 }
