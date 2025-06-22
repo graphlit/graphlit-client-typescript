@@ -1414,6 +1414,15 @@ class Graphlit {
     >(Documents.QueryContents, { filter: filter });
   }
 
+  public async queryContentsObservations(
+    filter?: Types.ContentFilter
+  ): Promise<Types.QueryContentsObservationsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryContentsObservationsQuery,
+      { filter?: Types.ContentFilter }
+    >(Documents.QueryContents, { filter: filter });
+  }
+
   public async queryContentsFacets(
     filter?: Types.ContentFilter
   ): Promise<Types.QueryContentsFacetsQuery> {
@@ -5148,7 +5157,7 @@ class Graphlit {
       const completionTime = uiAdapter.getCompletionTime(); // Total time in milliseconds
       const ttft = uiAdapter.getTTFT(); // Time to first token in milliseconds
       const throughput = uiAdapter.getThroughput(); // Tokens per second
-      
+
       const completeResponse = await this.completeConversation(
         trimmedMessage,
         conversationId,
