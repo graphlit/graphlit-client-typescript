@@ -12508,11 +12508,15 @@ export type QueryLookupContentsArgs = {
 
 export type QueryLookupCreditsArgs = {
   correlationId: Scalars['String']['input'];
+  duration?: InputMaybe<Scalars['TimeSpan']['input']>;
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type QueryLookupUsageArgs = {
   correlationId: Scalars['String']['input'];
+  duration?: InputMaybe<Scalars['TimeSpan']['input']>;
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -17285,6 +17289,8 @@ export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: '
 
 export type LookupCreditsQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+  duration?: InputMaybe<Scalars['TimeSpan']['input']>;
 }>;
 
 
@@ -17292,6 +17298,8 @@ export type LookupCreditsQuery = { __typename?: 'Query', lookupCredits?: { __typ
 
 export type LookupUsageQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+  duration?: InputMaybe<Scalars['TimeSpan']['input']>;
 }>;
 
 

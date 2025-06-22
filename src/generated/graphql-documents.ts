@@ -8122,8 +8122,12 @@ export const GetProject = gql`
 }
     `;
 export const LookupCredits = gql`
-    query LookupCredits($correlationId: String!) {
-  lookupCredits(correlationId: $correlationId) {
+    query LookupCredits($correlationId: String!, $startDate: DateTime, $duration: TimeSpan) {
+  lookupCredits(
+    correlationId: $correlationId
+    startDate: $startDate
+    duration: $duration
+  ) {
     correlationId
     ownerId
     credits
@@ -8145,8 +8149,12 @@ export const LookupCredits = gql`
 }
     `;
 export const LookupUsage = gql`
-    query LookupUsage($correlationId: String!) {
-  lookupUsage(correlationId: $correlationId) {
+    query LookupUsage($correlationId: String!, $startDate: DateTime, $duration: TimeSpan) {
+  lookupUsage(
+    correlationId: $correlationId
+    startDate: $startDate
+    duration: $duration
+  ) {
     id
     correlationId
     date
