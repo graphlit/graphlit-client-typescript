@@ -1420,7 +1420,7 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryContentsObservationsQuery,
       { filter?: Types.ContentFilter }
-    >(Documents.QueryContents, { filter: filter });
+    >(Documents.QueryContentsObservations, { filter: filter });
   }
 
   public async queryContentsFacets(
