@@ -1,18 +1,21 @@
 # Streaming Events Flow Documentation
 
 ## Overview
+
 This document describes the expected sequence of events when using `streamAgent` with tool calls, particularly for scenarios with multiple tool invocations.
 
 ## Event Types
 
 ### 1. `conversation_started`
+
 - **When**: Immediately after the conversation begins
 - **Data**: `conversationId: string`
 - **UI Action**: Store conversation ID, show conversation started indicator
 
 ### 2. `message_update`
+
 - **When**: Throughout the streaming response
-- **Data**: 
+- **Data**:
   ```typescript
   {
     message: {
@@ -29,11 +32,12 @@ This document describes the expected sequence of events when using `streamAgent`
     metrics?: AgentMetrics
   }
   ```
-- **UI Action**: 
+- **UI Action**:
   - If `isStreaming: true` - Append content to display
   - If `isStreaming: false` - Mark message as complete
 
 ### 3. `tool_update`
+
 - **When**: For each tool call
 - **Data**:
   ```typescript
@@ -50,6 +54,7 @@ This document describes the expected sequence of events when using `streamAgent`
 - **UI Action**: Update tool status display based on status
 
 ### 4. `conversation_completed`
+
 - **When**: After all processing is complete
 - **Data**:
   ```typescript
@@ -82,6 +87,7 @@ This document describes the expected sequence of events when using `streamAgent`
 - **UI Action**: Finalize display, show metrics
 
 ### 5. `error`
+
 - **When**: If an error occurs
 - **Data**:
   ```typescript
@@ -166,14 +172,15 @@ For the prompt: **"search for highlight videos for Mason Marchment and Connor Mc
 ## UI State Management Best Practices
 
 ### 1. Tool Calls Array
+
 Maintain an array of tool calls, not a single tool call:
 
 ```typescript
 interface ToolCallState {
-  id: string;           // Generate unique ID
+  id: string; // Generate unique ID
   name: string;
   arguments: any;
-  status: 'preparing' | 'executing' | 'ready' | 'completed' | 'failed';
+  status: "preparing" | "executing" | "ready" | "completed" | "failed";
   result?: any;
   error?: string;
   startTime: Date;
@@ -184,16 +191,17 @@ const [toolCalls, setToolCalls] = useState<ToolCallState[]>([]);
 ```
 
 ### 2. Handle Tool Updates Correctly
+
 ```typescript
 case 'tool_update':
   const toolKey = `${event.toolCall.name}-${JSON.stringify(event.toolCall.arguments)}`;
-  
+
   setToolCalls(prev => {
-    const existingIndex = prev.findIndex(tc => 
-      tc.name === event.toolCall.name && 
+    const existingIndex = prev.findIndex(tc =>
+      tc.name === event.toolCall.name &&
       JSON.stringify(tc.arguments) === JSON.stringify(event.toolCall.arguments)
     );
-    
+
     if (existingIndex >= 0) {
       // Update existing tool call
       const updated = [...prev];
@@ -202,8 +210,8 @@ case 'tool_update':
         status: event.status,
         result: event.result,
         error: event.error,
-        endTime: event.status === 'completed' || event.status === 'failed' 
-          ? new Date() 
+        endTime: event.status === 'completed' || event.status === 'failed'
+          ? new Date()
           : undefined
       };
       return updated;
@@ -224,19 +232,22 @@ case 'tool_update':
 ```
 
 ### 3. Display All Tool Calls
+
 Show all tool calls in the UI, not just the last one:
 
 ```tsx
-{toolCalls.map(toolCall => (
-  <ToolCallDisplay
-    key={toolCall.id}
-    name={toolCall.name}
-    arguments={toolCall.arguments}
-    status={toolCall.status}
-    result={toolCall.result}
-    error={toolCall.error}
-  />
-))}
+{
+  toolCalls.map((toolCall) => (
+    <ToolCallDisplay
+      key={toolCall.id}
+      name={toolCall.name}
+      arguments={toolCall.arguments}
+      status={toolCall.status}
+      result={toolCall.result}
+      error={toolCall.error}
+    />
+  ));
+}
 ```
 
 ## Common Pitfalls to Avoid
