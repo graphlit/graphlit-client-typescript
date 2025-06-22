@@ -2300,10 +2300,6 @@ export const QueryContents = gql`
         id
         name
       }
-      collections {
-        id
-        name
-      }
       links {
         uri
         linkType
