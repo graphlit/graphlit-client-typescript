@@ -2612,6 +2612,7 @@ export const QueryContentsObservations = gql`
         relevance
       }
       error
+      markdown
       observations {
         id
         type
