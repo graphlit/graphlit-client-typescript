@@ -1948,6 +1948,67 @@ class Graphlit {
     });
   }
 
+  public async queryMicrosoftCalendars(
+    properties: Types.MicrosoftCalendarsInput
+  ): Promise<Types.QueryMicrosoftCalendarsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMicrosoftCalendarsQuery,
+      { properties: Types.MicrosoftCalendarsInput }
+    >(Documents.QueryMicrosoftCalendars, {
+      properties: properties,
+    });
+  }
+
+  public async queryGoogleCalendars(
+    properties: Types.GoogleCalendarsInput
+  ): Promise<Types.QueryGoogleCalendarsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGoogleCalendarsQuery,
+      { properties: Types.GoogleCalendarsInput }
+    >(Documents.QueryGoogleCalendars, {
+      properties: properties,
+    });
+  }
+
+  public async queryBoxFolders(
+    properties: Types.BoxFoldersInput,
+    folderId?: string
+  ): Promise<Types.QueryBoxFoldersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBoxFoldersQuery,
+      { properties: Types.BoxFoldersInput; folderId?: string }
+    >(Documents.QueryBoxFolders, {
+      properties: properties,
+      folderId: folderId,
+    });
+  }
+
+  public async queryDropboxFolders(
+    properties: Types.DropboxFoldersInput,
+    folderPath?: string
+  ): Promise<Types.QueryDropboxFoldersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryDropboxFoldersQuery,
+      { properties: Types.DropboxFoldersInput; folderPath?: string }
+    >(Documents.QueryDropboxFolders, {
+      properties: properties,
+      folderPath: folderPath,
+    });
+  }
+
+  public async queryGoogleDriveFolders(
+    properties: Types.GoogleDriveFoldersInput,
+    folderId?: string
+  ): Promise<Types.QueryGoogleDriveFoldersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGoogleDriveFoldersQuery,
+      { properties: Types.GoogleDriveFoldersInput; folderId?: string }
+    >(Documents.QueryGoogleDriveFolders, {
+      properties: properties,
+      folderId: folderId,
+    });
+  }
+
   public async queryOneDriveFolders(
     properties: Types.OneDriveFoldersInput,
     folderId?: string

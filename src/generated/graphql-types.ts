@@ -1101,6 +1101,232 @@ export type BoxFeedPropertiesUpdateInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Box folder. */
+export type BoxFolderResult = {
+  __typename?: 'BoxFolderResult';
+  /** The Box folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
+  /** The Box folder name. */
+  folderName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Box folders. */
+export type BoxFolderResults = {
+  __typename?: 'BoxFolderResults';
+  /** The Box folders. */
+  results?: Maybe<Array<Maybe<BoxFolderResult>>>;
+};
+
+/** Represents Box folders properties. */
+export type BoxFoldersInput = {
+  /** Box client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Box client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Box refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents a calendar event attendee. */
+export type CalendarAttendee = {
+  __typename?: 'CalendarAttendee';
+  /** The attendee email. */
+  email?: Maybe<Scalars['String']['output']>;
+  /** Whether the attendee is optional. */
+  isOptional?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the attendee is the organizer. */
+  isOrganizer?: Maybe<Scalars['Boolean']['output']>;
+  /** The attendee name. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The attendee response status. */
+  responseStatus?: Maybe<CalendarAttendeeResponseStatus>;
+};
+
+/** Represents a calendar event attendee input. */
+export type CalendarAttendeeInput = {
+  /** The attendee email. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the attendee is optional. */
+  isOptional?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether the attendee is the organizer. */
+  isOrganizer?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The attendee name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The attendee response status. */
+  responseStatus?: InputMaybe<CalendarAttendeeResponseStatus>;
+};
+
+/** Calendar attendee response status */
+export enum CalendarAttendeeResponseStatus {
+  /** Accepted */
+  Accepted = 'ACCEPTED',
+  /** Declined */
+  Declined = 'DECLINED',
+  /** Needs action */
+  NeedsAction = 'NEEDS_ACTION',
+  /** Tentative */
+  Tentative = 'TENTATIVE'
+}
+
+/** Calendar event status */
+export enum CalendarEventStatus {
+  /** Cancelled event */
+  Cancelled = 'CANCELLED',
+  /** Confirmed event */
+  Confirmed = 'CONFIRMED',
+  /** Tentative event */
+  Tentative = 'TENTATIVE'
+}
+
+/** Calendar event visibility */
+export enum CalendarEventVisibility {
+  /** Confidential event */
+  Confidential = 'CONFIDENTIAL',
+  /** Default visibility */
+  Default = 'DEFAULT',
+  /** Private event */
+  Private = 'PRIVATE',
+  /** Public event */
+  Public = 'PUBLIC'
+}
+
+/** Represents calendar feed properties. */
+export type CalendarFeedProperties = {
+  __typename?: 'CalendarFeedProperties';
+  /** Feed connector type. */
+  connectorType: FeedConnectorTypes;
+  /** Google Calendar properties. */
+  google?: Maybe<GoogleCalendarFeedProperties>;
+  /** Should the calendar feed include attachments. */
+  includeAttachments?: Maybe<Scalars['Boolean']['output']>;
+  /** Microsoft Calendar properties. */
+  microsoft?: Maybe<MicrosoftCalendarFeedProperties>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** Feed service type. */
+  type: FeedServiceTypes;
+};
+
+/** Represents calendar feed properties. */
+export type CalendarFeedPropertiesInput = {
+  /** Google Calendar properties. */
+  google?: InputMaybe<GoogleCalendarFeedPropertiesInput>;
+  /** Should the calendar feed include attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Microsoft Calendar properties. */
+  microsoft?: InputMaybe<MicrosoftCalendarFeedPropertiesInput>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** Feed service type. */
+  type: FeedServiceTypes;
+};
+
+/** Represents calendar feed properties. */
+export type CalendarFeedPropertiesUpdateInput = {
+  /** Google Calendar properties. */
+  google?: InputMaybe<GoogleCalendarFeedPropertiesUpdateInput>;
+  /** Should the calendar feed include attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Microsoft Calendar properties. */
+  microsoft?: InputMaybe<MicrosoftCalendarFeedPropertiesUpdateInput>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Represents a calendar event recurrence. */
+export type CalendarRecurrence = {
+  __typename?: 'CalendarRecurrence';
+  /** The recurrence count. */
+  count?: Maybe<Scalars['Int']['output']>;
+  /** The recurrence day of month. */
+  dayOfMonth?: Maybe<Scalars['Int']['output']>;
+  /** The recurrence days of week. */
+  daysOfWeek?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The recurrence interval. */
+  interval?: Maybe<Scalars['Int']['output']>;
+  /** The recurrence month of year. */
+  monthOfYear?: Maybe<Scalars['Int']['output']>;
+  /** The recurrence pattern. */
+  pattern?: Maybe<CalendarRecurrencePattern>;
+  /** The recurrence until date. */
+  until?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/** Represents a calendar event recurrence input. */
+export type CalendarRecurrenceInput = {
+  /** The recurrence count. */
+  count?: InputMaybe<Scalars['Int']['input']>;
+  /** The recurrence day of month. */
+  dayOfMonth?: InputMaybe<Scalars['Int']['input']>;
+  /** The recurrence days of week. */
+  daysOfWeek?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The recurrence interval. */
+  interval?: InputMaybe<Scalars['Int']['input']>;
+  /** The recurrence month of year. */
+  monthOfYear?: InputMaybe<Scalars['Int']['input']>;
+  /** The recurrence pattern. */
+  pattern?: InputMaybe<CalendarRecurrencePattern>;
+  /** The recurrence until date. */
+  until?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+/** Calendar recurrence pattern */
+export enum CalendarRecurrencePattern {
+  /** Daily recurrence */
+  Daily = 'DAILY',
+  /** Monthly recurrence */
+  Monthly = 'MONTHLY',
+  /** Weekly recurrence */
+  Weekly = 'WEEKLY',
+  /** Yearly recurrence */
+  Yearly = 'YEARLY'
+}
+
+/** Represents a calendar event reminder. */
+export type CalendarReminder = {
+  __typename?: 'CalendarReminder';
+  /** The reminder method. */
+  method?: Maybe<CalendarReminderMethod>;
+  /** The reminder minutes before the event. */
+  minutesBefore?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents a calendar event reminder input. */
+export type CalendarReminderInput = {
+  /** The reminder method. */
+  method?: InputMaybe<CalendarReminderMethod>;
+  /** The reminder minutes before the event. */
+  minutesBefore?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Calendar reminder method */
+export enum CalendarReminderMethod {
+  /** Email reminder */
+  Email = 'EMAIL',
+  /** Popup reminder */
+  Popup = 'POPUP',
+  /** SMS reminder */
+  Sms = 'SMS'
+}
+
+/** Represents a calendar. */
+export type CalendarResult = {
+  __typename?: 'CalendarResult';
+  /** The calendar identifier. */
+  calendarId?: Maybe<Scalars['ID']['output']>;
+  /** The calendar name. */
+  calendarName?: Maybe<Scalars['String']['output']>;
+  /** If the calendar is primary. */
+  isPrimary?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Represents calendars. */
+export type CalendarResults = {
+  __typename?: 'CalendarResults';
+  /** The calendars. */
+  results?: Maybe<Array<Maybe<CalendarResult>>>;
+};
+
 /** Represents a category. */
 export type Category = {
   __typename?: 'Category';
@@ -1466,6 +1692,8 @@ export type CollectionResults = {
 export enum CollectionTypes {
   /** Content collection */
   Collection = 'COLLECTION',
+  /** Recurring event series */
+  Series = 'SERIES',
   /** Email thread */
   Thread = 'THREAD'
 }
@@ -1609,6 +1837,8 @@ export type Content = {
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** If workflow failed, the error message. */
   error?: Maybe<Scalars['String']['output']>;
+  /** The content event metadata. */
+  event?: Maybe<EventMetadata>;
   /** The geo-tags of the content, as GeoJSON Features with Point geometry. */
   features?: Maybe<Scalars['String']['output']>;
   /** The feed where this content was sourced from. */
@@ -2255,6 +2485,8 @@ export type ContentUpdateInput = {
   drawing?: InputMaybe<DrawingMetadataInput>;
   /** The content email metadata. */
   email?: InputMaybe<EmailMetadataInput>;
+  /** The content event metadata. */
+  event?: InputMaybe<EventMetadataInput>;
   /** The date when the file was created. */
   fileCreationDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The date when the file was last modified. */
@@ -3115,6 +3347,32 @@ export type DropboxFeedPropertiesUpdateInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Dropbox folder. */
+export type DropboxFolderResult = {
+  __typename?: 'DropboxFolderResult';
+  /** The Dropbox folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
+  /** The Dropbox folder name. */
+  folderName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Dropbox folders. */
+export type DropboxFolderResults = {
+  __typename?: 'DropboxFolderResults';
+  /** The Dropbox folders. */
+  results?: Maybe<Array<Maybe<DropboxFolderResult>>>;
+};
+
+/** Represents Dropbox folders properties. */
+export type DropboxFoldersInput = {
+  /** Dropbox app key. */
+  appKey: Scalars['String']['input'];
+  /** Dropbox app secret. */
+  appSecret: Scalars['String']['input'];
+  /** Dropbox refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
 /** ElevenLabs models */
 export enum ElevenLabsModels {
   /** Eleven English v1 */
@@ -3793,6 +4051,93 @@ export type EventInput = {
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
 
+/** Represents event metadata. */
+export type EventMetadata = {
+  __typename?: 'EventMetadata';
+  /** The event attendees. */
+  attendees?: Maybe<Array<Maybe<CalendarAttendee>>>;
+  /** The calendar identifier. */
+  calendarIdentifier?: Maybe<Scalars['String']['output']>;
+  /** The event categories. */
+  categories?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The event end date/time. */
+  endDateTime?: Maybe<Scalars['DateTime']['output']>;
+  /** The event identifier. */
+  eventIdentifier?: Maybe<Scalars['String']['output']>;
+  /** Whether the event is all day. */
+  isAllDay?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the event is recurring. */
+  isRecurring?: Maybe<Scalars['Boolean']['output']>;
+  /** The event hyperlinks. */
+  links?: Maybe<Array<Maybe<Scalars['URL']['output']>>>;
+  /** The event meeting link. */
+  meetingLink?: Maybe<Scalars['String']['output']>;
+  /** The event organizer. */
+  organizer?: Maybe<CalendarAttendee>;
+  /** The event recurrence. */
+  recurrence?: Maybe<CalendarRecurrence>;
+  /** The recurring event identifier. */
+  recurringEventIdentifier?: Maybe<Scalars['String']['output']>;
+  /** The event reminders. */
+  reminders?: Maybe<Array<Maybe<CalendarReminder>>>;
+  /** The event start date/time. */
+  startDateTime?: Maybe<Scalars['DateTime']['output']>;
+  /** The event status. */
+  status?: Maybe<CalendarEventStatus>;
+  /** The event subject. */
+  subject?: Maybe<Scalars['String']['output']>;
+  /** The event timezone. */
+  timezone?: Maybe<Scalars['String']['output']>;
+  /** The event visibility. */
+  visibility?: Maybe<CalendarEventVisibility>;
+};
+
+/** Represents event metadata. */
+export type EventMetadataInput = {
+  /** The event attendees. */
+  attendees?: InputMaybe<Array<InputMaybe<CalendarAttendeeInput>>>;
+  /** The calendar identifier. */
+  calendarId?: InputMaybe<Scalars['String']['input']>;
+  /** The event categories. */
+  categories?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The metadata creation date. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The event end date/time. */
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The event identifier. */
+  eventId?: InputMaybe<Scalars['String']['input']>;
+  /** Whether the event is all day. */
+  isAllDay?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether the event is recurring. */
+  isRecurring?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The event hyperlinks. */
+  links?: InputMaybe<Array<InputMaybe<LinkReferenceInput>>>;
+  /** The metadata geo-location. */
+  location?: InputMaybe<PointInput>;
+  /** The event meeting link. */
+  meetingLink?: InputMaybe<Scalars['String']['input']>;
+  /** The metadata modified date. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The event organizer. */
+  organizer?: InputMaybe<CalendarAttendeeInput>;
+  /** The event recurrence. */
+  recurrence?: InputMaybe<CalendarRecurrenceInput>;
+  /** The recurring event identifier. */
+  recurringEventId?: InputMaybe<Scalars['String']['input']>;
+  /** The event reminders. */
+  reminders?: InputMaybe<Array<InputMaybe<CalendarReminderInput>>>;
+  /** The event start date/time. */
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The event status. */
+  status?: InputMaybe<CalendarEventStatus>;
+  /** The event subject. */
+  subject?: InputMaybe<Scalars['String']['input']>;
+  /** The event timezone. */
+  timezone?: InputMaybe<Scalars['String']['input']>;
+  /** The event visibility. */
+  visibility?: InputMaybe<CalendarEventVisibility>;
+};
+
 /** Represents event query results. */
 export type EventResults = {
   __typename?: 'EventResults';
@@ -3917,6 +4262,8 @@ export enum FacetValueTypes {
 /** Represents a feed. */
 export type Feed = {
   __typename?: 'Feed';
+  /** The calendar feed properties. */
+  calendar?: Maybe<CalendarFeedProperties>;
   /** The contents sourced from the feed. */
   contents?: Maybe<Array<Maybe<Content>>>;
   /** The tenant correlation identifier. */
@@ -3998,6 +4345,8 @@ export enum FeedConnectorTypes {
   GitHub = 'GIT_HUB',
   /** Google Cloud feed connector */
   Google = 'GOOGLE',
+  /** Google Calendar feed connector */
+  GoogleCalendar = 'GOOGLE_CALENDAR',
   /** Google Drive feed connector */
   GoogleDrive = 'GOOGLE_DRIVE',
   /** Google Mail feed connector */
@@ -4006,6 +4355,8 @@ export enum FeedConnectorTypes {
   Intercom = 'INTERCOM',
   /** Linear feed connector */
   Linear = 'LINEAR',
+  /** Microsoft Calendar feed connector */
+  MicrosoftCalendar = 'MICROSOFT_CALENDAR',
   /** Microsoft Outlook Email feed connector */
   MicrosoftEmail = 'MICROSOFT_EMAIL',
   /** Microsoft OneDrive feed connector */
@@ -4044,6 +4395,8 @@ export type FeedFilter = {
 
 /** Represents a feed. */
 export type FeedInput = {
+  /** The calendar feed properties. */
+  calendar?: InputMaybe<CalendarFeedPropertiesInput>;
   /** The feed description. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** The Discord feed properties. */
@@ -4136,6 +4489,8 @@ export enum FeedServiceTypes {
   GitHubIssues = 'GIT_HUB_ISSUES',
   /** Google Cloud Blob feed service */
   GoogleBlob = 'GOOGLE_BLOB',
+  /** Google Calendar feed service */
+  GoogleCalendar = 'GOOGLE_CALENDAR',
   /** Google Drive feed service */
   GoogleDrive = 'GOOGLE_DRIVE',
   /** Google Mail feed service */
@@ -4146,6 +4501,8 @@ export enum FeedServiceTypes {
   IntercomTickets = 'INTERCOM_TICKETS',
   /** Linear feed service */
   Linear = 'LINEAR',
+  /** Microsoft Calendar feed service */
+  MicrosoftCalendar = 'MICROSOFT_CALENDAR',
   /** Microsoft Outlook Email feed service */
   MicrosoftEmail = 'MICROSOFT_EMAIL',
   /** Microsoft OneDrive feed service */
@@ -4164,6 +4521,8 @@ export enum FeedServiceTypes {
 
 /** Feed type */
 export enum FeedTypes {
+  /** Calendar feed */
+  Calendar = 'CALENDAR',
   /** Discord channel feed */
   Discord = 'DISCORD',
   /** Email feed */
@@ -4201,6 +4560,8 @@ export enum FeedTypes {
 
 /** Represents a feed. */
 export type FeedUpdateInput = {
+  /** The calendar feed properties. */
+  calendar?: InputMaybe<CalendarFeedPropertiesUpdateInput>;
   /** The feed description. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** The Discord feed properties. */
@@ -4480,6 +4841,59 @@ export type GoogleAuthenticationPropertiesInput = {
   clientSecret: Scalars['String']['input'];
 };
 
+/** Represents Google Calendar feed properties. */
+export type GoogleCalendarFeedProperties = {
+  __typename?: 'GoogleCalendarFeedProperties';
+  /** Read calendar events after this date (inclusive), optional. */
+  afterDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Read calendar events before this date (inclusive), optional. */
+  beforeDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Google Email calendar identifier, optional. */
+  calendarId?: Maybe<Scalars['String']['output']>;
+  /** Google OAuth2 client identifier. */
+  clientId: Scalars['String']['output'];
+  /** Google OAuth2 client secret. */
+  clientSecret: Scalars['String']['output'];
+  /** Google OAuth2 refresh token. */
+  refreshToken: Scalars['String']['output'];
+};
+
+/** Represents Google Calendar properties. */
+export type GoogleCalendarFeedPropertiesInput = {
+  /** Read calendar events after this date (inclusive), optional. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Read calendar events before this date (inclusive), optional. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Google Email calendar identifier, optional. */
+  calendarId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google OAuth2 client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Google OAuth2 refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents Google Calendar properties. */
+export type GoogleCalendarFeedPropertiesUpdateInput = {
+  /** Google OAuth2 client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google OAuth2 client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Google OAuth2 refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents Google Calendar properties. */
+export type GoogleCalendarsInput = {
+  /** Google OAuth2 client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google OAuth2 client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Google OAuth2 refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
 export enum GoogleDriveAuthenticationTypes {
   ServiceAccount = 'SERVICE_ACCOUNT',
   User = 'USER'
@@ -4538,6 +4952,32 @@ export type GoogleDriveFeedPropertiesUpdateInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** The full JSON contents of your Google service account credentials (not a file path), requires ServiceAccount authentication type. */
   serviceAccountJson?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Google Drive folder. */
+export type GoogleDriveFolderResult = {
+  __typename?: 'GoogleDriveFolderResult';
+  /** The Google Drive folder identifier. */
+  folderId?: Maybe<Scalars['ID']['output']>;
+  /** The Google Drive folder name. */
+  folderName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Google Drive folders. */
+export type GoogleDriveFolderResults = {
+  __typename?: 'GoogleDriveFolderResults';
+  /** The Google Drive folders. */
+  results?: Maybe<Array<Maybe<GoogleDriveFolderResult>>>;
+};
+
+/** Represents Google Drive folders properties. */
+export type GoogleDriveFoldersInput = {
+  /** Google OAuth2 client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Google OAuth2 client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Google OAuth2 refresh token. */
+  refreshToken: Scalars['String']['input'];
 };
 
 /** Represents Google Email feed properties. */
@@ -5690,6 +6130,14 @@ export type LinkReference = {
   linkType?: Maybe<LinkTypes>;
   /** The hyperlink URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents a hyperlink. */
+export type LinkReferenceInput = {
+  /** The hyperlink type. */
+  linkType?: InputMaybe<LinkTypes>;
+  /** The hyperlink URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
 };
 
 /** Represents the content hyperlink strategy. */
@@ -7664,6 +8112,59 @@ export type MicrosoftAuthenticationPropertiesInput = {
   clientSecret: Scalars['String']['input'];
   /** Microsoft Entra ID tenant ID. */
   tenantId: Scalars['ID']['input'];
+};
+
+/** Represents Microsoft Calendar feed properties. */
+export type MicrosoftCalendarFeedProperties = {
+  __typename?: 'MicrosoftCalendarFeedProperties';
+  /** Read calendar events after this date (inclusive), optional. */
+  afterDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Read calendar events before this date (inclusive), optional. */
+  beforeDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Microsoft Email calendar identifier, optional. */
+  calendarId?: Maybe<Scalars['String']['output']>;
+  /** Microsoft Entra ID client identifier. */
+  clientId: Scalars['String']['output'];
+  /** Microsoft Entra ID client secret. */
+  clientSecret: Scalars['String']['output'];
+  /** Microsoft Entra ID refresh token. */
+  refreshToken: Scalars['String']['output'];
+};
+
+/** Represents Microsoft Calendar properties. */
+export type MicrosoftCalendarFeedPropertiesInput = {
+  /** Read calendar events after this date (inclusive), optional. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Read calendar events before this date (inclusive), optional. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Microsoft Email calendar identifier, optional. */
+  calendarId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Microsoft Entra ID client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Microsoft Entra ID refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents Microsoft Calendar properties. */
+export type MicrosoftCalendarFeedPropertiesUpdateInput = {
+  /** Microsoft Entra ID client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Microsoft Entra ID client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Microsoft Entra ID refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents Microsoft Calendar properties. */
+export type MicrosoftCalendarsInput = {
+  /** Microsoft Entra ID client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Microsoft Entra ID client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Microsoft Entra ID refresh token. */
+  refreshToken: Scalars['String']['input'];
 };
 
 /** Represents Microsoft Email feed properties. */
@@ -10161,7 +10662,11 @@ export type OneDriveFolderResults = {
 
 /** Represents OneDrive folders properties. */
 export type OneDriveFoldersInput = {
-  /** OneDrive refresh token. */
+  /** Microsoft Entra ID client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Microsoft Entra ID client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Microsoft Entra ID refresh token. */
   refreshToken: Scalars['String']['input'];
 };
 
@@ -11963,6 +12468,8 @@ export type Query = {
   alert?: Maybe<Alert>;
   /** Retrieves alerts based on the provided filter criteria. */
   alerts?: Maybe<AlertResults>;
+  /** Retrieves available Box folders. */
+  boxFolders?: Maybe<BoxFolderResults>;
   /** Retrieves categories based on the provided filter criteria. */
   categories?: Maybe<CategoryResults>;
   /** Lookup a category given its ID. */
@@ -12041,6 +12548,8 @@ export type Query = {
   countWorkflows?: Maybe<CountResult>;
   /** Retrieves project credits. */
   credits?: Maybe<ProjectCredits>;
+  /** Retrieves available Dropbox folders. */
+  dropboxFolders?: Maybe<DropboxFolderResults>;
   /** Lookup an event given its ID. */
   event?: Maybe<Event>;
   /** Retrieves events based on the provided filter criteria. */
@@ -12051,6 +12560,10 @@ export type Query = {
   feedExists?: Maybe<BooleanResult>;
   /** Retrieves feeds based on the provided filter criteria. */
   feeds?: Maybe<FeedResults>;
+  /** Retrieves available Google calendars. */
+  googleCalendars?: Maybe<CalendarResults>;
+  /** Retrieves available Google Drive folders. */
+  googleDriveFolders?: Maybe<GoogleDriveFolderResults>;
   /** Returns if ingested content has finished (or errored). */
   isContentDone?: Maybe<BooleanResult>;
   /** Returns if all the contents ingested from a feed have finished (or errored). */
@@ -12113,6 +12626,8 @@ export type Query = {
   medicalTherapies?: Maybe<MedicalTherapyResults>;
   /** Lookup a medical therapy given its ID. */
   medicalTherapy?: Maybe<MedicalTherapy>;
+  /** Retrieves available Microsoft calendars. */
+  microsoftCalendars?: Maybe<CalendarResults>;
   /** Retrieves available Microsoft Teams team channels. */
   microsoftTeamsChannels?: Maybe<MicrosoftTeamsChannelResults>;
   /** Retrieves available Microsoft Teams teams. */
@@ -12199,6 +12714,12 @@ export type QueryAlertArgs = {
 export type QueryAlertsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<AlertFilter>;
+};
+
+
+export type QueryBoxFoldersArgs = {
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+  properties: BoxFoldersInput;
 };
 
 
@@ -12439,6 +12960,12 @@ export type QueryCreditsArgs = {
 };
 
 
+export type QueryDropboxFoldersArgs = {
+  folderPath?: InputMaybe<Scalars['String']['input']>;
+  properties: DropboxFoldersInput;
+};
+
+
 export type QueryEventArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -12467,6 +12994,17 @@ export type QueryFeedExistsArgs = {
 export type QueryFeedsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FeedFilter>;
+};
+
+
+export type QueryGoogleCalendarsArgs = {
+  properties: GoogleCalendarsInput;
+};
+
+
+export type QueryGoogleDriveFoldersArgs = {
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+  properties: GoogleDriveFoldersInput;
 };
 
 
@@ -12668,6 +13206,11 @@ export type QueryMedicalTherapiesArgs = {
 export type QueryMedicalTherapyArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryMicrosoftCalendarsArgs = {
+  properties: MicrosoftCalendarsInput;
 };
 
 
@@ -15574,7 +16117,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
 
 export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
@@ -15685,7 +16228,7 @@ export type LookupContentsQueryVariables = Exact<{
 }>;
 
 
-export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
+export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
 
 export type PublishContentsMutationVariables = Exact<{
   summaryPrompt?: InputMaybe<Scalars['String']['input']>;
@@ -15723,7 +16266,7 @@ export type QueryContentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
+export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
 
 export type QueryContentsFacetsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -15749,7 +16292,7 @@ export type QueryContentsObservationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsObservationsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, markdown?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null } | null };
+export type QueryContentsObservationsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, markdown?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null } | null };
 
 export type ScreenshotPageMutationVariables = Exact<{
   uri: Scalars['URL']['input'];
@@ -16155,7 +16698,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -16171,13 +16714,44 @@ export type IsFeedDoneQueryVariables = Exact<{
 
 export type IsFeedDoneQuery = { __typename?: 'Query', isFeedDone?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
 
+export type QueryBoxFoldersQueryVariables = Exact<{
+  properties: BoxFoldersInput;
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type QueryBoxFoldersQuery = { __typename?: 'Query', boxFolders?: { __typename?: 'BoxFolderResults', results?: Array<{ __typename?: 'BoxFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
+export type QueryDropboxFoldersQueryVariables = Exact<{
+  properties: DropboxFoldersInput;
+  folderPath?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryDropboxFoldersQuery = { __typename?: 'Query', dropboxFolders?: { __typename?: 'DropboxFolderResults', results?: Array<{ __typename?: 'DropboxFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
 export type QueryFeedsQueryVariables = Exact<{
   filter?: InputMaybe<FeedFilter>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+
+export type QueryGoogleCalendarsQueryVariables = Exact<{
+  properties: GoogleCalendarsInput;
+}>;
+
+
+export type QueryGoogleCalendarsQuery = { __typename?: 'Query', googleCalendars?: { __typename?: 'CalendarResults', results?: Array<{ __typename?: 'CalendarResult', calendarName?: string | null, calendarId?: string | null } | null> | null } | null };
+
+export type QueryGoogleDriveFoldersQueryVariables = Exact<{
+  properties: GoogleDriveFoldersInput;
+  folderId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type QueryGoogleDriveFoldersQuery = { __typename?: 'Query', googleDriveFolders?: { __typename?: 'GoogleDriveFolderResults', results?: Array<{ __typename?: 'GoogleDriveFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
 
 export type QueryLinearProjectsQueryVariables = Exact<{
   properties: LinearProjectsInput;
@@ -16185,6 +16759,13 @@ export type QueryLinearProjectsQueryVariables = Exact<{
 
 
 export type QueryLinearProjectsQuery = { __typename?: 'Query', linearProjects?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
+
+export type QueryMicrosoftCalendarsQueryVariables = Exact<{
+  properties: MicrosoftCalendarsInput;
+}>;
+
+
+export type QueryMicrosoftCalendarsQuery = { __typename?: 'Query', microsoftCalendars?: { __typename?: 'CalendarResults', results?: Array<{ __typename?: 'CalendarResult', calendarName?: string | null, calendarId?: string | null } | null> | null } | null };
 
 export type QueryMicrosoftTeamsChannelsQueryVariables = Exact<{
   properties: MicrosoftTeamsChannelsInput;

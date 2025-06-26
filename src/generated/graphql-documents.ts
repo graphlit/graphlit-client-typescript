@@ -1089,6 +1089,48 @@ export const GetContent = gql`
         familyName
       }
     }
+    event {
+      eventIdentifier
+      calendarIdentifier
+      subject
+      startDateTime
+      endDateTime
+      isAllDay
+      timezone
+      status
+      visibility
+      meetingLink
+      organizer {
+        name
+        email
+        isOptional
+        isOrganizer
+        responseStatus
+      }
+      attendees {
+        name
+        email
+        isOptional
+        isOrganizer
+        responseStatus
+      }
+      categories
+      reminders {
+        minutesBefore
+        method
+      }
+      recurrence {
+        pattern
+        interval
+        count
+        until
+        daysOfWeek
+        dayOfMonth
+        monthOfYear
+      }
+      recurringEventIdentifier
+      isRecurring
+    }
     issue {
       identifier
       title
@@ -1760,6 +1802,48 @@ export const LookupContents = gql`
           familyName
         }
       }
+      event {
+        eventIdentifier
+        calendarIdentifier
+        subject
+        startDateTime
+        endDateTime
+        isAllDay
+        timezone
+        status
+        visibility
+        meetingLink
+        organizer {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        attendees {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        categories
+        reminders {
+          minutesBefore
+          method
+        }
+        recurrence {
+          pattern
+          interval
+          count
+          until
+          daysOfWeek
+          dayOfMonth
+          monthOfYear
+        }
+        recurringEventIdentifier
+        isRecurring
+      }
       issue {
         identifier
         title
@@ -2155,6 +2239,7 @@ export const QueryContents = gql`
         latitude
         longitude
       }
+      features
       type
       fileType
       mimeType
@@ -2277,6 +2362,48 @@ export const QueryContents = gql`
           givenName
           familyName
         }
+      }
+      event {
+        eventIdentifier
+        calendarIdentifier
+        subject
+        startDateTime
+        endDateTime
+        isAllDay
+        timezone
+        status
+        visibility
+        meetingLink
+        organizer {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        attendees {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        categories
+        reminders {
+          minutesBefore
+          method
+        }
+        recurrence {
+          pattern
+          interval
+          count
+          until
+          daysOfWeek
+          dayOfMonth
+          monthOfYear
+        }
+        recurringEventIdentifier
+        isRecurring
       }
       issue {
         identifier
@@ -2421,6 +2548,7 @@ export const QueryContentsObservations = gql`
         latitude
         longitude
       }
+      features
       type
       fileType
       mimeType
@@ -2543,6 +2671,48 @@ export const QueryContentsObservations = gql`
           givenName
           familyName
         }
+      }
+      event {
+        eventIdentifier
+        calendarIdentifier
+        subject
+        startDateTime
+        endDateTime
+        isAllDay
+        timezone
+        status
+        visibility
+        meetingLink
+        organizer {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        attendees {
+          name
+          email
+          isOptional
+          isOrganizer
+          responseStatus
+        }
+        categories
+        reminders {
+          minutesBefore
+          method
+        }
+        recurrence {
+          pattern
+          interval
+          count
+          until
+          daysOfWeek
+          dayOfMonth
+          monthOfYear
+        }
+        recurringEventIdentifier
+        isRecurring
       }
       issue {
         identifier
@@ -6162,6 +6332,27 @@ export const GetFeed = gql`
       }
       readLimit
     }
+    calendar {
+      type
+      includeAttachments
+      google {
+        calendarId
+        beforeDate
+        afterDate
+        refreshToken
+        clientId
+        clientSecret
+      }
+      microsoft {
+        calendarId
+        beforeDate
+        afterDate
+        refreshToken
+        clientId
+        clientSecret
+      }
+      readLimit
+    }
     rss {
       readLimit
       uri
@@ -6262,6 +6453,26 @@ export const IsFeedDone = gql`
     query IsFeedDone($id: ID!) {
   isFeedDone(id: $id) {
     result
+  }
+}
+    `;
+export const QueryBoxFolders = gql`
+    query QueryBoxFolders($properties: BoxFoldersInput!, $folderId: ID) {
+  boxFolders(properties: $properties, folderId: $folderId) {
+    results {
+      folderName
+      folderId
+    }
+  }
+}
+    `;
+export const QueryDropboxFolders = gql`
+    query QueryDropboxFolders($properties: DropboxFoldersInput!, $folderPath: String) {
+  dropboxFolders(properties: $properties, folderPath: $folderPath) {
+    results {
+      folderName
+      folderId
+    }
   }
 }
     `;
@@ -6417,6 +6628,27 @@ export const QueryFeeds = gql`
         }
         readLimit
       }
+      calendar {
+        type
+        includeAttachments
+        google {
+          calendarId
+          beforeDate
+          afterDate
+          refreshToken
+          clientId
+          clientSecret
+        }
+        microsoft {
+          calendarId
+          beforeDate
+          afterDate
+          refreshToken
+          clientId
+          clientSecret
+        }
+        readLimit
+      }
       rss {
         readLimit
         uri
@@ -6507,10 +6739,40 @@ export const QueryFeeds = gql`
   }
 }
     `;
+export const QueryGoogleCalendars = gql`
+    query QueryGoogleCalendars($properties: GoogleCalendarsInput!) {
+  googleCalendars(properties: $properties) {
+    results {
+      calendarName
+      calendarId
+    }
+  }
+}
+    `;
+export const QueryGoogleDriveFolders = gql`
+    query QueryGoogleDriveFolders($properties: GoogleDriveFoldersInput!, $folderId: ID) {
+  googleDriveFolders(properties: $properties, folderId: $folderId) {
+    results {
+      folderName
+      folderId
+    }
+  }
+}
+    `;
 export const QueryLinearProjects = gql`
     query QueryLinearProjects($properties: LinearProjectsInput!) {
   linearProjects(properties: $properties) {
     results
+  }
+}
+    `;
+export const QueryMicrosoftCalendars = gql`
+    query QueryMicrosoftCalendars($properties: MicrosoftCalendarsInput!) {
+  microsoftCalendars(properties: $properties) {
+    results {
+      calendarName
+      calendarId
+    }
   }
 }
     `;
