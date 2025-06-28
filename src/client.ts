@@ -1722,6 +1722,31 @@ class Graphlit {
     });
   }
 
+  public async retrieveView(
+    prompt: string,
+    id: string,
+    retrievalStrategy?: Types.RetrievalStrategyInput,
+    rerankingStrategy?: Types.RerankingStrategyInput,
+    correlationId?: string
+  ): Promise<Types.RetrieveViewMutation> {
+    return this.mutateAndCheckError<
+      Types.RetrieveViewMutation,
+      {
+        prompt: string;
+        id: string;
+        retrievalStrategy?: Types.RetrievalStrategyInput;
+        rerankingStrategy?: Types.RerankingStrategyInput;
+        correlationId?: string;
+      }
+    >(Documents.RetrieveView, {
+      prompt: prompt,
+      id: id,
+      retrievalStrategy: retrievalStrategy,
+      rerankingStrategy: rerankingStrategy,
+      correlationId: correlationId,
+    });
+  }
+
   public async retrieveSources(
     prompt: string,
     filter?: Types.ContentFilter,
@@ -2071,6 +2096,24 @@ class Graphlit {
       properties: properties,
       teamId: teamId,
     });
+  }
+
+  public async queryDiscordGuilds(
+    properties: Types.DiscordGuildsInput
+  ): Promise<Types.QueryDiscordGuildsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryDiscordGuildsQuery,
+      { properties: Types.DiscordGuildsInput }
+    >(Documents.QueryDiscordGuilds, { properties: properties });
+  }
+
+  public async queryDiscordChannels(
+    properties: Types.DiscordChannelsInput
+  ): Promise<Types.QueryDiscordChannelsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryDiscordChannelsQuery,
+      { properties: Types.DiscordChannelsInput }
+    >(Documents.QueryDiscordChannels, { properties: properties });
   }
 
   public async querySlackChannels(

@@ -5536,6 +5536,31 @@ export const RetrieveSources = gql`
   }
 }
     `;
+export const RetrieveView = gql`
+    mutation RetrieveView($prompt: String!, $id: ID!, $retrievalStrategy: RetrievalStrategyInput, $rerankingStrategy: RerankingStrategyInput, $correlationId: String) {
+  retrieveView(
+    prompt: $prompt
+    id: $id
+    retrievalStrategy: $retrievalStrategy
+    rerankingStrategy: $rerankingStrategy
+    correlationId: $correlationId
+  ) {
+    results {
+      type
+      content {
+        id
+      }
+      text
+      metadata
+      relevance
+      startTime
+      endTime
+      pageNumber
+      frameNumber
+    }
+  }
+}
+    `;
 export const ReviseContent = gql`
     mutation ReviseContent($prompt: String!, $content: EntityReferenceInput!, $id: ID, $specification: EntityReferenceInput, $correlationId: String) {
   reviseContent(
@@ -6611,6 +6636,26 @@ export const QueryBoxFolders = gql`
     results {
       folderName
       folderId
+    }
+  }
+}
+    `;
+export const QueryDiscordChannels = gql`
+    query QueryDiscordChannels($properties: DiscordChannelsInput!) {
+  discordChannels(properties: $properties) {
+    results {
+      channelName
+      channelId
+    }
+  }
+}
+    `;
+export const QueryDiscordGuilds = gql`
+    query QueryDiscordGuilds($properties: DiscordGuildsInput!) {
+  discordGuilds(properties: $properties) {
+    results {
+      guildName
+      guildId
     }
   }
 }

@@ -16954,6 +16954,17 @@ export type RetrieveSourcesMutationVariables = Exact<{
 
 export type RetrieveSourcesMutation = { __typename?: 'Mutation', retrieveSources?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', type?: ContentSourceTypes | null, text: string, metadata?: string | null, relevance: number, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content: { __typename?: 'EntityReference', id: string } } | null> | null } | null };
 
+export type RetrieveViewMutationVariables = Exact<{
+  prompt: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+  retrievalStrategy?: InputMaybe<RetrievalStrategyInput>;
+  rerankingStrategy?: InputMaybe<RerankingStrategyInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type RetrieveViewMutation = { __typename?: 'Mutation', retrieveView?: { __typename?: 'ContentSourceResults', results?: Array<{ __typename?: 'ContentSource', type?: ContentSourceTypes | null, text: string, metadata?: string | null, relevance: number, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content: { __typename?: 'EntityReference', id: string } } | null> | null } | null };
+
 export type ReviseContentMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
   content: EntityReferenceInput;
@@ -17169,6 +17180,20 @@ export type QueryBoxFoldersQueryVariables = Exact<{
 
 
 export type QueryBoxFoldersQuery = { __typename?: 'Query', boxFolders?: { __typename?: 'BoxFolderResults', results?: Array<{ __typename?: 'BoxFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
+export type QueryDiscordChannelsQueryVariables = Exact<{
+  properties: DiscordChannelsInput;
+}>;
+
+
+export type QueryDiscordChannelsQuery = { __typename?: 'Query', discordChannels?: { __typename?: 'DiscordChannelResults', results?: Array<{ __typename?: 'DiscordChannelResult', channelName?: string | null, channelId?: string | null } | null> | null } | null };
+
+export type QueryDiscordGuildsQueryVariables = Exact<{
+  properties: DiscordGuildsInput;
+}>;
+
+
+export type QueryDiscordGuildsQuery = { __typename?: 'Query', discordGuilds?: { __typename?: 'DiscordGuildResults', results?: Array<{ __typename?: 'DiscordGuildResult', guildName?: string | null, guildId?: string | null } | null> | null } | null };
 
 export type QueryDropboxFoldersQueryVariables = Exact<{
   properties: DropboxFoldersInput;
