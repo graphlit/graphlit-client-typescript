@@ -14,6 +14,11 @@ export type ToolExecutionStatus =
   | "failed";
 
 /**
+ * Reasoning format types
+ */
+export type ReasoningFormat = "thinking_tag" | "markdown" | "custom";
+
+/**
  * Context window usage event - emitted at start of agent interaction
  */
 export type ContextWindowEvent = {
@@ -59,6 +64,12 @@ export type AgentStreamEvent =
       status: ToolExecutionStatus;
       result?: unknown;
       error?: string;
+    }
+  | {
+      type: "reasoning_update";
+      content: string; // Accumulated reasoning content
+      format: ReasoningFormat;
+      isComplete: boolean;
     }
   | {
       type: "conversation_completed";

@@ -7,6 +7,7 @@ export interface TestModelConfig {
   name: string;
   config: Types.SpecificationInput;
   skipStreaming?: boolean;
+  supportsTools?: boolean; // Some models don't support tool calling
 }
 
 /**
@@ -233,6 +234,7 @@ export const TEST_MODELS: TestModelConfig[] = [
   // Cerebras Models
   {
     name: "Cerebras LLaMA 3.3 70B",
+    supportsTools: false, // Only qwen-3-32b on Cerebras supports tools
     config: {
       name: "Test Cerebras LLaMA 3.3 70B",
       type: Types.SpecificationTypes.Completion,
@@ -314,6 +316,7 @@ export const TEST_MODELS: TestModelConfig[] = [
         disableFallback: true,
       },
     },
+    supportsTools: false, // Mistral Small appears to not support tool calling
   },
 
   // Bedrock Models

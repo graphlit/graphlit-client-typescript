@@ -3,7 +3,11 @@ import {
   ConversationToolCall,
   ConversationRoleTypes,
 } from "../generated/graphql-types.js";
-import { AgentStreamEvent, ToolExecutionStatus } from "../types/ui-events.js";
+import {
+  AgentStreamEvent,
+  ToolExecutionStatus,
+  ReasoningFormat,
+} from "../types/ui-events.js";
 import { StreamEvent } from "../types/internal.js";
 import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
 
@@ -44,6 +48,10 @@ export class UIEventAdapter {
     streamingThroughput?: number;
     [key: string]: any;
   };
+  private reasoningContent: string = "";
+  private reasoningFormat?: ReasoningFormat;
+  private reasoningSignature?: string;
+  private isInReasoning: boolean = false;
 
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
@@ -110,6 +118,18 @@ export class UIEventAdapter {
 
       case "context_window":
         this.handleContextWindow(event.usage);
+        break;
+
+      case "reasoning_start":
+        this.handleReasoningStart(event.format);
+        break;
+
+      case "reasoning_delta":
+        this.handleReasoningDelta(event.content, event.format);
+        break;
+
+      case "reasoning_end":
+        this.handleReasoningEnd(event.fullContent, event.signature);
         break;
     }
   }
@@ -681,6 +701,60 @@ export class UIEventAdapter {
       usage,
       timestamp: new Date(),
     });
+  }
+
+  private handleReasoningStart(format: ReasoningFormat): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🤔 [UIEventAdapter] Reasoning start - Format: ${format}`);
+    }
+
+    this.isInReasoning = true;
+    this.reasoningFormat = format;
+    this.reasoningContent = "";
+  }
+
+  private handleReasoningDelta(content: string, format: ReasoningFormat): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤔 [UIEventAdapter] Reasoning delta - Length: ${content.length}`,
+      );
+    }
+
+    this.reasoningContent += content;
+    this.reasoningFormat = format;
+
+    // Emit reasoning update
+    this.emitUIEvent({
+      type: "reasoning_update",
+      content: this.reasoningContent,
+      format: format,
+      isComplete: false,
+    });
+  }
+
+  private handleReasoningEnd(fullContent: string, signature?: string): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤔 [UIEventAdapter] Reasoning end - Final length: ${fullContent.length}, Has signature: ${!!signature}`,
+      );
+      if (signature) {
+        console.log(`🤔 [UIEventAdapter] Reasoning signature: ${signature}`);
+      }
+    }
+
+    this.isInReasoning = false;
+    this.reasoningContent = fullContent;
+    this.reasoningSignature = signature;
+
+    // Emit final reasoning update
+    if (this.reasoningFormat) {
+      this.emitUIEvent({
+        type: "reasoning_update",
+        content: fullContent,
+        format: this.reasoningFormat,
+        isComplete: true,
+      });
+    }
   }
 
   /**

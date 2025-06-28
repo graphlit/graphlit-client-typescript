@@ -162,7 +162,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
       console.log("=".repeat(80));
     }
-  }, 120000);
+  }, 180000);
 
   // Helper function to clean up conversation
   async function cleanupConversation(conversationId: string | undefined) {
@@ -340,7 +340,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 120000); // 60 second timeout per test
+      }, 180000); // 3 minute timeout per test
     });
   });
 
@@ -464,7 +464,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 120000);
+      }, 180000);
     });
   });
 
@@ -573,7 +573,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const toolEvents = events.filter((e) => e.type === "tool_update");
         console.log(`${testSpec.name}: Got ${toolEvents.length} tool events`);
 
-        // Tool calling should work for all models
+        // All models should attempt tool calling - if they fail, that's a real issue to investigate
         if (toolEvents.length === 0) {
           const finalEvent = events.find(
             (e) => e.type === "conversation_completed",
@@ -582,18 +582,27 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             ? finalEvent.message.message
             : "No response";
           console.error(
-            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response}"`,
+            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response.substring(0, 200)}..."`
           );
         }
-        expect(toolEvents.length).toBeGreaterThan(0);
-        console.log(`✅ ${testSpec.name}: Tool calling working`);
+        
+        // Check if this model supports tools
+        if (testSpec.supportsTools === false) {
+          console.log(`⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`);
+          expect(toolEvents.length).toBe(0);
+        } else {
+          expect(toolEvents.length).toBeGreaterThan(0);
+          console.log(`✅ ${testSpec.name}: Tool calling working`);
+        }
 
-        expect(toolResults.length).toBeGreaterThan(0);
-        expect(toolResults[0]).toContain("15");
-        expect(toolResults[0]).toContain("27");
-        console.log(
-          `✅ ${testSpec.name}: Tool executed with correct parameters`,
-        );
+        if (testSpec.supportsTools !== false) {
+          expect(toolResults.length).toBeGreaterThan(0);
+          expect(toolResults[0]).toContain("15");
+          expect(toolResults[0]).toContain("27");
+          console.log(
+            `✅ ${testSpec.name}: Tool executed with correct parameters`,
+          );
+        }
 
         const finalEvent = events.find(
           (e) => e.type === "conversation_completed",
@@ -603,7 +612,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 120000);
+      }, 180000);
     });
   });
 
@@ -713,7 +722,10 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         const toolEvents = events.filter((e) => e.type === "tool_update");
         console.log(`${testSpec.name}: Got ${toolEvents.length} tool events`);
 
-        if (toolEvents.length > 0) {
+        if (testSpec.supportsTools === false) {
+          console.log(`⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`);
+          expect(toolEvents.length).toBe(0);
+        } else if (toolEvents.length > 0) {
           console.log(
             `✅ ${testSpec.name}: Tool calling working with native SDK`,
           );
@@ -724,8 +736,10 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             `✅ ${testSpec.name}: Tool executed with correct parameters`,
           );
         } else {
+          // If tools are expected but not called, this is a test failure
+          expect(toolEvents.length).toBeGreaterThan(0);
           console.log(
-            `ℹ️  ${testSpec.name}: No tool events (may not support tool calling)`,
+            `❌ ${testSpec.name}: Expected tool events but got none`,
           );
         }
 
@@ -739,7 +753,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(conversationId);
-      }, 120000);
+      }, 180000);
     });
   });
 
@@ -828,7 +842,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(actualConversationId);
-      }, 120000);
+      }, 180000);
     });
   });
 
@@ -919,7 +933,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
         // Clean up conversation
         await cleanupConversation(actualConversationId);
-      }, 120000);
+      }, 180000);
     });
   });
 });

@@ -556,6 +556,141 @@ export const UpdateCollection = gql`
   }
 }
     `;
+export const CountConnectors = gql`
+    query CountConnectors($filter: ConnectorFilter, $correlationId: String) {
+  countConnectors(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateConnector = gql`
+    mutation CreateConnector($connector: ConnectorInput!) {
+  createConnector(connector: $connector) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
+export const DeleteConnector = gql`
+    mutation DeleteConnector($id: ID!) {
+  deleteConnector(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetConnector = gql`
+    query GetConnector($id: ID!, $correlationId: String) {
+  connector(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    relevance
+    owner {
+      id
+    }
+    state
+    type
+    authentication {
+      type
+      microsoft {
+        tenantId
+        clientId
+        clientSecret
+      }
+      google {
+        clientId
+        clientSecret
+      }
+      arcade {
+        authorizationId
+      }
+    }
+    integration {
+      type
+      uri
+      slack {
+        token
+        channel
+      }
+      email {
+        from
+        subject
+        to
+      }
+      twitter {
+        consumerKey
+        consumerSecret
+        accessTokenKey
+        accessTokenSecret
+      }
+    }
+  }
+}
+    `;
+export const QueryConnectors = gql`
+    query QueryConnectors($filter: ConnectorFilter, $correlationId: String) {
+  connectors(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      type
+      authentication {
+        type
+        microsoft {
+          tenantId
+          clientId
+          clientSecret
+        }
+        google {
+          clientId
+          clientSecret
+        }
+        arcade {
+          authorizationId
+        }
+      }
+      integration {
+        type
+        uri
+        slack {
+          token
+          channel
+        }
+        email {
+          from
+          subject
+          to
+        }
+        twitter {
+          consumerKey
+          consumerSecret
+          accessTokenKey
+          accessTokenSecret
+        }
+      }
+    }
+  }
+}
+    `;
+export const UpdateConnector = gql`
+    mutation UpdateConnector($connector: ConnectorUpdateInput!) {
+  updateConnector(connector: $connector) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
 export const CountContents = gql`
     query CountContents($filter: ContentFilter, $correlationId: String) {
   countContents(filter: $filter, correlationId: $correlationId) {
@@ -6231,13 +6366,16 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
+        connectorId
       }
       oneDrive {
+        authenticationType
         folderId
         files
         clientId
         clientSecret
         refreshToken
+        connectorId
       }
       googleDrive {
         authenticationType
@@ -6247,6 +6385,7 @@ export const GetFeed = gql`
         clientId
         clientSecret
         serviceAccountJson
+        connectorId
       }
       dropbox {
         path
@@ -6263,11 +6402,13 @@ export const GetFeed = gql`
         redirectUri
       }
       github {
+        authenticationType
         uri
         repositoryOwner
         repositoryName
         refreshToken
         personalAccessToken
+        connectorId
       }
       readLimit
     }
@@ -6280,9 +6421,11 @@ export const GetFeed = gql`
         excludeSentItems
         includeDeletedItems
         inboxOnly
+        authenticationType
         refreshToken
         clientId
         clientSecret
+        connectorId
       }
       microsoft {
         type
@@ -6290,9 +6433,11 @@ export const GetFeed = gql`
         excludeSentItems
         includeDeletedItems
         inboxOnly
+        authenticationType
         refreshToken
         clientId
         clientSecret
+        connectorId
       }
       readLimit
     }
@@ -6339,17 +6484,21 @@ export const GetFeed = gql`
         calendarId
         beforeDate
         afterDate
+        authenticationType
         refreshToken
         clientId
         clientSecret
+        connectorId
       }
       microsoft {
         calendarId
         beforeDate
         afterDate
+        authenticationType
         refreshToken
         clientId
         clientSecret
+        connectorId
       }
       readLimit
     }
@@ -6527,13 +6676,16 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
+          connectorId
         }
         oneDrive {
+          authenticationType
           folderId
           files
           clientId
           clientSecret
           refreshToken
+          connectorId
         }
         googleDrive {
           authenticationType
@@ -6543,6 +6695,7 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           serviceAccountJson
+          connectorId
         }
         dropbox {
           path
@@ -6559,11 +6712,13 @@ export const QueryFeeds = gql`
           redirectUri
         }
         github {
+          authenticationType
           uri
           repositoryOwner
           repositoryName
           refreshToken
           personalAccessToken
+          connectorId
         }
         readLimit
       }
@@ -6576,9 +6731,11 @@ export const QueryFeeds = gql`
           excludeSentItems
           includeDeletedItems
           inboxOnly
+          authenticationType
           refreshToken
           clientId
           clientSecret
+          connectorId
         }
         microsoft {
           type
@@ -6586,9 +6743,11 @@ export const QueryFeeds = gql`
           excludeSentItems
           includeDeletedItems
           inboxOnly
+          authenticationType
           refreshToken
           clientId
           clientSecret
+          connectorId
         }
         readLimit
       }
@@ -6635,17 +6794,21 @@ export const QueryFeeds = gql`
           calendarId
           beforeDate
           afterDate
+          authenticationType
           refreshToken
           clientId
           clientSecret
+          connectorId
         }
         microsoft {
           calendarId
           beforeDate
           afterDate
+          authenticationType
           refreshToken
           clientId
           clientSecret
+          connectorId
         }
         readLimit
       }
@@ -9443,6 +9606,9 @@ export const GetUser = gql`
           clientId
           clientSecret
         }
+        arcade {
+          authorizationId
+        }
       }
       integration {
         type
@@ -9496,6 +9662,9 @@ export const GetUserByIdentifier = gql`
         google {
           clientId
           clientSecret
+        }
+        arcade {
+          authorizationId
         }
       }
       integration {
@@ -9552,6 +9721,9 @@ export const QueryUsers = gql`
             clientId
             clientSecret
           }
+          arcade {
+            authorizationId
+          }
         }
         integration {
           type
@@ -9586,6 +9758,940 @@ export const UpdateUser = gql`
     type
     description
     identifier
+  }
+}
+    `;
+export const CountViews = gql`
+    query CountViews($filter: ViewFilter, $correlationId: String) {
+  countViews(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateView = gql`
+    mutation CreateView($view: ViewInput!) {
+  createView(view: $view) {
+    id
+    name
+    state
+    type
+    filter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+    augmentedFilter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+  }
+}
+    `;
+export const DeleteAllViews = gql`
+    mutation DeleteAllViews($filter: ViewFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllViews(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteView = gql`
+    mutation DeleteView($id: ID!) {
+  deleteView(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteViews = gql`
+    mutation DeleteViews($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteViews(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetView = gql`
+    query GetView($id: ID!, $correlationId: String) {
+  view(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    relevance
+    owner {
+      id
+    }
+    state
+    type
+    filter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+    augmentedFilter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+  }
+}
+    `;
+export const QueryViews = gql`
+    query QueryViews($filter: ViewFilter, $correlationId: String) {
+  views(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      type
+      filter {
+        dateRange {
+          from
+          to
+        }
+        inLast
+        creationDateRange {
+          from
+          to
+        }
+        createdInLast
+        types
+        fileTypes
+        formats
+        fileExtensions
+        similarContents {
+          id
+        }
+        contents {
+          id
+        }
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+      }
+      augmentedFilter {
+        dateRange {
+          from
+          to
+        }
+        inLast
+        creationDateRange {
+          from
+          to
+        }
+        createdInLast
+        types
+        fileTypes
+        formats
+        fileExtensions
+        similarContents {
+          id
+        }
+        contents {
+          id
+        }
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const UpdateView = gql`
+    mutation UpdateView($view: ViewUpdateInput!) {
+  updateView(view: $view) {
+    id
+    name
+    state
+    type
+    filter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+    augmentedFilter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+  }
+}
+    `;
+export const UpsertView = gql`
+    mutation UpsertView($view: ViewInput!) {
+  upsertView(view: $view) {
+    id
+    name
+    state
+    type
+    filter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+    augmentedFilter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+    }
+  }
+}
+    `;
+export const ViewExists = gql`
+    query ViewExists($filter: ViewFilter, $correlationId: String) {
+  viewExists(filter: $filter, correlationId: $correlationId) {
+    result
   }
 }
     `;
@@ -9763,6 +10869,8 @@ export const CreateWorkflow = gql`
         excludedLinks
         allowedFiles
         excludedFiles
+        allowedContentTypes
+        excludedContentTypes
         allowContentDomain
         maximumLinks
       }
@@ -10009,6 +11117,8 @@ export const GetWorkflow = gql`
         excludedLinks
         allowedFiles
         excludedFiles
+        allowedContentTypes
+        excludedContentTypes
         allowContentDomain
         maximumLinks
       }
@@ -10228,6 +11338,8 @@ export const QueryWorkflows = gql`
           excludedLinks
           allowedFiles
           excludedFiles
+          allowedContentTypes
+          excludedContentTypes
           allowContentDomain
           maximumLinks
         }
@@ -10442,6 +11554,8 @@ export const UpdateWorkflow = gql`
         excludedLinks
         allowedFiles
         excludedFiles
+        allowedContentTypes
+        excludedContentTypes
         allowContentDomain
         maximumLinks
       }
@@ -10655,6 +11769,8 @@ export const UpsertWorkflow = gql`
         excludedLinks
         allowedFiles
         excludedFiles
+        allowedContentTypes
+        excludedContentTypes
         allowContentDomain
         maximumLinks
       }

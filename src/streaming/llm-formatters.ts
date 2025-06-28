@@ -211,10 +211,51 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         break;
 
       case ConversationRoleTypes.Assistant:
-        const content: AnthropicMessage["content"] = [];
+        const content: any[] = []; // Use any[] to allow thinking blocks
 
-        // Add text content
-        if (trimmedMessage) {
+        // Handle thinking blocks for extended thinking preservation
+        if (trimmedMessage && trimmedMessage.includes('<thinking')) {
+          // Extract thinking content and signature if present
+          const thinkingMatch = trimmedMessage.match(/<thinking(?:\s+signature="([^"]*)")?>([\s\S]*?)<\/thinking>/);
+          if (thinkingMatch) {
+            const signature = thinkingMatch[1]; // Optional signature
+            const thinkingContent = thinkingMatch[2].trim();
+            
+            // Add thinking block for conversation history preservation
+            if (thinkingContent) {
+              const thinkingBlock: any = {
+                type: "thinking",
+                thinking: thinkingContent,
+              };
+              
+              // Add signature if present (required by Anthropic API)
+              if (signature) {
+                thinkingBlock.signature = signature;
+              } else {
+                // Provide a default signature if none captured
+                thinkingBlock.signature = "";
+              }
+              
+              content.push(thinkingBlock);
+            }
+            
+            // Remove thinking tags from the main text and add remaining content
+            const textWithoutThinking = trimmedMessage.replace(/<thinking(?:\s+[^>]*)?>[\s\S]*?<\/thinking>/g, '').trim();
+            if (textWithoutThinking) {
+              content.push({
+                type: "text",
+                text: textWithoutThinking,
+              });
+            }
+          } else {
+            // No valid thinking blocks found, add as regular text
+            content.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+        } else if (trimmedMessage) {
+          // Add regular text content
           content.push({
             type: "text",
             text: trimmedMessage,
@@ -536,6 +577,13 @@ export interface MistralMessage {
 export function formatMessagesForMistral(
   messages: ConversationMessage[],
 ): MistralMessage[] {
+  if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+    console.log(`[Mistral Formatter] Input: ${messages.length} messages`);
+    messages.forEach((msg, idx) => {
+      console.log(`  Input ${idx}: role=${msg.role}, hasToolCalls=${!!msg.toolCalls}, toolCallId=${msg.toolCallId}`);
+    });
+  }
+  
   const formattedMessages: MistralMessage[] = [];
 
   for (const message of messages) {
@@ -559,7 +607,7 @@ export function formatMessagesForMistral(
       case ConversationRoleTypes.Assistant:
         const assistantMessage: MistralMessage = {
           role: "assistant",
-          content: trimmedMessage,
+          content: trimmedMessage || "", // Mistral expects string, not null
         };
 
         // Add tool calls if present
@@ -568,6 +616,7 @@ export function formatMessagesForMistral(
             .filter((tc): tc is ConversationToolCall => tc !== null)
             .map((toolCall) => ({
               id: toolCall.id,
+              type: "function",
               function: {
                 name: toolCall.name,
                 arguments: toolCall.arguments,
@@ -579,11 +628,17 @@ export function formatMessagesForMistral(
         break;
 
       case ConversationRoleTypes.Tool:
+        if (!message.toolCallId) {
+          console.warn(`[Mistral] Tool message missing toolCallId, skipping`);
+          break;
+        }
+        // Mistral expects tool_call_id (snake_case) and a name field
         formattedMessages.push({
           role: "tool",
+          name: (message as any).toolName || "unknown", // Access toolName from extended message
           content: trimmedMessage,
-          tool_call_id: message.toolCallId || "",
-        });
+          tool_call_id: message.toolCallId, // Mistral uses snake_case!
+        } as any);
         break;
 
       default: // User messages
@@ -623,6 +678,17 @@ export function formatMessagesForMistral(
         }
         break;
     }
+  }
+
+  if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+    console.log(`[Mistral Formatter] Output: ${formattedMessages.length} messages`);
+    formattedMessages.forEach((msg, idx) => {
+      const msgWithTools = msg as MistralMessage & { tool_calls?: any[]; tool_call_id?: string };
+      console.log(`  Output ${idx}: role=${msg.role}, hasToolCalls=${!!msgWithTools.tool_calls}, toolCallId=${msgWithTools.tool_call_id}`);
+      if (msgWithTools.tool_calls) {
+        console.log(`    Tool calls: ${JSON.stringify(msgWithTools.tool_calls)}`);
+      }
+    });
   }
 
   return formattedMessages;

@@ -404,6 +404,19 @@ export enum ApplyPolicy {
   Validation = 'VALIDATION'
 }
 
+/** Represents Arcade authentication properties. */
+export type ArcadeAuthenticationProperties = {
+  __typename?: 'ArcadeAuthenticationProperties';
+  /** Arcade authorization ID. */
+  authorizationId: Scalars['String']['output'];
+};
+
+/** Represents Arcade authentication properties. */
+export type ArcadeAuthenticationPropertiesInput = {
+  /** Arcade authorization ID. */
+  authorizationId: Scalars['String']['input'];
+};
+
 /** Represents a prompted question about Graphlit. */
 export type AskGraphlit = {
   __typename?: 'AskGraphlit';
@@ -579,6 +592,8 @@ export type AudioMetadataInput = {
 /** Represents an authentication connector. */
 export type AuthenticationConnector = {
   __typename?: 'AuthenticationConnector';
+  /** Arcade authentication properties. */
+  arcade?: Maybe<ArcadeAuthenticationProperties>;
   /** Google authentication properties. */
   google?: Maybe<GoogleAuthenticationProperties>;
   /** Microsoft authentication properties. */
@@ -589,6 +604,8 @@ export type AuthenticationConnector = {
 
 /** Represents an authentication connector. */
 export type AuthenticationConnectorInput = {
+  /** Arcade authentication properties. */
+  arcade?: InputMaybe<ArcadeAuthenticationPropertiesInput>;
   /** Google authentication properties. */
   google?: InputMaybe<GoogleAuthenticationPropertiesInput>;
   /** Microsoft authentication properties. */
@@ -599,6 +616,8 @@ export type AuthenticationConnectorInput = {
 
 /** Authentication service type */
 export enum AuthenticationServiceTypes {
+  /** Arcade authentication service */
+  Arcade = 'ARCADE',
   /** Auth0 authentication service */
   Auth0 = 'AUTH0',
   /** Clerk authentication service */
@@ -2971,6 +2990,8 @@ export enum DeepgramModels {
   Nova2Voicemail = 'NOVA2_VOICEMAIL',
   /** Nova 3 (General) */
   Nova3 = 'NOVA3',
+  /** Nova 3 (Medical) */
+  Nova3Medical = 'NOVA3_MEDICAL',
   /** Whisper (Base) */
   WhisperBase = 'WHISPER_BASE',
   /** Whisper (Large) */
@@ -3086,6 +3107,30 @@ export type DiffbotEnrichmentPropertiesInput = {
   key?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Discord channel. */
+export type DiscordChannelResult = {
+  __typename?: 'DiscordChannelResult';
+  /** The Discord channel identifier. */
+  channelId?: Maybe<Scalars['ID']['output']>;
+  /** The Discord channel name. */
+  channelName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Discord channels. */
+export type DiscordChannelResults = {
+  __typename?: 'DiscordChannelResults';
+  /** The Discord channels. */
+  results?: Maybe<Array<Maybe<DiscordChannelResult>>>;
+};
+
+/** Represents Discord channels properties. */
+export type DiscordChannelsInput = {
+  /** Discord guild identifier. */
+  guildId: Scalars['String']['input'];
+  /** Discord bot token. */
+  token: Scalars['String']['input'];
+};
+
 /** Represents Discord feed properties. */
 export type DiscordFeedProperties = {
   __typename?: 'DiscordFeedProperties';
@@ -3127,6 +3172,28 @@ export type DiscordFeedPropertiesUpdateInput = {
   token?: InputMaybe<Scalars['String']['input']>;
   /** Feed listing type, i.e. past or new messages. */
   type?: InputMaybe<FeedListingTypes>;
+};
+
+/** Represents a Discord guild. */
+export type DiscordGuildResult = {
+  __typename?: 'DiscordGuildResult';
+  /** The Discord guild identifier. */
+  guildId?: Maybe<Scalars['ID']['output']>;
+  /** The Discord guild name. */
+  guildName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Discord guilds. */
+export type DiscordGuildResults = {
+  __typename?: 'DiscordGuildResults';
+  /** The Discord guilds. */
+  results?: Maybe<Array<Maybe<DiscordGuildResult>>>;
+};
+
+/** Represents Discord guilds properties. */
+export type DiscordGuildsInput = {
+  /** Discord bot token. */
+  token: Scalars['String']['input'];
 };
 
 /** Represents document metadata. */
@@ -3851,6 +3918,8 @@ export enum EntityTypes {
   Specification = 'SPECIFICATION',
   /** User */
   User = 'USER',
+  /** View */
+  View = 'VIEW',
   /** Workflow */
   Workflow = 'WORKFLOW'
 }
@@ -4738,9 +4807,19 @@ export type GeometryMetadataInput = {
   vertexCount?: InputMaybe<Scalars['Long']['input']>;
 };
 
+export enum GitHubAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  OAuth = 'O_AUTH',
+  PersonalAccessToken = 'PERSONAL_ACCESS_TOKEN'
+}
+
 /** Represents GitHub properties. */
 export type GitHubFeedProperties = {
   __typename?: 'GitHubFeedProperties';
+  /** OneDrive authentication type, defaults to User. */
+  authenticationType?: Maybe<OneDriveAuthenticationTypes>;
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
   personalAccessToken?: Maybe<Scalars['String']['output']>;
   /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
@@ -4755,9 +4834,13 @@ export type GitHubFeedProperties = {
 
 /** Represents GitHub properties. */
 export type GitHubFeedPropertiesInput = {
-  /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub authentication type, defaults to PersonalAccessToken. */
+  authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
-  /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub refresh token, requires OAuth authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub repository name. */
   repositoryName: Scalars['String']['input'];
@@ -4769,9 +4852,13 @@ export type GitHubFeedPropertiesInput = {
 
 /** Represents GitHub properties. */
 export type GitHubFeedPropertiesUpdateInput = {
-  /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub authentication type, defaults to PersonalAccessToken. */
+  authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
-  /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub refresh token, requires OAuth authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub repository name. */
   repositoryName?: InputMaybe<Scalars['String']['input']>;
@@ -4780,6 +4867,12 @@ export type GitHubFeedPropertiesUpdateInput = {
   /** GitHub Enterprise URI, optional. */
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
+
+export enum GitHubIssueAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  OAuth = 'O_AUTH',
+  PersonalAccessToken = 'PERSONAL_ACCESS_TOKEN'
+}
 
 /** Represents GitHub Issues feed properties. */
 export type GitHubIssuesFeedProperties = {
@@ -4798,9 +4891,13 @@ export type GitHubIssuesFeedProperties = {
 
 /** Represents GitHub Issues feed properties. */
 export type GitHubIssuesFeedPropertiesInput = {
-  /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub Issues authentication type, defaults to PersonalAccessToken. */
+  authenticationType?: InputMaybe<GitHubIssueAuthenticationTypes>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
-  /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
+  /** GitHub refresh token, requires OAuth authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub repository name. */
   repositoryName: Scalars['String']['input'];
@@ -4841,11 +4938,18 @@ export type GoogleAuthenticationPropertiesInput = {
   clientSecret: Scalars['String']['input'];
 };
 
+export enum GoogleCalendarAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
 /** Represents Google Calendar feed properties. */
 export type GoogleCalendarFeedProperties = {
   __typename?: 'GoogleCalendarFeedProperties';
   /** Read calendar events after this date (inclusive), optional. */
   afterDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Google Calendar authentication type. */
+  authenticationType?: Maybe<GoogleCalendarAuthenticationTypes>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: Maybe<Scalars['DateTime']['output']>;
   /** Google Email calendar identifier, optional. */
@@ -4854,6 +4958,8 @@ export type GoogleCalendarFeedProperties = {
   clientId: Scalars['String']['output'];
   /** Google OAuth2 client secret. */
   clientSecret: Scalars['String']['output'];
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** Google OAuth2 refresh token. */
   refreshToken: Scalars['String']['output'];
 };
@@ -4862,26 +4968,34 @@ export type GoogleCalendarFeedProperties = {
 export type GoogleCalendarFeedPropertiesInput = {
   /** Read calendar events after this date (inclusive), optional. */
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Google Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Email calendar identifier, optional. */
   calendarId?: InputMaybe<Scalars['String']['input']>;
-  /** Google OAuth2 client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Google OAuth2 client secret. */
-  clientSecret: Scalars['String']['input'];
-  /** Google OAuth2 refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Google OAuth2 client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Calendar properties. */
 export type GoogleCalendarFeedPropertiesUpdateInput = {
-  /** Google OAuth2 client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Google OAuth2 client secret. */
-  clientSecret: Scalars['String']['input'];
-  /** Google OAuth2 refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Google Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
+  /** Google OAuth2 client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Calendar properties. */
@@ -4895,6 +5009,7 @@ export type GoogleCalendarsInput = {
 };
 
 export enum GoogleDriveAuthenticationTypes {
+  Connector = 'CONNECTOR',
   ServiceAccount = 'SERVICE_ACCOUNT',
   User = 'USER'
 }
@@ -4908,6 +5023,8 @@ export type GoogleDriveFeedProperties = {
   clientId?: Maybe<Scalars['String']['output']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Google Drive folder identifier. */
@@ -4926,6 +5043,8 @@ export type GoogleDriveFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -4944,6 +5063,8 @@ export type GoogleDriveFeedPropertiesUpdateInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -4980,13 +5101,22 @@ export type GoogleDriveFoldersInput = {
   refreshToken: Scalars['String']['input'];
 };
 
+export enum GoogleEmailAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedProperties = {
   __typename?: 'GoogleEmailFeedProperties';
+  /** Google Email authentication type. */
+  authenticationType?: Maybe<GoogleEmailAuthenticationTypes>;
   /** Google Email client identifier. */
   clientId: Scalars['String']['output'];
   /** Google Email client secret. */
   clientSecret: Scalars['String']['output'];
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: Maybe<Scalars['Boolean']['output']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -5003,10 +5133,14 @@ export type GoogleEmailFeedProperties = {
 
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedPropertiesInput = {
-  /** Google client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Google client secret. */
-  clientSecret: Scalars['String']['input'];
+  /** Google Email authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
+  /** Google client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -5015,18 +5149,22 @@ export type GoogleEmailFeedPropertiesInput = {
   includeDeletedItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to include Spam messages in email listing. Default is False. */
   includeSpam?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Google refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Google refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Email listing type, i.e. past or new emails. */
   type?: InputMaybe<EmailListingTypes>;
 };
 
 /** Represents Google Email feed properties. */
 export type GoogleEmailFeedPropertiesUpdateInput = {
-  /** Google client identifier. */
+  /** Google Email authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
+  /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Google client secret. */
+  /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -5035,7 +5173,7 @@ export type GoogleEmailFeedPropertiesUpdateInput = {
   includeDeletedItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to include Spam messages in email listing. Default is False. */
   includeSpam?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Google refresh token. */
+  /** Google refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Email listing type, i.e. past or new emails. */
   type?: InputMaybe<EmailListingTypes>;
@@ -6145,6 +6283,8 @@ export type LinkStrategy = {
   __typename?: 'LinkStrategy';
   /** Whether to crawl the content DNS domain, i.e. hyperlinks to same domain as content page. */
   allowContentDomain?: Maybe<Scalars['Boolean']['output']>;
+  /** The allowed content types for link crawling. */
+  allowedContentTypes?: Maybe<Array<ContentTypes>>;
   /** The list of DNS domains to be crawled, i.e. example.com. */
   allowedDomains?: Maybe<Array<Scalars['String']['output']>>;
   /** The allowed file types. */
@@ -6155,6 +6295,8 @@ export type LinkStrategy = {
   allowedPaths?: Maybe<Array<Scalars['String']['output']>>;
   /** Whether link crawling is enabled. */
   enableCrawling?: Maybe<Scalars['Boolean']['output']>;
+  /** The excluded content types for link crawling. */
+  excludedContentTypes?: Maybe<Array<ContentTypes>>;
   /** The list of DNS domains to not be crawled, i.e. example.com. */
   excludedDomains?: Maybe<Array<Scalars['String']['output']>>;
   /** The excluded link types. */
@@ -6171,6 +6313,8 @@ export type LinkStrategy = {
 export type LinkStrategyInput = {
   /** Whether to crawl the content DNS domain, i.e. hyperlinks to same domain as content page. */
   allowContentDomain?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The allowed content types for link crawling. */
+  allowedContentTypes?: InputMaybe<Array<ContentTypes>>;
   /** The list of DNS domains to be crawled, i.e. example.com. */
   allowedDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The allowed file types. */
@@ -6181,6 +6325,8 @@ export type LinkStrategyInput = {
   allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Whether link crawling is enabled. */
   enableCrawling?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The excluded content types for link crawling. */
+  excludedContentTypes?: InputMaybe<Array<ContentTypes>>;
   /** The list of DNS domains to not be crawled, i.e. example.com. */
   excludedDomains?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The excluded link types. */
@@ -8114,11 +8260,18 @@ export type MicrosoftAuthenticationPropertiesInput = {
   tenantId: Scalars['ID']['input'];
 };
 
+export enum MicrosoftCalendarAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
 /** Represents Microsoft Calendar feed properties. */
 export type MicrosoftCalendarFeedProperties = {
   __typename?: 'MicrosoftCalendarFeedProperties';
   /** Read calendar events after this date (inclusive), optional. */
   afterDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Microsoft Calendar authentication type. */
+  authenticationType?: Maybe<MicrosoftCalendarAuthenticationTypes>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: Maybe<Scalars['DateTime']['output']>;
   /** Microsoft Email calendar identifier, optional. */
@@ -8127,6 +8280,8 @@ export type MicrosoftCalendarFeedProperties = {
   clientId: Scalars['String']['output'];
   /** Microsoft Entra ID client secret. */
   clientSecret: Scalars['String']['output'];
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID refresh token. */
   refreshToken: Scalars['String']['output'];
 };
@@ -8135,26 +8290,34 @@ export type MicrosoftCalendarFeedProperties = {
 export type MicrosoftCalendarFeedPropertiesInput = {
   /** Read calendar events after this date (inclusive), optional. */
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Microsoft Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Email calendar identifier, optional. */
   calendarId?: InputMaybe<Scalars['String']['input']>;
-  /** Microsoft Entra ID client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Microsoft Entra ID client secret. */
-  clientSecret: Scalars['String']['input'];
-  /** Microsoft Entra ID refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Microsoft Entra ID client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Microsoft Calendar properties. */
 export type MicrosoftCalendarFeedPropertiesUpdateInput = {
-  /** Microsoft Entra ID client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Microsoft Entra ID client secret. */
-  clientSecret: Scalars['String']['input'];
-  /** Microsoft Entra ID refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Microsoft Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Microsoft Entra ID client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Microsoft Calendar properties. */
@@ -8167,13 +8330,22 @@ export type MicrosoftCalendarsInput = {
   refreshToken: Scalars['String']['input'];
 };
 
+export enum MicrosoftEmailAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
 /** Represents Microsoft Email feed properties. */
 export type MicrosoftEmailFeedProperties = {
   __typename?: 'MicrosoftEmailFeedProperties';
+  /** Microsoft Email authentication type. */
+  authenticationType?: Maybe<MicrosoftEmailAuthenticationTypes>;
   /** Microsoft Email client identifier. */
   clientId: Scalars['String']['output'];
   /** Microsoft Email client secret. */
   clientSecret: Scalars['String']['output'];
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: Maybe<Scalars['Boolean']['output']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8190,10 +8362,14 @@ export type MicrosoftEmailFeedProperties = {
 
 /** Represents Microsoft Email feed properties. */
 export type MicrosoftEmailFeedPropertiesInput = {
-  /** Microsoft Email client identifier. */
-  clientId: Scalars['String']['input'];
-  /** Microsoft Email client secret. */
-  clientSecret: Scalars['String']['input'];
+  /** Microsoft Email authentication type, defaults to User. */
+  authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
+  /** Microsoft Email client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Email client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8202,18 +8378,22 @@ export type MicrosoftEmailFeedPropertiesInput = {
   includeDeletedItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to include Spam messages in email listing. Default is False. */
   includeSpam?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Microsoft Email refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** Microsoft Email refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Email listing type, i.e. past or new emails. */
   type?: InputMaybe<EmailListingTypes>;
 };
 
 /** Represents Microsoft Email feed properties. */
 export type MicrosoftEmailFeedPropertiesUpdateInput = {
-  /** Microsoft Email client identifier. */
+  /** Microsoft Email authentication type, defaults to User. */
+  authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
+  /** Microsoft Email client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Microsoft Email client secret. */
+  /** Microsoft Email client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8222,7 +8402,7 @@ export type MicrosoftEmailFeedPropertiesUpdateInput = {
   includeDeletedItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to include Spam messages in email listing. Default is False. */
   includeSpam?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Microsoft Email refresh token. */
+  /** Microsoft Email refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Email listing type, i.e. past or new emails. */
   type?: InputMaybe<EmailListingTypes>;
@@ -8686,6 +8866,8 @@ export type Mutation = {
   createSpecification?: Maybe<Specification>;
   /** Creates a new user. */
   createUser?: Maybe<User>;
+  /** Creates a new view. */
+  createView?: Maybe<View>;
   /** Creates a new content workflow. */
   createWorkflow?: Maybe<Workflow>;
   /** Deletes an alert. */
@@ -8744,6 +8926,8 @@ export type Mutation = {
   deleteAllSoftwares?: Maybe<Array<Maybe<Software>>>;
   /** Bulk deletes specifications based on the provided filter criteria. */
   deleteAllSpecifications?: Maybe<Array<Maybe<Specification>>>;
+  /** Bulk deletes views based on the provided filter criteria. */
+  deleteAllViews?: Maybe<Array<Maybe<View>>>;
   /** Bulk deletes workflows based on the provided filter criteria. */
   deleteAllWorkflows?: Maybe<Array<Maybe<Workflow>>>;
   /** Bulk deletes categories. */
@@ -8852,6 +9036,10 @@ export type Mutation = {
   deleteSpecifications?: Maybe<Array<Maybe<Specification>>>;
   /** Deletes a user. */
   deleteUser?: Maybe<User>;
+  /** Deletes a view. */
+  deleteView?: Maybe<View>;
+  /** Bulk deletes views. */
+  deleteViews?: Maybe<Array<Maybe<View>>>;
   /** Deletes a content workflow. */
   deleteWorkflow?: Maybe<Workflow>;
   /** Deletes multiple workflows given their IDs. */
@@ -8930,6 +9118,8 @@ export type Mutation = {
   restartContent?: Maybe<Content>;
   /** Retrieve content sources. */
   retrieveSources?: Maybe<ContentSourceResults>;
+  /** Retrieve content sources using a saved view. */
+  retrieveView?: Maybe<ContentSourceResults>;
   /** Revise content via prompted conversation. */
   reviseContent?: Maybe<ReviseContent>;
   /** Revise encoded image via prompted conversation. */
@@ -9010,6 +9200,8 @@ export type Mutation = {
   updateSpecification?: Maybe<Specification>;
   /** Updates an existing user. */
   updateUser?: Maybe<User>;
+  /** Updates an existing view. */
+  updateView?: Maybe<View>;
   /** Updates an existing content workflow. */
   updateWorkflow?: Maybe<Workflow>;
   /** Upserts a category. */
@@ -9018,6 +9210,8 @@ export type Mutation = {
   upsertLabel?: Maybe<Label>;
   /** Upserts an LLM specification. */
   upsertSpecification?: Maybe<Specification>;
+  /** Upserts a view. */
+  upsertView?: Maybe<View>;
   /** Upserts a content workflow. */
   upsertWorkflow?: Maybe<Workflow>;
 };
@@ -9226,6 +9420,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationCreateViewArgs = {
+  view: ViewInput;
+};
+
+
 export type MutationCreateWorkflowArgs = {
   workflow: WorkflowInput;
 };
@@ -9420,6 +9619,13 @@ export type MutationDeleteAllSoftwaresArgs = {
 export type MutationDeleteAllSpecificationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SpecificationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllViewsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ViewFilter>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -9718,6 +9924,17 @@ export type MutationDeleteSpecificationsArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteViewArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteViewsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -10027,6 +10244,15 @@ export type MutationRetrieveSourcesArgs = {
 };
 
 
+export type MutationRetrieveViewArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  prompt: Scalars['String']['input'];
+  rerankingStrategy?: InputMaybe<RerankingStrategyInput>;
+  retrievalStrategy?: InputMaybe<RetrievalStrategyInput>;
+};
+
+
 export type MutationReviseContentArgs = {
   content: EntityReferenceInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -10259,6 +10485,11 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationUpdateViewArgs = {
+  view: ViewUpdateInput;
+};
+
+
 export type MutationUpdateWorkflowArgs = {
   workflow: WorkflowUpdateInput;
 };
@@ -10276,6 +10507,11 @@ export type MutationUpsertLabelArgs = {
 
 export type MutationUpsertSpecificationArgs = {
   specification: SpecificationInput;
+};
+
+
+export type MutationUpsertViewArgs = {
+  view: ViewInput;
 };
 
 
@@ -10601,13 +10837,22 @@ export enum OccurrenceTypes {
   Time = 'TIME'
 }
 
+export enum OneDriveAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
 /** Represents OneDrive properties. */
 export type OneDriveFeedProperties = {
   __typename?: 'OneDriveFeedProperties';
+  /** OneDrive authentication type, defaults to User. */
+  authenticationType?: Maybe<OneDriveAuthenticationTypes>;
   /** OneDrive client identifier. */
   clientId: Scalars['String']['output'];
   /** OneDrive client secret. */
   clientSecret: Scalars['String']['output'];
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
   /** OneDrive folder identifier. */
@@ -10618,29 +10863,37 @@ export type OneDriveFeedProperties = {
 
 /** Represents OneDrive properties. */
 export type OneDriveFeedPropertiesInput = {
-  /** OneDrive client identifier. */
-  clientId: Scalars['String']['input'];
-  /** OneDrive client secret. */
-  clientSecret: Scalars['String']['input'];
+  /** OneDrive authentication type, defaults to User. */
+  authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
+  /** OneDrive client identifier, requires User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** OneDrive client secret, requires User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
-  /** OneDrive refresh token. */
-  refreshToken: Scalars['String']['input'];
+  /** OneDrive refresh token, requires User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents OneDrive properties. */
 export type OneDriveFeedPropertiesUpdateInput = {
-  /** OneDrive client identifier. */
+  /** OneDrive authentication type, defaults to User. */
+  authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
+  /** OneDrive client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
-  /** OneDrive client secret. */
+  /** OneDrive client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
-  /** OneDrive refresh token. */
+  /** OneDrive refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -12496,6 +12749,8 @@ export type Query = {
   countCategories?: Maybe<CountResult>;
   /** Counts collections based on the provided filter criteria. */
   countCollections?: Maybe<CountResult>;
+  /** Counts connectors based on the provided filter criteria. */
+  countConnectors?: Maybe<CountResult>;
   /** Counts contents based on the provided filter criteria. */
   countContents?: Maybe<CountResult>;
   /** Counts conversations based on the provided filter criteria. */
@@ -12544,10 +12799,16 @@ export type Query = {
   countSpecifications?: Maybe<CountResult>;
   /** Counts users based on the provided filter criteria. */
   countUsers?: Maybe<CountResult>;
+  /** Counts views based on the provided filter criteria. */
+  countViews?: Maybe<CountResult>;
   /** Counts workflows based on the provided filter criteria. */
   countWorkflows?: Maybe<CountResult>;
   /** Retrieves project credits. */
   credits?: Maybe<ProjectCredits>;
+  /** Retrieves available Discord channels for a guild. */
+  discordChannels?: Maybe<DiscordChannelResults>;
+  /** Retrieves available Discord guilds. */
+  discordGuilds?: Maybe<DiscordGuildResults>;
   /** Retrieves available Dropbox folders. */
   dropboxFolders?: Maybe<DropboxFolderResults>;
   /** Lookup an event given its ID. */
@@ -12696,6 +12957,12 @@ export type Query = {
   userByIdentifier?: Maybe<User>;
   /** Retrieves users based on the provided filter criteria. */
   users?: Maybe<UserResults>;
+  /** Lookup a view given its ID. */
+  view?: Maybe<View>;
+  /** Returns whether any view exists based on the provided filter criteria. */
+  viewExists?: Maybe<BooleanResult>;
+  /** Retrieves views based on the provided filter criteria. */
+  views?: Maybe<QueryResults>;
   /** Lookup a workflow given its ID. */
   workflow?: Maybe<Workflow>;
   /** Returns whether any workflow exists based on the provided filter criteria. */
@@ -12801,6 +13068,12 @@ export type QueryCountCategoriesArgs = {
 export type QueryCountCollectionsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CollectionFilter>;
+};
+
+
+export type QueryCountConnectorsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ConnectorFilter>;
 };
 
 
@@ -12948,6 +13221,12 @@ export type QueryCountUsersArgs = {
 };
 
 
+export type QueryCountViewsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ViewFilter>;
+};
+
+
 export type QueryCountWorkflowsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<WorkflowFilter>;
@@ -12957,6 +13236,16 @@ export type QueryCountWorkflowsArgs = {
 export type QueryCreditsArgs = {
   duration: Scalars['TimeSpan']['input'];
   startDate: Scalars['DateTime']['input'];
+};
+
+
+export type QueryDiscordChannelsArgs = {
+  properties: DiscordChannelsInput;
+};
+
+
+export type QueryDiscordGuildsArgs = {
+  properties: DiscordGuildsInput;
 };
 
 
@@ -13425,6 +13714,24 @@ export type QueryUsersArgs = {
 };
 
 
+export type QueryViewArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryViewExistsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ViewFilter>;
+};
+
+
+export type QueryViewsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ViewFilter>;
+};
+
+
 export type QueryWorkflowArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -13440,6 +13747,12 @@ export type QueryWorkflowExistsArgs = {
 export type QueryWorkflowsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<WorkflowFilter>;
+};
+
+export type QueryResults = {
+  __typename?: 'QueryResults';
+  /** The list of view query results. */
+  results?: Maybe<Array<View>>;
 };
 
 /** Represents RSS feed properties. */
@@ -14102,6 +14415,7 @@ export type ShapeMetadataInput = {
 
 export enum SharePointAuthenticationTypes {
   Application = 'APPLICATION',
+  Connector = 'CONNECTOR',
   User = 'USER'
 }
 
@@ -14111,11 +14425,13 @@ export type SharePointFeedProperties = {
   /** SharePoint account name. */
   accountName: Scalars['String']['output'];
   /** SharePoint authentication type. */
-  authenticationType: SharePointAuthenticationTypes;
+  authenticationType?: Maybe<SharePointAuthenticationTypes>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Connector identifier. */
+  connectorId?: Maybe<Scalars['String']['output']>;
   /** SharePoint folder identifier. */
   folderId?: Maybe<Scalars['ID']['output']>;
   /** SharePoint library identifier. */
@@ -14136,6 +14452,8 @@ export type SharePointFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires user authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -14152,6 +14470,8 @@ export type SharePointFeedPropertiesUpdateInput = {
   accountName?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint authentication type. */
   authenticationType?: InputMaybe<SharePointAuthenticationTypes>;
+  /** Connector identifier, for Connector authentication type. */
+  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -15446,6 +15766,89 @@ export type VideoMetadataInput = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Represents a view. */
+export type View = {
+  __typename?: 'View';
+  /** Augmented filter for view. */
+  augmentedFilter?: Maybe<ContentCriteria>;
+  /** The creation date of the view. */
+  creationDate: Scalars['DateTime']['output'];
+  /** Filter for view. */
+  filter?: Maybe<ContentCriteria>;
+  /** The ID of the view. */
+  id: Scalars['ID']['output'];
+  /** The modified date of the view. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the view. */
+  name: Scalars['String']['output'];
+  /** The owner of the view. */
+  owner: Owner;
+  /** The relevance score of the view. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the view (i.e. created, finished). */
+  state: EntityState;
+  /** Type of view. */
+  type?: Maybe<ViewTypes>;
+};
+
+/** Represents a filter for views. */
+export type ViewFilter = {
+  /** Filter by creation date recent timespan. For example, a timespan of one day will return view(s) created in the last 24 hours. */
+  createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter view(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter view(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of view(s) to be returned. Defaults to 100. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter view(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Skip the specified number of view(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** Filter view(s) by searching for similar text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Filter view(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+  /** Filter by view types. */
+  types?: InputMaybe<Array<InputMaybe<ViewTypes>>>;
+};
+
+/** Represents a view. */
+export type ViewInput = {
+  /** Augmented filter for view. */
+  augmentedFilter?: InputMaybe<ContentCriteriaInput>;
+  /** Filter for view. */
+  filter?: InputMaybe<ContentCriteriaInput>;
+  /** The name of the view. */
+  name: Scalars['String']['input'];
+  /** Type of view. */
+  type?: InputMaybe<ViewTypes>;
+};
+
+/** View type */
+export enum ViewTypes {
+  /** Content view */
+  Content = 'CONTENT'
+}
+
+/** Represents a view. */
+export type ViewUpdateInput = {
+  /** Augmented filter for view. */
+  augmentedFilter?: InputMaybe<ContentCriteriaInput>;
+  /** Filter for view. */
+  filter?: InputMaybe<ContentCriteriaInput>;
+  /** The ID of the view to update. */
+  id: Scalars['ID']['input'];
+  /** The name of the view. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Type of view. */
+  type?: InputMaybe<ViewTypes>;
+};
+
 /** Represents Voyage model properties. */
 export type VoyageModelProperties = {
   __typename?: 'VoyageModelProperties';
@@ -16034,6 +16437,51 @@ export type UpdateCollectionMutationVariables = Exact<{
 
 
 export type UpdateCollectionMutation = { __typename?: 'Mutation', updateCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null } | null };
+
+export type CountConnectorsQueryVariables = Exact<{
+  filter?: InputMaybe<ConnectorFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountConnectorsQuery = { __typename?: 'Query', countConnectors?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateConnectorMutationVariables = Exact<{
+  connector: ConnectorInput;
+}>;
+
+
+export type CreateConnectorMutation = { __typename?: 'Mutation', createConnector?: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null } | null };
+
+export type DeleteConnectorMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteConnectorMutation = { __typename?: 'Mutation', deleteConnector?: { __typename?: 'Connector', id: string, state: EntityState } | null };
+
+export type GetConnectorQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetConnectorQuery = { __typename?: 'Query', connector?: { __typename?: 'Connector', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null };
+
+export type QueryConnectorsQueryVariables = Exact<{
+  filter?: InputMaybe<ConnectorFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryConnectorsQuery = { __typename?: 'Query', connectors?: { __typename?: 'ConnectorResults', results?: Array<{ __typename?: 'Connector', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null }> | null } | null };
+
+export type UpdateConnectorMutationVariables = Exact<{
+  connector: ConnectorUpdateInput;
+}>;
+
+
+export type UpdateConnectorMutation = { __typename?: 'Mutation', updateConnector?: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null } | null };
 
 export type CountContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -16698,7 +17146,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string, connectorId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connectorId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, connectorId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -16736,7 +17184,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType: SharePointAuthenticationTypes, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken?: string | null, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, refreshToken: string, clientId: string, clientSecret: string } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId: string, clientSecret: string, refreshToken: string, connectorId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connectorId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', path?: string | null, appKey: string, appSecret: string, refreshToken: string, redirectUri: string } | null, box?: { __typename?: 'BoxFeedProperties', folderId?: string | null, clientId: string, clientSecret: string, refreshToken: string, redirectUri: string } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, connectorId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId: string, clientSecret: string, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken: string, clientId: string, clientSecret: string, connectorId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, clientId: string, clientSecret: string, refreshToken: string, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
 
 export type QueryGoogleCalendarsQueryVariables = Exact<{
   properties: GoogleCalendarsInput;
@@ -18196,14 +18644,14 @@ export type EnableUserMutation = { __typename?: 'Mutation', enableUser?: { __typ
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type GetUserByIdentifierQueryVariables = Exact<{
   identifier: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type QueryUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
@@ -18211,7 +18659,7 @@ export type QueryUsersQueryVariables = Exact<{
 }>;
 
 
-export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null }> | null } | null };
+export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null }> | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   user: UserUpdateInput;
@@ -18219,6 +18667,83 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, state: EntityState, type?: UserTypes | null, description?: string | null, identifier: string } | null };
+
+export type CountViewsQueryVariables = Exact<{
+  filter?: InputMaybe<ViewFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountViewsQuery = { __typename?: 'Query', countViews?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateViewMutationVariables = Exact<{
+  view: ViewInput;
+}>;
+
+
+export type CreateViewMutation = { __typename?: 'Mutation', createView?: { __typename?: 'View', id: string, name: string, state: EntityState, type?: ViewTypes | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+
+export type DeleteAllViewsMutationVariables = Exact<{
+  filter?: InputMaybe<ViewFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllViewsMutation = { __typename?: 'Mutation', deleteAllViews?: Array<{ __typename?: 'View', id: string, state: EntityState } | null> | null };
+
+export type DeleteViewMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteViewMutation = { __typename?: 'Mutation', deleteView?: { __typename?: 'View', id: string, state: EntityState } | null };
+
+export type DeleteViewsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteViewsMutation = { __typename?: 'Mutation', deleteViews?: Array<{ __typename?: 'View', id: string, state: EntityState } | null> | null };
+
+export type GetViewQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetViewQuery = { __typename?: 'Query', view?: { __typename?: 'View', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: ViewTypes | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+
+export type QueryViewsQueryVariables = Exact<{
+  filter?: InputMaybe<ViewFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryViewsQuery = { __typename?: 'Query', views?: { __typename?: 'QueryResults', results?: Array<{ __typename?: 'View', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, type?: ViewTypes | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
+
+export type UpdateViewMutationVariables = Exact<{
+  view: ViewUpdateInput;
+}>;
+
+
+export type UpdateViewMutation = { __typename?: 'Mutation', updateView?: { __typename?: 'View', id: string, name: string, state: EntityState, type?: ViewTypes | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+
+export type UpsertViewMutationVariables = Exact<{
+  view: ViewInput;
+}>;
+
+
+export type UpsertViewMutation = { __typename?: 'Mutation', upsertView?: { __typename?: 'View', id: string, name: string, state: EntityState, type?: ViewTypes | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+
+export type ViewExistsQueryVariables = Exact<{
+  filter?: InputMaybe<ViewFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ViewExistsQuery = { __typename?: 'Query', viewExists?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
 
 export type CountWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -18233,7 +18758,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type DeleteAllWorkflowsMutationVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -18265,7 +18790,7 @@ export type GetWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -18273,21 +18798,21 @@ export type QueryWorkflowsQueryVariables = Exact<{
 }>;
 
 
-export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null }> | null } | null };
+export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null }> | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   workflow: WorkflowUpdateInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type UpsertWorkflowMutationVariables = Exact<{
   workflow: WorkflowInput;
 }>;
 
 
-export type UpsertWorkflowMutation = { __typename?: 'Mutation', upsertWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
+export type UpsertWorkflowMutation = { __typename?: 'Mutation', upsertWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes | null> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null } | null } | null> | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null } | null } | null> | null } | null };
 
 export type WorkflowExistsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;

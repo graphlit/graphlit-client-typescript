@@ -10,7 +10,6 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 describe("Groq Tool Calling Tests", () => {
   let client: Graphlit;
-  let specification: Types.Specification | null = null;
   let conversationId: string | null = null;
   let createdSpecId: string | null = null;
 
@@ -49,11 +48,10 @@ describe("Groq Tool Calling Tests", () => {
         },
       });
       console.log("Create result:", JSON.stringify(createResult, null, 2));
-      specification = createResult.createSpecification || null;
-      createdSpecId = specification?.id || null;
+      createdSpecId = createResult.createSpecification?.id || null;
       console.log(
         "✅ Created specification:",
-        specification?.name,
+        createResult.createSpecification?.name,
         "ID:",
         createdSpecId,
       );
@@ -91,7 +89,7 @@ describe("Groq Tool Calling Tests", () => {
   });
 
   it("should call web search tool when requested with Groq", async () => {
-    if (!specification) {
+    if (!createdSpecId) {
       console.log("❌ No Groq specification available, skipping test");
       return;
     }
@@ -139,19 +137,16 @@ describe("Groq Tool Calling Tests", () => {
     };
 
     console.log("\n=== Testing Groq Tool Calling ===");
-    console.log("Specification:", specification.name);
-    console.log("Model:", specification.groq?.model);
-    console.log("Service Type:", specification.serviceType);
 
     try {
       const result = await client.promptAgent(
         "How long has Mason Marchment played in the NHL? Make me a table of his stats, via web search",
         undefined, // no conversation ID
-        { id: specification.id }, // specification reference
+        { id: createdSpecId }, // specification reference
         [webSearchTool], // available tools
         toolHandlers, // tool implementations
         {
-          debug: true,
+          //debug: true,
           maxToolRounds: 5,
         },
       );
@@ -204,7 +199,7 @@ describe("Groq Tool Calling Tests", () => {
   });
 
   it("should handle multiple tool types with Groq", async () => {
-    if (!specification || !GROQ_API_KEY) {
+    if (!createdSpecId || !GROQ_API_KEY) {
       console.log("❌ No Groq specification or API key, skipping test");
       return;
     }
@@ -294,7 +289,7 @@ describe("Groq Tool Calling Tests", () => {
     const result = await client.promptAgent(
       "Search for Mason Marchment's NHL career stats and create a formatted table showing his statistics by season",
       undefined,
-      { id: specification.id },
+      { id: createdSpecId },
       tools,
       toolHandlers,
     );
@@ -321,7 +316,7 @@ describe("Groq Tool Calling Tests", () => {
   });
 
   it("should work without tools when not needed", async () => {
-    if (!specification || !GROQ_API_KEY) {
+    if (!createdSpecId || !GROQ_API_KEY) {
       console.log("❌ No Groq specification or API key, skipping test");
       return;
     }
@@ -331,7 +326,7 @@ describe("Groq Tool Calling Tests", () => {
     const result = await client.promptAgent(
       "What is 2 + 2? Just give me the answer.",
       undefined,
-      { id: specification.id },
+      { id: createdSpecId },
       [], // No tools
       {}, // No handlers
     );

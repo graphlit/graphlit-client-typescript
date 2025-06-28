@@ -14,7 +14,15 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - **Extract insights** - Summaries, entities, and metadata
 - **Build knowledge graphs** - Automatically connect related information
 
-## ✨ What's New in v1.1.0
+## ✨ What's New
+
+### v1.2.0 - Reasoning & Cancellation Support 🧠
+
+- **Reasoning/Thinking Detection** - See how AI models think through problems (Bedrock Nova, Deepseek, Anthropic)
+- **Stream Cancellation** - Stop long-running generations instantly with AbortSignal support
+- **Enhanced Streaming Events** - New `reasoning_update` events expose model thought processes
+
+### v1.1.0 - Streaming & Resilience
 
 - **Real-time streaming** - Watch AI responses appear word-by-word across 9 different providers
 - **Tool calling** - Let AI execute functions and retrieve data
@@ -27,7 +35,9 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Setting Up](#setting-up)
-- [Network Resilience](#network-resilience-new-in-v111)
+- [Reasoning Support (New!)](#reasoning-support-new) 🧠
+- [Stream Cancellation (New!)](#stream-cancellation-new) 🛑
+- [Network Resilience](#network-resilience)
 - [Streaming Provider Support](#streaming-provider-support)
 - [Basic Examples](#basic-examples)
 - [Common Use Cases](#common-use-cases)
@@ -145,9 +155,153 @@ AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
 ```
 
-## Network Resilience (New in v1.1.1)
+## Reasoning Support (New!) 🧠
 
-The SDK now includes automatic retry logic for network errors and transient failures:
+The SDK can detect and expose AI reasoning processes, showing you how models "think" through problems. This feature works with models that support reasoning output.
+
+### Quick Example
+
+```typescript
+await client.streamAgent(
+  "What's 15% of 240? Think step by step.",
+  (event) => {
+    if (event.type === "reasoning_update") {
+      console.log("🤔 Model thinking:", event.content);
+    } else if (event.type === "message_update") {
+      console.log("💬 Answer:", event.message.message);
+    }
+  },
+  undefined,
+  { id: specificationId },
+);
+```
+
+### Supported Models
+
+| Provider        | Models                       | Format         | Example Output                             |
+| --------------- | ---------------------------- | -------------- | ------------------------------------------ |
+| **AWS Bedrock** | Nova Premier                 | `thinking_tag` | `<thinking>Let me calculate...</thinking>` |
+| **Deepseek**    | Chat, Reasoner               | `markdown`     | `**Step 1:** First, I need to...`          |
+| **Anthropic**   | Claude (with special access) | `thinking_tag` | Internal thinking blocks                   |
+
+### Using Reasoning Detection
+
+```typescript
+// Create a specification with a reasoning-capable model
+const spec = await client.createSpecification({
+  name: "Reasoning Assistant",
+  serviceType: Types.ModelServiceTypes.Bedrock,
+  bedrock: {
+    model: Types.BedrockModels.NovaPremier,
+    temperature: 0.7,
+  },
+});
+
+// Track reasoning steps
+const reasoningSteps: string[] = [];
+
+await client.streamAgent(
+  "Analyze the pros and cons of remote work. Think carefully.",
+  (event) => {
+    switch (event.type) {
+      case "reasoning_update":
+        // Capture model's thinking process
+        reasoningSteps.push(event.content);
+        console.log(`🧠 Thinking (${event.format}):`, event.content);
+
+        if (event.isComplete) {
+          console.log("✅ Reasoning complete!");
+        }
+        break;
+
+      case "message_update":
+        // The actual answer (reasoning removed)
+        console.log("Answer:", event.message.message);
+        break;
+    }
+  },
+  undefined,
+  { id: spec.createSpecification!.id },
+);
+```
+
+### Key Features
+
+- **Automatic Detection**: Reasoning content is automatically detected and separated
+- **Format Preservation**: Maintains original formatting (markdown, tags, etc.)
+- **Real-time Streaming**: Reasoning streams as it's generated
+- **Clean Separation**: Final answers don't include thinking content
+
+## Stream Cancellation (New!) 🛑
+
+Cancel long-running AI generations instantly using the standard Web API `AbortController`.
+
+### Quick Example
+
+```typescript
+const controller = new AbortController();
+
+// Add a stop button
+document.getElementById("stop").onclick = () => controller.abort();
+
+try {
+  await client.streamAgent(
+    "Write a 10,000 word essay about quantum computing...",
+    (event) => {
+      if (event.type === "message_update") {
+        console.log(event.message.message);
+      }
+    },
+    undefined,
+    { id: specificationId },
+    undefined, // tools
+    undefined, // toolHandlers
+    { abortSignal: controller.signal }, // Pass the signal
+  );
+} catch (error) {
+  if (controller.signal.aborted) {
+    console.log("✋ Generation stopped by user");
+  }
+}
+```
+
+### Advanced Cancellation
+
+```typescript
+// Cancel after timeout
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+// Cancel multiple streams at once
+const controller = new AbortController();
+
+const streams = [
+  client.streamAgent("Query 1", handler1, undefined, spec1, null, null, {
+    abortSignal: controller.signal,
+  }),
+  client.streamAgent("Query 2", handler2, undefined, spec2, null, null, {
+    abortSignal: controller.signal,
+  }),
+  client.streamAgent("Query 3", handler3, undefined, spec3, null, null, {
+    abortSignal: controller.signal,
+  }),
+];
+
+// Cancel all streams
+controller.abort();
+await Promise.allSettled(streams);
+```
+
+### Features
+
+- **Instant Response**: Cancellation happens immediately
+- **Provider Support**: Works with all streaming providers
+- **Tool Interruption**: Stops tool execution between rounds
+- **Clean Cleanup**: Resources are properly released
+
+## Network Resilience
+
+The SDK includes automatic retry logic for network errors and transient failures:
 
 ### Default Retry Configuration
 
@@ -466,7 +620,73 @@ for (const provider of providers) {
 }
 ```
 
-### 5. Tool Calling
+### 5. Reasoning + Cancellation Example
+
+Combine reasoning detection with cancellable streams:
+
+```typescript
+import { Graphlit, Types } from "graphlit-client";
+
+const client = new Graphlit();
+const controller = new AbortController();
+
+// Create spec for reasoning model
+const spec = await client.createSpecification({
+  name: "Reasoning Demo",
+  serviceType: Types.ModelServiceTypes.Bedrock,
+  bedrock: {
+    model: Types.BedrockModels.NovaPremier,
+  },
+});
+
+// UI elements
+const stopButton = document.getElementById("stop-reasoning");
+const reasoningDiv = document.getElementById("reasoning");
+const answerDiv = document.getElementById("answer");
+
+stopButton.onclick = () => {
+  controller.abort();
+  console.log("🛑 Cancelled!");
+};
+
+try {
+  await client.streamAgent(
+    "Solve this puzzle: If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Think through this step-by-step.",
+    (event) => {
+      switch (event.type) {
+        case "reasoning_update":
+          // Show the AI's thought process
+          reasoningDiv.textContent = event.content;
+          if (event.isComplete) {
+            reasoningDiv.classList.add("complete");
+          }
+          break;
+
+        case "message_update":
+          // Show the final answer
+          answerDiv.textContent = event.message.message;
+          break;
+
+        case "conversation_completed":
+          stopButton.disabled = true;
+          console.log("✅ Complete!");
+          break;
+      }
+    },
+    undefined,
+    { id: spec.createSpecification!.id },
+    undefined,
+    undefined,
+    { abortSignal: controller.signal },
+  );
+} catch (error) {
+  if (controller.signal.aborted) {
+    console.log("Reasoning cancelled by user");
+  }
+}
+```
+
+### 6. Tool Calling
 
 Let AI call functions to get real-time data:
 
@@ -933,6 +1153,16 @@ type AgentStreamEvent =
   | { type: "conversation_started"; conversationId: string }
   | { type: "message_update"; message: { message: string } }
   | { type: "tool_update"; toolCall: any; status: string }
+  | {
+      type: "reasoning_update";
+      content: string;
+      format: "thinking_tag" | "markdown" | "custom";
+      isComplete: boolean;
+    }
+  | {
+      type: "context_window";
+      usage: { usedTokens: number; maxTokens: number; percentage: number };
+    }
   | { type: "conversation_completed"; message: { message: string } }
   | { type: "error"; error: { message: string; recoverable: boolean } };
 ```

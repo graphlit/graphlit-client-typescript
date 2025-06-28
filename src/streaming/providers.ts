@@ -2,7 +2,10 @@ import {
   ConversationToolCall,
   Specification,
   ToolDefinitionInput,
+  ConversationMessage,
+  ConversationRoleTypes,
 } from "../generated/graphql-types.js";
+import * as Types from "../generated/graphql-types.js";
 import {
   OpenAIMessage,
   AnthropicMessage,
@@ -110,6 +113,7 @@ export async function streamWithOpenAI(
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -149,13 +153,13 @@ export async function streamWithOpenAI(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
+        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
@@ -187,11 +191,14 @@ export async function streamWithOpenAI(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [OpenAI] Starting LLM call at: ${new Date().toISOString()}`,
+        `⏱️ [OpenAI] Starting LLM call at: ${new Date().toISOString()}`
       );
     }
 
-    const stream = await openaiClient.chat.completions.create(streamConfig);
+    const stream = await openaiClient.chat.completions.create({
+      ...streamConfig,
+      ...(abortSignal && { signal: abortSignal }),
+    });
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
@@ -201,7 +208,7 @@ export async function streamWithOpenAI(
         console.log(`[OpenAI] Chunk:`, JSON.stringify(chunk, null, 2));
         if (delta?.content) {
           console.log(
-            `[OpenAI] Content delta: "${delta.content}" (${delta.content.length} chars)`,
+            `[OpenAI] Content delta: "${delta.content}" (${delta.content.length} chars)`
           );
         }
         if (delta?.tool_calls) {
@@ -209,7 +216,7 @@ export async function streamWithOpenAI(
         }
         if (chunk.choices[0]?.finish_reason) {
           console.log(
-            `[OpenAI] Finish reason: ${chunk.choices[0].finish_reason}`,
+            `[OpenAI] Finish reason: ${chunk.choices[0].finish_reason}`
           );
         }
       }
@@ -225,7 +232,7 @@ export async function streamWithOpenAI(
           firstTokenTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`,
+              `\n⚡ [OpenAI] Time to First Token (TTFT): ${firstTokenTime}ms`
             );
           }
         }
@@ -235,7 +242,7 @@ export async function streamWithOpenAI(
           firstMeaningfulContentTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
+              `\n🎯 [OpenAI] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
             );
           }
         }
@@ -249,7 +256,7 @@ export async function streamWithOpenAI(
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`,
+            `[OpenAI] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`
           );
         }
         onEvent({
@@ -285,14 +292,14 @@ export async function streamWithOpenAI(
               firstTokenTime = Date.now() - startTime;
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`,
+                  `\n⚡ [OpenAI] Time to First Token (Tool Call): ${firstTokenTime}ms`
                 );
               }
             }
 
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[OpenAI] Starting new tool call: ${toolCalls[index].id}`,
+                `[OpenAI] Starting new tool call: ${toolCalls[index].id}`
               );
             }
 
@@ -317,16 +324,16 @@ export async function streamWithOpenAI(
 
             // Count tool argument tokens (rough estimate: ~4 chars per token)
             toolArgumentTokens += Math.ceil(
-              toolCallDelta.function.arguments.length / 4,
+              toolCallDelta.function.arguments.length / 4
             );
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`,
+                `[OpenAI] Tool ${toolCalls[index].name} - Partial JSON chunk: "${toolCallDelta.function.arguments}"`
               );
               console.log(
-                `[OpenAI] Tool ${toolCalls[index].name} - Total accumulated: ${toolCalls[index].arguments.length} chars`,
+                `[OpenAI] Tool ${toolCalls[index].name} - Total accumulated: ${toolCalls[index].arguments.length} chars`
               );
             }
 
@@ -369,7 +376,7 @@ export async function streamWithOpenAI(
       // Log the final JSON for debugging
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
+          `[OpenAI] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
         );
         console.log(toolCall.arguments);
       }
@@ -387,7 +394,7 @@ export async function streamWithOpenAI(
     // Final summary logging
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
-        `[OpenAI] Successfully processed ${toolCalls.length} tool calls`,
+        `[OpenAI] Successfully processed ${toolCalls.length} tool calls`
       );
     }
 
@@ -402,7 +409,7 @@ export async function streamWithOpenAI(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0,
+        0
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -428,7 +435,7 @@ export async function streamWithOpenAI(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [OpenAI] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
+        `📊 [OpenAI] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
       );
 
       // Tool calling metrics
@@ -442,7 +449,7 @@ export async function streamWithOpenAI(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [OpenAI] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
+          `🔧 [OpenAI] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
         );
 
         // Tool timing details (consolidated)
@@ -480,12 +487,12 @@ export async function streamWithOpenAI(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [OpenAI] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
+          `⏳ [OpenAI] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
         );
       }
 
       console.log(
-        `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`,
+        `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`
       );
     }
     onComplete(fullMessage, toolCalls);
@@ -517,7 +524,7 @@ export async function streamWithOpenAI(
         console.log(`⚠️ [OpenAI] Network error: ${errorMessage}`);
       }
       const networkError: any = new Error(
-        `OpenAI network error: ${errorMessage}`,
+        `OpenAI network error: ${errorMessage}`
       );
       networkError.statusCode = 503; // Service unavailable
       throw networkError;
@@ -531,14 +538,19 @@ export async function streamWithOpenAI(
 /**
  * Stream with Anthropic SDK
  */
+// Import Anthropic types for better type safety
+type AnthropicClient = import("@anthropic-ai/sdk").default;
+
 export async function streamWithAnthropic(
   specification: Specification,
   messages: AnthropicMessage[],
   systemPrompt: string | undefined,
   tools: ToolDefinitionInput[] | undefined,
-  anthropicClient: any, // Anthropic client instance
+  anthropicClient: AnthropicClient, // Properly typed Anthropic client
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal,
+  thinkingConfig?: { type: "enabled"; budget_tokens: number }
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -578,24 +590,44 @@ export async function streamWithAnthropic(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Anthropic specification: ${specification.name}`,
+        `No model name found for Anthropic specification: ${specification.name}`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
+    // Use proper Anthropic SDK types for the config
     const streamConfig: any = {
-      model: modelName,
+      model: modelName as string,
       messages,
       stream: true,
-      temperature: specification.anthropic?.temperature,
-      //top_p: specification.anthropic?.probability,
       max_tokens: specification.anthropic?.completionTokenLimit || 8192, // required
     };
+
+    // Handle temperature based on thinking configuration
+    if (thinkingConfig) {
+      // When thinking is enabled, temperature must be 1
+      streamConfig.temperature = 1;
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [Anthropic] Setting temperature to 1 (required for extended thinking)`
+        );
+      }
+    } else {
+      // Only add temperature if it's defined and valid for non-thinking requests
+      if (
+        specification.anthropic?.temperature !== undefined &&
+        specification.anthropic?.temperature !== null &&
+        typeof specification.anthropic?.temperature === "number"
+      ) {
+        streamConfig.temperature = specification.anthropic.temperature;
+      }
+    }
 
     if (systemPrompt) {
       streamConfig.system = systemPrompt;
@@ -610,17 +642,51 @@ export async function streamWithAnthropic(
       }));
     }
 
+    // Add thinking config if provided
+    if (thinkingConfig) {
+      streamConfig.thinking = thinkingConfig;
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [Anthropic] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`
+        );
+      }
+
+      // Adjust max_tokens to account for thinking budget
+      const totalTokens =
+        streamConfig.max_tokens + thinkingConfig.budget_tokens;
+      if (totalTokens > 200000) {
+        // Claude's context window limit
+        console.warn(
+          `⚠️ [Anthropic] Total tokens (${totalTokens}) exceeds context window, adjusting completion tokens...`
+        );
+        streamConfig.max_tokens = Math.max(
+          1000,
+          200000 - thinkingConfig.budget_tokens
+        );
+      }
+    }
+
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`,
+        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`
       );
     }
 
-    const stream = await anthropicClient.messages.create(streamConfig);
+    const stream = await anthropicClient.messages.create(
+      streamConfig,
+      abortSignal ? { signal: abortSignal } : undefined
+    );
 
     let activeContentBlock = false;
+    let currentContentBlockIndex: number | undefined;
+    let currentContentBlockType: "text" | "thinking" | "tool_use" | undefined;
+    let thinkingContent = "";
+    let thinkingSignature = "";
+    let completeThinkingContent = ""; // Accumulate all thinking content for conversation history
+    let completeThinkingSignature = ""; // Accumulate signature for conversation history
 
-    for await (const chunk of stream) {
+    for await (const chunk of stream as any) {
       // Debug log all chunk types
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`[Anthropic] Received chunk type: ${chunk.type}`);
@@ -628,7 +694,23 @@ export async function streamWithAnthropic(
 
       if (chunk.type === "content_block_start") {
         activeContentBlock = true;
-        if (chunk.content_block.type === "tool_use") {
+        currentContentBlockIndex = chunk.index;
+        currentContentBlockType = chunk.content_block.type;
+
+        if (chunk.content_block.type === "thinking") {
+          // Start of thinking block (native extended thinking)
+          thinkingContent = "";
+          thinkingSignature = "";
+
+          onEvent({
+            type: "reasoning_start",
+            format: "thinking_tag",
+          });
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log("[Anthropic] Extended thinking block started");
+          }
+        } else if (chunk.content_block.type === "tool_use") {
           const toolCall = {
             id: chunk.content_block.id,
             name: chunk.content_block.name,
@@ -651,7 +733,7 @@ export async function streamWithAnthropic(
             firstTokenTime = Date.now() - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`,
+                `\n⚡ [Anthropic] Time to First Token (Tool Call): ${firstTokenTime}ms`
               );
             }
           }
@@ -665,7 +747,43 @@ export async function streamWithAnthropic(
           });
         }
       } else if (chunk.type === "content_block_delta") {
-        if (chunk.delta.type === "text_delta") {
+        // Handle thinking blocks with native extended thinking
+        if (
+          chunk.delta.type === "thinking_delta" &&
+          "thinking" in chunk.delta
+        ) {
+          // Accumulate thinking content
+          thinkingContent += chunk.delta.thinking;
+
+          // Track first token time
+          if (firstTokenTime === 0) {
+            firstTokenTime = Date.now() - startTime;
+          }
+
+          onEvent({
+            type: "reasoning_delta",
+            content: chunk.delta.thinking,
+            format: "thinking_tag",
+          });
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `[Anthropic] Thinking delta: "${chunk.delta.thinking}"`
+            );
+          }
+        } else if (
+          chunk.delta.type === "signature_delta" &&
+          "signature" in chunk.delta
+        ) {
+          // Handle signature for thinking blocks
+          thinkingSignature += chunk.delta.signature;
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `[Anthropic] Signature delta: "${chunk.delta.signature}"`
+            );
+          }
+        } else if (chunk.delta.type === "text_delta" && "text" in chunk.delta) {
           fullMessage += chunk.delta.text;
           tokenCount++;
 
@@ -676,7 +794,7 @@ export async function streamWithAnthropic(
             firstTokenTime = currentTime - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`,
+                `\n⚡ [Anthropic] Time to First Token (TTFT): ${firstTokenTime}ms`
               );
             }
           }
@@ -686,7 +804,7 @@ export async function streamWithAnthropic(
             firstMeaningfulContentTime = currentTime - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
+                `\n🎯 [Anthropic] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
               );
             }
           }
@@ -700,7 +818,7 @@ export async function streamWithAnthropic(
 
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`,
+              `[Anthropic] Token #${tokenCount}: "${chunk.delta.text}" | Accumulated: ${fullMessage.length} chars`
             );
           }
           onEvent({
@@ -715,16 +833,16 @@ export async function streamWithAnthropic(
 
             // Count tool argument tokens (rough estimate: ~4 chars per token)
             toolArgumentTokens += Math.ceil(
-              chunk.delta.partial_json.length / 4,
+              chunk.delta.partial_json.length / 4
             );
 
             // Debug logging for partial JSON accumulation
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`,
+                `[Anthropic] Tool ${currentTool.name} - Partial JSON chunk: "${chunk.delta.partial_json}"`
               );
               console.log(
-                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`,
+                `[Anthropic] Tool ${currentTool.name} - Total accumulated: ${currentTool.arguments.length} chars`
               );
             }
 
@@ -737,9 +855,47 @@ export async function streamWithAnthropic(
         }
       } else if (chunk.type === "content_block_stop") {
         activeContentBlock = false;
+
+        // Check if we're stopping a thinking block
+        if (
+          currentContentBlockType === "thinking" &&
+          chunk.index === currentContentBlockIndex
+        ) {
+          // Emit the complete thinking block with signature
+          onEvent({
+            type: "reasoning_end",
+            fullContent: thinkingContent,
+            signature: thinkingSignature || undefined,
+          });
+
+          // Accumulate thinking content and signature for conversation history preservation
+          if (thinkingContent.trim()) {
+            completeThinkingContent += thinkingContent;
+          }
+          if (thinkingSignature.trim()) {
+            completeThinkingSignature = thinkingSignature; // Use the last signature
+          }
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`[Anthropic] Thinking block completed:`, {
+              contentLength: thinkingContent.length,
+              hasSignature: !!thinkingSignature,
+              signature: thinkingSignature,
+              totalThinkingLength: completeThinkingContent.length,
+            });
+          }
+
+          // Reset current thinking state (but keep completeThinkingContent)
+          thinkingContent = "";
+          thinkingSignature = "";
+        }
+
+        currentContentBlockType = undefined;
+        currentContentBlockIndex = undefined;
+
         // Tool call complete
         const currentTool = toolCalls[toolCalls.length - 1];
-        if (currentTool) {
+        if (currentTool && chunk.content_block?.type === "tool_use") {
           const currentTime = Date.now();
 
           // Update tool metrics
@@ -762,7 +918,7 @@ export async function streamWithAnthropic(
           } catch (e) {
             toolMetrics.failedTools++;
             console.error(
-              `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`,
+              `[Anthropic] ❌ Invalid JSON for ${currentTool.name}: ${e}`
             );
           }
 
@@ -772,7 +928,7 @@ export async function streamWithAnthropic(
             !isValidJSON(currentTool.arguments)
           ) {
             console.log(
-              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`,
+              `[Anthropic] Tool ${currentTool.name} complete with arguments (${currentTool.arguments.length} chars):`
             );
             console.log(currentTool.arguments);
 
@@ -783,7 +939,7 @@ export async function streamWithAnthropic(
               currentTool.arguments.length > 100
             ) {
               console.warn(
-                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`,
+                `[Anthropic] WARNING: JSON may be truncated - doesn't end with '}': ...${lastChars}`
               );
             }
           }
@@ -800,7 +956,7 @@ export async function streamWithAnthropic(
       } else if (chunk.type === "message_stop" && activeContentBlock) {
         // Handle Anthropic bug: message_stop without content_block_stop
         console.warn(
-          `[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`,
+          `[Anthropic] Received message_stop without content_block_stop - handling as implicit block stop`
         );
         activeContentBlock = false;
 
@@ -809,7 +965,7 @@ export async function streamWithAnthropic(
         if (currentTool) {
           // Log the incomplete tool
           console.warn(
-            `[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`,
+            `[Anthropic] Synthetic content_block_stop for incomplete tool ${currentTool.name} (${currentTool.arguments.length} chars)`
           );
 
           // Only emit tool_call_complete if we have valid JSON
@@ -824,7 +980,7 @@ export async function streamWithAnthropic(
             });
           } else {
             console.error(
-              `[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`,
+              `[Anthropic] Tool ${currentTool.name} has incomplete JSON, skipping tool_call_complete event`
             );
           }
         }
@@ -835,7 +991,7 @@ export async function streamWithAnthropic(
     const validToolCalls = toolCalls.filter((tc, idx) => {
       if (!isValidJSON(tc.arguments)) {
         console.warn(
-          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
+          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`
         );
         return false;
       }
@@ -844,10 +1000,10 @@ export async function streamWithAnthropic(
 
     if (toolCalls.length !== validToolCalls.length) {
       console.log(
-        `[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`,
+        `[Anthropic] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`
       );
       console.log(
-        `[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`,
+        `[Anthropic] Successfully processed ${validToolCalls.length} valid tool calls`
       );
     }
 
@@ -862,7 +1018,7 @@ export async function streamWithAnthropic(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0,
+        0
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -888,7 +1044,7 @@ export async function streamWithAnthropic(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [Anthropic] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
+        `📊 [Anthropic] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
       );
 
       // Tool calling metrics
@@ -902,7 +1058,7 @@ export async function streamWithAnthropic(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [Anthropic] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
+          `🔧 [Anthropic] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
         );
 
         // Tool timing details (consolidated)
@@ -940,16 +1096,32 @@ export async function streamWithAnthropic(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [Anthropic] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
+          `⏳ [Anthropic] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
         );
       }
 
       console.log(
-        `✅ [Anthropic] Final message (${fullMessage.length} chars): "${fullMessage}"`,
+        `✅ [Anthropic] Final message (${fullMessage.length} chars): "${fullMessage}"`
       );
     }
 
-    onComplete(fullMessage, validToolCalls);
+    // Include thinking content in the final message for conversation history preservation
+    let finalMessage = fullMessage;
+    if (completeThinkingContent.trim()) {
+      // Wrap thinking content with signature in special tags that formatMessagesForAnthropic can parse
+      const thinkingBlock = completeThinkingSignature.trim()
+        ? `<thinking signature="${completeThinkingSignature}">${completeThinkingContent}</thinking>`
+        : `<thinking>${completeThinkingContent}</thinking>`;
+      finalMessage = `${thinkingBlock}${fullMessage}`;
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [Anthropic] Including thinking content (${completeThinkingContent.length} chars) and signature (${completeThinkingSignature.length} chars) in conversation history`
+        );
+      }
+    }
+
+    onComplete(finalMessage, validToolCalls);
   } catch (error: any) {
     // Handle Anthropic-specific errors
     const errorMessage = error.message || error.toString();
@@ -998,6 +1170,7 @@ export async function streamWithGoogle(
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -1037,13 +1210,13 @@ export async function streamWithGoogle(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Google specification: ${specification.name}`,
+        `No model name found for Google specification: ${specification.name}`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
@@ -1087,7 +1260,7 @@ export async function streamWithGoogle(
                     JSON.stringify(rawSchema) !== JSON.stringify(cleanedSchema);
                   if (hadCleanup) {
                     console.log(
-                      `[Google] Cleaned schema for tool ${tool.name} - removed unsupported fields`,
+                      `[Google] Cleaned schema for tool ${tool.name} - removed unsupported fields`
                     );
                   }
                 }
@@ -1140,7 +1313,7 @@ export async function streamWithGoogle(
           firstTokenTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`,
+              `\n⚡ [Google] Time to First Token (TTFT): ${firstTokenTime}ms`
             );
           }
         }
@@ -1150,7 +1323,7 @@ export async function streamWithGoogle(
           firstMeaningfulContentTime = currentTime - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`,
+              `\n🎯 [Google] Time to First Meaningful Content: ${firstMeaningfulContentTime}ms`
             );
           }
         }
@@ -1170,11 +1343,11 @@ export async function streamWithGoogle(
             if (part.functionCall) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Received function call: ${part.functionCall.name}`,
+                  `[Google] Received function call: ${part.functionCall.name}`
                 );
                 console.log(
                   `[Google] Function args:`,
-                  JSON.stringify(part.functionCall.args || {}),
+                  JSON.stringify(part.functionCall.args || {})
                 );
               }
 
@@ -1188,7 +1361,7 @@ export async function streamWithGoogle(
               // Track tool metrics
               toolMetrics.totalTools++;
               const argumentString = JSON.stringify(
-                part.functionCall.args || {},
+                part.functionCall.args || {}
               );
               toolArgumentTokens += Math.ceil(argumentString.length / 4);
 
@@ -1204,7 +1377,7 @@ export async function streamWithGoogle(
                 firstTokenTime = Date.now() - startTime;
                 if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                   console.log(
-                    `\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`,
+                    `\n⚡ [Google] Time to First Token (Tool Call): ${firstTokenTime}ms`
                   );
                 }
               }
@@ -1241,14 +1414,14 @@ export async function streamWithGoogle(
               } catch (e) {
                 toolMetrics.failedTools++;
                 console.error(
-                  `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`,
+                  `[Google] ❌ Invalid JSON for ${toolCall.name}: ${e}`
                 );
               }
 
               // Log completion
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`,
+                  `[Google] Tool ${toolCall.name} complete with arguments (${toolCall.arguments.length} chars):`
                 );
                 console.log(toolCall.arguments);
               }
@@ -1269,7 +1442,7 @@ export async function streamWithGoogle(
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.error(
             `[Google] Error parsing chunk for function calls:`,
-            error,
+            error
           );
         }
       }
@@ -1285,7 +1458,7 @@ export async function streamWithGoogle(
         candidate?.content?.parts
       ) {
         console.log(
-          `[Google] Processing final response with ${candidate.content.parts.length} parts`,
+          `[Google] Processing final response with ${candidate.content.parts.length} parts`
         );
       }
 
@@ -1298,7 +1471,7 @@ export async function streamWithGoogle(
             if (!fullMessage.endsWith(finalText)) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `[Google] Adding final text: ${finalText.length} chars`,
+                  `[Google] Adding final text: ${finalText.length} chars`
                 );
               }
               fullMessage += finalText;
@@ -1316,7 +1489,7 @@ export async function streamWithGoogle(
           ) {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Google] Found function call in final response: ${part.functionCall.name}`,
+                `[Google] Found function call in final response: ${part.functionCall.name}`
               );
             }
 
@@ -1357,7 +1530,7 @@ export async function streamWithGoogle(
     // Final summary logging
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && toolCalls.length > 0) {
       console.log(
-        `[Google] Successfully processed ${toolCalls.length} tool calls`,
+        `[Google] Successfully processed ${toolCalls.length} tool calls`
       );
     }
 
@@ -1372,7 +1545,7 @@ export async function streamWithGoogle(
       const roundEndTime = Date.now();
       const totalToolTime = toolMetrics.toolTimes.reduce(
         (sum, tool) => sum + tool.totalTime,
-        0,
+        0
       );
       const llmTime = totalTime - totalToolTime;
 
@@ -1398,7 +1571,7 @@ export async function streamWithGoogle(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [Google] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
+        `📊 [Google] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
       );
 
       // Tool calling metrics
@@ -1412,7 +1585,7 @@ export async function streamWithGoogle(
           toolMetrics.toolTimes.length;
 
         console.log(
-          `🔧 [Google] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`,
+          `🔧 [Google] Tools: Total=${toolMetrics.totalTools} | Success=${toolMetrics.successfulTools} | Failed=${toolMetrics.failedTools} | SuccessRate=${successRate}% | AvgTime=${avgToolTime.toFixed(2)}ms`
         );
 
         // Tool timing details (consolidated)
@@ -1450,12 +1623,12 @@ export async function streamWithGoogle(
         const p99Delay = sortedDelays[Math.floor(sortedDelays.length * 0.99)];
 
         console.log(
-          `⏳ [Google] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`,
+          `⏳ [Google] Inter-Token: Avg=${avgDelay.toFixed(2)}ms | P50=${p50Delay}ms | P95=${p95Delay}ms | P99=${p99Delay}ms`
         );
       }
 
       console.log(
-        `✅ [Google] Final message (${fullMessage.length} chars): "${fullMessage}"`,
+        `✅ [Google] Final message (${fullMessage.length} chars): "${fullMessage}"`
       );
     }
 
@@ -1476,6 +1649,7 @@ export async function streamWithGroq(
   groqClient: any, // Groq client instance (OpenAI-compatible)
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   try {
     const modelName = getModelName(specification);
@@ -1483,17 +1657,36 @@ export async function streamWithGroq(
     // Filter or simplify tools for Groq models that have issues
     let groqTools = tools;
     if (tools && tools.length > 0) {
-      // LLaMA 3.3 70B seems to have tool calling issues - disable tools for this model
+      // Some models have tool calling issues - provide fallback prompt
+      const problemModels = [
+        "llama-3.3",
+        "LLAMA_3_3",
+        "llama3-groq-70b",
+        "llama3-groq-8b",
+      ];
+
       if (
         modelName &&
-        (modelName.includes("llama-3.3") || modelName.includes("LLAMA_3_3"))
+        problemModels.some((model) =>
+          modelName.toLowerCase().includes(model.toLowerCase())
+        )
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `⚠️ [Groq] Disabling tools for ${modelName} due to known compatibility issues`,
+            `⚠️ [Groq] Model ${modelName} has limited tool support - using simplified schemas`
           );
         }
-        groqTools = undefined;
+        // Don't disable tools entirely, but simplify them more aggressively
+        groqTools = tools.map((tool) => ({
+          ...tool,
+          schema: tool.schema
+            ? JSON.stringify({
+                type: "object",
+                properties: JSON.parse(tool.schema).properties || {},
+                required: JSON.parse(tool.schema).required || [],
+              })
+            : tool.schema,
+        }));
       } else {
         // For other models, simplify complex schemas
         groqTools = tools.map((tool) => ({
@@ -1513,6 +1706,7 @@ export async function streamWithGroq(
       groqClient,
       onEvent,
       onComplete,
+      abortSignal
     );
   } catch (error: any) {
     // Handle Groq-specific errors
@@ -1529,7 +1723,7 @@ export async function streamWithGroq(
       // Groq may have limitations with certain tool schemas
       // Re-throw with a more descriptive error
       throw new Error(
-        `Groq tool calling error: ${errorMessage}. The model may not support the provided tool schema format.`,
+        `Groq tool calling error: ${errorMessage}. The model may not support the provided tool schema format.`
       );
     }
 
@@ -1557,16 +1751,61 @@ export async function streamWithCerebras(
   cerebrasClient: any, // OpenAI client instance configured for Cerebras
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   try {
+    const modelName = getModelName(specification);
+
+    // Cerebras has very limited tool support
+    let cerebrasTools = tools;
+    let filteredMessages = messages;
+
+    if (modelName) {
+      const isQwen = modelName.toLowerCase().includes("qwen-3-32b");
+
+      if (tools && tools.length > 0) {
+        if (!isQwen) {
+          // Only qwen-3-32b supports tools
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `⚠️ [Cerebras] Disabling tools for ${modelName} - only qwen-3-32b supports tools`
+            );
+          }
+          cerebrasTools = undefined;
+        }
+      }
+
+      // For non-qwen models, we need to filter out any assistant messages with tool_calls
+      if (!isQwen) {
+        filteredMessages = messages.map((msg) => {
+          if (
+            msg.role === "assistant" &&
+            msg.tool_calls &&
+            msg.tool_calls.length > 0
+          ) {
+            // Remove tool_calls from assistant messages for non-qwen models
+            const { tool_calls, ...msgWithoutTools } = msg;
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `⚠️ [Cerebras] Removing tool_calls from assistant message for ${modelName}`
+              );
+            }
+            return msgWithoutTools;
+          }
+          return msg;
+        });
+      }
+    }
+
     // Cerebras uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
     return await streamWithOpenAI(
       specification,
-      messages,
-      tools,
+      filteredMessages,
+      cerebrasTools,
       cerebrasClient,
       onEvent,
       onComplete,
+      abortSignal
     );
   } catch (error: any) {
     // Handle Cerebras-specific 429 errors
@@ -1593,9 +1832,24 @@ export async function streamWithDeepseek(
   deepseekClient: any, // OpenAI client instance configured for Deepseek
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+
+  // Reasoning detection state
+  let reasoningLines: string[] = [];
+  let currentLine = "";
+  const REASONING_PATTERNS = [
+    /^🤔\s*Reasoning:/i,
+    /^\*\*Step\s+\d+:/i,
+    /^\*\*Reasoning:/i,
+    /^\*\*Analysis:/i,
+    /^\*\*Thought\s+\d+:/i,
+    /^\*\*Consideration:/i,
+  ];
+  let isInReasoning = false;
+  let hasEmittedReasoningStart = false;
 
   // Performance metrics
   const startTime = Date.now();
@@ -1648,13 +1902,13 @@ export async function streamWithDeepseek(
         hasCustomModelName: !!specification.deepseek?.modelName,
       });
       throw new Error(
-        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
+        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Deepseek] Model Config: Service=Deepseek | Model=${modelName} | Temperature=${specification.deepseek?.temperature} | MaxTokens=${specification.deepseek?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Deepseek] Model Config: Service=Deepseek | Model=${modelName} | Temperature=${specification.deepseek?.temperature} | MaxTokens=${specification.deepseek?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
@@ -1685,11 +1939,14 @@ export async function streamWithDeepseek(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [Deepseek] Starting LLM call at: ${new Date().toISOString()}`,
+        `⏱️ [Deepseek] Starting LLM call at: ${new Date().toISOString()}`
       );
     }
 
-    const stream = await deepseekClient.chat.completions.create(streamConfig);
+    const stream = await deepseekClient.chat.completions.create({
+      ...streamConfig,
+      ...(abortSignal && { signal: abortSignal }),
+    });
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
@@ -1713,17 +1970,88 @@ export async function streamWithDeepseek(
       // Handle message content
       if (delta.content) {
         tokenCount++;
-        fullMessage += delta.content;
 
         // Track first meaningful content
         if (firstMeaningfulContentTime === 0 && fullMessage.trim().length > 0) {
           firstMeaningfulContentTime = currentTime - startTime;
         }
 
-        onEvent({
-          type: "message",
-          message: fullMessage,
-        });
+        // Process content for reasoning detection
+        const content = delta.content;
+
+        // Build current line for pattern matching
+        for (const char of content) {
+          if (char === "\n") {
+            // Check if this line starts a reasoning section
+            const trimmedLine = currentLine.trim();
+            const isReasoningLine = REASONING_PATTERNS.some((pattern) =>
+              pattern.test(trimmedLine)
+            );
+
+            if (isReasoningLine && !isInReasoning) {
+              // Start reasoning mode
+              isInReasoning = true;
+              if (!hasEmittedReasoningStart) {
+                onEvent({ type: "reasoning_start", format: "markdown" });
+                hasEmittedReasoningStart = true;
+              }
+              reasoningLines.push(currentLine);
+              onEvent({
+                type: "reasoning_delta",
+                content: currentLine + "\n",
+                format: "markdown",
+              });
+            } else if (isInReasoning) {
+              // Continue reasoning if line is indented or continues the pattern
+              if (
+                currentLine.startsWith("  ") ||
+                currentLine.startsWith("\t") ||
+                currentLine.trim().startsWith("**") ||
+                currentLine.trim() === ""
+              ) {
+                reasoningLines.push(currentLine);
+                onEvent({
+                  type: "reasoning_delta",
+                  content: currentLine + "\n",
+                  format: "markdown",
+                });
+              } else {
+                // End reasoning mode
+                isInReasoning = false;
+                onEvent({
+                  type: "reasoning_end",
+                  fullContent: reasoningLines.join("\n"),
+                });
+
+                // This line is normal content
+                fullMessage += currentLine + "\n";
+                onEvent({ type: "token", token: currentLine + "\n" });
+              }
+            } else {
+              // Normal content
+              fullMessage += currentLine + "\n";
+              onEvent({ type: "token", token: currentLine + "\n" });
+            }
+
+            currentLine = "";
+          } else {
+            currentLine += char;
+          }
+        }
+
+        // Handle partial line
+        if (currentLine && !isInReasoning) {
+          // For partial lines, emit as normal content
+          fullMessage += currentLine;
+          onEvent({ type: "token", token: currentLine });
+          currentLine = "";
+        }
+
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `[Deepseek] Token #${tokenCount}: "${delta.content}" | Accumulated: ${fullMessage.length} chars`
+          );
+        }
 
         // Performance metrics tracking (internal only)
         if (tokenCount % 10 === 0) {
@@ -1759,7 +2087,7 @@ export async function streamWithDeepseek(
 
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `🔧 [Deepseek] Tool call started: ${toolCalls[index].name}`,
+                `🔧 [Deepseek] Tool call started: ${toolCalls[index].name}`
               );
             }
 
@@ -1790,11 +2118,30 @@ export async function streamWithDeepseek(
       }
     }
 
+    // Handle any remaining content
+    if (currentLine) {
+      if (isInReasoning) {
+        reasoningLines.push(currentLine);
+        onEvent({
+          type: "reasoning_delta",
+          content: currentLine,
+          format: "markdown",
+        });
+        onEvent({
+          type: "reasoning_end",
+          fullContent: reasoningLines.join("\n"),
+        });
+      } else {
+        fullMessage += currentLine;
+        onEvent({ type: "token", token: currentLine });
+      }
+    }
+
     // Process completed tool calls
     const validToolCalls = toolCalls.filter((tc, idx) => {
       if (!isValidJSON(tc.arguments)) {
         console.warn(
-          `[Deepseek] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
+          `[Deepseek] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`
         );
         return false;
       }
@@ -1803,7 +2150,7 @@ export async function streamWithDeepseek(
 
     if (toolCalls.length !== validToolCalls.length) {
       console.log(
-        `[Deepseek] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`,
+        `[Deepseek] Filtered out ${toolCalls.length - validToolCalls.length} incomplete tool calls`
       );
     }
 
@@ -1827,7 +2174,7 @@ export async function streamWithDeepseek(
         tps: tokensPerSecond.toFixed(2),
       };
       console.log(
-        `📊 [Deepseek] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`,
+        `📊 [Deepseek] Performance: Total=${metricsData.totalTime} | TTFT=${metricsData.ttft}${metricsData.ttfmc ? ` | TTFMC=${metricsData.ttfmc}` : ""} | Tokens(content/tool/total)=${metricsData.contentTokens}/${metricsData.toolTokens}/${metricsData.totalTokens} | TPS=${metricsData.tps}`
       );
     }
 
@@ -1839,7 +2186,7 @@ export async function streamWithDeepseek(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `✅ [Deepseek] Stream completed: ${fullMessage.length} chars, ${validToolCalls.length} tools`,
+        `✅ [Deepseek] Stream completed: ${fullMessage.length} chars, ${validToolCalls.length} tools`
       );
     }
 
@@ -1861,11 +2208,12 @@ export async function streamWithDeepseek(
  */
 export async function streamWithCohere(
   specification: Specification,
-  messages: CohereMessage[],
+  messages: ConversationMessage[],
   tools: ToolDefinitionInput[] | undefined,
   cohereClient: any, // CohereClient instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -1879,13 +2227,13 @@ export async function streamWithCohere(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Cohere specification: ${specification.name}`,
+        `No model name found for Cohere specification: ${specification.name}`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Cohere] Model Config: Service=Cohere | Model=${modelName} | Temperature=${specification.cohere?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Cohere] Model Config: Service=Cohere | Model=${modelName} | Temperature=${specification.cohere?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
@@ -1893,85 +2241,93 @@ export async function streamWithCohere(
       console.log(`🔍 [Cohere] Messages array length: ${messages.length}`);
       console.log(
         `🔍 [Cohere] All messages:`,
-        JSON.stringify(messages, null, 2),
+        JSON.stringify(messages, null, 2)
       );
     }
 
+    // V2 API validation
     if (messages.length === 0) {
       throw new Error("No messages found for Cohere streaming");
     }
 
-    // Cohere v7 expects a single message and optional chatHistory
-    // Extract system messages for preamble and filter them out of history
-    const systemMessages = messages.filter((msg) => msg.role === "SYSTEM");
-    const nonSystemMessages = messages.filter((msg) => msg.role !== "SYSTEM");
-
-    // Extract the last non-system message as the current message
-    const lastMessage = nonSystemMessages[nonSystemMessages.length - 1];
-    const chatHistory = nonSystemMessages.slice(0, -1);
-
-    if (!lastMessage || !lastMessage.message) {
-      throw new Error(
-        "Last message must have message property for Cohere streaming",
-      );
+    // V2 API expects messages array with specific role strings
+    interface CohereV2Message {
+      role: "system" | "user" | "assistant" | "tool";
+      content: string;
+      toolCalls?: any[]; // ToolCallV2[]
+      toolCallId?: string;
     }
 
-    // Build properly typed request using Cohere SDK types
-    const streamConfig: Cohere.ChatStreamRequest = {
-      model: modelName,
-      message: lastMessage.message, // Current message (singular)
-    };
+    const v2Messages: CohereV2Message[] = [];
 
-    // Add system message as preamble if present
-    if (systemMessages.length > 0) {
-      // Combine all system messages into preamble
-      streamConfig.preamble = systemMessages
-        .map((msg) => msg.message)
-        .join("\n\n");
-    }
-
-    // Add chat history if there are previous messages
-    if (chatHistory.length > 0) {
-      // Build properly typed chat history using Cohere SDK Message types
-      // Note: SYSTEM messages are already filtered out and handled as preamble
-      const cohereHistory: Cohere.Message[] = chatHistory.map(
-        (msg): Cohere.Message => {
-          switch (msg.role) {
-            case "USER":
-              return {
-                role: "USER",
-                message: msg.message,
-              } as Cohere.Message.User;
-            case "CHATBOT":
-              const chatbotMsg: Cohere.Message.Chatbot = {
-                role: "CHATBOT",
-                message: msg.message,
-              };
-              // Add tool calls if present
-              if (msg.tool_calls && msg.tool_calls.length > 0) {
-                chatbotMsg.toolCalls = msg.tool_calls.map((tc) => ({
+    // Map our GraphQL role types to Cohere v2 role strings
+    messages.forEach((msg) => {
+      switch (msg.role) {
+        case Types.ConversationRoleTypes.System:
+          v2Messages.push({
+            role: "system",
+            content: msg.message || "",
+          });
+          break;
+        case Types.ConversationRoleTypes.User:
+          v2Messages.push({
+            role: "user",
+            content: msg.message || "",
+          });
+          break;
+        case Types.ConversationRoleTypes.Assistant:
+          const assistantMsg: CohereV2Message = {
+            role: "assistant",
+            content: msg.message || "",
+          };
+          // V2 uses camelCase toolCalls
+          if (msg.toolCalls && msg.toolCalls.length > 0) {
+            // Convert our internal tool call format to Cohere V2 format
+            assistantMsg.toolCalls = msg.toolCalls
+              .filter((tc): tc is Types.ConversationToolCall => tc !== null)
+              .map((tc) => ({
+                id: tc.id,
+                type: "function" as const,
+                function: {
                   name: tc.name,
-                  parameters: tc.parameters || {},
-                }));
-              }
-              return chatbotMsg;
-            case "TOOL":
-              return {
-                role: "TOOL",
-                toolResults: msg.tool_results || [],
-              } as Cohere.Message.Tool;
-            default:
-              // Fallback - treat as USER
-              return {
-                role: "USER",
-                message: msg.message,
-              } as Cohere.Message.User;
+                  arguments: tc.arguments,
+                },
+              }));
           }
-        },
-      );
+          v2Messages.push(assistantMsg);
+          break;
+        case Types.ConversationRoleTypes.Tool:
+          // Tool messages need the tool call ID
+          const toolCallId = msg.toolCallId || "";
 
-      streamConfig.chatHistory = cohereHistory;
-    }
+          if (!toolCallId && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.warn(`[Cohere] Tool message missing toolCallId:`, {
+              message: msg.message?.substring(0, 50),
+            });
+          }
+
+          v2Messages.push({
+            role: "tool",
+            content: msg.message || "",
+            toolCallId: toolCallId,
+          });
+          break;
+        default:
+          console.warn(
+            `[Cohere] Unknown message role: ${msg.role}, treating as user`
+          );
+          v2Messages.push({
+            role: "user",
+            content: msg.message || "",
+          });
+      }
+    });
+
+    const streamConfig: any = {
+      model: modelName,
+      messages: v2Messages,
+      stream: true,
+    };
 
     // Only add temperature if it's defined
     if (
@@ -1981,61 +2337,30 @@ export async function streamWithCohere(
       streamConfig.temperature = specification.cohere.temperature;
     }
 
-    // Add tools if provided
+    // Add tools if provided - V2 format is different
     if (tools && tools.length > 0) {
-      const cohereTools: Cohere.Tool[] = tools.map((tool): Cohere.Tool => {
-        if (!tool.schema) {
-          return {
-            name: tool.name || "",
-            description: tool.description || "",
-            parameterDefinitions: {},
-          };
-        }
-
-        // Parse the JSON schema
-        const schema = JSON.parse(tool.schema);
-
-        // Convert JSON Schema to Cohere's expected format
-        const parameterDefinitions: Record<
-          string,
-          Cohere.ToolParameterDefinitionsValue
-        > = {};
-
-        if (schema.properties) {
-          for (const [key, value] of Object.entries(schema.properties)) {
-            const prop = value as any;
-            const paramDef: Cohere.ToolParameterDefinitionsValue = {
-              type: prop.type || "str",
-              description: prop.description || "",
-              required: schema.required?.includes(key) || false,
-            };
-
-            parameterDefinitions[key] = paramDef;
-          }
-        }
-
-        return {
+      streamConfig.tools = tools.map((tool) => ({
+        type: "function",
+        function: {
           name: tool.name || "",
           description: tool.description || "",
-          parameterDefinitions, // Use camelCase as expected by Cohere SDK
-        };
-      });
-
-      streamConfig.tools = cohereTools;
+          parameters: tool.schema ? JSON.parse(tool.schema) : {},
+        },
+      }));
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🔍 [Cohere] Final stream config:`,
-        JSON.stringify(streamConfig, null, 2),
+        JSON.stringify(streamConfig, null, 2)
       );
       console.log(`🔍 [Cohere] Current message: "${streamConfig.message}"`);
       console.log(
-        `🔍 [Cohere] Chat history length: ${streamConfig.chatHistory?.length || 0}`,
+        `🔍 [Cohere] Chat history length: ${streamConfig.chatHistory?.length || 0}`
       );
       console.log(`🔍 [Cohere] Has tools: ${!!streamConfig.tools}`);
       console.log(
-        `⏱️ [Cohere] Starting stream request at: ${new Date().toISOString()}`,
+        `⏱️ [Cohere] Starting stream request at: ${new Date().toISOString()}`
       );
     }
 
@@ -2048,19 +2373,22 @@ export async function streamWithCohere(
       ) {
         console.log(
           `🔍 [Cohere] Full streamConfig for ${modelName}:`,
-          JSON.stringify(streamConfig, null, 2),
+          JSON.stringify(streamConfig, null, 2)
         );
       }
 
-      stream = await cohereClient.chatStream(streamConfig);
+      stream = await cohereClient.chatStream({
+        ...streamConfig,
+        ...(abortSignal && { signal: abortSignal }),
+      });
     } catch (streamError: any) {
       // Enhanced error logging
       console.error(
-        `❌ [Cohere] Stream creation failed for model ${modelName}`,
+        `❌ [Cohere] Stream creation failed for model ${modelName}`
       );
       console.error(`❌ [Cohere] Error type: ${streamError.constructor.name}`);
       console.error(
-        `❌ [Cohere] Status code: ${streamError.statusCode || streamError.status || "unknown"}`,
+        `❌ [Cohere] Status code: ${streamError.statusCode || streamError.status || "unknown"}`
       );
       console.error(`❌ [Cohere] Error message: ${streamError.message}`);
 
@@ -2082,7 +2410,7 @@ export async function streamWithCohere(
             const parsed = JSON.parse(fullBody);
             console.error(
               `❌ [Cohere] Parsed error details:`,
-              JSON.stringify(parsed, null, 2),
+              JSON.stringify(parsed, null, 2)
             );
           } catch (e) {
             console.error(`❌ [Cohere] Could not parse error body as JSON`);
@@ -2095,9 +2423,19 @@ export async function streamWithCohere(
       throw streamError;
     }
 
+    // Track current tool call being built
+    let currentToolCallIndex = -1;
+    let currentToolCall: ConversationToolCall | null = null;
+
     for await (const chunk of stream) {
-      if (chunk.eventType === "text-generation") {
-        const text = chunk.text;
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`[Cohere] Event type: ${chunk.type}`);
+      }
+
+      // Handle v2 API event types
+      if (chunk.type === "content-delta") {
+        // Content streaming in response generation step
+        const text = chunk.delta?.message?.content?.text;
         if (text) {
           fullMessage += text;
           tokenCount++;
@@ -2106,7 +2444,7 @@ export async function streamWithCohere(
             firstTokenTime = Date.now() - startTime;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `⚡ [Cohere] Time to First Token: ${firstTokenTime}ms`,
+                `⚡ [Cohere] Time to First Token: ${firstTokenTime}ms`
               );
             }
           }
@@ -2115,38 +2453,100 @@ export async function streamWithCohere(
             type: "token",
             token: text,
           });
+
+          // Also emit message update
+          onEvent({
+            type: "message",
+            message: fullMessage,
+          });
         }
-      } else if (chunk.eventType === "tool-calls-generation") {
-        // Handle tool calls
-        if (chunk.toolCalls) {
-          for (const toolCall of chunk.toolCalls) {
-            const id = `tool_${Date.now()}_${toolCalls.length}`;
-            const formattedToolCall = {
-              id,
-              name: toolCall.name,
-              arguments: JSON.stringify(toolCall.parameters),
-            };
-            toolCalls.push(formattedToolCall);
+      } else if (chunk.type === "tool-call-start") {
+        // Start of a tool call
+        currentToolCallIndex = chunk.index || 0;
+        const toolCallData = chunk.delta?.message?.toolCalls; // Note: toolCalls not tool_calls
+        if (toolCallData) {
+          currentToolCall = {
+            id:
+              toolCallData.id ||
+              `cohere_tool_${Date.now()}_${currentToolCallIndex}`,
+            name: toolCallData.function?.name || "",
+            arguments: "",
+          };
+
+          onEvent({
+            type: "tool_call_start",
+            toolCall: {
+              id: currentToolCall.id,
+              name: currentToolCall.name,
+            },
+          });
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`[Cohere] Tool call started: ${currentToolCall.name}`);
+          }
+        }
+      } else if (chunk.type === "tool-call-delta") {
+        // Tool call argument streaming
+        if (currentToolCall && chunk.index === currentToolCallIndex) {
+          const argDelta = chunk.delta?.message?.toolCalls?.function?.arguments;
+          if (argDelta) {
+            currentToolCall.arguments += argDelta;
 
             onEvent({
-              type: "tool_call_start",
-              toolCall: { id, name: toolCall.name },
-            });
-
-            onEvent({
-              type: "tool_call_parsed",
-              toolCall: formattedToolCall,
+              type: "tool_call_delta",
+              toolCallId: currentToolCall.id,
+              argumentDelta: argDelta,
             });
           }
+        }
+      } else if (chunk.type === "tool-call-end") {
+        // Tool call complete
+        if (currentToolCall && chunk.index === currentToolCallIndex) {
+          toolCalls.push(currentToolCall);
+
+          onEvent({
+            type: "tool_call_parsed",
+            toolCall: currentToolCall,
+          });
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `[Cohere] Tool call completed: ${currentToolCall.name}`
+            );
+          }
+
+          currentToolCall = null;
+          currentToolCallIndex = -1;
+        }
+      } else if (chunk.type === "tool-plan-delta") {
+        // Handle tool plan delta - Cohere might send this before tool calls
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Cohere] Tool plan delta received`, chunk);
+        }
+      } else if (chunk.type === "message-start") {
+        // Handle message start event
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Cohere] Message start event received`, chunk);
+        }
+      } else if (chunk.type === "message-end") {
+        // Handle message end event
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Cohere] Message end event received`, chunk);
         }
       }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `✅ [Cohere] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+        `✅ [Cohere] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length} | Tool calls: ${toolCalls.length}`
       );
     }
+
+    // Emit final complete event
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
 
     onComplete(fullMessage, toolCalls);
   } catch (error) {
@@ -2159,11 +2559,11 @@ export async function streamWithCohere(
       // Log additional error details if available
       if ((error as any).response) {
         console.error(
-          `❌ [Cohere] Response status: ${(error as any).response.status}`,
+          `❌ [Cohere] Response status: ${(error as any).response.status}`
         );
         console.error(
           `❌ [Cohere] Response data:`,
-          (error as any).response.data,
+          (error as any).response.data
         );
       }
     }
@@ -2181,6 +2581,7 @@ export async function streamWithMistral(
   mistralClient: any, // Mistral client instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -2194,14 +2595,37 @@ export async function streamWithMistral(
     const modelName = getModelName(specification);
     if (!modelName) {
       throw new Error(
-        `No model name found for Mistral specification: ${specification.name}`,
+        `No model name found for Mistral specification: ${specification.name}`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Mistral] Model Config: Service=Mistral | Model=${modelName} | Temperature=${specification.mistral?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Mistral] Model Config: Service=Mistral | Model=${modelName} | Temperature=${specification.mistral?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
+      console.log(
+        `🔍 [Mistral] Messages being sent (${messages.length} total):`
+      );
+      messages.forEach((msg, idx) => {
+        const msgWithTools = msg as MistralMessage & {
+          tool_calls?: any[];
+          tool_call_id?: string;
+          toolCallId?: string;
+        };
+        console.log(
+          `  Message ${idx}: role=${msg.role}, hasContent=${!!msg.content}, hasToolCalls=${!!msgWithTools.tool_calls}, tool_call_id=${msgWithTools.tool_call_id}`
+        );
+        if (msgWithTools.tool_calls) {
+          console.log(
+            `    Tool calls: ${JSON.stringify(msgWithTools.tool_calls)}`
+          );
+        }
+        if (msgWithTools.tool_call_id) {
+          console.log(`    Tool call ID: ${msgWithTools.tool_call_id}`);
+        }
+        // Log full message for debugging
+        console.log(`    Full message: ${JSON.stringify(msg)}`);
+      });
     }
 
     const streamConfig: any = {
@@ -2222,9 +2646,161 @@ export async function streamWithMistral(
       }));
     }
 
-    const stream = await mistralClient.chat.stream(streamConfig);
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `[Mistral] Stream config:`,
+        JSON.stringify(
+          {
+            ...streamConfig,
+            messages: streamConfig.messages.map((m: any) => ({
+              role: m.role,
+              contentLength:
+                typeof m.content === "string"
+                  ? m.content.length
+                  : m.content?.length || 0,
+              hasToolCalls: !!m.tool_calls,
+              toolCallsCount: m.tool_calls?.length || 0,
+              toolCallId: m.tool_call_id,
+            })),
+          },
+          null,
+          2
+        )
+      );
 
+      // Log full messages for debugging tool issues
+      if (messages.some((m) => m.role === "tool" || m.tool_calls)) {
+        console.log(
+          `[Mistral] Full messages for tool debugging:`,
+          JSON.stringify(messages, null, 2)
+        );
+      }
+    }
+
+    let stream;
+    try {
+      // Log the full config for debugging tool issues
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`[Mistral] About to call stream with:`, {
+          model: streamConfig.model,
+          messageCount: streamConfig.messages.length,
+          hasTools: !!(streamConfig.tools && streamConfig.tools.length > 0),
+          toolCount: streamConfig.tools?.length || 0,
+        });
+
+        // Log the EXACT payload being sent to Mistral API
+        console.log(
+          `[Mistral] EXACT API payload:`,
+          JSON.stringify(streamConfig, null, 2)
+        );
+
+        // Check for tool call/result mismatches
+        const toolCallMessages = streamConfig.messages.filter(
+          (m: any) => m.tool_calls?.length > 0
+        );
+        const toolResultMessages = streamConfig.messages.filter(
+          (m: any) => m.role === "tool"
+        );
+
+        if (toolCallMessages.length > 0 || toolResultMessages.length > 0) {
+          console.log(`[Mistral] Tool message analysis:`, {
+            toolCallMessages: toolCallMessages.length,
+            toolResultMessages: toolResultMessages.length,
+            toolCallsTotal: toolCallMessages.reduce(
+              (sum: number, m: any) => sum + (m.tool_calls?.length || 0),
+              0
+            ),
+          });
+        }
+      }
+
+      stream = await mistralClient.chat.stream({
+        ...streamConfig,
+        ...(abortSignal && { signal: abortSignal }),
+      });
+    } catch (error: any) {
+      console.error(`[Mistral] Failed to create stream:`, error);
+
+      // Better error handling for tool mismatch
+      if (
+        error.message?.includes(
+          "Not the same number of function calls and responses"
+        )
+      ) {
+        console.error(
+          `[Mistral] Tool call/response mismatch detected. This usually happens when there are unmatched tool calls in the conversation history.`
+        );
+
+        // Analyze the messages to find the mismatch
+        const toolCallIds = new Set<string>();
+        const toolResponseIds = new Set<string>();
+
+        messages.forEach((msg, idx) => {
+          const msgWithTools = msg as MistralMessage & {
+            tool_calls?: any[];
+            tool_call_id?: string;
+          };
+          if (msg.role === "assistant" && msgWithTools.tool_calls) {
+            msgWithTools.tool_calls.forEach((tc: any) => {
+              toolCallIds.add(tc.id);
+              console.error(
+                `  Message ${idx}: Assistant has tool call with id: ${tc.id}`
+              );
+            });
+          }
+          if (msg.role === "tool") {
+            // Check both camelCase and snake_case versions
+            const toolId = msgWithTools.tool_call_id;
+            if (toolId) {
+              toolResponseIds.add(toolId);
+              console.error(
+                `  Message ${idx}: Tool response for id: ${toolId}`
+              );
+            } else {
+              console.error(`  Message ${idx}: Tool response missing ID!`);
+            }
+          }
+        });
+
+        console.error(
+          `[Mistral] Tool call IDs: ${Array.from(toolCallIds).join(", ")}`
+        );
+        console.error(
+          `[Mistral] Tool response IDs: ${Array.from(toolResponseIds).join(", ")}`
+        );
+
+        // Find mismatches
+        const unmatchedCalls = Array.from(toolCallIds).filter(
+          (id) => !toolResponseIds.has(id)
+        );
+        const unmatchedResponses = Array.from(toolResponseIds).filter(
+          (id) => !toolCallIds.has(id)
+        );
+
+        if (unmatchedCalls.length > 0) {
+          console.error(
+            `[Mistral] Tool calls without responses: ${unmatchedCalls.join(", ")}`
+          );
+        }
+        if (unmatchedResponses.length > 0) {
+          console.error(
+            `[Mistral] Tool responses without calls: ${unmatchedResponses.join(", ")}`
+          );
+        }
+      }
+
+      throw new Error(
+        `Mistral streaming failed to start: ${error.message || "Unknown error"}`
+      );
+    }
+
+    let chunkCount = 0;
     for await (const chunk of stream) {
+      chunkCount++;
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`[Mistral] Raw chunk:`, JSON.stringify(chunk, null, 2));
+      }
+
       const delta = chunk.data.choices[0]?.delta;
 
       if (delta?.content) {
@@ -2235,7 +2811,7 @@ export async function streamWithMistral(
           firstTokenTime = Date.now() - startTime;
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `⚡ [Mistral] Time to First Token: ${firstTokenTime}ms`,
+              `⚡ [Mistral] Time to First Token: ${firstTokenTime}ms`
             );
           }
         }
@@ -2246,39 +2822,59 @@ export async function streamWithMistral(
         });
       }
 
-      // Handle tool calls
-      if (delta?.tool_calls) {
-        for (const toolCallDelta of delta.tool_calls) {
+      // Handle tool calls (Mistral uses camelCase 'toolCalls' not 'tool_calls')
+      if (delta?.toolCalls || delta?.tool_calls) {
+        const toolCallsArray = delta.toolCalls || delta.tool_calls;
+        for (const toolCallDelta of toolCallsArray) {
           const index = toolCallDelta.index || 0;
 
+          // Mistral sends complete tool calls in one chunk
           if (!toolCalls[index]) {
             toolCalls[index] = {
-              id: toolCallDelta.id || `tool_${Date.now()}_${index}`,
-              name: "",
-              arguments: "",
+              id:
+                toolCallDelta.id ||
+                toolCallDelta.function?.id ||
+                `tool_${Date.now()}_${index}`,
+              name: toolCallDelta.function?.name || "",
+              arguments: toolCallDelta.function?.arguments || "",
             };
 
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(`[Mistral] Tool call received:`, toolCalls[index]);
+            }
+
+            // Emit start event
             onEvent({
               type: "tool_call_start",
               toolCall: {
                 id: toolCalls[index].id,
-                name: toolCallDelta.function?.name || "",
+                name: toolCalls[index].name,
               },
             });
-          }
 
-          if (toolCallDelta.function?.name) {
-            toolCalls[index].name = toolCallDelta.function.name;
-          }
+            // If arguments are already complete (Mistral sends them all at once)
+            if (toolCalls[index].arguments) {
+              onEvent({
+                type: "tool_call_delta",
+                toolCallId: toolCalls[index].id,
+                argumentDelta: toolCalls[index].arguments,
+              });
+            }
+          } else {
+            // Update existing tool call (though Mistral typically sends complete calls)
+            if (toolCallDelta.function?.name) {
+              toolCalls[index].name = toolCallDelta.function.name;
+            }
 
-          if (toolCallDelta.function?.arguments) {
-            toolCalls[index].arguments += toolCallDelta.function.arguments;
+            if (toolCallDelta.function?.arguments) {
+              toolCalls[index].arguments += toolCallDelta.function.arguments;
 
-            onEvent({
-              type: "tool_call_delta",
-              toolCallId: toolCalls[index].id,
-              argumentDelta: toolCallDelta.function.arguments,
-            });
+              onEvent({
+                type: "tool_call_delta",
+                toolCallId: toolCalls[index].id,
+                argumentDelta: toolCallDelta.function.arguments,
+              });
+            }
           }
         }
       }
@@ -2291,18 +2887,55 @@ export async function streamWithMistral(
           type: "tool_call_parsed",
           toolCall,
         });
+      } else {
+        console.warn(
+          `[Mistral] Skipping tool call with invalid JSON: ${toolCall.name}`,
+          toolCall.arguments
+        );
       }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `✅ [Mistral] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+        `✅ [Mistral] Complete. Chunks: ${chunkCount} | Tokens: ${tokenCount} | Message length: ${fullMessage.length} | Tool calls: ${toolCalls.length}`
       );
     }
 
     onComplete(fullMessage, toolCalls);
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.error(
+        `❌ [Mistral] Streaming error:`,
+        error.message || error,
+        error.stack
+      );
+    }
+
+    // Check for common Mistral errors
+    if (
+      error.message?.includes("401") ||
+      error.message?.includes("Unauthorized")
+    ) {
+      throw new Error(
+        "Mistral API authentication failed. Please check your MISTRAL_API_KEY."
+      );
+    }
+
+    if (
+      error.message?.includes("429") ||
+      error.message?.includes("rate limit")
+    ) {
+      const rateLimitError = new Error(
+        "Mistral API rate limit exceeded. Please try again later."
+      );
+      (rateLimitError as any).statusCode = 429;
+      throw rateLimitError;
+    }
+
+    // Re-throw with more context
+    throw new Error(
+      `Mistral streaming failed: ${error.message || "Unknown error"}`
+    );
   }
 }
 
@@ -2317,6 +2950,7 @@ export async function streamWithBedrock(
   bedrockClient: any, // BedrockRuntimeClient instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  abortSignal?: AbortSignal
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -2328,11 +2962,18 @@ export async function streamWithBedrock(
   let firstTokenTime = 0;
   let tokenCount = 0;
 
+  // Reasoning detection state
+  let isInThinkingTag = false;
+  let reasoningContent = "";
+  let currentContent = "";
+  const THINKING_START = "<thinking>";
+  const THINKING_END = "</thinking>";
+
   try {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🔍 [Bedrock] Specification object:`,
-        JSON.stringify(specification, null, 2),
+        JSON.stringify(specification, null, 2)
       );
     }
 
@@ -2345,13 +2986,13 @@ export async function streamWithBedrock(
         hasCustomModelName: !!specification.bedrock?.modelName,
       });
       throw new Error(
-        `No model name found for Bedrock specification: ${specification.name} (service: ${specification.serviceType}, bedrock.model: ${specification.bedrock?.model})`,
+        `No model name found for Bedrock specification: ${specification.name} (service: ${specification.serviceType}, bedrock.model: ${specification.bedrock?.model})`
       );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Bedrock] Model Config: Service=Bedrock | Model=${modelName} | Temperature=${specification.bedrock?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Bedrock] Model Config: Service=Bedrock | Model=${modelName} | Temperature=${specification.bedrock?.temperature} | Tools=${tools?.length || 0} | Spec="${specification.name}"`
       );
     }
 
@@ -2412,13 +3053,15 @@ export async function streamWithBedrock(
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🔍 [Bedrock] Converse request:`,
-        JSON.stringify(request, null, 2),
+        JSON.stringify(request, null, 2)
       );
     }
 
     const command = new ConverseStreamCommand(request);
 
-    const response = await bedrockClient.send(command);
+    const response = await bedrockClient.send(command, {
+      ...(abortSignal && { abortSignal }),
+    });
 
     if (response.stream) {
       for await (const event of response.stream) {
@@ -2433,23 +3076,92 @@ export async function streamWithBedrock(
 
           if (delta?.text) {
             const text = delta.text;
-            fullMessage += text;
             tokenCount++;
 
             if (firstTokenTime === 0) {
               firstTokenTime = Date.now() - startTime;
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
-                  `⚡ [Bedrock] Time to First Token: ${firstTokenTime}ms`,
+                  `⚡ [Bedrock] Time to First Token: ${firstTokenTime}ms`
                 );
               }
             }
 
-            onEvent({
-              type: "token",
-              token: text,
-            });
+            // Accumulate content for thinking tag detection
+            currentContent += text;
 
+            // Check for thinking tags
+            if (!isInThinkingTag && currentContent.includes(THINKING_START)) {
+              const startIdx = currentContent.indexOf(THINKING_START);
+
+              // Emit any content before the thinking tag
+              const beforeThinking = currentContent.substring(0, startIdx);
+              if (beforeThinking) {
+                fullMessage += beforeThinking;
+                onEvent({ type: "token", token: beforeThinking });
+              }
+
+              // Start reasoning mode
+              isInThinkingTag = true;
+              onEvent({ type: "reasoning_start", format: "thinking_tag" });
+
+              // Process any content after the tag
+              currentContent = currentContent.substring(
+                startIdx + THINKING_START.length
+              );
+              reasoningContent = "";
+            }
+
+            if (isInThinkingTag) {
+              // Check for end of thinking
+              const endIdx = currentContent.indexOf(THINKING_END);
+              if (endIdx !== -1) {
+                // Add content up to the end tag
+                reasoningContent += currentContent.substring(0, endIdx);
+
+                // Emit final reasoning update
+                onEvent({
+                  type: "reasoning_delta",
+                  content: currentContent.substring(0, endIdx),
+                  format: "thinking_tag",
+                });
+                onEvent({
+                  type: "reasoning_end",
+                  fullContent: reasoningContent,
+                });
+
+                // Exit reasoning mode
+                isInThinkingTag = false;
+
+                // Continue with remaining content
+                currentContent = currentContent.substring(
+                  endIdx + THINKING_END.length
+                );
+
+                // Process any remaining text as normal content
+                if (currentContent) {
+                  fullMessage += currentContent;
+                  onEvent({ type: "token", token: currentContent });
+                  currentContent = "";
+                }
+              } else {
+                // Still in thinking mode, accumulate reasoning
+                reasoningContent += currentContent;
+                onEvent({
+                  type: "reasoning_delta",
+                  content: currentContent,
+                  format: "thinking_tag",
+                });
+                currentContent = "";
+              }
+            } else {
+              // Normal content mode
+              fullMessage += currentContent;
+              onEvent({ type: "token", token: currentContent });
+              currentContent = "";
+            }
+
+            // Always emit the current full message (excluding reasoning)
             onEvent({
               type: "message",
               message: fullMessage,
@@ -2515,7 +3227,7 @@ export async function streamWithBedrock(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `✅ [Bedrock] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+        `✅ [Bedrock] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`
       );
     }
 

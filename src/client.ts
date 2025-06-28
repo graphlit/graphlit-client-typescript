@@ -40,7 +40,6 @@ import {
   formatMessagesForOpenAI,
   formatMessagesForAnthropic,
   formatMessagesForGoogle,
-  formatMessagesForCohere,
   formatMessagesForMistral,
   formatMessagesForBedrock,
   OpenAIMessage,
@@ -74,6 +73,7 @@ let GoogleGenerativeAI:
   | undefined;
 let Groq: typeof import("groq-sdk").default | undefined;
 let CohereClient: typeof import("cohere-ai").CohereClient | undefined;
+let CohereClientV2: typeof import("cohere-ai").CohereClientV2 | undefined;
 let Mistral: typeof import("@mistralai/mistralai").Mistral | undefined;
 let BedrockRuntimeClient:
   | typeof import("@aws-sdk/client-bedrock-runtime").BedrockRuntimeClient
@@ -133,6 +133,7 @@ try {
 
 try {
   CohereClient = optionalRequire("cohere-ai").CohereClient;
+  CohereClientV2 = optionalRequire("cohere-ai").CohereClientV2;
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
     console.log("[SDK Loading] Cohere SDK loaded successfully");
   }
@@ -2345,6 +2346,208 @@ class Graphlit {
     >(Documents.QueryModels, { filter: filter });
   }
 
+  public async createConnector(
+    connector: Types.ConnectorInput
+  ): Promise<Types.CreateConnectorMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateConnectorMutation,
+      { connector: Types.ConnectorInput }
+    >(Documents.CreateConnector, { connector: connector });
+  }
+
+  public async updateConnector(
+    connector: Types.ConnectorUpdateInput
+  ): Promise<Types.UpdateConnectorMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateConnectorMutation,
+      { connector: Types.ConnectorUpdateInput }
+    >(Documents.UpdateConnector, { connector: connector });
+  }
+
+  /*
+  public async upsertConnector(
+    connector: Types.ConnectorInput
+  ): Promise<Types.UpsertConnectorMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertConnectorMutation,
+      { connector: Types.ConnectorInput }
+    >(Documents.UpsertConnector, { connector: connector });
+  }
+  */
+
+  public async deleteConnector(
+    id: string
+  ): Promise<Types.DeleteConnectorMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteConnectorMutation,
+      { id: string }
+    >(Documents.DeleteConnector, { id: id });
+  }
+
+  /*
+  public async deleteConnectors(
+    ids: string[],
+    isSynchronous?: boolean
+  ): Promise<Types.DeleteConnectorsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteConnectorsMutation,
+      { ids: string[]; isSynchronous?: boolean }
+    >(Documents.DeleteConnectors, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  public async deleteAllConnectors(
+    filter?: Types.ConnectorFilter,
+    isSynchronous?: boolean,
+    correlationId?: string
+  ): Promise<Types.DeleteAllConnectorsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllConnectorsMutation,
+      {
+        filter?: Types.ConnectorFilter;
+        isSynchronous?: boolean;
+        correlationId?: string;
+      }
+    >(Documents.DeleteAllConnectors, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+  */
+
+  public async getConnector(id: string): Promise<Types.GetConnectorQuery> {
+    return this.queryAndCheckError<Types.GetConnectorQuery, { id: string }>(
+      Documents.GetConnector,
+      { id: id }
+    );
+  }
+
+  public async queryConnectors(
+    filter?: Types.ConnectorFilter
+  ): Promise<Types.QueryConnectorsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryConnectorsQuery,
+      { filter?: Types.ConnectorFilter }
+    >(Documents.QueryConnectors, { filter: filter });
+  }
+
+  public async countConnectors(
+    filter?: Types.ConnectorFilter
+  ): Promise<Types.CountConnectorsQuery> {
+    return this.queryAndCheckError<
+      Types.CountConnectorsQuery,
+      { filter?: Types.ConnectorFilter }
+    >(Documents.CountConnectors, { filter: filter });
+  }
+
+  /*
+  public async connectorExists(
+    filter?: Types.ConnectorFilter
+  ): Promise<Types.ConnectorExistsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryConnectorsQuery,
+      { filter?: Types.ConnectorFilter }
+    >(Documents.ConnectorExists, { filter: filter });
+  }
+  */
+
+  public async createView(
+    view: Types.ViewInput
+  ): Promise<Types.CreateViewMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateViewMutation,
+      { view: Types.ViewInput }
+    >(Documents.CreateView, { view: view });
+  }
+
+  public async updateView(
+    view: Types.ViewUpdateInput
+  ): Promise<Types.UpdateViewMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateViewMutation,
+      { view: Types.ViewUpdateInput }
+    >(Documents.UpdateView, { view: view });
+  }
+
+  public async upsertView(
+    view: Types.ViewInput
+  ): Promise<Types.UpsertViewMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertViewMutation,
+      { view: Types.ViewInput }
+    >(Documents.UpsertView, { view: view });
+  }
+
+  public async deleteView(id: string): Promise<Types.DeleteViewMutation> {
+    return this.mutateAndCheckError<Types.DeleteViewMutation, { id: string }>(
+      Documents.DeleteView,
+      { id: id }
+    );
+  }
+
+  public async deleteViews(
+    ids: string[],
+    isSynchronous?: boolean
+  ): Promise<Types.DeleteViewsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteViewsMutation,
+      { ids: string[]; isSynchronous?: boolean }
+    >(Documents.DeleteViews, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  public async deleteAllViews(
+    filter?: Types.ViewFilter,
+    isSynchronous?: boolean,
+    correlationId?: string
+  ): Promise<Types.DeleteAllViewsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllViewsMutation,
+      {
+        filter?: Types.ViewFilter;
+        isSynchronous?: boolean;
+        correlationId?: string;
+      }
+    >(Documents.DeleteAllViews, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  public async getView(id: string): Promise<Types.GetViewQuery> {
+    return this.queryAndCheckError<Types.GetViewQuery, { id: string }>(
+      Documents.GetView,
+      { id: id }
+    );
+  }
+
+  public async queryViews(
+    filter?: Types.ViewFilter
+  ): Promise<Types.QueryViewsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryViewsQuery,
+      { filter?: Types.ViewFilter }
+    >(Documents.QueryViews, { filter: filter });
+  }
+
+  public async countViews(
+    filter?: Types.ViewFilter
+  ): Promise<Types.CountViewsQuery> {
+    return this.queryAndCheckError<
+      Types.CountViewsQuery,
+      { filter?: Types.ViewFilter }
+    >(Documents.CountViews, { filter: filter });
+  }
+
+  public async viewExists(
+    filter?: Types.ViewFilter
+  ): Promise<Types.ViewExistsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryViewsQuery,
+      { filter?: Types.ViewFilter }
+    >(Documents.ViewExists, { filter: filter });
+  }
+
   public async createWorkflow(
     workflow: Types.WorkflowInput
   ): Promise<Types.CreateWorkflowMutation> {
@@ -4057,7 +4260,10 @@ class Graphlit {
    * @param specification - Optional specification to check compatibility
    * @returns true if streaming is available, false otherwise
    */
-  public supportsStreaming(specification?: Types.Specification): boolean {
+  public supportsStreaming(
+    specification?: Types.Specification,
+    tools?: Types.ToolDefinitionInput[]
+  ): boolean {
     // If we have a full specification, check its service type
     if (specification) {
       const serviceType = specification.serviceType;
@@ -4089,14 +4295,35 @@ class Graphlit {
         case Types.ModelServiceTypes.Cerebras:
           return OpenAI !== undefined || this.cerebrasClient !== undefined;
         case Types.ModelServiceTypes.Cohere:
-          return CohereClient !== undefined || this.cohereClient !== undefined;
+          return (
+            CohereClient !== undefined ||
+            CohereClientV2 !== undefined ||
+            this.cohereClient !== undefined
+          );
         case Types.ModelServiceTypes.Mistral:
           return Mistral !== undefined || this.mistralClient !== undefined;
         case Types.ModelServiceTypes.Bedrock:
-          return (
+          const hasBedrockClient =
             BedrockRuntimeClient !== undefined ||
-            this.bedrockClient !== undefined
-          );
+            this.bedrockClient !== undefined;
+
+          // Bedrock Llama models don't support tools in streaming mode
+          if (hasBedrockClient && tools && tools.length > 0) {
+            const bedrockModel = specification.bedrock?.model;
+            if (
+              bedrockModel === Types.BedrockModels.Llama_4Maverick_17B ||
+              bedrockModel === Types.BedrockModels.Llama_4Scout_17B
+            ) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(
+                  `⚠️ [supportsStreaming] Bedrock Llama model ${bedrockModel} does not support tools in streaming mode - will fallback to non-streaming`
+                );
+              }
+              return false; // Force fallback to promptAgent for tool support
+            }
+          }
+
+          return hasBedrockClient;
         case Types.ModelServiceTypes.Deepseek:
           return OpenAI !== undefined || this.deepseekClient !== undefined;
         default:
@@ -4115,7 +4342,9 @@ class Graphlit {
     const hasCerebras =
       OpenAI !== undefined || this.cerebrasClient !== undefined;
     const hasCohere =
-      CohereClient !== undefined || this.cohereClient !== undefined;
+      CohereClient !== undefined ||
+      CohereClientV2 !== undefined ||
+      this.cohereClient !== undefined;
     const hasMistral =
       Mistral !== undefined || this.mistralClient !== undefined;
     const hasBedrock =
@@ -4421,7 +4650,7 @@ class Graphlit {
       }
 
       // Check streaming support - fallback to promptAgent if not supported
-      if (fullSpec && !this.supportsStreaming(fullSpec)) {
+      if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
             "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation"
@@ -4452,6 +4681,33 @@ class Graphlit {
           timestamp: new Date(),
         });
 
+        // Debug logging for fallback
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`📊 [streamAgent fallback] promptAgent result:`, {
+            hasMessage: !!promptResult.message,
+            messageLength: promptResult.message?.length,
+            toolCallsCount: promptResult.toolCalls?.length || 0,
+            toolResultsCount: promptResult.toolResults?.length || 0,
+            toolCalls: promptResult.toolCalls,
+            toolResults: promptResult.toolResults?.map((tr) => ({
+              name: tr.name,
+              hasResult: !!tr.result,
+              hasError: !!tr.error,
+            })),
+          });
+        }
+
+        // Emit tool events if there were tool calls
+        if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
+          for (const toolCall of promptResult.toolCalls) {
+            onEvent({
+              type: "tool_update",
+              toolCall: toolCall,
+              status: "completed" as const,
+            });
+          }
+        }
+
         // Emit the final message as a single update (simulating streaming)
         onEvent({
           type: "message_update",
@@ -4460,7 +4716,7 @@ class Graphlit {
             message: promptResult.message,
             role: Types.ConversationRoleTypes.Assistant,
             timestamp: new Date().toISOString(),
-            toolCalls: [],
+            toolCalls: promptResult.toolCalls || [],
           },
           isStreaming: false,
         });
@@ -4473,7 +4729,7 @@ class Graphlit {
             message: promptResult.message,
             role: Types.ConversationRoleTypes.Assistant,
             timestamp: new Date().toISOString(),
-            toolCalls: [],
+            toolCalls: promptResult.toolCalls || [],
           },
         });
 
@@ -4756,7 +5012,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4788,7 +5045,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4820,7 +5078,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4850,7 +5109,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4880,7 +5140,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4889,28 +5150,27 @@ class Graphlit {
         }
       } else if (
         serviceType === Types.ModelServiceTypes.Cohere &&
-        (CohereClient || this.cohereClient)
+        (CohereClient || CohereClientV2 || this.cohereClient)
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
             `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`
           );
         }
-        const cohereMessages = formatMessagesForCohere(messages);
+        // V2 API uses raw messages, not formatted
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Cohere] Sending ${cohereMessages.length} messages to LLM: ${JSON.stringify(cohereMessages)}`
-          );
+          console.log(`🔍 [Cohere] Sending ${messages.length} messages to LLM`);
         }
         await this.streamWithCohere(
           specification,
-          cohereMessages,
+          messages,
           tools,
           uiAdapter,
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4927,11 +5187,45 @@ class Graphlit {
           );
         }
         const mistralMessages = formatMessagesForMistral(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+
+        // ALWAYS log when there's a tool-related issue for debugging
+        const hasToolCalls = mistralMessages.some(
+          (m: any) => m.tool_calls?.length > 0
+        );
+        const hasToolResponses = mistralMessages.some(
+          (m: any) => m.role === "tool"
+        );
+
+        if (
+          hasToolCalls ||
+          hasToolResponses ||
+          process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES
+        ) {
           console.log(
-            `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM: ${JSON.stringify(mistralMessages)}`
+            `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM:`
           );
+          console.log(JSON.stringify(mistralMessages, null, 2));
+
+          // Count tool calls and responses
+          const toolCallCount = mistralMessages.reduce(
+            (count: number, m: any) => count + (m.tool_calls?.length || 0),
+            0
+          );
+          const toolResponseCount = mistralMessages.filter(
+            (m: any) => m.role === "tool"
+          ).length;
+
+          console.log(
+            `🔍 [Mistral] Tool calls: ${toolCallCount}, Tool responses: ${toolResponseCount}`
+          );
+
+          if (toolResponseCount > 0) {
+            console.log(
+              `🔍 [Mistral] IMPORTANT: We have tool responses, should we still pass tools?`
+            );
+          }
         }
+
         await this.streamWithMistral(
           specification,
           mistralMessages,
@@ -4940,7 +5234,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -4972,7 +5267,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -5002,7 +5298,8 @@ class Graphlit {
           (message, calls) => {
             roundMessage = message;
             toolCalls = calls;
-          }
+          },
+          abortSignal
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -5200,14 +5497,17 @@ class Graphlit {
             });
 
             // Add tool response to messages
-            messages.push({
+            const toolMessage: any = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
               message:
                 typeof result === "string" ? result : JSON.stringify(result),
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
-            });
+            };
+            // Add tool name for Mistral compatibility
+            toolMessage.toolName = toolCall.name;
+            messages.push(toolMessage);
           } catch (error) {
             const errorMessage =
               error instanceof Error ? error.message : "Unknown error";
@@ -5225,13 +5525,16 @@ class Graphlit {
             });
 
             // Add error response
-            messages.push({
+            const errorToolMessage: any = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
               message: `Error: ${errorMessage}`,
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
-            });
+            };
+            // Add tool name for Mistral compatibility
+            errorToolMessage.toolName = toolCall.name;
+            messages.push(errorToolMessage);
           }
         }
       }
@@ -5248,11 +5551,20 @@ class Graphlit {
       const ttft = uiAdapter.getTTFT(); // Time to first token in milliseconds
       const throughput = uiAdapter.getThroughput(); // Tokens per second
 
+      // Convert milliseconds to ISO 8601 duration format (e.g., "PT1.5S")
+      const millisecondsToTimeSpan = (
+        ms: number | undefined
+      ): string | undefined => {
+        if (ms === undefined) return undefined;
+        const seconds = ms / 1000;
+        return `PT${seconds}S`;
+      };
+
       const completeResponse = await this.completeConversation(
         trimmedMessage,
         conversationId,
-        completionTime,
-        ttft,
+        millisecondsToTimeSpan(completionTime),
+        millisecondsToTimeSpan(ttft),
         throughput,
         correlationId
       );
@@ -5482,7 +5794,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -5512,7 +5825,8 @@ class Graphlit {
       tools,
       openaiClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5528,7 +5842,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Anthropic module or a provided client
     if (!Anthropic && !this.anthropicClient) {
@@ -5552,6 +5867,15 @@ class Graphlit {
       );
     }
 
+    // Get thinking configuration from specification
+    const thinkingConfig = this.getThinkingConfig(specification);
+
+    if (thinkingConfig && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🧠 [Graphlit SDK] Anthropic thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`
+      );
+    }
+
     await streamWithAnthropic(
       specification,
       messages,
@@ -5559,8 +5883,41 @@ class Graphlit {
       tools,
       anthropicClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal,
+      thinkingConfig
     );
+  }
+
+  /**
+   * Extract thinking configuration from specification
+   */
+  private getThinkingConfig(
+    specification: Types.Specification
+  ): { type: "enabled"; budget_tokens: number } | undefined {
+    // Check Anthropic specifications
+    if (specification.serviceType === Types.ModelServiceTypes.Anthropic) {
+      const anthropic = specification.anthropic;
+      if (anthropic?.enableThinking) {
+        return {
+          type: "enabled",
+          budget_tokens: anthropic.thinkingTokenLimit || 10000,
+        };
+      }
+    }
+
+    // Check Google specifications (also supports thinking)
+    if (specification.serviceType === Types.ModelServiceTypes.Google) {
+      const google = specification.google;
+      if (google?.enableThinking) {
+        return {
+          type: "enabled",
+          budget_tokens: google.thinkingTokenLimit || 10000,
+        };
+      }
+    }
+
+    return undefined;
   }
 
   /**
@@ -5575,7 +5932,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
     if (!GoogleGenerativeAI && !this.googleClient) {
@@ -5604,7 +5962,8 @@ class Graphlit {
       tools,
       googleClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5619,7 +5978,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Groq module or a provided client
     if (!Groq && !this.groqClient) {
@@ -5647,7 +6007,8 @@ class Graphlit {
       tools,
       groqClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5662,7 +6023,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.cerebrasClient) {
@@ -5693,7 +6055,8 @@ class Graphlit {
       tools,
       cerebrasClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5702,27 +6065,30 @@ class Graphlit {
    */
   private async streamWithCohere(
     specification: Types.Specification,
-    messages: CohereMessage[],
+    messages: Types.ConversationMessage[],
     tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Cohere module or a provided client
-    if (!CohereClient && !this.cohereClient) {
+    if (!CohereClient && !CohereClientV2 && !this.cohereClient) {
       throw new Error("Cohere client not available");
     }
 
-    // Use provided client or create a new one
+    // Use provided client or create a new one - prefer v2
     const cohereClient =
       this.cohereClient ||
-      (CohereClient
-        ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
-        : (() => {
-            throw new Error("Cohere module not available");
-          })());
+      (CohereClientV2
+        ? new CohereClientV2({ token: process.env.COHERE_API_KEY || "" })
+        : CohereClient
+          ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
+          : (() => {
+              throw new Error("Cohere module not available");
+            })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -5736,7 +6102,8 @@ class Graphlit {
       tools,
       cohereClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5751,7 +6118,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Mistral module or a provided client
     if (!Mistral && !this.mistralClient) {
@@ -5762,7 +6130,15 @@ class Graphlit {
     const mistralClient =
       this.mistralClient ||
       (Mistral
-        ? new Mistral({ apiKey: process.env.MISTRAL_API_KEY || "" })
+        ? (() => {
+            const apiKey = process.env.MISTRAL_API_KEY;
+            if (!apiKey) {
+              throw new Error(
+                "MISTRAL_API_KEY environment variable is required for Mistral streaming"
+              );
+            }
+            return new Mistral({ apiKey });
+          })()
         : (() => {
             throw new Error("Mistral module not available");
           })());
@@ -5779,7 +6155,8 @@ class Graphlit {
       tools,
       mistralClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5795,7 +6172,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the Bedrock module or a provided client
     if (!BedrockRuntimeClient && !this.bedrockClient) {
@@ -5826,7 +6204,8 @@ class Graphlit {
       tools,
       bedrockClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 
@@ -5841,7 +6220,8 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[]
-    ) => void
+    ) => void,
+    abortSignal?: AbortSignal
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided Deepseek client
     if (!OpenAI && !this.deepseekClient) {
@@ -5874,7 +6254,8 @@ class Graphlit {
       tools,
       deepseekClient,
       (event) => uiAdapter.handleEvent(event),
-      onComplete
+      onComplete,
+      abortSignal
     );
   }
 

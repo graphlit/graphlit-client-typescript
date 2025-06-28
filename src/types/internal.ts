@@ -38,4 +38,18 @@ export type StreamEvent =
         percentage: number;
         remainingTokens: number;
       };
+    }
+  | {
+      type: "reasoning_start";
+      format: "thinking_tag" | "markdown" | "custom";
+    }
+  | {
+      type: "reasoning_delta";
+      content: string;
+      format: "thinking_tag" | "markdown" | "custom";
+    }
+  | {
+      type: "reasoning_end";
+      fullContent: string;
+      signature?: string; // For Anthropic extended thinking
     };

@@ -9,7 +9,6 @@ dotenv.config();
 
 describe("Streaming Multiple Tool Calls Test", () => {
   let client: Graphlit;
-  let specification: Types.Specification | null = null;
   let conversationId: string | null = null;
   let createdSpecId: string | null = null;
 
@@ -37,49 +36,24 @@ describe("Streaming Multiple Tool Calls Test", () => {
     // Find or create a specification that supports streaming
     const specifications = await client.querySpecifications();
 
-    // Look for OpenAI GPT-4 or similar that supports good tool calling
-    specification =
-      specifications.specifications?.results?.find(
-        (spec) =>
-          spec.serviceType === Types.ModelServiceTypes.OpenAi &&
-          (spec.name?.includes("GPT-4") || spec.name?.includes("gpt-4")),
-      ) || null;
-
-    // If not found, try any OpenAI spec
-    if (!specification) {
-      specification =
-        specifications.specifications?.results?.find(
-          (spec) => spec.serviceType === Types.ModelServiceTypes.OpenAi,
-        ) || null;
-    }
-
-    // If still not found, create one
-    if (!specification) {
-      console.log("Creating new OpenAI specification for testing");
-      try {
-        const createResult = await client.createSpecification({
-          name: "Test OpenAI GPT-4 Turbo",
-          serviceType: Types.ModelServiceTypes.OpenAi,
-          openAI: {
-            model: Types.OpenAiModels.Gpt_4TurboPreview,
-            temperature: 0.5,
-          },
-        });
-        specification = createResult.createSpecification || null;
-        createdSpecId = specification?.id || null;
-      } catch (error: any) {
-        console.error("Failed to create specification:", error);
-        if (error.networkError?.result?.errors) {
-          console.error(
-            "GraphQL errors:",
-            JSON.stringify(error.networkError.result.errors, null, 2),
-          );
-        }
-
-        // Try to find ANY specification as fallback
-        const allSpecs = await client.querySpecifications();
-        specification = allSpecs.specifications?.results?.[0] || null;
-        console.log("Using fallback specification:", specification?.name);
+    console.log("Creating new OpenAI specification for testing");
+    try {
+      const createResult = await client.createSpecification({
+        name: "Test OpenAI GPT-4 Turbo",
+        serviceType: Types.ModelServiceTypes.OpenAi,
+        openAI: {
+          model: Types.OpenAiModels.Gpt41_1024K,
+          temperature: 0.5,
+        },
+      });
+      createdSpecId = createResult.createSpecification?.id || null;
+    } catch (error: any) {
+      console.error("Failed to create specification:", error);
+      if (error.networkError?.result?.errors) {
+        console.error(
+          "GraphQL errors:",
+          JSON.stringify(error.networkError.result.errors, null, 2),
+        );
       }
     }
   });
@@ -107,16 +81,8 @@ describe("Streaming Multiple Tool Calls Test", () => {
   });
 
   it("should track multiple separate tool calls during streaming", async () => {
-    if (!specification) {
+    if (!createdSpecId) {
       console.log("No specification available, skipping test");
-      return;
-    }
-
-    // Check if streaming is supported
-    if (!client.supportsStreaming(specification)) {
-      console.log(
-        "Streaming not supported for this specification, skipping test",
-      );
       return;
     }
 
@@ -186,11 +152,6 @@ describe("Streaming Multiple Tool Calls Test", () => {
     };
 
     console.log("\n=== Testing Multiple Tool Calls with Streaming ===");
-    console.log("Specification:", specification.name);
-    console.log(
-      "Model:",
-      specification.openAI?.model || specification.anthropic?.model,
-    );
 
     let messageContent = "";
     let finalMetrics: any = null;
@@ -260,12 +221,12 @@ describe("Streaming Multiple Tool Calls Test", () => {
         }
       },
       undefined, // no existing conversation
-      { id: specification.id },
+      { id: createdSpecId },
       [webSearchTool],
       toolHandlers,
       {
         chunkingStrategy: "sentence",
-        debug: true,
+        //debug: true,
       },
     );
 
@@ -324,11 +285,6 @@ describe("Streaming Multiple Tool Calls Test", () => {
   });
 
   it("should handle parallel tool calls correctly", async () => {
-    if (!specification || !client.supportsStreaming(specification)) {
-      console.log("Skipping test - no streaming support");
-      return;
-    }
-
     // Define multiple tools
     const tools: Types.ToolDefinitionInput[] = [
       {
@@ -404,7 +360,7 @@ describe("Streaming Multiple Tool Calls Test", () => {
         }
       },
       conversationId, // reuse conversation
-      { id: specification.id },
+      { id: createdSpecId },
       tools,
       toolHandlers,
     );
