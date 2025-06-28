@@ -91,6 +91,10 @@ export const GetAlert = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -233,6 +237,10 @@ export const QueryAlerts = gql`
         fileTypes
         formats
         fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
         similarContents {
           id
         }
@@ -4442,6 +4450,10 @@ export const GetConversation = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -4525,6 +4537,10 @@ export const GetConversation = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -5355,6 +5371,10 @@ export const QueryConversations = gql`
         fileTypes
         formats
         fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
         similarContents {
           id
         }
@@ -5438,6 +5458,10 @@ export const QueryConversations = gql`
         fileTypes
         formats
         fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
         similarContents {
           id
         }
@@ -9835,6 +9859,10 @@ export const CreateView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -9918,6 +9946,10 @@ export const CreateView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10044,6 +10076,10 @@ export const GetView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10127,6 +10163,10 @@ export const GetView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10226,6 +10266,10 @@ export const QueryViews = gql`
         fileTypes
         formats
         fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
         similarContents {
           id
         }
@@ -10309,6 +10353,10 @@ export const QueryViews = gql`
         fileTypes
         formats
         fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
         similarContents {
           id
         }
@@ -10403,6 +10451,10 @@ export const UpdateView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10486,6 +10538,10 @@ export const UpdateView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10579,6 +10635,10 @@ export const UpsertView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
@@ -10662,6 +10722,10 @@ export const UpsertView = gql`
       fileTypes
       formats
       fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
       similarContents {
         id
       }
