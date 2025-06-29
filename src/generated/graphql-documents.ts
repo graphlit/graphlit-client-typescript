@@ -612,8 +612,15 @@ export const GetConnector = gql`
         clientId
         clientSecret
       }
+      oauth {
+        refreshToken
+        provider
+        metadata
+      }
       arcade {
         authorizationId
+        provider
+        metadata
       }
     }
     integration {
@@ -662,8 +669,15 @@ export const QueryConnectors = gql`
           clientId
           clientSecret
         }
+        oauth {
+          refreshToken
+          provider
+          metadata
+        }
         arcade {
           authorizationId
+          provider
+          metadata
         }
       }
       integration {
@@ -6437,14 +6451,18 @@ export const GetFeed = gql`
         connectorId
       }
       dropbox {
+        authenticationType
         path
+        connectorId
         appKey
         appSecret
         refreshToken
         redirectUri
       }
       box {
+        authenticationType
         folderId
+        connectorId
         clientId
         clientSecret
         refreshToken
@@ -6612,9 +6630,11 @@ export const GetFeed = gql`
     microsoftTeams {
       readLimit
       type
+      authenticationType
       clientId
       clientSecret
       refreshToken
+      connectorId
       teamId
       channelId
     }
@@ -6767,14 +6787,18 @@ export const QueryFeeds = gql`
           connectorId
         }
         dropbox {
+          authenticationType
           path
+          connectorId
           appKey
           appSecret
           refreshToken
           redirectUri
         }
         box {
+          authenticationType
           folderId
+          connectorId
           clientId
           clientSecret
           refreshToken
@@ -6942,9 +6966,11 @@ export const QueryFeeds = gql`
       microsoftTeams {
         readLimit
         type
+        authenticationType
         clientId
         clientSecret
         refreshToken
+        connectorId
         teamId
         channelId
       }
@@ -9675,8 +9701,15 @@ export const GetUser = gql`
           clientId
           clientSecret
         }
+        oauth {
+          refreshToken
+          provider
+          metadata
+        }
         arcade {
           authorizationId
+          provider
+          metadata
         }
       }
       integration {
@@ -9732,8 +9765,15 @@ export const GetUserByIdentifier = gql`
           clientId
           clientSecret
         }
+        oauth {
+          refreshToken
+          provider
+          metadata
+        }
         arcade {
           authorizationId
+          provider
+          metadata
         }
       }
       integration {
@@ -9790,8 +9830,15 @@ export const QueryUsers = gql`
             clientId
             clientSecret
           }
+          oauth {
+            refreshToken
+            provider
+            metadata
+          }
           arcade {
             authorizationId
+            provider
+            metadata
           }
         }
         integration {
