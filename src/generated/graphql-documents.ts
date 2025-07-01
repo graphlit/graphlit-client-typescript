@@ -181,6 +181,10 @@ export const GetAlert = gql`
         accessTokenKey
         accessTokenSecret
       }
+      mcp {
+        token
+        type
+      }
     }
     publishing {
       type
@@ -326,6 +330,10 @@ export const QueryAlerts = gql`
           consumerSecret
           accessTokenKey
           accessTokenSecret
+        }
+        mcp {
+          token
+          type
         }
       }
       publishing {
@@ -641,6 +649,10 @@ export const GetConnector = gql`
         accessTokenKey
         accessTokenSecret
       }
+      mcp {
+        token
+        type
+      }
     }
   }
 }
@@ -697,6 +709,10 @@ export const QueryConnectors = gql`
           consumerSecret
           accessTokenKey
           accessTokenSecret
+        }
+        mcp {
+          token
+          type
         }
       }
     }
@@ -9730,6 +9746,10 @@ export const GetUser = gql`
           accessTokenKey
           accessTokenSecret
         }
+        mcp {
+          token
+          type
+        }
       }
     }
   }
@@ -9793,6 +9813,10 @@ export const GetUserByIdentifier = gql`
           consumerSecret
           accessTokenKey
           accessTokenSecret
+        }
+        mcp {
+          token
+          type
         }
       }
     }
@@ -9858,6 +9882,10 @@ export const QueryUsers = gql`
             consumerSecret
             accessTokenKey
             accessTokenSecret
+          }
+          mcp {
+            token
+            type
           }
         }
       }
@@ -11068,6 +11096,10 @@ export const CreateWorkflow = gql`
           accessTokenKey
           accessTokenSecret
         }
+        mcp {
+          token
+          type
+        }
       }
     }
   }
@@ -11316,6 +11348,10 @@ export const GetWorkflow = gql`
           accessTokenKey
           accessTokenSecret
         }
+        mcp {
+          token
+          type
+        }
       }
     }
   }
@@ -11537,6 +11573,10 @@ export const QueryWorkflows = gql`
             accessTokenKey
             accessTokenSecret
           }
+          mcp {
+            token
+            type
+          }
         }
       }
     }
@@ -11753,6 +11793,10 @@ export const UpdateWorkflow = gql`
           accessTokenKey
           accessTokenSecret
         }
+        mcp {
+          token
+          type
+        }
       }
     }
   }
@@ -11967,6 +12011,10 @@ export const UpsertWorkflow = gql`
           consumerSecret
           accessTokenKey
           accessTokenSecret
+        }
+        mcp {
+          token
+          type
         }
       }
     }
