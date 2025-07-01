@@ -1431,6 +1431,7 @@ export const IngestBatch = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1467,12 +1468,13 @@ export const IngestBatch = gql`
 }
     `;
 export const IngestEncodedFile = gql`
-    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $fileCreationDate: DateTime, $fileModifiedDate: DateTime, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation IngestEncodedFile($name: String!, $data: String!, $mimeType: String!, $id: ID, $identifier: String, $fileCreationDate: DateTime, $fileModifiedDate: DateTime, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $workflow: EntityReferenceInput, $correlationId: String) {
   ingestEncodedFile(
     name: $name
     data: $data
     mimeType: $mimeType
     id: $id
+    identifier: $identifier
     fileCreationDate: $fileCreationDate
     fileModifiedDate: $fileModifiedDate
     isSynchronous: $isSynchronous
@@ -1488,6 +1490,7 @@ export const IngestEncodedFile = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1524,13 +1527,14 @@ export const IngestEncodedFile = gql`
 }
     `;
 export const IngestEvent = gql`
-    mutation IngestEvent($markdown: String!, $name: String, $description: String, $eventDate: DateTime, $id: ID, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestEvent($markdown: String!, $name: String, $description: String, $eventDate: DateTime, $id: ID, $identifier: String, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestEvent(
     name: $name
     description: $description
     eventDate: $eventDate
     markdown: $markdown
     id: $id
+    identifier: $identifier
     collections: $collections
     correlationId: $correlationId
   ) {
@@ -1541,6 +1545,7 @@ export const IngestEvent = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1577,12 +1582,13 @@ export const IngestEvent = gql`
 }
     `;
 export const IngestMemory = gql`
-    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $id: ID, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $id: ID, $identifier: String, $collections: [EntityReferenceInput!], $correlationId: String) {
   ingestMemory(
     name: $name
     text: $text
     textType: $textType
     id: $id
+    identifier: $identifier
     collections: $collections
     correlationId: $correlationId
   ) {
@@ -1593,6 +1599,7 @@ export const IngestMemory = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1629,7 +1636,7 @@ export const IngestMemory = gql`
 }
     `;
 export const IngestText = gql`
-    mutation IngestText($text: String!, $name: String, $textType: TextTypes, $uri: URL, $id: ID, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
+    mutation IngestText($text: String!, $name: String, $textType: TextTypes, $uri: URL, $id: ID, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestText(
     name: $name
     text: $text
@@ -1638,6 +1645,7 @@ export const IngestText = gql`
     id: $id
     isSynchronous: $isSynchronous
     workflow: $workflow
+    identifier: $identifier
     collections: $collections
     observations: $observations
     correlationId: $correlationId
@@ -1649,6 +1657,7 @@ export const IngestText = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1701,6 +1710,7 @@ export const IngestTextBatch = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -1737,7 +1747,7 @@ export const IngestTextBatch = gql`
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $mimeType: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $mimeType: String, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
@@ -1746,6 +1756,7 @@ export const IngestUri = gql`
     workflow: $workflow
     collections: $collections
     observations: $observations
+    identifier: $identifier
     isSynchronous: $isSynchronous
     correlationId: $correlationId
   ) {
@@ -1756,6 +1767,7 @@ export const IngestUri = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -3005,6 +3017,7 @@ export const ScreenshotPage = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name
@@ -3097,6 +3110,7 @@ export const UpdateContent = gql`
     fileType
     mimeType
     uri
+    identifier
     collections {
       id
       name

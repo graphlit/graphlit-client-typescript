@@ -1025,6 +1025,7 @@ class Graphlit {
     uri: string,
     name?: string,
     id?: string,
+    identifier?: string,
     isSynchronous?: boolean,
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
@@ -1037,6 +1038,7 @@ class Graphlit {
         uri: string;
         name?: string;
         id?: string;
+        identifier?: string;
         isSynchronous?: boolean;
         workflow?: Types.EntityReferenceInput;
         collections?: Types.EntityReferenceInput[];
@@ -1047,6 +1049,7 @@ class Graphlit {
       uri: uri,
       name: name,
       id: id,
+      identifier: identifier,
       isSynchronous: isSynchronous,
       workflow: workflow,
       collections: collections,
@@ -1061,6 +1064,7 @@ class Graphlit {
     textType?: Types.TextTypes,
     uri?: string,
     id?: string,
+    identifier?: string,
     isSynchronous?: boolean,
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
@@ -1075,6 +1079,7 @@ class Graphlit {
         textType?: Types.TextTypes;
         uri?: string;
         id?: string;
+        identifier?: string;
         isSynchronous?: boolean;
         workflow?: Types.EntityReferenceInput;
         collections?: Types.EntityReferenceInput[];
@@ -1087,6 +1092,7 @@ class Graphlit {
       textType: textType,
       uri: uri,
       id: id,
+      identifier: identifier,
       isSynchronous: isSynchronous,
       workflow: workflow,
       collections: collections,
@@ -1100,6 +1106,7 @@ class Graphlit {
     name?: string,
     textType?: Types.TextTypes,
     id?: string,
+    identifier?: string,
     collections?: Types.EntityReferenceInput[],
     correlationId?: string
   ): Promise<Types.IngestMemoryMutation> {
@@ -1110,6 +1117,7 @@ class Graphlit {
         name?: string;
         textType?: Types.TextTypes;
         id?: string;
+        identifier?: string;
         collections?: Types.EntityReferenceInput[];
         correlationId?: string;
       }
@@ -1118,6 +1126,7 @@ class Graphlit {
       text: text,
       textType: textType,
       id: id,
+      identifier: identifier,
       collections: collections,
       correlationId: correlationId,
     });
@@ -1129,6 +1138,7 @@ class Graphlit {
     description?: string,
     eventDate?: Types.Scalars["DateTime"]["input"],
     id?: string,
+    identifier?: string,
     collections?: Types.EntityReferenceInput[],
     correlationId?: string
   ): Promise<Types.IngestEventMutation> {
@@ -1140,6 +1150,7 @@ class Graphlit {
         description?: string;
         eventDate?: Types.Scalars["DateTime"]["input"];
         id?: string;
+        identifier?: string;
         collections?: Types.EntityReferenceInput[];
         correlationId?: string;
       }
@@ -1149,6 +1160,7 @@ class Graphlit {
       description: description,
       eventDate: eventDate,
       id: id,
+      identifier: identifier,
       collections: collections,
       correlationId: correlationId,
     });
@@ -1161,6 +1173,7 @@ class Graphlit {
     fileCreationDate?: Types.Scalars["DateTime"]["input"],
     fileModifiedDate?: Types.Scalars["DateTime"]["input"],
     id?: string,
+    identifier?: string,
     isSynchronous?: boolean,
     workflow?: Types.EntityReferenceInput,
     collections?: Types.EntityReferenceInput[],
@@ -1176,6 +1189,7 @@ class Graphlit {
         fileCreationDate?: Types.Scalars["DateTime"]["input"];
         fileModifiedDate?: Types.Scalars["DateTime"]["input"];
         id?: string;
+        identifier?: string;
         isSynchronous?: boolean;
         workflow?: Types.EntityReferenceInput;
         collections?: Types.EntityReferenceInput[];
@@ -1189,6 +1203,7 @@ class Graphlit {
       fileCreationDate: fileCreationDate,
       fileModifiedDate: fileModifiedDate,
       id: id,
+      identifier: identifier,
       isSynchronous: isSynchronous,
       workflow: workflow,
       collections: collections,
