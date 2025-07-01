@@ -195,10 +195,12 @@ export async function streamWithOpenAI(
       );
     }
 
-    const stream = await openaiClient.chat.completions.create({
-      ...streamConfig,
-      ...(abortSignal && { signal: abortSignal }),
-    });
+    const stream = await openaiClient.chat.completions.create(
+      streamConfig,
+      {
+        signal: abortSignal,
+      }
+    );
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
