@@ -5749,42 +5749,6 @@ class Graphlit {
   }
 
   /**
-   * Format tool results for API
-   */
-  private async formatToolResults(
-    toolCalls: Types.ConversationToolCall[],
-    toolHandlers: Record<string, ToolHandler>
-  ): Promise<Types.ConversationToolResponseInput[]> {
-    const results: Types.ConversationToolResponseInput[] = [];
-
-    for (const toolCall of toolCalls) {
-      const handler = toolHandlers[toolCall.name];
-      if (handler) {
-        try {
-          const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
-          const result = await handler(args);
-          results.push({
-            id: toolCall.id,
-            content: JSON.stringify(result),
-          });
-        } catch (error) {
-          results.push({
-            id: toolCall.id,
-            content: JSON.stringify({
-              error:
-                error instanceof Error
-                  ? error.message
-                  : "Tool execution failed",
-            }),
-          });
-        }
-      }
-    }
-
-    return results;
-  }
-
-  /**
    * Fallback to non-streaming when streaming is not available
    */
   private async fallbackToNonStreaming(

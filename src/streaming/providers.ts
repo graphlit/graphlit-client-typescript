@@ -2971,6 +2971,9 @@ export async function streamWithBedrock(
   const THINKING_START = "<thinking>";
   const THINKING_END = "</thinking>";
 
+  // Bedrock delta tracking - Some Bedrock models send accumulated text instead of deltas
+  let accumulatedText = "";
+
   try {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -3077,7 +3080,27 @@ export async function streamWithBedrock(
           const contentIndex = event.contentBlockDelta.contentBlockIndex;
 
           if (delta?.text) {
-            const text = delta.text;
+            let text = delta.text;
+            
+            // Bedrock models (especially Nova) may send accumulated text instead of deltas
+            // Check if this delta contains all previously accumulated text
+            if (accumulatedText.length > 0 && delta.text.startsWith(accumulatedText)) {
+              // This is accumulated text - extract only the new part
+              text = delta.text.substring(accumulatedText.length);
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(
+                  `🔍 [Bedrock] Extracted delta from accumulated text: "${text}" (total: ${delta.text.length}, prev: ${accumulatedText.length})`
+                );
+              }
+            } else if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `🔍 [Bedrock] Using text as delta: "${text}"`
+              );
+            }
+            
+            // Update accumulated text
+            accumulatedText = accumulatedText + text;
+            
             tokenCount++;
 
             if (firstTokenTime === 0) {
@@ -3180,6 +3203,12 @@ export async function streamWithBedrock(
             }
           }
         } else if (event.contentBlockStart) {
+          // Reset Bedrock tracking for new content blocks
+          accumulatedText = "";
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`🔍 [Bedrock] Reset accumulated text tracking for new content block`);
+          }
+          
           // Handle tool use start
           const start = event.contentBlockStart.start;
           const startIndex = event.contentBlockStart.contentBlockIndex;
