@@ -3,9 +3,11 @@
 ## Issues Fixed
 
 ### 1. Cohere Tool Calling (400 Bad Request)
+
 **Problem**: Cohere was rejecting tool schemas because of incorrect type mapping from JSON Schema to Cohere's expected format.
 
-**Solution**: 
+**Solution**:
+
 - Added proper type mapping in `providers.ts`:
   - `"number"/"integer"` → `"float"`
   - `"boolean"` → `"bool"`
@@ -14,24 +16,30 @@
   - Default → `"str"`
 
 ### 2. Mistral Tool Calling (Multi-turn Issues)
+
 **Problem**: "Not the same number of function calls and responses" error indicating a mismatch in tool call tracking.
 
-**Solution**: 
+**Solution**:
+
 - Added better error logging for invalid JSON in tool arguments
 - The formatter already properly handles tool calls with `tool_call_id` for multi-turn conversations
 
 ### 3. Groq Tool Calling (Limited Support)
+
 **Problem**: Some Groq models (especially LLaMA variants) have limited or no tool calling support.
 
 **Solution**:
+
 - Instead of completely disabling tools, now simplifies schemas more aggressively for problematic models
 - Maintains a list of models with known issues: `llama-3.3`, `llama3-groq-70b`, `llama3-groq-8b`
 - Uses simplified schemas that only include basic properties
 
 ### 4. Cerebras Tool Calling (Limited Support)
+
 **Problem**: Only the qwen-3-32b model supports multi-turn tool use. Other models will error if you include a non-empty tool_calls array on an assistant turn.
 
 **Solution**:
+
 - Added detection for the qwen-3-32b model (only model that supports tools)
 - For all other Cerebras models:
   - Disables tool definitions

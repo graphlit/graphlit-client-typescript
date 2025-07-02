@@ -14,9 +14,10 @@ const __dirname = dirname(__filename);
 config({ path: resolve(__dirname, ".env") });
 
 // Skip tests if environment variables are not set
-const skipTests = !process.env.GRAPHLIT_ORGANIZATION_ID || 
-                 !process.env.GRAPHLIT_ENVIRONMENT_ID || 
-                 !process.env.GRAPHLIT_JWT_SECRET;
+const skipTests =
+  !process.env.GRAPHLIT_ORGANIZATION_ID ||
+  !process.env.GRAPHLIT_ENVIRONMENT_ID ||
+  !process.env.GRAPHLIT_JWT_SECRET;
 
 describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
   let client: Graphlit;
@@ -42,7 +43,7 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
         // Ignore errors
       }
     }
-    
+
     for (const specId of createdSpecIds) {
       try {
         await client.deleteSpecification(specId);
@@ -57,15 +58,24 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
     const bedrockModels = [
       { name: "Nova Pro", model: Types.BedrockModels.NovaPro },
       { name: "Nova Premier", model: Types.BedrockModels.NovaPremier },
-      { name: "Claude 3.7 Sonnet", model: Types.BedrockModels.Claude_3_7Sonnet },
-      { name: "Llama 4 Maverick 17B", model: Types.BedrockModels.Llama_4Maverick_17B },
-      { name: "Llama 4 Scout 17B", model: Types.BedrockModels.Llama_4Scout_17B },
+      {
+        name: "Claude 3.7 Sonnet",
+        model: Types.BedrockModels.Claude_3_7Sonnet,
+      },
+      {
+        name: "Llama 4 Maverick 17B",
+        model: Types.BedrockModels.Llama_4Maverick_17B,
+      },
+      {
+        name: "Llama 4 Scout 17B",
+        model: Types.BedrockModels.Llama_4Scout_17B,
+      },
     ];
 
     bedrockModels.forEach(({ name, model }) => {
       it(`should handle ${name} streaming without duplicates`, async () => {
         console.log(`\n🤖 Testing ${name} streaming...`);
-        
+
         // Create specification for this model
         const specResponse = await client.createSpecification({
           name: `Test ${name} Streaming`,
@@ -95,20 +105,25 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
             } else if (event.type === "message_update") {
               const currentContent = event.message.message;
               const delta = currentContent.substring(previousContent.length);
-              
+
               updates.push({
                 content: currentContent,
                 delta: delta,
               });
-              
+
               // Check if the delta contains content that was already in previous
-              if (previousContent.length > 10 && delta.includes(previousContent.substring(0, 10))) {
+              if (
+                previousContent.length > 10 &&
+                delta.includes(previousContent.substring(0, 10))
+              ) {
                 duplicateDetected = true;
                 console.log(`⚠️  ${name}: Delta contains previous content!`);
-                console.log(`   Previous start: "${previousContent.substring(0, 30)}..."`);
+                console.log(
+                  `   Previous start: "${previousContent.substring(0, 30)}..."`,
+                );
                 console.log(`   Delta: "${delta.substring(0, 50)}..."`);
               }
-              
+
               previousContent = currentContent;
             }
           },
@@ -119,13 +134,17 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
         // Analysis
         console.log(`📊 ${name} Results:`);
         console.log(`   Total updates: ${updates.length}`);
-        console.log(`   Duplicate content detected: ${duplicateDetected ? 'YES ❌' : 'NO ✅'}`);
+        console.log(
+          `   Duplicate content detected: ${duplicateDetected ? "YES ❌" : "NO ✅"}`,
+        );
         console.log(`   Final message length: ${previousContent.length} chars`);
-        
+
         // Log first few deltas to see the pattern
         console.log(`   First 5 deltas:`);
         for (let i = 0; i < Math.min(5, updates.length); i++) {
-          console.log(`     ${i + 1}. "${updates[i].delta.substring(0, 30)}${updates[i].delta.length > 30 ? '...' : ''}" (${updates[i].delta.length} chars)`);
+          console.log(
+            `     ${i + 1}. "${updates[i].delta.substring(0, 30)}${updates[i].delta.length > 30 ? "..." : ""}" (${updates[i].delta.length} chars)`,
+          );
         }
 
         // Expect no duplicates
@@ -136,10 +155,10 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
 
     it("should compare delta behavior across all models", async () => {
       console.log("\n📊 Comparing delta behavior across Bedrock models...\n");
-      
-      const results: { 
-        model: string; 
-        hasDuplicates: boolean; 
+
+      const results: {
+        model: string;
+        hasDuplicates: boolean;
         updateCount: number;
         avgDeltaSize: number;
         sampleDelta: string;
@@ -148,8 +167,14 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
       // Test a subset for comparison
       const modelsToCompare = [
         { name: "Nova Pro", model: Types.BedrockModels.NovaPro },
-        { name: "Claude 3.7 Sonnet", model: Types.BedrockModels.Claude_3_7Sonnet },
-        { name: "Llama 4 Scout 17B", model: Types.BedrockModels.Llama_4Scout_17B },
+        {
+          name: "Claude 3.7 Sonnet",
+          model: Types.BedrockModels.Claude_3_7Sonnet,
+        },
+        {
+          name: "Llama 4 Scout 17B",
+          model: Types.BedrockModels.Llama_4Scout_17B,
+        },
       ];
 
       for (const { name, model } of modelsToCompare) {
@@ -178,15 +203,20 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
             } else if (event.type === "message_update") {
               const currentContent = event.message.message;
               const delta = currentContent.substring(previousContent.length);
-              
+
               deltas.push(delta);
               updates.push(currentContent);
-              
+
               // Simple duplicate check
-              if (previousContent.length > 5 && currentContent.includes(previousContent + previousContent.substring(0, 5))) {
+              if (
+                previousContent.length > 5 &&
+                currentContent.includes(
+                  previousContent + previousContent.substring(0, 5),
+                )
+              ) {
                 hasDuplicates = true;
               }
-              
+
               previousContent = currentContent;
             }
           },
@@ -194,9 +224,12 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
           { id: specResponse.createSpecification?.id },
         );
 
-        const avgDeltaSize = deltas.length > 0 
-          ? Math.round(deltas.reduce((sum, d) => sum + d.length, 0) / deltas.length)
-          : 0;
+        const avgDeltaSize =
+          deltas.length > 0
+            ? Math.round(
+                deltas.reduce((sum, d) => sum + d.length, 0) / deltas.length,
+              )
+            : 0;
 
         results.push({
           model: name,
@@ -209,24 +242,34 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
 
       // Display comparison
       console.log("Model Comparison Results:");
-      console.log("┌─────────────────────────┬─────────────┬──────────┬─────────────┬──────────────────┐");
-      console.log("│ Model                   │ Duplicates  │ Updates  │ Avg Delta   │ Sample Delta     │");
-      console.log("├─────────────────────────┼─────────────┼──────────┼─────────────┼──────────────────┤");
-      
+      console.log(
+        "┌─────────────────────────┬─────────────┬──────────┬─────────────┬──────────────────┐",
+      );
+      console.log(
+        "│ Model                   │ Duplicates  │ Updates  │ Avg Delta   │ Sample Delta     │",
+      );
+      console.log(
+        "├─────────────────────────┼─────────────┼──────────┼─────────────┼──────────────────┤",
+      );
+
       for (const result of results) {
         const duplicateStatus = result.hasDuplicates ? "YES ❌" : "NO  ✅";
         const modelName = result.model.padEnd(23);
         const updates = result.updateCount.toString().padEnd(8);
         const avgDelta = (result.avgDeltaSize + " chars").padEnd(11);
         const sample = result.sampleDelta.substring(0, 15).padEnd(16);
-        
-        console.log(`│ ${modelName} │ ${duplicateStatus}    │ ${updates} │ ${avgDelta} │ ${sample} │`);
+
+        console.log(
+          `│ ${modelName} │ ${duplicateStatus}    │ ${updates} │ ${avgDelta} │ ${sample} │`,
+        );
       }
-      
-      console.log("└─────────────────────────┴─────────────┴──────────┴─────────────┴──────────────────┘");
+
+      console.log(
+        "└─────────────────────────┴─────────────┴──────────┴─────────────┴──────────────────┘",
+      );
 
       // All models should now handle deltas correctly
-      expect(results.every(r => !r.hasDuplicates)).toBe(true);
+      expect(results.every((r) => !r.hasDuplicates)).toBe(true);
     }, 60000); // 60 second timeout for comparison test
   });
 
@@ -255,12 +298,14 @@ describe.skipIf(skipTests)("Bedrock Streaming Tests", () => {
           } else if (event.type === "message_update") {
             const currentContent = event.message.message;
             const delta = currentContent.substring(previousContent.length);
-            
+
             if (delta === "") {
               emptyDeltaCount++;
-              console.log(`⚠️  Empty delta detected at update ${emptyDeltaCount}`);
+              console.log(
+                `⚠️  Empty delta detected at update ${emptyDeltaCount}`,
+              );
             }
-            
+
             previousContent = currentContent;
           }
         },

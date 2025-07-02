@@ -582,13 +582,15 @@ describe("Comprehensive streamAgent Integration Tests", () => {
             ? finalEvent.message.message
             : "No response";
           console.error(
-            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response.substring(0, 200)}..."`
+            `❌ ${testSpec.name}: Tool was NOT called. Model responded with: "${response.substring(0, 200)}..."`,
           );
         }
-        
+
         // Check if this model supports tools
         if (testSpec.supportsTools === false) {
-          console.log(`⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`);
+          console.log(
+            `⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`,
+          );
           expect(toolEvents.length).toBe(0);
         } else {
           expect(toolEvents.length).toBeGreaterThan(0);
@@ -723,7 +725,9 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         console.log(`${testSpec.name}: Got ${toolEvents.length} tool events`);
 
         if (testSpec.supportsTools === false) {
-          console.log(`⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`);
+          console.log(
+            `⚠️ ${testSpec.name}: Model does not support tool calling, skipping tool assertions`,
+          );
           expect(toolEvents.length).toBe(0);
         } else if (toolEvents.length > 0) {
           console.log(
@@ -738,9 +742,7 @@ describe("Comprehensive streamAgent Integration Tests", () => {
         } else {
           // If tools are expected but not called, this is a test failure
           expect(toolEvents.length).toBeGreaterThan(0);
-          console.log(
-            `❌ ${testSpec.name}: Expected tool events but got none`,
-          );
+          console.log(`❌ ${testSpec.name}: Expected tool events but got none`);
         }
 
         const finalEvent = events.find(

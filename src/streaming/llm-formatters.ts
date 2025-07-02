@@ -214,20 +214,22 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         const content: any[] = []; // Use any[] to allow thinking blocks
 
         // Handle thinking blocks for extended thinking preservation
-        if (trimmedMessage && trimmedMessage.includes('<thinking')) {
+        if (trimmedMessage && trimmedMessage.includes("<thinking")) {
           // Extract thinking content and signature if present
-          const thinkingMatch = trimmedMessage.match(/<thinking(?:\s+signature="([^"]*)")?>([\s\S]*?)<\/thinking>/);
+          const thinkingMatch = trimmedMessage.match(
+            /<thinking(?:\s+signature="([^"]*)")?>([\s\S]*?)<\/thinking>/,
+          );
           if (thinkingMatch) {
             const signature = thinkingMatch[1]; // Optional signature
             const thinkingContent = thinkingMatch[2].trim();
-            
+
             // Add thinking block for conversation history preservation
             if (thinkingContent) {
               const thinkingBlock: any = {
                 type: "thinking",
                 thinking: thinkingContent,
               };
-              
+
               // Add signature if present (required by Anthropic API)
               if (signature) {
                 thinkingBlock.signature = signature;
@@ -235,12 +237,14 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
                 // Provide a default signature if none captured
                 thinkingBlock.signature = "";
               }
-              
+
               content.push(thinkingBlock);
             }
-            
+
             // Remove thinking tags from the main text and add remaining content
-            const textWithoutThinking = trimmedMessage.replace(/<thinking(?:\s+[^>]*)?>[\s\S]*?<\/thinking>/g, '').trim();
+            const textWithoutThinking = trimmedMessage
+              .replace(/<thinking(?:\s+[^>]*)?>[\s\S]*?<\/thinking>/g, "")
+              .trim();
             if (textWithoutThinking) {
               content.push({
                 type: "text",
@@ -580,10 +584,12 @@ export function formatMessagesForMistral(
   if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
     console.log(`[Mistral Formatter] Input: ${messages.length} messages`);
     messages.forEach((msg, idx) => {
-      console.log(`  Input ${idx}: role=${msg.role}, hasToolCalls=${!!msg.toolCalls}, toolCallId=${msg.toolCallId}`);
+      console.log(
+        `  Input ${idx}: role=${msg.role}, hasToolCalls=${!!msg.toolCalls}, toolCallId=${msg.toolCallId}`,
+      );
     });
   }
-  
+
   const formattedMessages: MistralMessage[] = [];
 
   for (const message of messages) {
@@ -681,12 +687,21 @@ export function formatMessagesForMistral(
   }
 
   if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-    console.log(`[Mistral Formatter] Output: ${formattedMessages.length} messages`);
+    console.log(
+      `[Mistral Formatter] Output: ${formattedMessages.length} messages`,
+    );
     formattedMessages.forEach((msg, idx) => {
-      const msgWithTools = msg as MistralMessage & { tool_calls?: any[]; tool_call_id?: string };
-      console.log(`  Output ${idx}: role=${msg.role}, hasToolCalls=${!!msgWithTools.tool_calls}, toolCallId=${msgWithTools.tool_call_id}`);
+      const msgWithTools = msg as MistralMessage & {
+        tool_calls?: any[];
+        tool_call_id?: string;
+      };
+      console.log(
+        `  Output ${idx}: role=${msg.role}, hasToolCalls=${!!msgWithTools.tool_calls}, toolCallId=${msgWithTools.tool_call_id}`,
+      );
       if (msgWithTools.tool_calls) {
-        console.log(`    Tool calls: ${JSON.stringify(msgWithTools.tool_calls)}`);
+        console.log(
+          `    Tool calls: ${JSON.stringify(msgWithTools.tool_calls)}`,
+        );
       }
     });
   }

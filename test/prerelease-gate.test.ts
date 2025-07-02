@@ -488,7 +488,7 @@ describe("Pre-release Gate Tests", () => {
       // Tool calling should work
       expect(events).toContain("tool_update");
       expect(toolCalled).toBe(true);
-      
+
       // Note: Reasoning might not always appear with tools
       if (reasoningDetected) {
         console.log("  ✅ Reasoning was detected with tools");
@@ -633,7 +633,7 @@ describe("Pre-release Gate Tests", () => {
       expect(flow).toContain("tool_update");
       expect(flow).toContain("message_update");
       expect(flow).toContain("conversation_completed");
-      
+
       // Reasoning is optional with tools
       if (flow.includes("reasoning_update")) {
         console.log("  ✅ Reasoning detected in integration flow");

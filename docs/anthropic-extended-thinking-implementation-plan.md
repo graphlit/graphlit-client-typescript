@@ -1,17 +1,20 @@
 # Anthropic Extended Thinking Implementation Plan
 
 ## Overview
+
 Add full support for Anthropic's extended thinking feature, which provides structured reasoning capabilities with dedicated thinking blocks, signatures, and proper multi-turn conversation support.
 
 ## Current State vs Target State
 
 ### Current (Pattern Detection Only)
+
 - Simple `<thinking>` tag detection in regular text
 - Generic `reasoning_update` events
 - No API parameter support
 - No proper thinking block handling
 
 ### Target (Full Extended Thinking)
+
 - Native `thinking` parameter in API calls
 - Proper `thinking_delta` streaming events
 - Thinking block preservation for multi-turn
@@ -23,21 +26,23 @@ Add full support for Anthropic's extended thinking feature, which provides struc
 ### Phase 1: API Parameter Support
 
 #### 1.1 Update Type Definitions
+
 ```typescript
 // src/types/internal.ts
 export interface ThinkingConfig {
-  type: 'enabled';
+  type: "enabled";
   budget_tokens: number;
 }
 
 // Add to StreamingOptions
 export interface StreamingOptions {
   abortSignal?: AbortSignal;
-  thinking?: ThinkingConfig;  // NEW
+  thinking?: ThinkingConfig; // NEW
 }
 ```
 
 #### 1.2 Update Client Method Signatures
+
 ```typescript
 // src/client.ts
 async streamAgent(
@@ -54,9 +59,10 @@ async streamAgent(
 ### Phase 2: Streaming Event Support
 
 #### 2.1 New Event Types
+
 ```typescript
 // src/types/internal.ts
-export type InternalStreamEvent = 
+export type InternalStreamEvent =
   | ... existing events ...
   | {
       type: "thinking_block_start";
@@ -85,50 +91,51 @@ export type InternalStreamEvent =
 ```
 
 #### 2.2 Update Anthropic Provider
+
 ```typescript
 // src/streaming/providers.ts
 function* streamWithAnthropic(
   client: Anthropic,
   params: AnthropicStreamParams,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Generator<InternalStreamEvent> {
   // Current implementation handles text blocks
   // Need to add handling for:
-  
+
   // 1. content_block_start with type: "thinking"
-  if (event.type === 'content_block_start') {
-    if (event.content_block.type === 'thinking') {
+  if (event.type === "content_block_start") {
+    if (event.content_block.type === "thinking") {
       yield {
         type: "thinking_block_start",
-        index: event.index
+        index: event.index,
       };
     }
   }
-  
+
   // 2. content_block_delta with thinking_delta
-  if (event.type === 'content_block_delta') {
-    if (event.delta.type === 'thinking_delta') {
+  if (event.type === "content_block_delta") {
+    if (event.delta.type === "thinking_delta") {
       yield {
         type: "thinking_delta",
         thinking: event.delta.thinking,
-        index: event.index
+        index: event.index,
       };
-    } else if (event.delta.type === 'signature_delta') {
+    } else if (event.delta.type === "signature_delta") {
       yield {
         type: "signature_delta",
         signature: event.delta.signature,
-        index: event.index
+        index: event.index,
       };
     }
   }
-  
+
   // 3. Handle thinking block completion
-  if (event.type === 'content_block_stop') {
+  if (event.type === "content_block_stop") {
     // Need to track if this was a thinking block
     yield {
       type: "thinking_block_stop",
       index: event.index,
-      signature: accumulatedSignature
+      signature: accumulatedSignature,
     };
   }
 }
@@ -137,6 +144,7 @@ function* streamWithAnthropic(
 ### Phase 3: Content Block Management
 
 #### 3.1 Thinking Block State
+
 ```typescript
 // src/streaming/providers.ts
 interface ThinkingBlockState {
@@ -148,30 +156,31 @@ interface ThinkingBlockState {
 
 class AnthropicStreamHandler {
   private thinkingBlocks: Map<number, ThinkingBlockState> = new Map();
-  private currentBlockType: Map<number, 'thinking' | 'text' | 'tool_use'> = new Map();
-  
+  private currentBlockType: Map<number, "thinking" | "text" | "tool_use"> =
+    new Map();
+
   handleContentBlockStart(event: any) {
-    if (event.content_block.type === 'thinking') {
+    if (event.content_block.type === "thinking") {
       this.thinkingBlocks.set(event.index, {
-        content: '',
+        content: "",
         isRedacted: false,
-        index: event.index
+        index: event.index,
       });
-      this.currentBlockType.set(event.index, 'thinking');
+      this.currentBlockType.set(event.index, "thinking");
     }
   }
-  
+
   handleThinkingDelta(event: any) {
     const block = this.thinkingBlocks.get(event.index);
     if (block) {
       block.content += event.delta.thinking;
     }
   }
-  
+
   handleSignatureDelta(event: any) {
     const block = this.thinkingBlocks.get(event.index);
     if (block) {
-      block.signature = (block.signature || '') + event.delta.signature;
+      block.signature = (block.signature || "") + event.delta.signature;
     }
   }
 }
@@ -180,27 +189,28 @@ class AnthropicStreamHandler {
 ### Phase 4: UI Event Adapter Updates
 
 #### 4.1 Convert to UI Events
+
 ```typescript
 // src/streaming/ui-event-adapter.ts
 function handleThinkingBlockStart(event: InternalStreamEvent): void {
   // Start accumulating thinking content
   this.currentThinking = {
-    content: '',
-    format: 'thinking_tag',  // Anthropic uses thinking tags
-    hasSignature: false
+    content: "",
+    format: "thinking_tag", // Anthropic uses thinking tags
+    hasSignature: false,
   };
 }
 
 function handleThinkingDelta(event: InternalStreamEvent): void {
   if (this.currentThinking) {
     this.currentThinking.content += event.thinking;
-    
+
     // Emit UI event
     this.emit({
       type: "reasoning_update",
       content: this.currentThinking.content,
       format: "thinking_tag",
-      isComplete: false
+      isComplete: false,
     });
   }
 }
@@ -211,7 +221,7 @@ function handleThinkingBlockStop(event: InternalStreamEvent): void {
       type: "reasoning_update",
       content: this.currentThinking.content,
       format: "thinking_tag",
-      isComplete: true
+      isComplete: true,
     });
   }
 }
@@ -220,6 +230,7 @@ function handleThinkingBlockStop(event: InternalStreamEvent): void {
 ### Phase 5: Multi-turn Support
 
 #### 5.1 Preserve Thinking Blocks
+
 ```typescript
 // src/client.ts
 interface ConversationMessage {
@@ -263,6 +274,7 @@ private buildAnthropicMessages(
 ### Phase 6: Provider Detection & Routing
 
 #### 6.1 Update supportsExtendedThinking
+
 ```typescript
 // src/client.ts
 private supportsExtendedThinking(
@@ -280,6 +292,7 @@ private supportsExtendedThinking(
 ```
 
 #### 6.2 Pass Thinking Config to Provider
+
 ```typescript
 // src/client.ts
 private async streamWithAnthropic(
@@ -287,21 +300,21 @@ private async streamWithAnthropic(
   options?: StreamingOptions
 ): AsyncGenerator<InternalStreamEvent> {
   const messages = this.buildAnthropicMessages(conversation);
-  
+
   const streamParams: any = {
     model: this.getAnthropicModel(specification),
     messages,
     max_tokens: specification.anthropic?.completionTokenLimit || 4096,
     stream: true,
   };
-  
+
   // Add thinking config if supported and requested
   if (options?.thinking && this.supportsExtendedThinking(model, serviceType)) {
     streamParams.thinking = options.thinking;
   }
-  
+
   const stream = await this.anthropicClient.messages.create(streamParams);
-  
+
   // ... rest of implementation
 }
 ```
@@ -309,37 +322,38 @@ private async streamWithAnthropic(
 ### Phase 7: Testing
 
 #### 7.1 Unit Tests
+
 ```typescript
 // test/anthropic-extended-thinking.test.ts
 describe("Anthropic Extended Thinking", () => {
   it("should handle thinking blocks in streaming", async () => {
     const events: AgentStreamEvent[] = [];
-    
+
     await client.streamAgent(
       "Complex reasoning task",
       (event) => events.push(event),
       undefined,
-      { 
+      {
         serviceType: Types.ModelServiceTypes.Anthropic,
-        anthropic: { model: Types.AnthropicModels.Claude_3_7Sonnet }
+        anthropic: { model: Types.AnthropicModels.Claude_3_7Sonnet },
       },
       undefined,
       undefined,
       {
-        thinking: { type: "enabled", budget_tokens: 10000 }
-      }
+        thinking: { type: "enabled", budget_tokens: 10000 },
+      },
     );
-    
+
     // Should have reasoning events
-    const reasoningEvents = events.filter(e => e.type === "reasoning_update");
+    const reasoningEvents = events.filter((e) => e.type === "reasoning_update");
     expect(reasoningEvents.length).toBeGreaterThan(0);
     expect(reasoningEvents[0].format).toBe("thinking_tag");
   });
-  
+
   it("should preserve thinking blocks in multi-turn", async () => {
     // Test that thinking blocks with signatures are preserved
   });
-  
+
   it("should handle redacted thinking blocks", async () => {
     // Test with magic string that triggers redaction
   });
@@ -349,12 +363,14 @@ describe("Anthropic Extended Thinking", () => {
 ### Phase 8: Documentation Updates
 
 #### 8.1 Update README
+
 - Add section on Anthropic extended thinking
 - Show how to enable thinking
 - Explain thinking budget tokens
 - Document supported models
 
 #### 8.2 Migration Guide
+
 - How to migrate from pattern detection to native thinking
 - Breaking changes (if any)
 - New event types to handle
@@ -372,14 +388,17 @@ describe("Anthropic Extended Thinking", () => {
 ## Risks & Mitigations
 
 ### Risk 1: Breaking Changes
+
 - **Risk**: Existing reasoning detection might conflict
 - **Mitigation**: Keep both systems working in parallel initially
 
 ### Risk 2: Complex State Management
+
 - **Risk**: Managing thinking blocks across streaming chunks
 - **Mitigation**: Create dedicated ThinkingBlockManager class
 
 ### Risk 3: API Compatibility
+
 - **Risk**: Anthropic API changes or beta features
 - **Mitigation**: Use feature detection and graceful fallbacks
 
