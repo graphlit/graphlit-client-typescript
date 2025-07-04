@@ -187,7 +187,7 @@ export const TEST_MODELS: TestModelConfig[] = [
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Google,
       google: {
-        model: Types.GoogleModels.Gemini_2_5ProPreview,
+        model: Types.GoogleModels.Gemini_2_5Pro,
         temperature: 0.7,
       },
       retrievalStrategy: {
@@ -203,7 +203,7 @@ export const TEST_MODELS: TestModelConfig[] = [
       type: Types.SpecificationTypes.Completion,
       serviceType: Types.ModelServiceTypes.Google,
       google: {
-        model: Types.GoogleModels.Gemini_2_5FlashPreview,
+        model: Types.GoogleModels.Gemini_2_5Flash,
         temperature: 0.7,
       },
       retrievalStrategy: {
@@ -448,7 +448,7 @@ export const NATIVE_STREAMING_MODELS: TestModelConfig[] = TEST_MODELS.filter(
     m.name.includes("Cohere") ||
     m.name.includes("Mistral") ||
     m.name.includes("Bedrock") ||
-    m.name.includes("Deepseek"),
+    m.name.includes("Deepseek")
 );
 
 /**
@@ -462,7 +462,7 @@ export function getModelByName(name: string): TestModelConfig | undefined {
  * Get models by service type
  */
 export function getModelsByService(
-  serviceType: Types.ModelServiceTypes,
+  serviceType: Types.ModelServiceTypes
 ): TestModelConfig[] {
   return TEST_MODELS.filter((m) => m.config.serviceType === serviceType);
 }
@@ -472,7 +472,7 @@ export function getModelsByService(
  */
 export function cloneModelConfig(
   model: TestModelConfig,
-  overrides: Partial<Types.SpecificationInput>,
+  overrides: Partial<Types.SpecificationInput>
 ): TestModelConfig {
   return {
     ...model,

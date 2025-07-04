@@ -101,6 +101,8 @@ const GOOGLE_MODEL_MAP: Record<string, string> = {
   // Gemini 2.5 models
   [Types.GoogleModels.Gemini_2_5FlashPreview]: "gemini-2.5-flash-preview-05-20",
   [Types.GoogleModels.Gemini_2_5ProPreview]: "gemini-2.5-pro-preview-06-05",
+  [Types.GoogleModels.Gemini_2_5Flash]: "gemini-2.5-flash",
+  [Types.GoogleModels.Gemini_2_5Pro]: "gemini-2.5-pro",
 };
 
 // Groq model mappings
