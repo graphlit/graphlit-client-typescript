@@ -5067,9 +5067,12 @@ class Graphlit {
           openaiMessages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5100,9 +5103,12 @@ class Graphlit {
           system,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5133,9 +5139,12 @@ class Graphlit {
           undefined, // systemPrompt - Google handles this differently
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5164,9 +5173,12 @@ class Graphlit {
           groqMessages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5195,9 +5207,12 @@ class Graphlit {
           cerebrasMessages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5224,9 +5239,12 @@ class Graphlit {
           messages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5289,9 +5307,12 @@ class Graphlit {
           mistralMessages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5322,9 +5343,12 @@ class Graphlit {
           system,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5353,9 +5377,12 @@ class Graphlit {
           deepseekMessages,
           tools,
           uiAdapter,
-          (message, calls) => {
+          (message, calls, usage) => {
             roundMessage = message;
             toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
           },
           abortSignal,
         );
@@ -5816,6 +5843,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -5864,6 +5892,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -5954,6 +5983,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6000,6 +6030,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6045,6 +6076,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6093,6 +6125,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6140,6 +6173,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6194,6 +6228,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -6242,6 +6277,7 @@ class Graphlit {
     onComplete: (
       message: string,
       toolCalls: Types.ConversationToolCall[],
+      usage?: any,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {

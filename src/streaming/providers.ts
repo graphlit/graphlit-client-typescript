@@ -112,11 +112,12 @@ export async function streamWithOpenAI(
   tools: ToolDefinitionInput[] | undefined,
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Performance metrics
   const startTime = Date.now();
@@ -167,6 +168,7 @@ export async function streamWithOpenAI(
       model: modelName,
       messages,
       stream: true,
+      stream_options: { include_usage: true },
       temperature: specification.openAI?.temperature,
       //top_p: specification.openAI?.probability,
     };
@@ -201,6 +203,14 @@ export async function streamWithOpenAI(
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
+
+      // Capture usage data from final chunk
+      if (chunk.usage || chunk.x_groq?.usage) {
+        usageData = chunk.usage || chunk.x_groq?.usage;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[OpenAI] Usage data captured:`, usageData);
+        }
+      }
 
       // Debug log chunk details
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -494,7 +504,9 @@ export async function streamWithOpenAI(
         `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`,
       );
     }
-    onComplete(fullMessage, toolCalls);
+    
+    // Pass usage data if available
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
     // Handle OpenAI-specific errors
     const errorMessage = error.message || error.toString();
@@ -547,12 +559,13 @@ export async function streamWithAnthropic(
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: AnthropicClient, // Properly typed Anthropic client
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Performance metrics
   const startTime = Date.now();
@@ -689,6 +702,31 @@ export async function streamWithAnthropic(
       // Debug log all chunk types
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`[Anthropic] Received chunk type: ${chunk.type}`);
+      }
+
+      // Capture usage data from various message events
+      // Prioritize message_start.message usage data as it's more complete
+      if (chunk.type === "message_start" && chunk.message?.usage) {
+        usageData = chunk.message.usage;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Anthropic] Usage data captured from message_start.message:`, usageData);
+        }
+      } else if (chunk.type === "message_delta" && chunk.usage && !usageData?.input_tokens) {
+        // Only use message_delta if we don't have input_tokens yet
+        usageData = chunk.usage;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Anthropic] Usage data captured from ${chunk.type}:`, usageData);
+        }
+      } else if ((chunk.type === "message_delta" || chunk.type === "message_start") && chunk.usage) {
+        // Merge usage data if we have partial data
+        if (usageData) {
+          usageData = { ...usageData, ...chunk.usage };
+        } else {
+          usageData = chunk.usage;
+        }
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Anthropic] Usage data merged from ${chunk.type}:`, usageData);
+        }
       }
 
       if (chunk.type === "content_block_start") {
@@ -1120,7 +1158,7 @@ export async function streamWithAnthropic(
       }
     }
 
-    onComplete(finalMessage, validToolCalls);
+    onComplete(finalMessage, validToolCalls, usageData);
   } catch (error: any) {
     // Handle Anthropic-specific errors
     const errorMessage = error.message || error.toString();
@@ -1168,11 +1206,12 @@ export async function streamWithGoogle(
   tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Performance metrics
   const startTime = Date.now();
@@ -1631,7 +1670,24 @@ export async function streamWithGoogle(
       );
     }
 
-    onComplete(fullMessage, toolCalls);
+    // Try to capture usage data from final response
+    try {
+      const response = await result.response;
+      if (response.usageMetadata) {
+        usageData = {
+          prompt_tokens: response.usageMetadata.promptTokenCount,
+          completion_tokens: response.usageMetadata.candidatesTokenCount,
+          total_tokens: response.usageMetadata.totalTokenCount,
+        };
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Google] Usage data captured:`, usageData);
+        }
+      }
+    } catch (e) {
+      // Ignore errors capturing usage data
+    }
+
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error) {
     // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
@@ -1647,7 +1703,7 @@ export async function streamWithGroq(
   tools: ToolDefinitionInput[] | undefined,
   groqClient: any, // Groq client instance (OpenAI-compatible)
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   try {
@@ -1749,7 +1805,7 @@ export async function streamWithCerebras(
   tools: ToolDefinitionInput[] | undefined,
   cerebrasClient: any, // OpenAI client instance configured for Cerebras
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   try {
@@ -1830,11 +1886,12 @@ export async function streamWithDeepseek(
   tools: ToolDefinitionInput[] | undefined,
   deepseekClient: any, // OpenAI client instance configured for Deepseek
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Reasoning detection state
   let reasoningLines: string[] = [];
@@ -1951,6 +2008,14 @@ export async function streamWithDeepseek(
       const delta = chunk.choices[0]?.delta;
 
       if (!delta) continue;
+      
+      // Check for usage data in the chunk (OpenAI-compatible format)
+      if (chunk.usage) {
+        usageData = chunk.usage;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Deepseek] Usage data captured:`, usageData);
+        }
+      }
 
       const currentTime = Date.now();
 
@@ -2189,7 +2254,7 @@ export async function streamWithDeepseek(
       );
     }
 
-    onComplete(fullMessage, validToolCalls);
+    onComplete(fullMessage, validToolCalls, usageData);
   } catch (error) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Deepseek] Stream error:`, error);
@@ -2211,11 +2276,12 @@ export async function streamWithCohere(
   tools: ToolDefinitionInput[] | undefined,
   cohereClient: any, // CohereClient instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Performance metrics
   const startTime = Date.now();
@@ -2528,9 +2594,17 @@ export async function streamWithCohere(
           console.log(`[Cohere] Message start event received`, chunk);
         }
       } else if (chunk.type === "message-end") {
-        // Handle message end event
+        // Handle message end event and capture usage data
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(`[Cohere] Message end event received`, chunk);
+        }
+        
+        // Capture usage data from message-end event
+        if (chunk.delta?.usage || chunk.usage) {
+          usageData = chunk.delta?.usage || chunk.usage;
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`[Cohere] Usage data captured:`, usageData);
+          }
         }
       }
     }
@@ -2547,7 +2621,7 @@ export async function streamWithCohere(
       tokens: tokenCount,
     });
 
-    onComplete(fullMessage, toolCalls);
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Cohere] Stream error:`, error);
@@ -2579,11 +2653,12 @@ export async function streamWithMistral(
   tools: ToolDefinitionInput[] | undefined,
   mistralClient: any, // Mistral client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
 
   // Performance metrics
   const startTime = Date.now();
@@ -2801,6 +2876,14 @@ export async function streamWithMistral(
       }
 
       const delta = chunk.data.choices[0]?.delta;
+      
+      // Check for usage data in the chunk
+      if (chunk.data.usage) {
+        usageData = chunk.data.usage;
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Mistral] Usage data captured:`, usageData);
+        }
+      }
 
       if (delta?.content) {
         fullMessage += delta.content;
@@ -2900,7 +2983,10 @@ export async function streamWithMistral(
       );
     }
 
-    onComplete(fullMessage, toolCalls);
+    // Check if we captured usage data during streaming
+    // Note: Mistral SDK may provide usage data differently than other providers
+    
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(
@@ -2948,11 +3034,12 @@ export async function streamWithBedrock(
   tools: ToolDefinitionInput[] | undefined,
   bedrockClient: any, // BedrockRuntimeClient instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[]) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
   // Map contentBlockIndex to tool calls for proper correlation
   const toolCallsByIndex = new Map<number, ConversationToolCall>();
 
@@ -3252,6 +3339,18 @@ export async function streamWithBedrock(
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(`📊 [Bedrock] Metadata:`, event.metadata);
           }
+          
+          // Capture usage data from metadata
+          if (event.metadata.usage) {
+            usageData = {
+              prompt_tokens: event.metadata.usage.inputTokens,
+              completion_tokens: event.metadata.usage.outputTokens,
+              total_tokens: event.metadata.usage.totalTokens,
+            };
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(`[Bedrock] Usage data captured:`, usageData);
+            }
+          }
         }
       }
     }
@@ -3267,7 +3366,7 @@ export async function streamWithBedrock(
       tokens: tokenCount,
     });
 
-    onComplete(fullMessage, toolCalls);
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Bedrock] Stream error:`, error);

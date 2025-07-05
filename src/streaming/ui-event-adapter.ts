@@ -52,6 +52,7 @@ export class UIEventAdapter {
   private reasoningFormat?: ReasoningFormat;
   private reasoningSignature?: string;
   private isInReasoning: boolean = false;
+  private usageData?: any;
 
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
@@ -506,6 +507,18 @@ export class UIEventAdapter {
       event.contextWindow = this.contextWindowUsage;
     }
 
+    // Add native provider usage data if available
+    if (this.usageData) {
+      event.usage = {
+        promptTokens: this.usageData.prompt_tokens || this.usageData.promptTokens || this.usageData.input_tokens || 0,
+        completionTokens: this.usageData.completion_tokens || this.usageData.completionTokens || this.usageData.output_tokens || 0,
+        totalTokens: this.usageData.total_tokens || this.usageData.totalTokens || 
+                    ((this.usageData.input_tokens || 0) + (this.usageData.output_tokens || 0)) || 0,
+        model: this.model,
+        provider: this.modelService,
+      };
+    }
+
     this.emitUIEvent(event);
   }
 
@@ -787,5 +800,15 @@ export class UIEventAdapter {
    */
   public getThroughput(): number | undefined {
     return this.finalMetrics?.streamingThroughput;
+  }
+
+  /**
+   * Set usage data from native provider
+   */
+  public setUsageData(usage: any): void {
+    this.usageData = usage;
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`📊 [UIEventAdapter] Usage data set:`, usage);
+    }
   }
 }

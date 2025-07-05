@@ -89,6 +89,13 @@ export type AgentStreamEvent =
         percentage: number; // Usage percentage (0-100)
         remainingTokens: number; // Tokens available
       };
+      usage?: {
+        promptTokens: number; // Input tokens from native provider
+        completionTokens: number; // Output tokens from native provider
+        totalTokens: number; // Total tokens (prompt + completion)
+        model?: string; // Model identifier from provider
+        provider?: string; // Provider name (OpenAI, Groq, etc.)
+      };
     }
   | {
       type: "error";

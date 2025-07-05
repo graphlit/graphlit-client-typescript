@@ -28,6 +28,13 @@ export type StreamEvent =
       messageId?: string;
       conversationId?: string;
       tokens?: number;
+      usage?: {
+        promptTokens: number;
+        completionTokens: number;
+        totalTokens: number;
+        model?: string;
+        provider?: string;
+      };
     }
   | { type: "error"; error: string }
   | {
