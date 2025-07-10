@@ -89,6 +89,19 @@ describe("Pre-release Gate Tests", () => {
             expect(content).toMatch(/15|8|multiply|120/i);
           },
         },
+        {
+          name: "xAI Grok 4 - Reasoning",
+          spec: {
+            serviceType: Types.ModelServiceTypes.Xai,
+            xai: { model: Types.XaiModels.Grok_4 },
+          },
+          prompt:
+            "What is 12 × 7? Show your step by step calculation.",
+          expectedFormat: "markdown",
+          validateContent: (content: string) => {
+            expect(content).toMatch(/12|7|84/i);
+          },
+        },
       ];
 
       for (const test of reasoningTests) {
@@ -171,6 +184,11 @@ describe("Pre-release Gate Tests", () => {
           name: "Deepseek",
           serviceType: Types.ModelServiceTypes.Deepseek,
           deepseek: { model: Types.DeepseekModels.Chat },
+        },
+        {
+          name: "xAI Grok",
+          serviceType: Types.ModelServiceTypes.Xai,
+          xai: { model: Types.XaiModels.Grok_4 },
         },
       ];
 
@@ -302,6 +320,11 @@ describe("Pre-release Gate Tests", () => {
           name: "Deepseek",
           serviceType: Types.ModelServiceTypes.Deepseek,
           deepseek: { model: Types.DeepseekModels.Chat },
+        },
+        {
+          name: "xAI Grok",
+          serviceType: Types.ModelServiceTypes.Xai,
+          xai: { model: Types.XaiModels.Grok_4 },
         },
       ];
 

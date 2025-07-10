@@ -170,6 +170,13 @@ const DEEPSEEK_MODEL_MAP: Record<string, string> = {
   [Types.DeepseekModels.Reasoner]: "deepseek-reasoner",
 };
 
+// xAI model mappings
+const XAI_MODEL_MAP: Record<string, string> = {
+  [Types.XaiModels.Grok_4]: "grok-4",
+  [Types.XaiModels.Grok_3]: "grok-3",
+  [Types.XaiModels.Grok_3Mini]: "grok-3-mini",
+};
+
 /**
  * Get the actual model name for a given specification
  * @param specification - The Graphlit specification object
@@ -205,6 +212,9 @@ export function getModelName(specification: any): string | undefined {
   }
   if (specification?.deepseek?.modelName) {
     return specification.deepseek.modelName;
+  }
+  if (specification?.xai?.modelName) {
+    return specification.xai.modelName;
   }
 
   // Map based on service type and model enum
@@ -246,6 +256,10 @@ export function getModelName(specification: any): string | undefined {
       const deepseekModel = specification?.deepseek?.model;
       return deepseekModel ? DEEPSEEK_MODEL_MAP[deepseekModel] : undefined;
 
+    case Types.ModelServiceTypes.Xai:
+      const xaiModel = specification?.xai?.model;
+      return xaiModel ? XAI_MODEL_MAP[xaiModel] : undefined;
+
     default:
       return undefined;
   }
@@ -267,6 +281,7 @@ export function isStreamingSupported(serviceType?: string): boolean {
     Types.ModelServiceTypes.Mistral,
     Types.ModelServiceTypes.Bedrock,
     Types.ModelServiceTypes.Deepseek,
+    Types.ModelServiceTypes.Xai,
   ];
 
   return streamingServices.includes(serviceType as Types.ModelServiceTypes);

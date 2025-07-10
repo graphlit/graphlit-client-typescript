@@ -9224,6 +9224,16 @@ export const GetSpecification = gql`
       temperature
       probability
     }
+    xai {
+      tokenLimit
+      completionTokenLimit
+      model
+      key
+      modelName
+      endpoint
+      temperature
+      probability
+    }
     groq {
       tokenLimit
       completionTokenLimit
@@ -9581,6 +9591,16 @@ export const QuerySpecifications = gql`
         accessKey
         secretAccessKey
         modelName
+        temperature
+        probability
+      }
+      xai {
+        tokenLimit
+        completionTokenLimit
+        model
+        key
+        modelName
+        endpoint
         temperature
         probability
       }

@@ -386,6 +386,56 @@ export const TEST_MODELS: TestModelConfig[] = [
       },
     },
   },
+
+  // xAI Models
+  {
+    name: "xAI Grok 4",
+    config: {
+      name: "Test xAI Grok 4",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Xai,
+      xai: {
+        model: Types.XaiModels.Grok_4,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "xAI Grok 3",
+    config: {
+      name: "Test xAI Grok 3",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Xai,
+      xai: {
+        model: Types.XaiModels.Grok_3,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
+    name: "xAI Grok 3 Mini",
+    config: {
+      name: "Test xAI Grok 3 Mini",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Xai,
+      xai: {
+        model: Types.XaiModels.Grok_3Mini,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
 ];
 
 /**
@@ -433,6 +483,8 @@ export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
   TEST_MODELS.find((m) => m.name === "Mistral Large")!,
   TEST_MODELS.find((m) => m.name === "Bedrock Claude 3.7 Sonnet")!,
   TEST_MODELS.find((m) => m.name === "Deepseek Chat")!,
+  TEST_MODELS.find((m) => m.name === "xAI Grok 4")!,
+  TEST_MODELS.find((m) => m.name === "xAI Grok 3")!,
 ];
 
 /**
@@ -448,7 +500,8 @@ export const NATIVE_STREAMING_MODELS: TestModelConfig[] = TEST_MODELS.filter(
     m.name.includes("Cohere") ||
     m.name.includes("Mistral") ||
     m.name.includes("Bedrock") ||
-    m.name.includes("Deepseek")
+    m.name.includes("Deepseek") ||
+    m.name.includes("xAI")
 );
 
 /**

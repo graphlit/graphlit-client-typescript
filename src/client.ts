@@ -59,6 +59,7 @@ import {
   streamWithMistral,
   streamWithBedrock,
   streamWithDeepseek,
+  streamWithXai,
 } from "./streaming/providers.js";
 // Optional imports for streaming LLM clients
 // These are peer dependencies and may not be installed
@@ -240,6 +241,7 @@ class Graphlit {
   private mistralClient?: any;
   private bedrockClient?: any;
   private deepseekClient?: any;
+  private xaiClient?: any;
 
   constructor(
     organizationIdOrOptions?: string | GraphlitClientOptions,
@@ -479,6 +481,14 @@ class Graphlit {
    */
   setDeepseekClient(client: any): void {
     this.deepseekClient = client;
+  }
+
+  /**
+   * Set a custom xAI client instance for streaming
+   * @param client - OpenAI client instance configured for xAI (e.g., new OpenAI({ baseURL: "https://api.x.ai/v1", apiKey: "..." }))
+   */
+  setXaiClient(client: any): void {
+    this.xaiClient = client;
   }
 
   /**
@@ -4384,6 +4394,8 @@ class Graphlit {
           return hasBedrockClient;
         case Types.ModelServiceTypes.Deepseek:
           return OpenAI !== undefined || this.deepseekClient !== undefined;
+        case Types.ModelServiceTypes.Xai:
+          return OpenAI !== undefined || this.xaiClient !== undefined;
         default:
           return false;
       }
@@ -4407,6 +4419,9 @@ class Graphlit {
       Mistral !== undefined || this.mistralClient !== undefined;
     const hasBedrock =
       BedrockRuntimeClient !== undefined || this.bedrockClient !== undefined;
+    const hasDeepseek =
+      OpenAI !== undefined || this.deepseekClient !== undefined;
+    const hasXai = OpenAI !== undefined || this.xaiClient !== undefined;
 
     return (
       hasOpenAI ||
@@ -4416,7 +4431,9 @@ class Graphlit {
       hasCerebras ||
       hasCohere ||
       hasMistral ||
-      hasBedrock
+      hasBedrock ||
+      hasDeepseek ||
+      hasXai
     );
   }
 
@@ -5391,6 +5408,40 @@ class Graphlit {
             `\n🏁 [Streaming] Deepseek native streaming completed (Round ${currentRound})`,
           );
         }
+      } else if (
+        serviceType === Types.ModelServiceTypes.Xai &&
+        (OpenAI || this.xaiClient)
+      ) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `\n✅ [Streaming] Using xAI native streaming (Round ${currentRound})`,
+          );
+        }
+        const xaiMessages = formatMessagesForOpenAI(messages); // xAI uses OpenAI format
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+          console.log(
+            `🔍 [xAI] Sending ${xaiMessages.length} messages to LLM: ${JSON.stringify(xaiMessages)}`,
+          );
+        }
+        await this.streamWithXai(
+          specification,
+          xaiMessages,
+          tools,
+          uiAdapter,
+          (message, calls, usage) => {
+            roundMessage = message;
+            toolCalls = calls;
+            if (usage) {
+              uiAdapter.setUsageData(usage);
+            }
+          },
+          abortSignal,
+        );
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `\n🏁 [Streaming] xAI native streaming completed (Round ${currentRound})`,
+          );
+        }
       } else {
         // Fallback to non-streaming
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -6311,6 +6362,54 @@ class Graphlit {
       messages,
       tools,
       deepseekClient,
+      (event) => uiAdapter.handleEvent(event),
+      onComplete,
+      abortSignal,
+    );
+  }
+
+  private async streamWithXai(
+    specification: Types.Specification,
+    messages: OpenAIMessage[],
+    tools: Types.ToolDefinitionInput[] | undefined,
+    uiAdapter: UIEventAdapter,
+    onComplete: (
+      message: string,
+      toolCalls: Types.ConversationToolCall[],
+      usage?: any,
+    ) => void,
+    abortSignal?: AbortSignal,
+  ): Promise<void> {
+    // Check if we have either the OpenAI module or a provided xAI client
+    if (!OpenAI && !this.xaiClient) {
+      throw new Error("xAI client not available (requires OpenAI SDK)");
+    }
+
+    // Use provided client or create a new one with xAI base URL
+    const xaiClient =
+      this.xaiClient ||
+      (OpenAI
+        ? new OpenAI({
+            baseURL: "https://api.x.ai/v1",
+            apiKey: process.env.XAI_API_KEY || "",
+          })
+        : null);
+
+    if (!xaiClient) {
+      throw new Error("Failed to create xAI client");
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🚀 [Graphlit SDK] Routing to xAI streaming provider | Spec: ${specification.name} (${specification.id}) | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
+      );
+    }
+
+    await streamWithXai(
+      specification,
+      messages,
+      tools,
+      xaiClient,
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,

@@ -3399,3 +3399,52 @@ export async function streamWithBedrock(
     throw error;
   }
 }
+
+export async function streamWithXai(
+  specification: Specification,
+  messages: OpenAIMessage[],
+  tools: ToolDefinitionInput[] | undefined,
+  xaiClient: any, // OpenAI client instance configured for xAI
+  onEvent: (event: StreamEvent) => void,
+  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  abortSignal?: AbortSignal,
+): Promise<void> {
+  try {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🚀 [xAI] Starting stream | Model: ${getModelName(specification)} | Messages: ${messages.length} | Tools: ${tools?.length || 0}`,
+      );
+    }
+
+    // xAI uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
+    return await streamWithOpenAI(
+      specification,
+      messages,
+      tools,
+      xaiClient,
+      onEvent,
+      onComplete,
+      abortSignal,
+    );
+  } catch (error: any) {
+    // Handle xAI-specific errors if any
+    const errorMessage = error.message || error.toString();
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`⚠️ [xAI] Error: ${errorMessage}`);
+    }
+
+    // Check for rate limit errors
+    if (error.status === 429 || error.statusCode === 429) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [xAI] Rate limit hit (429)`);
+      }
+      // Re-throw with proper status code for retry logic
+      const rateLimitError: any = new Error("xAI rate limit exceeded");
+      rateLimitError.statusCode = 429;
+      throw rateLimitError;
+    }
+
+    throw error;
+  }
+}
