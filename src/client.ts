@@ -218,6 +218,14 @@ export interface GraphlitClientOptions {
   retryConfig?: RetryConfig;
 }
 
+// Helper function to validate GUID format
+function isValidGuid(guid: string | undefined): boolean {
+  if (!guid) return false;
+  // GUID regex pattern: 8-4-4-4-12 hexadecimal characters
+  const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return guidRegex.test(guid);
+}
+
 // Define the Graphlit class
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
@@ -314,12 +322,34 @@ class Graphlit {
       throw new Error("Graphlit organization identifier is required.");
     }
 
+    if (!isValidGuid(this.organizationId)) {
+      throw new Error(
+        `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      );
+    }
+
     if (!this.environmentId) {
       throw new Error("Graphlit environment identifier is required.");
     }
 
+    if (!isValidGuid(this.environmentId)) {
+      throw new Error(
+        `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      );
+    }
+
     if (!this.jwtSecret) {
       throw new Error("Graphlit environment JWT secret is required.");
+    }
+
+    // Validate optional userId if provided (ownerId can be any format)
+    if (this.userId && !isValidGuid(this.userId)) {
+      throw new Error(
+        `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      );
     }
 
     this.refreshClient();
