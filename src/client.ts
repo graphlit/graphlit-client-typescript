@@ -1481,6 +1481,15 @@ class Graphlit {
     >(Documents.LookupContents, { ids: ids });
   }
 
+  public async queryObservables(
+    filter?: Types.ContentFilter,
+  ): Promise<Types.QueryObservablesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryObservablesQuery,
+      { filter?: Types.ContentFilter }
+    >(Documents.QueryObservables, { filter: filter });
+  }
+
   public async queryContents(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsQuery> {

@@ -10842,6 +10842,13 @@ export type ObservableFacet = {
   type?: Maybe<ObservableTypes>;
 };
 
+/** Represents observable results. */
+export type ObservableResults = {
+  __typename?: 'ObservableResults';
+  /** The retrieved observables. */
+  results?: Maybe<Array<Maybe<ObservationReference>>>;
+};
+
 /** Observable type */
 export enum ObservableTypes {
   /** Category */
@@ -13106,6 +13113,8 @@ export type Query = {
   notionDatabases?: Maybe<NotionDatabaseResults>;
   /** Retrieves available Notion pages within Notion database, non-recursive. */
   notionPages?: Maybe<NotionPageResults>;
+  /** Retrieves observables from contents based on the provided filter criteria. */
+  observables?: Maybe<ObservableResults>;
   /** Lookup a observation given its ID. */
   observation?: Maybe<Observation>;
   /** Retrieves available OneDrive folders. */
@@ -13734,6 +13743,12 @@ export type QueryNotionDatabasesArgs = {
 export type QueryNotionPagesArgs = {
   identifier: Scalars['String']['input'];
   properties: NotionPagesInput;
+};
+
+
+export type QueryObservablesArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ContentFilter>;
 };
 
 
@@ -17036,6 +17051,14 @@ export type QueryContentsObservationsQueryVariables = Exact<{
 
 
 export type QueryContentsObservationsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, markdown?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null } | null };
+
+export type QueryObservablesQueryVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryObservablesQuery = { __typename?: 'Query', observables?: { __typename?: 'ObservableResults', results?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null };
 
 export type ScreenshotPageMutationVariables = Exact<{
   uri: Scalars['URL']['input'];

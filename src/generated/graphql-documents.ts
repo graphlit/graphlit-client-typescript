@@ -3000,6 +3000,19 @@ export const QueryContentsObservations = gql`
   }
 }
     `;
+export const QueryObservables = gql`
+    query QueryObservables($filter: ContentFilter, $correlationId: String) {
+  observables(filter: $filter, correlationId: $correlationId) {
+    results {
+      type
+      observable {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
 export const ScreenshotPage = gql`
     mutation ScreenshotPage($uri: URL!, $maximumHeight: Int, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $correlationId: String) {
   screenshotPage(
