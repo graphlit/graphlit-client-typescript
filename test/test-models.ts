@@ -252,6 +252,22 @@ export const TEST_MODELS: TestModelConfig[] = [
 
   // Cohere Models
   {
+    name: "Cohere Command A",
+    config: {
+      name: "Test Cohere Command A",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Cohere,
+      cohere: {
+        model: Types.CohereModels.CommandA,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
     name: "Cohere Command R+",
     config: {
       name: "Test Cohere Command R+",
@@ -454,10 +470,14 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
   // Google - Generally reliable
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
 
+  // Cohere - Now fixed and ready for testing
+  TEST_MODELS.find((m) => m.name === "Cohere Command A")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command R+")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command R")!,
+
   // Skip problematic models:
   // - OpenAI o3/o3 Mini (may have availability/rate limit issues)
   // - Claude 4 models (may not be available yet)
-  // - Cohere Command R+ (recent 422 fix, still testing)
   // - Groq LLaMA 3.3 70B (tool calling issues)
   // - Cerebras/Mistral/Bedrock/Deepseek (not critical for performance baseline)
 ].filter(Boolean);
@@ -479,7 +499,9 @@ export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
   TEST_MODELS.find((m) => m.name === "Groq LLaMA 3.3 70B")!,
   TEST_MODELS.find((m) => m.name === "Cerebras LLaMA 3.3 70B")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command A")!,
   TEST_MODELS.find((m) => m.name === "Cohere Command R+")!,
+  TEST_MODELS.find((m) => m.name === "Cohere Command R")!,
   TEST_MODELS.find((m) => m.name === "Mistral Large")!,
   TEST_MODELS.find((m) => m.name === "Bedrock Claude 3.7 Sonnet")!,
   TEST_MODELS.find((m) => m.name === "Deepseek Chat")!,

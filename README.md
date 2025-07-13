@@ -404,9 +404,9 @@ if (process.env.OPENAI_API_KEY) {
 }
 
 if (process.env.COHERE_API_KEY) {
-  const { CohereClient } = await import("cohere-ai");
+  const { CohereClientV2 } = await import("cohere-ai");
   client.setCohereClient(
-    new CohereClient({ token: process.env.COHERE_API_KEY }),
+    new CohereClientV2({ token: process.env.COHERE_API_KEY }),
   );
 }
 
@@ -568,9 +568,9 @@ if (process.env.OPENAI_API_KEY) {
 }
 
 if (process.env.COHERE_API_KEY) {
-  const { CohereClient } = await import("cohere-ai");
+  const { CohereClientV2 } = await import("cohere-ai");
   client.setCohereClient(
-    new CohereClient({ token: process.env.COHERE_API_KEY }),
+    new CohereClientV2({ token: process.env.COHERE_API_KEY }),
   );
 }
 
