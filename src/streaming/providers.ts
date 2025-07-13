@@ -2442,10 +2442,10 @@ export async function streamWithCohere(
         );
       }
 
-      stream = await cohereClient.chatStream({
-        ...streamConfig,
-        ...(abortSignal && { signal: abortSignal }),
-      });
+      stream = await cohereClient.chatStream(
+        streamConfig,
+        abortSignal ? { abortSignal } : undefined
+      );
     } catch (streamError: any) {
       // Enhanced error logging
       console.error(
