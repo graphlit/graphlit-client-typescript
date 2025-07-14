@@ -1505,8 +1505,19 @@ export async function streamWithGoogle(
           // Check for any final text we might have missed
           if (part.text) {
             const finalText = part.text;
+            
+            // Skip if this is just the complete message we already have
+            if (finalText === fullMessage) {
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(
+                  `[Google] Skipping duplicate final text (matches fullMessage exactly)`,
+                );
+              }
+              continue;
+            }
+            
             // Only add if it's not already included in fullMessage
-            if (!fullMessage.endsWith(finalText)) {
+            if (!fullMessage.includes(finalText) && !fullMessage.endsWith(finalText)) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `[Google] Adding final text: ${finalText.length} chars`,
@@ -1517,6 +1528,10 @@ export async function streamWithGoogle(
                 type: "token",
                 token: finalText,
               });
+            } else if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `[Google] Skipping final text (already in message): ${finalText.length} chars`,
+              );
             }
           }
 
@@ -2710,6 +2725,7 @@ export async function streamWithMistral(
 
     // Add tools if provided
     if (tools && tools.length > 0) {
+      console.log(`[Mistral] Adding ${tools.length} tools to stream config`);
       streamConfig.tools = tools.map((tool) => ({
         type: "function",
         function: {
@@ -2718,6 +2734,8 @@ export async function streamWithMistral(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+    } else {
+      console.log(`[Mistral] No tools provided - tools parameter is ${tools === undefined ? 'undefined' : 'empty array'}`);
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -2788,10 +2806,30 @@ export async function streamWithMistral(
         }
       }
 
-      stream = await mistralClient.chat.stream({
-        ...streamConfig,
-        ...(abortSignal && { signal: abortSignal }),
-      });
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`[Mistral] Attempting to create stream with retry configuration`);
+      }
+      
+      // Log final config being sent
+      console.log(`[Mistral] Sending request with tools: ${streamConfig.tools ? 'YES' : 'NO'}`);
+      
+      stream = await mistralClient.chat.stream(
+        streamConfig,
+        {
+          retries: {
+            strategy: "backoff",
+            backoff: {
+              initialInterval: 1000,
+              maxInterval: 60000,
+              exponent: 2,
+              maxElapsedTime: 300000, // 5 minutes
+            },
+            retryConnectionErrors: true,
+          },
+          retryCodes: ["429", "500", "502", "503", "504"],
+          ...(abortSignal && { fetchOptions: { signal: abortSignal } }),
+        },
+      );
     } catch (error: any) {
       console.error(`[Mistral] Failed to create stream:`, error);
 
@@ -3015,6 +3053,18 @@ export async function streamWithMistral(
       );
       (rateLimitError as any).statusCode = 429;
       throw rateLimitError;
+    }
+
+    if (
+      error.message?.includes("500") ||
+      error.message?.includes("Service unavailable") ||
+      error.message?.includes("INTERNAL_SERVER_ERROR")
+    ) {
+      const serviceError = new Error(
+        "Mistral API service is temporarily unavailable (500). This is a temporary issue with Mistral's servers. Please try again later.",
+      );
+      (serviceError as any).statusCode = 500;
+      throw serviceError;
     }
 
     // Re-throw with more context

@@ -5328,6 +5328,11 @@ class Graphlit {
           (m: any) => m.role === "tool",
         );
 
+        // Count tool responses to determine if we should pass tools
+        const toolResponseCount = mistralMessages.filter(
+          (m: any) => m.role === "tool",
+        ).length;
+
         if (
           hasToolCalls ||
           hasToolResponses ||
@@ -5343,9 +5348,6 @@ class Graphlit {
             (count: number, m: any) => count + (m.tool_calls?.length || 0),
             0,
           );
-          const toolResponseCount = mistralMessages.filter(
-            (m: any) => m.role === "tool",
-          ).length;
 
           console.log(
             `🔍 [Mistral] Tool calls: ${toolCallCount}, Tool responses: ${toolResponseCount}`,
@@ -5358,10 +5360,19 @@ class Graphlit {
           }
         }
 
+        // Mistral API requires that we don't pass tools when sending tool results
+        const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
+        
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `🔍 [Mistral] Passing tools: ${shouldPassTools ? 'YES' : 'NO'} (tool responses in messages: ${toolResponseCount})`,
+          );
+        }
+
         await this.streamWithMistral(
           specification,
           mistralMessages,
-          tools,
+          shouldPassTools,
           uiAdapter,
           (message, calls, usage) => {
             roundMessage = message;
@@ -5948,6 +5959,8 @@ class Graphlit {
       (OpenAI
         ? new OpenAI({
             apiKey: process.env.OPENAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
           })
         : (() => {
             throw new Error("OpenAI module not available");
@@ -5997,6 +6010,8 @@ class Graphlit {
       (Anthropic
         ? new Anthropic({
             apiKey: process.env.ANTHROPIC_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
           })
         : (() => {
             throw new Error("Anthropic module not available");
@@ -6182,6 +6197,8 @@ class Graphlit {
         ? new OpenAI({
             apiKey: process.env.CEREBRAS_API_KEY || "",
             baseURL: "https://api.cerebras.ai/v1",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
           })
         : (() => {
             throw new Error("OpenAI module not available for Cerebras");
@@ -6283,7 +6300,19 @@ class Graphlit {
                 "MISTRAL_API_KEY environment variable is required for Mistral streaming",
               );
             }
-            return new Mistral({ apiKey });
+            return new Mistral({ 
+              apiKey,
+              retryConfig: {
+                strategy: "backoff",
+                backoff: {
+                  initialInterval: 1000,
+                  maxInterval: 60000,
+                  exponent: 2,
+                  maxElapsedTime: 300000, // 5 minutes
+                },
+                retryConnectionErrors: true,
+              },
+            });
           })()
         : (() => {
             throw new Error("Mistral module not available");
@@ -6383,6 +6412,8 @@ class Graphlit {
         ? new OpenAI({
             baseURL: "https://api.deepseek.com",
             apiKey: process.env.DEEPSEEK_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
           })
         : null);
 
@@ -6431,6 +6462,8 @@ class Graphlit {
         ? new OpenAI({
             baseURL: "https://api.x.ai/v1",
             apiKey: process.env.XAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
           })
         : null);
 

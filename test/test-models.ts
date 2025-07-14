@@ -461,14 +461,17 @@ export const TEST_MODELS: TestModelConfig[] = [
  */
 export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
   // OpenAI - Most reliable models
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o")!,
 
   // Anthropic - Stable models
-  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.5 Haiku")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
+  TEST_MODELS.find((m) => m.name === "Anthropic Claude 3.7 Sonnet")!,
 
   // Google - Generally reliable
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Flash")!,
+  TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
 
   // Cohere - Now fixed and ready for testing
   TEST_MODELS.find((m) => m.name === "Cohere Command A")!,
@@ -477,7 +480,6 @@ export const PERFORMANCE_TEST_MODELS: TestModelConfig[] = [
 
   // Skip problematic models:
   // - OpenAI o3/o3 Mini (may have availability/rate limit issues)
-  // - Claude 4 models (may not be available yet)
   // - Groq LLaMA 3.3 70B (tool calling issues)
   // - Cerebras/Mistral/Bedrock/Deepseek (not critical for performance baseline)
 ].filter(Boolean);
