@@ -1556,7 +1556,11 @@ export enum CerebrasModels {
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
   /** LLaMA 3.3 70b */
-  Llama_3_3_70B = 'LLAMA_3_3_70B'
+  Llama_3_3_70B = 'LLAMA_3_3_70B',
+  /** LLaMA 4 Scout 17b */
+  Llama_4Scout_17B = 'LLAMA_4_SCOUT_17B',
+  /** Qwen 3 32b */
+  Qwen_3_32B = 'QWEN_3_32B'
 }
 
 /** Represents a classification workflow job. */
@@ -4684,10 +4688,7 @@ export enum FeedTypes {
   Twitter = 'TWITTER',
   /** Web feed */
   Web = 'WEB',
-  /**
-   * YouTube audio feed
-   * @deprecated No longer supported. We suggest using your own YouTube downloader and then ingest the video or audio files.
-   */
+  /** YouTube audio feed */
   YouTube = 'YOU_TUBE',
   /** Zendesk articles feed */
   Zendesk = 'ZENDESK'
@@ -5554,6 +5555,8 @@ export enum GroqModels {
   Custom = 'CUSTOM',
   /** Deepseek R1 Distill Llama 70b Preview */
   DeepseekR1Llama_70BPreview = 'DEEPSEEK_R1_LLAMA_70B_PREVIEW',
+  /** Kimi K2 32b */
+  KimiK2_32B = 'KIMI_K2_32B',
   /** LLaMA 3.1 8b */
   Llama_3_1_8B = 'LLAMA_3_1_8B',
   /**
@@ -5587,7 +5590,9 @@ export enum GroqModels {
   /** LLaMA 4 Scout 17b */
   Llama_4Scout_17B = 'LLAMA_4_SCOUT_17B',
   /** Mixtral 8x7b Instruct */
-  Mixtral_8X7BInstruct = 'MIXTRAL_8X7B_INSTRUCT'
+  Mixtral_8X7BInstruct = 'MIXTRAL_8X7B_INSTRUCT',
+  /** Qwen 3 32b */
+  Qwen_3_32B = 'QWEN_3_32B'
 }
 
 /** Represents an H3 index. */

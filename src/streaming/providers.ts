@@ -1332,14 +1332,6 @@ export async function streamWithGoogle(
     for await (const chunk of result.stream) {
       const text = chunk.text();
 
-      // Debug log chunk details
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`[Google] Raw chunk:`, JSON.stringify(chunk, null, 2));
-        if (text) {
-          console.log(`[Google] Text delta: "${text}" (${text.length} chars)`);
-        }
-      }
-
       if (text) {
         fullMessage += text;
         tokenCount++;
@@ -1518,20 +1510,11 @@ export async function streamWithGoogle(
             
             // Only add if it's not already included in fullMessage
             if (!fullMessage.includes(finalText) && !fullMessage.endsWith(finalText)) {
-              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-                console.log(
-                  `[Google] Adding final text: ${finalText.length} chars`,
-                );
-              }
               fullMessage += finalText;
               onEvent({
                 type: "token",
                 token: finalText,
               });
-            } else if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-              console.log(
-                `[Google] Skipping final text (already in message): ${finalText.length} chars`,
-              );
             }
           }
 
