@@ -118,12 +118,16 @@ const GROQ_MODEL_MAP: Record<string, string> = {
   [Types.GroqModels.Llama_3_1_8B]: "llama-3.1-8b-instant",
   [Types.GroqModels.Llama_3_70B]: "llama3-70b-8192",
   [Types.GroqModels.Llama_3_8B]: "llama3-8b-8192",
+  [Types.GroqModels.Qwen_3_32B]: "qwen/qwen3-32b",
+  [Types.GroqModels.KimiK2_32B]: "moonshotai/kimi-k2-instruct",
 };
 
 // Cerebras model mappings
 const CEREBRAS_MODEL_MAP: Record<string, string> = {
   [Types.CerebrasModels.Llama_3_3_70B]: "llama3.3-70b",
   [Types.CerebrasModels.Llama_3_1_8B]: "llama3.1-8b",
+  [Types.CerebrasModels.Llama_4Scout_17B]: "llama-4-scout-17b-16e-instruct",
+  [Types.CerebrasModels.Qwen_3_32B]: "qwen-3-32b",
 };
 
 // Cohere model mappings
