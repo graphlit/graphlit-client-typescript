@@ -1795,22 +1795,36 @@ export async function streamWithGroq(
 }
 
 /**
- * Stream with Cerebras SDK (OpenAI-compatible)
+ * Stream with Cerebras native SDK
  */
 export async function streamWithCerebras(
   specification: Specification,
   messages: OpenAIMessage[],
   tools: ToolDefinitionInput[] | undefined,
-  cerebrasClient: any, // OpenAI client instance configured for Cerebras
+  cerebrasClient: any, // Cerebras native client instance
   onEvent: (event: StreamEvent) => void,
   onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
+  let fullMessage = "";
+  let toolCalls: ConversationToolCall[] = [];
+  let usageData: any = null;
+  
+  // Performance metrics
+  const startTime = Date.now();
+  let firstTokenTime = 0;
+  let tokenCount = 0;
+
   try {
     const modelName = getModelName(specification);
+    if (!modelName) {
+      throw new Error(
+        `No model name found for specification: ${specification.name} (service: ${specification.serviceType})`,
+      );
+    }
 
     // Cerebras has very limited tool support
-    let cerebrasTools = tools;
+    let cerebrasTools: any = undefined;
     let filteredMessages = messages;
 
     if (modelName) {
@@ -1824,7 +1838,16 @@ export async function streamWithCerebras(
               `⚠️ [Cerebras] Disabling tools for ${modelName} - only qwen-3-32b supports tools`,
             );
           }
-          cerebrasTools = undefined;
+        } else {
+          // Format tools for Cerebras
+          cerebrasTools = tools.map((tool) => ({
+            type: "function",
+            function: {
+              name: tool.name,
+              description: tool.description,
+              parameters: tool.schema ? JSON.parse(tool.schema) : {},
+            },
+          }));
         }
       }
 
@@ -1850,16 +1873,237 @@ export async function streamWithCerebras(
       }
     }
 
-    // Cerebras uses the same API as OpenAI, so we can reuse the OpenAI streaming logic
-    return await streamWithOpenAI(
-      specification,
-      filteredMessages,
-      cerebrasTools,
-      cerebrasClient,
-      onEvent,
-      onComplete,
-      abortSignal,
-    );
+    // Format messages for Cerebras API
+    const cerebrasMessages = filteredMessages.map((msg) => {
+      if (msg.role === "system") {
+        return { role: "system", content: msg.content || "" };
+      } else if (msg.role === "user") {
+        return { role: "user", content: msg.content || "" };
+      } else if (msg.role === "assistant") {
+        if (msg.tool_calls && msg.tool_calls.length > 0) {
+          return {
+            role: "assistant",
+            content: msg.content || null,
+            tool_calls: msg.tool_calls.map((tc) => ({
+              id: tc.id,
+              type: "function",
+              function: {
+                name: tc.function.name,
+                arguments: tc.function.arguments,
+              },
+            })),
+          };
+        }
+        return { role: "assistant", content: msg.content || "" };
+      } else if (msg.role === "tool") {
+        return {
+          role: "tool",
+          content: msg.content || "",
+          tool_call_id: msg.tool_call_id || "",
+        };
+      }
+      return msg;
+    });
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [Cerebras] Model Config: Service=Cerebras | Model=${modelName} | Temperature=${specification.cerebras?.temperature} | MaxTokens=${specification.cerebras?.completionTokenLimit || "null"} | Tools=${cerebrasTools?.length || 0} | Spec="${specification.name}"`,
+      );
+    }
+
+    // Cerebras treats tool calling as structured outputs
+    // Their reasoning models don't support streaming with structured outputs
+    const hasTools = cerebrasTools && cerebrasTools.length > 0;
+    
+    const streamConfig: any = {
+      model: modelName,
+      messages: cerebrasMessages,
+      stream: !hasTools, // Disable streaming when tools are present
+      temperature: specification.cerebras?.temperature,
+    };
+
+    // Only add max_tokens if it's defined
+    if (specification.cerebras?.completionTokenLimit) {
+      streamConfig.max_tokens = specification.cerebras.completionTokenLimit;
+    }
+
+    // Add tools if available
+    if (cerebrasTools) {
+      streamConfig.tools = cerebrasTools;
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `⏱️ [Cerebras] Starting LLM call at: ${new Date().toISOString()}`,
+      );
+      console.log(
+        `📦 [Cerebras] Full request config:`,
+        JSON.stringify(streamConfig, null, 2)
+      );
+    }
+
+    if (hasTools) {
+      // Non-streaming response when tools are present
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`🔧 [Cerebras] Using non-streaming mode due to tools`);
+      }
+      
+      const response = await cerebrasClient.chat.completions.create(streamConfig);
+      
+      // Process the complete response
+      if (response.choices && response.choices.length > 0) {
+        const choice = response.choices[0];
+        const message = choice.message;
+        
+        // Handle content
+        if (message.content) {
+          fullMessage = message.content;
+          onEvent({ type: "token", token: message.content });
+          onEvent({ type: "message", message: fullMessage });
+        }
+        
+        // Handle tool calls
+        if (message.tool_calls && message.tool_calls.length > 0) {
+          for (const toolCall of message.tool_calls) {
+            const tc: ConversationToolCall = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: toolCall.function.arguments,
+            };
+            
+            toolCalls.push(tc);
+            
+            // Emit tool events
+            onEvent({
+              type: "tool_call_start",
+              toolCall: { id: tc.id, name: tc.name },
+            });
+            
+            onEvent({
+              type: "tool_call_parsed",
+              toolCall: tc,
+            });
+          }
+        }
+      }
+      
+      // Capture usage data
+      if (response.usage) {
+        usageData = {
+          prompt_tokens: response.usage.prompt_tokens,
+          completion_tokens: response.usage.completion_tokens,
+          total_tokens: response.usage.total_tokens,
+        };
+      }
+      
+      tokenCount = fullMessage.length; // Approximate for non-streaming
+    } else {
+      // Streaming response when no tools
+      const stream = await cerebrasClient.chat.completions.create(streamConfig);
+
+      for await (const chunk of stream) {
+        // Handle abort signal
+        if (abortSignal?.aborted) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`🛑 [Cerebras] Stream aborted by user`);
+          }
+          break;
+        }
+
+        const currentTime = Date.now();
+        tokenCount++;
+
+        if (tokenCount === 1) {
+          firstTokenTime = currentTime - startTime;
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `⚡ [Cerebras] First token received in ${firstTokenTime}ms`,
+            );
+          }
+        }
+
+        // Process the chunk
+        if (chunk.choices && chunk.choices.length > 0) {
+          const delta = chunk.choices[0].delta;
+
+          // Handle content delta
+          if (delta?.content) {
+            fullMessage += delta.content;
+            onEvent({ type: "token", token: delta.content });
+          }
+
+          // Handle tool calls (shouldn't happen in streaming mode but just in case)
+          if (delta?.tool_calls) {
+            for (const toolCall of delta.tool_calls) {
+              const index = toolCall.index || 0;
+              
+              // Initialize tool call if needed
+              if (!toolCalls[index]) {
+                toolCalls[index] = {
+                  id: toolCall.id || `tool_${Date.now()}_${index}`,
+                  name: toolCall.function?.name || "",
+                  arguments: "",
+                };
+                
+                if (toolCall.function?.name) {
+                  onEvent({
+                    type: "tool_call_start",
+                    toolCall: {
+                      id: toolCalls[index].id,
+                      name: toolCall.function.name,
+                    },
+                  });
+                }
+              }
+
+              // Accumulate arguments
+              if (toolCall.function?.arguments) {
+                toolCalls[index].arguments += toolCall.function.arguments;
+              }
+            }
+          }
+
+          // Check for finish reason
+          if (chunk.choices[0].finish_reason === "tool_calls" && toolCalls.length > 0) {
+            // Emit tool_call_parsed events for completed tool calls
+            for (const toolCall of toolCalls) {
+              onEvent({
+                type: "tool_call_parsed",
+                toolCall: toolCall,
+              });
+            }
+          }
+        }
+
+        // Capture usage data if available
+        if (chunk.usage) {
+          usageData = {
+            prompt_tokens: chunk.usage.prompt_tokens,
+            completion_tokens: chunk.usage.completion_tokens,
+            total_tokens: chunk.usage.total_tokens,
+          };
+        }
+
+        // Emit current message
+        onEvent({
+          type: "message",
+          message: fullMessage,
+        });
+      }
+    }
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `✅ [Cerebras] Complete. Total tokens: ${tokenCount} | Message length: ${fullMessage.length}`,
+      );
+    }
+
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
+
+    onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
     // Handle Cerebras-specific 429 errors
     if (error.status === 429 || error.statusCode === 429) {

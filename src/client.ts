@@ -79,6 +79,7 @@ let Mistral: typeof import("@mistralai/mistralai").Mistral | undefined;
 let BedrockRuntimeClient:
   | typeof import("@aws-sdk/client-bedrock-runtime").BedrockRuntimeClient
   | undefined;
+let Cerebras: typeof import("@cerebras/cerebras_cloud_sdk").default | undefined;
 
 try {
   OpenAI = optionalRequire("openai").default || optionalRequire("openai");
@@ -168,6 +169,20 @@ try {
   // Bedrock SDK not installed
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
     console.log("[SDK Loading] Bedrock SDK not found:", e.message);
+  }
+}
+
+try {
+  Cerebras =
+    optionalRequire("@cerebras/cerebras_cloud_sdk").default ||
+    optionalRequire("@cerebras/cerebras_cloud_sdk");
+  if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
+    console.log("[SDK Loading] Cerebras SDK loaded successfully");
+  }
+} catch (e: any) {
+  // Cerebras SDK not installed
+  if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
+    console.log("[SDK Loading] Cerebras SDK not found:", e.message);
   }
 }
 
@@ -474,8 +489,8 @@ class Graphlit {
   }
 
   /**
-   * Set a custom Cerebras client instance for streaming (OpenAI-compatible)
-   * @param client - OpenAI client instance configured for Cerebras (e.g., new OpenAI({ apiKey: "...", baseURL: "https://api.cerebras.ai/v1" }))
+   * Set a custom Cerebras client instance for streaming
+   * @param client - Cerebras client instance (e.g., new Cerebras({ apiKey: "..." }))
    */
   setCerebrasClient(client: any): void {
     this.cerebrasClient = client;
@@ -4400,7 +4415,7 @@ class Graphlit {
         case Types.ModelServiceTypes.Groq:
           return Groq !== undefined || this.groqClient !== undefined;
         case Types.ModelServiceTypes.Cerebras:
-          return OpenAI !== undefined || this.cerebrasClient !== undefined;
+          return Cerebras !== undefined || this.cerebrasClient !== undefined;
         case Types.ModelServiceTypes.Cohere:
           return (
             CohereClient !== undefined ||
@@ -4449,7 +4464,7 @@ class Graphlit {
       GoogleGenerativeAI !== undefined || this.googleClient !== undefined;
     const hasGroq = Groq !== undefined || this.groqClient !== undefined;
     const hasCerebras =
-      OpenAI !== undefined || this.cerebrasClient !== undefined;
+      Cerebras !== undefined || this.cerebrasClient !== undefined;
     const hasCohere =
       CohereClient !== undefined ||
       CohereClientV2 !== undefined ||
@@ -5245,7 +5260,7 @@ class Graphlit {
         }
       } else if (
         serviceType === Types.ModelServiceTypes.Cerebras &&
-        (OpenAI || this.cerebrasClient)
+        (Cerebras || this.cerebrasClient)
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -6171,7 +6186,7 @@ class Graphlit {
   }
 
   /**
-   * Stream with Cerebras client (OpenAI-compatible)
+   * Stream with Cerebras client (native SDK)
    */
   private async streamWithCerebras(
     specification: Types.Specification,
@@ -6185,23 +6200,22 @@ class Graphlit {
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
-    // Check if we have either the OpenAI module or a provided client
-    if (!OpenAI && !this.cerebrasClient) {
+    // Check if we have either the Cerebras module or a provided client
+    if (!Cerebras && !this.cerebrasClient) {
       throw new Error("Cerebras client not available");
     }
 
-    // Use provided client or create a new one configured for Cerebras
+    // Use provided client or create a new one with Cerebras native SDK
     const cerebrasClient =
       this.cerebrasClient ||
-      (OpenAI
-        ? new OpenAI({
+      (Cerebras
+        ? new Cerebras({
             apiKey: process.env.CEREBRAS_API_KEY || "",
-            baseURL: "https://api.cerebras.ai/v1",
             maxRetries: 3,
             timeout: 60000, // 60 seconds
           })
         : (() => {
-            throw new Error("OpenAI module not available for Cerebras");
+            throw new Error("Cerebras module not available");
           })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
