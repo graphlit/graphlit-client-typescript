@@ -53,6 +53,8 @@ export class UIEventAdapter {
   private reasoningSignature?: string;
   private isInReasoning: boolean = false;
   private usageData?: any;
+  private hasToolCallsInProgress: boolean = false;
+  private hadToolCallsBeforeResume: boolean = false;
 
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
@@ -153,6 +155,10 @@ export class UIEventAdapter {
     this.tokenCount = 0;
     this.tokenDelays = [];
 
+    // Reset tool call tracking flags
+    this.hasToolCallsInProgress = false;
+    this.hadToolCallsBeforeResume = false;
+
     // Note: We only clear tool calls here if this is truly a new conversation start
     // For multi-round tool calling, handleStart is only called once at the beginning
     if (this.activeToolCalls.size > 0) {
@@ -183,6 +189,22 @@ export class UIEventAdapter {
     }
     this.lastTokenTime = now;
     this.tokenCount++;
+
+    // Check if we're resuming after tool calls and need to add newlines
+    if (this.hadToolCallsBeforeResume && this.hasToolCallsInProgress === false) {
+      // We had tool calls before and now we're receiving content again
+      // Add double newline to separate the content from tool results
+      if (this.currentMessage.length > 0 && !this.currentMessage.endsWith('\n\n')) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `📝 [UIEventAdapter] Adding newlines after tool calls before resuming content`,
+          );
+        }
+        this.currentMessage += '\n\n';
+      }
+      // Reset the flag now that we've added the newlines
+      this.hadToolCallsBeforeResume = false;
+    }
 
     if (this.chunkBuffer) {
       const chunks = this.chunkBuffer.addToken(token);
@@ -222,6 +244,10 @@ export class UIEventAdapter {
       toolCall: conversationToolCall,
       status: "preparing",
     });
+
+    // Mark that we have tool calls in progress
+    this.hasToolCallsInProgress = true;
+    this.hadToolCallsBeforeResume = true;
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -319,6 +345,10 @@ export class UIEventAdapter {
         status: "ready",
       });
 
+      // Mark that we have tool calls
+      this.hasToolCallsInProgress = true;
+      this.hadToolCallsBeforeResume = true;
+
       this.emitUIEvent({
         type: "tool_update",
         toolCall: conversationToolCall,
@@ -361,6 +391,25 @@ export class UIEventAdapter {
       console.warn(
         `🔧 [UIEventAdapter] Tool call complete for unknown tool ID: ${toolCall.id}`,
       );
+    }
+
+    // Check if all tool calls are complete
+    let allComplete = true;
+    for (const [, data] of this.activeToolCalls) {
+      if (data.status !== "completed" && data.status !== "failed") {
+        allComplete = false;
+        break;
+      }
+    }
+    
+    if (allComplete && this.activeToolCalls.size > 0) {
+      // All tool calls are complete, mark that we're no longer processing tools
+      this.hasToolCallsInProgress = false;
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🔧 [UIEventAdapter] All tool calls complete, ready to resume content streaming`,
+        );
+      }
     }
   }
 

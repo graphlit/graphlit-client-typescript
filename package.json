@@ -28,11 +28,7 @@
     "format": "prettier --write .",
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run build",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui",
-    "test:streaming": "vitest --run src/tests/streaming"
+    "test": "vitest"
   },
   "keywords": [
     "Graphlit",
