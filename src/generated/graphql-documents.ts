@@ -1237,6 +1237,7 @@ export const GetContent = gql`
       sensitivity
       priority
       importance
+      attachmentCount
       from {
         name
         email
@@ -1962,6 +1963,7 @@ export const LookupContents = gql`
         sensitivity
         priority
         importance
+        attachmentCount
         from {
           name
           email
@@ -2523,6 +2525,7 @@ export const QueryContents = gql`
         sensitivity
         priority
         importance
+        attachmentCount
         from {
           name
           email
@@ -2832,6 +2835,7 @@ export const QueryContentsObservations = gql`
         sensitivity
         priority
         importance
+        attachmentCount
         from {
           name
           email
