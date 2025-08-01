@@ -1101,8 +1101,9 @@ export type BoundingBoxInput = {
   width?: InputMaybe<Scalars['Float']['input']>;
 };
 
+/** Box authentication type */
 export enum BoxAuthenticationTypes {
-  Connector = 'CONNECTOR',
+  /** User */
   User = 'USER'
 }
 
@@ -1115,8 +1116,6 @@ export type BoxFeedProperties = {
   clientId?: Maybe<Scalars['String']['output']>;
   /** Box client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: Maybe<Scalars['ID']['output']>;
   /** Box folder identifier. */
   folderId?: Maybe<Scalars['ID']['output']>;
   /** Box redirect URI. */
@@ -1133,8 +1132,6 @@ export type BoxFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Box client secret. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: InputMaybe<Scalars['ID']['input']>;
   /** Box folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** Box redirect URI. */
@@ -1151,8 +1148,6 @@ export type BoxFeedPropertiesUpdateInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Box client secret. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: InputMaybe<Scalars['ID']['input']>;
   /** Box folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** Box redirect URI. */
@@ -3426,8 +3421,9 @@ export type DrawingMetadataInput = {
   y?: InputMaybe<Scalars['Float']['input']>;
 };
 
+/** Dropbox authentication type */
 export enum DropboxAuthenticationTypes {
-  Connector = 'CONNECTOR',
+  /** User */
   User = 'USER'
 }
 
@@ -3440,8 +3436,6 @@ export type DropboxFeedProperties = {
   appSecret?: Maybe<Scalars['String']['output']>;
   /** Dropbox authentication type. */
   authenticationType?: Maybe<DropboxAuthenticationTypes>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: Maybe<Scalars['ID']['output']>;
   /** Dropbox folder path. */
   path?: Maybe<Scalars['ID']['output']>;
   /** Dropbox redirect URI. */
@@ -3458,8 +3452,6 @@ export type DropboxFeedPropertiesInput = {
   appSecret?: InputMaybe<Scalars['String']['input']>;
   /** Dropbox authentication type. */
   authenticationType?: InputMaybe<DropboxAuthenticationTypes>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: InputMaybe<Scalars['ID']['input']>;
   /** Dropbox folder path. */
   path?: InputMaybe<Scalars['ID']['input']>;
   /** Dropbox redirect URI. */
@@ -3476,8 +3468,6 @@ export type DropboxFeedPropertiesUpdateInput = {
   appSecret?: InputMaybe<Scalars['String']['input']>;
   /** Dropbox authentication type. */
   authenticationType?: InputMaybe<DropboxAuthenticationTypes>;
-  /** The OAuth authentication connector identifier, if using connector authentication. */
-  connectorId?: InputMaybe<Scalars['ID']['input']>;
   /** Dropbox folder path. */
   path?: InputMaybe<Scalars['ID']['input']>;
   /** Dropbox redirect URI. */
@@ -4876,9 +4866,13 @@ export type GeometryMetadataInput = {
   vertexCount?: InputMaybe<Scalars['Long']['input']>;
 };
 
+/** GitHub authentication type */
 export enum GitHubAuthenticationTypes {
+  /** Connector */
   Connector = 'CONNECTOR',
+  /** OAuth */
   OAuth = 'O_AUTH',
+  /** Personal Access Token */
   PersonalAccessToken = 'PERSONAL_ACCESS_TOKEN'
 }
 
@@ -4888,7 +4882,7 @@ export type GitHubFeedProperties = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: Maybe<GitHubAuthenticationTypes>;
   /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
   personalAccessToken?: Maybe<Scalars['String']['output']>;
   /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
@@ -4905,8 +4899,8 @@ export type GitHubFeedProperties = {
 export type GitHubFeedPropertiesInput = {
   /** GitHub authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -4923,8 +4917,8 @@ export type GitHubFeedPropertiesInput = {
 export type GitHubFeedPropertiesUpdateInput = {
   /** GitHub authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -4946,6 +4940,10 @@ export enum GitHubIssueAuthenticationTypes {
 /** Represents GitHub Issues feed properties. */
 export type GitHubIssuesFeedProperties = {
   __typename?: 'GitHubIssuesFeedProperties';
+  /** GitHub Issues authentication type, defaults to PersonalAccessToken. */
+  authenticationType?: Maybe<GitHubIssueAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** GitHub personal access token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
   personalAccessToken?: Maybe<Scalars['String']['output']>;
   /** GitHub refresh token. Either refresh token or personal access token is required to avoid GitHub rate-limiting. */
@@ -4962,8 +4960,8 @@ export type GitHubIssuesFeedProperties = {
 export type GitHubIssuesFeedPropertiesInput = {
   /** GitHub Issues authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubIssueAuthenticationTypes>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5019,6 +5017,8 @@ export type GoogleCalendarFeedProperties = {
   afterDate?: Maybe<Scalars['DateTime']['output']>;
   /** Google Calendar authentication type. */
   authenticationType?: Maybe<GoogleCalendarAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: Maybe<Scalars['DateTime']['output']>;
   /** Google Email calendar identifier, optional. */
@@ -5027,8 +5027,6 @@ export type GoogleCalendarFeedProperties = {
   clientId?: Maybe<Scalars['String']['output']>;
   /** Google OAuth2 client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** Google OAuth2 refresh token. */
   refreshToken?: Maybe<Scalars['String']['output']>;
 };
@@ -5039,6 +5037,8 @@ export type GoogleCalendarFeedPropertiesInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Email calendar identifier, optional. */
@@ -5047,8 +5047,6 @@ export type GoogleCalendarFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5057,12 +5055,12 @@ export type GoogleCalendarFeedPropertiesInput = {
 export type GoogleCalendarFeedPropertiesUpdateInput = {
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5071,19 +5069,23 @@ export type GoogleCalendarFeedPropertiesUpdateInput = {
 export type GoogleCalendarsInput = {
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
+  /** Authorization identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier. */
   clientId: Scalars['String']['input'];
   /** Google OAuth2 client secret. */
   clientSecret: Scalars['String']['input'];
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 refresh token. */
   refreshToken: Scalars['String']['input'];
 };
 
+/** Google Drive authentication type */
 export enum GoogleDriveAuthenticationTypes {
+  /** Connector */
   Connector = 'CONNECTOR',
+  /** Service Account */
   ServiceAccount = 'SERVICE_ACCOUNT',
+  /** User */
   User = 'USER'
 }
 
@@ -5092,12 +5094,12 @@ export type GoogleDriveFeedProperties = {
   __typename?: 'GoogleDriveFeedProperties';
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: Maybe<GoogleDriveAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Google Drive folder identifier. */
@@ -5112,12 +5114,12 @@ export type GoogleDriveFeedProperties = {
 export type GoogleDriveFeedPropertiesInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -5132,12 +5134,12 @@ export type GoogleDriveFeedPropertiesInput = {
 export type GoogleDriveFeedPropertiesUpdateInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -5168,12 +5170,12 @@ export type GoogleDriveFolderResults = {
 export type GoogleDriveFoldersInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier. */
   clientId: Scalars['String']['input'];
   /** Google OAuth2 client secret. */
   clientSecret: Scalars['String']['input'];
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 refresh token. */
   refreshToken: Scalars['String']['input'];
 };
@@ -5188,12 +5190,12 @@ export type GoogleEmailFeedProperties = {
   __typename?: 'GoogleEmailFeedProperties';
   /** Google Email authentication type. */
   authenticationType?: Maybe<GoogleEmailAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Google Email client identifier. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Google Email client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: Maybe<Scalars['Boolean']['output']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -5212,12 +5214,12 @@ export type GoogleEmailFeedProperties = {
 export type GoogleEmailFeedPropertiesInput = {
   /** Google Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -5236,12 +5238,12 @@ export type GoogleEmailFeedPropertiesInput = {
 export type GoogleEmailFeedPropertiesUpdateInput = {
   /** Google Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8411,6 +8413,8 @@ export type MicrosoftCalendarFeedProperties = {
   afterDate?: Maybe<Scalars['DateTime']['output']>;
   /** Microsoft Calendar authentication type. */
   authenticationType?: Maybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: Maybe<Scalars['DateTime']['output']>;
   /** Microsoft Email calendar identifier, optional. */
@@ -8419,8 +8423,6 @@ export type MicrosoftCalendarFeedProperties = {
   clientId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID refresh token. */
   refreshToken?: Maybe<Scalars['String']['output']>;
 };
@@ -8431,6 +8433,8 @@ export type MicrosoftCalendarFeedPropertiesInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Email calendar identifier, optional. */
@@ -8439,8 +8443,6 @@ export type MicrosoftCalendarFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8449,12 +8451,12 @@ export type MicrosoftCalendarFeedPropertiesInput = {
 export type MicrosoftCalendarFeedPropertiesUpdateInput = {
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8463,12 +8465,12 @@ export type MicrosoftCalendarFeedPropertiesUpdateInput = {
 export type MicrosoftCalendarsInput = {
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Authorization identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier. */
   clientId: Scalars['String']['input'];
   /** Microsoft Entra ID client secret. */
   clientSecret: Scalars['String']['input'];
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token. */
   refreshToken: Scalars['String']['input'];
 };
@@ -8483,12 +8485,12 @@ export type MicrosoftEmailFeedProperties = {
   __typename?: 'MicrosoftEmailFeedProperties';
   /** Microsoft Email authentication type. */
   authenticationType?: Maybe<MicrosoftEmailAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Email client identifier. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Email client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: Maybe<Scalars['Boolean']['output']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8507,12 +8509,12 @@ export type MicrosoftEmailFeedProperties = {
 export type MicrosoftEmailFeedPropertiesInput = {
   /** Microsoft Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8531,12 +8533,12 @@ export type MicrosoftEmailFeedPropertiesInput = {
 export type MicrosoftEmailFeedPropertiesUpdateInput = {
   /** Microsoft Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether to only read past emails from Inbox. Default is False. */
@@ -8576,12 +8578,12 @@ export type MicrosoftTeamsChannelResults = {
 export type MicrosoftTeamsChannelsInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8591,14 +8593,14 @@ export type MicrosoftTeamsFeedProperties = {
   __typename?: 'MicrosoftTeamsFeedProperties';
   /** Microsoft Teams authentication type. */
   authenticationType?: Maybe<MicrosoftTeamsAuthenticationTypes>;
+  /** Microsoft Teams authentication identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['output'];
   /** Microsoft Teams client identifier. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Teams client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Microsoft Teams connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
   /** Microsoft Teams refresh token. */
@@ -8613,14 +8615,14 @@ export type MicrosoftTeamsFeedProperties = {
 export type MicrosoftTeamsFeedPropertiesInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['input'];
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
@@ -8635,14 +8637,14 @@ export type MicrosoftTeamsFeedPropertiesInput = {
 export type MicrosoftTeamsFeedPropertiesUpdateInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['input'];
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
@@ -8673,12 +8675,12 @@ export type MicrosoftTeamsTeamResults = {
 export type MicrosoftTeamsTeamsInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -11056,8 +11058,11 @@ export enum OccurrenceTypes {
   Time = 'TIME'
 }
 
+/** OneDrive authentication type */
 export enum OneDriveAuthenticationTypes {
+  /** Connector */
   Connector = 'CONNECTOR',
+  /** User */
   User = 'USER'
 }
 
@@ -11066,12 +11071,12 @@ export type OneDriveFeedProperties = {
   __typename?: 'OneDriveFeedProperties';
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: Maybe<OneDriveAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** OneDrive client identifier. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** OneDrive client secret. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
   /** OneDrive folder identifier. */
@@ -11084,12 +11089,12 @@ export type OneDriveFeedProperties = {
 export type OneDriveFeedPropertiesInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
@@ -11102,12 +11107,12 @@ export type OneDriveFeedPropertiesInput = {
 export type OneDriveFeedPropertiesUpdateInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
@@ -11136,12 +11141,12 @@ export type OneDriveFolderResults = {
 export type OneDriveFoldersInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier. */
   clientId: Scalars['String']['input'];
   /** Microsoft Entra ID client secret. */
   clientSecret: Scalars['String']['input'];
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token. */
   refreshToken: Scalars['String']['input'];
 };
@@ -14650,9 +14655,13 @@ export type ShapeMetadataInput = {
   modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+/** SharePoint authentication type */
 export enum SharePointAuthenticationTypes {
+  /** Application */
   Application = 'APPLICATION',
+  /** Connector */
   Connector = 'CONNECTOR',
+  /** User */
   User = 'USER'
 }
 
@@ -14663,12 +14672,12 @@ export type SharePointFeedProperties = {
   accountName: Scalars['String']['output'];
   /** SharePoint authentication type. */
   authenticationType?: Maybe<SharePointAuthenticationTypes>;
+  /** Connector identifier. */
+  authorizationId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: Maybe<Scalars['String']['output']>;
-  /** Connector identifier. */
-  connectorId?: Maybe<Scalars['String']['output']>;
   /** SharePoint folder identifier. */
   folderId?: Maybe<Scalars['ID']['output']>;
   /** SharePoint library identifier. */
@@ -14685,12 +14694,12 @@ export type SharePointFeedPropertiesInput = {
   accountName: Scalars['String']['input'];
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires user authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires user authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -14707,8 +14716,8 @@ export type SharePointFeedPropertiesUpdateInput = {
   accountName?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint authentication type. */
   authenticationType?: InputMaybe<SharePointAuthenticationTypes>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -14741,12 +14750,12 @@ export type SharePointFolderResults = {
 export type SharePointFoldersInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, requires Application authentication type. */
@@ -14757,12 +14766,12 @@ export type SharePointFoldersInput = {
 export type SharePointLibrariesInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Connector identifier, for Connector authentication type. */
-  connectorId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, requires Application authentication type. */
@@ -17490,7 +17499,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connectorId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, connectorId?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, connectorId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, connectorId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, authorizationId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -17542,7 +17551,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connectorId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, connectorId?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, connectorId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, connectorId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connectorId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connectorId?: string | null, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, authorizationId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
 
 export type QueryGoogleCalendarsQueryVariables = Exact<{
   properties: GoogleCalendarsInput;

@@ -6472,7 +6472,7 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
-        connectorId
+        authorizationId
       }
       oneDrive {
         authenticationType
@@ -6481,7 +6481,7 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
-        connectorId
+        authorizationId
       }
       googleDrive {
         authenticationType
@@ -6491,12 +6491,11 @@ export const GetFeed = gql`
         clientId
         clientSecret
         serviceAccountJson
-        connectorId
+        authorizationId
       }
       dropbox {
         authenticationType
         path
-        connectorId
         appKey
         appSecret
         refreshToken
@@ -6505,7 +6504,6 @@ export const GetFeed = gql`
       box {
         authenticationType
         folderId
-        connectorId
         clientId
         clientSecret
         refreshToken
@@ -6518,7 +6516,7 @@ export const GetFeed = gql`
         repositoryName
         refreshToken
         personalAccessToken
-        connectorId
+        authorizationId
       }
       readLimit
     }
@@ -6535,7 +6533,7 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        connectorId
+        authorizationId
       }
       microsoft {
         type
@@ -6547,7 +6545,7 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        connectorId
+        authorizationId
       }
       readLimit
     }
@@ -6566,11 +6564,13 @@ export const GetFeed = gql`
         project
       }
       github {
+        authenticationType
         uri
         repositoryOwner
         repositoryName
         refreshToken
         personalAccessToken
+        authorizationId
       }
       intercom {
         accessToken
@@ -6598,7 +6598,7 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        connectorId
+        authorizationId
       }
       microsoft {
         calendarId
@@ -6608,7 +6608,7 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        connectorId
+        authorizationId
       }
       readLimit
     }
@@ -6677,7 +6677,7 @@ export const GetFeed = gql`
       clientId
       clientSecret
       refreshToken
-      connectorId
+      authorizationId
       teamId
       channelId
     }
@@ -6808,7 +6808,7 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
-          connectorId
+          authorizationId
         }
         oneDrive {
           authenticationType
@@ -6817,7 +6817,7 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
-          connectorId
+          authorizationId
         }
         googleDrive {
           authenticationType
@@ -6827,12 +6827,11 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           serviceAccountJson
-          connectorId
+          authorizationId
         }
         dropbox {
           authenticationType
           path
-          connectorId
           appKey
           appSecret
           refreshToken
@@ -6841,7 +6840,6 @@ export const QueryFeeds = gql`
         box {
           authenticationType
           folderId
-          connectorId
           clientId
           clientSecret
           refreshToken
@@ -6854,7 +6852,7 @@ export const QueryFeeds = gql`
           repositoryName
           refreshToken
           personalAccessToken
-          connectorId
+          authorizationId
         }
         readLimit
       }
@@ -6871,7 +6869,7 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          connectorId
+          authorizationId
         }
         microsoft {
           type
@@ -6883,7 +6881,7 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          connectorId
+          authorizationId
         }
         readLimit
       }
@@ -6902,11 +6900,13 @@ export const QueryFeeds = gql`
           project
         }
         github {
+          authenticationType
           uri
           repositoryOwner
           repositoryName
           refreshToken
           personalAccessToken
+          authorizationId
         }
         intercom {
           accessToken
@@ -6934,7 +6934,7 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          connectorId
+          authorizationId
         }
         microsoft {
           calendarId
@@ -6944,7 +6944,7 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          connectorId
+          authorizationId
         }
         readLimit
       }
@@ -7013,7 +7013,7 @@ export const QueryFeeds = gql`
         clientId
         clientSecret
         refreshToken
-        connectorId
+        authorizationId
         teamId
         channelId
       }
