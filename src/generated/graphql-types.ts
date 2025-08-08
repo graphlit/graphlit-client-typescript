@@ -378,6 +378,10 @@ export enum AnthropicModels {
   Claude_3Sonnet = 'CLAUDE_3_SONNET',
   /** @deprecated Use Claude 4 Sonnet instead. */
   Claude_3Sonnet_20240229 = 'CLAUDE_3_SONNET_20240229',
+  /** Claude 4.1 Opus (Latest) */
+  Claude_4_1Opus = 'CLAUDE_4_1_OPUS',
+  /** Claude 4.1 Opus (08-05-2025 version) */
+  Claude_4_1Opus_20250805 = 'CLAUDE_4_1_OPUS_20250805',
   /** Claude 4 Opus (Latest) */
   Claude_4Opus = 'CLAUDE_4_OPUS',
   /** Claude 4 Opus (05-14-2025 version) */
@@ -11336,6 +11340,20 @@ export enum OpenAiModels {
    * @deprecated OpenAI has deprecated this model. Use the GPT-4o model instead.
    */
   Gpt4TurboVision_128K_1106 = 'GPT4_TURBO_VISION_128K_1106',
+  /** GPT 5 400k (Latest) */
+  Gpt5_400K = 'GPT5_400K',
+  /** GPT 5 400k (2025-08-07 version) */
+  Gpt5_400K_20250807 = 'GPT5_400K_20250807',
+  /** ChatGPT-5 400k (Latest) */
+  Gpt5Chat_400K = 'GPT5_CHAT_400K',
+  /** GPT 5 Mini 400k (Latest) */
+  Gpt5Mini_400K = 'GPT5_MINI_400K',
+  /** GPT 5 Mini 400k (2025-08-07 version) */
+  Gpt5Mini_400K_20250807 = 'GPT5_MINI_400K_20250807',
+  /** GPT Nano 5 400k (Latest) */
+  Gpt5Nano_400K = 'GPT5_NANO_400K',
+  /** GPT 5 Nano 400k (2025-08-07 version) */
+  Gpt5Nano_400K_20250807 = 'GPT5_NANO_400K_20250807',
   /**
    * GPT-3.5 Turbo (Latest)
    * @deprecated OpenAI has deprecated this model. Use the GPT-4o Mini model instead.
