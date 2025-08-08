@@ -70,27 +70,27 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   [Types.AnthropicModels.Claude_3Haiku_20240307]: "claude-3-haiku-20240307",
 
   // Claude 3.5 models
-  [Types.AnthropicModels.Claude_3_5Sonnet]: "claude-3-5-sonnet-20241022",
+  [Types.AnthropicModels.Claude_3_5Sonnet]: "claude-3-5-sonnet-latest",
   [Types.AnthropicModels.Claude_3_5Sonnet_20240620]:
     "claude-3-5-sonnet-20240620",
   [Types.AnthropicModels.Claude_3_5Sonnet_20241022]:
     "claude-3-5-sonnet-20241022",
-  [Types.AnthropicModels.Claude_3_5Haiku]: "claude-3-5-haiku-20241022",
+  [Types.AnthropicModels.Claude_3_5Haiku]: "claude-3-5-haiku-latest",
   [Types.AnthropicModels.Claude_3_5Haiku_20241022]: "claude-3-5-haiku-20241022",
 
   // Claude 3.7 models
-  [Types.AnthropicModels.Claude_3_7Sonnet]: "claude-3-7-sonnet-20250219",
+  [Types.AnthropicModels.Claude_3_7Sonnet]: "claude-3-7-sonnet-latest",
   [Types.AnthropicModels.Claude_3_7Sonnet_20250219]:
     "claude-3-7-sonnet-20250219",
 
   // Claude 4 models
-  [Types.AnthropicModels.Claude_4Opus]: "claude-4-opus-20250514",
-  [Types.AnthropicModels.Claude_4Opus_20250514]: "claude-4-opus-20250514",
-  [Types.AnthropicModels.Claude_4Sonnet]: "claude-4-sonnet-20250514",
-  [Types.AnthropicModels.Claude_4Sonnet_20250514]: "claude-4-sonnet-20250514",
+  [Types.AnthropicModels.Claude_4Opus]: "claude-opus-4-0",
+  [Types.AnthropicModels.Claude_4Opus_20250514]: "claude-opus-4-20250514",
+  [Types.AnthropicModels.Claude_4Sonnet]: "claude-sonnet-4-0",
+  [Types.AnthropicModels.Claude_4Sonnet_20250514]: "claude-sonnet-4-20250514",
 
   // Claude 4.1 models
-  [Types.AnthropicModels.Claude_4_1Opus]: "claude-opus-4-1-20250805",
+  [Types.AnthropicModels.Claude_4_1Opus]: "claude-opus-4-1",
   [Types.AnthropicModels.Claude_4_1Opus_20250805]: "claude-opus-4-1-20250805",
 };
 
