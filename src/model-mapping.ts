@@ -31,6 +31,16 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   [Types.OpenAiModels.Gpt41Mini_1024K]: "gpt-4.1-mini",
   [Types.OpenAiModels.Gpt41Mini_1024K_20250414]: "gpt-4.1-mini-2025-04-14",
   [Types.OpenAiModels.Gpt41Nano_1024K]: "gpt-4.1-nano",
+  [Types.OpenAiModels.Gpt41Nano_1024K_20250414]: "gpt-4.1-nano-2025-04-14",
+
+  // GPT-5 models
+  [Types.OpenAiModels.Gpt5_400K]: "gpt-5",
+  [Types.OpenAiModels.Gpt5_400K_20250807]: "gpt-5-2025-08-07",
+  [Types.OpenAiModels.Gpt5Chat_400K]: "chatgpt-5-latest",
+  [Types.OpenAiModels.Gpt5Mini_400K]: "gpt-5-mini",
+  [Types.OpenAiModels.Gpt5Mini_400K_20250807]: "gpt-5-mini-2025-08-07",
+  [Types.OpenAiModels.Gpt5Nano_400K]: "gpt-5-nano",
+  [Types.OpenAiModels.Gpt5Nano_400K_20250807]: "gpt-5-nano-2025-08-07",
 
   // O1 models
   [Types.OpenAiModels.O1Mini_128K]: "o1-mini",
@@ -75,7 +85,13 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
 
   // Claude 4 models
   [Types.AnthropicModels.Claude_4Opus]: "claude-4-opus-20250514",
+  [Types.AnthropicModels.Claude_4Opus_20250514]: "claude-4-opus-20250514",
   [Types.AnthropicModels.Claude_4Sonnet]: "claude-4-sonnet-20250514",
+  [Types.AnthropicModels.Claude_4Sonnet_20250514]: "claude-4-sonnet-20250514",
+
+  // Claude 4.1 models
+  [Types.AnthropicModels.Claude_4_1Opus]: "claude-opus-4-1-20250805",
+  [Types.AnthropicModels.Claude_4_1Opus_20250805]: "claude-opus-4-1-20250805",
 };
 
 // Google model mappings
