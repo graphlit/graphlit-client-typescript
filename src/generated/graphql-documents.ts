@@ -9237,6 +9237,8 @@ export const GetSpecification = gql`
       model
       accessKey
       secretAccessKey
+      endpoint
+      region
       modelName
       temperature
       probability
@@ -9607,6 +9609,8 @@ export const QuerySpecifications = gql`
         model
         accessKey
         secretAccessKey
+        endpoint
+        region
         modelName
         temperature
         probability
