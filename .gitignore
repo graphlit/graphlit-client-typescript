@@ -1,6 +1,8 @@
 # Dependency directories
 node_modules/
 
+.claude/
+
 # TypeScript build output
 /dist/
 *.js

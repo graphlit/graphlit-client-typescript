@@ -1237,6 +1237,9 @@ export const GetContent = gql`
       sensitivity
       priority
       importance
+      unsubscribeUrl
+      publicationName
+      publicationUrl
       attachmentCount
       from {
         name
@@ -1963,6 +1966,9 @@ export const LookupContents = gql`
         sensitivity
         priority
         importance
+        unsubscribeUrl
+        publicationName
+        publicationUrl
         attachmentCount
         from {
           name
@@ -2525,6 +2531,9 @@ export const QueryContents = gql`
         sensitivity
         priority
         importance
+        unsubscribeUrl
+        publicationName
+        publicationUrl
         attachmentCount
         from {
           name
@@ -2835,6 +2844,9 @@ export const QueryContentsObservations = gql`
         sensitivity
         priority
         importance
+        unsubscribeUrl
+        publicationName
+        publicationUrl
         attachmentCount
         from {
           name
