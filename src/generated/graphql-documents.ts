@@ -199,6 +199,13 @@ export const GetAlert = gql`
           id
         }
       }
+      googleImage {
+        model
+        count
+        seed {
+          id
+        }
+      }
     }
     summarySpecification {
       id
@@ -343,6 +350,13 @@ export const QueryAlerts = gql`
           voice
         }
         openAIImage {
+          model
+          count
+          seed {
+            id
+          }
+        }
+        googleImage {
           model
           count
           seed {
