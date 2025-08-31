@@ -6555,6 +6555,7 @@ export const GetFeed = gql`
       includeAttachments
       google {
         type
+        filter
         includeSpam
         excludeSentItems
         includeDeletedItems
@@ -6567,6 +6568,7 @@ export const GetFeed = gql`
       }
       microsoft {
         type
+        filter
         includeSpam
         excludeSentItems
         includeDeletedItems
@@ -6891,6 +6893,7 @@ export const QueryFeeds = gql`
         includeAttachments
         google {
           type
+          filter
           includeSpam
           excludeSentItems
           includeDeletedItems
@@ -6903,6 +6906,7 @@ export const QueryFeeds = gql`
         }
         microsoft {
           type
+          filter
           includeSpam
           excludeSentItems
           includeDeletedItems
