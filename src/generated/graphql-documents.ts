@@ -10997,6 +10997,7 @@ export const CreateWorkflow = gql`
         }
       }
       enableEmailCollections
+      enableFolderCollections
     }
     indexing {
       jobs {
@@ -11249,6 +11250,7 @@ export const GetWorkflow = gql`
         }
       }
       enableEmailCollections
+      enableFolderCollections
     }
     indexing {
       jobs {
@@ -11474,6 +11476,7 @@ export const QueryWorkflows = gql`
           }
         }
         enableEmailCollections
+        enableFolderCollections
       }
       indexing {
         jobs {
@@ -11694,6 +11697,7 @@ export const UpdateWorkflow = gql`
         }
       }
       enableEmailCollections
+      enableFolderCollections
     }
     indexing {
       jobs {
@@ -11913,6 +11917,7 @@ export const UpsertWorkflow = gql`
         }
       }
       enableEmailCollections
+      enableFolderCollections
     }
     indexing {
       jobs {
