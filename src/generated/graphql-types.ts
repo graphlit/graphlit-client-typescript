@@ -166,6 +166,8 @@ export type AlertSchedulePolicy = {
   __typename?: 'AlertSchedulePolicy';
   /** If absolute time, the datetime value. */
   absoluteTime?: Maybe<Scalars['DateTime']['output']>;
+  /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
+  cron?: Maybe<Scalars['String']['output']>;
   /** The delay between recurrences of the alert. */
   delay?: Maybe<Scalars['TimeSpan']['output']>;
   /** The alert recurrence type. */
@@ -178,12 +180,16 @@ export type AlertSchedulePolicy = {
   repeatUntilTime?: Maybe<Scalars['DateTime']['output']>;
   /** The type of time interval. */
   timeType?: Maybe<PolicyTimeTypes>;
+  /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
+  timeZoneId?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents an alert scheduling policy. */
 export type AlertSchedulePolicyInput = {
   /** If absolute time, the datetime value. */
   absoluteTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
+  cron?: InputMaybe<Scalars['String']['input']>;
   /** The delay between recurrences of the alert. */
   delay?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** The alert recurrence type. */
@@ -196,6 +202,8 @@ export type AlertSchedulePolicyInput = {
   repeatUntilTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The type of time interval. */
   timeType?: InputMaybe<PolicyTimeTypes>;
+  /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
+  timeZoneId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Alert type */
