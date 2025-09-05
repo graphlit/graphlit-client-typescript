@@ -213,6 +213,12 @@ export const GetAlert = gql`
     publishSpecification {
       id
     }
+    schedulePolicy {
+      recurrenceType
+      repeatInterval
+      cron
+      timeZoneId
+    }
     lastAlertDate
   }
 }
@@ -369,6 +375,12 @@ export const QueryAlerts = gql`
       }
       publishSpecification {
         id
+      }
+      schedulePolicy {
+        recurrenceType
+        repeatInterval
+        cron
+        timeZoneId
       }
       lastAlertDate
     }
