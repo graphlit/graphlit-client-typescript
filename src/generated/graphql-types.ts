@@ -102,6 +102,8 @@ export type Alert = {
   summarySpecification?: Maybe<EntityReference>;
   /** The alert type. */
   type: AlertTypes;
+  /** The saved view, optional. */
+  view?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for alerts. */
@@ -152,6 +154,8 @@ export type AlertInput = {
   summarySpecification?: InputMaybe<EntityReferenceInput>;
   /** The alert type. */
   type: AlertTypes;
+  /** The saved view, optional. */
+  view?: InputMaybe<EntityReferenceInput>;
 };
 
 /** Represents alert query results. */
@@ -164,44 +168,24 @@ export type AlertResults = {
 /** Represents an alert scheduling policy. */
 export type AlertSchedulePolicy = {
   __typename?: 'AlertSchedulePolicy';
-  /** If absolute time, the datetime value. */
-  absoluteTime?: Maybe<Scalars['DateTime']['output']>;
   /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
   cron?: Maybe<Scalars['String']['output']>;
-  /** The delay between recurrences of the alert. */
-  delay?: Maybe<Scalars['TimeSpan']['output']>;
   /** The alert recurrence type. */
   recurrenceType?: Maybe<TimedPolicyRecurrenceTypes>;
-  /** If relative time, the relative timespan. */
-  relativeTime?: Maybe<Scalars['TimeSpan']['output']>;
-  /** If a repeated alert, the interval between repetitions. */
+  /** If a repeated alert, the interval between repetitions. Defaults to 15 minutes. */
   repeatInterval?: Maybe<Scalars['TimeSpan']['output']>;
-  /** If a repeated alert, the time to repeat until */
-  repeatUntilTime?: Maybe<Scalars['DateTime']['output']>;
-  /** The type of time interval. */
-  timeType?: Maybe<PolicyTimeTypes>;
   /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
   timeZoneId?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents an alert scheduling policy. */
 export type AlertSchedulePolicyInput = {
-  /** If absolute time, the datetime value. */
-  absoluteTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
   cron?: InputMaybe<Scalars['String']['input']>;
-  /** The delay between recurrences of the alert. */
-  delay?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** The alert recurrence type. */
   recurrenceType?: InputMaybe<TimedPolicyRecurrenceTypes>;
-  /** If relative time, the relative timespan. */
-  relativeTime?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** If a repeated alert, the interval between repetitions. */
   repeatInterval?: InputMaybe<Scalars['TimeSpan']['input']>;
-  /** If a repeated alert, the time to repeat until */
-  repeatUntilTime?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The type of time interval. */
-  timeType?: InputMaybe<PolicyTimeTypes>;
   /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
   timeZoneId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -234,6 +218,8 @@ export type AlertUpdateInput = {
   summaryPrompt?: InputMaybe<Scalars['String']['input']>;
   /** The LLM specification used for summarization, optional. */
   summarySpecification?: InputMaybe<EntityReferenceInput>;
+  /** The saved view, optional. */
+  view?: InputMaybe<EntityReferenceInput>;
 };
 
 /** Represents Amazon S3 feed properties. */
@@ -12281,14 +12267,6 @@ export type PointInput = {
   longitude: Scalars['Float']['input'];
 };
 
-/** Time type for policies */
-export enum PolicyTimeTypes {
-  /** Absolute time */
-  AbsoluteTime = 'ABSOLUTE_TIME',
-  /** Relative time */
-  RelativeTime = 'RELATIVE_TIME'
-}
-
 /** Represents a preparation workflow job. */
 export type PreparationWorkflowJob = {
   __typename?: 'PreparationWorkflowJob';
@@ -16261,6 +16239,10 @@ export enum VoyageModels {
   Voyage_3_0 = 'VOYAGE_3_0',
   /** Voyage 3.0 Large */
   Voyage_3_0Large = 'VOYAGE_3_0_LARGE',
+  /** Voyage 3.5 */
+  Voyage_3_5 = 'VOYAGE_3_5',
+  /** Voyage 3.5 Lite */
+  Voyage_3_5Lite = 'VOYAGE_3_5_LITE',
   /** Voyage Code 2.0 */
   VoyageCode_2_0 = 'VOYAGE_CODE_2_0',
   /** Voyage Code 3.0 */
@@ -16712,7 +16694,7 @@ export type GetAlertQueryVariables = Exact<{
 }>;
 
 
-export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null, googleImage?: { __typename?: 'GoogleImagePublishingProperties', model?: GoogleImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null, schedulePolicy?: { __typename?: 'AlertSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null } | null };
+export type GetAlertQuery = { __typename?: 'Query', alert?: { __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, view?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null, googleImage?: { __typename?: 'GoogleImagePublishingProperties', model?: GoogleImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null, schedulePolicy?: { __typename?: 'AlertSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null } | null };
 
 export type QueryAlertsQueryVariables = Exact<{
   filter?: InputMaybe<AlertFilter>;
@@ -16720,7 +16702,7 @@ export type QueryAlertsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null, googleImage?: { __typename?: 'GoogleImagePublishingProperties', model?: GoogleImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null, schedulePolicy?: { __typename?: 'AlertSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null }> | null } | null };
+export type QueryAlertsQuery = { __typename?: 'Query', alerts?: { __typename?: 'AlertResults', results?: Array<{ __typename?: 'Alert', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AlertTypes, summaryPrompt?: string | null, publishPrompt: string, lastAlertDate?: any | null, owner: { __typename?: 'Owner', id: string }, view?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes | null> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState | null> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, integration: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null }, publishing: { __typename?: 'ContentPublishingConnector', type: ContentPublishingServiceTypes, elevenLabs?: { __typename?: 'ElevenLabsPublishingProperties', model?: ElevenLabsModels | null, voice?: string | null } | null, openAIImage?: { __typename?: 'OpenAIImagePublishingProperties', model?: OpenAiImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null, googleImage?: { __typename?: 'GoogleImagePublishingProperties', model?: GoogleImageModels | null, count?: number | null, seed?: { __typename?: 'EntityReference', id: string } | null } | null }, summarySpecification?: { __typename?: 'EntityReference', id: string } | null, publishSpecification?: { __typename?: 'EntityReference', id: string } | null, schedulePolicy?: { __typename?: 'AlertSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null }> | null } | null };
 
 export type UpdateAlertMutationVariables = Exact<{
   alert: AlertUpdateInput;

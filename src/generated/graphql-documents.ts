@@ -76,6 +76,9 @@ export const GetAlert = gql`
     type
     summaryPrompt
     publishPrompt
+    view {
+      id
+    }
     filter {
       dateRange {
         from
@@ -239,6 +242,9 @@ export const QueryAlerts = gql`
       type
       summaryPrompt
       publishPrompt
+      view {
+        id
+      }
       filter {
         dateRange {
           from
