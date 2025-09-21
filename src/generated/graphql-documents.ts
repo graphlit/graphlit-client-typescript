@@ -1181,6 +1181,7 @@ export const GetContent = gql`
     fileExtension
     fileName
     fileSize
+    relativeFolderPath
     masterUri
     imageUri
     textUri
@@ -1910,6 +1911,7 @@ export const LookupContents = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
@@ -2477,6 +2479,7 @@ export const QueryContents = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
@@ -2790,6 +2793,7 @@ export const QueryContentsObservations = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
