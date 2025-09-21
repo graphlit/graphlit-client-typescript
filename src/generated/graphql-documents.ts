@@ -824,6 +824,7 @@ export const DescribeEncodedImage = gql`
         fileExtension
         fileName
         fileSize
+        relativeFolderPath
         masterUri
         imageUri
         textUri
@@ -960,6 +961,7 @@ export const DescribeImage = gql`
         fileExtension
         fileName
         fileSize
+        relativeFolderPath
         masterUri
         imageUri
         textUri
@@ -2212,6 +2214,7 @@ export const PublishContents = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
@@ -2337,6 +2340,7 @@ export const PublishText = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
@@ -3239,6 +3243,7 @@ export const AskGraphlit = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -3413,6 +3418,7 @@ export const CompleteConversation = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -3592,6 +3598,7 @@ export const CompleteConversation = gql`
             fileExtension
             fileName
             fileSize
+            relativeFolderPath
             masterUri
             imageUri
             textUri
@@ -3733,6 +3740,7 @@ export const ContinueConversation = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -3912,6 +3920,7 @@ export const ContinueConversation = gql`
             fileExtension
             fileName
             fileSize
+            relativeFolderPath
             masterUri
             imageUri
             textUri
@@ -4102,6 +4111,7 @@ export const FormatConversation = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -4281,6 +4291,7 @@ export const FormatConversation = gql`
             fileExtension
             fileName
             fileSize
+            relativeFolderPath
             masterUri
             imageUri
             textUri
@@ -4425,6 +4436,7 @@ export const GetConversation = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -4750,6 +4762,7 @@ export const Prompt = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -4898,6 +4911,7 @@ export const PromptConversation = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -5077,6 +5091,7 @@ export const PromptConversation = gql`
             fileExtension
             fileName
             fileSize
+            relativeFolderPath
             masterUri
             imageUri
             textUri
@@ -5214,6 +5229,7 @@ export const PublishConversation = gql`
       fileExtension
       fileName
       fileSize
+      relativeFolderPath
       masterUri
       imageUri
       textUri
@@ -5346,6 +5362,7 @@ export const QueryConversations = gql`
             fileExtension
             fileName
             fileSize
+            relativeFolderPath
             masterUri
             imageUri
             textUri
@@ -5722,6 +5739,7 @@ export const ReviseContent = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -5866,6 +5884,7 @@ export const ReviseEncodedImage = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -6009,6 +6028,7 @@ export const ReviseImage = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -6152,6 +6172,7 @@ export const ReviseText = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -6487,6 +6508,8 @@ export const GetFeed = gql`
       siteType
       type
       isRecursive
+      allowedPaths
+      excludedPaths
       s3 {
         accessKey
         secretAccessKey
@@ -6825,6 +6848,8 @@ export const QueryFeeds = gql`
         siteType
         type
         isRecursive
+        allowedPaths
+        excludedPaths
         s3 {
           accessKey
           secretAccessKey
@@ -9371,6 +9396,7 @@ export const PromptSpecifications = gql`
           fileExtension
           fileName
           fileSize
+          relativeFolderPath
           masterUri
           imageUri
           textUri
@@ -11116,6 +11142,7 @@ export const CreateWorkflow = gql`
             specification {
               id
             }
+            tokenThreshold
           }
         }
       }
@@ -11369,6 +11396,7 @@ export const GetWorkflow = gql`
             specification {
               id
             }
+            tokenThreshold
           }
         }
       }
@@ -11595,6 +11623,7 @@ export const QueryWorkflows = gql`
               specification {
                 id
               }
+              tokenThreshold
             }
           }
         }
@@ -11816,6 +11845,7 @@ export const UpdateWorkflow = gql`
             specification {
               id
             }
+            tokenThreshold
           }
         }
       }
@@ -12036,6 +12066,7 @@ export const UpsertWorkflow = gql`
             specification {
               id
             }
+            tokenThreshold
           }
         }
       }
