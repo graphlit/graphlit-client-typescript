@@ -6697,6 +6697,7 @@ export const GetFeed = gql`
       enableMeetingRecording
       meetingBotName
       google {
+        type
         calendarId
         beforeDate
         afterDate
@@ -6707,6 +6708,7 @@ export const GetFeed = gql`
         authorizationId
       }
       microsoft {
+        type
         calendarId
         beforeDate
         afterDate
@@ -7040,6 +7042,7 @@ export const QueryFeeds = gql`
         enableMeetingRecording
         meetingBotName
         google {
+          type
           calendarId
           beforeDate
           afterDate
@@ -7050,6 +7053,7 @@ export const QueryFeeds = gql`
           authorizationId
         }
         microsoft {
+          type
           calendarId
           beforeDate
           afterDate
