@@ -895,6 +895,7 @@ export const DescribeEncodedImage = gql`
           subject
           summary
           author
+          lastModifiedBy
           publisher
           description
           keywords
@@ -1032,6 +1033,7 @@ export const DescribeImage = gql`
           subject
           summary
           author
+          lastModifiedBy
           publisher
           description
           keywords
@@ -1252,6 +1254,7 @@ export const GetContent = gql`
       subject
       summary
       author
+      lastModifiedBy
       publisher
       description
       keywords
@@ -1982,6 +1985,7 @@ export const LookupContents = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -2287,6 +2291,7 @@ export const PublishContents = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -2413,6 +2418,7 @@ export const PublishText = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -2550,6 +2556,7 @@ export const QueryContents = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -2864,6 +2871,7 @@ export const QueryContentsObservations = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -3318,6 +3326,7 @@ export const AskGraphlit = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -3493,6 +3502,7 @@ export const CompleteConversation = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -3673,6 +3683,7 @@ export const CompleteConversation = gql`
               subject
               summary
               author
+              lastModifiedBy
               publisher
               description
               keywords
@@ -3815,6 +3826,7 @@ export const ContinueConversation = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -3995,6 +4007,7 @@ export const ContinueConversation = gql`
               subject
               summary
               author
+              lastModifiedBy
               publisher
               description
               keywords
@@ -4186,6 +4199,7 @@ export const FormatConversation = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -4366,6 +4380,7 @@ export const FormatConversation = gql`
               subject
               summary
               author
+              lastModifiedBy
               publisher
               description
               keywords
@@ -4511,6 +4526,7 @@ export const GetConversation = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -4837,6 +4853,7 @@ export const Prompt = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -4986,6 +5003,7 @@ export const PromptConversation = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -5166,6 +5184,7 @@ export const PromptConversation = gql`
               subject
               summary
               author
+              lastModifiedBy
               publisher
               description
               keywords
@@ -5304,6 +5323,7 @@ export const PublishConversation = gql`
         subject
         summary
         author
+        lastModifiedBy
         publisher
         description
         keywords
@@ -5437,6 +5457,7 @@ export const QueryConversations = gql`
               subject
               summary
               author
+              lastModifiedBy
               publisher
               description
               keywords
@@ -5814,6 +5835,7 @@ export const ReviseContent = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -5959,6 +5981,7 @@ export const ReviseEncodedImage = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -6103,6 +6126,7 @@ export const ReviseImage = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -6247,6 +6271,7 @@ export const ReviseText = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
@@ -6441,6 +6466,7 @@ export const CreateFeed = gql`
     name
     state
     type
+    syncMode
   }
 }
     `;
@@ -6508,6 +6534,7 @@ export const GetFeed = gql`
     state
     correlationId
     type
+    syncMode
     site {
       siteType
       type
@@ -6667,6 +6694,8 @@ export const GetFeed = gql`
     calendar {
       type
       includeAttachments
+      enableMeetingRecording
+      meetingBotName
       google {
         calendarId
         beforeDate
@@ -6848,6 +6877,7 @@ export const QueryFeeds = gql`
       state
       correlationId
       type
+      syncMode
       site {
         siteType
         type
@@ -7007,6 +7037,8 @@ export const QueryFeeds = gql`
       calendar {
         type
         includeAttachments
+        enableMeetingRecording
+        meetingBotName
         google {
           calendarId
           beforeDate
@@ -7250,6 +7282,7 @@ export const UpdateFeed = gql`
     name
     state
     type
+    syncMode
   }
 }
     `;
@@ -9471,6 +9504,7 @@ export const PromptSpecifications = gql`
             subject
             summary
             author
+            lastModifiedBy
             publisher
             description
             keywords
