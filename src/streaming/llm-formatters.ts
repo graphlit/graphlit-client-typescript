@@ -211,59 +211,64 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         break;
 
       case ConversationRoleTypes.Assistant:
-        const content: any[] = []; // Use any[] to allow thinking blocks
+        const content: any[] = [];
 
-        // Handle thinking blocks for extended thinking preservation
-        if (trimmedMessage && trimmedMessage.includes("<thinking")) {
-          // Extract thinking content and signature if present
-          const thinkingMatch = trimmedMessage.match(
-            /<thinking(?:\s+signature="([^"]*)")?>([\s\S]*?)<\/thinking>/,
-          );
-          if (thinkingMatch) {
-            const signature = thinkingMatch[1]; // Optional signature
-            const thinkingContent = thinkingMatch[2].trim();
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`🔍 [formatMessagesForAnthropic] Processing assistant message: "${trimmedMessage.substring(0, 200)}..."`);
+          console.log(`🔍 [formatMessagesForAnthropic] Has tool calls: ${message.toolCalls?.length || 0}`);
+        }
 
-            // Add thinking block for conversation history preservation
-            if (thinkingContent) {
-              const thinkingBlock: any = {
-                type: "thinking",
-                thinking: thinkingContent,
-              };
+        // Check if message contains thinking content (for Anthropic compatibility)
+        const hasThinking = trimmedMessage.includes('<thinking');
 
-              // Add signature if present (required by Anthropic API)
-              if (signature) {
-                thinkingBlock.signature = signature;
-              } else {
-                // Provide a default signature if none captured
-                thinkingBlock.signature = "";
-              }
+        if (hasThinking) {
+          // Parse thinking and text content separately for proper Anthropic format
+          const thinkingMatch = trimmedMessage.match(/<thinking(?:\s+signature="([^"]*)")?\s*>(.*?)<\/thinking>/s);
+          const thinkingSignature = thinkingMatch ? thinkingMatch[1] : '';
+          const thinkingContent = thinkingMatch ? thinkingMatch[2].trim() : '';
+          const textContent = trimmedMessage.replace(/<thinking(?:\s+signature="[^"]*")?\s*>.*?<\/thinking>/s, '').trim();
 
-              content.push(thinkingBlock);
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`🔍 [formatMessagesForAnthropic] Found thinking content: ${thinkingContent.length} chars`);
+            console.log(`🔍 [formatMessagesForAnthropic] Text content after thinking: "${textContent}"`);
+            console.log(`🔍 [formatMessagesForAnthropic] Signature: "${thinkingSignature}"`);
+          }
+
+          // CRITICAL: When thinking is enabled, thinking block must come first
+          if (thinkingContent) {
+            const thinkingBlock: any = {
+              type: "thinking",
+              thinking: thinkingContent,
+            };
+
+            // Include signature if present
+            if (thinkingSignature) {
+              thinkingBlock.signature = thinkingSignature;
             }
 
-            // Remove thinking tags from the main text and add remaining content
-            const textWithoutThinking = trimmedMessage
-              .replace(/<thinking(?:\s+[^>]*)?>[\s\S]*?<\/thinking>/g, "")
-              .trim();
-            if (textWithoutThinking) {
-              content.push({
-                type: "text",
-                text: textWithoutThinking,
-              });
-            }
-          } else {
-            // No valid thinking blocks found, add as regular text
+            content.push(thinkingBlock);
+          }
+
+          // Add text content after thinking block
+          if (textContent) {
             content.push({
               type: "text",
-              text: trimmedMessage,
+              text: textContent,
             });
           }
         } else if (trimmedMessage) {
-          // Add regular text content
+          // Regular text content
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`🔍 [formatMessagesForAnthropic] No thinking found, adding text content`);
+          }
           content.push({
             type: "text",
             text: trimmedMessage,
           });
+        }
+
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`🔍 [formatMessagesForAnthropic] Content array: ${content.map(c => c.type).join(', ')}`);
         }
 
         // Add tool uses if present

@@ -48,6 +48,7 @@ export class UIEventAdapter {
     streamingThroughput?: number;
     [key: string]: any;
   };
+  private roundThinkingContent?: string; // Store thinking content for conversation history
   private reasoningContent: string = "";
   private reasoningFormat?: ReasoningFormat;
   private reasoningSignature?: string;
@@ -191,16 +192,22 @@ export class UIEventAdapter {
     this.tokenCount++;
 
     // Check if we're resuming after tool calls and need to add newlines
-    if (this.hadToolCallsBeforeResume && this.hasToolCallsInProgress === false) {
+    if (
+      this.hadToolCallsBeforeResume &&
+      this.hasToolCallsInProgress === false
+    ) {
       // We had tool calls before and now we're receiving content again
       // Add double newline to separate the content from tool results
-      if (this.currentMessage.length > 0 && !this.currentMessage.endsWith('\n\n')) {
+      if (
+        this.currentMessage.length > 0 &&
+        !this.currentMessage.endsWith("\n\n")
+      ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
             `📝 [UIEventAdapter] Adding newlines after tool calls before resuming content`,
           );
         }
-        this.currentMessage += '\n\n';
+        this.currentMessage += "\n\n";
       }
       // Reset the flag now that we've added the newlines
       this.hadToolCallsBeforeResume = false;
@@ -401,7 +408,7 @@ export class UIEventAdapter {
         break;
       }
     }
-    
+
     if (allComplete && this.activeToolCalls.size > 0) {
       // All tool calls are complete, mark that we're no longer processing tools
       this.hasToolCallsInProgress = false;
@@ -545,6 +552,24 @@ export class UIEventAdapter {
     // Store final metrics for later retrieval
     this.finalMetrics = finalMetrics;
 
+    // Check if there are tool calls that haven't been executed yet
+    const hasPendingToolCalls = Array.from(this.activeToolCalls.values()).some(
+      (toolData) =>
+        toolData.status === "ready" ||
+        toolData.status === "preparing" ||
+        toolData.status === "executing"
+    );
+
+    if (hasPendingToolCalls) {
+      // Don't emit conversation_completed yet - tool execution will continue
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🔄 [UIEventAdapter] Skipping conversation_completed - ${this.activeToolCalls.size} tool calls pending execution`,
+        );
+      }
+      return; // Exit without emitting conversation_completed
+    }
+
     // Include context window usage if available
     const event: AgentStreamEvent = {
       type: "conversation_completed",
@@ -559,10 +584,22 @@ export class UIEventAdapter {
     // Add native provider usage data if available
     if (this.usageData) {
       event.usage = {
-        promptTokens: this.usageData.prompt_tokens || this.usageData.promptTokens || this.usageData.input_tokens || 0,
-        completionTokens: this.usageData.completion_tokens || this.usageData.completionTokens || this.usageData.output_tokens || 0,
-        totalTokens: this.usageData.total_tokens || this.usageData.totalTokens || 
-                    ((this.usageData.input_tokens || 0) + (this.usageData.output_tokens || 0)) || 0,
+        promptTokens:
+          this.usageData.prompt_tokens ||
+          this.usageData.promptTokens ||
+          this.usageData.input_tokens ||
+          0,
+        completionTokens:
+          this.usageData.completion_tokens ||
+          this.usageData.completionTokens ||
+          this.usageData.output_tokens ||
+          0,
+        totalTokens:
+          this.usageData.total_tokens ||
+          this.usageData.totalTokens ||
+          (this.usageData.input_tokens || 0) +
+            (this.usageData.output_tokens || 0) ||
+          0,
         model: this.model,
         provider: this.modelService,
       };
@@ -858,6 +895,16 @@ export class UIEventAdapter {
     this.usageData = usage;
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(`📊 [UIEventAdapter] Usage data set:`, usage);
+    }
+  }
+
+  /**
+   * Set thinking content for this round (for conversation history formatting)
+   */
+  public setRoundThinkingContent(thinkingContent: string): void {
+    this.roundThinkingContent = thinkingContent;
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🧠 [UIEventAdapter] Thinking content set for conversation history (${thinkingContent.length} chars)`);
     }
   }
 }

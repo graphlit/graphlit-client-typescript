@@ -112,7 +112,11 @@ export async function streamWithOpenAI(
   tools: ToolDefinitionInput[] | undefined,
   openaiClient: any, // OpenAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -504,7 +508,7 @@ export async function streamWithOpenAI(
         `✅ [OpenAI] Final message (${fullMessage.length} chars): "${fullMessage}"`,
       );
     }
-    
+
     // Pass usage data if available
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
@@ -559,7 +563,11 @@ export async function streamWithAnthropic(
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: AnthropicClient, // Properly typed Anthropic client
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
 ): Promise<void> {
@@ -606,9 +614,12 @@ export async function streamWithAnthropic(
       );
     }
 
+    // Calculate smart default for max_tokens based on thinking mode
+    const defaultMaxTokens = thinkingConfig ? 32768 : 8192;
+
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || 8192} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Anthropic] Model Config: Service=Anthropic | Model=${modelName} | Temperature=${specification.anthropic?.temperature} | MaxTokens=${specification.anthropic?.completionTokenLimit || defaultMaxTokens} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Thinking=${!!thinkingConfig} | Spec="${specification.name}"`,
       );
     }
 
@@ -617,7 +628,7 @@ export async function streamWithAnthropic(
       model: modelName as string,
       messages,
       stream: true,
-      max_tokens: specification.anthropic?.completionTokenLimit || 8192, // required
+      max_tokens: specification.anthropic?.completionTokenLimit || defaultMaxTokens,
     };
 
     // Handle temperature based on thinking configuration
@@ -709,15 +720,28 @@ export async function streamWithAnthropic(
       if (chunk.type === "message_start" && chunk.message?.usage) {
         usageData = chunk.message.usage;
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`[Anthropic] Usage data captured from message_start.message:`, usageData);
+          console.log(
+            `[Anthropic] Usage data captured from message_start.message:`,
+            usageData,
+          );
         }
-      } else if (chunk.type === "message_delta" && chunk.usage && !usageData?.input_tokens) {
+      } else if (
+        chunk.type === "message_delta" &&
+        chunk.usage &&
+        !usageData?.input_tokens
+      ) {
         // Only use message_delta if we don't have input_tokens yet
         usageData = chunk.usage;
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`[Anthropic] Usage data captured from ${chunk.type}:`, usageData);
+          console.log(
+            `[Anthropic] Usage data captured from ${chunk.type}:`,
+            usageData,
+          );
         }
-      } else if ((chunk.type === "message_delta" || chunk.type === "message_start") && chunk.usage) {
+      } else if (
+        (chunk.type === "message_delta" || chunk.type === "message_start") &&
+        chunk.usage
+      ) {
         // Merge usage data if we have partial data
         if (usageData) {
           usageData = { ...usageData, ...chunk.usage };
@@ -725,7 +749,10 @@ export async function streamWithAnthropic(
           usageData = chunk.usage;
         }
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`[Anthropic] Usage data merged from ${chunk.type}:`, usageData);
+          console.log(
+            `[Anthropic] Usage data merged from ${chunk.type}:`,
+            usageData,
+          );
         }
       }
 
@@ -1024,16 +1051,29 @@ export async function streamWithAnthropic(
       }
     }
 
-    // Final check: filter out any remaining incomplete tool calls
-    const validToolCalls = toolCalls.filter((tc, idx) => {
-      if (!isValidJSON(tc.arguments)) {
-        console.warn(
-          `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
-        );
-        return false;
-      }
-      return true;
-    });
+    // Final check: normalize and validate tool calls
+    const validToolCalls = toolCalls
+      .map((tc, idx) => {
+        // For tools with no parameters, Anthropic doesn't send input_json_delta
+        // So we need to convert empty arguments to valid JSON
+        if (tc.arguments === "") {
+          tc.arguments = "{}";
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `[Anthropic] Normalized empty arguments to "{}" for tool ${tc.name}`,
+            );
+          }
+        }
+
+        if (!isValidJSON(tc.arguments)) {
+          console.warn(
+            `[Anthropic] Filtering out incomplete tool call ${idx} (${tc.name}) with INVALID JSON (${tc.arguments.length} chars)`,
+          );
+          return null;
+        }
+        return tc;
+      })
+      .filter((tc) => tc !== null) as typeof toolCalls;
 
     if (toolCalls.length !== validToolCalls.length) {
       console.log(
@@ -1142,23 +1182,33 @@ export async function streamWithAnthropic(
       );
     }
 
-    // Include thinking content in the final message for conversation history preservation
-    let finalMessage = fullMessage;
-    if (completeThinkingContent.trim()) {
-      // Wrap thinking content with signature in special tags that formatMessagesForAnthropic can parse
-      const thinkingBlock = completeThinkingSignature.trim()
-        ? `<thinking signature="${completeThinkingSignature}">${completeThinkingContent}</thinking>`
-        : `<thinking>${completeThinkingContent}</thinking>`;
-      finalMessage = `${thinkingBlock}${fullMessage}`;
+    // Include thinking content in message when there are tool calls (required by Anthropic API)
+    let messageWithThinking = fullMessage;
 
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(
-          `🧠 [Anthropic] Including thinking content (${completeThinkingContent.length} chars) and signature (${completeThinkingSignature.length} chars) in conversation history`,
-        );
-      }
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(`🧠 [Anthropic] Debug - validToolCalls: ${validToolCalls.length}, thinking content: ${completeThinkingContent.length} chars, fullMessage: ${fullMessage.length} chars`);
     }
 
-    onComplete(finalMessage, validToolCalls, usageData);
+    if (validToolCalls.length > 0 && completeThinkingContent.trim()) {
+      // Include thinking content with signature for API compatibility
+      const thinkingXml = completeThinkingSignature
+        ? `<thinking signature="${completeThinkingSignature}">${completeThinkingContent}</thinking>`
+        : `<thinking>${completeThinkingContent}</thinking>`;
+
+      messageWithThinking = `${thinkingXml}\n${fullMessage}`.trim();
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [Anthropic] Including thinking content with message due to tool calls (${completeThinkingContent.length} chars, signature: ${completeThinkingSignature?.length || 0})`,
+        );
+        console.log(`🧠 [Anthropic] Final stored message: "${messageWithThinking}"`);
+      }
+    } else if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && completeThinkingContent.trim()) {
+      console.log(
+        `🧠 [Anthropic] Thinking content captured (${completeThinkingContent.length} chars) - not including (no tool calls)`,
+      );
+    }
+
+    onComplete(messageWithThinking, validToolCalls, usageData);
   } catch (error: any) {
     // Handle Anthropic-specific errors
     const errorMessage = error.message || error.toString();
@@ -1206,7 +1256,11 @@ export async function streamWithGoogle(
   tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -1497,7 +1551,7 @@ export async function streamWithGoogle(
           // Check for any final text we might have missed
           if (part.text) {
             const finalText = part.text;
-            
+
             // Skip if this is just the complete message we already have
             if (finalText === fullMessage) {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -1507,9 +1561,12 @@ export async function streamWithGoogle(
               }
               continue;
             }
-            
+
             // Only add if it's not already included in fullMessage
-            if (!fullMessage.includes(finalText) && !fullMessage.endsWith(finalText)) {
+            if (
+              !fullMessage.includes(finalText) &&
+              !fullMessage.endsWith(finalText)
+            ) {
               fullMessage += finalText;
               onEvent({
                 type: "token",
@@ -1701,7 +1758,11 @@ export async function streamWithGroq(
   tools: ToolDefinitionInput[] | undefined,
   groqClient: any, // Groq client instance (OpenAI-compatible)
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   try {
@@ -1803,13 +1864,17 @@ export async function streamWithCerebras(
   tools: ToolDefinitionInput[] | undefined,
   cerebrasClient: any, // Cerebras native client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
   let usageData: any = null;
-  
+
   // Performance metrics
   const startTime = Date.now();
   let firstTokenTime = 0;
@@ -1914,7 +1979,7 @@ export async function streamWithCerebras(
     // Cerebras treats tool calling as structured outputs
     // Their reasoning models don't support streaming with structured outputs
     const hasTools = cerebrasTools && cerebrasTools.length > 0;
-    
+
     const streamConfig: any = {
       model: modelName,
       messages: cerebrasMessages,
@@ -1938,7 +2003,7 @@ export async function streamWithCerebras(
       );
       console.log(
         `📦 [Cerebras] Full request config:`,
-        JSON.stringify(streamConfig, null, 2)
+        JSON.stringify(streamConfig, null, 2),
       );
     }
 
@@ -1947,21 +2012,22 @@ export async function streamWithCerebras(
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`🔧 [Cerebras] Using non-streaming mode due to tools`);
       }
-      
-      const response = await cerebrasClient.chat.completions.create(streamConfig);
-      
+
+      const response =
+        await cerebrasClient.chat.completions.create(streamConfig);
+
       // Process the complete response
       if (response.choices && response.choices.length > 0) {
         const choice = response.choices[0];
         const message = choice.message;
-        
+
         // Handle content
         if (message.content) {
           fullMessage = message.content;
           onEvent({ type: "token", token: message.content });
           onEvent({ type: "message", message: fullMessage });
         }
-        
+
         // Handle tool calls
         if (message.tool_calls && message.tool_calls.length > 0) {
           for (const toolCall of message.tool_calls) {
@@ -1970,15 +2036,15 @@ export async function streamWithCerebras(
               name: toolCall.function.name,
               arguments: toolCall.function.arguments,
             };
-            
+
             toolCalls.push(tc);
-            
+
             // Emit tool events
             onEvent({
               type: "tool_call_start",
               toolCall: { id: tc.id, name: tc.name },
             });
-            
+
             onEvent({
               type: "tool_call_parsed",
               toolCall: tc,
@@ -1986,7 +2052,7 @@ export async function streamWithCerebras(
           }
         }
       }
-      
+
       // Capture usage data
       if (response.usage) {
         usageData = {
@@ -1995,7 +2061,7 @@ export async function streamWithCerebras(
           total_tokens: response.usage.total_tokens,
         };
       }
-      
+
       tokenCount = fullMessage.length; // Approximate for non-streaming
     } else {
       // Streaming response when no tools
@@ -2036,7 +2102,7 @@ export async function streamWithCerebras(
           if (delta?.tool_calls) {
             for (const toolCall of delta.tool_calls) {
               const index = toolCall.index || 0;
-              
+
               // Initialize tool call if needed
               if (!toolCalls[index]) {
                 toolCalls[index] = {
@@ -2044,7 +2110,7 @@ export async function streamWithCerebras(
                   name: toolCall.function?.name || "",
                   arguments: "",
                 };
-                
+
                 if (toolCall.function?.name) {
                   onEvent({
                     type: "tool_call_start",
@@ -2064,7 +2130,10 @@ export async function streamWithCerebras(
           }
 
           // Check for finish reason
-          if (chunk.choices[0].finish_reason === "tool_calls" && toolCalls.length > 0) {
+          if (
+            chunk.choices[0].finish_reason === "tool_calls" &&
+            toolCalls.length > 0
+          ) {
             // Emit tool_call_parsed events for completed tool calls
             for (const toolCall of toolCalls) {
               onEvent({
@@ -2128,7 +2197,11 @@ export async function streamWithDeepseek(
   tools: ToolDefinitionInput[] | undefined,
   deepseekClient: any, // OpenAI client instance configured for Deepseek
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -2250,7 +2323,7 @@ export async function streamWithDeepseek(
       const delta = chunk.choices[0]?.delta;
 
       if (!delta) continue;
-      
+
       // Check for usage data in the chunk (OpenAI-compatible format)
       if (chunk.usage) {
         usageData = chunk.usage;
@@ -2518,7 +2591,11 @@ export async function streamWithCohere(
   tools: ToolDefinitionInput[] | undefined,
   cohereClient: any, // CohereClient instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -2686,7 +2763,7 @@ export async function streamWithCohere(
 
       stream = await cohereClient.chatStream(
         streamConfig,
-        abortSignal ? { abortSignal } : undefined
+        abortSignal ? { abortSignal } : undefined,
       );
     } catch (streamError: any) {
       // Enhanced error logging
@@ -2840,7 +2917,7 @@ export async function streamWithCohere(
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(`[Cohere] Message end event received`, chunk);
         }
-        
+
         // Capture usage data from message-end event
         if (chunk.delta?.usage || chunk.usage) {
           usageData = chunk.delta?.usage || chunk.usage;
@@ -2895,7 +2972,11 @@ export async function streamWithMistral(
   tools: ToolDefinitionInput[] | undefined,
   mistralClient: any, // Mistral client instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -2962,7 +3043,9 @@ export async function streamWithMistral(
         },
       }));
     } else {
-      console.log(`[Mistral] No tools provided - tools parameter is ${tools === undefined ? 'undefined' : 'empty array'}`);
+      console.log(
+        `[Mistral] No tools provided - tools parameter is ${tools === undefined ? "undefined" : "empty array"}`,
+      );
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -3034,29 +3117,30 @@ export async function streamWithMistral(
       }
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`[Mistral] Attempting to create stream with retry configuration`);
+        console.log(
+          `[Mistral] Attempting to create stream with retry configuration`,
+        );
       }
-      
+
       // Log final config being sent
-      console.log(`[Mistral] Sending request with tools: ${streamConfig.tools ? 'YES' : 'NO'}`);
-      
-      stream = await mistralClient.chat.stream(
-        streamConfig,
-        {
-          retries: {
-            strategy: "backoff",
-            backoff: {
-              initialInterval: 1000,
-              maxInterval: 60000,
-              exponent: 2,
-              maxElapsedTime: 300000, // 5 minutes
-            },
-            retryConnectionErrors: true,
-          },
-          retryCodes: ["429", "500", "502", "503", "504"],
-          ...(abortSignal && { fetchOptions: { signal: abortSignal } }),
-        },
+      console.log(
+        `[Mistral] Sending request with tools: ${streamConfig.tools ? "YES" : "NO"}`,
       );
+
+      stream = await mistralClient.chat.stream(streamConfig, {
+        retries: {
+          strategy: "backoff",
+          backoff: {
+            initialInterval: 1000,
+            maxInterval: 60000,
+            exponent: 2,
+            maxElapsedTime: 300000, // 5 minutes
+          },
+          retryConnectionErrors: true,
+        },
+        retryCodes: ["429", "500", "502", "503", "504"],
+        ...(abortSignal && { fetchOptions: { signal: abortSignal } }),
+      });
     } catch (error: any) {
       console.error(`[Mistral] Failed to create stream:`, error);
 
@@ -3141,7 +3225,7 @@ export async function streamWithMistral(
       }
 
       const delta = chunk.data.choices[0]?.delta;
-      
+
       // Check for usage data in the chunk
       if (chunk.data.usage) {
         usageData = chunk.data.usage;
@@ -3250,7 +3334,7 @@ export async function streamWithMistral(
 
     // Check if we captured usage data during streaming
     // Note: Mistral SDK may provide usage data differently than other providers
-    
+
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -3311,7 +3395,11 @@ export async function streamWithBedrock(
   tools: ToolDefinitionInput[] | undefined,
   bedrockClient: any, // BedrockRuntimeClient instance
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   let fullMessage = "";
@@ -3616,7 +3704,7 @@ export async function streamWithBedrock(
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(`📊 [Bedrock] Metadata:`, event.metadata);
           }
-          
+
           // Capture usage data from metadata
           if (event.metadata.usage) {
             usageData = {
@@ -3683,7 +3771,11 @@ export async function streamWithXai(
   tools: ToolDefinitionInput[] | undefined,
   xaiClient: any, // OpenAI client instance configured for xAI
   onEvent: (event: StreamEvent) => void,
-  onComplete: (message: string, toolCalls: ConversationToolCall[], usage?: any) => void,
+  onComplete: (
+    message: string,
+    toolCalls: ConversationToolCall[],
+    usage?: any,
+  ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
   try {

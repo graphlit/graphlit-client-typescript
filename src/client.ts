@@ -237,7 +237,8 @@ export interface GraphlitClientOptions {
 function isValidGuid(guid: string | undefined): boolean {
   if (!guid) return false;
   // GUID regex pattern: 8-4-4-4-12 hexadecimal characters
-  const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const guidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return guidRegex.test(guid);
 }
 
@@ -340,7 +341,7 @@ class Graphlit {
     if (!isValidGuid(this.organizationId)) {
       throw new Error(
         `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -351,7 +352,7 @@ class Graphlit {
     if (!isValidGuid(this.environmentId)) {
       throw new Error(
         `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -363,7 +364,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -5377,10 +5378,10 @@ class Graphlit {
 
         // Mistral API requires that we don't pass tools when sending tool results
         const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
-        
+
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `🔍 [Mistral] Passing tools: ${shouldPassTools ? 'YES' : 'NO'} (tool responses in messages: ${toolResponseCount})`,
+            `🔍 [Mistral] Passing tools: ${shouldPassTools ? "YES" : "NO"} (tool responses in messages: ${toolResponseCount})`,
           );
         }
 
@@ -6314,7 +6315,7 @@ class Graphlit {
                 "MISTRAL_API_KEY environment variable is required for Mistral streaming",
               );
             }
-            return new Mistral({ 
+            return new Mistral({
               apiKey,
               retryConfig: {
                 strategy: "backoff",

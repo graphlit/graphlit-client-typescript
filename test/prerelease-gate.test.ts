@@ -14,7 +14,7 @@ import { AgentStreamEvent } from "../src/types/ui-events";
  * 5. Tool calling with reasoning and cancellation
  * 6. Error handling and edge cases
  */
-describe("Pre-release Gate Tests", () => {
+describe("Pre-release Gate Tests", { timeout: 120000 }, () => {
   const orgId = process.env.GRAPHLIT_ORGANIZATION_ID;
   const envId = process.env.GRAPHLIT_ENVIRONMENT_ID;
   const secret = process.env.GRAPHLIT_JWT_SECRET;

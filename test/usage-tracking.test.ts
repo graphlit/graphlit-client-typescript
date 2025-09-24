@@ -160,9 +160,15 @@ describe.skipIf(skipTests)("Usage Tracking Integration Tests", () => {
 
       // Display usage comparison
       console.log("\n📊 OpenAI Model Usage Comparison:");
-      console.log("┌─────────────────┬──────────────┬─────────────────┬──────────────┐");
-      console.log("│ Model           │ Prompt Tokens│ Completion Tokens│ Total Tokens │");
-      console.log("├─────────────────┼──────────────┼─────────────────┼──────────────┤");
+      console.log(
+        "┌─────────────────┬──────────────┬─────────────────┬──────────────┐",
+      );
+      console.log(
+        "│ Model           │ Prompt Tokens│ Completion Tokens│ Total Tokens │",
+      );
+      console.log(
+        "├─────────────────┼──────────────┼─────────────────┼──────────────┤",
+      );
 
       for (const { model, usage } of results) {
         const modelName = model.padEnd(15);
@@ -170,14 +176,18 @@ describe.skipIf(skipTests)("Usage Tracking Integration Tests", () => {
         const completionTokens = usage.completionTokens.toString().padEnd(15);
         const totalTokens = usage.totalTokens.toString().padEnd(12);
 
-        console.log(`│ ${modelName} │ ${promptTokens} │ ${completionTokens} │ ${totalTokens} │`);
+        console.log(
+          `│ ${modelName} │ ${promptTokens} │ ${completionTokens} │ ${totalTokens} │`,
+        );
       }
-      console.log("└─────────────────┴──────────────┴─────────────────┴──────────────┘");
+      console.log(
+        "└─────────────────┴──────────────┴─────────────────┴──────────────┘",
+      );
 
       // All models should have usage data
-      expect(results.every(r => r.usage.promptTokens > 0)).toBe(true);
-      expect(results.every(r => r.usage.completionTokens > 0)).toBe(true);
-      expect(results.every(r => r.usage.totalTokens > 0)).toBe(true);
+      expect(results.every((r) => r.usage.promptTokens > 0)).toBe(true);
+      expect(results.every((r) => r.usage.completionTokens > 0)).toBe(true);
+      expect(results.every((r) => r.usage.totalTokens > 0)).toBe(true);
     }, 60000);
   });
 
@@ -448,9 +458,15 @@ describe.skipIf(skipTests)("Usage Tracking Integration Tests", () => {
 
       // Display comparison
       console.log("\n📊 Cross-Provider Usage Comparison:");
-      console.log("┌─────────────┬──────────────┬─────────────────┬──────────────┬─────────────────┐");
-      console.log("│ Provider    │ Prompt Tokens│ Completion Tokens│ Total Tokens │ Response Length │");
-      console.log("├─────────────┼──────────────┼─────────────────┼──────────────┼─────────────────┤");
+      console.log(
+        "┌─────────────┬──────────────┬─────────────────┬──────────────┬─────────────────┐",
+      );
+      console.log(
+        "│ Provider    │ Prompt Tokens│ Completion Tokens│ Total Tokens │ Response Length │",
+      );
+      console.log(
+        "├─────────────┼──────────────┼─────────────────┼──────────────┼─────────────────┤",
+      );
 
       for (const { provider, usage, responseLength } of results) {
         const providerName = provider.padEnd(11);
@@ -459,15 +475,19 @@ describe.skipIf(skipTests)("Usage Tracking Integration Tests", () => {
         const totalTokens = usage.totalTokens.toString().padEnd(12);
         const respLength = responseLength.toString().padEnd(15);
 
-        console.log(`│ ${providerName} │ ${promptTokens} │ ${completionTokens} │ ${totalTokens} │ ${respLength} │`);
+        console.log(
+          `│ ${providerName} │ ${promptTokens} │ ${completionTokens} │ ${totalTokens} │ ${respLength} │`,
+        );
       }
-      console.log("└─────────────┴──────────────┴─────────────────┴──────────────┴─────────────────┘");
+      console.log(
+        "└─────────────┴──────────────┴─────────────────┴──────────────┴─────────────────┘",
+      );
 
       // All providers should have usage data
-      expect(results.every(r => r.usage.promptTokens > 0)).toBe(true);
-      expect(results.every(r => r.usage.completionTokens > 0)).toBe(true);
-      expect(results.every(r => r.usage.totalTokens > 0)).toBe(true);
-      expect(results.every(r => r.responseLength > 0)).toBe(true);
+      expect(results.every((r) => r.usage.promptTokens > 0)).toBe(true);
+      expect(results.every((r) => r.usage.completionTokens > 0)).toBe(true);
+      expect(results.every((r) => r.usage.totalTokens > 0)).toBe(true);
+      expect(results.every((r) => r.responseLength > 0)).toBe(true);
     }, 120000);
   });
 
@@ -571,7 +591,7 @@ describe.skipIf(skipTests)("Usage Tracking Integration Tests", () => {
 
       // Should complete regardless of usage data availability
       expect(conversationCompleted).toBe(true);
-      
+
       // Usage data should be present for successful completions
       expect(hasUsageData).toBe(true);
     }, 20000);
