@@ -24,7 +24,7 @@ import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
 import * as dotenv from "dotenv";
-import { getServiceType, getModelName } from "./model-mapping.js";
+import { getServiceType, getModelName, getModelEnum } from "./model-mapping.js";
 import {
   AgentOptions,
   AgentResult,
@@ -4868,6 +4868,7 @@ class Graphlit {
 
       // Create UI event adapter with model information
       const modelName = fullSpec ? getModelName(fullSpec) : undefined;
+      const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
       const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
 
       uiAdapter = new UIEventAdapter(
@@ -4877,7 +4878,8 @@ class Graphlit {
           smoothingEnabled: options?.smoothingEnabled ?? true,
           chunkingStrategy: options?.chunkingStrategy ?? "word",
           smoothingDelay: options?.smoothingDelay ?? 30,
-          model: modelName,
+          model: modelEnum,
+          modelName: modelName,
           modelService: serviceType,
         },
       );

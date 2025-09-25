@@ -33,6 +33,14 @@ export type ContextWindowEvent = {
 };
 
 /**
+ * Extended conversation message with additional streaming metadata
+ */
+export type StreamingConversationMessage = Partial<ConversationMessage> & {
+  message: string; // Ensure message text is always present
+  modelName?: string; // Raw model name from API (e.g., "claude-sonnet-4-0")
+};
+
+/**
  * Simplified UI-focused streaming events using GraphQL types
  */
 export type AgentStreamEvent =
@@ -45,9 +53,7 @@ export type AgentStreamEvent =
   | ContextWindowEvent
   | {
       type: "message_update";
-      message: Partial<ConversationMessage> & {
-        message: string; // Ensure message text is always present
-      };
+      message: StreamingConversationMessage;
       isStreaming: boolean;
       metrics?: {
         ttft?: number; // Time to first token (ms)
@@ -73,7 +79,7 @@ export type AgentStreamEvent =
     }
   | {
       type: "conversation_completed";
-      message: ConversationMessage;
+      message: StreamingConversationMessage;
       metrics?: {
         ttft?: number; // Time to first token (ms)
         totalTime: number; // Total streaming time (ms)

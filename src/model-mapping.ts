@@ -316,3 +316,37 @@ export function isStreamingSupported(serviceType?: string): boolean {
 export function getServiceType(specification: any): string | undefined {
   return specification?.serviceType;
 }
+
+/**
+ * Get the model enum value from specification
+ * @param specification - The specification object
+ * @returns The model enum value
+ */
+export function getModelEnum(specification: any): string | undefined {
+  const serviceType = specification?.serviceType;
+
+  switch (serviceType) {
+    case Types.ModelServiceTypes.OpenAi:
+      return specification?.openAI?.model;
+    case Types.ModelServiceTypes.Anthropic:
+      return specification?.anthropic?.model;
+    case Types.ModelServiceTypes.Google:
+      return specification?.google?.model;
+    case Types.ModelServiceTypes.Groq:
+      return specification?.groq?.model;
+    case Types.ModelServiceTypes.Cerebras:
+      return specification?.cerebras?.model;
+    case Types.ModelServiceTypes.Cohere:
+      return specification?.cohere?.model;
+    case Types.ModelServiceTypes.Mistral:
+      return specification?.mistral?.model;
+    case Types.ModelServiceTypes.Bedrock:
+      return specification?.bedrock?.model;
+    case Types.ModelServiceTypes.Deepseek:
+      return specification?.deepseek?.model;
+    case Types.ModelServiceTypes.Xai:
+      return specification?.xai?.model;
+    default:
+      return undefined;
+  }
+}

@@ -7,6 +7,7 @@ import {
   AgentStreamEvent,
   ToolExecutionStatus,
   ReasoningFormat,
+  StreamingConversationMessage,
 } from "../types/ui-events.js";
 import { StreamEvent } from "../types/internal.js";
 import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
@@ -17,7 +18,8 @@ import { ChunkBuffer, ChunkingStrategy } from "./chunk-buffer.js";
  */
 export class UIEventAdapter {
   private conversationId: string;
-  private model?: string;
+  private model?: string; // This will now be the enum value
+  private modelName?: string; // This will be the actual model name (e.g., "claude-sonnet-4-0")
   private modelService?: string;
   private tokenCount: number = 0;
   private currentMessage: string = "";
@@ -65,12 +67,14 @@ export class UIEventAdapter {
       chunkingStrategy?: ChunkingStrategy;
       smoothingDelay?: number;
       model?: string;
+      modelName?: string;
       modelService?: string;
     } = {},
   ) {
     this.conversationId = conversationId;
     this.smoothingDelay = options.smoothingDelay ?? 30;
     this.model = options.model;
+    this.modelName = options.modelName;
     this.modelService = options.modelService;
     this.conversationStartTime = Date.now(); // Capture when conversation began
 
@@ -471,7 +475,7 @@ export class UIEventAdapter {
     this.isStreaming = false;
 
     // Create final message with metadata
-    const finalMessage: ConversationMessage = {
+    const finalMessage: StreamingConversationMessage = {
       __typename: "ConversationMessage",
       role: ConversationRoleTypes.Assistant,
       message: this.currentMessage,
@@ -481,6 +485,7 @@ export class UIEventAdapter {
         (t) => t.toolCall,
       ),
       model: this.model,
+      modelName: this.modelName,
       modelService: this.modelService as any,
     };
 
@@ -699,7 +704,7 @@ export class UIEventAdapter {
       this.updateTimer = undefined;
     }
 
-    const message: Partial<ConversationMessage> & { message: string } = {
+    const message: StreamingConversationMessage = {
       __typename: "ConversationMessage",
       role: ConversationRoleTypes.Assistant,
       message: this.currentMessage,
@@ -709,6 +714,9 @@ export class UIEventAdapter {
     // Add model metadata if available
     if (this.model) {
       message.model = this.model;
+    }
+    if (this.modelName) {
+      message.modelName = this.modelName;
     }
     if (this.modelService) {
       message.modelService = this.modelService as any;
