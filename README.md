@@ -365,6 +365,7 @@ The SDK includes automatic retry logic for network errors and transient failures
 By default, the client will automatically retry on these status codes:
 
 - `429` - Too Many Requests
+- `500` - Internal Server Error
 - `502` - Bad Gateway
 - `503` - Service Unavailable
 - `504` - Gateway Timeout

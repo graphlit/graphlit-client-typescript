@@ -325,7 +325,7 @@ class Graphlit {
       maxAttempts: 5,
       initialDelay: 300,
       maxDelay: 30000,
-      retryableStatusCodes: [429, 502, 503, 504],
+      retryableStatusCodes: [429, 500, 502, 503, 504],
       jitter: true,
       ...options.retryConfig,
     };
