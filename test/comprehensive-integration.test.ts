@@ -69,8 +69,8 @@ describe("Comprehensive streamAgent Integration Tests", () => {
 
     if (process.env.GOOGLE_API_KEY) {
       try {
-        const { GoogleGenerativeAI } = await import("@google/generative-ai");
-        googleClient = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+        const { GoogleGenAI } = await import("@google/genai");
+        googleClient = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
         console.log("✅ Google streaming client initialized");
       } catch (e) {
         console.log("⚠️  Google SDK not available");

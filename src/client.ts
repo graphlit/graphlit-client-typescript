@@ -69,9 +69,7 @@ const optionalRequire = createRequire(import.meta.url);
 
 let OpenAI: typeof import("openai").default | undefined;
 let Anthropic: typeof import("@anthropic-ai/sdk").default | undefined;
-let GoogleGenerativeAI:
-  | typeof import("@google/generative-ai").GoogleGenerativeAI
-  | undefined;
+let GoogleGenAI: typeof import("@google/genai").GoogleGenAI | undefined;
 let Groq: typeof import("groq-sdk").default | undefined;
 let CohereClient: typeof import("cohere-ai").CohereClient | undefined;
 let CohereClientV2: typeof import("cohere-ai").CohereClientV2 | undefined;
@@ -108,16 +106,14 @@ try {
 }
 
 try {
-  GoogleGenerativeAI = optionalRequire(
-    "@google/generative-ai",
-  ).GoogleGenerativeAI;
+  GoogleGenAI = optionalRequire("@google/genai").GoogleGenAI;
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
-    console.log("[SDK Loading] Google Generative AI SDK loaded successfully");
+    console.log("[SDK Loading] Google Gen AI SDK loaded successfully");
   }
 } catch (e: any) {
-  // Google Generative AI not installed
+  // Google Gen AI not installed
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
-    console.log("[SDK Loading] Google Generative AI SDK not found:", e.message);
+    console.log("[SDK Loading] Google Gen AI SDK not found:", e.message);
   }
 }
 
@@ -475,7 +471,7 @@ class Graphlit {
 
   /**
    * Set a custom Google Generative AI client instance for streaming
-   * @param client - Google GenerativeAI client instance (e.g., new GoogleGenerativeAI(apiKey))
+   * @param client - Google GenAI client instance (e.g., new GoogleGenAI({apiKey}))
    */
   setGoogleClient(client: any): void {
     this.googleClient = client;
@@ -4399,7 +4395,7 @@ class Graphlit {
           instanceOpenAI: this.openaiClient !== undefined,
           moduleAnthropic: Anthropic !== undefined,
           instanceAnthropic: this.anthropicClient !== undefined,
-          moduleGoogle: GoogleGenerativeAI !== undefined,
+          moduleGoogle: GoogleGenAI !== undefined,
           instanceGoogle: this.googleClient !== undefined,
         });
       }
@@ -4411,7 +4407,7 @@ class Graphlit {
           return Anthropic !== undefined || this.anthropicClient !== undefined;
         case Types.ModelServiceTypes.Google:
           return (
-            GoogleGenerativeAI !== undefined || this.googleClient !== undefined
+            GoogleGenAI !== undefined || this.googleClient !== undefined
           );
         case Types.ModelServiceTypes.Groq:
           return Groq !== undefined || this.groqClient !== undefined;
@@ -4462,7 +4458,7 @@ class Graphlit {
     const hasAnthropic =
       Anthropic !== undefined || this.anthropicClient !== undefined;
     const hasGoogle =
-      GoogleGenerativeAI !== undefined || this.googleClient !== undefined;
+      GoogleGenAI !== undefined || this.googleClient !== undefined;
     const hasGroq = Groq !== undefined || this.groqClient !== undefined;
     const hasCerebras =
       Cerebras !== undefined || this.cerebrasClient !== undefined;
@@ -5117,7 +5113,7 @@ class Graphlit {
           `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`,
         );
         console.log(
-          `   Google available: ${!!(GoogleGenerativeAI || this.googleClient)}`,
+          `   Google available: ${!!(GoogleGenAI || this.googleClient)}`,
         );
       }
 
@@ -5193,7 +5189,7 @@ class Graphlit {
         }
       } else if (
         serviceType === Types.ModelServiceTypes.Google &&
-        (GoogleGenerativeAI || this.googleClient)
+        (GoogleGenAI || this.googleClient)
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -6121,15 +6117,15 @@ class Graphlit {
     abortSignal?: AbortSignal,
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
-    if (!GoogleGenerativeAI && !this.googleClient) {
+    if (!GoogleGenAI && !this.googleClient) {
       throw new Error("Google GenerativeAI client not available");
     }
 
     // Use provided client or create a new one
     const googleClient =
       this.googleClient ||
-      (GoogleGenerativeAI
-        ? new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "")
+      (GoogleGenAI
+        ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
             throw new Error("Google GenerativeAI module not available");
           })());

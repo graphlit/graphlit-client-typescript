@@ -1417,44 +1417,111 @@ export async function streamWithGoogle(
       };
     }
 
-    const model = googleClient.getGenerativeModel({
+    // Convert messages to Google format for the new SDK
+    // The new SDK expects contents as an array of message objects with role and parts
+    const contents = messages.map((msg: any) => ({
+      role: msg.role,
+      parts: msg.parts,
+    }));
+
+    // Build the config object for the new SDK
+    const config: any = {
+      ...generationConfig,
+    };
+
+    // Add tools to config if provided
+    if (googleTools) {
+      config.tools = googleTools;
+    }
+
+    // Call generateContentStream with conversation history
+    const streamResponse = await googleClient.models.generateContentStream({
       model: modelName,
-      generationConfig,
-      tools: googleTools,
+      contents: contents, // Full conversation history
+      config: config,
     });
 
-    // Convert messages to Google chat format
-    const history = messages.slice(0, -1); // All but last message
-    const prompt = messages[messages.length - 1]?.parts[0]?.text || "";
+    // Track last chunk for usage metadata
+    let lastChunk: any = null;
 
-    const chat = model.startChat({ history });
-    const result = await chat.sendMessageStream(prompt);
+    // Process streaming chunks
+    for await (const chunk of streamResponse) {
+      lastChunk = chunk; // Keep track for usage metadata
+      // Process parts separately to handle thought vs regular text
+      let regularText = "";
 
-    for await (const chunk of result.stream) {
-      // Check for thought parts in streaming chunks first (Google's thinking API)
-      if (thinkingConfig && chunk.candidates?.[0]?.content?.parts) {
+      if (chunk.candidates?.[0]?.content?.parts) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `[Google] Chunk has ${chunk.candidates[0].content.parts.length} parts during streaming`,
+          );
+          // Log details about each part
+          for (let i = 0; i < chunk.candidates[0].content.parts.length; i++) {
+            const part = chunk.candidates[0].content.parts[i];
+            console.log(
+              `[Google]   Part ${i}: thought=${!!part.thought}, text length=${part.text?.length || 0}`,
+            );
+            if (part.thought && part.text) {
+              console.log(
+                `[Google]     THOUGHT CONTENT: "${part.text.substring(0, 100)}${part.text.length > 100 ? '...' : ''}"`,
+              );
+            }
+          }
+        }
+
         for (const part of chunk.candidates[0].content.parts) {
-          if (part.thought && part.text) {
-            // Emit thinking content as reasoning events
+          if (part.thought && part.text && thinkingConfig) {
+            // This is a thought part - emit as reasoning only
             if (!hasEmittedThinkingStart) {
               onEvent({ type: "reasoning_start", format: "markdown" });
               hasEmittedThinkingStart = true;
               allThinkingContent = "";
+
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(`[Google] Started reasoning from thought part`);
+              }
             }
+
             allThinkingContent += part.text + "\n";
+
+            // Emit delta for streaming
+            onEvent({
+              type: "reasoning_delta",
+              content: part.text,
+              format: "markdown",
+            });
 
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Google] Streaming thought part: ${part.text.length} chars`,
+                `[Google] Emitted reasoning delta from thought part: ${part.text.length} chars`,
+              );
+            }
+          } else if (!part.thought && part.text) {
+            // Regular text part - add to message content
+            regularText += part.text;
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `[Google] Regular text part (NOT thought): "${part.text.substring(0, 100)}${part.text.length > 100 ? '...' : ''}"`,
               );
             }
           }
         }
       }
 
-      const text = chunk.text();
+      // Use regularText to avoid including thought parts
+      const text = regularText; // Only use text from non-thought parts
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && text) {
+        console.log(
+          `[Google] Text to add (excluding thoughts): "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}" (${text.length} chars)`,
+        );
+      }
 
       if (text) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(`[Google] Adding to fullMessage: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}" (${text.length} chars)`);
+        }
+
         fullMessage += text;
         tokenCount++;
 
@@ -1600,141 +1667,17 @@ export async function streamWithGoogle(
       }
     }
 
-    // Google might also return function calls or additional text in the final response
-    try {
-      const response = await result.response;
-      const candidate = response.candidates?.[0];
+    // After streaming is complete, emit reasoning end if needed
+    if (hasEmittedThinkingStart && allThinkingContent) {
+      onEvent({
+        type: "reasoning_end",
+        fullContent: allThinkingContent.trim(),
+      });
 
-      if (
-        process.env.DEBUG_GRAPHLIT_SDK_STREAMING &&
-        candidate?.content?.parts
-      ) {
-        console.log(
-          `[Google] Processing final response with ${candidate.content.parts.length} parts`,
-        );
-      }
-
-      if (candidate?.content?.parts) {
-        let collectedThoughts = "";
-        let hasThoughts = false;
-
-        // First pass: collect all thought parts from final response
-        for (const part of candidate.content.parts) {
-          // Check for thinking/thought parts (Google's thinking API)
-          if (part.thought && thinkingConfig) {
-            hasThoughts = true;
-            collectedThoughts += (part.text || "") + "\n";
-
-            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-              console.log(
-                `[Google] Found thought part in final response: ${part.text?.length || 0} chars`,
-              );
-            }
-          }
-        }
-
-        // Emit thinking events if we found thoughts
-        if (hasThoughts && collectedThoughts) {
-          if (!hasEmittedThinkingStart) {
-            onEvent({ type: "reasoning_start", format: "markdown" });
-          }
-
-          // Combine with any streaming thoughts
-          const finalThoughts = allThinkingContent + collectedThoughts;
-          onEvent({
-            type: "reasoning_end",
-            fullContent: finalThoughts.trim(),
-          });
-
-          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-            console.log(
-              `[Google] Emitted complete thinking: ${finalThoughts.length} chars`,
-            );
-          }
-        } else if (hasEmittedThinkingStart && allThinkingContent) {
-          // Close thinking from streaming if no final thoughts
-          onEvent({
-            type: "reasoning_end",
-            fullContent: allThinkingContent.trim(),
-          });
-        }
-
-        // Second pass: handle regular text parts
-        for (const part of candidate.content.parts) {
-          // Skip thought parts - we already handled them
-          if (part.thought) {
-            continue;
-          }
-
-          // Check for any final text we might have missed
-          if (part.text) {
-            const finalText = part.text;
-
-            // Skip if this is just the complete message we already have
-            if (finalText === fullMessage) {
-              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-                console.log(
-                  `[Google] Skipping duplicate final text (matches fullMessage exactly)`,
-                );
-              }
-              continue;
-            }
-
-            // Only add if it's not already included in fullMessage
-            if (
-              !fullMessage.includes(finalText) &&
-              !fullMessage.endsWith(finalText)
-            ) {
-              fullMessage += finalText;
-              onEvent({
-                type: "token",
-                token: finalText,
-              });
-            }
-          }
-
-          // Check for function calls
-          if (
-            part.functionCall &&
-            !toolCalls.some((tc) => tc.name === part.functionCall.name)
-          ) {
-            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-              console.log(
-                `[Google] Found function call in final response: ${part.functionCall.name}`,
-              );
-            }
-
-            const toolCall: ConversationToolCall = {
-              id: `google_tool_${Date.now()}_${toolCalls.length}`,
-              name: part.functionCall.name,
-              arguments: JSON.stringify(part.functionCall.args || {}),
-            };
-            toolCalls.push(toolCall);
-
-            // Emit events for function calls found in final response
-            onEvent({
-              type: "tool_call_start",
-              toolCall: {
-                id: toolCall.id,
-                name: toolCall.name,
-              },
-            });
-
-            onEvent({
-              type: "tool_call_parsed",
-              toolCall: {
-                id: toolCall.id,
-                name: toolCall.name,
-                arguments: toolCall.arguments,
-              },
-            });
-          }
-        }
-      }
-    } catch (error) {
-      // Log parsing errors when debugging
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.error(`[Google] Error processing final response:`, error);
+        console.log(
+          `[Google] Emitted reasoning_end with ${allThinkingContent.length} chars of thinking`,
+        );
       }
     }
 
@@ -1843,14 +1786,15 @@ export async function streamWithGoogle(
       );
     }
 
-    // Try to capture usage data from final response
+    // Usage data collection - new SDK may provide this differently
+    // Check last chunk for usage metadata
     try {
-      const response = await result.response;
-      if (response.usageMetadata) {
+      // Check if last chunk has usage metadata
+      if (lastChunk?.usageMetadata) {
         usageData = {
-          prompt_tokens: response.usageMetadata.promptTokenCount,
-          completion_tokens: response.usageMetadata.candidatesTokenCount,
-          total_tokens: response.usageMetadata.totalTokenCount,
+          prompt_tokens: lastChunk.usageMetadata.promptTokenCount,
+          completion_tokens: lastChunk.usageMetadata.candidatesTokenCount,
+          total_tokens: lastChunk.usageMetadata.totalTokenCount,
         };
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(`[Google] Usage data captured:`, usageData);

@@ -28,11 +28,11 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
   beforeAll(async () => {
     client = new Graphlit(orgId, envId, secret);
 
-    // Initialize Google Generative AI client
-    const { GoogleGenerativeAI } = await import("@google/generative-ai");
-    googleClient = new GoogleGenerativeAI(googleApiKey);
+    // Initialize Google Gen AI client
+    const { GoogleGenAI } = await import("@google/genai");
+    googleClient = new GoogleGenAI({ apiKey: googleApiKey });
     client.setGoogleClient(googleClient);
-    console.log("✅ Google client initialized for Gemini thinking tests");
+    console.log("✅ Google Gen AI client initialized for Gemini thinking tests");
 
     // Create a specification for Gemini 2.5 Flash with thinking enabled
     const specInput: Types.SpecificationInput = {
@@ -87,8 +87,8 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
 
     console.log("\n🚀 Starting test with prompt that should trigger thinking...");
 
-    // Use a complex prompt that should trigger thinking
-    const prompt = "Write a comprehensive analysis of the impact of artificial intelligence on healthcare, including specific examples and future predictions. Think through this systematically.";
+    // Use a prompt that should trigger thinking
+    const prompt = "Tell me a detailed story about PT Barnum";
 
     await client.streamAgent(
       prompt,
@@ -105,29 +105,43 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
           case "reasoning_update":
             hasReasoning = true;
             const reasoningEvent = event as any;
+
+            // Log ALL reasoning updates for debugging
+            console.log(`  🧠 Reasoning update:`);
+            console.log(`     - isComplete: ${reasoningEvent.isComplete}`);
+            console.log(`     - format: ${reasoningEvent.format}`);
+            console.log(`     - content length: ${reasoningEvent.content?.length || 0}`);
+
             if (!reasoningStarted && !reasoningEvent.isComplete) {
               reasoningStarted = true;
-              console.log(`  🤔 Reasoning started (format: ${reasoningEvent.format})`);
+              console.log(`  🤔 Reasoning STARTED (format: ${reasoningEvent.format})`);
             }
+
             if (reasoningEvent.isComplete) {
               reasoningCompleted = true;
               reasoningContent = reasoningEvent.content || "";
               eventLog.details = {
                 contentLength: reasoningContent.length,
                 isComplete: true,
+                format: reasoningEvent.format,
               };
-              console.log(`  ✅ Reasoning complete (${reasoningContent.length} chars)`);
+              console.log(`  ✅ Reasoning COMPLETE (${reasoningContent.length} chars)`);
 
-              // Log a snippet of the reasoning content
+              // Log a longer snippet of the reasoning content
               if (reasoningContent.length > 0) {
-                const snippet = reasoningContent.substring(0, 200);
-                console.log(`  💭 Reasoning snippet: "${snippet}..."`);
+                const snippet = reasoningContent.substring(0, 500);
+                console.log(`  💭 Reasoning content: "${snippet}${reasoningContent.length > 500 ? '...' : ''}"`);
               }
             } else {
               eventLog.details = {
                 contentLength: reasoningEvent.content?.length || 0,
                 isComplete: false,
+                format: reasoningEvent.format,
               };
+              // Log partial reasoning content
+              if (reasoningEvent.content?.length > 0) {
+                console.log(`  📝 Partial reasoning: ${reasoningEvent.content.substring(0, 100)}...`);
+              }
             }
             break;
 
@@ -233,7 +247,7 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
       let thinkingLength = 0;
 
       await client.streamAgent(
-        "Explain quantum computing in simple terms. Think about the best analogies to use.",
+        "Tell me a detailed story about PT Barnum",
         (event: AgentStreamEvent) => {
           if (event.type === "conversation_started") {
             conversationId = event.conversationId;

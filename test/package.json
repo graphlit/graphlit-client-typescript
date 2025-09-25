@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",
-    "@google/generative-ai": "^0.17.0",
+    "@google/genai": "^1.20.0",
     "graphlit-client": "file:../",
     "openai": "^4.104.0"
   },

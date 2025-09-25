@@ -16,6 +16,13 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 
 ## ✨ What's New
 
+### v1.3.0 - Google SDK Migration 🔄
+
+- **BREAKING CHANGE**: Migrated from deprecated `@google/generative-ai` to new `@google/genai` SDK
+- **Improved Thinking Support** - Better detection of Google Gemini thinking/reasoning with proper `part.thought` API
+- **Enhanced Streaming** - More reliable streaming with the new Google SDK
+- **Migration Required** - See [Migration Guide](#migrating-from-google-generative-ai) below
+
 ### v1.2.0 - Reasoning & Cancellation Support 🧠
 
 - **Reasoning/Thinking Detection** - See how AI models think through problems (Bedrock Nova, Deepseek, Anthropic)
@@ -35,6 +42,7 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Setting Up](#setting-up)
+- [Migrating from @google/generative-ai](#migrating-from-google-generative-ai) 🔄
 - [Reasoning Support (New!)](#reasoning-support-new) 🧠
 - [Stream Cancellation (New!)](#stream-cancellation-new) 🛑
 - [Network Resilience](#network-resilience)
@@ -107,7 +115,7 @@ npm install openai
 npm install @anthropic-ai/sdk
 
 # For Google streaming
-npm install @google/generative-ai
+npm install @google/genai
 
 # For Groq streaming (OpenAI-compatible)
 npm install groq-sdk
@@ -154,6 +162,55 @@ AWS_REGION=us-east-2
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
 ```
+
+## Migrating from @google/generative-ai
+
+### ⚠️ Breaking Change in v1.3.0
+
+The deprecated `@google/generative-ai` SDK has been replaced with the new `@google/genai` SDK. This change provides better thinking/reasoning support and improved streaming reliability.
+
+### Migration Steps
+
+1. **Update your dependencies:**
+```bash
+# Remove old SDK
+npm uninstall @google/generative-ai
+
+# Install new SDK
+npm install @google/genai
+```
+
+2. **Update your client initialization:**
+```typescript
+// Old (deprecated)
+import { GoogleGenerativeAI } from "@google/generative-ai";
+const googleClient = new GoogleGenerativeAI(apiKey);
+client.setGoogleClient(googleClient);
+
+// New
+import { GoogleGenAI } from "@google/genai";
+const googleClient = new GoogleGenAI({ apiKey });
+client.setGoogleClient(googleClient);
+```
+
+3. **No other code changes required!**
+   - The Graphlit SDK handles all the API differences internally
+   - Your existing specifications and conversations will continue to work
+   - Thinking/reasoning detection is now more reliable with proper `part.thought` support
+
+### Why the Migration?
+
+- The `@google/generative-ai` SDK is deprecated by Google
+- New SDK provides better support for Gemini 2.x features including thinking mode
+- Improved streaming performance and reliability
+- Proper detection of thought parts without markdown parsing hacks
+
+### Benefits
+
+- **Better Thinking Detection**: Properly detects and separates thinking content using Google's official API
+- **Improved Performance**: More efficient streaming with the new SDK architecture
+- **Future-Proof**: Ensures compatibility with upcoming Gemini models and features
+- **Cleaner API**: Simplified configuration and better TypeScript types
 
 ## Reasoning Support (New!) 🧠
 
@@ -380,7 +437,7 @@ The Graphlit SDK supports real-time streaming responses from 9 different LLM pro
 | --------------- | --------------------------------------------- | --------------------------------- | ------------------- |
 | **OpenAI**      | GPT-4, GPT-4o, GPT-4.1, O1, O3, O4            | `openai`                          | `OPENAI_API_KEY`    |
 | **Anthropic**   | Claude 3, Claude 3.5, Claude 3.7, Claude 4    | `@anthropic-ai/sdk`               | `ANTHROPIC_API_KEY` |
-| **Google**      | Gemini 1.5, Gemini 2.0, Gemini 2.5            | `@google/generative-ai`           | `GOOGLE_API_KEY`    |
+| **Google**      | Gemini 1.5, Gemini 2.0, Gemini 2.5            | `@google/genai`                   | `GOOGLE_API_KEY`    |
 | **Groq**        | Llama 4, Llama 3.3, Mixtral, Deepseek R1      | `groq-sdk`                        | `GROQ_API_KEY`      |
 | **Cerebras**    | Llama 3.3, Llama 3.1                          | `openai`                          | `CEREBRAS_API_KEY`  |
 | **Cohere**      | Command R+, Command R, Command R7B, Command A | `cohere-ai`                       | `COHERE_API_KEY`    |
