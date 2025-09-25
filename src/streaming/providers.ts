@@ -1290,6 +1290,10 @@ export async function streamWithGoogle(
   let lastEventTime = 0;
   const interTokenDelays: number[] = [];
 
+  // Thinking content detection state for Google
+  let hasEmittedThinkingStart = false;
+  let allThinkingContent = "";
+
   // Tool calling metrics
   const toolMetrics = {
     totalTools: 0,
@@ -1389,15 +1393,20 @@ export async function streamWithGoogle(
     };
 
     if (thinkingConfig) {
-      // Google Gemini 2.5 Flash+ supports thinking mode
+      // Google Gemini 2.5 supports thinking mode
+      // -1 = dynamic thinking (model decides), 0 = disabled, >0 = specific budget
+      const budget = thinkingConfig.budget_tokens === 0 ? 0 :
+                     thinkingConfig.budget_tokens || -1; // Default to dynamic if not specified
+
       generationConfig.thinkingConfig = {
-        thinkingBudget: thinkingConfig.budget_tokens,
-        includeThoughts: true, // Include thinking content in the response
+        thinkingBudget: budget,
+        includeThoughts: budget !== 0, // Include thoughts unless explicitly disabled
       };
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        const mode = budget === -1 ? "dynamic" : budget === 0 ? "disabled" : `${budget} tokens`;
         console.log(
-          `🧠 [Google] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens | Include thoughts: true`,
+          `🧠 [Google] Thinking mode: ${mode} | Include thoughts: ${budget !== 0}`,
         );
       }
     } else {
@@ -1422,6 +1431,27 @@ export async function streamWithGoogle(
     const result = await chat.sendMessageStream(prompt);
 
     for await (const chunk of result.stream) {
+      // Check for thought parts in streaming chunks first (Google's thinking API)
+      if (thinkingConfig && chunk.candidates?.[0]?.content?.parts) {
+        for (const part of chunk.candidates[0].content.parts) {
+          if (part.thought && part.text) {
+            // Emit thinking content as reasoning events
+            if (!hasEmittedThinkingStart) {
+              onEvent({ type: "reasoning_start", format: "markdown" });
+              hasEmittedThinkingStart = true;
+              allThinkingContent = "";
+            }
+            allThinkingContent += part.text + "\n";
+
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `[Google] Streaming thought part: ${part.text.length} chars`,
+              );
+            }
+          }
+        }
+      }
+
       const text = chunk.text();
 
       if (text) {
@@ -1585,7 +1615,57 @@ export async function streamWithGoogle(
       }
 
       if (candidate?.content?.parts) {
+        let collectedThoughts = "";
+        let hasThoughts = false;
+
+        // First pass: collect all thought parts from final response
         for (const part of candidate.content.parts) {
+          // Check for thinking/thought parts (Google's thinking API)
+          if (part.thought && thinkingConfig) {
+            hasThoughts = true;
+            collectedThoughts += (part.text || "") + "\n";
+
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `[Google] Found thought part in final response: ${part.text?.length || 0} chars`,
+              );
+            }
+          }
+        }
+
+        // Emit thinking events if we found thoughts
+        if (hasThoughts && collectedThoughts) {
+          if (!hasEmittedThinkingStart) {
+            onEvent({ type: "reasoning_start", format: "markdown" });
+          }
+
+          // Combine with any streaming thoughts
+          const finalThoughts = allThinkingContent + collectedThoughts;
+          onEvent({
+            type: "reasoning_end",
+            fullContent: finalThoughts.trim(),
+          });
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `[Google] Emitted complete thinking: ${finalThoughts.length} chars`,
+            );
+          }
+        } else if (hasEmittedThinkingStart && allThinkingContent) {
+          // Close thinking from streaming if no final thoughts
+          onEvent({
+            type: "reasoning_end",
+            fullContent: allThinkingContent.trim(),
+          });
+        }
+
+        // Second pass: handle regular text parts
+        for (const part of candidate.content.parts) {
+          // Skip thought parts - we already handled them
+          if (part.thought) {
+            continue;
+          }
+
           // Check for any final text we might have missed
           if (part.text) {
             const finalText = part.text;
