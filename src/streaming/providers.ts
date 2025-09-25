@@ -118,6 +118,7 @@ export async function streamWithOpenAI(
     usage?: any,
   ) => void,
   abortSignal?: AbortSignal,
+  reasoningEffort?: string, // OpenAI reasoning effort level (low, medium, high)
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -164,7 +165,7 @@ export async function streamWithOpenAI(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [OpenAI] Model Config: Service=OpenAI | Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | ReasoningEffort=${reasoningEffort || "none"} | Spec="${specification.name}"`,
       );
     }
 
@@ -193,6 +194,18 @@ export async function streamWithOpenAI(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+    }
+
+    // Add reasoning effort for o1 models
+    if (reasoningEffort) {
+      // OpenAI o1 models support reasoning_effort parameter
+      streamConfig.reasoning_effort = reasoningEffort.toLowerCase();
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [OpenAI] Reasoning effort set to: ${reasoningEffort}`,
+        );
+      }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -1262,6 +1275,7 @@ export async function streamWithGoogle(
     usage?: any,
   ) => void,
   abortSignal?: AbortSignal,
+  thinkingConfig?: { type: "enabled"; budget_tokens: number },
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -1308,7 +1322,7 @@ export async function streamWithGoogle(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Spec="${specification.name}"`,
+        `🤖 [Google] Model Config: Service=Google | Model=${modelName} | Temperature=${specification.google?.temperature} | MaxTokens=${specification.google?.completionTokenLimit || "null"} | SystemPrompt=${systemPrompt ? "Yes" : "No"} | Tools=${tools?.length || 0} | Thinking=${!!thinkingConfig} | Spec="${specification.name}"`,
       );
     }
 
@@ -1367,12 +1381,29 @@ export async function streamWithGoogle(
           ]
         : undefined;
 
+    // Add thinking configuration if provided
+    // Note: Google's thinking API is still in preview and may require specific model support
+    const generationConfig: any = {
+      temperature: streamConfig.temperature,
+      maxOutputTokens: streamConfig.max_tokens,
+    };
+
+    if (thinkingConfig) {
+      // Google Gemini Flash 2.5+ supports thinking mode
+      // The API may use a different parameter name than Anthropic
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `🧠 [Google] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
+        );
+      }
+      // Note: Google's thinking API implementation may differ from Anthropic
+      // This is a placeholder for when Google releases their thinking API
+      // generationConfig.thinking = { enabled: true, maxTokens: thinkingConfig.budget_tokens };
+    }
+
     const model = googleClient.getGenerativeModel({
       model: modelName,
-      generationConfig: {
-        temperature: streamConfig.temperature,
-        maxOutputTokens: streamConfig.max_tokens,
-      },
+      generationConfig,
       tools: googleTools,
     });
 

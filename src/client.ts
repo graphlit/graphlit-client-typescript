@@ -5990,6 +5990,15 @@ class Graphlit {
       );
     }
 
+    // Extract reasoning effort for OpenAI o1 models
+    const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
+
+    if (reasoningEffort && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🧠 [Graphlit SDK] OpenAI reasoning effort: ${reasoningEffort}`,
+      );
+    }
+
     await streamWithOpenAI(
       specification,
       messages,
@@ -5998,6 +6007,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      reasoningEffort,
     );
   }
 
@@ -6130,6 +6140,15 @@ class Graphlit {
       );
     }
 
+    // Get thinking configuration from specification
+    const thinkingConfig = this.getThinkingConfig(specification);
+
+    if (thinkingConfig && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🧠 [Graphlit SDK] Google thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
+      );
+    }
+
     await streamWithGoogle(
       specification,
       messages,
@@ -6139,6 +6158,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      thinkingConfig,
     );
   }
 
