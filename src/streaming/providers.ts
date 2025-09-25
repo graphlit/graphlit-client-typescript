@@ -1389,16 +1389,23 @@ export async function streamWithGoogle(
     };
 
     if (thinkingConfig) {
-      // Google Gemini Flash 2.5+ supports thinking mode
-      // The API may use a different parameter name than Anthropic
+      // Google Gemini 2.5 Flash+ supports thinking mode
+      generationConfig.thinkingConfig = {
+        thinkingBudget: thinkingConfig.budget_tokens,
+        includeThoughts: true, // Include thinking content in the response
+      };
+
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `🧠 [Google] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
+          `🧠 [Google] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens | Include thoughts: true`,
         );
       }
-      // Note: Google's thinking API implementation may differ from Anthropic
-      // This is a placeholder for when Google releases their thinking API
-      // generationConfig.thinking = { enabled: true, maxTokens: thinkingConfig.budget_tokens };
+    } else {
+      // Explicitly disable thinking when not configured
+      generationConfig.thinkingConfig = {
+        thinkingBudget: 0, // Disable thinking by setting budget to 0
+        includeThoughts: false,
+      };
     }
 
     const model = googleClient.getGenerativeModel({
