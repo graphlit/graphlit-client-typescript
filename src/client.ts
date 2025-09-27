@@ -2287,6 +2287,13 @@ class Graphlit {
     });
   }
 
+  public async triggerFeed(id: string): Promise<Types.TriggerFeedMutation> {
+    return this.mutateAndCheckError<Types.TriggerFeedMutation, { id: string }>(
+      Documents.TriggerFeed,
+      { id: id },
+    );
+  }
+
   public async enableFeed(id: string): Promise<Types.EnableFeedMutation> {
     return this.mutateAndCheckError<Types.EnableFeedMutation, { id: string }>(
       Documents.EnableFeed,

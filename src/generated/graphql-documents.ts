@@ -165,6 +165,10 @@ export const GetAlert = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     integration {
       type
@@ -331,6 +335,10 @@ export const QueryAlerts = gql`
             states
           }
         }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
       }
       integration {
         type
@@ -2493,12 +2501,6 @@ export const QueryContents = gql`
       transcriptUri
       summary
       customSummary
-      keywords
-      bullets
-      headlines
-      posts
-      chapters
-      questions
       quotes
       video {
         width
@@ -2669,10 +2671,6 @@ export const QueryContents = gql`
       feed {
         id
         name
-      }
-      links {
-        uri
-        linkType
       }
       workflow {
         id
@@ -2808,12 +2806,6 @@ export const QueryContentsObservations = gql`
       transcriptUri
       summary
       customSummary
-      keywords
-      bullets
-      headlines
-      posts
-      chapters
-      questions
       quotes
       video {
         width
@@ -2984,10 +2976,6 @@ export const QueryContentsObservations = gql`
       feed {
         id
         name
-      }
-      links {
-        uri
-        linkType
       }
       workflow {
         id
@@ -4658,6 +4646,10 @@ export const GetConversation = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     augmentedFilter {
       dateRange {
@@ -4745,6 +4737,10 @@ export const GetConversation = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
   }
 }
@@ -5589,6 +5585,10 @@ export const QueryConversations = gql`
             states
           }
         }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
       }
       augmentedFilter {
         dateRange {
@@ -5676,6 +5676,10 @@ export const QueryConversations = gql`
             states
           }
         }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
       }
     }
   }
@@ -7276,6 +7280,14 @@ export const QuerySlackChannels = gql`
     query QuerySlackChannels($properties: SlackChannelsInput!) {
   slackChannels(properties: $properties) {
     results
+  }
+}
+    `;
+export const TriggerFeed = gql`
+    mutation TriggerFeed($id: ID!) {
+  triggerFeed(id: $id) {
+    id
+    state
   }
 }
     `;
@@ -10176,6 +10188,10 @@ export const CreateView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     augmentedFilter {
       dateRange {
@@ -10263,6 +10279,10 @@ export const CreateView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
   }
 }
@@ -10393,6 +10413,10 @@ export const GetView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     augmentedFilter {
       dateRange {
@@ -10480,6 +10504,10 @@ export const GetView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
   }
 }
@@ -10583,6 +10611,10 @@ export const QueryViews = gql`
             states
           }
         }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
       }
       augmentedFilter {
         dateRange {
@@ -10670,6 +10702,10 @@ export const QueryViews = gql`
             states
           }
         }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
       }
     }
   }
@@ -10768,6 +10804,10 @@ export const UpdateView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     augmentedFilter {
       dateRange {
@@ -10855,6 +10895,10 @@ export const UpdateView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
   }
 }
@@ -10952,6 +10996,10 @@ export const UpsertView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
     augmentedFilter {
       dateRange {
@@ -11039,6 +11087,10 @@ export const UpsertView = gql`
           states
         }
       }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
     }
   }
 }
