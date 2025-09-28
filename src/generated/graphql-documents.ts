@@ -1149,6 +1149,7 @@ export const GetContent = gql`
     description
     identifier
     markdown
+    html
     address {
       streetAddress
       city
@@ -1880,6 +1881,7 @@ export const LookupContents = gql`
       description
       identifier
       markdown
+      html
       address {
         streetAddress
         city
