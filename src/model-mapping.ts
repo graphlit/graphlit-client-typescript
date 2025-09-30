@@ -92,6 +92,11 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   // Claude 4.1 models
   [Types.AnthropicModels.Claude_4_1Opus]: "claude-opus-4-1",
   [Types.AnthropicModels.Claude_4_1Opus_20250805]: "claude-opus-4-1-20250805",
+
+  // Claude 4.5 models
+  [Types.AnthropicModels.Claude_4_5Sonnet]: "claude-sonnet-4-5",
+  [Types.AnthropicModels.Claude_4_5Sonnet_20250929]:
+    "claude-sonnet-4-5-20250929",
 };
 
 // Google model mappings

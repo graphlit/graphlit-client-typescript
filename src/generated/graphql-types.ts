@@ -376,6 +376,10 @@ export enum AnthropicModels {
   Claude_4_1Opus = 'CLAUDE_4_1_OPUS',
   /** Claude 4.1 Opus (08-05-2025 version) */
   Claude_4_1Opus_20250805 = 'CLAUDE_4_1_OPUS_20250805',
+  /** Claude 4.5 Sonnet (Latest) */
+  Claude_4_5Sonnet = 'CLAUDE_4_5_SONNET',
+  /** Claude 4.5 Sonnet (09-29-2025 version) */
+  Claude_4_5Sonnet_20250929 = 'CLAUDE_4_5_SONNET_20250929',
   /** Claude 4 Opus (Latest) */
   Claude_4Opus = 'CLAUDE_4_OPUS',
   /** Claude 4 Opus (05-14-2025 version) */
@@ -4923,7 +4927,10 @@ export enum FileTypes {
   Document = 'DOCUMENT',
   /** Drawing file */
   Drawing = 'DRAWING',
-  /** Email file */
+  /**
+   * Email file
+   * @deprecated Email files now use ContentTypes.Email instead. FileTypes.Email is maintained for backward compatibility with existing data only.
+   */
   Email = 'EMAIL',
   /** Geometry file */
   Geometry = 'GEOMETRY',
