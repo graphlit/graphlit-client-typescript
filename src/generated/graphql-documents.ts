@@ -6607,7 +6607,6 @@ export const GetFeed = gql`
         appKey
         appSecret
         refreshToken
-        redirectUri
       }
       box {
         authenticationType
@@ -6952,7 +6951,6 @@ export const QueryFeeds = gql`
           appKey
           appSecret
           refreshToken
-          redirectUri
         }
         box {
           authenticationType
