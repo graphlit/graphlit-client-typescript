@@ -1188,10 +1188,14 @@ export type BoxFolderResults = {
 
 /** Represents Box folders properties. */
 export type BoxFoldersInput = {
+  /** Box authentication type. */
+  authenticationType?: InputMaybe<BoxAuthenticationTypes>;
   /** Box client identifier. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Box client secret. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Box redirect URI. */
+  redirectUri?: InputMaybe<Scalars['String']['input']>;
   /** Box refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3572,6 +3576,8 @@ export type DropboxFoldersInput = {
   appKey?: InputMaybe<Scalars['String']['input']>;
   /** Dropbox app secret. */
   appSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Dropbox authentication type. */
+  authenticationType?: InputMaybe<DropboxAuthenticationTypes>;
   /** Dropbox refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
