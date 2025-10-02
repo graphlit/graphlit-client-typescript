@@ -7161,6 +7161,25 @@ export const QueryFeeds = gql`
   }
 }
     `;
+export const QueryGitHubRepositories = gql`
+    query QueryGitHubRepositories($properties: GitHubRepositoriesInput!, $sortBy: GitHubRepositorySortTypes) {
+  gitHubRepositories(properties: $properties, sortBy: $sortBy) {
+    results {
+      repositoryOwner
+      repositoryName
+      repositoryFullName
+      description
+      isPrivate
+      stargazersCount
+      forksCount
+      pushedAt
+      createdAt
+      isOwner
+      language
+    }
+  }
+}
+    `;
 export const QueryGoogleCalendars = gql`
     query QueryGoogleCalendars($properties: GoogleCalendarsInput!) {
   googleCalendars(properties: $properties) {

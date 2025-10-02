@@ -2210,6 +2210,19 @@ class Graphlit {
     >(Documents.QueryLinearProjects, { properties: properties });
   }
 
+  public async queryGitHubRepositories(
+    properties: Types.GitHubRepositoriesInput,
+    sortBy?: Types.GitHubRepositorySortTypes,
+  ): Promise<Types.QueryGitHubRepositoriesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGitHubRepositoriesQuery,
+      { properties: Types.GitHubRepositoriesInput; sortBy?: Types.GitHubRepositorySortTypes }
+    >(Documents.QueryGitHubRepositories, {
+      properties: properties,
+      sortBy: sortBy,
+    });
+  }
+
   public async queryNotionDatabases(
     properties: Types.NotionDatabasesInput,
   ): Promise<Types.QueryNotionDatabasesQuery> {

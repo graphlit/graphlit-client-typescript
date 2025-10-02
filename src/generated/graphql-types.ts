@@ -5100,6 +5100,62 @@ export type GitHubIssuesFeedPropertiesUpdateInput = {
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
 
+/** Represents GitHub repositories properties. */
+export type GitHubRepositoriesInput = {
+  /** GitHub authentication type. */
+  authenticationType: GitHubAuthenticationTypes;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub OAuth refresh token, requires OAuth authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub API URI, optional. Defaults to https://api.github.com/. */
+  uri?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a GitHub repository. */
+export type GitHubRepositoryResult = {
+  __typename?: 'GitHubRepositoryResult';
+  /** The date the repository was created. */
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The repository description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The number of forks the repository has. */
+  forksCount?: Maybe<Scalars['Int']['output']>;
+  /** Whether the authenticated user is the owner of the repository. */
+  isOwner?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the repository is private. */
+  isPrivate?: Maybe<Scalars['Boolean']['output']>;
+  /** The primary programming language of the repository. */
+  language?: Maybe<Scalars['String']['output']>;
+  /** The last time the repository was pushed to. */
+  pushedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The repository full name (e.g., 'owner/repo'). */
+  repositoryFullName?: Maybe<Scalars['String']['output']>;
+  /** The repository name. */
+  repositoryName?: Maybe<Scalars['String']['output']>;
+  /** The repository owner/organization name. */
+  repositoryOwner?: Maybe<Scalars['String']['output']>;
+  /** The number of stars the repository has. */
+  stargazersCount?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents GitHub repositories. */
+export type GitHubRepositoryResults = {
+  __typename?: 'GitHubRepositoryResults';
+  /** The GitHub repositories. */
+  results?: Maybe<Array<Maybe<GitHubRepositoryResult>>>;
+};
+
+/** GitHub repository sort type */
+export enum GitHubRepositorySortTypes {
+  /** Sort alphabetically by repository name */
+  Alphabetical = 'ALPHABETICAL',
+  /** Sort by activity ranking (stars, recency, ownership) */
+  Ranked = 'RANKED'
+}
+
 /** Represents Google authentication properties. */
 export type GoogleAuthenticationProperties = {
   __typename?: 'GoogleAuthenticationProperties';
@@ -13272,6 +13328,8 @@ export type Query = {
   feedExists?: Maybe<BooleanResult>;
   /** Retrieves feeds based on the provided filter criteria. */
   feeds?: Maybe<FeedResults>;
+  /** Retrieves available GitHub repositories for the authenticated user. */
+  gitHubRepositories?: Maybe<GitHubRepositoryResults>;
   /** Retrieves available Google calendars. */
   googleCalendars?: Maybe<CalendarResults>;
   /** Retrieves available Google Drive folders. */
@@ -13736,6 +13794,12 @@ export type QueryFeedExistsArgs = {
 export type QueryFeedsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FeedFilter>;
+};
+
+
+export type QueryGitHubRepositoriesArgs = {
+  properties: GitHubRepositoriesInput;
+  sortBy?: InputMaybe<GitHubRepositorySortTypes>;
 };
 
 
@@ -14829,6 +14893,8 @@ export enum SearchQueryTypes {
 export enum SearchServiceTypes {
   /** Exa search feed service */
   Exa = 'EXA',
+  /** Exa Code context search service */
+  ExaCode = 'EXA_CODE',
   /** Podscan search feed service */
   Podscan = 'PODSCAN',
   /** Tavily search feed service */
@@ -16452,7 +16518,7 @@ export type WebSearchResult = {
   /** The content title. */
   title?: Maybe<Scalars['String']['output']>;
   /** The web search result URI, may be a web page or podcast episode. */
-  uri: Scalars['URL']['output'];
+  uri?: Maybe<Scalars['URL']['output']>;
 };
 
 /** Represents web search results. */
@@ -17786,6 +17852,14 @@ export type QueryFeedsQueryVariables = Exact<{
 
 export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, relevance?: number | null, state: EntityState, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, authorizationId?: string | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, refreshToken?: string | null, personalAccessToken?: string | null, authorizationId?: string | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, authorizationId?: string | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, teamId: string, channelId: string } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
 
+export type QueryGitHubRepositoriesQueryVariables = Exact<{
+  properties: GitHubRepositoriesInput;
+  sortBy?: InputMaybe<GitHubRepositorySortTypes>;
+}>;
+
+
+export type QueryGitHubRepositoriesQuery = { __typename?: 'Query', gitHubRepositories?: { __typename?: 'GitHubRepositoryResults', results?: Array<{ __typename?: 'GitHubRepositoryResult', repositoryOwner?: string | null, repositoryName?: string | null, repositoryFullName?: string | null, description?: string | null, isPrivate?: boolean | null, stargazersCount?: number | null, forksCount?: number | null, pushedAt?: any | null, createdAt?: any | null, isOwner?: boolean | null, language?: string | null } | null> | null } | null };
+
 export type QueryGoogleCalendarsQueryVariables = Exact<{
   properties: GoogleCalendarsInput;
 }>;
@@ -19056,7 +19130,7 @@ export type SearchWebQueryVariables = Exact<{
 }>;
 
 
-export type SearchWebQuery = { __typename?: 'Query', searchWeb?: { __typename?: 'WebSearchResults', results?: Array<{ __typename?: 'WebSearchResult', uri: any, text?: string | null, title?: string | null, score?: number | null }> | null } | null };
+export type SearchWebQuery = { __typename?: 'Query', searchWeb?: { __typename?: 'WebSearchResults', results?: Array<{ __typename?: 'WebSearchResult', uri?: any | null, text?: string | null, title?: string | null, score?: number | null }> | null } | null };
 
 export type CountSoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
