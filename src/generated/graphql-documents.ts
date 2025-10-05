@@ -9275,7 +9275,6 @@ export const GetSpecification = gql`
       type
       contentLimit
       disableFallback
-      expandRelatedContents
     }
     rerankingStrategy {
       serviceType
@@ -9650,7 +9649,6 @@ export const QuerySpecifications = gql`
         type
         contentLimit
         disableFallback
-        expandRelatedContents
       }
       rerankingStrategy {
         serviceType
