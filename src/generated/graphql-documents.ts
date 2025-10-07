@@ -213,6 +213,14 @@ export const GetAlert = gql`
           id
         }
       }
+      openAIVideo {
+        model
+        seconds
+        size
+        seed {
+          id
+        }
+      }
     }
     summarySpecification {
       id
@@ -379,6 +387,14 @@ export const QueryAlerts = gql`
         googleImage {
           model
           count
+          seed {
+            id
+          }
+        }
+        openAIVideo {
+          model
+          seconds
+          size
           seed {
             id
           }
@@ -11155,6 +11171,7 @@ export const CreateWorkflow = gql`
       }
       enableEmailCollections
       enableFolderCollections
+      enableMessageCollections
     }
     indexing {
       jobs {
@@ -11319,6 +11336,7 @@ export const CreateWorkflow = gql`
       policy {
         type
         allowDuplicates
+        embeddingTypes
       }
     }
     actions {
@@ -11409,6 +11427,7 @@ export const GetWorkflow = gql`
       }
       enableEmailCollections
       enableFolderCollections
+      enableMessageCollections
     }
     indexing {
       jobs {
@@ -11573,6 +11592,7 @@ export const GetWorkflow = gql`
       policy {
         type
         allowDuplicates
+        embeddingTypes
       }
     }
     actions {
@@ -11636,6 +11656,7 @@ export const QueryWorkflows = gql`
         }
         enableEmailCollections
         enableFolderCollections
+        enableMessageCollections
       }
       indexing {
         jobs {
@@ -11800,6 +11821,7 @@ export const QueryWorkflows = gql`
         policy {
           type
           allowDuplicates
+          embeddingTypes
         }
       }
       actions {
@@ -11858,6 +11880,7 @@ export const UpdateWorkflow = gql`
       }
       enableEmailCollections
       enableFolderCollections
+      enableMessageCollections
     }
     indexing {
       jobs {
@@ -12022,6 +12045,7 @@ export const UpdateWorkflow = gql`
       policy {
         type
         allowDuplicates
+        embeddingTypes
       }
     }
     actions {
@@ -12079,6 +12103,7 @@ export const UpsertWorkflow = gql`
       }
       enableEmailCollections
       enableFolderCollections
+      enableMessageCollections
     }
     indexing {
       jobs {
@@ -12243,6 +12268,7 @@ export const UpsertWorkflow = gql`
       policy {
         type
         allowDuplicates
+        embeddingTypes
       }
     }
     actions {
