@@ -16396,12 +16396,14 @@ export type VideoMetadataInput = {
 
 /** Video size (resolution) */
 export enum VideoSizeTypes {
-  /** 1080x1920 (Full HD portrait) */
-  Size_1080X1920 = 'SIZE_1080X1920',
-  /** 1280x720 (HD landscape) */
-  Size_1280X720 = 'SIZE_1280X720',
-  /** 1920x1080 (Full HD landscape) */
-  Size_1920X1080 = 'SIZE_1920X1080'
+  /** Full HD landscape */
+  FullHdLandscape = 'FULL_HD_LANDSCAPE',
+  /** Full HD portrait */
+  FullHdPortrait = 'FULL_HD_PORTRAIT',
+  /** HD landscape */
+  HdLandscape = 'HD_LANDSCAPE',
+  /** HD portrait */
+  HdPortrait = 'HD_PORTRAIT'
 }
 
 /** Represents a view. */
