@@ -1381,6 +1381,40 @@ export const GetContent = gql`
       type
       labels
     }
+    message {
+      identifier
+      conversationIdentifier
+      channelIdentifier
+      channelName
+      attachmentCount
+      links
+      author {
+        name
+        email
+        givenName
+        familyName
+      }
+      mentions {
+        name
+        email
+        givenName
+        familyName
+      }
+    }
+    post {
+      identifier
+      title
+      author {
+        name
+        email
+        givenName
+        familyName
+      }
+      upvotes
+      downvotes
+      commentCount
+      links
+    }
     package {
       fileCount
       folderCount
@@ -2113,6 +2147,40 @@ export const LookupContents = gql`
         type
         labels
       }
+      message {
+        identifier
+        conversationIdentifier
+        channelIdentifier
+        channelName
+        attachmentCount
+        links
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        mentions {
+          name
+          email
+          givenName
+          familyName
+        }
+      }
+      post {
+        identifier
+        title
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        upvotes
+        downvotes
+        commentCount
+        links
+      }
       package {
         fileCount
         folderCount
@@ -2678,6 +2746,40 @@ export const QueryContents = gql`
         type
         labels
       }
+      message {
+        identifier
+        conversationIdentifier
+        channelIdentifier
+        channelName
+        attachmentCount
+        links
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        mentions {
+          name
+          email
+          givenName
+          familyName
+        }
+      }
+      post {
+        identifier
+        title
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        upvotes
+        downvotes
+        commentCount
+        links
+      }
       package {
         fileCount
         folderCount
@@ -2982,6 +3084,40 @@ export const QueryContentsObservations = gql`
         priority
         type
         labels
+      }
+      message {
+        identifier
+        conversationIdentifier
+        channelIdentifier
+        channelName
+        attachmentCount
+        links
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        mentions {
+          name
+          email
+          givenName
+          familyName
+        }
+      }
+      post {
+        identifier
+        title
+        author {
+          name
+          email
+          givenName
+          familyName
+        }
+        upvotes
+        downvotes
+        commentCount
+        links
       }
       package {
         fileCount
