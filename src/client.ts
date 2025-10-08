@@ -337,7 +337,7 @@ class Graphlit {
     if (!isValidGuid(this.organizationId)) {
       throw new Error(
         `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -348,7 +348,7 @@ class Graphlit {
     if (!isValidGuid(this.environmentId)) {
       throw new Error(
         `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -360,7 +360,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -757,6 +757,15 @@ class Graphlit {
       Types.UpdateAlertMutation,
       { alert: Types.AlertUpdateInput }
     >(Documents.UpdateAlert, { alert: alert });
+  }
+
+  public async upsertAlert(
+    alert: Types.AlertInput,
+  ): Promise<Types.UpsertAlertMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertAlertMutation,
+      { alert: Types.AlertInput }
+    >(Documents.UpsertAlert, { alert: alert });
   }
 
   public async deleteAlert(id: string): Promise<Types.DeleteAlertMutation> {
@@ -4670,11 +4679,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-              promptTokens: 0, // We don't have this breakdown from the API
-              completionTokens: totalTokens,
-              totalTokens: totalTokens,
-              model: currentMessage?.model || undefined,
-            }
+            promptTokens: 0, // We don't have this breakdown from the API
+            completionTokens: totalTokens,
+            totalTokens: totalTokens,
+            model: currentMessage?.model || undefined,
+          }
           : undefined;
 
       return {
@@ -4761,7 +4770,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = specification?.id
         ? ((await this.getSpecification(specification.id))
-            .specification as Types.Specification)
+          .specification as Types.Specification)
         : undefined;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && fullSpec) {
@@ -5992,13 +6001,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.OPENAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("OpenAI module not available");
-          })());
+          throw new Error("OpenAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6053,13 +6062,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.ANTHROPIC_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Anthropic module not available");
-          })());
+          throw new Error("Anthropic module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6147,8 +6156,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-            throw new Error("Google GenerativeAI module not available");
-          })());
+          throw new Error("Google GenerativeAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6204,8 +6213,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-            throw new Error("Groq module not available");
-          })());
+          throw new Error("Groq module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6249,13 +6258,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-            apiKey: process.env.CEREBRAS_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.CEREBRAS_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Cerebras module not available");
-          })());
+          throw new Error("Cerebras module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6302,8 +6311,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-              throw new Error("Cohere module not available");
-            })());
+            throw new Error("Cohere module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6347,29 +6356,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-            const apiKey = process.env.MISTRAL_API_KEY;
-            if (!apiKey) {
-              throw new Error(
-                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-              );
-            }
-            return new Mistral({
-              apiKey,
-              retryConfig: {
-                strategy: "backoff",
-                backoff: {
-                  initialInterval: 1000,
-                  maxInterval: 60000,
-                  exponent: 2,
-                  maxElapsedTime: 300000, // 5 minutes
-                },
-                retryConnectionErrors: true,
+          const apiKey = process.env.MISTRAL_API_KEY;
+          if (!apiKey) {
+            throw new Error(
+              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+            );
+          }
+          return new Mistral({
+            apiKey,
+            retryConfig: {
+              strategy: "backoff",
+              backoff: {
+                initialInterval: 1000,
+                maxInterval: 60000,
+                exponent: 2,
+                maxElapsedTime: 300000, // 5 minutes
               },
-            });
-          })()
+              retryConnectionErrors: true,
+            },
+          });
+        })()
         : (() => {
-            throw new Error("Mistral module not available");
-          })());
+          throw new Error("Mistral module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6414,11 +6423,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-            region: process.env.AWS_REGION || "us-east-2",
-          })
+          region: process.env.AWS_REGION || "us-east-2",
+        })
         : (() => {
-            throw new Error("Bedrock module not available");
-          })());
+          throw new Error("Bedrock module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6463,11 +6472,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.deepseek.com",
-            apiKey: process.env.DEEPSEEK_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.deepseek.com",
+          apiKey: process.env.DEEPSEEK_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!deepseekClient) {
@@ -6513,11 +6522,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.x.ai/v1",
-            apiKey: process.env.XAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.x.ai/v1",
+          apiKey: process.env.XAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!xaiClient) {

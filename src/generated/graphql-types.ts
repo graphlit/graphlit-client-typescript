@@ -2516,7 +2516,7 @@ export type ContentPublishingConnectorUpdateInput = {
   /** The specific properties for ElevenLabs Audio publishing. */
   elevenLabs?: InputMaybe<ElevenLabsPublishingPropertiesInput>;
   /** The content publishing format, i.e. MP3, Markdown. */
-  format?: InputMaybe<ContentPublishingFormats>;
+  format: ContentPublishingFormats;
   /** The specific properties for Google Image publishing. */
   googleImage?: InputMaybe<GoogleImagePublishingPropertiesInput>;
   /** The specific properties for OpenAI Image publishing. */
@@ -2524,7 +2524,7 @@ export type ContentPublishingConnectorUpdateInput = {
   /** The specific properties for OpenAI Video publishing. */
   openAIVideo?: InputMaybe<OpenAiVideoPublishingPropertiesInput>;
   /** The content publishing service type. */
-  type?: InputMaybe<ContentPublishingServiceTypes>;
+  type: ContentPublishingServiceTypes;
 };
 
 export enum ContentPublishingFormats {
@@ -6275,6 +6275,8 @@ export type IntegrationConnectorUpdateInput = {
   email?: InputMaybe<EmailIntegrationPropertiesInput>;
   /** MCP integration properties. */
   mcp?: InputMaybe<McpIntegrationPropertiesInput>;
+  /** Integration service type. */
+  serviceType: IntegrationServiceTypes;
   /** Slack integration properties. */
   slack?: InputMaybe<SlackIntegrationPropertiesInput>;
   /** Twitter integration properties. */
@@ -9733,6 +9735,8 @@ export type Mutation = {
   updateView?: Maybe<View>;
   /** Updates an existing content workflow. */
   updateWorkflow?: Maybe<Workflow>;
+  /** Upserts a alert. */
+  upsertAlert?: Maybe<Alert>;
   /** Upserts a category. */
   upsertCategory?: Maybe<Category>;
   /** Upserts a label. */
@@ -11031,6 +11035,11 @@ export type MutationUpdateViewArgs = {
 
 export type MutationUpdateWorkflowArgs = {
   workflow: WorkflowUpdateInput;
+};
+
+
+export type MutationUpsertAlertArgs = {
+  alert: AlertInput;
 };
 
 
@@ -17117,6 +17126,13 @@ export type UpdateAlertMutationVariables = Exact<{
 
 
 export type UpdateAlertMutation = { __typename?: 'Mutation', updateAlert?: { __typename?: 'Alert', id: string, name: string, state: EntityState, type: AlertTypes } | null };
+
+export type UpsertAlertMutationVariables = Exact<{
+  alert: AlertInput;
+}>;
+
+
+export type UpsertAlertMutation = { __typename?: 'Mutation', upsertAlert?: { __typename?: 'Alert', id: string, name: string, state: EntityState, type: AlertTypes } | null };
 
 export type CountCategoriesQueryVariables = Exact<{
   filter?: InputMaybe<CategoryFilter>;

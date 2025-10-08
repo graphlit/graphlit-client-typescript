@@ -427,6 +427,16 @@ export const UpdateAlert = gql`
   }
 }
     `;
+export const UpsertAlert = gql`
+    mutation UpsertAlert($alert: AlertInput!) {
+  upsertAlert(alert: $alert) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
 export const CountCategories = gql`
     query CountCategories($filter: CategoryFilter, $correlationId: String) {
   countCategories(filter: $filter, correlationId: $correlationId) {
