@@ -350,11 +350,11 @@ export enum AnthropicModels {
   Claude_3_5Haiku = 'CLAUDE_3_5_HAIKU',
   /** Claude 3.5 Haiku (10-22-2024 version) */
   Claude_3_5Haiku_20241022 = 'CLAUDE_3_5_HAIKU_20241022',
-  /** Claude 3.5 Sonnet (Latest) */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_5Sonnet = 'CLAUDE_3_5_SONNET',
-  /** @deprecated Use Claude 4.x instead. */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_5Sonnet_20240620 = 'CLAUDE_3_5_SONNET_20240620',
-  /** Claude 3.5 Sonnet (10-22-2024 version) */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_5Sonnet_20241022 = 'CLAUDE_3_5_SONNET_20241022',
   /** Claude 3.7 Sonnet (Latest) */
   Claude_3_7Sonnet = 'CLAUDE_3_7_SONNET',
@@ -376,6 +376,10 @@ export enum AnthropicModels {
   Claude_4_1Opus = 'CLAUDE_4_1_OPUS',
   /** Claude 4.1 Opus (08-05-2025 version) */
   Claude_4_1Opus_20250805 = 'CLAUDE_4_1_OPUS_20250805',
+  /** Claude 4.5 Haiku (Latest) */
+  Claude_4_5Haiku = 'CLAUDE_4_5_HAIKU',
+  /** Claude 4.5 Haiku (10-01-2025 version) */
+  Claude_4_5Haiku_20251001 = 'CLAUDE_4_5_HAIKU_20251001',
   /** Claude 4.5 Sonnet (Latest) */
   Claude_4_5Sonnet = 'CLAUDE_4_5_SONNET',
   /** Claude 4.5 Sonnet (09-29-2025 version) */
