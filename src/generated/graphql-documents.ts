@@ -864,6 +864,8 @@ export const DescribeEncodedImage = gql`
         textUri
         audioUri
         transcriptUri
+        snapshotsUri
+        snapshotCount
         summary
         customSummary
         keywords
@@ -1002,6 +1004,8 @@ export const DescribeImage = gql`
         textUri
         audioUri
         transcriptUri
+        snapshotsUri
+        snapshotCount
         summary
         customSummary
         keywords
@@ -1224,6 +1228,8 @@ export const GetContent = gql`
     textUri
     audioUri
     transcriptUri
+    snapshotsUri
+    snapshotCount
     summary
     customSummary
     keywords
@@ -1990,6 +1996,8 @@ export const LookupContents = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       keywords
@@ -2330,6 +2338,8 @@ export const PublishContents = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       keywords
@@ -2457,6 +2467,8 @@ export const PublishText = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       keywords
@@ -2595,6 +2607,8 @@ export const QueryContents = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       quotes
@@ -2934,6 +2948,8 @@ export const QueryContentsObservations = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       quotes
@@ -3413,6 +3429,8 @@ export const AskGraphlit = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -3589,6 +3607,8 @@ export const CompleteConversation = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -3770,6 +3790,8 @@ export const CompleteConversation = gql`
             textUri
             audioUri
             transcriptUri
+            snapshotsUri
+            snapshotCount
             summary
             customSummary
             keywords
@@ -3913,6 +3935,8 @@ export const ContinueConversation = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -4094,6 +4118,8 @@ export const ContinueConversation = gql`
             textUri
             audioUri
             transcriptUri
+            snapshotsUri
+            snapshotCount
             summary
             customSummary
             keywords
@@ -4286,6 +4312,8 @@ export const FormatConversation = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -4467,6 +4495,8 @@ export const FormatConversation = gql`
             textUri
             audioUri
             transcriptUri
+            snapshotsUri
+            snapshotCount
             summary
             customSummary
             keywords
@@ -4613,6 +4643,8 @@ export const GetConversation = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -4948,6 +4980,8 @@ export const Prompt = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -5098,6 +5132,8 @@ export const PromptConversation = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -5279,6 +5315,8 @@ export const PromptConversation = gql`
             textUri
             audioUri
             transcriptUri
+            snapshotsUri
+            snapshotCount
             summary
             customSummary
             keywords
@@ -5418,6 +5456,8 @@ export const PublishConversation = gql`
       textUri
       audioUri
       transcriptUri
+      snapshotsUri
+      snapshotCount
       summary
       customSummary
       keywords
@@ -5552,6 +5592,8 @@ export const QueryConversations = gql`
             textUri
             audioUri
             transcriptUri
+            snapshotsUri
+            snapshotCount
             summary
             customSummary
             keywords
@@ -5938,6 +5980,8 @@ export const ReviseContent = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -6084,6 +6128,8 @@ export const ReviseEncodedImage = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -6229,6 +6275,8 @@ export const ReviseImage = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -6374,6 +6422,8 @@ export const ReviseText = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -9636,6 +9686,8 @@ export const PromptSpecifications = gql`
           textUri
           audioUri
           transcriptUri
+          snapshotsUri
+          snapshotCount
           summary
           customSummary
           keywords
@@ -11483,6 +11535,8 @@ export const CreateWorkflow = gql`
         type
         allowDuplicates
         embeddingTypes
+        enableSnapshots
+        snapshotCount
       }
     }
     actions {
@@ -11739,6 +11793,8 @@ export const GetWorkflow = gql`
         type
         allowDuplicates
         embeddingTypes
+        enableSnapshots
+        snapshotCount
       }
     }
     actions {
@@ -11968,6 +12024,8 @@ export const QueryWorkflows = gql`
           type
           allowDuplicates
           embeddingTypes
+          enableSnapshots
+          snapshotCount
         }
       }
       actions {
@@ -12192,6 +12250,8 @@ export const UpdateWorkflow = gql`
         type
         allowDuplicates
         embeddingTypes
+        enableSnapshots
+        snapshotCount
       }
     }
     actions {
@@ -12415,6 +12475,8 @@ export const UpsertWorkflow = gql`
         type
         allowDuplicates
         embeddingTypes
+        enableSnapshots
+        snapshotCount
       }
     }
     actions {
