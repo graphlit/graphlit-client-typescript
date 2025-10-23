@@ -118,6 +118,10 @@ export type AlertFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of alert(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter alert(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return alert(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter alert(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of alert(s) from the beginning of the result set. Only supported on keyword search. */
@@ -1492,6 +1496,10 @@ export type CategoryFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of category(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter category(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return category(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter category(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of category(s) from the beginning of the result set. Only supported on keyword search. */
@@ -1762,6 +1770,10 @@ export type CollectionFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of collection(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter collection(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return collection(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter collection(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of collection(s) from the beginning of the result set. Only supported on keyword search. */
@@ -1856,6 +1868,10 @@ export type ConnectorFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of connector(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter connector(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return connector(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter connector(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of connector(s) from the beginning of the result set. Only supported on keyword search. */
@@ -2384,6 +2400,10 @@ export type ContentFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter content(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return content(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter content(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -2466,6 +2486,8 @@ export enum ContentIndexingServiceTypes {
 
 /** Represents content. */
 export type ContentInput = {
+  /** The date when the content was created. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The content description. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** The date when the file was created. */
@@ -2474,6 +2496,8 @@ export type ContentInput = {
   fileModifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The content external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The date when the content was last modified. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The name of the content. */
   name: Scalars['String']['input'];
   /** The content text. */
@@ -2648,6 +2672,8 @@ export type ContentUpdateInput = {
   bullets?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The timestamped chapters summarized from the content transcript. */
   chapters?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The date when the content was created. */
+  creationDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The custom content summary. */
   customSummary?: InputMaybe<Scalars['String']['input']>;
   /** The content description. */
@@ -2682,6 +2708,8 @@ export type ContentUpdateInput = {
   language?: InputMaybe<LanguageMetadataInput>;
   /** The content message metadata. */
   message?: InputMaybe<MessageMetadataInput>;
+  /** The date when the content was last modified. */
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The name of the content. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** The content package metadata. */
@@ -2819,6 +2847,10 @@ export type ConversationFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of conversation(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter conversation(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return conversation(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter conversation(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -4255,6 +4287,10 @@ export type EventFilter = {
   maxPrice?: InputMaybe<Scalars['Decimal']['input']>;
   /** Filter by the event minimum price. */
   minPrice?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Filter event(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return event(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter event(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -4651,6 +4687,10 @@ export type FeedFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of feed(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter feed(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return feed(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter feed(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of feed(s) from the beginning of the result set. Only supported on keyword search. */
@@ -6580,6 +6620,10 @@ export type LabelFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of label(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter label(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return label(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter label(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of label(s) from the beginning of the result set. Only supported on keyword search. */
@@ -6996,6 +7040,10 @@ export type MedicalConditionFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalcondition(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalcondition(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalcondition(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7147,6 +7195,10 @@ export type MedicalContraindicationFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalcontraindication(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalcontraindication(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalcontraindication(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7298,6 +7350,10 @@ export type MedicalDeviceFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicaldevice(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicaldevice(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicaldevice(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7486,6 +7542,10 @@ export type MedicalDrugClassFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicaldrugclass(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicaldrugclass(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicaldrugclass(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7600,6 +7660,10 @@ export type MedicalDrugFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicaldrug(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicaldrug(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicaldrug(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7751,6 +7815,10 @@ export type MedicalGuidelineFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalguideline(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalguideline(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalguideline(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -7902,6 +7970,10 @@ export type MedicalIndicationFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalindication(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalindication(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalindication(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -8053,6 +8125,10 @@ export type MedicalProcedureFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalprocedure(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalprocedure(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalprocedure(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -8206,6 +8282,10 @@ export type MedicalStudyFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicalstudy(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicalstudy(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicalstudy(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -8363,6 +8443,10 @@ export type MedicalTestFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicaltest(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicaltest(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicaltest(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -8514,6 +8598,10 @@ export type MedicalTherapyFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter medicaltherapy(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return medicaltherapy(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter medicaltherapy(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -8671,6 +8759,10 @@ export type MetadataFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by metadata types. */
   metadataTypes?: InputMaybe<Array<MetadataTypes>>;
+  /** Filter metadata(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return metadata(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter metadata(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of metadata(s) from the beginning of the result set. Only supported on keyword search. */
@@ -11985,6 +12077,10 @@ export type OrganizationFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter organization(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return organization(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter organization(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -12257,6 +12353,10 @@ export type PersonFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter person(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return person(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter person(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -12477,6 +12577,10 @@ export type PlaceFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter place(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return place(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter place(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -12797,6 +12901,10 @@ export type ProductFilter = {
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   /** Filter by product model. */
   model?: InputMaybe<Scalars['String']['input']>;
+  /** Filter product(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return product(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter product(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -12994,6 +13102,10 @@ export type ProjectFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of project(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter project(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return project(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter project(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of project(s) from the beginning of the result set. Only supported on keyword search. */
@@ -14845,6 +14957,10 @@ export type RepoFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter repo(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return repo(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter repo(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -15546,6 +15662,10 @@ export type SoftwareFilter = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by observable geo-location. */
   location?: InputMaybe<PointFilter>;
+  /** Filter software(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return software(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter software(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
@@ -15698,6 +15818,10 @@ export type SpecificationFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of specification(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter specification(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return specification(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter specification(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of specification(s) from the beginning of the result set. Only supported on keyword search. */
@@ -16429,6 +16553,10 @@ export type UserFilter = {
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** Limit the number of user(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter user(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return user(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter user(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of user(s) from the beginning of the result set. Only supported on keyword search. */
@@ -16578,6 +16706,10 @@ export type ViewFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of view(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter view(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return view(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter view(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of view(s) from the beginning of the result set. Only supported on keyword search. */
@@ -16812,6 +16944,10 @@ export type WorkflowFilter = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** Limit the number of workflow(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter workflow(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return workflow(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter workflow(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Skip the specified number of workflow(s) from the beginning of the result set. Only supported on keyword search. */
