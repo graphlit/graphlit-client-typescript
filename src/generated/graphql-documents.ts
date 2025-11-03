@@ -1397,6 +1397,39 @@ export const GetContent = gql`
       type
       labels
     }
+    commit {
+      sha
+      message
+      project
+      team
+      branch
+      parentShas
+      filesChanged
+      additions
+      deletions
+      pullRequestNumber
+      authorDate
+      committerDate
+      labels
+    }
+    pullRequest {
+      identifier
+      title
+      project
+      team
+      status
+      type
+      baseBranch
+      headBranch
+      isDraft
+      isMergeable
+      mergeCommitSha
+      mergedAt
+      filesChanged
+      additions
+      deletions
+      labels
+    }
     message {
       identifier
       conversationIdentifier
@@ -2165,6 +2198,39 @@ export const LookupContents = gql`
         type
         labels
       }
+      commit {
+        sha
+        message
+        project
+        team
+        branch
+        parentShas
+        filesChanged
+        additions
+        deletions
+        pullRequestNumber
+        authorDate
+        committerDate
+        labels
+      }
+      pullRequest {
+        identifier
+        title
+        project
+        team
+        status
+        type
+        baseBranch
+        headBranch
+        isDraft
+        isMergeable
+        mergeCommitSha
+        mergedAt
+        filesChanged
+        additions
+        deletions
+        labels
+      }
       message {
         identifier
         conversationIdentifier
@@ -2770,6 +2836,39 @@ export const QueryContents = gql`
         type
         labels
       }
+      commit {
+        sha
+        message
+        project
+        team
+        branch
+        parentShas
+        filesChanged
+        additions
+        deletions
+        pullRequestNumber
+        authorDate
+        committerDate
+        labels
+      }
+      pullRequest {
+        identifier
+        title
+        project
+        team
+        status
+        type
+        baseBranch
+        headBranch
+        isDraft
+        isMergeable
+        mergeCommitSha
+        mergedAt
+        filesChanged
+        additions
+        deletions
+        labels
+      }
       message {
         identifier
         conversationIdentifier
@@ -3109,6 +3208,39 @@ export const QueryContentsObservations = gql`
         status
         priority
         type
+        labels
+      }
+      commit {
+        sha
+        message
+        project
+        team
+        branch
+        parentShas
+        filesChanged
+        additions
+        deletions
+        pullRequestNumber
+        authorDate
+        committerDate
+        labels
+      }
+      pullRequest {
+        identifier
+        title
+        project
+        team
+        status
+        type
+        baseBranch
+        headBranch
+        isDraft
+        isMergeable
+        mergeCommitSha
+        mergedAt
+        filesChanged
+        additions
+        deletions
         labels
       }
       message {
