@@ -6908,6 +6908,32 @@ export const GetFeed = gql`
       }
       readLimit
     }
+    commit {
+      type
+      github {
+        authenticationType
+        uri
+        repositoryOwner
+        repositoryName
+        refreshToken
+        personalAccessToken
+        authorizationId
+      }
+      readLimit
+    }
+    pullRequest {
+      type
+      github {
+        authenticationType
+        uri
+        repositoryOwner
+        repositoryName
+        refreshToken
+        personalAccessToken
+        authorizationId
+      }
+      readLimit
+    }
     calendar {
       type
       includeAttachments
@@ -7249,6 +7275,32 @@ export const QueryFeeds = gql`
           token
           identifiers
           type
+        }
+        readLimit
+      }
+      commit {
+        type
+        github {
+          authenticationType
+          uri
+          repositoryOwner
+          repositoryName
+          refreshToken
+          personalAccessToken
+          authorizationId
+        }
+        readLimit
+      }
+      pullRequest {
+        type
+        github {
+          authenticationType
+          uri
+          repositoryOwner
+          repositoryName
+          refreshToken
+          personalAccessToken
+          authorizationId
         }
         readLimit
       }
