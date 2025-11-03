@@ -1849,7 +1849,7 @@ export type CommitFeedProperties = {
 /** Represents commit feed properties. */
 export type CommitFeedPropertiesInput = {
   /** GitHub Commits properties. */
-  github?: InputMaybe<GitHubIssuesFeedPropertiesInput>;
+  github?: InputMaybe<GitHubCommitsFeedPropertiesInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Feed service type. */
@@ -1859,7 +1859,7 @@ export type CommitFeedPropertiesInput = {
 /** Represents commit feed properties. */
 export type CommitFeedPropertiesUpdateInput = {
   /** GitHub Commits properties. */
-  github?: InputMaybe<GitHubIssuesFeedPropertiesUpdateInput>;
+  github?: InputMaybe<GitHubCommitsFeedPropertiesUpdateInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -5189,6 +5189,46 @@ export type GitHubCommitsFeedProperties = {
   repositoryOwner: Scalars['String']['output'];
   /** GitHub Enterprise URI, optional. */
   uri?: Maybe<Scalars['URL']['output']>;
+};
+
+/** Represents GitHub Commits feed properties. */
+export type GitHubCommitsFeedPropertiesInput = {
+  /** GitHub Commits authentication type, defaults to PersonalAccessToken. */
+  authenticationType?: InputMaybe<GitHubCommitAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub repository branch, defaults to default branch. */
+  branch?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub refresh token, requires OAuth authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub repository name. */
+  repositoryName: Scalars['String']['input'];
+  /** GitHub repository owner. */
+  repositoryOwner: Scalars['String']['input'];
+  /** GitHub Enterprise URI, optional. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
+};
+
+/** Represents GitHub Commits feed properties. */
+export type GitHubCommitsFeedPropertiesUpdateInput = {
+  /** GitHub Commits authentication type. */
+  authenticationType?: InputMaybe<GitHubCommitAuthenticationTypes>;
+  /** Authentication identifier, for Connector authentication type. */
+  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub repository branch. */
+  branch?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub personal access token, requires PersonalAccessToken authentication type. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub refresh token, requires OAuth authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub repository name. */
+  repositoryName?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub repository owner. */
+  repositoryOwner?: InputMaybe<Scalars['String']['input']>;
+  /** GitHub Enterprise URI. */
+  uri?: InputMaybe<Scalars['URL']['input']>;
 };
 
 /** Represents GitHub properties. */
