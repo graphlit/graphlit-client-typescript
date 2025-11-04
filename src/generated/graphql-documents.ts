@@ -1428,6 +1428,7 @@ export const GetContent = gql`
     pullRequest {
       identifier
       title
+      description
       project
       team
       status
@@ -2255,6 +2256,7 @@ export const LookupContents = gql`
       pullRequest {
         identifier
         title
+        description
         project
         team
         status
@@ -2919,6 +2921,7 @@ export const QueryContents = gql`
       pullRequest {
         identifier
         title
+        description
         project
         team
         status
@@ -3319,6 +3322,7 @@ export const QueryContentsObservations = gql`
       pullRequest {
         identifier
         title
+        description
         project
         team
         status
