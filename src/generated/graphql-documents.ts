@@ -1410,7 +1410,20 @@ export const GetContent = gql`
       pullRequestNumber
       authorDate
       committerDate
+      authors {
+        name
+        email
+        givenName
+        familyName
+      }
+      committers {
+        name
+        email
+        givenName
+        familyName
+      }
       labels
+      links
     }
     pullRequest {
       identifier
@@ -1428,7 +1441,20 @@ export const GetContent = gql`
       filesChanged
       additions
       deletions
+      authors {
+        name
+        email
+        givenName
+        familyName
+      }
+      reviewers {
+        name
+        email
+        givenName
+        familyName
+      }
       labels
+      links
     }
     message {
       identifier
@@ -2211,7 +2237,20 @@ export const LookupContents = gql`
         pullRequestNumber
         authorDate
         committerDate
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        committers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       pullRequest {
         identifier
@@ -2229,7 +2268,20 @@ export const LookupContents = gql`
         filesChanged
         additions
         deletions
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        reviewers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       message {
         identifier
@@ -2849,7 +2901,20 @@ export const QueryContents = gql`
         pullRequestNumber
         authorDate
         committerDate
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        committers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       pullRequest {
         identifier
@@ -2867,7 +2932,20 @@ export const QueryContents = gql`
         filesChanged
         additions
         deletions
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        reviewers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       message {
         identifier
@@ -3223,7 +3301,20 @@ export const QueryContentsObservations = gql`
         pullRequestNumber
         authorDate
         committerDate
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        committers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       pullRequest {
         identifier
@@ -3241,7 +3332,20 @@ export const QueryContentsObservations = gql`
         filesChanged
         additions
         deletions
+        authors {
+          name
+          email
+          givenName
+          familyName
+        }
+        reviewers {
+          name
+          email
+          givenName
+          familyName
+        }
         labels
+        links
       }
       message {
         identifier
