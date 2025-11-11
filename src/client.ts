@@ -1486,6 +1486,28 @@ class Graphlit {
     });
   }
 
+  public async researchContents(
+    prompt: string,
+    specification?: Types.EntityReferenceInput,
+    filter?: Types.ContentFilter,
+    correlationId?: string,
+  ): Promise<Types.ResearchContentsMutation> {
+    return this.mutateAndCheckError<
+      Types.ResearchContentsMutation,
+      {
+        prompt: string;
+        specification?: Types.EntityReferenceInput;
+        filter?: Types.ContentFilter;
+        correlationId?: string;
+      }
+    >(Documents.ResearchContents, {
+      prompt: prompt,
+      specification: specification,
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async getContent(id: string): Promise<Types.GetContentQuery> {
     return this.queryAndCheckError<Types.GetContentQuery, { id: string }>(
       Documents.GetContent,
@@ -4397,6 +4419,124 @@ class Graphlit {
       Types.DeleteObservationMutation,
       { id: string }
     >(Documents.DeleteObservation, { id: id });
+  }
+
+  public async createInvestment(
+    investment: Types.InvestmentInput,
+  ): Promise<Types.CreateInvestmentMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateInvestmentMutation,
+      { investment: Types.InvestmentInput }
+    >(Documents.CreateInvestment, { investment: investment });
+  }
+
+  public async updateInvestment(
+    investment: Types.InvestmentUpdateInput,
+  ): Promise<Types.UpdateInvestmentMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateInvestmentMutation,
+      { investment: Types.InvestmentUpdateInput }
+    >(Documents.UpdateInvestment, { investment: investment });
+  }
+
+  public async deleteInvestment(
+    id: string,
+  ): Promise<Types.DeleteInvestmentMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteInvestmentMutation,
+      { id: string }
+    >(Documents.DeleteInvestment, { id: id });
+  }
+
+  public async deleteInvestments(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteInvestmentsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteInvestmentsMutation,
+      { ids: string[]; isSynchronous?: boolean }
+    >(Documents.DeleteInvestments, {
+      ids: ids,
+      isSynchronous: isSynchronous,
+    });
+  }
+
+  public async deleteAllInvestments(
+    filter?: Types.InvestmentFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllInvestmentsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllInvestmentsMutation,
+      {
+        filter?: Types.InvestmentFilter;
+        isSynchronous?: boolean;
+        correlationId?: string;
+      }
+    >(Documents.DeleteAllInvestments, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  public async createInvestmentFund(
+    investmentFund: Types.InvestmentFundInput,
+  ): Promise<Types.CreateInvestmentFundMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateInvestmentFundMutation,
+      { investmentFund: Types.InvestmentFundInput }
+    >(Documents.CreateInvestmentFund, { investmentFund: investmentFund });
+  }
+
+  public async updateInvestmentFund(
+    investmentFund: Types.InvestmentFundUpdateInput,
+  ): Promise<Types.UpdateInvestmentFundMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateInvestmentFundMutation,
+      { investmentFund: Types.InvestmentFundUpdateInput }
+    >(Documents.UpdateInvestmentFund, { investmentFund: investmentFund });
+  }
+
+  public async deleteInvestmentFund(
+    id: string,
+  ): Promise<Types.DeleteInvestmentFundMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteInvestmentFundMutation,
+      { id: string }
+    >(Documents.DeleteInvestmentFund, { id: id });
+  }
+
+  public async deleteInvestmentFunds(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteInvestmentFundsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteInvestmentFundsMutation,
+      { ids: string[]; isSynchronous?: boolean }
+    >(Documents.DeleteInvestmentFunds, {
+      ids: ids,
+      isSynchronous: isSynchronous,
+    });
+  }
+
+  public async deleteAllInvestmentFunds(
+    filter?: Types.InvestmentFundFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllInvestmentFundsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllInvestmentFundsMutation,
+      {
+        filter?: Types.InvestmentFundFilter;
+        isSynchronous?: boolean;
+        correlationId?: string;
+      }
+    >(Documents.DeleteAllInvestmentFunds, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
   }
 
   /**

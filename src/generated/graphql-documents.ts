@@ -221,6 +221,9 @@ export const GetAlert = gql`
           id
         }
       }
+      parallel {
+        processor
+      }
     }
     summarySpecification {
       id
@@ -398,6 +401,9 @@ export const QueryAlerts = gql`
           seed {
             id
           }
+        }
+        parallel {
+          processor
         }
       }
       summarySpecification {
@@ -858,6 +864,7 @@ export const DescribeEncodedImage = gql`
         fileExtension
         fileName
         fileSize
+        fileMetadata
         relativeFolderPath
         masterUri
         imageUri
@@ -998,6 +1005,7 @@ export const DescribeImage = gql`
         fileExtension
         fileName
         fileSize
+        fileMetadata
         relativeFolderPath
         masterUri
         imageUri
@@ -1222,6 +1230,7 @@ export const GetContent = gql`
     fileExtension
     fileName
     fileSize
+    fileMetadata
     relativeFolderPath
     masterUri
     imageUri
@@ -2050,6 +2059,7 @@ export const LookupContents = gql`
       fileExtension
       fileName
       fileSize
+      fileMetadata
       relativeFolderPath
       masterUri
       imageUri
@@ -2452,6 +2462,7 @@ export const PublishContents = gql`
       fileExtension
       fileName
       fileSize
+      fileMetadata
       relativeFolderPath
       masterUri
       imageUri
@@ -2581,6 +2592,7 @@ export const PublishText = gql`
       fileExtension
       fileName
       fileSize
+      fileMetadata
       relativeFolderPath
       masterUri
       imageUri
@@ -3472,6 +3484,22 @@ export const QueryContentsObservations = gql`
   }
 }
     `;
+export const QueryGraph = gql`
+    query QueryGraph($filter: GraphFilter, $graph: GraphInput, $correlationId: String) {
+  graph(filter: $filter, graph: $graph, correlationId: $correlationId) {
+    nodes {
+      id
+      name
+      type
+    }
+    edges {
+      from
+      to
+      relation
+    }
+  }
+}
+    `;
 export const QueryObservables = gql`
     query QueryObservables($filter: ContentFilter, $correlationId: String) {
   observables(filter: $filter, correlationId: $correlationId) {
@@ -3482,6 +3510,21 @@ export const QueryObservables = gql`
         name
       }
     }
+  }
+}
+    `;
+export const ResearchContents = gql`
+    mutation ResearchContents($connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput, $correlationId: String) {
+  researchContents(
+    connector: $connector
+    filter: $filter
+    name: $name
+    summarySpecification: $summarySpecification
+    publishSpecification: $publishSpecification
+    workflow: $workflow
+    correlationId: $correlationId
+  ) {
+    result
   }
 }
     `;
@@ -3663,6 +3706,7 @@ export const AskGraphlit = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -3841,6 +3885,7 @@ export const CompleteConversation = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -4024,6 +4069,7 @@ export const CompleteConversation = gql`
             fileExtension
             fileName
             fileSize
+            fileMetadata
             relativeFolderPath
             masterUri
             imageUri
@@ -4169,6 +4215,7 @@ export const ContinueConversation = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -4352,6 +4399,7 @@ export const ContinueConversation = gql`
             fileExtension
             fileName
             fileSize
+            fileMetadata
             relativeFolderPath
             masterUri
             imageUri
@@ -4546,6 +4594,7 @@ export const FormatConversation = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -4729,6 +4778,7 @@ export const FormatConversation = gql`
             fileExtension
             fileName
             fileSize
+            fileMetadata
             relativeFolderPath
             masterUri
             imageUri
@@ -4877,6 +4927,7 @@ export const GetConversation = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -5214,6 +5265,7 @@ export const Prompt = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -5366,6 +5418,7 @@ export const PromptConversation = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -5549,6 +5602,7 @@ export const PromptConversation = gql`
             fileExtension
             fileName
             fileSize
+            fileMetadata
             relativeFolderPath
             masterUri
             imageUri
@@ -5690,6 +5744,7 @@ export const PublishConversation = gql`
       fileExtension
       fileName
       fileSize
+      fileMetadata
       relativeFolderPath
       masterUri
       imageUri
@@ -5826,6 +5881,7 @@ export const QueryConversations = gql`
             fileExtension
             fileName
             fileSize
+            fileMetadata
             relativeFolderPath
             masterUri
             imageUri
@@ -6214,6 +6270,7 @@ export const ReviseContent = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -6362,6 +6419,7 @@ export const ReviseEncodedImage = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -6509,6 +6567,7 @@ export const ReviseImage = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -6656,6 +6715,7 @@ export const ReviseText = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
@@ -7146,6 +7206,9 @@ export const GetFeed = gql`
         identifiers
         type
       }
+      attio {
+        apiKey
+      }
       readLimit
     }
     commit {
@@ -7171,6 +7234,14 @@ export const GetFeed = gql`
         refreshToken
         personalAccessToken
         authorizationId
+      }
+      readLimit
+    }
+    crm {
+      type
+      attio {
+        authenticationType
+        apiKey
       }
       readLimit
     }
@@ -7278,6 +7349,26 @@ export const GetFeed = gql`
       token
       channel
       includeAttachments
+    }
+    attio {
+      readLimit
+      apiKey
+    }
+    research {
+      readLimit
+      type
+      query
+      parallel {
+        processor
+      }
+    }
+    entity {
+      type
+      query
+      readLimit
+      parallel {
+        generator
+      }
     }
     error
     lastPostDate
@@ -7516,6 +7607,9 @@ export const QueryFeeds = gql`
           identifiers
           type
         }
+        attio {
+          apiKey
+        }
         readLimit
       }
       commit {
@@ -7541,6 +7635,14 @@ export const QueryFeeds = gql`
           refreshToken
           personalAccessToken
           authorizationId
+        }
+        readLimit
+      }
+      crm {
+        type
+        attio {
+          authenticationType
+          apiKey
         }
         readLimit
       }
@@ -7648,6 +7750,26 @@ export const QueryFeeds = gql`
         token
         channel
         includeAttachments
+      }
+      attio {
+        readLimit
+        apiKey
+      }
+      research {
+        readLimit
+        type
+        query
+        parallel {
+          processor
+        }
+      }
+      entity {
+        type
+        query
+        readLimit
+        parallel {
+          generator
+        }
       }
       error
       lastPostDate
@@ -7822,6 +7944,172 @@ export const UpdateFeed = gql`
     state
     type
     syncMode
+  }
+}
+    `;
+export const CountInvestments = gql`
+    query CountInvestments($filter: InvestmentFilter, $correlationId: String) {
+  countInvestments(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateInvestment = gql`
+    mutation CreateInvestment($investment: InvestmentInput!) {
+  createInvestment(investment: $investment) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllInvestments = gql`
+    mutation DeleteAllInvestments($filter: InvestmentFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllInvestments(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteInvestment = gql`
+    mutation DeleteInvestment($id: ID!) {
+  deleteInvestment(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteInvestments = gql`
+    mutation DeleteInvestments($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteInvestments(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetInvestment = gql`
+    query GetInvestment($id: ID!, $correlationId: String) {
+  investment(id: $id, correlationId: $correlationId) {
+    id
+    name
+    alternateNames
+    creationDate
+    uri
+    description
+    identifier
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryInvestments = gql`
+    query QueryInvestments($filter: InvestmentFilter, $correlationId: String) {
+  investments(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      uri
+      description
+      identifier
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateInvestment = gql`
+    mutation UpdateInvestment($investment: InvestmentUpdateInput!) {
+  updateInvestment(investment: $investment) {
+    id
+    name
+  }
+}
+    `;
+export const CountInvestmentFunds = gql`
+    query CountInvestmentFunds($filter: InvestmentFundFilter, $correlationId: String) {
+  countInvestmentFunds(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateInvestmentFund = gql`
+    mutation CreateInvestmentFund($investmentFund: InvestmentFundInput!) {
+  createInvestmentFund(investmentFund: $investmentFund) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllInvestmentFunds = gql`
+    mutation DeleteAllInvestmentFunds($filter: InvestmentFundFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllInvestmentFunds(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteInvestmentFund = gql`
+    mutation DeleteInvestmentFund($id: ID!) {
+  deleteInvestmentFund(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteInvestmentFunds = gql`
+    mutation DeleteInvestmentFunds($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteInvestmentFunds(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetInvestmentFund = gql`
+    query GetInvestmentFund($id: ID!, $correlationId: String) {
+  investmentFund(id: $id, correlationId: $correlationId) {
+    id
+    name
+    alternateNames
+    creationDate
+    uri
+    description
+    identifier
+    thing
+    relevance
+  }
+}
+    `;
+export const QueryInvestmentFunds = gql`
+    query QueryInvestmentFunds($filter: InvestmentFundFilter, $correlationId: String) {
+  investmentFunds(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      alternateNames
+      creationDate
+      uri
+      description
+      identifier
+      thing
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateInvestmentFund = gql`
+    mutation UpdateInvestmentFund($investmentFund: InvestmentFundUpdateInput!) {
+  updateInvestmentFund(investmentFund: $investmentFund) {
+    id
+    name
   }
 }
     `;
@@ -9972,6 +10260,7 @@ export const PromptSpecifications = gql`
           fileExtension
           fileName
           fileSize
+          fileMetadata
           relativeFolderPath
           masterUri
           imageUri
