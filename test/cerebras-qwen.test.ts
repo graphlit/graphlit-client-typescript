@@ -20,7 +20,7 @@ const skipTests =
   !process.env.GRAPHLIT_JWT_SECRET;
 
 // Enable debug logging for these tests
-process.env.DEBUG_GRAPHLIT_SDK_STREAMING = 'true';
+process.env.DEBUG_GRAPHLIT_SDK_STREAMING = "true";
 
 describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
   let client: Graphlit;
@@ -80,11 +80,11 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
         "What is the 2025 Home Run Derby? Just tell me what you know about it.",
         (event) => {
           events.push(event);
-          
+
           if (event.type === "conversation_started") {
             createdConversationIds.push(event.conversationId);
           }
-          
+
           if (event.type === "conversation_completed" && event.message) {
             finalMessage = event.message.message || "";
           }
@@ -93,12 +93,14 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
         { id: cerebrasSpecId }, // specification
         undefined, // tools
         undefined, // toolHandlers
-        undefined // options
+        undefined, // options
       );
 
       expect(finalMessage).toBeTruthy();
-      expect(events.some(e => e.type === "conversation_started")).toBe(true);
-      expect(events.some(e => e.type === "conversation_completed")).toBe(true);
+      expect(events.some((e) => e.type === "conversation_started")).toBe(true);
+      expect(events.some((e) => e.type === "conversation_completed")).toBe(
+        true,
+      );
     });
   });
 
@@ -110,27 +112,30 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
 
       // Mock tool handler
       const toolHandler = async (toolCall: any) => {
-        console.log(`Tool called: ${toolCall.name}`, JSON.parse(toolCall.arguments));
-        
-        if (toolCall.name === 'webSearch') {
+        console.log(
+          `Tool called: ${toolCall.name}`,
+          JSON.parse(toolCall.arguments),
+        );
+
+        if (toolCall.name === "webSearch") {
           return [
             {
               uri: "https://en.wikipedia.org/wiki/2025_Major_League_Baseball_Home_Run_Derby",
               text: "2025 Major League Baseball Home Run Derby - Wikipedia. Date: July 14, 2025. The 2025 Major League Baseball Home Run Derby is a home run hitting contest between eight batters from Major League Baseball (MLB).",
               title: "2025 Major League Baseball Home Run Derby - Wikipedia",
               score: 0.9039154,
-              __typename: "WebSearchResult"
+              __typename: "WebSearchResult",
             },
             {
               uri: "https://www.mlb.com/news/2025-home-run-derby-results",
               text: "Cal Raleigh made history as the first catcher to win the T-Mobile Home Run Derby, defeating 22-year-old Junior Caminero in the finals on Monday",
               title: "2025 Home Run Derby results - MLB.com",
               score: 0.6829338,
-              __typename: "WebSearchResult"
-            }
+              __typename: "WebSearchResult",
+            },
           ];
         }
-        
+
         return null;
       };
 
@@ -139,49 +144,52 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
           "Search for information about the 2025 Home Run Derby and tell me the key details.",
           (event) => {
             events.push(event);
-            
+
             if (event.type === "conversation_started") {
               createdConversationIds.push(event.conversationId);
             }
-            
+
             if (event.type === "error") {
               console.log("Error event:", event.error);
               errorDetails = event.error;
             }
-            
+
             if (event.type === "tool_update") {
-              console.log(`Tool update: ${event.toolCall.name} - ${event.status}`);
+              console.log(
+                `Tool update: ${event.toolCall.name} - ${event.status}`,
+              );
             }
           },
           undefined, // conversationId
           { id: cerebrasSpecId }, // specification
           [
             {
-              name: 'webSearch',
-              description: 'Search the web for information',
+              name: "webSearch",
+              description: "Search the web for information",
               schema: JSON.stringify({
-                type: 'object',
+                type: "object",
                 properties: {
                   query: {
-                    type: 'string',
-                    description: 'The search query'
+                    type: "string",
+                    description: "The search query",
                   },
                   limit: {
-                    type: 'number',
-                    description: 'Maximum number of results to return',
-                    default: 5
-                  }
+                    type: "number",
+                    description: "Maximum number of results to return",
+                    default: 5,
+                  },
                 },
-                required: ['query']
-              })
-            }
+                required: ["query"],
+              }),
+            },
           ], // tools
-          { webSearch: toolHandler } // toolHandlers
+          { webSearch: toolHandler }, // toolHandlers
         );
 
         // If we get here, no error occurred
-        expect(events.some(e => e.type === "conversation_completed")).toBe(true);
-        
+        expect(events.some((e) => e.type === "conversation_completed")).toBe(
+          true,
+        );
       } catch (err: any) {
         error = err;
         console.error("Caught error:", {
@@ -189,26 +197,30 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
           status: err.status || err.statusCode,
           error: err.error,
           type: err.type,
-          code: err.code
+          code: err.code,
         });
       }
 
       // If we got an error, it should have more details than just "400 status code (no body)"
       if (error) {
         expect(error.message).toBeDefined();
-        
+
         // Check if we're getting our enhanced error message
         if (error.message.includes("400 status code (no body)")) {
-          console.error("Still getting generic error message - enhanced error handling not working");
+          console.error(
+            "Still getting generic error message - enhanced error handling not working",
+          );
         } else {
           console.log("Enhanced error message:", error.message);
         }
-        
+
         // This test should fail since Cerebras doesn't support tools properly
         throw new Error(`Cerebras returned error: ${error.message}`);
       } else {
         // If no error, the request succeeded
-        expect(events.some(e => e.type === "conversation_completed")).toBe(true);
+        expect(events.some((e) => e.type === "conversation_completed")).toBe(
+          true,
+        );
       }
     });
 
@@ -221,12 +233,12 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
           name: `tool${i}`,
           description: `Test tool ${i}`,
           schema: JSON.stringify({
-            type: 'object',
+            type: "object",
             properties: {
-              param: { type: 'string', description: `Parameter for tool ${i}` }
+              param: { type: "string", description: `Parameter for tool ${i}` },
             },
-            required: ['param']
-          })
+            required: ["param"],
+          }),
         }));
 
         await client.streamAgent(
@@ -238,9 +250,8 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
           },
           undefined, // conversationId
           { id: cerebrasSpecId }, // specification
-          tools // tools
+          tools, // tools
         );
-
       } catch (error: any) {
         capturedError = error;
       }
@@ -248,14 +259,19 @@ describe.skipIf(skipTests)("Cerebras Qwen 3 Tests", () => {
       if (capturedError) {
         console.log("=== Error Details ===");
         console.log("Message:", capturedError.message);
-        console.log("Status:", capturedError.status || capturedError.statusCode);
-        
+        console.log(
+          "Status:",
+          capturedError.status || capturedError.statusCode,
+        );
+
         // Verify we're getting better error details
         expect(capturedError.message).toBeDefined();
         expect(capturedError.message).not.toBe("400 status code (no body)");
-        
+
         // We got a 400 error, which means Cerebras rejected our request
-        throw new Error(`Cerebras returned 400 error: ${capturedError.message}`);
+        throw new Error(
+          `Cerebras returned 400 error: ${capturedError.message}`,
+        );
       } else {
         // No error means the request succeeded, which is also fine
         console.log("No error - request succeeded with many tools");

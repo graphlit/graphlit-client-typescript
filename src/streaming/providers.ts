@@ -202,9 +202,7 @@ export async function streamWithOpenAI(
       streamConfig.reasoning_effort = reasoningEffort.toLowerCase();
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(
-          `🧠 [OpenAI] Reasoning effort set to: ${reasoningEffort}`,
-        );
+        console.log(`🧠 [OpenAI] Reasoning effort set to: ${reasoningEffort}`);
       }
     }
 
@@ -641,7 +639,8 @@ export async function streamWithAnthropic(
       model: modelName as string,
       messages,
       stream: true,
-      max_tokens: specification.anthropic?.completionTokenLimit || defaultMaxTokens,
+      max_tokens:
+        specification.anthropic?.completionTokenLimit || defaultMaxTokens,
     };
 
     // Handle temperature based on thinking configuration
@@ -1199,7 +1198,9 @@ export async function streamWithAnthropic(
     let messageWithThinking = fullMessage;
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🧠 [Anthropic] Debug - validToolCalls: ${validToolCalls.length}, thinking content: ${completeThinkingContent.length} chars, fullMessage: ${fullMessage.length} chars`);
+      console.log(
+        `🧠 [Anthropic] Debug - validToolCalls: ${validToolCalls.length}, thinking content: ${completeThinkingContent.length} chars, fullMessage: ${fullMessage.length} chars`,
+      );
     }
 
     if (validToolCalls.length > 0 && completeThinkingContent.trim()) {
@@ -1213,9 +1214,14 @@ export async function streamWithAnthropic(
         console.log(
           `🧠 [Anthropic] Including thinking content with message due to tool calls (${completeThinkingContent.length} chars, signature: ${completeThinkingSignature?.length || 0})`,
         );
-        console.log(`🧠 [Anthropic] Final stored message: "${messageWithThinking}"`);
+        console.log(
+          `🧠 [Anthropic] Final stored message: "${messageWithThinking}"`,
+        );
       }
-    } else if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && completeThinkingContent.trim()) {
+    } else if (
+      process.env.DEBUG_GRAPHLIT_SDK_STREAMING &&
+      completeThinkingContent.trim()
+    ) {
       console.log(
         `🧠 [Anthropic] Thinking content captured (${completeThinkingContent.length} chars) - not including (no tool calls)`,
       );
@@ -1395,8 +1401,10 @@ export async function streamWithGoogle(
     if (thinkingConfig) {
       // Google Gemini 2.5 supports thinking mode
       // -1 = dynamic thinking (model decides), 0 = disabled, >0 = specific budget
-      const budget = thinkingConfig.budget_tokens === 0 ? 0 :
-                     thinkingConfig.budget_tokens || -1; // Default to dynamic if not specified
+      const budget =
+        thinkingConfig.budget_tokens === 0
+          ? 0
+          : thinkingConfig.budget_tokens || -1; // Default to dynamic if not specified
 
       generationConfig.thinkingConfig = {
         thinkingBudget: budget,
@@ -1404,7 +1412,12 @@ export async function streamWithGoogle(
       };
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        const mode = budget === -1 ? "dynamic" : budget === 0 ? "disabled" : `${budget} tokens`;
+        const mode =
+          budget === -1
+            ? "dynamic"
+            : budget === 0
+              ? "disabled"
+              : `${budget} tokens`;
         console.log(
           `🧠 [Google] Thinking mode: ${mode} | Include thoughts: ${budget !== 0}`,
         );
@@ -1463,7 +1476,7 @@ export async function streamWithGoogle(
             );
             if (part.thought && part.text) {
               console.log(
-                `[Google]     THOUGHT CONTENT: "${part.text.substring(0, 100)}${part.text.length > 100 ? '...' : ''}"`,
+                `[Google]     THOUGHT CONTENT: "${part.text.substring(0, 100)}${part.text.length > 100 ? "..." : ""}"`,
               );
             }
           }
@@ -1501,7 +1514,7 @@ export async function streamWithGoogle(
             regularText += part.text;
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `[Google] Regular text part (NOT thought): "${part.text.substring(0, 100)}${part.text.length > 100 ? '...' : ''}"`,
+                `[Google] Regular text part (NOT thought): "${part.text.substring(0, 100)}${part.text.length > 100 ? "..." : ""}"`,
               );
             }
           }
@@ -1513,13 +1526,15 @@ export async function streamWithGoogle(
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && text) {
         console.log(
-          `[Google] Text to add (excluding thoughts): "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}" (${text.length} chars)`,
+          `[Google] Text to add (excluding thoughts): "${text.substring(0, 100)}${text.length > 100 ? "..." : ""}" (${text.length} chars)`,
         );
       }
 
       if (text) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`[Google] Adding to fullMessage: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}" (${text.length} chars)`);
+          console.log(
+            `[Google] Adding to fullMessage: "${text.substring(0, 50)}${text.length > 50 ? "..." : ""}" (${text.length} chars)`,
+          );
         }
 
         fullMessage += text;

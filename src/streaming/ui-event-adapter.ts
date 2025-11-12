@@ -562,7 +562,7 @@ export class UIEventAdapter {
       (toolData) =>
         toolData.status === "ready" ||
         toolData.status === "preparing" ||
-        toolData.status === "executing"
+        toolData.status === "executing",
     );
 
     if (hasPendingToolCalls) {
@@ -912,7 +912,9 @@ export class UIEventAdapter {
   public setRoundThinkingContent(thinkingContent: string): void {
     this.roundThinkingContent = thinkingContent;
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(`🧠 [UIEventAdapter] Thinking content set for conversation history (${thinkingContent.length} chars)`);
+      console.log(
+        `🧠 [UIEventAdapter] Thinking content set for conversation history (${thinkingContent.length} chars)`,
+      );
     }
   }
 }

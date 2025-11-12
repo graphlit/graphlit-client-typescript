@@ -337,7 +337,7 @@ class Graphlit {
     if (!isValidGuid(this.organizationId)) {
       throw new Error(
         `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -348,7 +348,7 @@ class Graphlit {
     if (!isValidGuid(this.environmentId)) {
       throw new Error(
         `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -360,7 +360,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -570,10 +570,10 @@ class Graphlit {
   }
 
   public async getProject(): Promise<Types.GetProjectQuery> {
-    return this.queryAndCheckError<Types.GetProjectQuery, {}>(
-      Documents.GetProject,
-      {},
-    );
+    return this.queryAndCheckError<
+      Types.GetProjectQuery,
+      Types.GetProjectQueryVariables
+    >(Documents.GetProject, {});
   }
 
   public async updateProject(
@@ -581,7 +581,7 @@ class Graphlit {
   ): Promise<Types.UpdateProjectMutation> {
     return this.mutateAndCheckError<
       Types.UpdateProjectMutation,
-      { project: Types.ProjectUpdateInput }
+      Types.UpdateProjectMutationVariables
     >(Documents.UpdateProject, { project: project });
   }
 
@@ -592,11 +592,7 @@ class Graphlit {
   ): Promise<Types.LookupUsageQuery> {
     return this.queryAndCheckError<
       Types.LookupUsageQuery,
-      {
-        correlationId: string;
-        startDate?: Types.Scalars["DateTime"]["input"];
-        duration?: Types.Scalars["TimeSpan"]["input"];
-      }
+      Types.LookupUsageQueryVariables
     >(Documents.LookupUsage, {
       correlationId: correlationId,
       startDate: startDate,
@@ -611,11 +607,7 @@ class Graphlit {
   ): Promise<Types.LookupCreditsQuery> {
     return this.queryAndCheckError<
       Types.LookupCreditsQuery,
-      {
-        correlationId: string;
-        startDate?: Types.Scalars["DateTime"]["input"];
-        duration?: Types.Scalars["TimeSpan"]["input"];
-      }
+      Types.LookupCreditsQueryVariables
     >(Documents.LookupCredits, {
       correlationId: correlationId,
       startDate: startDate,
@@ -629,10 +621,7 @@ class Graphlit {
   ): Promise<Types.QueryTokensQuery> {
     return this.queryAndCheckError<
       Types.QueryTokensQuery,
-      {
-        startDate: Types.Scalars["DateTime"]["input"];
-        duration: Types.Scalars["TimeSpan"]["input"];
-      }
+      Types.QueryTokensQueryVariables
     >(Documents.QueryTokens, { startDate: startDate, duration: duration });
   }
 
@@ -646,14 +635,7 @@ class Graphlit {
   ): Promise<Types.QueryUsageQuery> {
     return this.queryAndCheckError<
       Types.QueryUsageQuery,
-      {
-        startDate: Types.Scalars["DateTime"]["input"];
-        duration: Types.Scalars["TimeSpan"]["input"];
-        names?: string[];
-        excludedNames?: string[];
-        offset?: Types.Scalars["Int"]["input"];
-        limit?: Types.Scalars["Int"]["input"];
-      }
+      Types.QueryUsageQueryVariables
     >(Documents.QueryUsage, {
       startDate: startDate,
       duration: duration,
@@ -670,10 +652,7 @@ class Graphlit {
   ): Promise<Types.QueryCreditsQuery> {
     return this.queryAndCheckError<
       Types.QueryCreditsQuery,
-      {
-        startDate: Types.Scalars["DateTime"]["input"];
-        duration: Types.Scalars["TimeSpan"]["input"];
-      }
+      Types.QueryCreditsQueryVariables
     >(Documents.QueryCredits, { startDate: startDate, duration: duration });
   }
 
@@ -684,11 +663,7 @@ class Graphlit {
   ): Promise<Types.SendNotificationMutation> {
     return this.mutateAndCheckError<
       Types.SendNotificationMutation,
-      {
-        connector: Types.IntegrationConnectorInput;
-        text: string;
-        textType?: Types.TextTypes;
-      }
+      Types.SendNotificationMutationVariables
     >(Documents.SendNotification, {
       connector: connector,
       text: text,
@@ -704,12 +679,7 @@ class Graphlit {
   ): Promise<Types.MapWebQuery> {
     return this.queryAndCheckError<
       Types.MapWebQuery,
-      {
-        uri: string;
-        allowedPaths?: string[];
-        excludedPaths?: string[];
-        correlationId?: string;
-      }
+      Types.MapWebQueryVariables
     >(Documents.MapWeb, {
       uri: uri,
       allowedPaths: allowedPaths,
@@ -726,12 +696,7 @@ class Graphlit {
   ): Promise<Types.SearchWebQuery> {
     return this.queryAndCheckError<
       Types.SearchWebQuery,
-      {
-        text: string;
-        service?: Types.SearchServiceTypes;
-        limit?: number;
-        correlationId?: string;
-      }
+      Types.SearchWebQueryVariables
     >(Documents.SearchWeb, {
       text: text,
       service: service,
@@ -746,7 +711,7 @@ class Graphlit {
   ): Promise<Types.CreateAlertMutation> {
     return this.mutateAndCheckError<
       Types.CreateAlertMutation,
-      { alert: Types.AlertInput; correlationId?: string }
+      Types.CreateAlertMutationVariables
     >(Documents.CreateAlert, { alert: alert, correlationId: correlationId });
   }
 
@@ -755,7 +720,7 @@ class Graphlit {
   ): Promise<Types.UpdateAlertMutation> {
     return this.mutateAndCheckError<
       Types.UpdateAlertMutation,
-      { alert: Types.AlertUpdateInput }
+      Types.UpdateAlertMutationVariables
     >(Documents.UpdateAlert, { alert: alert });
   }
 
@@ -764,15 +729,15 @@ class Graphlit {
   ): Promise<Types.UpsertAlertMutation> {
     return this.mutateAndCheckError<
       Types.UpsertAlertMutation,
-      { alert: Types.AlertInput }
+      Types.UpsertAlertMutationVariables
     >(Documents.UpsertAlert, { alert: alert });
   }
 
   public async deleteAlert(id: string): Promise<Types.DeleteAlertMutation> {
-    return this.mutateAndCheckError<Types.DeleteAlertMutation, { id: string }>(
-      Documents.DeleteAlert,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteAlertMutation,
+      Types.DeleteAlertMutationVariables
+    >(Documents.DeleteAlert, { id: id });
   }
 
   public async deleteAlerts(
@@ -781,7 +746,7 @@ class Graphlit {
   ): Promise<Types.DeleteAlertsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAlertsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteAlertsMutationVariables
     >(Documents.DeleteAlerts, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -792,11 +757,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllAlertsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllAlertsMutation,
-      {
-        filter?: Types.AlertFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllAlertsMutationVariables
     >(Documents.DeleteAllAlerts, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -805,24 +766,24 @@ class Graphlit {
   }
 
   public async enableAlert(id: string): Promise<Types.EnableAlertMutation> {
-    return this.mutateAndCheckError<Types.EnableAlertMutation, { id: string }>(
-      Documents.EnableAlert,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.EnableAlertMutation,
+      Types.EnableAlertMutationVariables
+    >(Documents.EnableAlert, { id: id });
   }
 
   public async disableAlert(id: string): Promise<Types.DisableAlertMutation> {
-    return this.mutateAndCheckError<Types.DisableAlertMutation, { id: string }>(
-      Documents.DisableAlert,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DisableAlertMutation,
+      Types.DisableAlertMutationVariables
+    >(Documents.DisableAlert, { id: id });
   }
 
   public async getAlert(id: string): Promise<Types.GetAlertQuery> {
-    return this.queryAndCheckError<Types.GetAlertQuery, { id: string }>(
-      Documents.GetAlert,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetAlertQuery,
+      Types.GetAlertQueryVariables
+    >(Documents.GetAlert, { id: id });
   }
 
   public async queryAlerts(
@@ -830,7 +791,7 @@ class Graphlit {
   ): Promise<Types.QueryAlertsQuery> {
     return this.queryAndCheckError<
       Types.QueryAlertsQuery,
-      { filter?: Types.AlertFilter }
+      Types.QueryAlertsQueryVariables
     >(Documents.QueryAlerts, { filter: filter });
   }
 
@@ -839,7 +800,7 @@ class Graphlit {
   ): Promise<Types.CountAlertsQuery> {
     return this.queryAndCheckError<
       Types.CountAlertsQuery,
-      { filter?: Types.AlertFilter }
+      Types.CountAlertsQueryVariables
     >(Documents.CountAlerts, { filter: filter });
   }
 
@@ -848,7 +809,7 @@ class Graphlit {
   ): Promise<Types.CreateCollectionMutation> {
     return this.mutateAndCheckError<
       Types.CreateCollectionMutation,
-      { collection: Types.CollectionInput }
+      Types.CreateCollectionMutationVariables
     >(Documents.CreateCollection, { collection: collection });
   }
 
@@ -857,7 +818,7 @@ class Graphlit {
   ): Promise<Types.UpdateCollectionMutation> {
     return this.mutateAndCheckError<
       Types.UpdateCollectionMutation,
-      { collection: Types.CollectionUpdateInput }
+      Types.UpdateCollectionMutationVariables
     >(Documents.UpdateCollection, { collection: collection });
   }
 
@@ -866,7 +827,7 @@ class Graphlit {
   ): Promise<Types.DeleteCollectionMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCollectionMutation,
-      { id: string }
+      Types.DeleteCollectionMutationVariables
     >(Documents.DeleteCollection, { id: id });
   }
 
@@ -876,7 +837,7 @@ class Graphlit {
   ): Promise<Types.DeleteCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCollectionsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteCollectionsMutationVariables
     >(Documents.DeleteCollections, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -887,11 +848,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllCollectionsMutation,
-      {
-        filter?: Types.CollectionFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllCollectionsMutationVariables
     >(Documents.DeleteAllCollections, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -905,10 +862,7 @@ class Graphlit {
   ): Promise<Types.AddContentsToCollectionsMutation> {
     return this.mutateAndCheckError<
       Types.AddContentsToCollectionsMutation,
-      {
-        contents: Types.EntityReferenceInput[];
-        collections: Types.EntityReferenceInput[];
-      }
+      Types.AddContentsToCollectionsMutationVariables
     >(Documents.AddContentsToCollections, {
       contents: contents,
       collections: collections,
@@ -921,10 +875,7 @@ class Graphlit {
   ): Promise<Types.RemoveContentsFromCollectionMutation> {
     return this.mutateAndCheckError<
       Types.RemoveContentsFromCollectionMutation,
-      {
-        contents: Types.EntityReferenceInput[];
-        collection: Types.EntityReferenceInput;
-      }
+      Types.RemoveContentsFromCollectionMutationVariables
     >(Documents.RemoveContentsFromCollection, {
       contents: contents,
       collection: collection,
@@ -932,10 +883,10 @@ class Graphlit {
   }
 
   public async getCollection(id: string): Promise<Types.GetCollectionQuery> {
-    return this.queryAndCheckError<Types.GetCollectionQuery, { id: string }>(
-      Documents.GetCollection,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetCollectionQuery,
+      Types.GetCollectionQueryVariables
+    >(Documents.GetCollection, { id: id });
   }
 
   public async queryCollections(
@@ -943,7 +894,7 @@ class Graphlit {
   ): Promise<Types.QueryCollectionsQuery> {
     return this.queryAndCheckError<
       Types.QueryCollectionsQuery,
-      { filter?: Types.CollectionFilter }
+      Types.QueryCollectionsQueryVariables
     >(Documents.QueryCollections, { filter: filter });
   }
 
@@ -952,7 +903,7 @@ class Graphlit {
   ): Promise<Types.CountCollectionsQuery> {
     return this.queryAndCheckError<
       Types.CountCollectionsQuery,
-      { filter?: Types.CollectionFilter }
+      Types.CountCollectionsQueryVariables
     >(Documents.CountCollections, { filter: filter });
   }
 
@@ -964,12 +915,7 @@ class Graphlit {
   ): Promise<Types.DescribeImageMutation> {
     return this.mutateAndCheckError<
       Types.DescribeImageMutation,
-      {
-        prompt: string;
-        uri: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.DescribeImageMutationVariables
     >(Documents.DescribeImage, {
       prompt: prompt,
       uri: uri,
@@ -987,13 +933,7 @@ class Graphlit {
   ): Promise<Types.DescribeEncodedImageMutation> {
     return this.mutateAndCheckError<
       Types.DescribeEncodedImageMutation,
-      {
-        prompt: string;
-        mimeType: string;
-        data: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.DescribeEncodedImageMutationVariables
     >(Documents.DescribeEncodedImage, {
       prompt: prompt,
       mimeType: mimeType,
@@ -1013,14 +953,7 @@ class Graphlit {
   ): Promise<Types.ScreenshotPageMutation> {
     return this.mutateAndCheckError<
       Types.ScreenshotPageMutation,
-      {
-        uri: string;
-        maximumHeight?: number;
-        isSynchronous?: boolean;
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        correlationId?: string;
-      }
+      Types.ScreenshotPageMutationVariables
     >(Documents.ScreenshotPage, {
       uri: uri,
       maximumHeight: maximumHeight,
@@ -1040,14 +973,7 @@ class Graphlit {
   ): Promise<Types.IngestTextBatchMutation> {
     return this.mutateAndCheckError<
       Types.IngestTextBatchMutation,
-      {
-        batch: Types.TextContentInput[];
-        textType: Types.TextTypes;
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        observations?: Types.ObservationReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestTextBatchMutationVariables
     >(Documents.IngestTextBatch, {
       batch: batch,
       textType: textType,
@@ -1066,13 +992,7 @@ class Graphlit {
   ): Promise<Types.IngestBatchMutation> {
     return this.mutateAndCheckError<
       Types.IngestBatchMutation,
-      {
-        uris: string[];
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        observations?: Types.ObservationReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestBatchMutationVariables
     >(Documents.IngestBatch, {
       uris: uris,
       workflow: workflow,
@@ -1095,17 +1015,7 @@ class Graphlit {
   ): Promise<Types.IngestUriMutation> {
     return this.mutateAndCheckError<
       Types.IngestUriMutation,
-      {
-        uri: string;
-        name?: string;
-        id?: string;
-        identifier?: string;
-        isSynchronous?: boolean;
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        observations?: Types.ObservationReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestUriMutationVariables
     >(Documents.IngestUri, {
       uri: uri,
       name: name,
@@ -1134,19 +1044,7 @@ class Graphlit {
   ): Promise<Types.IngestTextMutation> {
     return this.mutateAndCheckError<
       Types.IngestTextMutation,
-      {
-        text: string;
-        name?: string;
-        textType?: Types.TextTypes;
-        uri?: string;
-        id?: string;
-        identifier?: string;
-        isSynchronous?: boolean;
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        observations?: Types.ObservationReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestTextMutationVariables
     >(Documents.IngestText, {
       name: name,
       text: text,
@@ -1173,15 +1071,7 @@ class Graphlit {
   ): Promise<Types.IngestMemoryMutation> {
     return this.mutateAndCheckError<
       Types.IngestMemoryMutation,
-      {
-        text: string;
-        name?: string;
-        textType?: Types.TextTypes;
-        id?: string;
-        identifier?: string;
-        collections?: Types.EntityReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestMemoryMutationVariables
     >(Documents.IngestMemory, {
       name: name,
       text: text,
@@ -1205,16 +1095,7 @@ class Graphlit {
   ): Promise<Types.IngestEventMutation> {
     return this.mutateAndCheckError<
       Types.IngestEventMutation,
-      {
-        markdown: string;
-        name?: string;
-        description?: string;
-        eventDate?: Types.Scalars["DateTime"]["input"];
-        id?: string;
-        identifier?: string;
-        collections?: Types.EntityReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestEventMutationVariables
     >(Documents.IngestEvent, {
       name: name,
       markdown: markdown,
@@ -1243,20 +1124,7 @@ class Graphlit {
   ): Promise<Types.IngestEncodedFileMutation> {
     return this.mutateAndCheckError<
       Types.IngestEncodedFileMutation,
-      {
-        name: string;
-        data: string;
-        mimeType: string;
-        fileCreationDate?: Types.Scalars["DateTime"]["input"];
-        fileModifiedDate?: Types.Scalars["DateTime"]["input"];
-        id?: string;
-        identifier?: string;
-        isSynchronous?: boolean;
-        workflow?: Types.EntityReferenceInput;
-        collections?: Types.EntityReferenceInput[];
-        observations?: Types.ObservationReferenceInput[];
-        correlationId?: string;
-      }
+      Types.IngestEncodedFileMutationVariables
     >(Documents.IngestEncodedFile, {
       name: name,
       data: data,
@@ -1278,14 +1146,14 @@ class Graphlit {
   ): Promise<Types.UpdateContentMutation> {
     return this.mutateAndCheckError<
       Types.UpdateContentMutation,
-      { content: Types.ContentUpdateInput }
+      Types.UpdateContentMutationVariables
     >(Documents.UpdateContent, { content: content });
   }
 
   public async deleteContent(id: string): Promise<Types.DeleteContentMutation> {
     return this.mutateAndCheckError<
       Types.DeleteContentMutation,
-      { id: string }
+      Types.DeleteContentMutationVariables
     >(Documents.DeleteContent, { id: id });
   }
 
@@ -1295,7 +1163,7 @@ class Graphlit {
   ): Promise<Types.DeleteContentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteContentsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteContentsMutationVariables
     >(Documents.DeleteContents, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -1306,11 +1174,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllContentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllContentsMutation,
-      {
-        filter?: Types.ContentFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllContentsMutationVariables
     >(Documents.DeleteAllContents, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -1326,12 +1190,7 @@ class Graphlit {
   ): Promise<Types.SummarizeTextMutation> {
     return this.mutateAndCheckError<
       Types.SummarizeTextMutation,
-      {
-        summarization: Types.SummarizationStrategyInput;
-        text: string;
-        textType?: Types.TextTypes;
-        correlationId?: string;
-      }
+      Types.SummarizeTextMutationVariables
     >(Documents.SummarizeText, {
       summarization: summarization,
       text: text,
@@ -1347,11 +1206,7 @@ class Graphlit {
   ): Promise<Types.SummarizeContentsMutation> {
     return this.mutateAndCheckError<
       Types.SummarizeContentsMutation,
-      {
-        summarizations: Types.SummarizationStrategyInput[];
-        filter?: Types.ContentFilter;
-        correlationId?: string;
-      }
+      Types.SummarizeContentsMutationVariables
     >(Documents.SummarizeContents, {
       summarizations: summarizations,
       filter: filter,
@@ -1369,14 +1224,7 @@ class Graphlit {
   ): Promise<Types.ExtractTextMutation> {
     return this.mutateAndCheckError<
       Types.ExtractTextMutation,
-      {
-        prompt: string;
-        text: string;
-        tools: Types.ToolDefinitionInput[];
-        specification?: Types.EntityReferenceInput;
-        textType?: Types.TextTypes;
-        correlationId?: string;
-      }
+      Types.ExtractTextMutationVariables
     >(Documents.ExtractText, {
       prompt: prompt,
       text: text,
@@ -1396,13 +1244,7 @@ class Graphlit {
   ): Promise<Types.ExtractContentsMutation> {
     return this.mutateAndCheckError<
       Types.ExtractContentsMutation,
-      {
-        prompt: string;
-        tools: Types.ToolDefinitionInput[];
-        specification?: Types.EntityReferenceInput;
-        filter?: Types.ContentFilter;
-        correlationId?: string;
-      }
+      Types.ExtractContentsMutationVariables
     >(Documents.ExtractContents, {
       prompt: prompt,
       filter: filter,
@@ -1427,19 +1269,7 @@ class Graphlit {
   ): Promise<Types.PublishContentsMutation> {
     return this.mutateAndCheckError<
       Types.PublishContentsMutation,
-      {
-        summaryPrompt?: string;
-        summarySpecification?: Types.EntityReferenceInput;
-        connector: Types.ContentPublishingConnectorInput;
-        publishPrompt: string;
-        publishSpecification?: Types.EntityReferenceInput;
-        name?: string;
-        filter?: Types.ContentFilter;
-        workflow?: Types.EntityReferenceInput;
-        isSynchronous?: boolean;
-        includeDetails?: boolean;
-        correlationId?: string;
-      }
+      Types.PublishContentsMutationVariables
     >(Documents.PublishContents, {
       summaryPrompt: summaryPrompt,
       summarySpecification: summarySpecification,
@@ -1466,15 +1296,7 @@ class Graphlit {
   ): Promise<Types.PublishTextMutation> {
     return this.mutateAndCheckError<
       Types.PublishTextMutation,
-      {
-        text: string;
-        textType: Types.TextTypes;
-        connector: Types.ContentPublishingConnectorInput;
-        name?: string;
-        workflow?: Types.EntityReferenceInput;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.PublishTextMutationVariables
     >(Documents.PublishText, {
       text: text,
       textType: textType,
@@ -1487,32 +1309,33 @@ class Graphlit {
   }
 
   public async researchContents(
-    prompt: string,
-    specification?: Types.EntityReferenceInput,
+    connector: Types.ContentPublishingConnectorInput,
     filter?: Types.ContentFilter,
+    name?: string,
+    summarySpecification?: Types.EntityReferenceInput,
+    publishSpecification?: Types.EntityReferenceInput,
+    workflow?: Types.EntityReferenceInput,
     correlationId?: string,
   ): Promise<Types.ResearchContentsMutation> {
     return this.mutateAndCheckError<
       Types.ResearchContentsMutation,
-      {
-        prompt: string;
-        specification?: Types.EntityReferenceInput;
-        filter?: Types.ContentFilter;
-        correlationId?: string;
-      }
+      Types.ResearchContentsMutationVariables
     >(Documents.ResearchContents, {
-      prompt: prompt,
-      specification: specification,
+      connector: connector,
       filter: filter,
+      name: name,
+      summarySpecification: summarySpecification,
+      publishSpecification: publishSpecification,
+      workflow: workflow,
       correlationId: correlationId,
     });
   }
 
   public async getContent(id: string): Promise<Types.GetContentQuery> {
-    return this.queryAndCheckError<Types.GetContentQuery, { id: string }>(
-      Documents.GetContent,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetContentQuery,
+      Types.GetContentQueryVariables
+    >(Documents.GetContent, { id: id });
   }
 
   public async lookupContents(
@@ -1529,7 +1352,7 @@ class Graphlit {
   ): Promise<Types.QueryObservablesQuery> {
     return this.queryAndCheckError<
       Types.QueryObservablesQuery,
-      { filter?: Types.ContentFilter }
+      Types.QueryObservablesQueryVariables
     >(Documents.QueryObservables, { filter: filter });
   }
 
@@ -1538,7 +1361,7 @@ class Graphlit {
   ): Promise<Types.QueryContentsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsQuery,
-      { filter?: Types.ContentFilter }
+      Types.QueryContentsQueryVariables
     >(Documents.QueryContents, { filter: filter });
   }
 
@@ -1547,7 +1370,7 @@ class Graphlit {
   ): Promise<Types.QueryContentsObservationsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsObservationsQuery,
-      { filter?: Types.ContentFilter }
+      Types.QueryContentsObservationsQueryVariables
     >(Documents.QueryContentsObservations, { filter: filter });
   }
 
@@ -1556,7 +1379,7 @@ class Graphlit {
   ): Promise<Types.QueryContentsFacetsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsFacetsQuery,
-      { filter?: Types.ContentFilter }
+      Types.QueryContentsFacetsQueryVariables
     >(Documents.QueryContentsFacets, { filter: filter });
   }
 
@@ -1565,7 +1388,7 @@ class Graphlit {
   ): Promise<Types.QueryContentsGraphQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsGraphQuery,
-      { filter?: Types.ContentFilter; graph?: Types.ContentGraphInput }
+      Types.QueryContentsGraphQueryVariables
     >(Documents.QueryContentsGraph, {
       filter: filter,
       graph: {
@@ -1579,15 +1402,15 @@ class Graphlit {
   ): Promise<Types.CountContentsQuery> {
     return this.queryAndCheckError<
       Types.CountContentsQuery,
-      { filter?: Types.ContentFilter }
+      Types.CountContentsQueryVariables
     >(Documents.CountContents, { filter: filter });
   }
 
   public async isContentDone(id: string): Promise<Types.IsContentDoneQuery> {
-    return this.queryAndCheckError<Types.IsContentDoneQuery, { id: string }>(
-      Documents.IsContentDone,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.IsContentDoneQuery,
+      Types.IsContentDoneQueryVariables
+    >(Documents.IsContentDone, { id: id });
   }
 
   public async createConversation(
@@ -1596,7 +1419,7 @@ class Graphlit {
   ): Promise<Types.CreateConversationMutation> {
     return this.mutateAndCheckError<
       Types.CreateConversationMutation,
-      { conversation: Types.ConversationInput; correlationId?: string }
+      Types.CreateConversationMutationVariables
     >(Documents.CreateConversation, {
       conversation: conversation,
       correlationId: correlationId,
@@ -1608,7 +1431,7 @@ class Graphlit {
   ): Promise<Types.UpdateConversationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateConversationMutation,
-      { conversation: Types.ConversationUpdateInput }
+      Types.UpdateConversationMutationVariables
     >(Documents.UpdateConversation, { conversation: conversation });
   }
 
@@ -1617,7 +1440,7 @@ class Graphlit {
   ): Promise<Types.DeleteConversationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteConversationMutation,
-      { id: string }
+      Types.DeleteConversationMutationVariables
     >(Documents.DeleteConversation, { id: id });
   }
 
@@ -1627,7 +1450,7 @@ class Graphlit {
   ): Promise<Types.DeleteConversationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteConversationsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteConversationsMutationVariables
     >(Documents.DeleteConversations, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -1641,11 +1464,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllConversationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllConversationsMutation,
-      {
-        filter?: Types.ConversationFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllConversationsMutationVariables
     >(Documents.DeleteAllConversations, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -1658,7 +1477,7 @@ class Graphlit {
   ): Promise<Types.ClearConversationMutation> {
     return this.mutateAndCheckError<
       Types.ClearConversationMutation,
-      { id: string }
+      Types.ClearConversationMutationVariables
     >(Documents.ClearConversation, { id: id });
   }
 
@@ -1667,17 +1486,17 @@ class Graphlit {
   ): Promise<Types.CloseConversationMutation> {
     return this.mutateAndCheckError<
       Types.CloseConversationMutation,
-      { id: string }
+      Types.CloseConversationMutationVariables
     >(Documents.CloseConversation, { id: id });
   }
 
   public async getConversation(
     id: string,
   ): Promise<Types.GetConversationQuery> {
-    return this.queryAndCheckError<Types.GetConversationQuery, { id: string }>(
-      Documents.GetConversation,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetConversationQuery,
+      Types.GetConversationQueryVariables
+    >(Documents.GetConversation, { id: id });
   }
 
   public async queryConversations(
@@ -1685,7 +1504,7 @@ class Graphlit {
   ): Promise<Types.QueryConversationsQuery> {
     return this.queryAndCheckError<
       Types.QueryConversationsQuery,
-      { filter?: Types.ConversationFilter }
+      Types.QueryConversationsQueryVariables
     >(Documents.QueryConversations, { filter: filter });
   }
 
@@ -1694,7 +1513,7 @@ class Graphlit {
   ): Promise<Types.CountConversationsQuery> {
     return this.queryAndCheckError<
       Types.CountConversationsQuery,
-      { filter?: Types.ConversationFilter }
+      Types.CountConversationsQueryVariables
     >(Documents.CountConversations, { filter: filter });
   }
 
@@ -1707,13 +1526,7 @@ class Graphlit {
   ): Promise<Types.ReviseImageMutation> {
     return this.mutateAndCheckError<
       Types.ReviseImageMutation,
-      {
-        prompt: string;
-        uri: string;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.ReviseImageMutationVariables
     >(Documents.ReviseImage, {
       prompt: prompt,
       uri: uri,
@@ -1733,14 +1546,7 @@ class Graphlit {
   ): Promise<Types.ReviseEncodedImageMutation> {
     return this.mutateAndCheckError<
       Types.ReviseEncodedImageMutation,
-      {
-        prompt: string;
-        mimeType: string;
-        data: string;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.ReviseEncodedImageMutationVariables
     >(Documents.ReviseEncodedImage, {
       prompt: prompt,
       mimeType: mimeType,
@@ -1760,13 +1566,7 @@ class Graphlit {
   ): Promise<Types.ReviseTextMutation> {
     return this.mutateAndCheckError<
       Types.ReviseTextMutation,
-      {
-        prompt: string;
-        text: string;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.ReviseTextMutationVariables
     >(Documents.ReviseText, {
       prompt: prompt,
       text: text,
@@ -1785,13 +1585,7 @@ class Graphlit {
   ): Promise<Types.ReviseContentMutation> {
     return this.mutateAndCheckError<
       Types.ReviseContentMutation,
-      {
-        prompt: string;
-        content: Types.EntityReferenceInput;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.ReviseContentMutationVariables
     >(Documents.ReviseContent, {
       prompt: prompt,
       content: content,
@@ -1811,14 +1605,7 @@ class Graphlit {
   ): Promise<Types.PromptMutation> {
     return this.mutateAndCheckError<
       Types.PromptMutation,
-      {
-        prompt?: string;
-        mimeType?: string;
-        data?: string;
-        specification?: Types.EntityReferenceInput;
-        messages?: Types.ConversationMessageInput[];
-        correlationId?: string;
-      }
+      Types.PromptMutationVariables
     >(Documents.Prompt, {
       prompt: prompt,
       mimeType: mimeType,
@@ -1838,13 +1625,7 @@ class Graphlit {
   ): Promise<Types.RetrieveViewMutation> {
     return this.mutateAndCheckError<
       Types.RetrieveViewMutation,
-      {
-        prompt: string;
-        id: string;
-        retrievalStrategy?: Types.RetrievalStrategyInput;
-        rerankingStrategy?: Types.RerankingStrategyInput;
-        correlationId?: string;
-      }
+      Types.RetrieveViewMutationVariables
     >(Documents.RetrieveView, {
       prompt: prompt,
       id: id,
@@ -1864,14 +1645,7 @@ class Graphlit {
   ): Promise<Types.RetrieveSourcesMutation> {
     return this.mutateAndCheckError<
       Types.RetrieveSourcesMutation,
-      {
-        prompt: string;
-        filter?: Types.ContentFilter;
-        augmentedFilter?: Types.ContentFilter;
-        retrievalStrategy?: Types.RetrievalStrategyInput;
-        rerankingStrategy?: Types.RerankingStrategyInput;
-        correlationId?: string;
-      }
+      Types.RetrieveSourcesMutationVariables
     >(Documents.RetrieveSources, {
       prompt: prompt,
       filter: filter,
@@ -1893,15 +1667,7 @@ class Graphlit {
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
-      {
-        prompt: string;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        tools?: Types.ToolDefinitionInput[];
-        systemPrompt?: string;
-        includeDetails?: boolean;
-        correlationId?: string;
-      }
+      Types.FormatConversationMutationVariables
     >(Documents.FormatConversation, {
       prompt: prompt,
       id: id,
@@ -1923,14 +1689,7 @@ class Graphlit {
   ): Promise<Types.CompleteConversationMutation> {
     return this.mutateAndCheckError<
       Types.CompleteConversationMutation,
-      {
-        completion: string;
-        id: string;
-        completionTime?: Types.Scalars["TimeSpan"]["input"];
-        ttft?: Types.Scalars["TimeSpan"]["input"];
-        throughput?: Types.Scalars["Float"]["input"];
-        correlationId?: string;
-      }
+      Types.CompleteConversationMutationVariables
     >(Documents.CompleteConversation, {
       completion: completion,
       id: id,
@@ -1950,13 +1709,7 @@ class Graphlit {
   ): Promise<Types.AskGraphlitMutation> {
     return this.mutateAndCheckError<
       Types.AskGraphlitMutation,
-      {
-        prompt: string;
-        type?: Types.SdkTypes;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        correlationId?: string;
-      }
+      Types.AskGraphlitMutationVariables
     >(Documents.AskGraphlit, {
       prompt: prompt,
       type: type,
@@ -1971,9 +1724,7 @@ class Graphlit {
   ): Promise<Types.BranchConversationMutation> {
     return this.mutateAndCheckError<
       Types.BranchConversationMutation,
-      {
-        id: string;
-      }
+      Types.BranchConversationMutationVariables
     >(Documents.BranchConversation, {
       id: id,
     });
@@ -1993,18 +1744,7 @@ class Graphlit {
   ): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<
       Types.PromptConversationMutation,
-      {
-        prompt: string;
-        id?: string;
-        specification?: Types.EntityReferenceInput;
-        mimeType?: string;
-        data?: string;
-        tools?: Types.ToolDefinitionInput[];
-        requireTool?: boolean;
-        systemPrompt?: string;
-        includeDetails?: boolean;
-        correlationId?: string;
-      }
+      Types.PromptConversationMutationVariables
     >(Documents.PromptConversation, {
       prompt: prompt,
       id: id,
@@ -2026,11 +1766,7 @@ class Graphlit {
   ): Promise<Types.ContinueConversationMutation> {
     return this.mutateAndCheckError<
       Types.ContinueConversationMutation,
-      {
-        id: string;
-        responses: Types.ConversationToolResponseInput[];
-        correlationId?: string;
-      }
+      Types.ContinueConversationMutationVariables
     >(Documents.ContinueConversation, {
       id: id,
       responses: responses,
@@ -2048,14 +1784,7 @@ class Graphlit {
   ): Promise<Types.PublishConversationMutation> {
     return this.mutateAndCheckError<
       Types.PublishConversationMutation,
-      {
-        id: string;
-        connector: Types.ContentPublishingConnectorInput;
-        name?: string;
-        workflow?: Types.EntityReferenceInput;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.PublishConversationMutationVariables
     >(Documents.PublishConversation, {
       id: id,
       connector: connector,
@@ -2073,7 +1802,7 @@ class Graphlit {
   ): Promise<Types.SuggestConversationMutation> {
     return this.mutateAndCheckError<
       Types.SuggestConversationMutation,
-      { id: string; count?: number; correlationId?: string }
+      Types.SuggestConversationMutationVariables
     >(Documents.SuggestConversation, {
       id: id,
       count: count,
@@ -2086,7 +1815,7 @@ class Graphlit {
   ): Promise<Types.QueryMicrosoftCalendarsQuery> {
     return this.queryAndCheckError<
       Types.QueryMicrosoftCalendarsQuery,
-      { properties: Types.MicrosoftCalendarsInput }
+      Types.QueryMicrosoftCalendarsQueryVariables
     >(Documents.QueryMicrosoftCalendars, {
       properties: properties,
     });
@@ -2097,7 +1826,7 @@ class Graphlit {
   ): Promise<Types.QueryGoogleCalendarsQuery> {
     return this.queryAndCheckError<
       Types.QueryGoogleCalendarsQuery,
-      { properties: Types.GoogleCalendarsInput }
+      Types.QueryGoogleCalendarsQueryVariables
     >(Documents.QueryGoogleCalendars, {
       properties: properties,
     });
@@ -2109,7 +1838,7 @@ class Graphlit {
   ): Promise<Types.QueryBoxFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryBoxFoldersQuery,
-      { properties: Types.BoxFoldersInput; folderId?: string }
+      Types.QueryBoxFoldersQueryVariables
     >(Documents.QueryBoxFolders, {
       properties: properties,
       folderId: folderId,
@@ -2122,7 +1851,7 @@ class Graphlit {
   ): Promise<Types.QueryDropboxFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryDropboxFoldersQuery,
-      { properties: Types.DropboxFoldersInput; folderPath?: string }
+      Types.QueryDropboxFoldersQueryVariables
     >(Documents.QueryDropboxFolders, {
       properties: properties,
       folderPath: folderPath,
@@ -2135,7 +1864,7 @@ class Graphlit {
   ): Promise<Types.QueryGoogleDriveFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryGoogleDriveFoldersQuery,
-      { properties: Types.GoogleDriveFoldersInput; folderId?: string }
+      Types.QueryGoogleDriveFoldersQueryVariables
     >(Documents.QueryGoogleDriveFolders, {
       properties: properties,
       folderId: folderId,
@@ -2148,7 +1877,7 @@ class Graphlit {
   ): Promise<Types.QueryOneDriveFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryOneDriveFoldersQuery,
-      { properties: Types.OneDriveFoldersInput; folderId?: string }
+      Types.QueryOneDriveFoldersQueryVariables
     >(Documents.QueryOneDriveFolders, {
       properties: properties,
       folderId: folderId,
@@ -2162,11 +1891,7 @@ class Graphlit {
   ): Promise<Types.QuerySharePointFoldersQuery> {
     return this.queryAndCheckError<
       Types.QuerySharePointFoldersQuery,
-      {
-        properties: Types.SharePointFoldersInput;
-        libraryId: string;
-        folderId?: string;
-      }
+      Types.QuerySharePointFoldersQueryVariables
     >(Documents.QuerySharePointFolders, {
       properties: properties,
       libraryId: libraryId,
@@ -2179,7 +1904,7 @@ class Graphlit {
   ): Promise<Types.QuerySharePointLibrariesQuery> {
     return this.queryAndCheckError<
       Types.QuerySharePointLibrariesQuery,
-      { properties: Types.SharePointLibrariesInput }
+      Types.QuerySharePointLibrariesQueryVariables
     >(Documents.QuerySharePointLibraries, { properties: properties });
   }
 
@@ -2188,7 +1913,7 @@ class Graphlit {
   ): Promise<Types.QueryMicrosoftTeamsTeamsQuery> {
     return this.queryAndCheckError<
       Types.QueryMicrosoftTeamsTeamsQuery,
-      { properties: Types.MicrosoftTeamsTeamsInput }
+      Types.QueryMicrosoftTeamsTeamsQueryVariables
     >(Documents.QueryMicrosoftTeamsTeams, { properties: properties });
   }
 
@@ -2198,7 +1923,7 @@ class Graphlit {
   ): Promise<Types.QueryMicrosoftTeamsChannelsQuery> {
     return this.queryAndCheckError<
       Types.QueryMicrosoftTeamsChannelsQuery,
-      { properties: Types.MicrosoftTeamsChannelsInput; teamId: string }
+      Types.QueryMicrosoftTeamsChannelsQueryVariables
     >(Documents.QueryMicrosoftTeamsChannels, {
       properties: properties,
       teamId: teamId,
@@ -2210,7 +1935,7 @@ class Graphlit {
   ): Promise<Types.QueryDiscordGuildsQuery> {
     return this.queryAndCheckError<
       Types.QueryDiscordGuildsQuery,
-      { properties: Types.DiscordGuildsInput }
+      Types.QueryDiscordGuildsQueryVariables
     >(Documents.QueryDiscordGuilds, { properties: properties });
   }
 
@@ -2219,7 +1944,7 @@ class Graphlit {
   ): Promise<Types.QueryDiscordChannelsQuery> {
     return this.queryAndCheckError<
       Types.QueryDiscordChannelsQuery,
-      { properties: Types.DiscordChannelsInput }
+      Types.QueryDiscordChannelsQueryVariables
     >(Documents.QueryDiscordChannels, { properties: properties });
   }
 
@@ -2228,7 +1953,7 @@ class Graphlit {
   ): Promise<Types.QuerySlackChannelsQuery> {
     return this.queryAndCheckError<
       Types.QuerySlackChannelsQuery,
-      { properties: Types.SlackChannelsInput }
+      Types.QuerySlackChannelsQueryVariables
     >(Documents.QuerySlackChannels, { properties: properties });
   }
 
@@ -2237,7 +1962,7 @@ class Graphlit {
   ): Promise<Types.QueryLinearProjectsQuery> {
     return this.queryAndCheckError<
       Types.QueryLinearProjectsQuery,
-      { properties: Types.LinearProjectsInput }
+      Types.QueryLinearProjectsQueryVariables
     >(Documents.QueryLinearProjects, { properties: properties });
   }
 
@@ -2247,7 +1972,7 @@ class Graphlit {
   ): Promise<Types.QueryGitHubRepositoriesQuery> {
     return this.queryAndCheckError<
       Types.QueryGitHubRepositoriesQuery,
-      { properties: Types.GitHubRepositoriesInput; sortBy?: Types.GitHubRepositorySortTypes }
+      Types.QueryGitHubRepositoriesQueryVariables
     >(Documents.QueryGitHubRepositories, {
       properties: properties,
       sortBy: sortBy,
@@ -2259,7 +1984,7 @@ class Graphlit {
   ): Promise<Types.QueryNotionDatabasesQuery> {
     return this.queryAndCheckError<
       Types.QueryNotionDatabasesQuery,
-      { properties: Types.NotionDatabasesInput }
+      Types.QueryNotionDatabasesQueryVariables
     >(Documents.QueryNotionDatabases, { properties: properties });
   }
 
@@ -2269,7 +1994,7 @@ class Graphlit {
   ): Promise<Types.QueryNotionPagesQuery> {
     return this.queryAndCheckError<
       Types.QueryNotionPagesQuery,
-      { properties: Types.NotionPagesInput; identifier: string }
+      Types.QueryNotionPagesQueryVariables
     >(Documents.QueryNotionPages, {
       properties: properties,
       identifier: identifier,
@@ -2282,7 +2007,7 @@ class Graphlit {
   ): Promise<Types.CreateFeedMutation> {
     return this.mutateAndCheckError<
       Types.CreateFeedMutation,
-      { feed: Types.FeedInput; correlationId?: string }
+      Types.CreateFeedMutationVariables
     >(Documents.CreateFeed, { feed: feed, correlationId: correlationId });
   }
 
@@ -2291,15 +2016,15 @@ class Graphlit {
   ): Promise<Types.UpdateFeedMutation> {
     return this.mutateAndCheckError<
       Types.UpdateFeedMutation,
-      { feed: Types.FeedUpdateInput }
+      Types.UpdateFeedMutationVariables
     >(Documents.UpdateFeed, { feed: feed });
   }
 
   public async deleteFeed(id: string): Promise<Types.DeleteFeedMutation> {
-    return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
-      Documents.DeleteFeed,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteFeedMutation,
+      Types.DeleteFeedMutationVariables
+    >(Documents.DeleteFeed, { id: id });
   }
 
   public async deleteFeeds(
@@ -2308,7 +2033,7 @@ class Graphlit {
   ): Promise<Types.DeleteFeedsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteFeedsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteFeedsMutationVariables
     >(Documents.DeleteFeeds, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -2319,11 +2044,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllFeedsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllFeedsMutation,
-      {
-        filter?: Types.FeedFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllFeedsMutationVariables
     >(Documents.DeleteAllFeeds, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -2332,31 +2053,31 @@ class Graphlit {
   }
 
   public async triggerFeed(id: string): Promise<Types.TriggerFeedMutation> {
-    return this.mutateAndCheckError<Types.TriggerFeedMutation, { id: string }>(
-      Documents.TriggerFeed,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.TriggerFeedMutation,
+      Types.TriggerFeedMutationVariables
+    >(Documents.TriggerFeed, { id: id });
   }
 
   public async enableFeed(id: string): Promise<Types.EnableFeedMutation> {
-    return this.mutateAndCheckError<Types.EnableFeedMutation, { id: string }>(
-      Documents.EnableFeed,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.EnableFeedMutation,
+      Types.EnableFeedMutationVariables
+    >(Documents.EnableFeed, { id: id });
   }
 
   public async disableFeed(id: string): Promise<Types.DeleteFeedMutation> {
-    return this.mutateAndCheckError<Types.DeleteFeedMutation, { id: string }>(
-      Documents.DisableFeed,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteFeedMutation,
+      Types.DeleteFeedMutationVariables
+    >(Documents.DisableFeed, { id: id });
   }
 
   public async getFeed(id: string): Promise<Types.GetFeedQuery> {
-    return this.queryAndCheckError<Types.GetFeedQuery, { id: string }>(
-      Documents.GetFeed,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetFeedQuery,
+      Types.GetFeedQueryVariables
+    >(Documents.GetFeed, { id: id });
   }
 
   public async queryFeeds(
@@ -2364,7 +2085,7 @@ class Graphlit {
   ): Promise<Types.QueryFeedsQuery> {
     return this.queryAndCheckError<
       Types.QueryFeedsQuery,
-      { filter?: Types.FeedFilter }
+      Types.QueryFeedsQueryVariables
     >(Documents.QueryFeeds, { filter: filter });
   }
 
@@ -2373,7 +2094,7 @@ class Graphlit {
   ): Promise<Types.CountFeedsQuery> {
     return this.queryAndCheckError<
       Types.CountFeedsQuery,
-      { filter?: Types.FeedFilter }
+      Types.CountFeedsQueryVariables
     >(Documents.CountFeeds, { filter: filter });
   }
 
@@ -2382,15 +2103,15 @@ class Graphlit {
   ): Promise<Types.FeedExistsQuery> {
     return this.queryAndCheckError<
       Types.FeedExistsQuery,
-      { filter?: Types.FeedFilter }
+      Types.FeedExistsQueryVariables
     >(Documents.FeedExists, { filter: filter });
   }
 
   public async isFeedDone(id: string): Promise<Types.IsFeedDoneQuery> {
-    return this.queryAndCheckError<Types.IsFeedDoneQuery, { id: string }>(
-      Documents.IsFeedDone,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.IsFeedDoneQuery,
+      Types.IsFeedDoneQueryVariables
+    >(Documents.IsFeedDone, { id: id });
   }
 
   public async promptSpecifications(
@@ -2399,7 +2120,7 @@ class Graphlit {
   ): Promise<Types.PromptSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.PromptSpecificationsMutation,
-      { prompt: string; ids: string[] }
+      Types.PromptSpecificationsMutationVariables
     >(Documents.PromptSpecifications, { prompt: prompt, ids: ids });
   }
 
@@ -2408,7 +2129,7 @@ class Graphlit {
   ): Promise<Types.CreateSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.CreateSpecificationMutation,
-      { specification: Types.SpecificationInput }
+      Types.CreateSpecificationMutationVariables
     >(Documents.CreateSpecification, { specification: specification });
   }
 
@@ -2417,7 +2138,7 @@ class Graphlit {
   ): Promise<Types.UpdateSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateSpecificationMutation,
-      { specification: Types.SpecificationUpdateInput }
+      Types.UpdateSpecificationMutationVariables
     >(Documents.UpdateSpecification, { specification: specification });
   }
 
@@ -2426,7 +2147,7 @@ class Graphlit {
   ): Promise<Types.UpsertSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.UpsertSpecificationMutation,
-      { specification: Types.SpecificationInput }
+      Types.UpsertSpecificationMutationVariables
     >(Documents.UpsertSpecification, { specification: specification });
   }
 
@@ -2435,7 +2156,7 @@ class Graphlit {
   ): Promise<Types.DeleteSpecificationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSpecificationMutation,
-      { id: string }
+      Types.DeleteSpecificationMutationVariables
     >(Documents.DeleteSpecification, { id: id });
   }
 
@@ -2445,7 +2166,7 @@ class Graphlit {
   ): Promise<Types.DeleteSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSpecificationsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteSpecificationsMutationVariables
     >(Documents.DeleteSpecifications, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -2459,11 +2180,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllSpecificationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllSpecificationsMutation,
-      {
-        filter?: Types.SpecificationFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllSpecificationsMutationVariables
     >(Documents.DeleteAllSpecifications, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -2474,10 +2191,10 @@ class Graphlit {
   public async getSpecification(
     id: string,
   ): Promise<Types.GetSpecificationQuery> {
-    return this.queryAndCheckError<Types.GetSpecificationQuery, { id: string }>(
-      Documents.GetSpecification,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetSpecificationQuery,
+      Types.GetSpecificationQueryVariables
+    >(Documents.GetSpecification, { id: id });
   }
 
   public async querySpecifications(
@@ -2485,7 +2202,7 @@ class Graphlit {
   ): Promise<Types.QuerySpecificationsQuery> {
     return this.queryAndCheckError<
       Types.QuerySpecificationsQuery,
-      { filter?: Types.SpecificationFilter }
+      Types.QuerySpecificationsQueryVariables
     >(Documents.QuerySpecifications, { filter: filter });
   }
 
@@ -2494,7 +2211,7 @@ class Graphlit {
   ): Promise<Types.CountSpecificationsQuery> {
     return this.queryAndCheckError<
       Types.CountSpecificationsQuery,
-      { filter?: Types.SpecificationFilter }
+      Types.CountSpecificationsQueryVariables
     >(Documents.CountSpecifications, { filter: filter });
   }
 
@@ -2503,7 +2220,7 @@ class Graphlit {
   ): Promise<Types.SpecificationExistsQuery> {
     return this.queryAndCheckError<
       Types.QuerySpecificationsQuery,
-      { filter?: Types.SpecificationFilter }
+      Types.QuerySpecificationsQueryVariables
     >(Documents.SpecificationExists, { filter: filter });
   }
 
@@ -2512,7 +2229,7 @@ class Graphlit {
   ): Promise<Types.QueryModelsQuery> {
     return this.queryAndCheckError<
       Types.QueryModelsQuery,
-      { filter?: Types.ModelFilter }
+      Types.QueryModelsQueryVariables
     >(Documents.QueryModels, { filter: filter });
   }
 
@@ -2521,7 +2238,7 @@ class Graphlit {
   ): Promise<Types.CreateConnectorMutation> {
     return this.mutateAndCheckError<
       Types.CreateConnectorMutation,
-      { connector: Types.ConnectorInput }
+      Types.CreateConnectorMutationVariables
     >(Documents.CreateConnector, { connector: connector });
   }
 
@@ -2530,7 +2247,7 @@ class Graphlit {
   ): Promise<Types.UpdateConnectorMutation> {
     return this.mutateAndCheckError<
       Types.UpdateConnectorMutation,
-      { connector: Types.ConnectorUpdateInput }
+      Types.UpdateConnectorMutationVariables
     >(Documents.UpdateConnector, { connector: connector });
   }
 
@@ -2550,7 +2267,7 @@ class Graphlit {
   ): Promise<Types.DeleteConnectorMutation> {
     return this.mutateAndCheckError<
       Types.DeleteConnectorMutation,
-      { id: string }
+      Types.DeleteConnectorMutationVariables
     >(Documents.DeleteConnector, { id: id });
   }
 
@@ -2586,10 +2303,10 @@ class Graphlit {
   */
 
   public async getConnector(id: string): Promise<Types.GetConnectorQuery> {
-    return this.queryAndCheckError<Types.GetConnectorQuery, { id: string }>(
-      Documents.GetConnector,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetConnectorQuery,
+      Types.GetConnectorQueryVariables
+    >(Documents.GetConnector, { id: id });
   }
 
   public async queryConnectors(
@@ -2597,7 +2314,7 @@ class Graphlit {
   ): Promise<Types.QueryConnectorsQuery> {
     return this.queryAndCheckError<
       Types.QueryConnectorsQuery,
-      { filter?: Types.ConnectorFilter }
+      Types.QueryConnectorsQueryVariables
     >(Documents.QueryConnectors, { filter: filter });
   }
 
@@ -2606,7 +2323,7 @@ class Graphlit {
   ): Promise<Types.CountConnectorsQuery> {
     return this.queryAndCheckError<
       Types.CountConnectorsQuery,
-      { filter?: Types.ConnectorFilter }
+      Types.CountConnectorsQueryVariables
     >(Documents.CountConnectors, { filter: filter });
   }
 
@@ -2614,10 +2331,7 @@ class Graphlit {
   public async connectorExists(
     filter?: Types.ConnectorFilter
   ): Promise<Types.ConnectorExistsQuery> {
-    return this.queryAndCheckError<
-      Types.QueryConnectorsQuery,
-      { filter?: Types.ConnectorFilter }
-    >(Documents.ConnectorExists, { filter: filter });
+    return this.queryAndCheckError<Types.QueryConnectorsQuery, Types.QueryConnectorsQueryVariables>(Documents.ConnectorExists, { filter: filter });
   }
   */
 
@@ -2626,7 +2340,7 @@ class Graphlit {
   ): Promise<Types.CreateViewMutation> {
     return this.mutateAndCheckError<
       Types.CreateViewMutation,
-      { view: Types.ViewInput }
+      Types.CreateViewMutationVariables
     >(Documents.CreateView, { view: view });
   }
 
@@ -2635,7 +2349,7 @@ class Graphlit {
   ): Promise<Types.UpdateViewMutation> {
     return this.mutateAndCheckError<
       Types.UpdateViewMutation,
-      { view: Types.ViewUpdateInput }
+      Types.UpdateViewMutationVariables
     >(Documents.UpdateView, { view: view });
   }
 
@@ -2644,15 +2358,15 @@ class Graphlit {
   ): Promise<Types.UpsertViewMutation> {
     return this.mutateAndCheckError<
       Types.UpsertViewMutation,
-      { view: Types.ViewInput }
+      Types.UpsertViewMutationVariables
     >(Documents.UpsertView, { view: view });
   }
 
   public async deleteView(id: string): Promise<Types.DeleteViewMutation> {
-    return this.mutateAndCheckError<Types.DeleteViewMutation, { id: string }>(
-      Documents.DeleteView,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteViewMutation,
+      Types.DeleteViewMutationVariables
+    >(Documents.DeleteView, { id: id });
   }
 
   public async deleteViews(
@@ -2661,7 +2375,7 @@ class Graphlit {
   ): Promise<Types.DeleteViewsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteViewsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteViewsMutationVariables
     >(Documents.DeleteViews, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -2672,11 +2386,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllViewsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllViewsMutation,
-      {
-        filter?: Types.ViewFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllViewsMutationVariables
     >(Documents.DeleteAllViews, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -2685,10 +2395,10 @@ class Graphlit {
   }
 
   public async getView(id: string): Promise<Types.GetViewQuery> {
-    return this.queryAndCheckError<Types.GetViewQuery, { id: string }>(
-      Documents.GetView,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetViewQuery,
+      Types.GetViewQueryVariables
+    >(Documents.GetView, { id: id });
   }
 
   public async queryViews(
@@ -2696,7 +2406,7 @@ class Graphlit {
   ): Promise<Types.QueryViewsQuery> {
     return this.queryAndCheckError<
       Types.QueryViewsQuery,
-      { filter?: Types.ViewFilter }
+      Types.QueryViewsQueryVariables
     >(Documents.QueryViews, { filter: filter });
   }
 
@@ -2705,7 +2415,7 @@ class Graphlit {
   ): Promise<Types.CountViewsQuery> {
     return this.queryAndCheckError<
       Types.CountViewsQuery,
-      { filter?: Types.ViewFilter }
+      Types.CountViewsQueryVariables
     >(Documents.CountViews, { filter: filter });
   }
 
@@ -2714,7 +2424,7 @@ class Graphlit {
   ): Promise<Types.ViewExistsQuery> {
     return this.queryAndCheckError<
       Types.QueryViewsQuery,
-      { filter?: Types.ViewFilter }
+      Types.QueryViewsQueryVariables
     >(Documents.ViewExists, { filter: filter });
   }
 
@@ -2723,7 +2433,7 @@ class Graphlit {
   ): Promise<Types.CreateWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.CreateWorkflowMutation,
-      { workflow: Types.WorkflowInput }
+      Types.CreateWorkflowMutationVariables
     >(Documents.CreateWorkflow, { workflow: workflow });
   }
 
@@ -2732,7 +2442,7 @@ class Graphlit {
   ): Promise<Types.UpdateWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.UpdateWorkflowMutation,
-      { workflow: Types.WorkflowUpdateInput }
+      Types.UpdateWorkflowMutationVariables
     >(Documents.UpdateWorkflow, { workflow: workflow });
   }
 
@@ -2741,7 +2451,7 @@ class Graphlit {
   ): Promise<Types.UpsertWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.UpsertWorkflowMutation,
-      { workflow: Types.WorkflowInput }
+      Types.UpsertWorkflowMutationVariables
     >(Documents.UpsertWorkflow, { workflow: workflow });
   }
 
@@ -2750,7 +2460,7 @@ class Graphlit {
   ): Promise<Types.DeleteWorkflowMutation> {
     return this.mutateAndCheckError<
       Types.DeleteWorkflowMutation,
-      { id: string }
+      Types.DeleteWorkflowMutationVariables
     >(Documents.DeleteWorkflow, { id: id });
   }
 
@@ -2760,7 +2470,7 @@ class Graphlit {
   ): Promise<Types.DeleteWorkflowsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteWorkflowsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteWorkflowsMutationVariables
     >(Documents.DeleteWorkflows, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -2771,11 +2481,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllWorkflowsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllWorkflowsMutation,
-      {
-        filter?: Types.WorkflowFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllWorkflowsMutationVariables
     >(Documents.DeleteAllWorkflows, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -2784,10 +2490,10 @@ class Graphlit {
   }
 
   public async getWorkflow(id: string): Promise<Types.GetWorkflowQuery> {
-    return this.queryAndCheckError<Types.GetWorkflowQuery, { id: string }>(
-      Documents.GetWorkflow,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetWorkflowQuery,
+      Types.GetWorkflowQueryVariables
+    >(Documents.GetWorkflow, { id: id });
   }
 
   public async queryWorkflows(
@@ -2795,7 +2501,7 @@ class Graphlit {
   ): Promise<Types.QueryWorkflowsQuery> {
     return this.queryAndCheckError<
       Types.QueryWorkflowsQuery,
-      { filter?: Types.WorkflowFilter }
+      Types.QueryWorkflowsQueryVariables
     >(Documents.QueryWorkflows, { filter: filter });
   }
 
@@ -2804,7 +2510,7 @@ class Graphlit {
   ): Promise<Types.CountWorkflowsQuery> {
     return this.queryAndCheckError<
       Types.CountWorkflowsQuery,
-      { filter?: Types.WorkflowFilter }
+      Types.CountWorkflowsQueryVariables
     >(Documents.CountWorkflows, { filter: filter });
   }
 
@@ -2813,7 +2519,7 @@ class Graphlit {
   ): Promise<Types.WorkflowExistsQuery> {
     return this.queryAndCheckError<
       Types.QueryWorkflowsQuery,
-      { filter?: Types.WorkflowFilter }
+      Types.QueryWorkflowsQueryVariables
     >(Documents.WorkflowExists, { filter: filter });
   }
 
@@ -2822,7 +2528,7 @@ class Graphlit {
   ): Promise<Types.CreateUserMutation> {
     return this.mutateAndCheckError<
       Types.CreateUserMutation,
-      { user: Types.UserInput }
+      Types.CreateUserMutationVariables
     >(Documents.CreateUser, { user: user });
   }
 
@@ -2831,15 +2537,15 @@ class Graphlit {
   ): Promise<Types.UpdateUserMutation> {
     return this.mutateAndCheckError<
       Types.UpdateUserMutation,
-      { user: Types.UserUpdateInput }
+      Types.UpdateUserMutationVariables
     >(Documents.UpdateUser, { user: user });
   }
 
   public async deleteUser(id: string): Promise<Types.DeleteUserMutation> {
-    return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
-      Documents.DeleteUser,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteUserMutation,
+      Types.DeleteUserMutationVariables
+    >(Documents.DeleteUser, { id: id });
   }
 
   public async getUserByIdentifier(
@@ -2847,15 +2553,15 @@ class Graphlit {
   ): Promise<Types.GetUserByIdentifierQuery> {
     return this.queryAndCheckError<
       Types.GetUserByIdentifierQuery,
-      { identifier: string }
+      Types.GetUserByIdentifierQueryVariables
     >(Documents.GetUserByIdentifier, { identifier: identifier });
   }
 
   public async getUser(): Promise<Types.GetUserQuery> {
-    return this.queryAndCheckError<Types.GetUserQuery, {}>(
-      Documents.GetUser,
-      {},
-    );
+    return this.queryAndCheckError<
+      Types.GetUserQuery,
+      Types.GetUserQueryVariables
+    >(Documents.GetUser, {});
   }
 
   public async queryUsers(
@@ -2863,7 +2569,7 @@ class Graphlit {
   ): Promise<Types.QueryUsersQuery> {
     return this.queryAndCheckError<
       Types.QueryUsersQuery,
-      { filter?: Types.UserFilter }
+      Types.QueryUsersQueryVariables
     >(Documents.QueryUsers, { filter: filter });
   }
 
@@ -2872,22 +2578,22 @@ class Graphlit {
   ): Promise<Types.CountUsersQuery> {
     return this.queryAndCheckError<
       Types.CountUsersQuery,
-      { filter?: Types.UserFilter }
+      Types.CountUsersQueryVariables
     >(Documents.CountUsers, { filter: filter });
   }
 
   public async enableUser(id: string): Promise<Types.EnableUserMutation> {
-    return this.mutateAndCheckError<Types.EnableUserMutation, { id: string }>(
-      Documents.EnableUser,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.EnableUserMutation,
+      Types.EnableUserMutationVariables
+    >(Documents.EnableUser, { id: id });
   }
 
   public async disableUser(id: string): Promise<Types.DeleteUserMutation> {
-    return this.mutateAndCheckError<Types.DeleteUserMutation, { id: string }>(
-      Documents.DisableUser,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteUserMutation,
+      Types.DeleteUserMutationVariables
+    >(Documents.DisableUser, { id: id });
   }
 
   public async createCategory(
@@ -2895,7 +2601,7 @@ class Graphlit {
   ): Promise<Types.CreateCategoryMutation> {
     return this.mutateAndCheckError<
       Types.CreateCategoryMutation,
-      { category: Types.CategoryInput }
+      Types.CreateCategoryMutationVariables
     >(Documents.CreateCategory, { category: category });
   }
 
@@ -2904,7 +2610,7 @@ class Graphlit {
   ): Promise<Types.UpdateCategoryMutation> {
     return this.mutateAndCheckError<
       Types.UpdateCategoryMutation,
-      { category: Types.CategoryUpdateInput }
+      Types.UpdateCategoryMutationVariables
     >(Documents.UpdateCategory, { category: category });
   }
 
@@ -2913,7 +2619,7 @@ class Graphlit {
   ): Promise<Types.UpsertCategoryMutation> {
     return this.mutateAndCheckError<
       Types.UpsertCategoryMutation,
-      { category: Types.CategoryInput }
+      Types.UpsertCategoryMutationVariables
     >(Documents.UpsertCategory, { category: category });
   }
 
@@ -2922,7 +2628,7 @@ class Graphlit {
   ): Promise<Types.DeleteCategoryMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCategoryMutation,
-      { id: string }
+      Types.DeleteCategoryMutationVariables
     >(Documents.DeleteCategory, { id: id });
   }
 
@@ -2932,7 +2638,7 @@ class Graphlit {
   ): Promise<Types.DeleteCategoriesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteCategoriesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteCategoriesMutationVariables
     >(Documents.DeleteCategories, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -2943,11 +2649,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllCategoriesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllCategoriesMutation,
-      {
-        filter?: Types.CategoryFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllCategoriesMutationVariables
     >(Documents.DeleteAllCategories, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -2956,10 +2658,10 @@ class Graphlit {
   }
 
   public async getCategory(id: string): Promise<Types.GetCategoryQuery> {
-    return this.queryAndCheckError<Types.GetCategoryQuery, { id: string }>(
-      Documents.GetCategory,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetCategoryQuery,
+      Types.GetCategoryQueryVariables
+    >(Documents.GetCategory, { id: id });
   }
 
   public async queryCategories(
@@ -2967,7 +2669,7 @@ class Graphlit {
   ): Promise<Types.QueryCategoriesQuery> {
     return this.queryAndCheckError<
       Types.QueryCategoriesQuery,
-      { filter?: Types.CategoryFilter }
+      Types.QueryCategoriesQueryVariables
     >(Documents.QueryCategories, { filter: filter });
   }
 
@@ -2976,7 +2678,7 @@ class Graphlit {
   ): Promise<Types.CreateLabelMutation> {
     return this.mutateAndCheckError<
       Types.CreateLabelMutation,
-      { label: Types.LabelInput }
+      Types.CreateLabelMutationVariables
     >(Documents.CreateLabel, { label: label });
   }
 
@@ -2985,7 +2687,7 @@ class Graphlit {
   ): Promise<Types.UpdateLabelMutation> {
     return this.mutateAndCheckError<
       Types.UpdateLabelMutation,
-      { label: Types.LabelUpdateInput }
+      Types.UpdateLabelMutationVariables
     >(Documents.UpdateLabel, { label: label });
   }
 
@@ -2994,15 +2696,15 @@ class Graphlit {
   ): Promise<Types.UpsertLabelMutation> {
     return this.mutateAndCheckError<
       Types.UpsertLabelMutation,
-      { label: Types.LabelInput }
+      Types.UpsertLabelMutationVariables
     >(Documents.UpsertLabel, { label: label });
   }
 
   public async deleteLabel(id: string): Promise<Types.DeleteLabelMutation> {
-    return this.mutateAndCheckError<Types.DeleteLabelMutation, { id: string }>(
-      Documents.DeleteLabel,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteLabelMutation,
+      Types.DeleteLabelMutationVariables
+    >(Documents.DeleteLabel, { id: id });
   }
 
   public async deleteLabels(
@@ -3011,7 +2713,7 @@ class Graphlit {
   ): Promise<Types.DeleteLabelsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteLabelsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteLabelsMutationVariables
     >(Documents.DeleteLabels, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3022,11 +2724,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllLabelsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllLabelsMutation,
-      {
-        filter?: Types.LabelFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllLabelsMutationVariables
     >(Documents.DeleteAllLabels, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3035,10 +2733,10 @@ class Graphlit {
   }
 
   public async getLabel(id: string): Promise<Types.GetLabelQuery> {
-    return this.queryAndCheckError<Types.GetLabelQuery, { id: string }>(
-      Documents.GetLabel,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetLabelQuery,
+      Types.GetLabelQueryVariables
+    >(Documents.GetLabel, { id: id });
   }
 
   public async queryLabels(
@@ -3046,7 +2744,7 @@ class Graphlit {
   ): Promise<Types.QueryLabelsQuery> {
     return this.queryAndCheckError<
       Types.QueryLabelsQuery,
-      { filter?: Types.LabelFilter }
+      Types.QueryLabelsQueryVariables
     >(Documents.QueryLabels, { filter: filter });
   }
 
@@ -3055,7 +2753,7 @@ class Graphlit {
   ): Promise<Types.CreatePersonMutation> {
     return this.mutateAndCheckError<
       Types.CreatePersonMutation,
-      { person: Types.PersonInput }
+      Types.CreatePersonMutationVariables
     >(Documents.CreatePerson, { person: person });
   }
 
@@ -3064,15 +2762,15 @@ class Graphlit {
   ): Promise<Types.UpdatePersonMutation> {
     return this.mutateAndCheckError<
       Types.UpdatePersonMutation,
-      { person: Types.PersonUpdateInput }
+      Types.UpdatePersonMutationVariables
     >(Documents.UpdatePerson, { person: person });
   }
 
   public async deletePerson(id: string): Promise<Types.DeletePersonMutation> {
-    return this.mutateAndCheckError<Types.DeletePersonMutation, { id: string }>(
-      Documents.DeletePerson,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeletePersonMutation,
+      Types.DeletePersonMutationVariables
+    >(Documents.DeletePerson, { id: id });
   }
 
   public async deletePersons(
@@ -3081,7 +2779,7 @@ class Graphlit {
   ): Promise<Types.DeletePersonsMutation> {
     return this.mutateAndCheckError<
       Types.DeletePersonsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeletePersonsMutationVariables
     >(Documents.DeletePersons, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3092,11 +2790,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllPersonsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllPersonsMutation,
-      {
-        filter?: Types.PersonFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllPersonsMutationVariables
     >(Documents.DeleteAllPersons, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3105,10 +2799,10 @@ class Graphlit {
   }
 
   public async getPerson(id: string): Promise<Types.GetPersonQuery> {
-    return this.queryAndCheckError<Types.GetPersonQuery, { id: string }>(
-      Documents.GetPerson,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetPersonQuery,
+      Types.GetPersonQueryVariables
+    >(Documents.GetPerson, { id: id });
   }
 
   public async queryPersons(
@@ -3116,7 +2810,7 @@ class Graphlit {
   ): Promise<Types.QueryPersonsQuery> {
     return this.queryAndCheckError<
       Types.QueryPersonsQuery,
-      { filter?: Types.PersonFilter }
+      Types.QueryPersonsQueryVariables
     >(Documents.QueryPersons, { filter: filter });
   }
 
@@ -3125,7 +2819,7 @@ class Graphlit {
   ): Promise<Types.CreateOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.CreateOrganizationMutation,
-      { organization: Types.OrganizationInput }
+      Types.CreateOrganizationMutationVariables
     >(Documents.CreateOrganization, { organization: organization });
   }
 
@@ -3134,7 +2828,7 @@ class Graphlit {
   ): Promise<Types.UpdateOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateOrganizationMutation,
-      { organization: Types.OrganizationUpdateInput }
+      Types.UpdateOrganizationMutationVariables
     >(Documents.UpdateOrganization, { organization: organization });
   }
 
@@ -3143,7 +2837,7 @@ class Graphlit {
   ): Promise<Types.DeleteOrganizationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteOrganizationMutation,
-      { id: string }
+      Types.DeleteOrganizationMutationVariables
     >(Documents.DeleteOrganization, { id: id });
   }
 
@@ -3153,7 +2847,7 @@ class Graphlit {
   ): Promise<Types.DeleteOrganizationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteOrganizationsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteOrganizationsMutationVariables
     >(Documents.DeleteOrganizations, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -3167,11 +2861,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllOrganizationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllOrganizationsMutation,
-      {
-        filter?: Types.OrganizationFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllOrganizationsMutationVariables
     >(Documents.DeleteAllOrganizations, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3182,10 +2872,10 @@ class Graphlit {
   public async getOrganization(
     id: string,
   ): Promise<Types.GetOrganizationQuery> {
-    return this.queryAndCheckError<Types.GetOrganizationQuery, { id: string }>(
-      Documents.GetOrganization,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetOrganizationQuery,
+      Types.GetOrganizationQueryVariables
+    >(Documents.GetOrganization, { id: id });
   }
 
   public async queryOrganizations(
@@ -3193,7 +2883,7 @@ class Graphlit {
   ): Promise<Types.QueryOrganizationsQuery> {
     return this.queryAndCheckError<
       Types.QueryOrganizationsQuery,
-      { filter?: Types.OrganizationFilter }
+      Types.QueryOrganizationsQueryVariables
     >(Documents.QueryOrganizations, { filter: filter });
   }
 
@@ -3202,7 +2892,7 @@ class Graphlit {
   ): Promise<Types.CreatePlaceMutation> {
     return this.mutateAndCheckError<
       Types.CreatePlaceMutation,
-      { place: Types.PlaceInput }
+      Types.CreatePlaceMutationVariables
     >(Documents.CreatePlace, { place: place });
   }
 
@@ -3211,15 +2901,15 @@ class Graphlit {
   ): Promise<Types.UpdatePlaceMutation> {
     return this.mutateAndCheckError<
       Types.UpdatePlaceMutation,
-      { place: Types.PlaceUpdateInput }
+      Types.UpdatePlaceMutationVariables
     >(Documents.UpdatePlace, { place: place });
   }
 
   public async deletePlace(id: string): Promise<Types.DeletePlaceMutation> {
-    return this.mutateAndCheckError<Types.DeletePlaceMutation, { id: string }>(
-      Documents.DeletePlace,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeletePlaceMutation,
+      Types.DeletePlaceMutationVariables
+    >(Documents.DeletePlace, { id: id });
   }
 
   public async deletePlaces(
@@ -3228,7 +2918,7 @@ class Graphlit {
   ): Promise<Types.DeletePlacesMutation> {
     return this.mutateAndCheckError<
       Types.DeletePlacesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeletePlacesMutationVariables
     >(Documents.DeletePlaces, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3239,11 +2929,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllPlacesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllPlacesMutation,
-      {
-        filter?: Types.PlaceFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllPlacesMutationVariables
     >(Documents.DeleteAllPlaces, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3252,10 +2938,10 @@ class Graphlit {
   }
 
   public async getPlace(id: string): Promise<Types.GetPlaceQuery> {
-    return this.queryAndCheckError<Types.GetPlaceQuery, { id: string }>(
-      Documents.GetPlace,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetPlaceQuery,
+      Types.GetPlaceQueryVariables
+    >(Documents.GetPlace, { id: id });
   }
 
   public async queryPlaces(
@@ -3263,7 +2949,7 @@ class Graphlit {
   ): Promise<Types.QueryPlacesQuery> {
     return this.queryAndCheckError<
       Types.QueryPlacesQuery,
-      { filter?: Types.PlaceFilter }
+      Types.QueryPlacesQueryVariables
     >(Documents.QueryPlaces, { filter: filter });
   }
 
@@ -3272,7 +2958,7 @@ class Graphlit {
   ): Promise<Types.CreateEventMutation> {
     return this.mutateAndCheckError<
       Types.CreateEventMutation,
-      { event: Types.EventInput }
+      Types.CreateEventMutationVariables
     >(Documents.CreateEvent, { event: event });
   }
 
@@ -3281,15 +2967,15 @@ class Graphlit {
   ): Promise<Types.UpdateEventMutation> {
     return this.mutateAndCheckError<
       Types.UpdateEventMutation,
-      { event: Types.EventUpdateInput }
+      Types.UpdateEventMutationVariables
     >(Documents.UpdateEvent, { event: event });
   }
 
   public async deleteEvent(id: string): Promise<Types.DeleteEventMutation> {
-    return this.mutateAndCheckError<Types.DeleteEventMutation, { id: string }>(
-      Documents.DeleteEvent,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteEventMutation,
+      Types.DeleteEventMutationVariables
+    >(Documents.DeleteEvent, { id: id });
   }
 
   public async deleteEvents(
@@ -3298,7 +2984,7 @@ class Graphlit {
   ): Promise<Types.DeleteEventsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteEventsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteEventsMutationVariables
     >(Documents.DeleteEvents, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3309,11 +2995,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllEventsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllEventsMutation,
-      {
-        filter?: Types.EventFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllEventsMutationVariables
     >(Documents.DeleteAllEvents, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3322,10 +3004,10 @@ class Graphlit {
   }
 
   public async getEvent(id: string): Promise<Types.GetEventQuery> {
-    return this.queryAndCheckError<Types.GetEventQuery, { id: string }>(
-      Documents.GetEvent,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetEventQuery,
+      Types.GetEventQueryVariables
+    >(Documents.GetEvent, { id: id });
   }
 
   public async queryEvents(
@@ -3333,7 +3015,7 @@ class Graphlit {
   ): Promise<Types.QueryEventsQuery> {
     return this.queryAndCheckError<
       Types.QueryEventsQuery,
-      { filter?: Types.EventFilter }
+      Types.QueryEventsQueryVariables
     >(Documents.QueryEvents, { filter: filter });
   }
 
@@ -3342,7 +3024,7 @@ class Graphlit {
   ): Promise<Types.CreateProductMutation> {
     return this.mutateAndCheckError<
       Types.CreateProductMutation,
-      { product: Types.ProductInput }
+      Types.CreateProductMutationVariables
     >(Documents.CreateProduct, { product: product });
   }
 
@@ -3351,14 +3033,14 @@ class Graphlit {
   ): Promise<Types.UpdateProductMutation> {
     return this.mutateAndCheckError<
       Types.UpdateProductMutation,
-      { product: Types.ProductUpdateInput }
+      Types.UpdateProductMutationVariables
     >(Documents.UpdateProduct, { product: product });
   }
 
   public async deleteProduct(id: string): Promise<Types.DeleteProductMutation> {
     return this.mutateAndCheckError<
       Types.DeleteProductMutation,
-      { id: string }
+      Types.DeleteProductMutationVariables
     >(Documents.DeleteProduct, { id: id });
   }
 
@@ -3368,7 +3050,7 @@ class Graphlit {
   ): Promise<Types.DeleteProductsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteProductsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteProductsMutationVariables
     >(Documents.DeleteProducts, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3379,11 +3061,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllProductsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllProductsMutation,
-      {
-        filter?: Types.ProductFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllProductsMutationVariables
     >(Documents.DeleteAllProducts, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3392,10 +3070,10 @@ class Graphlit {
   }
 
   public async getProduct(id: string): Promise<Types.GetProductQuery> {
-    return this.queryAndCheckError<Types.GetProductQuery, { id: string }>(
-      Documents.GetProduct,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetProductQuery,
+      Types.GetProductQueryVariables
+    >(Documents.GetProduct, { id: id });
   }
 
   public async queryProducts(
@@ -3403,7 +3081,7 @@ class Graphlit {
   ): Promise<Types.QueryProductsQuery> {
     return this.queryAndCheckError<
       Types.QueryProductsQuery,
-      { filter?: Types.ProductFilter }
+      Types.QueryProductsQueryVariables
     >(Documents.QueryProducts, { filter: filter });
   }
 
@@ -3412,7 +3090,7 @@ class Graphlit {
   ): Promise<Types.CreateRepoMutation> {
     return this.mutateAndCheckError<
       Types.CreateRepoMutation,
-      { repo: Types.RepoInput }
+      Types.CreateRepoMutationVariables
     >(Documents.CreateRepo, { repo: repo });
   }
 
@@ -3421,15 +3099,15 @@ class Graphlit {
   ): Promise<Types.UpdateRepoMutation> {
     return this.mutateAndCheckError<
       Types.UpdateRepoMutation,
-      { repo: Types.RepoUpdateInput }
+      Types.UpdateRepoMutationVariables
     >(Documents.UpdateRepo, { repo: repo });
   }
 
   public async deleteRepo(id: string): Promise<Types.DeleteRepoMutation> {
-    return this.mutateAndCheckError<Types.DeleteRepoMutation, { id: string }>(
-      Documents.DeleteRepo,
-      { id: id },
-    );
+    return this.mutateAndCheckError<
+      Types.DeleteRepoMutation,
+      Types.DeleteRepoMutationVariables
+    >(Documents.DeleteRepo, { id: id });
   }
 
   public async deleteRepos(
@@ -3438,7 +3116,7 @@ class Graphlit {
   ): Promise<Types.DeleteReposMutation> {
     return this.mutateAndCheckError<
       Types.DeleteReposMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteReposMutationVariables
     >(Documents.DeleteRepos, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3449,11 +3127,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllReposMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllReposMutation,
-      {
-        filter?: Types.RepoFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllReposMutationVariables
     >(Documents.DeleteAllRepos, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3462,10 +3136,10 @@ class Graphlit {
   }
 
   public async getRepo(id: string): Promise<Types.GetRepoQuery> {
-    return this.queryAndCheckError<Types.GetRepoQuery, { id: string }>(
-      Documents.GetRepo,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetRepoQuery,
+      Types.GetRepoQueryVariables
+    >(Documents.GetRepo, { id: id });
   }
 
   public async queryRepos(
@@ -3473,7 +3147,7 @@ class Graphlit {
   ): Promise<Types.QueryReposQuery> {
     return this.queryAndCheckError<
       Types.QueryReposQuery,
-      { filter?: Types.RepoFilter }
+      Types.QueryReposQueryVariables
     >(Documents.QueryRepos, { filter: filter });
   }
 
@@ -3482,7 +3156,7 @@ class Graphlit {
   ): Promise<Types.CreateSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.CreateSoftwareMutation,
-      { software: Types.SoftwareInput }
+      Types.CreateSoftwareMutationVariables
     >(Documents.CreateSoftware, { software: software });
   }
 
@@ -3491,7 +3165,7 @@ class Graphlit {
   ): Promise<Types.UpdateSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.UpdateSoftwareMutation,
-      { software: Types.SoftwareUpdateInput }
+      Types.UpdateSoftwareMutationVariables
     >(Documents.UpdateSoftware, { software: software });
   }
 
@@ -3500,7 +3174,7 @@ class Graphlit {
   ): Promise<Types.DeleteSoftwareMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSoftwareMutation,
-      { id: string }
+      Types.DeleteSoftwareMutationVariables
     >(Documents.DeleteSoftware, { id: id });
   }
 
@@ -3510,7 +3184,7 @@ class Graphlit {
   ): Promise<Types.DeleteSoftwaresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteSoftwaresMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteSoftwaresMutationVariables
     >(Documents.DeleteSoftwares, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3521,11 +3195,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllSoftwaresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllSoftwaresMutation,
-      {
-        filter?: Types.SoftwareFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllSoftwaresMutationVariables
     >(Documents.DeleteAllSoftwares, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3534,10 +3204,10 @@ class Graphlit {
   }
 
   public async getSoftware(id: string): Promise<Types.GetSoftwareQuery> {
-    return this.queryAndCheckError<Types.GetSoftwareQuery, { id: string }>(
-      Documents.GetSoftware,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetSoftwareQuery,
+      Types.GetSoftwareQueryVariables
+    >(Documents.GetSoftware, { id: id });
   }
 
   public async querySoftwares(
@@ -3545,7 +3215,7 @@ class Graphlit {
   ): Promise<Types.QuerySoftwaresQuery> {
     return this.queryAndCheckError<
       Types.QuerySoftwaresQuery,
-      { filter?: Types.SoftwareFilter }
+      Types.QuerySoftwaresQueryVariables
     >(Documents.QuerySoftwares, { filter: filter });
   }
 
@@ -3554,8 +3224,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalConditionMutation,
-      { MedicalCondition: Types.MedicalConditionInput }
-    >(Documents.CreateMedicalCondition, { MedicalCondition: MedicalCondition });
+      Types.CreateMedicalConditionMutationVariables
+    >(Documents.CreateMedicalCondition, { medicalCondition: MedicalCondition });
   }
 
   public async updateMedicalCondition(
@@ -3563,8 +3233,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalConditionMutation,
-      { MedicalCondition: Types.MedicalConditionUpdateInput }
-    >(Documents.UpdateMedicalCondition, { MedicalCondition: MedicalCondition });
+      Types.UpdateMedicalConditionMutationVariables
+    >(Documents.UpdateMedicalCondition, { medicalCondition: MedicalCondition });
   }
 
   public async deleteMedicalCondition(
@@ -3572,7 +3242,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalConditionMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalConditionMutation,
-      { id: string }
+      Types.DeleteMedicalConditionMutationVariables
     >(Documents.DeleteMedicalCondition, { id: id });
   }
 
@@ -3582,7 +3252,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalConditionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalConditionsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalConditionsMutationVariables
     >(Documents.DeleteMedicalConditions, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -3596,11 +3266,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalConditionsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalConditionsMutation,
-      {
-        filter?: Types.MedicalConditionFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalConditionsMutationVariables
     >(Documents.DeleteAllMedicalConditions, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3613,7 +3279,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalConditionQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalConditionQuery,
-      { id: string }
+      Types.GetMedicalConditionQueryVariables
     >(Documents.GetMedicalCondition, { id: id });
   }
 
@@ -3622,7 +3288,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalConditionsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalConditionsQuery,
-      { filter?: Types.MedicalConditionFilter }
+      Types.QueryMedicalConditionsQueryVariables
     >(Documents.QueryMedicalConditions, { filter: filter });
   }
 
@@ -3631,8 +3297,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalGuidelineMutation,
-      { MedicalGuideline: Types.MedicalGuidelineInput }
-    >(Documents.CreateMedicalGuideline, { MedicalGuideline: MedicalGuideline });
+      Types.CreateMedicalGuidelineMutationVariables
+    >(Documents.CreateMedicalGuideline, { medicalGuideline: MedicalGuideline });
   }
 
   public async updateMedicalGuideline(
@@ -3640,8 +3306,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalGuidelineMutation,
-      { MedicalGuideline: Types.MedicalGuidelineUpdateInput }
-    >(Documents.UpdateMedicalGuideline, { MedicalGuideline: MedicalGuideline });
+      Types.UpdateMedicalGuidelineMutationVariables
+    >(Documents.UpdateMedicalGuideline, { medicalGuideline: MedicalGuideline });
   }
 
   public async deleteMedicalGuideline(
@@ -3649,7 +3315,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalGuidelineMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalGuidelineMutation,
-      { id: string }
+      Types.DeleteMedicalGuidelineMutationVariables
     >(Documents.DeleteMedicalGuideline, { id: id });
   }
 
@@ -3659,7 +3325,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalGuidelinesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalGuidelinesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalGuidelinesMutationVariables
     >(Documents.DeleteMedicalGuidelines, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -3673,11 +3339,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalGuidelinesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalGuidelinesMutation,
-      {
-        filter?: Types.MedicalGuidelineFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalGuidelinesMutationVariables
     >(Documents.DeleteAllMedicalGuidelines, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3690,7 +3352,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalGuidelineQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalGuidelineQuery,
-      { id: string }
+      Types.GetMedicalGuidelineQueryVariables
     >(Documents.GetMedicalGuideline, { id: id });
   }
 
@@ -3699,7 +3361,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalGuidelinesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalGuidelinesQuery,
-      { filter?: Types.MedicalGuidelineFilter }
+      Types.QueryMedicalGuidelinesQueryVariables
     >(Documents.QueryMedicalGuidelines, { filter: filter });
   }
 
@@ -3708,8 +3370,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDrugMutation,
-      { MedicalDrug: Types.MedicalDrugInput }
-    >(Documents.CreateMedicalDrug, { MedicalDrug: MedicalDrug });
+      Types.CreateMedicalDrugMutationVariables
+    >(Documents.CreateMedicalDrug, { medicalDrug: MedicalDrug });
   }
 
   public async updateMedicalDrug(
@@ -3717,8 +3379,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDrugMutation,
-      { MedicalDrug: Types.MedicalDrugUpdateInput }
-    >(Documents.UpdateMedicalDrug, { MedicalDrug: MedicalDrug });
+      Types.UpdateMedicalDrugMutationVariables
+    >(Documents.UpdateMedicalDrug, { medicalDrug: MedicalDrug });
   }
 
   public async deleteMedicalDrug(
@@ -3726,7 +3388,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDrugMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugMutation,
-      { id: string }
+      Types.DeleteMedicalDrugMutationVariables
     >(Documents.DeleteMedicalDrug, { id: id });
   }
 
@@ -3736,7 +3398,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDrugsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalDrugsMutationVariables
     >(Documents.DeleteMedicalDrugs, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3747,11 +3409,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalDrugsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDrugsMutation,
-      {
-        filter?: Types.MedicalDrugFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalDrugsMutationVariables
     >(Documents.DeleteAllMedicalDrugs, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3760,10 +3418,10 @@ class Graphlit {
   }
 
   public async getMedicalDrug(id: string): Promise<Types.GetMedicalDrugQuery> {
-    return this.queryAndCheckError<Types.GetMedicalDrugQuery, { id: string }>(
-      Documents.GetMedicalDrug,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetMedicalDrugQuery,
+      Types.GetMedicalDrugQueryVariables
+    >(Documents.GetMedicalDrug, { id: id });
   }
 
   public async queryMedicalDrugs(
@@ -3771,7 +3429,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalDrugsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugsQuery,
-      { filter?: Types.MedicalDrugFilter }
+      Types.QueryMedicalDrugsQueryVariables
     >(Documents.QueryMedicalDrugs, { filter: filter });
   }
 
@@ -3780,9 +3438,9 @@ class Graphlit {
   ): Promise<Types.CreateMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalIndicationMutation,
-      { MedicalIndication: Types.MedicalIndicationInput }
+      Types.CreateMedicalIndicationMutationVariables
     >(Documents.CreateMedicalIndication, {
-      MedicalIndication: MedicalIndication,
+      medicalIndication: MedicalIndication,
     });
   }
 
@@ -3791,9 +3449,9 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalIndicationMutation,
-      { MedicalIndication: Types.MedicalIndicationUpdateInput }
+      Types.UpdateMedicalIndicationMutationVariables
     >(Documents.UpdateMedicalIndication, {
-      MedicalIndication: MedicalIndication,
+      medicalIndication: MedicalIndication,
     });
   }
 
@@ -3802,7 +3460,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalIndicationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalIndicationMutation,
-      { id: string }
+      Types.DeleteMedicalIndicationMutationVariables
     >(Documents.DeleteMedicalIndication, { id: id });
   }
 
@@ -3812,7 +3470,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalIndicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalIndicationsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalIndicationsMutationVariables
     >(Documents.DeleteMedicalIndications, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -3826,11 +3484,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalIndicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalIndicationsMutation,
-      {
-        filter?: Types.MedicalIndicationFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalIndicationsMutationVariables
     >(Documents.DeleteAllMedicalIndications, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3843,7 +3497,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalIndicationQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalIndicationQuery,
-      { id: string }
+      Types.GetMedicalIndicationQueryVariables
     >(Documents.GetMedicalIndication, { id: id });
   }
 
@@ -3852,7 +3506,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalIndicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalIndicationsQuery,
-      { filter?: Types.MedicalIndicationFilter }
+      Types.QueryMedicalIndicationsQueryVariables
     >(Documents.QueryMedicalIndications, { filter: filter });
   }
 
@@ -3861,9 +3515,9 @@ class Graphlit {
   ): Promise<Types.CreateMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalContraindicationMutation,
-      { MedicalContraindication: Types.MedicalContraindicationInput }
+      Types.CreateMedicalContraindicationMutationVariables
     >(Documents.CreateMedicalContraindication, {
-      MedicalContraindication: MedicalContraindication,
+      medicalContraindication: MedicalContraindication,
     });
   }
 
@@ -3872,9 +3526,9 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalContraindicationMutation,
-      { MedicalContraindication: Types.MedicalContraindicationUpdateInput }
+      Types.UpdateMedicalContraindicationMutationVariables
     >(Documents.UpdateMedicalContraindication, {
-      MedicalContraindication: MedicalContraindication,
+      medicalContraindication: MedicalContraindication,
     });
   }
 
@@ -3883,7 +3537,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalContraindicationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalContraindicationMutation,
-      { id: string }
+      Types.DeleteMedicalContraindicationMutationVariables
     >(Documents.DeleteMedicalContraindication, { id: id });
   }
 
@@ -3893,7 +3547,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalContraindicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalContraindicationsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalContraindicationsMutationVariables
     >(Documents.DeleteMedicalContraindications, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -3907,11 +3561,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalContraindicationsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalContraindicationsMutation,
-      {
-        filter?: Types.MedicalContraindicationFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalContraindicationsMutationVariables
     >(Documents.DeleteAllMedicalContraindications, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3924,7 +3574,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalContraindicationQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalContraindicationQuery,
-      { id: string }
+      Types.GetMedicalContraindicationQueryVariables
     >(Documents.GetMedicalContraindication, { id: id });
   }
 
@@ -3933,7 +3583,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalContraindicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalContraindicationsQuery,
-      { filter?: Types.MedicalContraindicationFilter }
+      Types.QueryMedicalContraindicationsQueryVariables
     >(Documents.QueryMedicalContraindications, { filter: filter });
   }
 
@@ -3942,8 +3592,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalTestMutation,
-      { MedicalTest: Types.MedicalTestInput }
-    >(Documents.CreateMedicalTest, { MedicalTest: MedicalTest });
+      Types.CreateMedicalTestMutationVariables
+    >(Documents.CreateMedicalTest, { medicalTest: MedicalTest });
   }
 
   public async updateMedicalTest(
@@ -3951,8 +3601,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalTestMutation,
-      { MedicalTest: Types.MedicalTestUpdateInput }
-    >(Documents.UpdateMedicalTest, { MedicalTest: MedicalTest });
+      Types.UpdateMedicalTestMutationVariables
+    >(Documents.UpdateMedicalTest, { medicalTest: MedicalTest });
   }
 
   public async deleteMedicalTest(
@@ -3960,7 +3610,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalTestMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTestMutation,
-      { id: string }
+      Types.DeleteMedicalTestMutationVariables
     >(Documents.DeleteMedicalTest, { id: id });
   }
 
@@ -3970,7 +3620,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalTestsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTestsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalTestsMutationVariables
     >(Documents.DeleteMedicalTests, { ids: ids, isSynchronous: isSynchronous });
   }
 
@@ -3981,11 +3631,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalTestsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalTestsMutation,
-      {
-        filter?: Types.MedicalTestFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalTestsMutationVariables
     >(Documents.DeleteAllMedicalTests, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -3994,10 +3640,10 @@ class Graphlit {
   }
 
   public async getMedicalTest(id: string): Promise<Types.GetMedicalTestQuery> {
-    return this.queryAndCheckError<Types.GetMedicalTestQuery, { id: string }>(
-      Documents.GetMedicalTest,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetMedicalTestQuery,
+      Types.GetMedicalTestQueryVariables
+    >(Documents.GetMedicalTest, { id: id });
   }
 
   public async queryMedicalTests(
@@ -4005,7 +3651,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalTestsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTestsQuery,
-      { filter?: Types.MedicalTestFilter }
+      Types.QueryMedicalTestsQueryVariables
     >(Documents.QueryMedicalTests, { filter: filter });
   }
 
@@ -4014,8 +3660,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDeviceMutation,
-      { MedicalDevice: Types.MedicalDeviceInput }
-    >(Documents.CreateMedicalDevice, { MedicalDevice: MedicalDevice });
+      Types.CreateMedicalDeviceMutationVariables
+    >(Documents.CreateMedicalDevice, { medicalDevice: MedicalDevice });
   }
 
   public async updateMedicalDevice(
@@ -4023,8 +3669,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDeviceMutation,
-      { MedicalDevice: Types.MedicalDeviceUpdateInput }
-    >(Documents.UpdateMedicalDevice, { MedicalDevice: MedicalDevice });
+      Types.UpdateMedicalDeviceMutationVariables
+    >(Documents.UpdateMedicalDevice, { medicalDevice: MedicalDevice });
   }
 
   public async deleteMedicalDevice(
@@ -4032,7 +3678,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDeviceMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDeviceMutation,
-      { id: string }
+      Types.DeleteMedicalDeviceMutationVariables
     >(Documents.DeleteMedicalDevice, { id: id });
   }
 
@@ -4042,7 +3688,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDevicesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDevicesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalDevicesMutationVariables
     >(Documents.DeleteMedicalDevices, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4056,11 +3702,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalDevicesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDevicesMutation,
-      {
-        filter?: Types.MedicalDeviceFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalDevicesMutationVariables
     >(Documents.DeleteAllMedicalDevices, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4071,10 +3713,10 @@ class Graphlit {
   public async getMedicalDevice(
     id: string,
   ): Promise<Types.GetMedicalDeviceQuery> {
-    return this.queryAndCheckError<Types.GetMedicalDeviceQuery, { id: string }>(
-      Documents.GetMedicalDevice,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetMedicalDeviceQuery,
+      Types.GetMedicalDeviceQueryVariables
+    >(Documents.GetMedicalDevice, { id: id });
   }
 
   public async queryMedicalDevices(
@@ -4082,7 +3724,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalDevicesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDevicesQuery,
-      { filter?: Types.MedicalDeviceFilter }
+      Types.QueryMedicalDevicesQueryVariables
     >(Documents.QueryMedicalDevices, { filter: filter });
   }
 
@@ -4091,8 +3733,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalProcedureMutation,
-      { MedicalProcedure: Types.MedicalProcedureInput }
-    >(Documents.CreateMedicalProcedure, { MedicalProcedure: MedicalProcedure });
+      Types.CreateMedicalProcedureMutationVariables
+    >(Documents.CreateMedicalProcedure, { medicalProcedure: MedicalProcedure });
   }
 
   public async updateMedicalProcedure(
@@ -4100,8 +3742,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalProcedureMutation,
-      { MedicalProcedure: Types.MedicalProcedureUpdateInput }
-    >(Documents.UpdateMedicalProcedure, { MedicalProcedure: MedicalProcedure });
+      Types.UpdateMedicalProcedureMutationVariables
+    >(Documents.UpdateMedicalProcedure, { medicalProcedure: MedicalProcedure });
   }
 
   public async deleteMedicalProcedure(
@@ -4109,7 +3751,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalProcedureMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalProcedureMutation,
-      { id: string }
+      Types.DeleteMedicalProcedureMutationVariables
     >(Documents.DeleteMedicalProcedure, { id: id });
   }
 
@@ -4119,7 +3761,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalProceduresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalProceduresMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalProceduresMutationVariables
     >(Documents.DeleteMedicalProcedures, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4133,11 +3775,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalProceduresMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalProceduresMutation,
-      {
-        filter?: Types.MedicalProcedureFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalProceduresMutationVariables
     >(Documents.DeleteAllMedicalProcedures, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4150,7 +3788,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalProcedureQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalProcedureQuery,
-      { id: string }
+      Types.GetMedicalProcedureQueryVariables
     >(Documents.GetMedicalProcedure, { id: id });
   }
 
@@ -4159,7 +3797,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalProceduresQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalProceduresQuery,
-      { filter?: Types.MedicalProcedureFilter }
+      Types.QueryMedicalProceduresQueryVariables
     >(Documents.QueryMedicalProcedures, { filter: filter });
   }
 
@@ -4168,8 +3806,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalStudyMutation,
-      { MedicalStudy: Types.MedicalStudyInput }
-    >(Documents.CreateMedicalStudy, { MedicalStudy: MedicalStudy });
+      Types.CreateMedicalStudyMutationVariables
+    >(Documents.CreateMedicalStudy, { medicalStudy: MedicalStudy });
   }
 
   public async updateMedicalStudy(
@@ -4177,8 +3815,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalStudyMutation,
-      { MedicalStudy: Types.MedicalStudyUpdateInput }
-    >(Documents.UpdateMedicalStudy, { MedicalStudy: MedicalStudy });
+      Types.UpdateMedicalStudyMutationVariables
+    >(Documents.UpdateMedicalStudy, { medicalStudy: MedicalStudy });
   }
 
   public async deleteMedicalStudy(
@@ -4186,7 +3824,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalStudyMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalStudyMutation,
-      { id: string }
+      Types.DeleteMedicalStudyMutationVariables
     >(Documents.DeleteMedicalStudy, { id: id });
   }
 
@@ -4196,7 +3834,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalStudiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalStudiesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalStudiesMutationVariables
     >(Documents.DeleteMedicalStudies, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4210,11 +3848,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalStudiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalStudiesMutation,
-      {
-        filter?: Types.MedicalStudyFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalStudiesMutationVariables
     >(Documents.DeleteAllMedicalStudies, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4225,10 +3859,10 @@ class Graphlit {
   public async getMedicalStudy(
     id: string,
   ): Promise<Types.GetMedicalStudyQuery> {
-    return this.queryAndCheckError<Types.GetMedicalStudyQuery, { id: string }>(
-      Documents.GetMedicalStudy,
-      { id: id },
-    );
+    return this.queryAndCheckError<
+      Types.GetMedicalStudyQuery,
+      Types.GetMedicalStudyQueryVariables
+    >(Documents.GetMedicalStudy, { id: id });
   }
 
   public async queryMedicalStudies(
@@ -4236,7 +3870,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalStudiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalStudiesQuery,
-      { filter?: Types.MedicalStudyFilter }
+      Types.QueryMedicalStudiesQueryVariables
     >(Documents.QueryMedicalStudies, { filter: filter });
   }
 
@@ -4245,8 +3879,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalDrugClassMutation,
-      { MedicalDrugClass: Types.MedicalDrugClassInput }
-    >(Documents.CreateMedicalDrugClass, { MedicalDrugClass: MedicalDrugClass });
+      Types.CreateMedicalDrugClassMutationVariables
+    >(Documents.CreateMedicalDrugClass, { medicalDrugClass: MedicalDrugClass });
   }
 
   public async updateMedicalDrugClass(
@@ -4254,8 +3888,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalDrugClassMutation,
-      { MedicalDrugClass: Types.MedicalDrugClassUpdateInput }
-    >(Documents.UpdateMedicalDrugClass, { MedicalDrugClass: MedicalDrugClass });
+      Types.UpdateMedicalDrugClassMutationVariables
+    >(Documents.UpdateMedicalDrugClass, { medicalDrugClass: MedicalDrugClass });
   }
 
   public async deleteMedicalDrugClass(
@@ -4263,7 +3897,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDrugClassMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugClassMutation,
-      { id: string }
+      Types.DeleteMedicalDrugClassMutationVariables
     >(Documents.DeleteMedicalDrugClass, { id: id });
   }
 
@@ -4273,7 +3907,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalDrugClassesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalDrugClassesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalDrugClassesMutationVariables
     >(Documents.DeleteMedicalDrugClasses, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4287,11 +3921,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalDrugClassesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalDrugClassesMutation,
-      {
-        filter?: Types.MedicalDrugClassFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalDrugClassesMutationVariables
     >(Documents.DeleteAllMedicalDrugClasses, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4304,7 +3934,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalDrugClassQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalDrugClassQuery,
-      { id: string }
+      Types.GetMedicalDrugClassQueryVariables
     >(Documents.GetMedicalDrugClass, { id: id });
   }
 
@@ -4313,7 +3943,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalDrugClassesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugClassesQuery,
-      { filter?: Types.MedicalDrugClassFilter }
+      Types.QueryMedicalDrugClassesQueryVariables
     >(Documents.QueryMedicalDrugClasses, { filter: filter });
   }
 
@@ -4322,8 +3952,8 @@ class Graphlit {
   ): Promise<Types.CreateMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.CreateMedicalTherapyMutation,
-      { MedicalTherapy: Types.MedicalTherapyInput }
-    >(Documents.CreateMedicalTherapy, { MedicalTherapy: MedicalTherapy });
+      Types.CreateMedicalTherapyMutationVariables
+    >(Documents.CreateMedicalTherapy, { medicalTherapy: MedicalTherapy });
   }
 
   public async updateMedicalTherapy(
@@ -4331,8 +3961,8 @@ class Graphlit {
   ): Promise<Types.UpdateMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.UpdateMedicalTherapyMutation,
-      { MedicalTherapy: Types.MedicalTherapyUpdateInput }
-    >(Documents.UpdateMedicalTherapy, { MedicalTherapy: MedicalTherapy });
+      Types.UpdateMedicalTherapyMutationVariables
+    >(Documents.UpdateMedicalTherapy, { medicalTherapy: MedicalTherapy });
   }
 
   public async deleteMedicalTherapy(
@@ -4340,7 +3970,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalTherapyMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTherapyMutation,
-      { id: string }
+      Types.DeleteMedicalTherapyMutationVariables
     >(Documents.DeleteMedicalTherapy, { id: id });
   }
 
@@ -4350,7 +3980,7 @@ class Graphlit {
   ): Promise<Types.DeleteMedicalTherapiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteMedicalTherapiesMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteMedicalTherapiesMutationVariables
     >(Documents.DeleteMedicalTherapies, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4364,11 +3994,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllMedicalTherapiesMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllMedicalTherapiesMutation,
-      {
-        filter?: Types.MedicalTherapyFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllMedicalTherapiesMutationVariables
     >(Documents.DeleteAllMedicalTherapies, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4381,7 +4007,7 @@ class Graphlit {
   ): Promise<Types.GetMedicalTherapyQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalTherapyQuery,
-      { id: string }
+      Types.GetMedicalTherapyQueryVariables
     >(Documents.GetMedicalTherapy, { id: id });
   }
 
@@ -4390,7 +4016,7 @@ class Graphlit {
   ): Promise<Types.QueryMedicalTherapiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTherapiesQuery,
-      { filter?: Types.MedicalTherapyFilter }
+      Types.QueryMedicalTherapiesQueryVariables
     >(Documents.QueryMedicalTherapies, { filter: filter });
   }
 
@@ -4399,7 +4025,7 @@ class Graphlit {
   ): Promise<Types.CreateObservationMutation> {
     return this.mutateAndCheckError<
       Types.CreateObservationMutation,
-      { observation: Types.ObservationInput }
+      Types.CreateObservationMutationVariables
     >(Documents.CreateObservation, { observation: observation });
   }
 
@@ -4408,7 +4034,7 @@ class Graphlit {
   ): Promise<Types.UpdateObservationMutation> {
     return this.mutateAndCheckError<
       Types.UpdateObservationMutation,
-      { observation: Types.ObservationUpdateInput }
+      Types.UpdateObservationMutationVariables
     >(Documents.UpdateObservation, { observation: observation });
   }
 
@@ -4417,7 +4043,7 @@ class Graphlit {
   ): Promise<Types.DeleteObservationMutation> {
     return this.mutateAndCheckError<
       Types.DeleteObservationMutation,
-      { id: string }
+      Types.DeleteObservationMutationVariables
     >(Documents.DeleteObservation, { id: id });
   }
 
@@ -4426,7 +4052,7 @@ class Graphlit {
   ): Promise<Types.CreateInvestmentMutation> {
     return this.mutateAndCheckError<
       Types.CreateInvestmentMutation,
-      { investment: Types.InvestmentInput }
+      Types.CreateInvestmentMutationVariables
     >(Documents.CreateInvestment, { investment: investment });
   }
 
@@ -4435,7 +4061,7 @@ class Graphlit {
   ): Promise<Types.UpdateInvestmentMutation> {
     return this.mutateAndCheckError<
       Types.UpdateInvestmentMutation,
-      { investment: Types.InvestmentUpdateInput }
+      Types.UpdateInvestmentMutationVariables
     >(Documents.UpdateInvestment, { investment: investment });
   }
 
@@ -4444,7 +4070,7 @@ class Graphlit {
   ): Promise<Types.DeleteInvestmentMutation> {
     return this.mutateAndCheckError<
       Types.DeleteInvestmentMutation,
-      { id: string }
+      Types.DeleteInvestmentMutationVariables
     >(Documents.DeleteInvestment, { id: id });
   }
 
@@ -4454,7 +4080,7 @@ class Graphlit {
   ): Promise<Types.DeleteInvestmentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteInvestmentsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteInvestmentsMutationVariables
     >(Documents.DeleteInvestments, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4468,11 +4094,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllInvestmentsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllInvestmentsMutation,
-      {
-        filter?: Types.InvestmentFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllInvestmentsMutationVariables
     >(Documents.DeleteAllInvestments, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4485,7 +4107,7 @@ class Graphlit {
   ): Promise<Types.CreateInvestmentFundMutation> {
     return this.mutateAndCheckError<
       Types.CreateInvestmentFundMutation,
-      { investmentFund: Types.InvestmentFundInput }
+      Types.CreateInvestmentFundMutationVariables
     >(Documents.CreateInvestmentFund, { investmentFund: investmentFund });
   }
 
@@ -4494,7 +4116,7 @@ class Graphlit {
   ): Promise<Types.UpdateInvestmentFundMutation> {
     return this.mutateAndCheckError<
       Types.UpdateInvestmentFundMutation,
-      { investmentFund: Types.InvestmentFundUpdateInput }
+      Types.UpdateInvestmentFundMutationVariables
     >(Documents.UpdateInvestmentFund, { investmentFund: investmentFund });
   }
 
@@ -4503,7 +4125,7 @@ class Graphlit {
   ): Promise<Types.DeleteInvestmentFundMutation> {
     return this.mutateAndCheckError<
       Types.DeleteInvestmentFundMutation,
-      { id: string }
+      Types.DeleteInvestmentFundMutationVariables
     >(Documents.DeleteInvestmentFund, { id: id });
   }
 
@@ -4513,7 +4135,7 @@ class Graphlit {
   ): Promise<Types.DeleteInvestmentFundsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteInvestmentFundsMutation,
-      { ids: string[]; isSynchronous?: boolean }
+      Types.DeleteInvestmentFundsMutationVariables
     >(Documents.DeleteInvestmentFunds, {
       ids: ids,
       isSynchronous: isSynchronous,
@@ -4527,11 +4149,7 @@ class Graphlit {
   ): Promise<Types.DeleteAllInvestmentFundsMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAllInvestmentFundsMutation,
-      {
-        filter?: Types.InvestmentFundFilter;
-        isSynchronous?: boolean;
-        correlationId?: string;
-      }
+      Types.DeleteAllInvestmentFundsMutationVariables
     >(Documents.DeleteAllInvestmentFunds, {
       filter: filter,
       isSynchronous: isSynchronous,
@@ -4575,9 +4193,7 @@ class Graphlit {
         case Types.ModelServiceTypes.Anthropic:
           return Anthropic !== undefined || this.anthropicClient !== undefined;
         case Types.ModelServiceTypes.Google:
-          return (
-            GoogleGenAI !== undefined || this.googleClient !== undefined
-          );
+          return GoogleGenAI !== undefined || this.googleClient !== undefined;
         case Types.ModelServiceTypes.Groq:
           return Groq !== undefined || this.groqClient !== undefined;
         case Types.ModelServiceTypes.Cerebras:
@@ -4819,11 +4435,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-            promptTokens: 0, // We don't have this breakdown from the API
-            completionTokens: totalTokens,
-            totalTokens: totalTokens,
-            model: currentMessage?.model || undefined,
-          }
+              promptTokens: 0, // We don't have this breakdown from the API
+              completionTokens: totalTokens,
+              totalTokens: totalTokens,
+              model: currentMessage?.model || undefined,
+            }
           : undefined;
 
       return {
@@ -4910,7 +4526,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = specification?.id
         ? ((await this.getSpecification(specification.id))
-          .specification as Types.Specification)
+            .specification as Types.Specification)
         : undefined;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && fullSpec) {
@@ -6141,13 +5757,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.OPENAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("OpenAI module not available");
-        })());
+            throw new Error("OpenAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6202,13 +5818,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-          apiKey: process.env.ANTHROPIC_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.ANTHROPIC_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Anthropic module not available");
-        })());
+            throw new Error("Anthropic module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6296,8 +5912,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-          throw new Error("Google GenerativeAI module not available");
-        })());
+            throw new Error("Google GenerativeAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6353,8 +5969,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-          throw new Error("Groq module not available");
-        })());
+            throw new Error("Groq module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6398,13 +6014,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-          apiKey: process.env.CEREBRAS_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.CEREBRAS_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Cerebras module not available");
-        })());
+            throw new Error("Cerebras module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6451,8 +6067,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-            throw new Error("Cohere module not available");
-          })());
+              throw new Error("Cohere module not available");
+            })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6496,29 +6112,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-          const apiKey = process.env.MISTRAL_API_KEY;
-          if (!apiKey) {
-            throw new Error(
-              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-            );
-          }
-          return new Mistral({
-            apiKey,
-            retryConfig: {
-              strategy: "backoff",
-              backoff: {
-                initialInterval: 1000,
-                maxInterval: 60000,
-                exponent: 2,
-                maxElapsedTime: 300000, // 5 minutes
+            const apiKey = process.env.MISTRAL_API_KEY;
+            if (!apiKey) {
+              throw new Error(
+                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+              );
+            }
+            return new Mistral({
+              apiKey,
+              retryConfig: {
+                strategy: "backoff",
+                backoff: {
+                  initialInterval: 1000,
+                  maxInterval: 60000,
+                  exponent: 2,
+                  maxElapsedTime: 300000, // 5 minutes
+                },
+                retryConnectionErrors: true,
               },
-              retryConnectionErrors: true,
-            },
-          });
-        })()
+            });
+          })()
         : (() => {
-          throw new Error("Mistral module not available");
-        })());
+            throw new Error("Mistral module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6563,11 +6179,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-          region: process.env.AWS_REGION || "us-east-2",
-        })
+            region: process.env.AWS_REGION || "us-east-2",
+          })
         : (() => {
-          throw new Error("Bedrock module not available");
-        })());
+            throw new Error("Bedrock module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -6612,11 +6228,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.deepseek.com",
-          apiKey: process.env.DEEPSEEK_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.deepseek.com",
+            apiKey: process.env.DEEPSEEK_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!deepseekClient) {
@@ -6662,11 +6278,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.x.ai/v1",
-          apiKey: process.env.XAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.x.ai/v1",
+            apiKey: process.env.XAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!xaiClient) {

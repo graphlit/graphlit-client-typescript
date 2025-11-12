@@ -172,6 +172,7 @@ The deprecated `@google/generative-ai` SDK has been replaced with the new `@goog
 ### Migration Steps
 
 1. **Update your dependencies:**
+
 ```bash
 # Remove old SDK
 npm uninstall @google/generative-ai
@@ -181,6 +182,7 @@ npm install @google/genai
 ```
 
 2. **Update your client initialization:**
+
 ```typescript
 // Old (deprecated)
 import { GoogleGenerativeAI } from "@google/generative-ai";

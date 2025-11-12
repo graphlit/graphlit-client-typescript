@@ -27,7 +27,7 @@ describe.skipIf(skipTests)("Gemini Tool/Thinking Token Leakage", () => {
     client = new Graphlit(
       process.env.GRAPHLIT_ORGANIZATION_ID,
       process.env.GRAPHLIT_ENVIRONMENT_ID,
-      process.env.GRAPHLIT_JWT_SECRET
+      process.env.GRAPHLIT_JWT_SECRET,
     );
     createdSpecIds = [];
     createdConversationIds = [];
@@ -138,7 +138,7 @@ Every reply should end with **one** of:
     let foundThinkingTags = false;
     let foundToolCode = false;
     let foundToolOutput = false;
-    
+
     await new Promise<void>((resolve, reject) => {
       client.streamAgent(
         prompt,
@@ -146,11 +146,11 @@ Every reply should end with **one** of:
           if (event.type === "conversation_started") {
             createdConversationIds.push(event.conversationId);
           }
-          
+
           if (event.type === "message_update" && event.message?.message) {
             fullMessage = event.message.message;
             messageChunks.push(fullMessage);
-            
+
             // Check for problematic content
             if (fullMessage.includes("<thinking>")) {
               foundThinkingTags = true;
@@ -165,18 +165,18 @@ Every reply should end with **one** of:
               console.log("❌ Found <tool_output> tags in message");
             }
           }
-          
+
           if (event.type === "conversation_completed") {
             resolve();
           }
-          
+
           if (event.type === "error") {
             reject(new Error(event.error.message || "Conversation failed"));
           }
         },
         undefined, // conversationId (create new)
         { id: specId },
-        [] // EXPLICITLY NO TOOLS
+        [], // EXPLICITLY NO TOOLS
       );
     });
 
@@ -185,11 +185,11 @@ Every reply should end with **one** of:
     console.log("Found <thinking> tags:", foundThinkingTags);
     console.log("Found <tool_code> tags:", foundToolCode);
     console.log("Found <tool_output> tags:", foundToolOutput);
-    
+
     // Log first 500 chars to see what's in the message
     console.log("\nFirst 500 chars of message:");
     console.log(fullMessage.substring(0, 500));
-    
+
     // Assertions
     expect(foundThinkingTags).toBe(false);
     expect(foundToolCode).toBe(false);
@@ -198,7 +198,6 @@ Every reply should end with **one** of:
     expect(fullMessage).not.toContain("<thinking>");
     expect(fullMessage).not.toContain("<tool_code>");
     expect(fullMessage).not.toContain("<tool_output>");
-    
   }, 60000); // 60 second timeout
 
   it("should work correctly with improved system prompt", async () => {
@@ -280,7 +279,7 @@ End each response with ONE of:
 
     let fullMessage = "";
     let foundProblematicContent = false;
-    
+
     await new Promise<void>((resolve, reject) => {
       client.streamAgent(
         "Tell me the latest on Wimbledon 2025",
@@ -288,31 +287,33 @@ End each response with ONE of:
           if (event.type === "conversation_started") {
             createdConversationIds.push(event.conversationId);
           }
-          
+
           if (event.type === "message_update" && event.message?.message) {
             fullMessage = event.message.message;
-            
+
             // Check for tool simulation
-            if (fullMessage.includes("<tool_code>") || 
-                fullMessage.includes("<thinking>") || 
-                fullMessage.includes("print(graphlit") ||
-                fullMessage.includes("<tool_output>")) {
+            if (
+              fullMessage.includes("<tool_code>") ||
+              fullMessage.includes("<thinking>") ||
+              fullMessage.includes("print(graphlit") ||
+              fullMessage.includes("<tool_output>")
+            ) {
               foundProblematicContent = true;
               console.log("❌ Found simulated tool usage with improved prompt");
             }
           }
-          
+
           if (event.type === "conversation_completed") {
             resolve();
           }
-          
+
           if (event.type === "error") {
             reject(new Error(event.error.message || "Conversation failed"));
           }
         },
         undefined,
         { id: specId },
-        [] // No tools
+        [], // No tools
       );
     });
 
@@ -321,9 +322,8 @@ End each response with ONE of:
     console.log("Found problematic content:", foundProblematicContent);
     console.log("\nFirst 500 chars:");
     console.log(fullMessage.substring(0, 500));
-    
+
     expect(foundProblematicContent).toBe(false);
-    
   }, 60000);
 
   it("should test with thinking disabled", async () => {
@@ -338,7 +338,8 @@ End each response with ONE of:
         enableThinking: false, // Explicitly disable thinking
       },
       // Use a simple system prompt
-      systemPrompt: "You are a helpful assistant. Provide clear, concise answers.",
+      systemPrompt:
+        "You are a helpful assistant. Provide clear, concise answers.",
     };
 
     const specResponse = await client.createSpecification(specification);
@@ -348,7 +349,7 @@ End each response with ONE of:
 
     let fullMessage = "";
     let foundProblematicContent = false;
-    
+
     await new Promise<void>((resolve, reject) => {
       client.streamAgent(
         "Tell me the latest on Wimbledon 2025",
@@ -356,28 +357,30 @@ End each response with ONE of:
           if (event.type === "conversation_started") {
             createdConversationIds.push(event.conversationId);
           }
-          
+
           if (event.type === "message_update" && event.message?.message) {
             fullMessage = event.message.message;
-            
+
             // Check for any XML-like tags or tool syntax
             if (/<\w+>/.test(fullMessage) || fullMessage.includes("print(")) {
               foundProblematicContent = true;
-              console.log("❌ Found problematic content with thinking disabled");
+              console.log(
+                "❌ Found problematic content with thinking disabled",
+              );
             }
           }
-          
+
           if (event.type === "conversation_completed") {
             resolve();
           }
-          
+
           if (event.type === "error") {
             reject(new Error(event.error.message || "Conversation failed"));
           }
         },
         undefined,
         { id: specId },
-        [] // No tools
+        [], // No tools
       );
     });
 
@@ -386,8 +389,7 @@ End each response with ONE of:
     console.log("Found problematic content:", foundProblematicContent);
     console.log("\nFirst 300 chars:");
     console.log(fullMessage.substring(0, 300));
-    
+
     expect(foundProblematicContent).toBe(false);
-    
   }, 60000);
 });

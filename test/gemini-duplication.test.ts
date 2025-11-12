@@ -27,7 +27,7 @@ describe.skipIf(skipTests)("Gemini 2.5 Pro Duplication Issue", () => {
     client = new Graphlit(
       process.env.GRAPHLIT_ORGANIZATION_ID,
       process.env.GRAPHLIT_ENVIRONMENT_ID,
-      process.env.GRAPHLIT_JWT_SECRET
+      process.env.GRAPHLIT_JWT_SECRET,
     );
     createdSpecIds = [];
     createdConversationIds = [];
@@ -51,7 +51,6 @@ describe.skipIf(skipTests)("Gemini 2.5 Pro Duplication Issue", () => {
     }
   });
   it("should reproduce response duplication with no tools", async () => {
-
     // Create specification matching the one provided
     const specification: Types.SpecificationInput = {
       name: "Google Gemini 2.5 Pro Test",
@@ -130,69 +129,73 @@ Every reply should end with **one** of:
     createdSpecIds.push(specId);
 
     try {
-
       // Stream agent with NO tools
       const messageChunks: string[] = [];
       const fullMessage = await new Promise<string>((resolve, reject) => {
         let completeMessage = "";
-        
+
         client.streamAgent(
           "Tell me the latest on Wimbledon 2025",
           (event) => {
             console.log(`Event type: ${event.type}`);
-            
+
             if (event.type === "conversation_started") {
               createdConversationIds.push(event.conversationId);
             }
-            
+
             if (event.type === "message_update" && event.message?.message) {
               // Track the delta between chunks
               const previousLength = completeMessage.length;
               const newLength = event.message.message.length;
               const delta = newLength - previousLength;
-              
+
               messageChunks.push(event.message.message);
               completeMessage = event.message.message;
               console.log(`Message length: ${newLength} (delta: +${delta})`);
             }
-            
+
             if (event.type === "conversation_completed") {
               resolve(completeMessage);
             }
-            
+
             if (event.type === "error") {
               reject(new Error(event.error.message || "Conversation failed"));
             }
           },
           undefined, // conversationId (create new)
-          { id: specId } // Pass specification as object
+          { id: specId }, // Pass specification as object
         );
       });
 
       console.log("\n=== DUPLICATION ANALYSIS ===");
       console.log("Final message length:", fullMessage.length);
       console.log("Number of message chunks:", messageChunks.length);
-      
+
       // More detailed analysis
       const halfLength = Math.floor(fullMessage.length / 2);
       const firstHalf = fullMessage.substring(0, halfLength);
       const secondHalf = fullMessage.substring(halfLength);
-      
+
       // Check if the message is exactly duplicated
-      const exactDuplication = fullMessage.substring(0, halfLength) === fullMessage.substring(halfLength, halfLength * 2);
-      
+      const exactDuplication =
+        fullMessage.substring(0, halfLength) ===
+        fullMessage.substring(halfLength, halfLength * 2);
+
       if (exactDuplication) {
         console.error("\n❌ EXACT DUPLICATION DETECTED!");
         console.error("Message appears to be duplicated exactly.");
         console.error("First 100 chars:", fullMessage.substring(0, 100));
         console.error("Duplication starts at position:", halfLength);
       }
-      
+
       // Check for partial duplication
       const firstPart = fullMessage.substring(0, 100);
       const firstOccurrence = fullMessage.indexOf(firstPart);
-      const secondOccurrence = fullMessage.indexOf(firstPart, firstOccurrence + 1);
-      
+      const secondOccurrence = fullMessage.indexOf(
+        firstPart,
+        firstOccurrence + 1,
+      );
+
       if (secondOccurrence !== -1 && !exactDuplication) {
         console.error("\n⚠️  PARTIAL DUPLICATION DETECTED!");
         console.error("First occurrence at:", firstOccurrence);
@@ -203,18 +206,20 @@ Every reply should end with **one** of:
       // Also check for the specific "Of course" pattern
       const ofCourseCount = (fullMessage.match(/Of course\./g) || []).length;
       console.log("\n'Of course.' appears", ofCourseCount, "times");
-      
+
       // Log message chunks to see the pattern
       console.log("\nMessage chunk progression:");
       const uniqueChunks = new Set(messageChunks);
       console.log("Total chunks:", messageChunks.length);
       console.log("Unique chunks:", uniqueChunks.size);
-      
+
       // Check if final chunk equals full message (indicating duplication at end)
       if (messageChunks.length > 0) {
         const lastChunk = messageChunks[messageChunks.length - 1];
         if (lastChunk === fullMessage && messageChunks.length > 1) {
-          console.error("\n❌ UI ADAPTER DUPLICATION: Last chunk contains the entire message!");
+          console.error(
+            "\n❌ UI ADAPTER DUPLICATION: Last chunk contains the entire message!",
+          );
         }
       }
 
@@ -225,11 +230,12 @@ Every reply should end with **one** of:
       expect(exactDuplication).toBe(false); // Should not have exact duplication
       expect(secondOccurrence).toBe(-1); // Should not find partial duplication
       expect(ofCourseCount).toBeLessThanOrEqual(1); // Should appear at most once
-      
-      // Check that no chunk contains the full message (except possibly the last one in non-streaming mode)
-      const fullMessageChunks = messageChunks.filter(chunk => chunk === fullMessage);
-      expect(fullMessageChunks.length).toBeLessThanOrEqual(1);
 
+      // Check that no chunk contains the full message (except possibly the last one in non-streaming mode)
+      const fullMessageChunks = messageChunks.filter(
+        (chunk) => chunk === fullMessage,
+      );
+      expect(fullMessageChunks.length).toBeLessThanOrEqual(1);
     } catch (error) {
       throw error;
     }

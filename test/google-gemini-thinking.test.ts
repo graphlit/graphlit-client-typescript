@@ -428,7 +428,9 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
     const { GoogleGenAI } = await import("@google/genai");
     googleClient = new GoogleGenAI({ apiKey: googleApiKey });
     client.setGoogleClient(googleClient);
-    console.log("✅ Google Gen AI client initialized for Gemini thinking tests");
+    console.log(
+      "✅ Google Gen AI client initialized for Gemini thinking tests",
+    );
 
     // Create a specification for Gemini 2.5 Flash with thinking enabled, using Zine system prompt
     const specInput: Types.SpecificationInput = {
@@ -472,399 +474,491 @@ describe("Google Gemini - Thinking/Reasoning Events", () => {
     }
   });
 
-  it("should emit reasoning events for Google thought parts", { timeout: 60000 }, async () => {
-    // Track all events to validate the flow
-    const events: { type: string; timestamp: number; details?: any }[] = [];
-    let hasReasoning = false;
-    let reasoningStarted = false;
-    let reasoningCompleted = false;
-    let reasoningContent = "";
-    let hasConversationCompleted = false;
-    let messageContent = "";
+  it(
+    "should emit reasoning events for Google thought parts",
+    { timeout: 60000 },
+    async () => {
+      // Track all events to validate the flow
+      const events: { type: string; timestamp: number; details?: any }[] = [];
+      let hasReasoning = false;
+      let reasoningStarted = false;
+      let reasoningCompleted = false;
+      let reasoningContent = "";
+      let hasConversationCompleted = false;
+      let messageContent = "";
 
-    console.log("\n🚀 Starting test with prompt that should trigger thinking...");
+      console.log(
+        "\n🚀 Starting test with prompt that should trigger thinking...",
+      );
 
-    // Use a prompt that should trigger thinking
-    const prompt = "Tell me a detailed story about PT Barnum";
+      // Use a prompt that should trigger thinking
+      const prompt = "Tell me a detailed story about PT Barnum";
 
-    await client.streamAgent(
-      prompt,
-      (event: AgentStreamEvent) => {
-        const timestamp = Date.now();
-        const eventLog = { type: event.type, timestamp, details: {} };
+      await client.streamAgent(
+        prompt,
+        (event: AgentStreamEvent) => {
+          const timestamp = Date.now();
+          const eventLog = { type: event.type, timestamp, details: {} };
 
-        switch (event.type) {
-          case "conversation_started":
-            conversationId = event.conversationId;
-            console.log(`  📝 Conversation started: ${conversationId}`);
-            break;
+          switch (event.type) {
+            case "conversation_started":
+              conversationId = event.conversationId;
+              console.log(`  📝 Conversation started: ${conversationId}`);
+              break;
 
-          case "reasoning_update":
-            hasReasoning = true;
-            const reasoningEvent = event as any;
+            case "reasoning_update":
+              hasReasoning = true;
+              const reasoningEvent = event as any;
 
-            // Log ALL reasoning updates for debugging
-            console.log(`  🧠 Reasoning update:`);
-            console.log(`     - isComplete: ${reasoningEvent.isComplete}`);
-            console.log(`     - format: ${reasoningEvent.format}`);
-            console.log(`     - content length: ${reasoningEvent.content?.length || 0}`);
+              // Log ALL reasoning updates for debugging
+              console.log(`  🧠 Reasoning update:`);
+              console.log(`     - isComplete: ${reasoningEvent.isComplete}`);
+              console.log(`     - format: ${reasoningEvent.format}`);
+              console.log(
+                `     - content length: ${reasoningEvent.content?.length || 0}`,
+              );
 
-            if (!reasoningStarted && !reasoningEvent.isComplete) {
-              reasoningStarted = true;
-              console.log(`  🤔 Reasoning STARTED (format: ${reasoningEvent.format})`);
-            }
-
-            if (reasoningEvent.isComplete) {
-              reasoningCompleted = true;
-              reasoningContent = reasoningEvent.content || "";
-              eventLog.details = {
-                contentLength: reasoningContent.length,
-                isComplete: true,
-                format: reasoningEvent.format,
-              };
-              console.log(`  ✅ Reasoning COMPLETE (${reasoningContent.length} chars)`);
-
-              // Log a longer snippet of the reasoning content
-              if (reasoningContent.length > 0) {
-                const snippet = reasoningContent.substring(0, 500);
-                console.log(`  💭 Reasoning content: "${snippet}${reasoningContent.length > 500 ? '...' : ''}"`);
+              if (!reasoningStarted && !reasoningEvent.isComplete) {
+                reasoningStarted = true;
+                console.log(
+                  `  🤔 Reasoning STARTED (format: ${reasoningEvent.format})`,
+                );
               }
-            } else {
+
+              if (reasoningEvent.isComplete) {
+                reasoningCompleted = true;
+                reasoningContent = reasoningEvent.content || "";
+                eventLog.details = {
+                  contentLength: reasoningContent.length,
+                  isComplete: true,
+                  format: reasoningEvent.format,
+                };
+                console.log(
+                  `  ✅ Reasoning COMPLETE (${reasoningContent.length} chars)`,
+                );
+
+                // Log a longer snippet of the reasoning content
+                if (reasoningContent.length > 0) {
+                  const snippet = reasoningContent.substring(0, 500);
+                  console.log(
+                    `  💭 Reasoning content: "${snippet}${reasoningContent.length > 500 ? "..." : ""}"`,
+                  );
+                }
+              } else {
+                eventLog.details = {
+                  contentLength: reasoningEvent.content?.length || 0,
+                  isComplete: false,
+                  format: reasoningEvent.format,
+                };
+                // Log partial reasoning content
+                if (reasoningEvent.content?.length > 0) {
+                  console.log(
+                    `  📝 Partial reasoning: ${reasoningEvent.content.substring(0, 100)}...`,
+                  );
+                }
+              }
+              break;
+
+            case "message_update":
+              const messageEvent = event as any;
+              if (messageEvent.message?.message) {
+                messageContent = messageEvent.message.message;
+                eventLog.details = {
+                  isStreaming: messageEvent.isStreaming,
+                  messageLength: messageContent.length,
+                };
+              }
+              break;
+
+            case "conversation_completed":
+              hasConversationCompleted = true;
+              const completedEvent = event as any;
               eventLog.details = {
-                contentLength: reasoningEvent.content?.length || 0,
-                isComplete: false,
-                format: reasoningEvent.format,
+                messageLength: completedEvent.message?.message?.length || 0,
               };
-              // Log partial reasoning content
-              if (reasoningEvent.content?.length > 0) {
-                console.log(`  📝 Partial reasoning: ${reasoningEvent.content.substring(0, 100)}...`);
+              console.log(`  🏁 Conversation completed`);
+              console.log(
+                `     - Final message length: ${completedEvent.message?.message?.length || 0} chars`,
+              );
+              break;
+
+            case "error":
+              console.log(`  ❌ Error: ${(event as any).error?.message}`);
+              break;
+          }
+
+          events.push(eventLog);
+        },
+        undefined, // conversationId
+        { id: specificationId },
+        undefined, // tools
+        undefined, // toolHandlers
+        {
+          // Enable detailed debugging
+          chunkingStrategy: "sentence",
+        },
+      );
+
+      // Analyze the event flow
+      console.log("\n📊 Event Analysis:");
+      console.log(`  Total events: ${events.length}`);
+      console.log(
+        `  Unique event types: ${[...new Set(events.map((e) => e.type))].join(", ")}`,
+      );
+
+      // Check for reasoning events
+      console.log("\n🔍 Reasoning Detection:");
+      console.log(`  Has reasoning updates: ${hasReasoning}`);
+      console.log(`  Reasoning started: ${reasoningStarted}`);
+      console.log(`  Reasoning completed: ${reasoningCompleted}`);
+      console.log(
+        `  Reasoning content length: ${reasoningContent.length} chars`,
+      );
+      console.log(`  Message content length: ${messageContent.length} chars`);
+      console.log(`  Conversation completed: ${hasConversationCompleted}`);
+
+      // Assertions
+      expect(hasConversationCompleted).toBe(true); // Should complete the conversation
+
+      // Google Gemini with thinking enabled should emit reasoning events
+      if (reasoningContent.length > 0) {
+        expect(hasReasoning).toBe(true); // Should have reasoning events
+        expect(reasoningCompleted).toBe(true); // Should have completed reasoning
+        expect(reasoningContent.length).toBeGreaterThan(0); // Should have reasoning content
+      } else {
+        console.warn(
+          "⚠️  No reasoning content detected - model may not have engaged thinking mode for this prompt",
+        );
+      }
+
+      expect(messageContent.length).toBeGreaterThan(0); // Should have actual message content
+
+      // Print timeline for debugging
+      if (events.length > 0) {
+        console.log("\n📅 Event Timeline:");
+        const startTime = events[0]?.timestamp || 0;
+        events.forEach((e) => {
+          const relativeTime = e.timestamp - startTime;
+          const details = e.details ? ` - ${JSON.stringify(e.details)}` : "";
+          console.log(`  ${relativeTime}ms: ${e.type}${details}`);
+        });
+      }
+    },
+  );
+
+  it(
+    "should handle thinking with different budget settings",
+    { timeout: 60000 },
+    async () => {
+      // Test with explicit budget (not dynamic)
+      const specInput: Types.SpecificationInput = {
+        name: "Test - Gemini with Fixed Budget",
+        type: Types.SpecificationTypes.Completion,
+        serviceType: Types.ModelServiceTypes.Google,
+        google: {
+          model: Types.GoogleModels.Gemini_2_5Flash,
+          temperature: 0.7,
+          enableThinking: true,
+          // Set a specific thinking token limit
+          thinkingTokenLimit: 8000,
+        },
+      };
+
+      const createSpecResponse = await client.createSpecification(specInput);
+      const fixedBudgetSpecId = createSpecResponse.createSpecification?.id;
+      expect(fixedBudgetSpecId).toBeTruthy();
+
+      try {
+        let hasThinking = false;
+        let thinkingLength = 0;
+
+        await client.streamAgent(
+          "Tell me a detailed story about PT Barnum",
+          (event: AgentStreamEvent) => {
+            if (event.type === "conversation_started") {
+              conversationId = event.conversationId;
+            } else if (event.type === "reasoning_update") {
+              const reasoningEvent = event as any;
+              if (reasoningEvent.isComplete) {
+                hasThinking = true;
+                thinkingLength = reasoningEvent.content?.length || 0;
+                console.log(
+                  `  ✅ Fixed budget thinking complete: ${thinkingLength} chars`,
+                );
+              } else if (!hasThinking) {
+                hasThinking = true;
+                console.log("  🤔 Fixed budget thinking started");
               }
             }
-            break;
+          },
+          undefined,
+          { id: fixedBudgetSpecId },
+        );
 
-          case "message_update":
-            const messageEvent = event as any;
-            if (messageEvent.message?.message) {
-              messageContent = messageEvent.message.message;
-              eventLog.details = {
-                isStreaming: messageEvent.isStreaming,
-                messageLength: messageContent.length,
-              };
-            }
-            break;
-
-          case "conversation_completed":
-            hasConversationCompleted = true;
-            const completedEvent = event as any;
-            eventLog.details = {
-              messageLength: completedEvent.message?.message?.length || 0,
-            };
-            console.log(`  🏁 Conversation completed`);
-            console.log(`     - Final message length: ${completedEvent.message?.message?.length || 0} chars`);
-            break;
-
-          case "error":
-            console.log(`  ❌ Error: ${(event as any).error?.message}`);
-            break;
+        if (hasThinking) {
+          expect(thinkingLength).toBeGreaterThan(0);
+          console.log(
+            `  📊 Fixed budget (8000 tokens) produced ${thinkingLength} chars of thinking`,
+          );
         }
 
-        events.push(eventLog);
-      },
-      undefined, // conversationId
-      { id: specificationId },
-      undefined, // tools
-      undefined, // toolHandlers
-      {
-        // Enable detailed debugging
-        chunkingStrategy: "sentence",
-      },
-    );
+        // Clean up test conversation
+        if (conversationId) {
+          await client.deleteConversation(conversationId);
+          conversationId = undefined;
+        }
+      } finally {
+        // Clean up test specification
+        if (fixedBudgetSpecId) {
+          await client.deleteSpecification(fixedBudgetSpecId);
+        }
+      }
+    },
+  );
 
-    // Analyze the event flow
-    console.log("\n📊 Event Analysis:");
-    console.log(`  Total events: ${events.length}`);
-    console.log(`  Unique event types: ${[...new Set(events.map(e => e.type))].join(", ")}`);
+  it(
+    "should not emit reasoning events when thinking is disabled",
+    { timeout: 60000 },
+    async () => {
+      // Test with thinking explicitly disabled
+      const specInput: Types.SpecificationInput = {
+        name: "Test - Gemini No Thinking",
+        type: Types.SpecificationTypes.Completion,
+        serviceType: Types.ModelServiceTypes.Google,
+        google: {
+          model: Types.GoogleModels.Gemini_2_5Flash,
+          temperature: 0.7,
+          // Disable thinking
+          enableThinking: false,
+          thinkingTokenLimit: 0,
+        },
+      };
 
-    // Check for reasoning events
-    console.log("\n🔍 Reasoning Detection:");
-    console.log(`  Has reasoning updates: ${hasReasoning}`);
-    console.log(`  Reasoning started: ${reasoningStarted}`);
-    console.log(`  Reasoning completed: ${reasoningCompleted}`);
-    console.log(`  Reasoning content length: ${reasoningContent.length} chars`);
-    console.log(`  Message content length: ${messageContent.length} chars`);
-    console.log(`  Conversation completed: ${hasConversationCompleted}`);
+      const createSpecResponse = await client.createSpecification(specInput);
+      const noThinkingSpecId = createSpecResponse.createSpecification?.id;
+      expect(noThinkingSpecId).toBeTruthy();
 
-    // Assertions
-    expect(hasConversationCompleted).toBe(true); // Should complete the conversation
+      try {
+        let hasReasoningEvents = false;
 
-    // Google Gemini with thinking enabled should emit reasoning events
-    if (reasoningContent.length > 0) {
-      expect(hasReasoning).toBe(true); // Should have reasoning events
-      expect(reasoningCompleted).toBe(true); // Should have completed reasoning
-      expect(reasoningContent.length).toBeGreaterThan(0); // Should have reasoning content
-    } else {
-      console.warn("⚠️  No reasoning content detected - model may not have engaged thinking mode for this prompt");
-    }
+        await client.streamAgent(
+          "What is 2 + 2?",
+          (event: AgentStreamEvent) => {
+            if (event.type === "conversation_started") {
+              conversationId = event.conversationId;
+            } else if (event.type === "reasoning_update") {
+              hasReasoningEvents = true;
+              const reasoningEvent = event as any;
+              console.log(
+                `  ⚠️ Unexpected reasoning event (isComplete: ${reasoningEvent.isComplete})`,
+              );
+            }
+          },
+          undefined,
+          { id: noThinkingSpecId },
+        );
 
-    expect(messageContent.length).toBeGreaterThan(0); // Should have actual message content
+        // Should NOT have reasoning events when thinking is disabled
+        expect(hasReasoningEvents).toBe(false);
+        console.log(
+          "  ✅ Confirmed: No reasoning events when thinking is disabled",
+        );
 
-    // Print timeline for debugging
-    if (events.length > 0) {
-      console.log("\n📅 Event Timeline:");
-      const startTime = events[0]?.timestamp || 0;
-      events.forEach((e) => {
-        const relativeTime = e.timestamp - startTime;
-        const details = e.details ? ` - ${JSON.stringify(e.details)}` : "";
-        console.log(`  ${relativeTime}ms: ${e.type}${details}`);
-      });
-    }
-  });
+        // Clean up test conversation
+        if (conversationId) {
+          await client.deleteConversation(conversationId);
+          conversationId = undefined;
+        }
+      } finally {
+        // Clean up test specification
+        if (noThinkingSpecId) {
+          await client.deleteSpecification(noThinkingSpecId);
+        }
+      }
+    },
+  );
 
-  it("should handle thinking with different budget settings", { timeout: 60000 }, async () => {
-    // Test with explicit budget (not dynamic)
-    const specInput: Types.SpecificationInput = {
-      name: "Test - Gemini with Fixed Budget",
-      type: Types.SpecificationTypes.Completion,
-      serviceType: Types.ModelServiceTypes.Google,
-      google: {
-        model: Types.GoogleModels.Gemini_2_5Flash,
-        temperature: 0.7,
-        enableThinking: true,
-        // Set a specific thinking token limit
-        thinkingTokenLimit: 8000,
-      },
-    };
+  it(
+    "should replicate HTTP 500 issue with simple conversation continuation",
+    { timeout: 120000 },
+    async () => {
+      console.log(
+        "\n🧪 REPRODUCTION TEST: Simple conversation continuation (no tools)",
+      );
 
-    const createSpecResponse = await client.createSpecification(specInput);
-    const fixedBudgetSpecId = createSpecResponse.createSpecification?.id;
-    expect(fixedBudgetSpecId).toBeTruthy();
+      let firstConversationCompleted = false;
+      let secondConversationCompleted = false;
+      let firstError: any = null;
+      let secondError: any = null;
+      let testConversationId: string | undefined;
 
-    try {
-      let hasThinking = false;
-      let thinkingLength = 0;
-
+      // First request - should work fine
+      console.log("\n📝 Step 1: PT Barnum prompt (first time)");
       await client.streamAgent(
         "Tell me a detailed story about PT Barnum",
         (event: AgentStreamEvent) => {
-          if (event.type === "conversation_started") {
-            conversationId = event.conversationId;
-          } else if (event.type === "reasoning_update") {
-            const reasoningEvent = event as any;
-            if (reasoningEvent.isComplete) {
-              hasThinking = true;
-              thinkingLength = reasoningEvent.content?.length || 0;
-              console.log(`  ✅ Fixed budget thinking complete: ${thinkingLength} chars`);
-            } else if (!hasThinking) {
-              hasThinking = true;
-              console.log("  🤔 Fixed budget thinking started");
-            }
-          }
-        },
-        undefined,
-        { id: fixedBudgetSpecId },
-      );
-
-      if (hasThinking) {
-        expect(thinkingLength).toBeGreaterThan(0);
-        console.log(`  📊 Fixed budget (8000 tokens) produced ${thinkingLength} chars of thinking`);
-      }
-
-      // Clean up test conversation
-      if (conversationId) {
-        await client.deleteConversation(conversationId);
-        conversationId = undefined;
-      }
-    } finally {
-      // Clean up test specification
-      if (fixedBudgetSpecId) {
-        await client.deleteSpecification(fixedBudgetSpecId);
-      }
-    }
-  });
-
-  it("should not emit reasoning events when thinking is disabled", { timeout: 60000 }, async () => {
-    // Test with thinking explicitly disabled
-    const specInput: Types.SpecificationInput = {
-      name: "Test - Gemini No Thinking",
-      type: Types.SpecificationTypes.Completion,
-      serviceType: Types.ModelServiceTypes.Google,
-      google: {
-        model: Types.GoogleModels.Gemini_2_5Flash,
-        temperature: 0.7,
-        // Disable thinking
-        enableThinking: false,
-        thinkingTokenLimit: 0,
-      },
-    };
-
-    const createSpecResponse = await client.createSpecification(specInput);
-    const noThinkingSpecId = createSpecResponse.createSpecification?.id;
-    expect(noThinkingSpecId).toBeTruthy();
-
-    try {
-      let hasReasoningEvents = false;
-
-      await client.streamAgent(
-        "What is 2 + 2?",
-        (event: AgentStreamEvent) => {
-          if (event.type === "conversation_started") {
-            conversationId = event.conversationId;
-          } else if (event.type === "reasoning_update") {
-            hasReasoningEvents = true;
-            const reasoningEvent = event as any;
-            console.log(`  ⚠️ Unexpected reasoning event (isComplete: ${reasoningEvent.isComplete})`);
-          }
-        },
-        undefined,
-        { id: noThinkingSpecId },
-      );
-
-      // Should NOT have reasoning events when thinking is disabled
-      expect(hasReasoningEvents).toBe(false);
-      console.log("  ✅ Confirmed: No reasoning events when thinking is disabled");
-
-      // Clean up test conversation
-      if (conversationId) {
-        await client.deleteConversation(conversationId);
-        conversationId = undefined;
-      }
-    } finally {
-      // Clean up test specification
-      if (noThinkingSpecId) {
-        await client.deleteSpecification(noThinkingSpecId);
-      }
-    }
-  });
-
-  it("should replicate HTTP 500 issue with simple conversation continuation", { timeout: 120000 }, async () => {
-    console.log("\n🧪 REPRODUCTION TEST: Simple conversation continuation (no tools)");
-
-    let firstConversationCompleted = false;
-    let secondConversationCompleted = false;
-    let firstError: any = null;
-    let secondError: any = null;
-    let testConversationId: string | undefined;
-
-    // First request - should work fine
-    console.log("\n📝 Step 1: PT Barnum prompt (first time)");
-    await client.streamAgent(
-      "Tell me a detailed story about PT Barnum",
-      (event: AgentStreamEvent) => {
-        switch (event.type) {
-          case "conversation_started":
-            testConversationId = event.conversationId;
-            console.log(`  ✅ First conversation started: ${testConversationId}`);
-            break;
-          case "conversation_completed":
-            firstConversationCompleted = true;
-            const completedEvent = event as any;
-            console.log(`  ✅ First conversation completed - message length: ${completedEvent.message?.message?.length || 0} chars`);
-            break;
-          case "reasoning_update":
-            const reasoningEvent = event as any;
-            if (!reasoningEvent.isComplete) {
-              console.log(`  🧠 First request thinking started...`);
-            } else {
-              console.log(`  🧠 First request thinking completed (${reasoningEvent.content?.length || 0} chars)`);
-            }
-            break;
-          case "error":
-            firstError = (event as any).error;
-            console.log(`  ❌ First conversation error: ${firstError?.message}`);
-            break;
-        }
-      },
-      undefined, // conversationId - let it create new one
-      { id: specificationId },
-    );
-
-    console.log(`\n🔍 First request result: completed=${firstConversationCompleted}, error=${!!firstError}`);
-    expect(firstConversationCompleted).toBe(true);
-    expect(firstError).toBeNull();
-    expect(testConversationId).toBeTruthy();
-
-    // Short delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Second request in same conversation - this should trigger HTTP 500 during thinking-to-message transition
-    console.log(`\n📝 Step 2: Continue conversation ${testConversationId}`);
-    console.log(`  🎯 This is where HTTP 500 should occur during thinking-to-message transition`);
-
-    try {
-      await client.streamAgent(
-        "What was PT Barnum's most famous circus act?",
-        (event: AgentStreamEvent) => {
           switch (event.type) {
             case "conversation_started":
-              console.log(`  ✅ Second request started in conversation: ${event.conversationId}`);
+              testConversationId = event.conversationId;
+              console.log(
+                `  ✅ First conversation started: ${testConversationId}`,
+              );
               break;
             case "conversation_completed":
-              secondConversationCompleted = true;
+              firstConversationCompleted = true;
               const completedEvent = event as any;
-              console.log(`  ✅ Second conversation completed - message length: ${completedEvent.message?.message?.length || 0} chars`);
+              console.log(
+                `  ✅ First conversation completed - message length: ${completedEvent.message?.message?.length || 0} chars`,
+              );
               break;
             case "reasoning_update":
               const reasoningEvent = event as any;
               if (!reasoningEvent.isComplete) {
-                console.log(`  🧠 Second request thinking started... (this is where it should crash)`);
+                console.log(`  🧠 First request thinking started...`);
               } else {
-                console.log(`  🧠 Second request thinking completed (${reasoningEvent.content?.length || 0} chars)`);
-                console.log(`  🎯 CRITICAL: Now transitioning from thinking to message - HTTP 500 expected here!`);
-              }
-              break;
-            case "message_update":
-              const messageEvent = event as any;
-              if (messageEvent.message?.message) {
-                console.log(`  🔤 Message content received (thinking-to-message transition successful): ${messageEvent.message.message.length} chars`);
+                console.log(
+                  `  🧠 First request thinking completed (${reasoningEvent.content?.length || 0} chars)`,
+                );
               }
               break;
             case "error":
-              secondError = (event as any).error;
-              console.log(`  ❌ Second conversation error: ${secondError?.message}`);
-              console.log(`  🚨 ERROR DETAILS:`, JSON.stringify(secondError, null, 2));
-
-              // Check if this is the HTTP 500 we're looking for
-              if (secondError?.message?.includes('500') || secondError?.status === 500) {
-                console.log(`  🎯 HTTP 500 ERROR REPRODUCED! This confirms the bug.`);
-              }
+              firstError = (event as any).error;
+              console.log(
+                `  ❌ First conversation error: ${firstError?.message}`,
+              );
               break;
           }
         },
-        testConversationId, // Use existing conversation
+        undefined, // conversationId - let it create new one
         { id: specificationId },
       );
-    } catch (error: any) {
-      console.log(`  ❌ Exception during second request: ${error.message}`);
-      console.log(`  🔍 Exception details:`, error);
-      secondError = error;
 
-      // Check if this is the HTTP 500
-      if (error.message?.includes('500') || error.status === 500) {
-        console.log(`  🎯 HTTP 500 EXCEPTION REPRODUCED! This confirms the bug.`);
-      }
-    }
+      console.log(
+        `\n🔍 First request result: completed=${firstConversationCompleted}, error=${!!firstError}`,
+      );
+      expect(firstConversationCompleted).toBe(true);
+      expect(firstError).toBeNull();
+      expect(testConversationId).toBeTruthy();
 
-    console.log(`\n📊 Final Results:`);
-    console.log(`  First request: completed=${firstConversationCompleted}, error=${!!firstError}`);
-    console.log(`  Second request: completed=${secondConversationCompleted}, error=${!!secondError}`);
+      // Short delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    if (secondError) {
-      console.log(`\n🚨 REPRODUCTION SUCCESSFUL!`);
-      console.log(`  Error message: ${secondError.message}`);
-      console.log(`  This confirms the HTTP 500 issue on conversation continuation.`);
-    } else {
-      console.log(`\n✅ No HTTP 500 error - either bug is fixed or didn't reproduce this time.`);
-      expect(secondConversationCompleted).toBe(true);
-    }
+      // Second request in same conversation - this should trigger HTTP 500 during thinking-to-message transition
+      console.log(`\n📝 Step 2: Continue conversation ${testConversationId}`);
+      console.log(
+        `  🎯 This is where HTTP 500 should occur during thinking-to-message transition`,
+      );
 
-    // Clean up the test conversation
-    if (testConversationId) {
       try {
-        await client.deleteConversation(testConversationId);
-        console.log(`✅ Cleaned up test conversation: ${testConversationId}`);
-      } catch (cleanupError) {
-        console.warn(`⚠️  Failed to clean up test conversation: ${testConversationId}`);
+        await client.streamAgent(
+          "What was PT Barnum's most famous circus act?",
+          (event: AgentStreamEvent) => {
+            switch (event.type) {
+              case "conversation_started":
+                console.log(
+                  `  ✅ Second request started in conversation: ${event.conversationId}`,
+                );
+                break;
+              case "conversation_completed":
+                secondConversationCompleted = true;
+                const completedEvent = event as any;
+                console.log(
+                  `  ✅ Second conversation completed - message length: ${completedEvent.message?.message?.length || 0} chars`,
+                );
+                break;
+              case "reasoning_update":
+                const reasoningEvent = event as any;
+                if (!reasoningEvent.isComplete) {
+                  console.log(
+                    `  🧠 Second request thinking started... (this is where it should crash)`,
+                  );
+                } else {
+                  console.log(
+                    `  🧠 Second request thinking completed (${reasoningEvent.content?.length || 0} chars)`,
+                  );
+                  console.log(
+                    `  🎯 CRITICAL: Now transitioning from thinking to message - HTTP 500 expected here!`,
+                  );
+                }
+                break;
+              case "message_update":
+                const messageEvent = event as any;
+                if (messageEvent.message?.message) {
+                  console.log(
+                    `  🔤 Message content received (thinking-to-message transition successful): ${messageEvent.message.message.length} chars`,
+                  );
+                }
+                break;
+              case "error":
+                secondError = (event as any).error;
+                console.log(
+                  `  ❌ Second conversation error: ${secondError?.message}`,
+                );
+                console.log(
+                  `  🚨 ERROR DETAILS:`,
+                  JSON.stringify(secondError, null, 2),
+                );
+
+                // Check if this is the HTTP 500 we're looking for
+                if (
+                  secondError?.message?.includes("500") ||
+                  secondError?.status === 500
+                ) {
+                  console.log(
+                    `  🎯 HTTP 500 ERROR REPRODUCED! This confirms the bug.`,
+                  );
+                }
+                break;
+            }
+          },
+          testConversationId, // Use existing conversation
+          { id: specificationId },
+        );
+      } catch (error: any) {
+        console.log(`  ❌ Exception during second request: ${error.message}`);
+        console.log(`  🔍 Exception details:`, error);
+        secondError = error;
+
+        // Check if this is the HTTP 500
+        if (error.message?.includes("500") || error.status === 500) {
+          console.log(
+            `  🎯 HTTP 500 EXCEPTION REPRODUCED! This confirms the bug.`,
+          );
+        }
       }
-    }
-  });
+
+      console.log(`\n📊 Final Results:`);
+      console.log(
+        `  First request: completed=${firstConversationCompleted}, error=${!!firstError}`,
+      );
+      console.log(
+        `  Second request: completed=${secondConversationCompleted}, error=${!!secondError}`,
+      );
+
+      if (secondError) {
+        console.log(`\n🚨 REPRODUCTION SUCCESSFUL!`);
+        console.log(`  Error message: ${secondError.message}`);
+        console.log(
+          `  This confirms the HTTP 500 issue on conversation continuation.`,
+        );
+      } else {
+        console.log(
+          `\n✅ No HTTP 500 error - either bug is fixed or didn't reproduce this time.`,
+        );
+        expect(secondConversationCompleted).toBe(true);
+      }
+
+      // Clean up the test conversation
+      if (testConversationId) {
+        try {
+          await client.deleteConversation(testConversationId);
+          console.log(`✅ Cleaned up test conversation: ${testConversationId}`);
+        } catch (cleanupError) {
+          console.warn(
+            `⚠️  Failed to clean up test conversation: ${testConversationId}`,
+          );
+        }
+      }
+    },
+  );
 });

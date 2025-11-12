@@ -214,24 +214,41 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         const content: any[] = [];
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`🔍 [formatMessagesForAnthropic] Processing assistant message: "${trimmedMessage.substring(0, 200)}..."`);
-          console.log(`🔍 [formatMessagesForAnthropic] Has tool calls: ${message.toolCalls?.length || 0}`);
+          console.log(
+            `🔍 [formatMessagesForAnthropic] Processing assistant message: "${trimmedMessage.substring(0, 200)}..."`,
+          );
+          console.log(
+            `🔍 [formatMessagesForAnthropic] Has tool calls: ${message.toolCalls?.length || 0}`,
+          );
         }
 
         // Check if message contains thinking content (for Anthropic compatibility)
-        const hasThinking = trimmedMessage.includes('<thinking');
+        const hasThinking = trimmedMessage.includes("<thinking");
 
         if (hasThinking) {
           // Parse thinking and text content separately for proper Anthropic format
-          const thinkingMatch = trimmedMessage.match(/<thinking(?:\s+signature="([^"]*)")?\s*>(.*?)<\/thinking>/s);
-          const thinkingSignature = thinkingMatch ? thinkingMatch[1] : '';
-          const thinkingContent = thinkingMatch ? thinkingMatch[2].trim() : '';
-          const textContent = trimmedMessage.replace(/<thinking(?:\s+signature="[^"]*")?\s*>.*?<\/thinking>/s, '').trim();
+          const thinkingMatch = trimmedMessage.match(
+            /<thinking(?:\s+signature="([^"]*)")?\s*>(.*?)<\/thinking>/s,
+          );
+          const thinkingSignature = thinkingMatch ? thinkingMatch[1] : "";
+          const thinkingContent = thinkingMatch ? thinkingMatch[2].trim() : "";
+          const textContent = trimmedMessage
+            .replace(
+              /<thinking(?:\s+signature="[^"]*")?\s*>.*?<\/thinking>/s,
+              "",
+            )
+            .trim();
 
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-            console.log(`🔍 [formatMessagesForAnthropic] Found thinking content: ${thinkingContent.length} chars`);
-            console.log(`🔍 [formatMessagesForAnthropic] Text content after thinking: "${textContent}"`);
-            console.log(`🔍 [formatMessagesForAnthropic] Signature: "${thinkingSignature}"`);
+            console.log(
+              `🔍 [formatMessagesForAnthropic] Found thinking content: ${thinkingContent.length} chars`,
+            );
+            console.log(
+              `🔍 [formatMessagesForAnthropic] Text content after thinking: "${textContent}"`,
+            );
+            console.log(
+              `🔍 [formatMessagesForAnthropic] Signature: "${thinkingSignature}"`,
+            );
           }
 
           // CRITICAL: When thinking is enabled, thinking block must come first
@@ -259,7 +276,9 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         } else if (trimmedMessage) {
           // Regular text content
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-            console.log(`🔍 [formatMessagesForAnthropic] No thinking found, adding text content`);
+            console.log(
+              `🔍 [formatMessagesForAnthropic] No thinking found, adding text content`,
+            );
           }
           content.push({
             type: "text",
@@ -268,7 +287,9 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         }
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`🔍 [formatMessagesForAnthropic] Content array: ${content.map(c => c.type).join(', ')}`);
+          console.log(
+            `🔍 [formatMessagesForAnthropic] Content array: ${content.map((c) => c.type).join(", ")}`,
+          );
         }
 
         // Add tool uses if present

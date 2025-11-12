@@ -95,8 +95,7 @@ describe("Pre-release Gate Tests", { timeout: 120000 }, () => {
             serviceType: Types.ModelServiceTypes.Xai,
             xai: { model: Types.XaiModels.Grok_4 },
           },
-          prompt:
-            "What is 12 × 7? Show your step by step calculation.",
+          prompt: "What is 12 × 7? Show your step by step calculation.",
           expectedFormat: "markdown",
           validateContent: (content: string) => {
             expect(content).toMatch(/12|7|84/i);
