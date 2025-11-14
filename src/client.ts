@@ -1397,6 +1397,21 @@ class Graphlit {
     });
   }
 
+  public async queryGraph(
+    filter?: Types.GraphFilter,
+    graph?: Types.GraphInput,
+    correlationId?: string,
+  ): Promise<Types.QueryGraphQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGraphQuery,
+      Types.QueryGraphQueryVariables
+    >(Documents.QueryGraph, {
+      filter: filter,
+      graph: graph,
+      correlationId: correlationId,
+    });
+  }
+
   public async countContents(
     filter?: Types.ContentFilter,
   ): Promise<Types.CountContentsQuery> {
