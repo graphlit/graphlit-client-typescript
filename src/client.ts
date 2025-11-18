@@ -4172,6 +4172,78 @@ class Graphlit {
     });
   }
 
+  public async getInvestment(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetInvestmentQuery> {
+    return this.queryAndCheckError<
+      Types.GetInvestmentQuery,
+      Types.GetInvestmentQueryVariables
+    >(Documents.GetInvestment, { id: id, correlationId: correlationId });
+  }
+
+  public async queryInvestments(
+    filter?: Types.InvestmentFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentsQuery,
+      Types.QueryInvestmentsQueryVariables
+    >(Documents.QueryInvestments, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async countInvestments(
+    filter?: Types.InvestmentFilter,
+    correlationId?: string,
+  ): Promise<Types.CountInvestmentsQuery> {
+    return this.queryAndCheckError<
+      Types.CountInvestmentsQuery,
+      Types.CountInvestmentsQueryVariables
+    >(Documents.CountInvestments, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async getInvestmentFund(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetInvestmentFundQuery> {
+    return this.queryAndCheckError<
+      Types.GetInvestmentFundQuery,
+      Types.GetInvestmentFundQueryVariables
+    >(Documents.GetInvestmentFund, { id: id, correlationId: correlationId });
+  }
+
+  public async queryInvestmentFunds(
+    filter?: Types.InvestmentFundFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentFundsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentFundsQuery,
+      Types.QueryInvestmentFundsQueryVariables
+    >(Documents.QueryInvestmentFunds, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async countInvestmentFunds(
+    filter?: Types.InvestmentFundFilter,
+    correlationId?: string,
+  ): Promise<Types.CountInvestmentFundsQuery> {
+    return this.queryAndCheckError<
+      Types.CountInvestmentFundsQuery,
+      Types.CountInvestmentFundsQueryVariables
+    >(Documents.CountInvestmentFunds, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   /**
    * Creates an event handler that supports UI streaming mode
    * @internal
