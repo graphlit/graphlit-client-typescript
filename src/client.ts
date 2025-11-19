@@ -3424,6 +3424,19 @@ class Graphlit {
     >(Documents.QueryMedicalConditions, { filter: filter });
   }
 
+  public async countMedicalConditions(
+    filter?: Types.MedicalConditionFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalConditionsQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalConditionsQuery,
+      Types.CountMedicalConditionsQueryVariables
+    >(Documents.CountMedicalConditions, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalGuideline(
     MedicalGuideline: Types.MedicalGuidelineInput,
   ): Promise<Types.CreateMedicalGuidelineMutation> {
@@ -3497,6 +3510,19 @@ class Graphlit {
     >(Documents.QueryMedicalGuidelines, { filter: filter });
   }
 
+  public async countMedicalGuidelines(
+    filter?: Types.MedicalGuidelineFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalGuidelinesQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalGuidelinesQuery,
+      Types.CountMedicalGuidelinesQueryVariables
+    >(Documents.CountMedicalGuidelines, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalDrug(
     MedicalDrug: Types.MedicalDrugInput,
   ): Promise<Types.CreateMedicalDrugMutation> {
@@ -3563,6 +3589,19 @@ class Graphlit {
       Types.QueryMedicalDrugsQuery,
       Types.QueryMedicalDrugsQueryVariables
     >(Documents.QueryMedicalDrugs, { filter: filter });
+  }
+
+  public async countMedicalDrugs(
+    filter?: Types.MedicalDrugFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalDrugsQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalDrugsQuery,
+      Types.CountMedicalDrugsQueryVariables
+    >(Documents.CountMedicalDrugs, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createMedicalIndication(
@@ -3642,6 +3681,19 @@ class Graphlit {
     >(Documents.QueryMedicalIndications, { filter: filter });
   }
 
+  public async countMedicalIndications(
+    filter?: Types.MedicalIndicationFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalIndicationsQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalIndicationsQuery,
+      Types.CountMedicalIndicationsQueryVariables
+    >(Documents.CountMedicalIndications, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalContraindication(
     MedicalContraindication: Types.MedicalContraindicationInput,
   ): Promise<Types.CreateMedicalContraindicationMutation> {
@@ -3719,6 +3771,19 @@ class Graphlit {
     >(Documents.QueryMedicalContraindications, { filter: filter });
   }
 
+  public async countMedicalContraindications(
+    filter?: Types.MedicalContraindicationFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalContraindicationsQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalContraindicationsQuery,
+      Types.CountMedicalContraindicationsQueryVariables
+    >(Documents.CountMedicalContraindications, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalTest(
     MedicalTest: Types.MedicalTestInput,
   ): Promise<Types.CreateMedicalTestMutation> {
@@ -3785,6 +3850,19 @@ class Graphlit {
       Types.QueryMedicalTestsQuery,
       Types.QueryMedicalTestsQueryVariables
     >(Documents.QueryMedicalTests, { filter: filter });
+  }
+
+  public async countMedicalTests(
+    filter?: Types.MedicalTestFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalTestsQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalTestsQuery,
+      Types.CountMedicalTestsQueryVariables
+    >(Documents.CountMedicalTests, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createMedicalDevice(
@@ -3860,6 +3938,19 @@ class Graphlit {
     >(Documents.QueryMedicalDevices, { filter: filter });
   }
 
+  public async countMedicalDevices(
+    filter?: Types.MedicalDeviceFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalDevicesQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalDevicesQuery,
+      Types.CountMedicalDevicesQueryVariables
+    >(Documents.CountMedicalDevices, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalProcedure(
     MedicalProcedure: Types.MedicalProcedureInput,
   ): Promise<Types.CreateMedicalProcedureMutation> {
@@ -3931,6 +4022,19 @@ class Graphlit {
       Types.QueryMedicalProceduresQuery,
       Types.QueryMedicalProceduresQueryVariables
     >(Documents.QueryMedicalProcedures, { filter: filter });
+  }
+
+  public async countMedicalProcedures(
+    filter?: Types.MedicalProcedureFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalProceduresQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalProceduresQuery,
+      Types.CountMedicalProceduresQueryVariables
+    >(Documents.CountMedicalProcedures, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createMedicalStudy(
@@ -4006,6 +4110,17 @@ class Graphlit {
     >(Documents.QueryMedicalStudies, { filter: filter });
   }
 
+  public async countMedicalStudies(
+    filter?: Types.MedicalStudyFilter,
+  ): Promise<Types.CountMedicalStudiesQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalStudiesQuery,
+      Types.CountMedicalStudiesQueryVariables
+    >(Documents.CountMedicalStudies, {
+      filter: filter,
+    });
+  }
+
   public async createMedicalDrugClass(
     MedicalDrugClass: Types.MedicalDrugClassInput,
   ): Promise<Types.CreateMedicalDrugClassMutation> {
@@ -4079,6 +4194,19 @@ class Graphlit {
     >(Documents.QueryMedicalDrugClasses, { filter: filter });
   }
 
+  public async countMedicalDrugClasses(
+    filter?: Types.MedicalDrugClassFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalDrugClassesQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalDrugClassesQuery,
+      Types.CountMedicalDrugClassesQueryVariables
+    >(Documents.CountMedicalDrugClasses, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createMedicalTherapy(
     MedicalTherapy: Types.MedicalTherapyInput,
   ): Promise<Types.CreateMedicalTherapyMutation> {
@@ -4150,6 +4278,19 @@ class Graphlit {
       Types.QueryMedicalTherapiesQuery,
       Types.QueryMedicalTherapiesQueryVariables
     >(Documents.QueryMedicalTherapies, { filter: filter });
+  }
+
+  public async countMedicalTherapies(
+    filter?: Types.MedicalTherapyFilter,
+    correlationId?: string,
+  ): Promise<Types.CountMedicalTherapiesQuery> {
+    return this.queryAndCheckError<
+      Types.CountMedicalTherapiesQuery,
+      Types.CountMedicalTherapiesQueryVariables
+    >(Documents.CountMedicalTherapies, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createObservation(
