@@ -2688,6 +2688,19 @@ class Graphlit {
     >(Documents.QueryCategories, { filter: filter });
   }
 
+  public async countCategories(
+    filter?: Types.CategoryFilter,
+    correlationId?: string,
+  ): Promise<Types.CountCategoriesQuery> {
+    return this.queryAndCheckError<
+      Types.CountCategoriesQuery,
+      Types.CountCategoriesQueryVariables
+    >(Documents.CountCategories, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createLabel(
     label: Types.LabelInput,
   ): Promise<Types.CreateLabelMutation> {
@@ -2763,6 +2776,19 @@ class Graphlit {
     >(Documents.QueryLabels, { filter: filter });
   }
 
+  public async countLabels(
+    filter?: Types.LabelFilter,
+    correlationId?: string,
+  ): Promise<Types.CountLabelsQuery> {
+    return this.queryAndCheckError<
+      Types.CountLabelsQuery,
+      Types.CountLabelsQueryVariables
+    >(Documents.CountLabels, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createPerson(
     person: Types.PersonInput,
   ): Promise<Types.CreatePersonMutation> {
@@ -2827,6 +2853,19 @@ class Graphlit {
       Types.QueryPersonsQuery,
       Types.QueryPersonsQueryVariables
     >(Documents.QueryPersons, { filter: filter });
+  }
+
+  public async countPersons(
+    filter?: Types.PersonFilter,
+    correlationId?: string,
+  ): Promise<Types.CountPersonsQuery> {
+    return this.queryAndCheckError<
+      Types.CountPersonsQuery,
+      Types.CountPersonsQueryVariables
+    >(Documents.CountPersons, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createOrganization(
@@ -2902,6 +2941,19 @@ class Graphlit {
     >(Documents.QueryOrganizations, { filter: filter });
   }
 
+  public async countOrganizations(
+    filter?: Types.OrganizationFilter,
+    correlationId?: string,
+  ): Promise<Types.CountOrganizationsQuery> {
+    return this.queryAndCheckError<
+      Types.CountOrganizationsQuery,
+      Types.CountOrganizationsQueryVariables
+    >(Documents.CountOrganizations, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createPlace(
     place: Types.PlaceInput,
   ): Promise<Types.CreatePlaceMutation> {
@@ -2966,6 +3018,19 @@ class Graphlit {
       Types.QueryPlacesQuery,
       Types.QueryPlacesQueryVariables
     >(Documents.QueryPlaces, { filter: filter });
+  }
+
+  public async countPlaces(
+    filter?: Types.PlaceFilter,
+    correlationId?: string,
+  ): Promise<Types.CountPlacesQuery> {
+    return this.queryAndCheckError<
+      Types.CountPlacesQuery,
+      Types.CountPlacesQueryVariables
+    >(Documents.CountPlaces, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createEvent(
@@ -3034,6 +3099,19 @@ class Graphlit {
     >(Documents.QueryEvents, { filter: filter });
   }
 
+  public async countEvents(
+    filter?: Types.EventFilter,
+    correlationId?: string,
+  ): Promise<Types.CountEventsQuery> {
+    return this.queryAndCheckError<
+      Types.CountEventsQuery,
+      Types.CountEventsQueryVariables
+    >(Documents.CountEvents, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createProduct(
     product: Types.ProductInput,
   ): Promise<Types.CreateProductMutation> {
@@ -3098,6 +3176,19 @@ class Graphlit {
       Types.QueryProductsQuery,
       Types.QueryProductsQueryVariables
     >(Documents.QueryProducts, { filter: filter });
+  }
+
+  public async countProducts(
+    filter?: Types.ProductFilter,
+    correlationId?: string,
+  ): Promise<Types.CountProductsQuery> {
+    return this.queryAndCheckError<
+      Types.CountProductsQuery,
+      Types.CountProductsQueryVariables
+    >(Documents.CountProducts, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createRepo(
@@ -3166,6 +3257,19 @@ class Graphlit {
     >(Documents.QueryRepos, { filter: filter });
   }
 
+  public async countRepos(
+    filter?: Types.RepoFilter,
+    correlationId?: string,
+  ): Promise<Types.CountReposQuery> {
+    return this.queryAndCheckError<
+      Types.CountReposQuery,
+      Types.CountReposQueryVariables
+    >(Documents.CountRepos, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createSoftware(
     software: Types.SoftwareInput,
   ): Promise<Types.CreateSoftwareMutation> {
@@ -3232,6 +3336,19 @@ class Graphlit {
       Types.QuerySoftwaresQuery,
       Types.QuerySoftwaresQueryVariables
     >(Documents.QuerySoftwares, { filter: filter });
+  }
+
+  public async countSoftwares(
+    filter?: Types.SoftwareFilter,
+    correlationId?: string,
+  ): Promise<Types.CountSoftwaresQuery> {
+    return this.queryAndCheckError<
+      Types.CountSoftwaresQuery,
+      Types.CountSoftwaresQueryVariables
+    >(Documents.CountSoftwares, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async createMedicalCondition(
