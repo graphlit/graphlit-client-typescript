@@ -4112,12 +4112,14 @@ class Graphlit {
 
   public async countMedicalStudies(
     filter?: Types.MedicalStudyFilter,
+    correlationId?: string,
   ): Promise<Types.CountMedicalStudiesQuery> {
     return this.queryAndCheckError<
       Types.CountMedicalStudiesQuery,
       Types.CountMedicalStudiesQueryVariables
     >(Documents.CountMedicalStudies, {
       filter: filter,
+      correlationId: correlationId,
     });
   }
 
