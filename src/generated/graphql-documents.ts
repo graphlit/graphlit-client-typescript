@@ -67,6 +67,7 @@ export const GetAlert = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -247,6 +248,7 @@ export const QueryAlerts = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -597,6 +599,7 @@ export const GetCollection = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -616,6 +619,7 @@ export const QueryCollections = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -681,6 +685,7 @@ export const GetConnector = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -741,6 +746,7 @@ export const QueryConnectors = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -1179,6 +1185,7 @@ export const GetContent = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -2008,6 +2015,7 @@ export const LookupContents = gql`
       id
       name
       creationDate
+      modifiedDate
       owner {
         id
       }
@@ -2707,6 +2715,7 @@ export const QueryContents = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -3108,6 +3117,7 @@ export const QueryContentsObservations = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -4905,6 +4915,7 @@ export const GetConversation = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -5858,6 +5869,7 @@ export const QueryConversations = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -6906,6 +6918,7 @@ export const GetEvent = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -6946,6 +6959,7 @@ export const QueryEvents = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -7064,6 +7078,7 @@ export const GetFeed = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -7479,6 +7494,7 @@ export const QueryFeeds = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8044,6 +8060,7 @@ export const GetInvestment = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8067,6 +8084,7 @@ export const QueryInvestments = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8142,6 +8160,7 @@ export const GetInvestmentFund = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8165,6 +8184,7 @@ export const QueryInvestmentFunds = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8330,6 +8350,7 @@ export const GetMedicalCondition = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8353,6 +8374,7 @@ export const QueryMedicalConditions = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8428,6 +8450,7 @@ export const GetMedicalContraindication = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8451,6 +8474,7 @@ export const QueryMedicalContraindications = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8526,6 +8550,7 @@ export const GetMedicalDevice = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8549,6 +8574,7 @@ export const QueryMedicalDevices = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8624,6 +8650,7 @@ export const GetMedicalDrug = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8647,6 +8674,7 @@ export const QueryMedicalDrugs = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8722,6 +8750,7 @@ export const GetMedicalDrugClass = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8745,6 +8774,7 @@ export const QueryMedicalDrugClasses = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8820,6 +8850,7 @@ export const GetMedicalGuideline = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8843,6 +8874,7 @@ export const QueryMedicalGuidelines = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -8918,6 +8950,7 @@ export const GetMedicalIndication = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -8941,6 +8974,7 @@ export const QueryMedicalIndications = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9016,6 +9050,7 @@ export const GetMedicalProcedure = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9039,6 +9074,7 @@ export const QueryMedicalProcedures = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9114,6 +9150,7 @@ export const GetMedicalStudy = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9144,6 +9181,7 @@ export const QueryMedicalStudies = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9226,6 +9264,7 @@ export const GetMedicalTest = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9249,6 +9288,7 @@ export const QueryMedicalTests = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9324,6 +9364,7 @@ export const GetMedicalTherapy = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9347,6 +9388,7 @@ export const QueryMedicalTherapies = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9465,6 +9507,7 @@ export const GetOrganization = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9501,6 +9544,7 @@ export const QueryOrganizations = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9601,6 +9645,7 @@ export const GetPerson = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9639,6 +9684,7 @@ export const QueryPersons = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9741,6 +9787,7 @@ export const GetPlace = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9771,6 +9818,7 @@ export const QueryPlaces = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -9865,6 +9913,7 @@ export const GetProduct = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -9902,6 +9951,7 @@ export const QueryProducts = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -10195,6 +10245,7 @@ export const GetRepo = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -10218,6 +10269,7 @@ export const QueryRepos = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -10322,6 +10374,7 @@ export const GetSoftware = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -10347,6 +10400,7 @@ export const QuerySoftwares = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -10427,6 +10481,7 @@ export const GetSpecification = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -10803,6 +10858,7 @@ export const QuerySpecifications = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -11077,6 +11133,7 @@ export const GetUser = gql`
     id
     name
     creationDate
+    modifiedDate
     relevance
     owner {
       id
@@ -11145,6 +11202,7 @@ export const GetUserByIdentifier = gql`
     id
     name
     creationDate
+    modifiedDate
     relevance
     owner {
       id
@@ -11214,6 +11272,7 @@ export const QueryUsers = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -11522,6 +11581,7 @@ export const GetView = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -11719,6 +11779,7 @@ export const QueryViews = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
@@ -12574,6 +12635,7 @@ export const GetWorkflow = gql`
     id
     name
     creationDate
+    modifiedDate
     owner {
       id
     }
@@ -12810,6 +12872,7 @@ export const QueryWorkflows = gql`
       id
       name
       creationDate
+      modifiedDate
       relevance
       owner {
         id
