@@ -2868,6 +2868,21 @@ class Graphlit {
     });
   }
 
+  public async enrichPersons(
+    connector: Types.EntityEnrichmentConnectorInput,
+    filter?: Types.PersonFilter,
+    correlationId?: string,
+  ): Promise<Types.EnrichPersonsMutation> {
+    return this.mutateAndCheckError<
+      Types.EnrichPersonsMutation,
+      Types.EnrichPersonsMutationVariables
+    >(Documents.EnrichPersons, {
+      connector: connector,
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createOrganization(
     organization: Types.OrganizationInput,
   ): Promise<Types.CreateOrganizationMutation> {
@@ -2954,6 +2969,21 @@ class Graphlit {
     });
   }
 
+  public async enrichOrganizations(
+    connector: Types.EntityEnrichmentConnectorInput,
+    filter?: Types.OrganizationFilter,
+    correlationId?: string,
+  ): Promise<Types.EnrichOrganizationsMutation> {
+    return this.mutateAndCheckError<
+      Types.EnrichOrganizationsMutation,
+      Types.EnrichOrganizationsMutationVariables
+    >(Documents.EnrichOrganizations, {
+      connector: connector,
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async createPlace(
     place: Types.PlaceInput,
   ): Promise<Types.CreatePlaceMutation> {
@@ -3028,6 +3058,21 @@ class Graphlit {
       Types.CountPlacesQuery,
       Types.CountPlacesQueryVariables
     >(Documents.CountPlaces, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async enrichPlaces(
+    connector: Types.EntityEnrichmentConnectorInput,
+    filter?: Types.PlaceFilter,
+    correlationId?: string,
+  ): Promise<Types.EnrichPlacesMutation> {
+    return this.mutateAndCheckError<
+      Types.EnrichPlacesMutation,
+      Types.EnrichPlacesMutationVariables
+    >(Documents.EnrichPlaces, {
+      connector: connector,
       filter: filter,
       correlationId: correlationId,
     });
@@ -3186,6 +3231,21 @@ class Graphlit {
       Types.CountProductsQuery,
       Types.CountProductsQueryVariables
     >(Documents.CountProducts, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async enrichProducts(
+    connector: Types.EntityEnrichmentConnectorInput,
+    filter?: Types.ProductFilter,
+    correlationId?: string,
+  ): Promise<Types.EnrichProductsMutation> {
+    return this.mutateAndCheckError<
+      Types.EnrichProductsMutation,
+      Types.EnrichProductsMutationVariables
+    >(Documents.EnrichProducts, {
+      connector: connector,
       filter: filter,
       correlationId: correlationId,
     });

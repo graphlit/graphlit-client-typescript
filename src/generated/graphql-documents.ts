@@ -67,7 +67,6 @@ export const GetAlert = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -493,7 +492,10 @@ export const GetCategory = gql`
     name
     description
     creationDate
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -506,6 +508,10 @@ export const QueryCategories = gql`
       description
       creationDate
       relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -675,7 +681,6 @@ export const GetConnector = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -4900,7 +4905,6 @@ export const GetConversation = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -6901,13 +6905,20 @@ export const GetEvent = gql`
   event(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -6934,13 +6945,21 @@ export const QueryEvents = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -7045,7 +7064,6 @@ export const GetFeed = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -7242,6 +7260,21 @@ export const GetFeed = gql`
       attio {
         authenticationType
         apiKey
+      }
+      googleContacts {
+        authenticationType
+        clientId
+        clientSecret
+        refreshToken
+        authorizationId
+      }
+      microsoftContacts {
+        authenticationType
+        clientId
+        clientSecret
+        refreshToken
+        tenantId
+        authorizationId
       }
       readLimit
     }
@@ -7644,6 +7677,21 @@ export const QueryFeeds = gql`
           authenticationType
           apiKey
         }
+        googleContacts {
+          authenticationType
+          clientId
+          clientSecret
+          refreshToken
+          authorizationId
+        }
+        microsoftContacts {
+          authenticationType
+          clientId
+          clientSecret
+          refreshToken
+          tenantId
+          authorizationId
+        }
         readLimit
       }
       calendar {
@@ -7995,13 +8043,20 @@ export const GetInvestment = gql`
   investment(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8011,13 +8066,21 @@ export const QueryInvestments = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8078,13 +8141,20 @@ export const GetInvestmentFund = gql`
   investmentFund(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8094,13 +8164,21 @@ export const QueryInvestmentFunds = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8163,7 +8241,10 @@ export const GetLabel = gql`
     name
     description
     creationDate
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8176,6 +8257,10 @@ export const QueryLabels = gql`
       description
       creationDate
       relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8244,13 +8329,20 @@ export const GetMedicalCondition = gql`
   medicalCondition(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8260,13 +8352,21 @@ export const QueryMedicalConditions = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8327,13 +8427,20 @@ export const GetMedicalContraindication = gql`
   medicalContraindication(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8343,13 +8450,21 @@ export const QueryMedicalContraindications = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8410,13 +8525,20 @@ export const GetMedicalDevice = gql`
   medicalDevice(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8426,13 +8548,21 @@ export const QueryMedicalDevices = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8493,13 +8623,20 @@ export const GetMedicalDrug = gql`
   medicalDrug(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8509,13 +8646,21 @@ export const QueryMedicalDrugs = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8576,13 +8721,20 @@ export const GetMedicalDrugClass = gql`
   medicalDrugClass(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8592,13 +8744,21 @@ export const QueryMedicalDrugClasses = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8659,13 +8819,20 @@ export const GetMedicalGuideline = gql`
   medicalGuideline(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8675,13 +8842,21 @@ export const QueryMedicalGuidelines = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8742,13 +8917,20 @@ export const GetMedicalIndication = gql`
   medicalIndication(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8758,13 +8940,21 @@ export const QueryMedicalIndications = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8825,13 +9015,20 @@ export const GetMedicalProcedure = gql`
   medicalProcedure(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -8841,13 +9038,21 @@ export const QueryMedicalProcedures = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -8908,13 +9113,20 @@ export const GetMedicalStudy = gql`
   medicalStudy(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -8931,13 +9143,21 @@ export const QueryMedicalStudies = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9005,13 +9225,20 @@ export const GetMedicalTest = gql`
   medicalTest(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -9021,13 +9248,21 @@ export const QueryMedicalTests = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -9088,13 +9323,20 @@ export const GetMedicalTherapy = gql`
   medicalTherapy(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -9104,13 +9346,21 @@ export const QueryMedicalTherapies = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -9197,18 +9447,37 @@ export const DeleteOrganizations = gql`
   }
 }
     `;
+export const EnrichOrganizations = gql`
+    mutation EnrichOrganizations($filter: OrganizationFilter, $connector: EntityEnrichmentConnectorInput!, $correlationId: String) {
+  enrichOrganizations(
+    filter: $filter
+    connector: $connector
+    correlationId: $correlationId
+  ) {
+    id
+    name
+  }
+}
+    `;
 export const GetOrganization = gql`
     query GetOrganization($id: ID!, $correlationId: String) {
   organization(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9231,13 +9500,21 @@ export const QueryOrganizations = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9306,18 +9583,37 @@ export const DeletePersons = gql`
   }
 }
     `;
+export const EnrichPersons = gql`
+    mutation EnrichPersons($filter: PersonFilter, $connector: EntityEnrichmentConnectorInput!, $correlationId: String) {
+  enrichPersons(
+    filter: $filter
+    connector: $connector
+    correlationId: $correlationId
+  ) {
+    id
+    name
+  }
+}
+    `;
 export const GetPerson = gql`
     query GetPerson($id: ID!, $correlationId: String) {
   person(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9342,13 +9638,21 @@ export const QueryPersons = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9419,18 +9723,37 @@ export const DeletePlaces = gql`
   }
 }
     `;
+export const EnrichPlaces = gql`
+    mutation EnrichPlaces($filter: PlaceFilter, $connector: EntityEnrichmentConnectorInput!, $correlationId: String) {
+  enrichPlaces(
+    filter: $filter
+    connector: $connector
+    correlationId: $correlationId
+  ) {
+    id
+    name
+  }
+}
+    `;
 export const GetPlace = gql`
     query GetPlace($id: ID!, $correlationId: String) {
   place(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9447,13 +9770,21 @@ export const QueryPlaces = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9516,18 +9847,37 @@ export const DeleteProducts = gql`
   }
 }
     `;
+export const EnrichProducts = gql`
+    mutation EnrichProducts($filter: ProductFilter, $connector: EntityEnrichmentConnectorInput!, $correlationId: String) {
+  enrichProducts(
+    filter: $filter
+    connector: $connector
+    correlationId: $correlationId
+  ) {
+    id
+    name
+  }
+}
+    `;
 export const GetProduct = gql`
     query GetProduct($id: ID!, $correlationId: String) {
   product(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9551,13 +9901,21 @@ export const QueryProducts = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9836,13 +10194,20 @@ export const GetRepo = gql`
   repo(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
   }
 }
     `;
@@ -9852,13 +10217,21 @@ export const QueryRepos = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
     }
   }
 }
@@ -9948,13 +10321,20 @@ export const GetSoftware = gql`
   software(id: $id, correlationId: $correlationId) {
     id
     name
-    alternateNames
     creationDate
+    owner {
+      id
+    }
+    state
+    alternateNames
     uri
     description
     identifier
     thing
-    relevance
+    feeds {
+      id
+      name
+    }
     releaseDate
     developer
   }
@@ -9966,13 +10346,21 @@ export const QuerySoftwares = gql`
     results {
       id
       name
-      alternateNames
       creationDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
       uri
       description
       identifier
       thing
-      relevance
+      feeds {
+        id
+        name
+      }
       releaseDate
       developer
     }
@@ -10039,7 +10427,6 @@ export const GetSpecification = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -11135,7 +11522,6 @@ export const GetView = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -12052,6 +12438,8 @@ export const CreateWorkflow = gql`
               id
             }
             tokenThreshold
+            timeBudget
+            entityBudget
           }
         }
       }
@@ -12107,6 +12495,10 @@ export const CreateWorkflow = gql`
           }
           diffbot {
             key
+          }
+          parallel {
+            processor
+            isSynchronous
           }
         }
       }
@@ -12182,7 +12574,6 @@ export const GetWorkflow = gql`
     id
     name
     creationDate
-    relevance
     owner {
       id
     }
@@ -12310,6 +12701,8 @@ export const GetWorkflow = gql`
               id
             }
             tokenThreshold
+            timeBudget
+            entityBudget
           }
         }
       }
@@ -12365,6 +12758,10 @@ export const GetWorkflow = gql`
           }
           diffbot {
             key
+          }
+          parallel {
+            processor
+            isSynchronous
           }
         }
       }
@@ -12541,6 +12938,8 @@ export const QueryWorkflows = gql`
                 id
               }
               tokenThreshold
+              timeBudget
+              entityBudget
             }
           }
         }
@@ -12596,6 +12995,10 @@ export const QueryWorkflows = gql`
             }
             diffbot {
               key
+            }
+            parallel {
+              processor
+              isSynchronous
             }
           }
         }
@@ -12767,6 +13170,8 @@ export const UpdateWorkflow = gql`
               id
             }
             tokenThreshold
+            timeBudget
+            entityBudget
           }
         }
       }
@@ -12822,6 +13227,10 @@ export const UpdateWorkflow = gql`
           }
           diffbot {
             key
+          }
+          parallel {
+            processor
+            isSynchronous
           }
         }
       }
@@ -12992,6 +13401,8 @@ export const UpsertWorkflow = gql`
               id
             }
             tokenThreshold
+            timeBudget
+            entityBudget
           }
         }
       }
@@ -13047,6 +13458,10 @@ export const UpsertWorkflow = gql`
           }
           diffbot {
             key
+          }
+          parallel {
+            processor
+            isSynchronous
           }
         }
       }
