@@ -384,6 +384,10 @@ export enum AnthropicModels {
   Claude_4_5Haiku = 'CLAUDE_4_5_HAIKU',
   /** Claude 4.5 Haiku (10-01-2025 version) */
   Claude_4_5Haiku_20251001 = 'CLAUDE_4_5_HAIKU_20251001',
+  /** Claude 4.5 Opus (Latest) */
+  Claude_4_5Opus = 'CLAUDE_4_5_OPUS',
+  /** Claude 4.5 Opus (11-01-2025 version) */
+  Claude_4_5Opus_20251101 = 'CLAUDE_4_5_OPUS_20251101',
   /** Claude 4.5 Sonnet (Latest) */
   Claude_4_5Sonnet = 'CLAUDE_4_5_SONNET',
   /** Claude 4.5 Sonnet (09-29-2025 version) */
@@ -6982,18 +6986,34 @@ export type Investment = {
   boundary?: Maybe<Scalars['String']['output']>;
   /** The creation date of the investment. */
   creationDate: Scalars['DateTime']['output'];
+  /** The current price per share. */
+  currentPricePerShare?: Maybe<Scalars['Decimal']['output']>;
   /** The investment description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** The discount percentage (for convertible notes/SAFEs). */
+  discountPercent?: Maybe<Scalars['Decimal']['output']>;
+  /** The entry price per share. */
+  entryPricePerShare?: Maybe<Scalars['Decimal']['output']>;
   /** The EPSG code for spatial reference of the investment. */
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** The feeds that discovered this investment. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
+  /** The fund that made this investment. */
+  fund?: Maybe<InvestmentFund>;
   /** The H3 index of the investment. */
   h3?: Maybe<H3>;
   /** The ID of the investment. */
   id: Scalars['ID']['output'];
   /** The investment external identifier. */
   identifier?: Maybe<Scalars['String']['output']>;
+  /** The date of the investment. */
+  investmentDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The fund that made this investment (for fund investments). */
+  investorFund?: Maybe<InvestmentFund>;
+  /** The organization that made this investment (for direct corporate investments). */
+  investorOrganization?: Maybe<Organization>;
+  /** The person who made this investment (for angel/individual investments). */
+  investorPerson?: Maybe<Person>;
   /** The extracted hyperlinks. */
   links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The geo-location of the investment. */
@@ -7002,16 +7022,36 @@ export type Investment = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the investment. */
   name: Scalars['String']['output'];
+  /** The organization that received this investment (portfolio company). */
+  organization?: Maybe<Organization>;
   /** The owner of the investment. */
   owner: Owner;
+  /** The post-money valuation. */
+  postValuation?: Maybe<Scalars['Decimal']['output']>;
+  /** The currency code for the post-money valuation. */
+  postValuationCurrency?: Maybe<Scalars['String']['output']>;
+  /** Whether pro-rata rights were obtained. */
+  proRataRights?: Maybe<Scalars['Boolean']['output']>;
   /** The relevance score of the investment. */
   relevance?: Maybe<Scalars['Float']['output']>;
+  /** The total round size. */
+  roundSize?: Maybe<Scalars['Decimal']['output']>;
+  /** The currency code for the round size. */
+  roundSizeCurrency?: Maybe<Scalars['String']['output']>;
+  /** The number of shares owned. */
+  sharesOwned?: Maybe<Scalars['Decimal']['output']>;
+  /** The investment stage. */
+  stage?: Maybe<Scalars['String']['output']>;
   /** The state of the investment (i.e. created, enabled). */
   state: EntityState;
+  /** The investment status. */
+  status?: Maybe<Scalars['String']['output']>;
   /** The JSON-LD value of the investment. */
   thing?: Maybe<Scalars['String']['output']>;
   /** The investment URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The investment vehicle type. */
+  vehicle?: Maybe<Scalars['String']['output']>;
   /** The workflow associated with this investment. */
   workflow?: Maybe<Workflow>;
 };
@@ -7108,6 +7148,8 @@ export type InvestmentFund = {
   amountCurrency?: Maybe<Scalars['String']['output']>;
   /** The geo-boundary of the investmentfund, as GeoJSON Feature with Polygon geometry. */
   boundary?: Maybe<Scalars['String']['output']>;
+  /** The child funds (sub-funds within this fund). */
+  childFunds?: Maybe<Array<Maybe<InvestmentFund>>>;
   /** The creation date of the investmentfund. */
   creationDate: Scalars['DateTime']['output'];
   /** The investmentfund description. */
@@ -7116,12 +7158,16 @@ export type InvestmentFund = {
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** The feeds that discovered this investmentfund. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
+  /** The fund type (e.g., Venture, Growth, PE). */
+  fundType?: Maybe<Scalars['String']['output']>;
   /** The H3 index of the investmentfund. */
   h3?: Maybe<H3>;
   /** The ID of the investmentfund. */
   id: Scalars['ID']['output'];
   /** The investmentfund external identifier. */
   identifier?: Maybe<Scalars['String']['output']>;
+  /** The individual investments made by this fund. */
+  investments?: Maybe<Array<Maybe<Investment>>>;
   /** The extracted hyperlinks. */
   links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The geo-location of the investmentfund. */
@@ -7130,16 +7176,26 @@ export type InvestmentFund = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the investmentfund. */
   name: Scalars['String']['output'];
+  /** The portfolio companies this fund has invested in. */
+  organizations?: Maybe<Array<Maybe<Organization>>>;
   /** The owner of the investmentfund. */
   owner: Owner;
+  /** The parent fund (for fund-of-funds structures). */
+  parentFund?: Maybe<InvestmentFund>;
   /** The relevance score of the investmentfund. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the investmentfund (i.e. created, enabled). */
   state: EntityState;
+  /** The target fund size. */
+  targetSize?: Maybe<Scalars['Decimal']['output']>;
+  /** The currency for the target fund size. */
+  targetSizeCurrency?: Maybe<Scalars['String']['output']>;
   /** The JSON-LD value of the investmentfund. */
   thing?: Maybe<Scalars['String']['output']>;
   /** The investmentfund URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The fund vintage year. */
+  vintage?: Maybe<Scalars['Int']['output']>;
   /** The workflow associated with this investment fund. */
   workflow?: Maybe<Workflow>;
 };
@@ -7235,14 +7291,22 @@ export type InvestmentFundInput = {
   boundary?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The fund type (e.g., Venture, Growth, PE). */
+  fundType?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund geo-location. */
   location?: InputMaybe<PointInput>;
   /** The name of the investmentfund. */
   name: Scalars['String']['input'];
+  /** The target fund size. */
+  targetSize?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency for the target fund size. */
+  targetSizeCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
+  /** The fund vintage year. */
+  vintage?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents investment fund query results. */
@@ -7264,6 +7328,8 @@ export type InvestmentFundUpdateInput = {
   boundary?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The fund type (e.g., Venture, Growth, PE). */
+  fundType?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the investmentfund to update. */
   id: Scalars['ID']['input'];
   /** The investmentfund external identifier. */
@@ -7272,8 +7338,14 @@ export type InvestmentFundUpdateInput = {
   location?: InputMaybe<PointInput>;
   /** The name of the investmentfund. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The target fund size. */
+  targetSize?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency for the target fund size. */
+  targetSizeCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The investmentfund URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
+  /** The fund vintage year. */
+  vintage?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents an investment. */
@@ -7284,16 +7356,42 @@ export type InvestmentInput = {
   amountCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The investment geo-boundary, as GeoJSON Feature with Polygon geometry. */
   boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The current price per share. */
+  currentPricePerShare?: InputMaybe<Scalars['Decimal']['input']>;
   /** The investment description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The discount percentage (for convertible notes/SAFEs). */
+  discountPercent?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The entry price per share. */
+  entryPricePerShare?: InputMaybe<Scalars['Decimal']['input']>;
   /** The investment external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The date of the investment. */
+  investmentDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The investment geo-location. */
   location?: InputMaybe<PointInput>;
   /** The name of the investment. */
   name: Scalars['String']['input'];
+  /** The post-money valuation. */
+  postValuation?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency code for the post-money valuation. */
+  postValuationCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** Whether pro-rata rights were obtained. */
+  proRataRights?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The total round size. */
+  roundSize?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency code for the round size. */
+  roundSizeCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The number of shares owned. */
+  sharesOwned?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The investment stage. */
+  stage?: InputMaybe<Scalars['String']['input']>;
+  /** The investment status. */
+  status?: InputMaybe<Scalars['String']['input']>;
   /** The investment URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
+  /** The investment vehicle type. */
+  vehicle?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents investment query results. */
@@ -7313,18 +7411,44 @@ export type InvestmentUpdateInput = {
   amountCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The investment geo-boundary, as GeoJSON Feature with Polygon geometry. */
   boundary?: InputMaybe<Scalars['String']['input']>;
+  /** The current price per share. */
+  currentPricePerShare?: InputMaybe<Scalars['Decimal']['input']>;
   /** The investment description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The discount percentage (for convertible notes/SAFEs). */
+  discountPercent?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The entry price per share. */
+  entryPricePerShare?: InputMaybe<Scalars['Decimal']['input']>;
   /** The ID of the investment to update. */
   id: Scalars['ID']['input'];
   /** The investment external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
+  /** The date of the investment. */
+  investmentDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The investment geo-location. */
   location?: InputMaybe<PointInput>;
   /** The name of the investment. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The post-money valuation. */
+  postValuation?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency code for the post-money valuation. */
+  postValuationCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** Whether pro-rata rights were obtained. */
+  proRataRights?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The total round size. */
+  roundSize?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The currency code for the round size. */
+  roundSizeCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The number of shares owned. */
+  sharesOwned?: InputMaybe<Scalars['Decimal']['input']>;
+  /** The investment stage. */
+  stage?: InputMaybe<Scalars['String']['input']>;
+  /** The investment status. */
+  status?: InputMaybe<Scalars['String']['input']>;
   /** The investment URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
+  /** The investment vehicle type. */
+  vehicle?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents issue feed properties. */
@@ -13271,10 +13395,14 @@ export type Organization = {
   description?: Maybe<Scalars['String']['output']>;
   /** The email address of the organization. */
   email?: Maybe<Scalars['String']['output']>;
+  /** The employee(s) of this organization. */
+  employees?: Maybe<Array<Maybe<Person>>>;
   /** The EPSG code for spatial reference of the organization. */
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** The feeds that discovered this organization. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
+  /** The founder(s) of this organization. */
+  founders?: Maybe<Array<Maybe<Person>>>;
   /** The founding date of the organization. */
   foundingDate?: Maybe<Scalars['DateTime']['output']>;
   /** The H3 index of the organization. */
@@ -13289,18 +13417,30 @@ export type Organization = {
   investment?: Maybe<Scalars['Decimal']['output']>;
   /** The currency of the investment into the organization. */
   investmentCurrency?: Maybe<Scalars['String']['output']>;
+  /** Investments received by this organization (as portfolio company). */
+  investmentsReceived?: Maybe<Array<Maybe<Investment>>>;
+  /** Investment funds that have invested in this organization. */
+  investorFunds?: Maybe<Array<Maybe<InvestmentFund>>>;
   /** The official legal name of the organization. */
   legalName?: Maybe<Scalars['String']['output']>;
   /** The extracted hyperlinks. */
   links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The geo-location of the organization. */
   location?: Maybe<Point>;
+  /** The location(s) of this organization. */
+  locations?: Maybe<Array<Maybe<Place>>>;
+  /** Organization(s) this organization is a member of. */
+  memberOf?: Maybe<Array<Maybe<Organization>>>;
+  /** The member(s) of this organization. */
+  members?: Maybe<Array<Maybe<Person>>>;
   /** The modified date of the organization. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the organization. */
   name: Scalars['String']['output'];
   /** The owner of the organization. */
   owner: Owner;
+  /** The parent organization. */
+  parentOrganization?: Maybe<Organization>;
   /** The relevance score of the organization. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The revenue of the organization. */
@@ -13309,6 +13449,8 @@ export type Organization = {
   revenueCurrency?: Maybe<Scalars['String']['output']>;
   /** The state of the organization (i.e. created, enabled). */
   state: EntityState;
+  /** Sub-organization(s) of this organization. */
+  subOrganizations?: Maybe<Array<Maybe<Organization>>>;
   /** The telephone number of the organization. */
   telephone?: Maybe<Scalars['String']['output']>;
   /** The JSON-LD value of the organization. */
@@ -13661,10 +13803,14 @@ export type Person = {
   alumniOf?: Maybe<Array<Maybe<Organization>>>;
   /** The birth date of the person. */
   birthDate?: Maybe<Scalars['Date']['output']>;
+  /** The place where the person was born. */
+  birthPlace?: Maybe<Place>;
   /** The geo-boundary of the person, as GeoJSON Feature with Polygon geometry. */
   boundary?: Maybe<Scalars['String']['output']>;
   /** The creation date of the person. */
   creationDate: Scalars['DateTime']['output'];
+  /** The place where the person died. */
+  deathPlace?: Maybe<Place>;
   /** The person description. */
   description?: Maybe<Scalars['String']['output']>;
   /** The education of the person. */
@@ -13681,6 +13827,8 @@ export type Person = {
   givenName?: Maybe<Scalars['String']['output']>;
   /** The H3 index of the person. */
   h3?: Maybe<H3>;
+  /** The place(s) where the person lives. */
+  homeLocation?: Maybe<Array<Maybe<Place>>>;
   /** The ID of the person. */
   id: Scalars['ID']['output'];
   /** The person external identifier. */
@@ -13711,6 +13859,8 @@ export type Person = {
   title?: Maybe<Scalars['String']['output']>;
   /** The person URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The place(s) where the person works. */
+  workLocation?: Maybe<Array<Maybe<Place>>>;
   /** The workflow associated with this person. */
   workflow?: Maybe<Workflow>;
   /** The organizations the person works for. */
