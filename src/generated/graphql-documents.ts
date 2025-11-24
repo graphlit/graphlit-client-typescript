@@ -1539,6 +1539,7 @@ export const GetContent = gql`
     links {
       uri
       linkType
+      excerpts
     }
     observations {
       id
@@ -2369,6 +2370,7 @@ export const LookupContents = gql`
       links {
         uri
         linkType
+        excerpts
       }
       observations {
         id
@@ -6932,6 +6934,15 @@ export const GetEvent = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -6949,6 +6960,10 @@ export const GetEvent = gql`
     priceCurrency
     isAccessibleForFree
     typicalAgeRange
+    organizer
+    performer
+    sponsor
+    eventStatus
   }
 }
     `;
@@ -6974,6 +6989,15 @@ export const QueryEvents = gql`
         id
         name
       }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -6991,6 +7015,10 @@ export const QueryEvents = gql`
       priceCurrency
       isAccessibleForFree
       typicalAgeRange
+      organizer
+      performer
+      sponsor
+      eventStatus
     }
   }
 }
@@ -8074,6 +8102,15 @@ export const GetInvestment = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8096,6 +8133,15 @@ export const QueryInvestments = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8174,6 +8220,15 @@ export const GetInvestmentFund = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8196,6 +8251,15 @@ export const QueryInvestmentFunds = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8364,6 +8428,15 @@ export const GetMedicalCondition = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8386,6 +8459,15 @@ export const QueryMedicalConditions = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8464,6 +8546,15 @@ export const GetMedicalContraindication = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8486,6 +8577,15 @@ export const QueryMedicalContraindications = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8564,6 +8664,15 @@ export const GetMedicalDevice = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8586,6 +8695,15 @@ export const QueryMedicalDevices = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8664,6 +8782,15 @@ export const GetMedicalDrug = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8686,6 +8813,15 @@ export const QueryMedicalDrugs = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8764,6 +8900,15 @@ export const GetMedicalDrugClass = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8786,6 +8931,15 @@ export const QueryMedicalDrugClasses = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8864,6 +9018,15 @@ export const GetMedicalGuideline = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8886,6 +9049,15 @@ export const QueryMedicalGuidelines = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -8964,6 +9136,15 @@ export const GetMedicalIndication = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -8986,6 +9167,15 @@ export const QueryMedicalIndications = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9064,6 +9254,15 @@ export const GetMedicalProcedure = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -9086,6 +9285,15 @@ export const QueryMedicalProcedures = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9164,6 +9372,15 @@ export const GetMedicalStudy = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9193,6 +9410,15 @@ export const QueryMedicalStudies = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9278,6 +9504,15 @@ export const GetMedicalTest = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -9300,6 +9535,15 @@ export const QueryMedicalTests = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9378,6 +9622,15 @@ export const GetMedicalTherapy = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -9400,6 +9653,15 @@ export const QueryMedicalTherapies = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9521,6 +9783,15 @@ export const GetOrganization = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9529,6 +9800,9 @@ export const GetOrganization = gql`
       postalCode
     }
     foundingDate
+    email
+    telephone
+    legalName
     industries
     revenue
     revenueCurrency
@@ -9559,6 +9833,15 @@ export const QueryOrganizations = gql`
         id
         name
       }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9567,6 +9850,9 @@ export const QueryOrganizations = gql`
         postalCode
       }
       foundingDate
+      email
+      telephone
+      legalName
       industries
       revenue
       revenueCurrency
@@ -9659,6 +9945,15 @@ export const GetPerson = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9696,6 +9991,15 @@ export const QueryPersons = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -9801,6 +10105,15 @@ export const GetPlace = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9808,6 +10121,9 @@ export const GetPlace = gql`
       country
       postalCode
     }
+    telephone
+    openingHours
+    priceRange
   }
 }
     `;
@@ -9833,6 +10149,15 @@ export const QueryPlaces = gql`
         id
         name
       }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9840,6 +10165,9 @@ export const QueryPlaces = gql`
         country
         postalCode
       }
+      telephone
+      openingHours
+      priceRange
     }
   }
 }
@@ -9927,6 +10255,15 @@ export const GetProduct = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     address {
       streetAddress
       city
@@ -9939,6 +10276,8 @@ export const GetProduct = gql`
     brand
     upc
     sku
+    gtin
+    mpn
     releaseDate
     productionDate
   }
@@ -9966,6 +10305,15 @@ export const QueryProducts = gql`
         id
         name
       }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
       address {
         streetAddress
         city
@@ -9978,6 +10326,8 @@ export const QueryProducts = gql`
       brand
       upc
       sku
+      gtin
+      mpn
       releaseDate
       productionDate
     }
@@ -10259,6 +10609,15 @@ export const GetRepo = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
   }
 }
     `;
@@ -10281,6 +10640,15 @@ export const QueryRepos = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }
@@ -10388,6 +10756,15 @@ export const GetSoftware = gql`
       id
       name
     }
+    links {
+      uri
+      linkType
+      excerpts
+    }
+    workflow {
+      id
+      name
+    }
     releaseDate
     developer
   }
@@ -10412,6 +10789,15 @@ export const QuerySoftwares = gql`
       identifier
       thing
       feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
         id
         name
       }

@@ -4444,6 +4444,8 @@ export type Event = {
   endDate?: Maybe<Scalars['DateTime']['output']>;
   /** The EPSG code for spatial reference of the event. */
   epsgCode?: Maybe<Scalars['Int']['output']>;
+  /** The status of the event. */
+  eventStatus?: Maybe<Scalars['String']['output']>;
   /** The feeds that discovered this event. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
   /** The H3 index of the event. */
@@ -4466,14 +4468,20 @@ export type Event = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the event. */
   name: Scalars['String']['output'];
+  /** The organizer of the event. */
+  organizer?: Maybe<Scalars['String']['output']>;
   /** The owner of the event. */
   owner: Owner;
+  /** The performer at the event. */
+  performer?: Maybe<Scalars['String']['output']>;
   /** The event price. */
   price?: Maybe<Scalars['Decimal']['output']>;
   /** The currency of the event price. */
   priceCurrency?: Maybe<Scalars['String']['output']>;
   /** The relevance score of the event. */
   relevance?: Maybe<Scalars['Float']['output']>;
+  /** The sponsor of the event. */
+  sponsor?: Maybe<Scalars['String']['output']>;
   /** The event start date. */
   startDate?: Maybe<Scalars['DateTime']['output']>;
   /** The state of the event (i.e. created, enabled). */
@@ -4484,6 +4492,8 @@ export type Event = {
   typicalAgeRange?: Maybe<Scalars['String']['output']>;
   /** The event URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this event. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a event facet. */
@@ -4601,6 +4611,8 @@ export type EventInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** The event end date. */
   endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The status of the event. */
+  eventStatus?: InputMaybe<Scalars['String']['input']>;
   /** The event external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** If the event is accessible for free. */
@@ -4613,10 +4625,16 @@ export type EventInput = {
   minPrice?: InputMaybe<Scalars['Decimal']['input']>;
   /** The name of the event. */
   name: Scalars['String']['input'];
+  /** The organizer of the event. */
+  organizer?: InputMaybe<Scalars['String']['input']>;
+  /** The performer at the event. */
+  performer?: InputMaybe<Scalars['String']['input']>;
   /** The event price. */
   price?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the event price. */
   priceCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The sponsor of the event. */
+  sponsor?: InputMaybe<Scalars['String']['input']>;
   /** The event start date. */
   startDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event typical age range. */
@@ -4737,6 +4755,8 @@ export type EventUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** The event end date. */
   endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The status of the event. */
+  eventStatus?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the event to update. */
   id: Scalars['ID']['input'];
   /** The event external identifier. */
@@ -4751,10 +4771,16 @@ export type EventUpdateInput = {
   minPrice?: InputMaybe<Scalars['Decimal']['input']>;
   /** The name of the event. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The organizer of the event. */
+  organizer?: InputMaybe<Scalars['String']['input']>;
+  /** The performer at the event. */
+  performer?: InputMaybe<Scalars['String']['input']>;
   /** The event price. */
   price?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the event price. */
   priceCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The sponsor of the event. */
+  sponsor?: InputMaybe<Scalars['String']['input']>;
   /** The event start date. */
   startDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event typical age range. */
@@ -6986,6 +7012,8 @@ export type Investment = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The investment URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this investment. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents an investment facet. */
@@ -7112,6 +7140,8 @@ export type InvestmentFund = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The investmentfund URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this investment fund. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents an investment fund facet. */
@@ -7628,6 +7658,8 @@ export type LinearProjectsInput = {
 /** Represents a hyperlink. */
 export type LinkReference = {
   __typename?: 'LinkReference';
+  /** Text excerpts from the linked source, used as citations for enrichment provenance. */
+  excerpts?: Maybe<Scalars['String']['output']>;
   /** The hyperlink type. */
   linkType?: Maybe<LinkTypes>;
   /** The hyperlink URI. */
@@ -7636,6 +7668,8 @@ export type LinkReference = {
 
 /** Represents a hyperlink. */
 export type LinkReferenceInput = {
+  /** Text excerpts from the linked source, used as citations for enrichment provenance. */
+  excerpts?: InputMaybe<Scalars['String']['input']>;
   /** The hyperlink type. */
   linkType?: InputMaybe<LinkTypes>;
   /** The hyperlink URI. */
@@ -7909,6 +7943,8 @@ export type MedicalCondition = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalcondition URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical condition. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical condition facet. */
@@ -8074,6 +8110,8 @@ export type MedicalContraindication = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalcontraindication URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical contraindication. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical contraindication facet. */
@@ -8239,6 +8277,8 @@ export type MedicalDevice = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldevice URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical device. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical device facet. */
@@ -8404,6 +8444,8 @@ export type MedicalDrug = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldrug URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical drug. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical drug class. */
@@ -8445,6 +8487,8 @@ export type MedicalDrugClass = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldrugclass URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical drug class. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical drug class facet. */
@@ -8734,6 +8778,8 @@ export type MedicalGuideline = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalguideline URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical guideline. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical guideline facet. */
@@ -8899,6 +8945,8 @@ export type MedicalIndication = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalindication URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical indication. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical indication facet. */
@@ -9064,6 +9112,8 @@ export type MedicalProcedure = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalprocedure URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical procedure. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical procedure facet. */
@@ -9231,6 +9281,8 @@ export type MedicalStudy = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalstudy URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical study. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical study facet. */
@@ -9402,6 +9454,8 @@ export type MedicalTest = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaltest URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical test. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical test facet. */
@@ -9567,6 +9621,8 @@ export type MedicalTherapy = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaltherapy URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this medical therapy. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a medical therapy facet. */
@@ -13213,6 +13269,8 @@ export type Organization = {
   creationDate: Scalars['DateTime']['output'];
   /** The organization description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** The email address of the organization. */
+  email?: Maybe<Scalars['String']['output']>;
   /** The EPSG code for spatial reference of the organization. */
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** The feeds that discovered this organization. */
@@ -13231,6 +13289,8 @@ export type Organization = {
   investment?: Maybe<Scalars['Decimal']['output']>;
   /** The currency of the investment into the organization. */
   investmentCurrency?: Maybe<Scalars['String']['output']>;
+  /** The official legal name of the organization. */
+  legalName?: Maybe<Scalars['String']['output']>;
   /** The extracted hyperlinks. */
   links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The geo-location of the organization. */
@@ -13249,10 +13309,14 @@ export type Organization = {
   revenueCurrency?: Maybe<Scalars['String']['output']>;
   /** The state of the organization (i.e. created, enabled). */
   state: EntityState;
+  /** The telephone number of the organization. */
+  telephone?: Maybe<Scalars['String']['output']>;
   /** The JSON-LD value of the organization. */
   thing?: Maybe<Scalars['String']['output']>;
   /** The organization URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this organization. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents an organization facet. */
@@ -13346,6 +13410,8 @@ export type OrganizationInput = {
   boundary?: InputMaybe<Scalars['String']['input']>;
   /** The organization description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The email address of the organization. */
+  email?: InputMaybe<Scalars['String']['input']>;
   /** The founding date of the organization. */
   foundingDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The organization external identifier. */
@@ -13356,6 +13422,8 @@ export type OrganizationInput = {
   investment?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the investment into the organization. */
   investmentCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The official legal name of the organization. */
+  legalName?: InputMaybe<Scalars['String']['input']>;
   /** The organization geo-location. */
   location?: InputMaybe<PointInput>;
   /** The name of the organization. */
@@ -13364,6 +13432,8 @@ export type OrganizationInput = {
   revenue?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the revenue of the organization. */
   revenueCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The telephone number of the organization. */
+  telephone?: InputMaybe<Scalars['String']['input']>;
   /** The organization URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
@@ -13387,6 +13457,8 @@ export type OrganizationUpdateInput = {
   boundary?: InputMaybe<Scalars['String']['input']>;
   /** The organization description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The email address of the organization. */
+  email?: InputMaybe<Scalars['String']['input']>;
   /** The founding date of the organization. */
   foundingDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The ID of the organization to update. */
@@ -13399,6 +13471,8 @@ export type OrganizationUpdateInput = {
   investment?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the investment into the organization. */
   investmentCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The official legal name of the organization. */
+  legalName?: InputMaybe<Scalars['String']['input']>;
   /** The organization geo-location. */
   location?: InputMaybe<PointInput>;
   /** The name of the organization. */
@@ -13407,6 +13481,8 @@ export type OrganizationUpdateInput = {
   revenue?: InputMaybe<Scalars['Decimal']['input']>;
   /** The currency of the revenue of the organization. */
   revenueCurrency?: InputMaybe<Scalars['String']['input']>;
+  /** The telephone number of the organization. */
+  telephone?: InputMaybe<Scalars['String']['input']>;
   /** The organization URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
@@ -13635,6 +13711,8 @@ export type Person = {
   title?: Maybe<Scalars['String']['output']>;
   /** The person URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this person. */
+  workflow?: Maybe<Workflow>;
   /** The organizations the person works for. */
   worksFor?: Maybe<Array<Maybe<Organization>>>;
 };
@@ -13867,16 +13945,24 @@ export type Place = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the place. */
   name: Scalars['String']['output'];
+  /** The opening hours of the place. */
+  openingHours?: Maybe<Scalars['String']['output']>;
   /** The owner of the place. */
   owner: Owner;
+  /** The price range of the place. */
+  priceRange?: Maybe<Scalars['String']['output']>;
   /** The relevance score of the place. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the place (i.e. created, enabled). */
   state: EntityState;
+  /** The telephone number of the place. */
+  telephone?: Maybe<Scalars['String']['output']>;
   /** The JSON-LD value of the place. */
   thing?: Maybe<Scalars['String']['output']>;
   /** The place URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this place. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a place facet. */
@@ -13974,6 +14060,12 @@ export type PlaceInput = {
   location?: InputMaybe<PointInput>;
   /** The name of the place. */
   name: Scalars['String']['input'];
+  /** The opening hours of the place. */
+  openingHours?: InputMaybe<Scalars['String']['input']>;
+  /** The price range of the place. */
+  priceRange?: InputMaybe<Scalars['String']['input']>;
+  /** The telephone number of the place. */
+  telephone?: InputMaybe<Scalars['String']['input']>;
   /** The place URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
@@ -14005,6 +14097,12 @@ export type PlaceUpdateInput = {
   location?: InputMaybe<PointInput>;
   /** The name of the place. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The opening hours of the place. */
+  openingHours?: InputMaybe<Scalars['String']['input']>;
+  /** The price range of the place. */
+  priceRange?: InputMaybe<Scalars['String']['input']>;
+  /** The telephone number of the place. */
+  telephone?: InputMaybe<Scalars['String']['input']>;
   /** The place URI. */
   uri?: InputMaybe<Scalars['URL']['input']>;
 };
@@ -14169,6 +14267,8 @@ export type Product = {
   epsgCode?: Maybe<Scalars['Int']['output']>;
   /** The feeds that discovered this product. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
+  /** The Global Trade Item Number (GTIN). */
+  gtin?: Maybe<Scalars['String']['output']>;
   /** The H3 index of the product. */
   h3?: Maybe<H3>;
   /** The ID of the product. */
@@ -14185,6 +14285,8 @@ export type Product = {
   model?: Maybe<Scalars['String']['output']>;
   /** The modified date of the product. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The Manufacturer Part Number (MPN). */
+  mpn?: Maybe<Scalars['String']['output']>;
   /** The name of the product. */
   name: Scalars['String']['output'];
   /** The owner of the product. */
@@ -14205,6 +14307,8 @@ export type Product = {
   upc?: Maybe<Scalars['String']['output']>;
   /** The product URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this product. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a product facet. */
@@ -14312,6 +14416,8 @@ export type ProductInput = {
   brand?: InputMaybe<Scalars['String']['input']>;
   /** The product description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The Global Trade Item Number (GTIN). */
+  gtin?: InputMaybe<Scalars['String']['input']>;
   /** The product external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** The product geo-location. */
@@ -14320,6 +14426,8 @@ export type ProductInput = {
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   /** The product model. */
   model?: InputMaybe<Scalars['String']['input']>;
+  /** The Manufacturer Part Number (MPN). */
+  mpn?: InputMaybe<Scalars['String']['input']>;
   /** The name of the product. */
   name: Scalars['String']['input'];
   /** The production date. */
@@ -14353,6 +14461,8 @@ export type ProductUpdateInput = {
   brand?: InputMaybe<Scalars['String']['input']>;
   /** The product description. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The Global Trade Item Number (GTIN). */
+  gtin?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the product to update. */
   id: Scalars['ID']['input'];
   /** The product external identifier. */
@@ -14363,6 +14473,8 @@ export type ProductUpdateInput = {
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   /** The product model. */
   model?: InputMaybe<Scalars['String']['input']>;
+  /** The Manufacturer Part Number (MPN). */
+  mpn?: InputMaybe<Scalars['String']['input']>;
   /** The name of the product. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** The production date. */
@@ -16398,6 +16510,8 @@ export type Repo = {
   id: Scalars['ID']['output'];
   /** The repo external identifier. */
   identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The modified date of the repo. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the repo. */
@@ -16414,6 +16528,8 @@ export type Repo = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The repo URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this repo. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a repo facet. */
@@ -17154,6 +17270,8 @@ export type Software = {
   id: Scalars['ID']['output'];
   /** The software external identifier. */
   identifier?: Maybe<Scalars['String']['output']>;
+  /** The extracted hyperlinks. */
+  links?: Maybe<Array<Maybe<LinkReference>>>;
   /** The modified date of the software. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the software. */
@@ -17172,6 +17290,8 @@ export type Software = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The software URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The workflow associated with this software. */
+  workflow?: Maybe<Workflow>;
 };
 
 /** Represents a software facet. */
@@ -19138,7 +19258,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null };
 
 export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
@@ -19254,7 +19374,7 @@ export type LookupContentsQueryVariables = Exact<{
 }>;
 
 
-export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
+export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null }> | null } | null> | null } | null };
 
 export type PublishContentsMutationVariables = Exact<{
   summaryPrompt?: InputMaybe<Scalars['String']['input']>;
@@ -19680,7 +19800,7 @@ export type GetEventQueryVariables = Exact<{
 }>;
 
 
-export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetEventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, organizer?: string | null, performer?: string | null, sponsor?: string | null, eventStatus?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryEventsQueryVariables = Exact<{
   filter?: InputMaybe<EventFilter>;
@@ -19688,7 +19808,7 @@ export type QueryEventsQueryVariables = Exact<{
 }>;
 
 
-export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryEventsQuery = { __typename?: 'Query', events?: { __typename?: 'EventResults', results?: Array<{ __typename?: 'Event', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, startDate?: any | null, endDate?: any | null, availabilityStartDate?: any | null, availabilityEndDate?: any | null, price?: any | null, minPrice?: any | null, maxPrice?: any | null, priceCurrency?: string | null, isAccessibleForFree?: boolean | null, typicalAgeRange?: string | null, organizer?: string | null, performer?: string | null, sponsor?: string | null, eventStatus?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateEventMutationVariables = Exact<{
   event: EventUpdateInput;
@@ -19976,7 +20096,7 @@ export type GetInvestmentQueryVariables = Exact<{
 }>;
 
 
-export type GetInvestmentQuery = { __typename?: 'Query', investment?: { __typename?: 'Investment', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetInvestmentQuery = { __typename?: 'Query', investment?: { __typename?: 'Investment', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryInvestmentsQueryVariables = Exact<{
   filter?: InputMaybe<InvestmentFilter>;
@@ -19984,7 +20104,7 @@ export type QueryInvestmentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryInvestmentsQuery = { __typename?: 'Query', investments?: { __typename?: 'InvestmentResults', results?: Array<{ __typename?: 'Investment', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryInvestmentsQuery = { __typename?: 'Query', investments?: { __typename?: 'InvestmentResults', results?: Array<{ __typename?: 'Investment', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateInvestmentMutationVariables = Exact<{
   investment: InvestmentUpdateInput;
@@ -20038,7 +20158,7 @@ export type GetInvestmentFundQueryVariables = Exact<{
 }>;
 
 
-export type GetInvestmentFundQuery = { __typename?: 'Query', investmentFund?: { __typename?: 'InvestmentFund', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetInvestmentFundQuery = { __typename?: 'Query', investmentFund?: { __typename?: 'InvestmentFund', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryInvestmentFundsQueryVariables = Exact<{
   filter?: InputMaybe<InvestmentFundFilter>;
@@ -20046,7 +20166,7 @@ export type QueryInvestmentFundsQueryVariables = Exact<{
 }>;
 
 
-export type QueryInvestmentFundsQuery = { __typename?: 'Query', investmentFunds?: { __typename?: 'InvestmentFundResults', results?: Array<{ __typename?: 'InvestmentFund', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryInvestmentFundsQuery = { __typename?: 'Query', investmentFunds?: { __typename?: 'InvestmentFundResults', results?: Array<{ __typename?: 'InvestmentFund', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateInvestmentFundMutationVariables = Exact<{
   investmentFund: InvestmentFundUpdateInput;
@@ -20169,7 +20289,7 @@ export type GetMedicalConditionQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalConditionQuery = { __typename?: 'Query', medicalCondition?: { __typename?: 'MedicalCondition', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalConditionsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalConditionFilter>;
@@ -20177,7 +20297,7 @@ export type QueryMedicalConditionsQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalConditionsQuery = { __typename?: 'Query', medicalConditions?: { __typename?: 'MedicalConditionResults', results?: Array<{ __typename?: 'MedicalCondition', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalConditionsQuery = { __typename?: 'Query', medicalConditions?: { __typename?: 'MedicalConditionResults', results?: Array<{ __typename?: 'MedicalCondition', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalConditionMutationVariables = Exact<{
   medicalCondition: MedicalConditionUpdateInput;
@@ -20231,7 +20351,7 @@ export type GetMedicalContraindicationQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalContraindicationQuery = { __typename?: 'Query', medicalContraindication?: { __typename?: 'MedicalContraindication', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalContraindicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalContraindicationFilter>;
@@ -20239,7 +20359,7 @@ export type QueryMedicalContraindicationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalContraindicationsQuery = { __typename?: 'Query', medicalContraindications?: { __typename?: 'MedicalContraindicationResults', results?: Array<{ __typename?: 'MedicalContraindication', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalContraindicationsQuery = { __typename?: 'Query', medicalContraindications?: { __typename?: 'MedicalContraindicationResults', results?: Array<{ __typename?: 'MedicalContraindication', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalContraindicationMutationVariables = Exact<{
   medicalContraindication: MedicalContraindicationUpdateInput;
@@ -20293,7 +20413,7 @@ export type GetMedicalDeviceQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalDeviceQuery = { __typename?: 'Query', medicalDevice?: { __typename?: 'MedicalDevice', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalDevicesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDeviceFilter>;
@@ -20301,7 +20421,7 @@ export type QueryMedicalDevicesQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalDevicesQuery = { __typename?: 'Query', medicalDevices?: { __typename?: 'MedicalDeviceResults', results?: Array<{ __typename?: 'MedicalDevice', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalDevicesQuery = { __typename?: 'Query', medicalDevices?: { __typename?: 'MedicalDeviceResults', results?: Array<{ __typename?: 'MedicalDevice', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalDeviceMutationVariables = Exact<{
   medicalDevice: MedicalDeviceUpdateInput;
@@ -20355,7 +20475,7 @@ export type GetMedicalDrugQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalDrugQuery = { __typename?: 'Query', medicalDrug?: { __typename?: 'MedicalDrug', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalDrugsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugFilter>;
@@ -20363,7 +20483,7 @@ export type QueryMedicalDrugsQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalDrugsQuery = { __typename?: 'Query', medicalDrugs?: { __typename?: 'MedicalDrugResults', results?: Array<{ __typename?: 'MedicalDrug', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalDrugsQuery = { __typename?: 'Query', medicalDrugs?: { __typename?: 'MedicalDrugResults', results?: Array<{ __typename?: 'MedicalDrug', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalDrugMutationVariables = Exact<{
   medicalDrug: MedicalDrugUpdateInput;
@@ -20417,7 +20537,7 @@ export type GetMedicalDrugClassQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalDrugClassQuery = { __typename?: 'Query', medicalDrugClass?: { __typename?: 'MedicalDrugClass', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalDrugClassesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalDrugClassFilter>;
@@ -20425,7 +20545,7 @@ export type QueryMedicalDrugClassesQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalDrugClassesQuery = { __typename?: 'Query', medicalDrugClasses?: { __typename?: 'MedicalDrugClassResults', results?: Array<{ __typename?: 'MedicalDrugClass', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalDrugClassesQuery = { __typename?: 'Query', medicalDrugClasses?: { __typename?: 'MedicalDrugClassResults', results?: Array<{ __typename?: 'MedicalDrugClass', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalDrugClassMutationVariables = Exact<{
   medicalDrugClass: MedicalDrugClassUpdateInput;
@@ -20479,7 +20599,7 @@ export type GetMedicalGuidelineQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalGuidelineQuery = { __typename?: 'Query', medicalGuideline?: { __typename?: 'MedicalGuideline', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalGuidelinesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalGuidelineFilter>;
@@ -20487,7 +20607,7 @@ export type QueryMedicalGuidelinesQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalGuidelinesQuery = { __typename?: 'Query', medicalGuidelines?: { __typename?: 'MedicalGuidelineResults', results?: Array<{ __typename?: 'MedicalGuideline', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalGuidelinesQuery = { __typename?: 'Query', medicalGuidelines?: { __typename?: 'MedicalGuidelineResults', results?: Array<{ __typename?: 'MedicalGuideline', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalGuidelineMutationVariables = Exact<{
   medicalGuideline: MedicalGuidelineUpdateInput;
@@ -20541,7 +20661,7 @@ export type GetMedicalIndicationQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalIndicationQuery = { __typename?: 'Query', medicalIndication?: { __typename?: 'MedicalIndication', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalIndicationsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalIndicationFilter>;
@@ -20549,7 +20669,7 @@ export type QueryMedicalIndicationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalIndicationsQuery = { __typename?: 'Query', medicalIndications?: { __typename?: 'MedicalIndicationResults', results?: Array<{ __typename?: 'MedicalIndication', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalIndicationsQuery = { __typename?: 'Query', medicalIndications?: { __typename?: 'MedicalIndicationResults', results?: Array<{ __typename?: 'MedicalIndication', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalIndicationMutationVariables = Exact<{
   medicalIndication: MedicalIndicationUpdateInput;
@@ -20603,7 +20723,7 @@ export type GetMedicalProcedureQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalProcedureQuery = { __typename?: 'Query', medicalProcedure?: { __typename?: 'MedicalProcedure', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalProceduresQueryVariables = Exact<{
   filter?: InputMaybe<MedicalProcedureFilter>;
@@ -20611,7 +20731,7 @@ export type QueryMedicalProceduresQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalProceduresQuery = { __typename?: 'Query', medicalProcedures?: { __typename?: 'MedicalProcedureResults', results?: Array<{ __typename?: 'MedicalProcedure', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalProceduresQuery = { __typename?: 'Query', medicalProcedures?: { __typename?: 'MedicalProcedureResults', results?: Array<{ __typename?: 'MedicalProcedure', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalProcedureMutationVariables = Exact<{
   medicalProcedure: MedicalProcedureUpdateInput;
@@ -20665,7 +20785,7 @@ export type GetMedicalStudyQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetMedicalStudyQuery = { __typename?: 'Query', medicalStudy?: { __typename?: 'MedicalStudy', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryMedicalStudiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalStudyFilter>;
@@ -20673,7 +20793,7 @@ export type QueryMedicalStudiesQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalStudiesQuery = { __typename?: 'Query', medicalStudies?: { __typename?: 'MedicalStudyResults', results?: Array<{ __typename?: 'MedicalStudy', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryMedicalStudiesQuery = { __typename?: 'Query', medicalStudies?: { __typename?: 'MedicalStudyResults', results?: Array<{ __typename?: 'MedicalStudy', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateMedicalStudyMutationVariables = Exact<{
   medicalStudy: MedicalStudyUpdateInput;
@@ -20727,7 +20847,7 @@ export type GetMedicalTestQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __typename?: 'MedicalTest', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalTestQuery = { __typename?: 'Query', medicalTest?: { __typename?: 'MedicalTest', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalTestsQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTestFilter>;
@@ -20735,7 +20855,7 @@ export type QueryMedicalTestsQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalTestsQuery = { __typename?: 'Query', medicalTests?: { __typename?: 'MedicalTestResults', results?: Array<{ __typename?: 'MedicalTest', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalTestsQuery = { __typename?: 'Query', medicalTests?: { __typename?: 'MedicalTestResults', results?: Array<{ __typename?: 'MedicalTest', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalTestMutationVariables = Exact<{
   medicalTest: MedicalTestUpdateInput;
@@ -20789,7 +20909,7 @@ export type GetMedicalTherapyQueryVariables = Exact<{
 }>;
 
 
-export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetMedicalTherapyQuery = { __typename?: 'Query', medicalTherapy?: { __typename?: 'MedicalTherapy', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryMedicalTherapiesQueryVariables = Exact<{
   filter?: InputMaybe<MedicalTherapyFilter>;
@@ -20797,7 +20917,7 @@ export type QueryMedicalTherapiesQueryVariables = Exact<{
 }>;
 
 
-export type QueryMedicalTherapiesQuery = { __typename?: 'Query', medicalTherapies?: { __typename?: 'MedicalTherapyResults', results?: Array<{ __typename?: 'MedicalTherapy', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryMedicalTherapiesQuery = { __typename?: 'Query', medicalTherapies?: { __typename?: 'MedicalTherapyResults', results?: Array<{ __typename?: 'MedicalTherapy', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateMedicalTherapyMutationVariables = Exact<{
   medicalTherapy: MedicalTherapyUpdateInput;
@@ -20890,7 +21010,7 @@ export type GetOrganizationQueryVariables = Exact<{
 }>;
 
 
-export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetOrganizationQuery = { __typename?: 'Query', organization?: { __typename?: 'Organization', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, foundingDate?: any | null, email?: string | null, telephone?: string | null, legalName?: string | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryOrganizationsQueryVariables = Exact<{
   filter?: InputMaybe<OrganizationFilter>;
@@ -20898,7 +21018,7 @@ export type QueryOrganizationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, foundingDate?: any | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryOrganizationsQuery = { __typename?: 'Query', organizations?: { __typename?: 'OrganizationResults', results?: Array<{ __typename?: 'Organization', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, foundingDate?: any | null, email?: string | null, telephone?: string | null, legalName?: string | null, industries?: Array<string | null> | null, revenue?: any | null, revenueCurrency?: string | null, investment?: any | null, investmentCurrency?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateOrganizationMutationVariables = Exact<{
   organization: OrganizationUpdateInput;
@@ -20961,7 +21081,7 @@ export type GetPersonQueryVariables = Exact<{
 }>;
 
 
-export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPersonQuery = { __typename?: 'Query', person?: { __typename?: 'Person', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPersonsQueryVariables = Exact<{
   filter?: InputMaybe<PersonFilter>;
@@ -20969,7 +21089,7 @@ export type QueryPersonsQueryVariables = Exact<{
 }>;
 
 
-export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPersonsQuery = { __typename?: 'Query', persons?: { __typename?: 'PersonResults', results?: Array<{ __typename?: 'Person', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null, phoneNumber?: string | null, birthDate?: any | null, title?: string | null, occupation?: string | null, education?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePersonMutationVariables = Exact<{
   person: PersonUpdateInput;
@@ -21032,7 +21152,7 @@ export type GetPlaceQueryVariables = Exact<{
 }>;
 
 
-export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetPlaceQuery = { __typename?: 'Query', place?: { __typename?: 'Place', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, telephone?: string | null, openingHours?: string | null, priceRange?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryPlacesQueryVariables = Exact<{
   filter?: InputMaybe<PlaceFilter>;
@@ -21040,7 +21160,7 @@ export type QueryPlacesQueryVariables = Exact<{
 }>;
 
 
-export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryPlacesQuery = { __typename?: 'Query', places?: { __typename?: 'PlaceResults', results?: Array<{ __typename?: 'Place', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, telephone?: string | null, openingHours?: string | null, priceRange?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdatePlaceMutationVariables = Exact<{
   place: PlaceUpdateInput;
@@ -21103,7 +21223,7 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
+export type GetProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, gtin?: string | null, mpn?: string | null, releaseDate?: any | null, productionDate?: any | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null };
 
 export type QueryProductsQueryVariables = Exact<{
   filter?: InputMaybe<ProductFilter>;
@@ -21111,7 +21231,7 @@ export type QueryProductsQueryVariables = Exact<{
 }>;
 
 
-export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, releaseDate?: any | null, productionDate?: any | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
+export type QueryProductsQuery = { __typename?: 'Query', products?: { __typename?: 'ProductResults', results?: Array<{ __typename?: 'Product', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, manufacturer?: string | null, model?: string | null, brand?: string | null, upc?: string | null, sku?: string | null, gtin?: string | null, mpn?: string | null, releaseDate?: any | null, productionDate?: any | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null } | null> | null } | null };
 
 export type UpdateProductMutationVariables = Exact<{
   product: ProductUpdateInput;
@@ -21223,7 +21343,7 @@ export type GetRepoQueryVariables = Exact<{
 }>;
 
 
-export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetRepoQuery = { __typename?: 'Query', repo?: { __typename?: 'Repo', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QueryReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
@@ -21231,7 +21351,7 @@ export type QueryReposQueryVariables = Exact<{
 }>;
 
 
-export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QueryReposQuery = { __typename?: 'Query', repos?: { __typename?: 'RepoResults', results?: Array<{ __typename?: 'Repo', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateRepoMutationVariables = Exact<{
   repo: RepoUpdateInput;
@@ -21305,7 +21425,7 @@ export type GetSoftwareQueryVariables = Exact<{
 }>;
 
 
-export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, releaseDate?: any | null, developer?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetSoftwareQuery = { __typename?: 'Query', software?: { __typename?: 'Software', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, releaseDate?: any | null, developer?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null };
 
 export type QuerySoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;
@@ -21313,7 +21433,7 @@ export type QuerySoftwaresQueryVariables = Exact<{
 }>;
 
 
-export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, releaseDate?: any | null, developer?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null> | null } | null };
+export type QuerySoftwaresQuery = { __typename?: 'Query', softwares?: { __typename?: 'SoftwareResults', results?: Array<{ __typename?: 'Software', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, alternateNames?: Array<string | null> | null, uri?: any | null, description?: string | null, identifier?: string | null, thing?: string | null, releaseDate?: any | null, developer?: string | null, owner: { __typename?: 'Owner', id: string }, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null } | null> | null } | null };
 
 export type UpdateSoftwareMutationVariables = Exact<{
   software: SoftwareUpdateInput;
