@@ -6943,6 +6943,28 @@ export const GetEvent = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -6997,6 +7019,28 @@ export const QueryEvents = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -8111,6 +8155,49 @@ export const GetInvestment = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
+    amount
+    amountCurrency
+    status
+    stage
+    investmentDate
+    roundSize
+    roundSizeCurrency
+    postValuation
+    postValuationCurrency
+    sharesOwned
+    vehicle
+    entryPricePerShare
+    currentPricePerShare
+    discountPercent
+    proRataRights
+    investor {
+      id
+    }
+    organization {
+      id
+    }
   }
 }
     `;
@@ -8145,6 +8232,33 @@ export const QueryInvestments = gql`
         id
         name
       }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
+      status
+      stage
+      investmentDate
     }
   }
 }
@@ -8229,6 +8343,46 @@ export const GetInvestmentFund = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
+    amount
+    amountCurrency
+    fundType
+    vintage
+    targetSize
+    targetSizeCurrency
+    organizations {
+      id
+    }
+    investments {
+      id
+    }
+    parentFund {
+      id
+    }
+    childFunds {
+      id
+    }
   }
 }
     `;
@@ -8263,6 +8417,30 @@ export const QueryInvestmentFunds = gql`
         id
         name
       }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
     }
   }
 }
@@ -8437,6 +8615,28 @@ export const GetMedicalCondition = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -8470,6 +8670,28 @@ export const QueryMedicalConditions = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -8555,6 +8777,28 @@ export const GetMedicalContraindication = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -8588,6 +8832,28 @@ export const QueryMedicalContraindications = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -8673,6 +8939,28 @@ export const GetMedicalDevice = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -8706,6 +8994,28 @@ export const QueryMedicalDevices = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -8791,6 +9101,28 @@ export const GetMedicalDrug = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -8824,6 +9156,28 @@ export const QueryMedicalDrugs = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -8909,6 +9263,28 @@ export const GetMedicalDrugClass = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -8942,6 +9318,28 @@ export const QueryMedicalDrugClasses = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9027,6 +9425,28 @@ export const GetMedicalGuideline = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -9060,6 +9480,28 @@ export const QueryMedicalGuidelines = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9145,6 +9587,28 @@ export const GetMedicalIndication = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -9178,6 +9642,28 @@ export const QueryMedicalIndications = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9263,6 +9749,28 @@ export const GetMedicalProcedure = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -9296,6 +9804,28 @@ export const QueryMedicalProcedures = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9381,6 +9911,28 @@ export const GetMedicalStudy = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -9421,6 +9973,28 @@ export const QueryMedicalStudies = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -9513,6 +10087,28 @@ export const GetMedicalTest = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -9546,6 +10142,28 @@ export const QueryMedicalTests = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9631,6 +10249,28 @@ export const GetMedicalTherapy = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -9664,6 +10304,28 @@ export const QueryMedicalTherapies = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -9792,6 +10454,28 @@ export const GetOrganization = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -9808,6 +10492,33 @@ export const GetOrganization = gql`
     revenueCurrency
     investment
     investmentCurrency
+    founders {
+      id
+    }
+    employees {
+      id
+    }
+    members {
+      id
+    }
+    parentOrganization {
+      id
+    }
+    memberOf {
+      id
+    }
+    subOrganizations {
+      id
+    }
+    locations {
+      id
+    }
+    investmentsReceived {
+      id
+    }
+    investorFunds {
+      id
+    }
   }
 }
     `;
@@ -9841,6 +10552,28 @@ export const QueryOrganizations = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -9954,6 +10687,28 @@ export const GetPerson = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -9969,6 +10724,30 @@ export const GetPerson = gql`
     title
     occupation
     education
+    worksFor {
+      id
+    }
+    affiliation {
+      id
+    }
+    memberOf {
+      id
+    }
+    alumniOf {
+      id
+    }
+    birthPlace {
+      id
+    }
+    deathPlace {
+      id
+    }
+    homeLocation {
+      id
+    }
+    workLocation {
+      id
+    }
   }
 }
     `;
@@ -10002,6 +10781,28 @@ export const QueryPersons = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -10114,6 +10915,28 @@ export const GetPlace = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -10157,6 +10980,28 @@ export const QueryPlaces = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -10264,6 +11109,28 @@ export const GetProduct = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
     address {
       streetAddress
       city
@@ -10313,6 +11180,28 @@ export const QueryProducts = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
       address {
         streetAddress
@@ -10592,14 +11481,6 @@ export const DeleteRepos = gql`
 export const GetRepo = gql`
     query GetRepo($id: ID!, $correlationId: String) {
   repo(id: $id, correlationId: $correlationId) {
-    id
-    name
-    creationDate
-    modifiedDate
-    owner {
-      id
-    }
-    state
     alternateNames
     uri
     description
@@ -10625,15 +11506,6 @@ export const QueryRepos = gql`
     query QueryRepos($filter: RepoFilter, $correlationId: String) {
   repos(filter: $filter, correlationId: $correlationId) {
     results {
-      id
-      name
-      creationDate
-      modifiedDate
-      relevance
-      owner {
-        id
-      }
-      state
       alternateNames
       uri
       description
@@ -10739,14 +11611,8 @@ export const DeleteSoftwares = gql`
 export const GetSoftware = gql`
     query GetSoftware($id: ID!, $correlationId: String) {
   software(id: $id, correlationId: $correlationId) {
-    id
-    name
-    creationDate
-    modifiedDate
-    owner {
-      id
-    }
-    state
+    releaseDate
+    developer
     alternateNames
     uri
     description
@@ -10765,8 +11631,6 @@ export const GetSoftware = gql`
       id
       name
     }
-    releaseDate
-    developer
   }
 }
     `;
@@ -10774,15 +11638,8 @@ export const QuerySoftwares = gql`
     query QuerySoftwares($filter: SoftwareFilter, $correlationId: String) {
   softwares(filter: $filter, correlationId: $correlationId) {
     results {
-      id
-      name
-      creationDate
-      modifiedDate
-      relevance
-      owner {
-        id
-      }
-      state
+      releaseDate
+      developer
       alternateNames
       uri
       description
@@ -10801,8 +11658,6 @@ export const QuerySoftwares = gql`
         id
         name
       }
-      releaseDate
-      developer
     }
   }
 }
