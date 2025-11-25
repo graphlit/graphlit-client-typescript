@@ -8194,9 +8194,11 @@ export const GetInvestment = gql`
     proRataRights
     investor {
       id
+      name
     }
     organization {
       id
+      name
     }
   }
 }
@@ -8373,15 +8375,19 @@ export const GetInvestmentFund = gql`
     targetSizeCurrency
     organizations {
       id
+      name
     }
     investments {
       id
+      name
     }
     parentFund {
       id
+      name
     }
     childFunds {
       id
+      name
     }
   }
 }
@@ -10494,30 +10500,39 @@ export const GetOrganization = gql`
     investmentCurrency
     founders {
       id
+      name
     }
     employees {
       id
+      name
     }
     members {
       id
+      name
     }
     parentOrganization {
       id
+      name
     }
     memberOf {
       id
+      name
     }
     subOrganizations {
       id
+      name
     }
     locations {
       id
+      name
     }
     investmentsReceived {
       id
+      name
     }
     investorFunds {
       id
+      name
     }
   }
 }
@@ -10726,27 +10741,35 @@ export const GetPerson = gql`
     education
     worksFor {
       id
+      name
     }
     affiliation {
       id
+      name
     }
     memberOf {
       id
+      name
     }
     alumniOf {
       id
+      name
     }
     birthPlace {
       id
+      name
     }
     deathPlace {
       id
+      name
     }
     homeLocation {
       id
+      name
     }
     workLocation {
       id
+      name
     }
   }
 }
