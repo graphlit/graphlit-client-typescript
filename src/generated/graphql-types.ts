@@ -4157,6 +4157,8 @@ export enum EntityEnrichmentServiceTypes {
   Fhir = 'FHIR',
   /** Parallel */
   Parallel = 'PARALLEL',
+  /** Radar */
+  Radar = 'RADAR',
   /** Wikipedia */
   Wikipedia = 'WIKIPEDIA'
 }
