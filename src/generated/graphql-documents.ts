@@ -8261,6 +8261,96 @@ export const QueryInvestments = gql`
       status
       stage
       investmentDate
+      roundSize
+      roundSizeCurrency
+      postValuation
+      postValuationCurrency
+      sharesOwned
+      vehicle
+      entryPricePerShare
+      currentPricePerShare
+      discountPercent
+      proRataRights
+    }
+  }
+}
+    `;
+export const QueryInvestmentsExpanded = gql`
+    query QueryInvestmentsExpanded($filter: InvestmentFilter, $correlationId: String) {
+  investments(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
+      status
+      stage
+      investmentDate
+      roundSize
+      roundSizeCurrency
+      postValuation
+      postValuationCurrency
+      sharesOwned
+      vehicle
+      entryPricePerShare
+      currentPricePerShare
+      discountPercent
+      proRataRights
+      investor {
+        id
+        name
+      }
+      organization {
+        id
+        name
+      }
     }
   }
 }
@@ -8447,6 +8537,89 @@ export const QueryInvestmentFunds = gql`
       }
       amount
       amountCurrency
+      fundType
+      vintage
+      targetSize
+      targetSizeCurrency
+    }
+  }
+}
+    `;
+export const QueryInvestmentFundsExpanded = gql`
+    query QueryInvestmentFundsExpanded($filter: InvestmentFundFilter, $correlationId: String) {
+  investmentFunds(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
+      fundType
+      vintage
+      targetSize
+      targetSizeCurrency
+      organizations {
+        id
+        name
+      }
+      investments {
+        id
+        name
+      }
+      parentFund {
+        id
+        name
+      }
+      childFunds {
+        id
+        name
+      }
     }
   }
 }
@@ -10610,6 +10783,115 @@ export const QueryOrganizations = gql`
   }
 }
     `;
+export const QueryOrganizationsExpanded = gql`
+    query QueryOrganizationsExpanded($filter: OrganizationFilter, $correlationId: String) {
+  organizations(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      foundingDate
+      email
+      telephone
+      legalName
+      industries
+      revenue
+      revenueCurrency
+      investment
+      investmentCurrency
+      founders {
+        id
+        name
+      }
+      employees {
+        id
+        name
+      }
+      members {
+        id
+        name
+      }
+      parentOrganization {
+        id
+        name
+      }
+      memberOf {
+        id
+        name
+      }
+      subOrganizations {
+        id
+        name
+      }
+      locations {
+        id
+        name
+      }
+      investmentsReceived {
+        id
+        name
+      }
+      investorFunds {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
 export const UpdateOrganization = gql`
     mutation UpdateOrganization($organization: OrganizationUpdateInput!) {
   updateOrganization(organization: $organization) {
@@ -10842,6 +11124,110 @@ export const QueryPersons = gql`
       title
       occupation
       education
+    }
+  }
+}
+    `;
+export const QueryPersonsExpanded = gql`
+    query QueryPersonsExpanded($filter: PersonFilter, $correlationId: String) {
+  persons(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      email
+      givenName
+      familyName
+      phoneNumber
+      birthDate
+      title
+      occupation
+      education
+      worksFor {
+        id
+        name
+      }
+      affiliation {
+        id
+        name
+      }
+      memberOf {
+        id
+        name
+      }
+      alumniOf {
+        id
+        name
+      }
+      birthPlace {
+        id
+        name
+      }
+      deathPlace {
+        id
+        name
+      }
+      homeLocation {
+        id
+        name
+      }
+      workLocation {
+        id
+        name
+      }
     }
   }
 }

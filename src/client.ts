@@ -2855,6 +2855,19 @@ class Graphlit {
     >(Documents.QueryPersons, { filter: filter });
   }
 
+  public async queryPersonsExpanded(
+    filter?: Types.PersonFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryPersonsExpandedQuery> {
+    return this.queryAndCheckError<
+      Types.QueryPersonsExpandedQuery,
+      Types.QueryPersonsExpandedQueryVariables
+    >(Documents.QueryPersonsExpanded, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async countPersons(
     filter?: Types.PersonFilter,
     correlationId?: string,
@@ -2954,6 +2967,19 @@ class Graphlit {
       Types.QueryOrganizationsQuery,
       Types.QueryOrganizationsQueryVariables
     >(Documents.QueryOrganizations, { filter: filter });
+  }
+
+  public async queryOrganizationsExpanded(
+    filter?: Types.OrganizationFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryOrganizationsExpandedQuery> {
+    return this.queryAndCheckError<
+      Types.QueryOrganizationsExpandedQuery,
+      Types.QueryOrganizationsExpandedQueryVariables
+    >(Documents.QueryOrganizationsExpanded, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   public async countOrganizations(
@@ -4515,6 +4541,19 @@ class Graphlit {
     });
   }
 
+  public async queryInvestmentsExpanded(
+    filter?: Types.InvestmentFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentsExpandedQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentsExpandedQuery,
+      Types.QueryInvestmentsExpandedQueryVariables
+    >(Documents.QueryInvestmentsExpanded, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async countInvestments(
     filter?: Types.InvestmentFilter,
     correlationId?: string,
@@ -4546,6 +4585,19 @@ class Graphlit {
       Types.QueryInvestmentFundsQuery,
       Types.QueryInvestmentFundsQueryVariables
     >(Documents.QueryInvestmentFunds, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async queryInvestmentFundsExpanded(
+    filter?: Types.InvestmentFundFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentFundsExpandedQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentFundsExpandedQuery,
+      Types.QueryInvestmentFundsExpandedQueryVariables
+    >(Documents.QueryInvestmentFundsExpanded, {
       filter: filter,
       correlationId: correlationId,
     });
