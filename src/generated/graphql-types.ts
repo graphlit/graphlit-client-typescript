@@ -19601,7 +19601,7 @@ export type QueryGraphQueryVariables = Exact<{
 }>;
 
 
-export type QueryGraphQuery = { __typename?: 'Query', graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null };
+export type QueryGraphQuery = { __typename?: 'Query', graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null };
 
 export type QueryObservablesQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;

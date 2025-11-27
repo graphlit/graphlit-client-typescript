@@ -3508,6 +3508,7 @@ export const QueryGraph = gql`
       id
       name
       type
+      metadata
     }
     edges {
       from
