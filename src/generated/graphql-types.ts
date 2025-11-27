@@ -6303,6 +6303,8 @@ export type GraphFilter = {
   createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter by entity creation date range. */
   creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** Disable project inheritance, only return user-scoped entities. */
+  disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by source feeds. */
   feeds?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by H3 hexagon index. */
