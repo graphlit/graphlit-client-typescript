@@ -33,6 +33,10 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   [Types.OpenAiModels.Gpt41Nano_1024K]: "gpt-4.1-nano",
   [Types.OpenAiModels.Gpt41Nano_1024K_20250414]: "gpt-4.1-nano-2025-04-14",
 
+  // GPT-4.5 Preview models (deprecated)
+  [Types.OpenAiModels.Gpt45Preview_128K]: "gpt-4.5-preview",
+  [Types.OpenAiModels.Gpt45Preview_128K_20250227]: "gpt-4.5-preview-2025-02-27",
+
   // GPT-5 models
   [Types.OpenAiModels.Gpt5_400K]: "gpt-5",
   [Types.OpenAiModels.Gpt5_400K_20250807]: "gpt-5-2025-08-07",
@@ -42,7 +46,13 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   [Types.OpenAiModels.Gpt5Nano_400K]: "gpt-5-nano",
   [Types.OpenAiModels.Gpt5Nano_400K_20250807]: "gpt-5-nano-2025-08-07",
 
+  // GPT-5.1 models
+  [Types.OpenAiModels.Gpt51_400K]: "gpt-5.1",
+  [Types.OpenAiModels.Gpt51_400K_20251113]: "gpt-5.1-2025-11-13",
+
   // O1 models
+  [Types.OpenAiModels.O1_200K]: "o1",
+  [Types.OpenAiModels.O1_200K_20241217]: "o1-2024-12-17",
   [Types.OpenAiModels.O1Mini_128K]: "o1-mini",
   [Types.OpenAiModels.O1Mini_128K_20240912]: "o1-mini-2024-09-12",
   [Types.OpenAiModels.O1Preview_128K]: "o1-preview",
@@ -94,9 +104,13 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   [Types.AnthropicModels.Claude_4_1Opus_20250805]: "claude-opus-4-1-20250805",
 
   // Claude 4.5 models
+  [Types.AnthropicModels.Claude_4_5Opus]: "claude-opus-4-5",
+  [Types.AnthropicModels.Claude_4_5Opus_20251101]: "claude-opus-4-5-20251101",
   [Types.AnthropicModels.Claude_4_5Sonnet]: "claude-sonnet-4-5",
   [Types.AnthropicModels.Claude_4_5Sonnet_20250929]:
     "claude-sonnet-4-5-20250929",
+  [Types.AnthropicModels.Claude_4_5Haiku]: "claude-haiku-4-5",
+  [Types.AnthropicModels.Claude_4_5Haiku_20251001]: "claude-haiku-4-5-20251001",
 };
 
 // Google model mappings
@@ -118,13 +132,21 @@ const GOOGLE_MODEL_MAP: Record<string, string> = {
   // Gemini 2.0 Flash models
   [Types.GoogleModels.Gemini_2_0Flash]: "gemini-2.0-flash-exp",
   [Types.GoogleModels.Gemini_2_0Flash_001]: "gemini-2.0-flash-001",
+  [Types.GoogleModels.Gemini_2_0FlashExperimental]: "gemini-2.0-flash-exp",
+  [Types.GoogleModels.Gemini_2_0FlashThinkingExperimental]:
+    "gemini-2.0-flash-thinking-exp",
+  [Types.GoogleModels.Gemini_2_0ProExperimental]: "gemini-2.0-pro-exp",
 
   // Gemini 2.5 models
   [Types.GoogleModels.Gemini_2_5FlashPreview]: "gemini-2.5-flash-preview-05-20",
   [Types.GoogleModels.Gemini_2_5ProPreview]: "gemini-2.5-pro-preview-06-05",
+  [Types.GoogleModels.Gemini_2_5ProExperimental]: "gemini-2.5-pro-exp",
   [Types.GoogleModels.Gemini_2_5FlashLite]: "gemini-2.5-flash-lite",
   [Types.GoogleModels.Gemini_2_5Flash]: "gemini-2.5-flash",
   [Types.GoogleModels.Gemini_2_5Pro]: "gemini-2.5-pro",
+
+  // Gemini 3 models
+  [Types.GoogleModels.Gemini_3ProPreview]: "gemini-3-pro-preview",
 
   // Gemini Latest models
   [Types.GoogleModels.GeminiFlashLatest]: "gemini-flash-latest",
