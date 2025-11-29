@@ -1154,6 +1154,106 @@ export const ExtractContents = gql`
   }
 }
     `;
+export const ExtractObservables = gql`
+    mutation ExtractObservables($text: String!, $textType: TextTypes, $specification: EntityReferenceInput, $observableTypes: [ObservableTypes!], $correlationId: String) {
+  extractObservables(
+    text: $text
+    textType: $textType
+    specification: $specification
+    observableTypes: $observableTypes
+    correlationId: $correlationId
+  ) {
+    labels {
+      name
+      metadata
+    }
+    categories {
+      name
+      metadata
+    }
+    persons {
+      name
+      metadata
+    }
+    organizations {
+      name
+      metadata
+    }
+    places {
+      name
+      metadata
+    }
+    events {
+      name
+      metadata
+    }
+    products {
+      name
+      metadata
+    }
+    softwares {
+      name
+      metadata
+    }
+    repos {
+      name
+      metadata
+    }
+    investments {
+      name
+      metadata
+    }
+    investmentFunds {
+      name
+      metadata
+    }
+    medicalStudies {
+      name
+      metadata
+    }
+    medicalConditions {
+      name
+      metadata
+    }
+    medicalGuidelines {
+      name
+      metadata
+    }
+    medicalDrugs {
+      name
+      metadata
+    }
+    medicalDrugClasses {
+      name
+      metadata
+    }
+    medicalIndications {
+      name
+      metadata
+    }
+    medicalContraindications {
+      name
+      metadata
+    }
+    medicalProcedures {
+      name
+      metadata
+    }
+    medicalTherapies {
+      name
+      metadata
+    }
+    medicalDevices {
+      name
+      metadata
+    }
+    medicalTests {
+      name
+      metadata
+    }
+  }
+}
+    `;
 export const ExtractText = gql`
     mutation ExtractText($prompt: String!, $text: String!, $textType: TextTypes, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractText(
@@ -10542,6 +10642,82 @@ export const DeleteObservation = gql`
   }
 }
     `;
+export const MatchEntity = gql`
+    mutation MatchEntity($observable: ObservableInput!, $candidates: [EntityReferenceInput!]!, $specification: EntityReferenceInput, $correlationId: String) {
+  matchEntity(
+    observable: $observable
+    candidates: $candidates
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    reference {
+      type
+      observable {
+        id
+        name
+      }
+    }
+    relevance
+    reasoning
+  }
+}
+    `;
+export const ResolveEntities = gql`
+    mutation ResolveEntities($type: ObservableTypes!, $entities: [EntityReferenceInput!]!, $threshold: Float, $specification: EntityReferenceInput, $correlationId: String) {
+  resolveEntities(
+    type: $type
+    entities: $entities
+    threshold: $threshold
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    type
+    primary {
+      id
+    }
+    resolved {
+      id
+    }
+    relevance
+    reasoning
+    primaryCluster {
+      entities {
+        id
+        name
+      }
+      similarity
+    }
+    outlierClusters {
+      entities {
+        id
+        name
+      }
+      similarity
+    }
+  }
+}
+    `;
+export const ResolveEntity = gql`
+    mutation ResolveEntity($type: ObservableTypes!, $source: EntityReferenceInput!, $target: EntityReferenceInput!, $specification: EntityReferenceInput, $correlationId: String) {
+  resolveEntity(
+    type: $type
+    source: $source
+    target: $target
+    specification: $specification
+    correlationId: $correlationId
+  ) {
+    reference {
+      type
+      observable {
+        id
+        name
+      }
+    }
+    relevance
+    reasoning
+  }
+}
+    `;
 export const UpdateObservation = gql`
     mutation UpdateObservation($observation: ObservationUpdateInput!) {
   updateObservation(observation: $observation) {
@@ -11891,6 +12067,14 @@ export const DeleteRepos = gql`
 export const GetRepo = gql`
     query GetRepo($id: ID!, $correlationId: String) {
   repo(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
     alternateNames
     uri
     description
@@ -11909,6 +12093,28 @@ export const GetRepo = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
   }
 }
     `;
@@ -11916,6 +12122,15 @@ export const QueryRepos = gql`
     query QueryRepos($filter: RepoFilter, $correlationId: String) {
   repos(filter: $filter, correlationId: $correlationId) {
     results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
       alternateNames
       uri
       description
@@ -11933,6 +12148,28 @@ export const QueryRepos = gql`
       workflow {
         id
         name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
       }
     }
   }
@@ -12021,8 +12258,14 @@ export const DeleteSoftwares = gql`
 export const GetSoftware = gql`
     query GetSoftware($id: ID!, $correlationId: String) {
   software(id: $id, correlationId: $correlationId) {
-    releaseDate
-    developer
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
     alternateNames
     uri
     description
@@ -12041,6 +12284,30 @@ export const GetSoftware = gql`
       id
       name
     }
+    location {
+      latitude
+      longitude
+    }
+    h3 {
+      h3r0
+      h3r1
+      h3r2
+      h3r3
+      h3r4
+      h3r5
+      h3r6
+      h3r7
+      h3r8
+      h3r9
+      h3r10
+      h3r11
+      h3r12
+      h3r13
+      h3r14
+      h3r15
+    }
+    releaseDate
+    developer
   }
 }
     `;
@@ -12048,8 +12315,15 @@ export const QuerySoftwares = gql`
     query QuerySoftwares($filter: SoftwareFilter, $correlationId: String) {
   softwares(filter: $filter, correlationId: $correlationId) {
     results {
-      releaseDate
-      developer
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
       alternateNames
       uri
       description
@@ -12068,6 +12342,30 @@ export const QuerySoftwares = gql`
         id
         name
       }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      releaseDate
+      developer
     }
   }
 }
@@ -14214,6 +14512,13 @@ export const CreateWorkflow = gql`
           }
         }
       }
+      entityResolution {
+        strategy
+        threshold
+        specification {
+          id
+        }
+      }
     }
     storage {
       policy {
@@ -14478,6 +14783,13 @@ export const GetWorkflow = gql`
           }
         }
       }
+      entityResolution {
+        strategy
+        threshold
+        specification {
+          id
+        }
+      }
     }
     storage {
       policy {
@@ -14716,6 +15028,13 @@ export const QueryWorkflows = gql`
             }
           }
         }
+        entityResolution {
+          strategy
+          threshold
+          specification {
+            id
+          }
+        }
       }
       storage {
         policy {
@@ -14948,6 +15267,13 @@ export const UpdateWorkflow = gql`
           }
         }
       }
+      entityResolution {
+        strategy
+        threshold
+        specification {
+          id
+        }
+      }
     }
     storage {
       policy {
@@ -15177,6 +15503,13 @@ export const UpsertWorkflow = gql`
             processor
             isSynchronous
           }
+        }
+      }
+      entityResolution {
+        strategy
+        threshold
+        specification {
+          id
         }
       }
     }

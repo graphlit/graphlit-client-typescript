@@ -1254,6 +1254,25 @@ class Graphlit {
     });
   }
 
+  public async extractObservables(
+    text: string,
+    textType?: Types.TextTypes,
+    specification?: Types.EntityReferenceInput,
+    observableTypes?: Types.ObservableTypes[],
+    correlationId?: string,
+  ): Promise<Types.ExtractObservablesMutation> {
+    return this.mutateAndCheckError<
+      Types.ExtractObservablesMutation,
+      Types.ExtractObservablesMutationVariables
+    >(Documents.ExtractObservables, {
+      text: text,
+      textType: textType,
+      specification: specification,
+      observableTypes: observableTypes,
+      correlationId: correlationId,
+    });
+  }
+
   public async publishContents(
     publishPrompt: string,
     connector: Types.ContentPublishingConnectorInput,
@@ -4406,6 +4425,61 @@ class Graphlit {
       Types.DeleteObservationMutation,
       Types.DeleteObservationMutationVariables
     >(Documents.DeleteObservation, { id: id });
+  }
+
+  public async matchEntity(
+    observable: Types.ObservableInput,
+    candidates: Types.EntityReferenceInput[],
+    specification?: Types.EntityReferenceInput,
+    correlationId?: string,
+  ): Promise<Types.MatchEntityMutation> {
+    return this.mutateAndCheckError<
+      Types.MatchEntityMutation,
+      Types.MatchEntityMutationVariables
+    >(Documents.MatchEntity, {
+      observable: observable,
+      candidates: candidates,
+      specification: specification,
+      correlationId: correlationId,
+    });
+  }
+
+  public async resolveEntities(
+    type: Types.ObservableTypes,
+    entities: Types.EntityReferenceInput[],
+    threshold?: number,
+    specification?: Types.EntityReferenceInput,
+    correlationId?: string,
+  ): Promise<Types.ResolveEntitiesMutation> {
+    return this.mutateAndCheckError<
+      Types.ResolveEntitiesMutation,
+      Types.ResolveEntitiesMutationVariables
+    >(Documents.ResolveEntities, {
+      type: type,
+      entities: entities,
+      threshold: threshold,
+      specification: specification,
+      correlationId: correlationId,
+    });
+  }
+
+  public async resolveEntity(
+    type: Types.ObservableTypes,
+    source: Types.EntityReferenceInput,
+    target: Types.EntityReferenceInput,
+    specification?: Types.EntityReferenceInput,
+    correlationId?: string,
+  ): Promise<Types.ResolveEntityMutation> {
+    return this.mutateAndCheckError<
+      Types.ResolveEntityMutation,
+      Types.ResolveEntityMutationVariables
+    >(Documents.ResolveEntity, {
+      type: type,
+      source: source,
+      target: target,
+      specification: specification,
+      correlationId: correlationId,
+    });
   }
 
   public async createInvestment(
