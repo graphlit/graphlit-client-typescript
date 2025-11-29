@@ -7168,6 +7168,93 @@ export const QueryEvents = gql`
   }
 }
     `;
+export const QueryEventsClusters = gql`
+    query QueryEventsClusters($filter: EventFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  events(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      startDate
+      endDate
+      availabilityStartDate
+      availabilityEndDate
+      price
+      minPrice
+      maxPrice
+      priceCurrency
+      isAccessibleForFree
+      typicalAgeRange
+      organizer
+      performer
+      sponsor
+      eventStatus
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateEvent = gql`
     mutation UpdateEvent($event: EventUpdateInput!) {
   updateEvent(event: $event) {
@@ -8376,6 +8463,87 @@ export const QueryInvestments = gql`
   }
 }
     `;
+export const QueryInvestmentsClusters = gql`
+    query QueryInvestmentsClusters($filter: InvestmentFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  investments(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
+      status
+      stage
+      investmentDate
+      roundSize
+      roundSizeCurrency
+      postValuation
+      postValuationCurrency
+      sharesOwned
+      vehicle
+      entryPricePerShare
+      currentPricePerShare
+      discountPercent
+      proRataRights
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const QueryInvestmentsExpanded = gql`
     query QueryInvestmentsExpanded($filter: InvestmentFilter, $correlationId: String) {
   investments(filter: $filter, correlationId: $correlationId) {
@@ -8642,6 +8810,82 @@ export const QueryInvestmentFunds = gql`
       vintage
       targetSize
       targetSizeCurrency
+    }
+  }
+}
+    `;
+export const QueryInvestmentFundsClusters = gql`
+    query QueryInvestmentFundsClusters($filter: InvestmentFundFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  investmentFunds(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      amount
+      amountCurrency
+      fundType
+      vintage
+      targetSize
+      targetSizeCurrency
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
     }
   }
 }
@@ -8977,6 +9221,76 @@ export const QueryMedicalConditions = gql`
   }
 }
     `;
+export const QueryMedicalConditionsClusters = gql`
+    query QueryMedicalConditionsClusters($filter: MedicalConditionFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalConditions(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalCondition = gql`
     mutation UpdateMedicalCondition($medicalCondition: MedicalConditionUpdateInput!) {
   updateMedicalCondition(medicalCondition: $medicalCondition) {
@@ -9134,6 +9448,76 @@ export const QueryMedicalContraindications = gql`
         h3r13
         h3r14
         h3r15
+      }
+    }
+  }
+}
+    `;
+export const QueryMedicalContraindicationsClusters = gql`
+    query QueryMedicalContraindicationsClusters($filter: MedicalContraindicationFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalContraindications(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
       }
     }
   }
@@ -9301,6 +9685,76 @@ export const QueryMedicalDevices = gql`
   }
 }
     `;
+export const QueryMedicalDevicesClusters = gql`
+    query QueryMedicalDevicesClusters($filter: MedicalDeviceFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalDevices(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalDevice = gql`
     mutation UpdateMedicalDevice($medicalDevice: MedicalDeviceUpdateInput!) {
   updateMedicalDevice(medicalDevice: $medicalDevice) {
@@ -9458,6 +9912,76 @@ export const QueryMedicalDrugs = gql`
         h3r13
         h3r14
         h3r15
+      }
+    }
+  }
+}
+    `;
+export const QueryMedicalDrugsClusters = gql`
+    query QueryMedicalDrugsClusters($filter: MedicalDrugFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalDrugs(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
       }
     }
   }
@@ -9625,6 +10149,76 @@ export const QueryMedicalDrugClasses = gql`
   }
 }
     `;
+export const QueryMedicalDrugClassesClusters = gql`
+    query QueryMedicalDrugClassesClusters($filter: MedicalDrugClassFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalDrugClasses(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalDrugClass = gql`
     mutation UpdateMedicalDrugClass($medicalDrugClass: MedicalDrugClassUpdateInput!) {
   updateMedicalDrugClass(medicalDrugClass: $medicalDrugClass) {
@@ -9782,6 +10376,76 @@ export const QueryMedicalGuidelines = gql`
         h3r13
         h3r14
         h3r15
+      }
+    }
+  }
+}
+    `;
+export const QueryMedicalGuidelinesClusters = gql`
+    query QueryMedicalGuidelinesClusters($filter: MedicalGuidelineFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalGuidelines(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
       }
     }
   }
@@ -9949,6 +10613,76 @@ export const QueryMedicalIndications = gql`
   }
 }
     `;
+export const QueryMedicalIndicationsClusters = gql`
+    query QueryMedicalIndicationsClusters($filter: MedicalIndicationFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalIndications(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalIndication = gql`
     mutation UpdateMedicalIndication($medicalIndication: MedicalIndicationUpdateInput!) {
   updateMedicalIndication(medicalIndication: $medicalIndication) {
@@ -10106,6 +10840,76 @@ export const QueryMedicalProcedures = gql`
         h3r13
         h3r14
         h3r15
+      }
+    }
+  }
+}
+    `;
+export const QueryMedicalProceduresClusters = gql`
+    query QueryMedicalProceduresClusters($filter: MedicalProcedureFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalProcedures(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
       }
     }
   }
@@ -10287,6 +11091,83 @@ export const QueryMedicalStudies = gql`
   }
 }
     `;
+export const QueryMedicalStudiesClusters = gql`
+    query QueryMedicalStudiesClusters($filter: MedicalStudyFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalStudies(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalStudy = gql`
     mutation UpdateMedicalStudy($medicalStudy: MedicalStudyUpdateInput!) {
   updateMedicalStudy(medicalStudy: $medicalStudy) {
@@ -10449,6 +11330,76 @@ export const QueryMedicalTests = gql`
   }
 }
     `;
+export const QueryMedicalTestsClusters = gql`
+    query QueryMedicalTestsClusters($filter: MedicalTestFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalTests(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateMedicalTest = gql`
     mutation UpdateMedicalTest($medicalTest: MedicalTestUpdateInput!) {
   updateMedicalTest(medicalTest: $medicalTest) {
@@ -10606,6 +11557,76 @@ export const QueryMedicalTherapies = gql`
         h3r13
         h3r14
         h3r15
+      }
+    }
+  }
+}
+    `;
+export const QueryMedicalTherapiesClusters = gql`
+    query QueryMedicalTherapiesClusters($filter: MedicalTherapyFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  medicalTherapies(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
       }
     }
   }
@@ -10960,6 +11981,92 @@ export const QueryOrganizations = gql`
   }
 }
     `;
+export const QueryOrganizationsClusters = gql`
+    query QueryOrganizationsClusters($filter: OrganizationFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  organizations(
+    filter: $filter
+    clusters: $clusters
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      foundingDate
+      email
+      telephone
+      legalName
+      industries
+      revenue
+      revenueCurrency
+      investment
+      investmentCurrency
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const QueryOrganizationsExpanded = gql`
     query QueryOrganizationsExpanded($filter: OrganizationFilter, $correlationId: String) {
   organizations(filter: $filter, correlationId: $correlationId) {
@@ -11305,6 +12412,87 @@ export const QueryPersons = gql`
   }
 }
     `;
+export const QueryPersonsClusters = gql`
+    query QueryPersonsClusters($filter: PersonFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  persons(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      email
+      givenName
+      familyName
+      phoneNumber
+      birthDate
+      title
+      occupation
+      education
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const QueryPersonsExpanded = gql`
     query QueryPersonsExpanded($filter: PersonFilter, $correlationId: String) {
   persons(filter: $filter, correlationId: $correlationId) {
@@ -11603,6 +12791,82 @@ export const QueryPlaces = gql`
   }
 }
     `;
+export const QueryPlacesClusters = gql`
+    query QueryPlacesClusters($filter: PlaceFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  places(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      telephone
+      openingHours
+      priceRange
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdatePlace = gql`
     mutation UpdatePlace($place: PlaceUpdateInput!) {
   updatePlace(place: $place) {
@@ -11805,6 +13069,88 @@ export const QueryProducts = gql`
       mpn
       releaseDate
       productionDate
+    }
+  }
+}
+    `;
+export const QueryProductsClusters = gql`
+    query QueryProductsClusters($filter: ProductFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  products(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      address {
+        streetAddress
+        city
+        region
+        country
+        postalCode
+      }
+      manufacturer
+      model
+      brand
+      upc
+      sku
+      gtin
+      mpn
+      releaseDate
+      productionDate
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
     }
   }
 }
@@ -12175,6 +13521,72 @@ export const QueryRepos = gql`
   }
 }
     `;
+export const QueryReposClusters = gql`
+    query QueryReposClusters($filter: RepoFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  repos(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
+    }
+  }
+}
+    `;
 export const UpdateRepo = gql`
     mutation UpdateRepo($repo: RepoUpdateInput!) {
   updateRepo(repo: $repo) {
@@ -12366,6 +13778,74 @@ export const QuerySoftwares = gql`
       }
       releaseDate
       developer
+    }
+  }
+}
+    `;
+export const QuerySoftwaresClusters = gql`
+    query QuerySoftwaresClusters($filter: SoftwareFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  softwares(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      alternateNames
+      uri
+      description
+      identifier
+      thing
+      feeds {
+        id
+        name
+      }
+      links {
+        uri
+        linkType
+        excerpts
+      }
+      workflow {
+        id
+        name
+      }
+      location {
+        latitude
+        longitude
+      }
+      h3 {
+        h3r0
+        h3r1
+        h3r2
+        h3r3
+        h3r4
+        h3r5
+        h3r6
+        h3r7
+        h3r8
+        h3r9
+        h3r10
+        h3r11
+        h3r12
+        h3r13
+        h3r14
+        h3r15
+      }
+      releaseDate
+      developer
+    }
+    clusters {
+      clusters {
+        entities {
+          id
+          name
+        }
+        similarity
+      }
     }
   }
 }

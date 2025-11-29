@@ -2867,11 +2867,27 @@ class Graphlit {
 
   public async queryPersons(
     filter?: Types.PersonFilter,
+    correlationId?: string,
   ): Promise<Types.QueryPersonsQuery> {
     return this.queryAndCheckError<
       Types.QueryPersonsQuery,
       Types.QueryPersonsQueryVariables
-    >(Documents.QueryPersons, { filter: filter });
+    >(Documents.QueryPersons, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryPersonsClusters(
+    filter?: Types.PersonFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryPersonsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryPersonsClustersQuery,
+      Types.QueryPersonsClustersQueryVariables
+    >(Documents.QueryPersonsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async queryPersonsExpanded(
@@ -2981,11 +2997,27 @@ class Graphlit {
 
   public async queryOrganizations(
     filter?: Types.OrganizationFilter,
+    correlationId?: string,
   ): Promise<Types.QueryOrganizationsQuery> {
     return this.queryAndCheckError<
       Types.QueryOrganizationsQuery,
       Types.QueryOrganizationsQueryVariables
-    >(Documents.QueryOrganizations, { filter: filter });
+    >(Documents.QueryOrganizations, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryOrganizationsClusters(
+    filter?: Types.OrganizationFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryOrganizationsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryOrganizationsClustersQuery,
+      Types.QueryOrganizationsClustersQueryVariables
+    >(Documents.QueryOrganizationsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async queryOrganizationsExpanded(
@@ -3088,11 +3120,27 @@ class Graphlit {
 
   public async queryPlaces(
     filter?: Types.PlaceFilter,
+    correlationId?: string,
   ): Promise<Types.QueryPlacesQuery> {
     return this.queryAndCheckError<
       Types.QueryPlacesQuery,
       Types.QueryPlacesQueryVariables
-    >(Documents.QueryPlaces, { filter: filter });
+    >(Documents.QueryPlaces, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryPlacesClusters(
+    filter?: Types.PlaceFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryPlacesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryPlacesClustersQuery,
+      Types.QueryPlacesClustersQueryVariables
+    >(Documents.QueryPlacesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countPlaces(
@@ -3182,11 +3230,27 @@ class Graphlit {
 
   public async queryEvents(
     filter?: Types.EventFilter,
+    correlationId?: string,
   ): Promise<Types.QueryEventsQuery> {
     return this.queryAndCheckError<
       Types.QueryEventsQuery,
       Types.QueryEventsQueryVariables
-    >(Documents.QueryEvents, { filter: filter });
+    >(Documents.QueryEvents, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryEventsClusters(
+    filter?: Types.EventFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryEventsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryEventsClustersQuery,
+      Types.QueryEventsClustersQueryVariables
+    >(Documents.QueryEventsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countEvents(
@@ -3261,11 +3325,27 @@ class Graphlit {
 
   public async queryProducts(
     filter?: Types.ProductFilter,
+    correlationId?: string,
   ): Promise<Types.QueryProductsQuery> {
     return this.queryAndCheckError<
       Types.QueryProductsQuery,
       Types.QueryProductsQueryVariables
-    >(Documents.QueryProducts, { filter: filter });
+    >(Documents.QueryProducts, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryProductsClusters(
+    filter?: Types.ProductFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryProductsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryProductsClustersQuery,
+      Types.QueryProductsClustersQueryVariables
+    >(Documents.QueryProductsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countProducts(
@@ -3355,11 +3435,27 @@ class Graphlit {
 
   public async queryRepos(
     filter?: Types.RepoFilter,
+    correlationId?: string,
   ): Promise<Types.QueryReposQuery> {
     return this.queryAndCheckError<
       Types.QueryReposQuery,
       Types.QueryReposQueryVariables
-    >(Documents.QueryRepos, { filter: filter });
+    >(Documents.QueryRepos, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryReposClusters(
+    filter?: Types.RepoFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryReposClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryReposClustersQuery,
+      Types.QueryReposClustersQueryVariables
+    >(Documents.QueryReposClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countRepos(
@@ -3436,11 +3532,27 @@ class Graphlit {
 
   public async querySoftwares(
     filter?: Types.SoftwareFilter,
+    correlationId?: string,
   ): Promise<Types.QuerySoftwaresQuery> {
     return this.queryAndCheckError<
       Types.QuerySoftwaresQuery,
       Types.QuerySoftwaresQueryVariables
-    >(Documents.QuerySoftwares, { filter: filter });
+    >(Documents.QuerySoftwares, { filter: filter, correlationId: correlationId });
+  }
+
+  public async querySoftwaresClusters(
+    filter?: Types.SoftwareFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QuerySoftwaresClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QuerySoftwaresClustersQuery,
+      Types.QuerySoftwaresClustersQueryVariables
+    >(Documents.QuerySoftwaresClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countSoftwares(
@@ -3522,11 +3634,27 @@ class Graphlit {
 
   public async queryMedicalConditions(
     filter?: Types.MedicalConditionFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalConditionsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalConditionsQuery,
       Types.QueryMedicalConditionsQueryVariables
-    >(Documents.QueryMedicalConditions, { filter: filter });
+    >(Documents.QueryMedicalConditions, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalConditionsClusters(
+    filter?: Types.MedicalConditionFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalConditionsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalConditionsClustersQuery,
+      Types.QueryMedicalConditionsClustersQueryVariables
+    >(Documents.QueryMedicalConditionsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalConditions(
@@ -3608,11 +3736,27 @@ class Graphlit {
 
   public async queryMedicalGuidelines(
     filter?: Types.MedicalGuidelineFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalGuidelinesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalGuidelinesQuery,
       Types.QueryMedicalGuidelinesQueryVariables
-    >(Documents.QueryMedicalGuidelines, { filter: filter });
+    >(Documents.QueryMedicalGuidelines, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalGuidelinesClusters(
+    filter?: Types.MedicalGuidelineFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalGuidelinesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalGuidelinesClustersQuery,
+      Types.QueryMedicalGuidelinesClustersQueryVariables
+    >(Documents.QueryMedicalGuidelinesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalGuidelines(
@@ -3689,11 +3833,27 @@ class Graphlit {
 
   public async queryMedicalDrugs(
     filter?: Types.MedicalDrugFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalDrugsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugsQuery,
       Types.QueryMedicalDrugsQueryVariables
-    >(Documents.QueryMedicalDrugs, { filter: filter });
+    >(Documents.QueryMedicalDrugs, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalDrugsClusters(
+    filter?: Types.MedicalDrugFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalDrugsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalDrugsClustersQuery,
+      Types.QueryMedicalDrugsClustersQueryVariables
+    >(Documents.QueryMedicalDrugsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalDrugs(
@@ -3779,11 +3939,27 @@ class Graphlit {
 
   public async queryMedicalIndications(
     filter?: Types.MedicalIndicationFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalIndicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalIndicationsQuery,
       Types.QueryMedicalIndicationsQueryVariables
-    >(Documents.QueryMedicalIndications, { filter: filter });
+    >(Documents.QueryMedicalIndications, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalIndicationsClusters(
+    filter?: Types.MedicalIndicationFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalIndicationsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalIndicationsClustersQuery,
+      Types.QueryMedicalIndicationsClustersQueryVariables
+    >(Documents.QueryMedicalIndicationsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalIndications(
@@ -3869,11 +4045,27 @@ class Graphlit {
 
   public async queryMedicalContraindications(
     filter?: Types.MedicalContraindicationFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalContraindicationsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalContraindicationsQuery,
       Types.QueryMedicalContraindicationsQueryVariables
-    >(Documents.QueryMedicalContraindications, { filter: filter });
+    >(Documents.QueryMedicalContraindications, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalContraindicationsClusters(
+    filter?: Types.MedicalContraindicationFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalContraindicationsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalContraindicationsClustersQuery,
+      Types.QueryMedicalContraindicationsClustersQueryVariables
+    >(Documents.QueryMedicalContraindicationsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalContraindications(
@@ -3950,11 +4142,27 @@ class Graphlit {
 
   public async queryMedicalTests(
     filter?: Types.MedicalTestFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalTestsQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTestsQuery,
       Types.QueryMedicalTestsQueryVariables
-    >(Documents.QueryMedicalTests, { filter: filter });
+    >(Documents.QueryMedicalTests, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalTestsClusters(
+    filter?: Types.MedicalTestFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalTestsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalTestsClustersQuery,
+      Types.QueryMedicalTestsClustersQueryVariables
+    >(Documents.QueryMedicalTestsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalTests(
@@ -4036,11 +4244,27 @@ class Graphlit {
 
   public async queryMedicalDevices(
     filter?: Types.MedicalDeviceFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalDevicesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDevicesQuery,
       Types.QueryMedicalDevicesQueryVariables
-    >(Documents.QueryMedicalDevices, { filter: filter });
+    >(Documents.QueryMedicalDevices, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalDevicesClusters(
+    filter?: Types.MedicalDeviceFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalDevicesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalDevicesClustersQuery,
+      Types.QueryMedicalDevicesClustersQueryVariables
+    >(Documents.QueryMedicalDevicesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalDevices(
@@ -4122,11 +4346,27 @@ class Graphlit {
 
   public async queryMedicalProcedures(
     filter?: Types.MedicalProcedureFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalProceduresQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalProceduresQuery,
       Types.QueryMedicalProceduresQueryVariables
-    >(Documents.QueryMedicalProcedures, { filter: filter });
+    >(Documents.QueryMedicalProcedures, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalProceduresClusters(
+    filter?: Types.MedicalProcedureFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalProceduresClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalProceduresClustersQuery,
+      Types.QueryMedicalProceduresClustersQueryVariables
+    >(Documents.QueryMedicalProceduresClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalProcedures(
@@ -4208,11 +4448,27 @@ class Graphlit {
 
   public async queryMedicalStudies(
     filter?: Types.MedicalStudyFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalStudiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalStudiesQuery,
       Types.QueryMedicalStudiesQueryVariables
-    >(Documents.QueryMedicalStudies, { filter: filter });
+    >(Documents.QueryMedicalStudies, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalStudiesClusters(
+    filter?: Types.MedicalStudyFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalStudiesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalStudiesClustersQuery,
+      Types.QueryMedicalStudiesClustersQueryVariables
+    >(Documents.QueryMedicalStudiesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalStudies(
@@ -4294,11 +4550,27 @@ class Graphlit {
 
   public async queryMedicalDrugClasses(
     filter?: Types.MedicalDrugClassFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalDrugClassesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugClassesQuery,
       Types.QueryMedicalDrugClassesQueryVariables
-    >(Documents.QueryMedicalDrugClasses, { filter: filter });
+    >(Documents.QueryMedicalDrugClasses, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalDrugClassesClusters(
+    filter?: Types.MedicalDrugClassFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalDrugClassesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalDrugClassesClustersQuery,
+      Types.QueryMedicalDrugClassesClustersQueryVariables
+    >(Documents.QueryMedicalDrugClassesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalDrugClasses(
@@ -4380,11 +4652,27 @@ class Graphlit {
 
   public async queryMedicalTherapies(
     filter?: Types.MedicalTherapyFilter,
+    correlationId?: string,
   ): Promise<Types.QueryMedicalTherapiesQuery> {
     return this.queryAndCheckError<
       Types.QueryMedicalTherapiesQuery,
       Types.QueryMedicalTherapiesQueryVariables
-    >(Documents.QueryMedicalTherapies, { filter: filter });
+    >(Documents.QueryMedicalTherapies, { filter: filter, correlationId: correlationId });
+  }
+
+  public async queryMedicalTherapiesClusters(
+    filter?: Types.MedicalTherapyFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryMedicalTherapiesClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMedicalTherapiesClustersQuery,
+      Types.QueryMedicalTherapiesClustersQueryVariables
+    >(Documents.QueryMedicalTherapiesClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
   }
 
   public async countMedicalTherapies(
@@ -4615,6 +4903,21 @@ class Graphlit {
     });
   }
 
+  public async queryInvestmentsClusters(
+    filter?: Types.InvestmentFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentsClustersQuery,
+      Types.QueryInvestmentsClustersQueryVariables
+    >(Documents.QueryInvestmentsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
+  }
+
   public async queryInvestmentsExpanded(
     filter?: Types.InvestmentFilter,
     correlationId?: string,
@@ -4660,6 +4963,21 @@ class Graphlit {
       Types.QueryInvestmentFundsQueryVariables
     >(Documents.QueryInvestmentFunds, {
       filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  public async queryInvestmentFundsClusters(
+    filter?: Types.InvestmentFundFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryInvestmentFundsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryInvestmentFundsClustersQuery,
+      Types.QueryInvestmentFundsClustersQueryVariables
+    >(Documents.QueryInvestmentFundsClusters, {
+      filter: filter,
+      clusters: clusters,
       correlationId: correlationId,
     });
   }
