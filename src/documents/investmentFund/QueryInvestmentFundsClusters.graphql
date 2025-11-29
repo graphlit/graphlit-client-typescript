@@ -56,6 +56,22 @@ query QueryInvestmentFundsClusters($filter: InvestmentFundFilter, $clusters: Ent
       vintage
       targetSize
       targetSizeCurrency
+      organizations {
+        id
+        name
+      }
+      investments {
+        id
+        name
+      }
+      parentFund {
+        id
+        name
+      }
+      childFunds {
+        id
+        name
+      }
     }
     clusters {
       clusters {

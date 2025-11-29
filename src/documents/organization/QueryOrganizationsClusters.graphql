@@ -66,6 +66,42 @@ query QueryOrganizationsClusters($filter: OrganizationFilter, $clusters: EntityC
       revenueCurrency
       investment
       investmentCurrency
+      founders {
+        id
+        name
+      }
+      employees {
+        id
+        name
+      }
+      members {
+        id
+        name
+      }
+      parentOrganization {
+        id
+        name
+      }
+      memberOf {
+        id
+        name
+      }
+      subOrganizations {
+        id
+        name
+      }
+      locations {
+        id
+        name
+      }
+      investmentsReceived {
+        id
+        name
+      }
+      investorFunds {
+        id
+        name
+      }
     }
     clusters {
       clusters {

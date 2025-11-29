@@ -65,6 +65,38 @@ query QueryPersonsClusters($filter: PersonFilter, $clusters: EntityClustersInput
       title
       occupation
       education
+      worksFor {
+        id
+        name
+      }
+      affiliation {
+        id
+        name
+      }
+      memberOf {
+        id
+        name
+      }
+      alumniOf {
+        id
+        name
+      }
+      birthPlace {
+        id
+        name
+      }
+      deathPlace {
+        id
+        name
+      }
+      homeLocation {
+        id
+        name
+      }
+      workLocation {
+        id
+        name
+      }
     }
     clusters {
       clusters {

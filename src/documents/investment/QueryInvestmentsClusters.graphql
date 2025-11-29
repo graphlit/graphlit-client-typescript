@@ -65,6 +65,14 @@ query QueryInvestmentsClusters($filter: InvestmentFilter, $clusters: EntityClust
       currentPricePerShare
       discountPercent
       proRataRights
+      investor {
+        id
+        name
+      }
+      organization {
+        id
+        name
+      }
     }
     clusters {
       clusters {
