@@ -1431,6 +1431,19 @@ class Graphlit {
     });
   }
 
+  public async lookupEntity(
+    filter: Types.EntityRelationshipsFilter,
+    correlationId?: string,
+  ): Promise<Types.LookupEntityQuery> {
+    return this.queryAndCheckError<
+      Types.LookupEntityQuery,
+      Types.LookupEntityQueryVariables
+    >(Documents.LookupEntity, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
   public async countContents(
     filter?: Types.ContentFilter,
   ): Promise<Types.CountContentsQuery> {

@@ -2546,6 +2546,29 @@ export const LookupContents = gql`
   }
 }
     `;
+export const LookupEntity = gql`
+    query LookupEntity($filter: EntityRelationshipsFilter!, $correlationId: String) {
+  lookupEntity(filter: $filter, correlationId: $correlationId) {
+    entity {
+      id
+      name
+      type
+      metadata
+    }
+    relationships {
+      relation
+      direction
+      entity {
+        id
+        name
+        type
+        metadata
+      }
+    }
+    totalCount
+  }
+}
+    `;
 export const PublishContents = gql`
     mutation PublishContents($summaryPrompt: String, $publishPrompt: String!, $connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $includeDetails: Boolean, $isSynchronous: Boolean, $correlationId: String, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput) {
   publishContents(
