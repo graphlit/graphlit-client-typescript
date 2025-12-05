@@ -169,6 +169,8 @@ export const GetAlert = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     integration {
       type
@@ -351,6 +353,8 @@ export const QueryAlerts = gql`
         hasFeeds
         hasCollections
         hasWorkflows
+        collectionMode
+        observationMode
       }
       integration {
         type
@@ -5278,6 +5282,8 @@ export const GetConversation = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     augmentedFilter {
       dateRange {
@@ -5369,6 +5375,8 @@ export const GetConversation = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
   }
 }
@@ -6233,6 +6241,8 @@ export const QueryConversations = gql`
         hasFeeds
         hasCollections
         hasWorkflows
+        collectionMode
+        observationMode
       }
       augmentedFilter {
         dateRange {
@@ -6324,6 +6334,8 @@ export const QueryConversations = gql`
         hasFeeds
         hasCollections
         hasWorkflows
+        collectionMode
+        observationMode
       }
     }
   }
@@ -7387,6 +7399,7 @@ export const GetFeed = gql`
         accountName
         containerName
         prefix
+        listType
       }
       azureFile {
         storageAccessKey
@@ -7804,6 +7817,7 @@ export const QueryFeeds = gql`
           accountName
           containerName
           prefix
+          listType
         }
         azureFile {
           storageAccessKey
@@ -14996,6 +15010,8 @@ export const CreateView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     augmentedFilter {
       dateRange {
@@ -15087,6 +15103,8 @@ export const CreateView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
   }
 }
@@ -15221,6 +15239,8 @@ export const GetView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     augmentedFilter {
       dateRange {
@@ -15312,6 +15332,8 @@ export const GetView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
   }
 }
@@ -15420,6 +15442,8 @@ export const QueryViews = gql`
         hasFeeds
         hasCollections
         hasWorkflows
+        collectionMode
+        observationMode
       }
       augmentedFilter {
         dateRange {
@@ -15511,6 +15535,8 @@ export const QueryViews = gql`
         hasFeeds
         hasCollections
         hasWorkflows
+        collectionMode
+        observationMode
       }
     }
   }
@@ -15613,6 +15639,8 @@ export const UpdateView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     augmentedFilter {
       dateRange {
@@ -15704,6 +15732,8 @@ export const UpdateView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
   }
 }
@@ -15805,6 +15835,8 @@ export const UpsertView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
     augmentedFilter {
       dateRange {
@@ -15896,6 +15928,8 @@ export const UpsertView = gql`
       hasFeeds
       hasCollections
       hasWorkflows
+      collectionMode
+      observationMode
     }
   }
 }
