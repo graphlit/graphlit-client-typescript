@@ -7425,7 +7425,9 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
-        authorizationId
+        connector {
+          id
+        }
       }
       oneDrive {
         authenticationType
@@ -7434,7 +7436,9 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
-        authorizationId
+        connector {
+          id
+        }
       }
       googleDrive {
         authenticationType
@@ -7444,7 +7448,9 @@ export const GetFeed = gql`
         clientId
         clientSecret
         serviceAccountJson
-        authorizationId
+        connector {
+          id
+        }
       }
       dropbox {
         authenticationType
@@ -7468,7 +7474,9 @@ export const GetFeed = gql`
         repositoryName
         refreshToken
         personalAccessToken
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7486,7 +7494,9 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        authorizationId
+        connector {
+          id
+        }
       }
       microsoft {
         type
@@ -7499,7 +7509,9 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7524,7 +7536,9 @@ export const GetFeed = gql`
         repositoryName
         refreshToken
         personalAccessToken
-        authorizationId
+        connector {
+          id
+        }
       }
       intercom {
         accessToken
@@ -7553,7 +7567,9 @@ export const GetFeed = gql`
         repositoryName
         refreshToken
         personalAccessToken
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7566,7 +7582,9 @@ export const GetFeed = gql`
         repositoryName
         refreshToken
         personalAccessToken
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7581,7 +7599,9 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
-        authorizationId
+        connector {
+          id
+        }
       }
       microsoftContacts {
         authenticationType
@@ -7589,7 +7609,9 @@ export const GetFeed = gql`
         clientSecret
         refreshToken
         tenantId
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7607,7 +7629,9 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        authorizationId
+        connector {
+          id
+        }
       }
       microsoft {
         type
@@ -7618,7 +7642,9 @@ export const GetFeed = gql`
         refreshToken
         clientId
         clientSecret
-        authorizationId
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -7687,7 +7713,9 @@ export const GetFeed = gql`
       clientId
       clientSecret
       refreshToken
-      authorizationId
+      connector {
+        id
+      }
       teamId
       channelId
     }
@@ -7843,7 +7871,9 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
-          authorizationId
+          connector {
+            id
+          }
         }
         oneDrive {
           authenticationType
@@ -7852,7 +7882,9 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
-          authorizationId
+          connector {
+            id
+          }
         }
         googleDrive {
           authenticationType
@@ -7862,7 +7894,9 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           serviceAccountJson
-          authorizationId
+          connector {
+            id
+          }
         }
         dropbox {
           authenticationType
@@ -7886,7 +7920,9 @@ export const QueryFeeds = gql`
           repositoryName
           refreshToken
           personalAccessToken
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -7904,7 +7940,9 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          authorizationId
+          connector {
+            id
+          }
         }
         microsoft {
           type
@@ -7917,7 +7955,9 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -7942,7 +7982,9 @@ export const QueryFeeds = gql`
           repositoryName
           refreshToken
           personalAccessToken
-          authorizationId
+          connector {
+            id
+          }
         }
         intercom {
           accessToken
@@ -7971,7 +8013,9 @@ export const QueryFeeds = gql`
           repositoryName
           refreshToken
           personalAccessToken
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -7984,7 +8028,9 @@ export const QueryFeeds = gql`
           repositoryName
           refreshToken
           personalAccessToken
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -7999,7 +8045,9 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
-          authorizationId
+          connector {
+            id
+          }
         }
         microsoftContacts {
           authenticationType
@@ -8007,7 +8055,9 @@ export const QueryFeeds = gql`
           clientSecret
           refreshToken
           tenantId
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -8025,7 +8075,9 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          authorizationId
+          connector {
+            id
+          }
         }
         microsoft {
           type
@@ -8036,7 +8088,9 @@ export const QueryFeeds = gql`
           refreshToken
           clientId
           clientSecret
-          authorizationId
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -8105,7 +8159,9 @@ export const QueryFeeds = gql`
         clientId
         clientSecret
         refreshToken
-        authorizationId
+        connector {
+          id
+        }
         teamId
         channelId
       }
