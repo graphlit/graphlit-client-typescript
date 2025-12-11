@@ -707,8 +707,10 @@ export const GetConnector = gql`
         clientSecret
       }
       oauth {
-        refreshToken
         provider
+        clientId
+        clientSecret
+        refreshToken
         metadata
       }
       arcade {
@@ -769,8 +771,10 @@ export const QueryConnectors = gql`
           clientSecret
         }
         oauth {
-          refreshToken
           provider
+          clientId
+          clientSecret
+          refreshToken
           metadata
         }
         arcade {
@@ -14717,8 +14721,10 @@ export const GetUser = gql`
           clientSecret
         }
         oauth {
-          refreshToken
           provider
+          clientId
+          clientSecret
+          refreshToken
           metadata
         }
         arcade {
@@ -14786,8 +14792,10 @@ export const GetUserByIdentifier = gql`
           clientSecret
         }
         oauth {
-          refreshToken
           provider
+          clientId
+          clientSecret
+          refreshToken
           metadata
         }
         arcade {
@@ -14856,8 +14864,10 @@ export const QueryUsers = gql`
             clientSecret
           }
           oauth {
-            refreshToken
             provider
+            clientId
+            clientSecret
+            refreshToken
             metadata
           }
           arcade {
