@@ -13072,6 +13072,10 @@ export enum NotionTypes {
 /** Represents OAuth authentication properties. */
 export type OAuthAuthenticationProperties = {
   __typename?: 'OAuthAuthenticationProperties';
+  /** OAuth client identifier. */
+  clientId: Scalars['String']['output'];
+  /** OAuth client secret. */
+  clientSecret: Scalars['String']['output'];
   /** OAuth metadata. */
   metadata?: Maybe<Scalars['String']['output']>;
   /** OAuth provider. */
@@ -13082,6 +13086,10 @@ export type OAuthAuthenticationProperties = {
 
 /** Represents OAuth authentication properties. */
 export type OAuthAuthenticationPropertiesInput = {
+  /** OAuth client identifier. */
+  clientId: Scalars['String']['input'];
+  /** OAuth client secret. */
+  clientSecret: Scalars['String']['input'];
   /** OAuth metadata. */
   metadata?: InputMaybe<Scalars['String']['input']>;
   /** OAuth provider. */
