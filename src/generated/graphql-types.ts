@@ -5677,10 +5677,10 @@ export type GitHubCommitsFeedProperties = {
 export type GitHubCommitsFeedPropertiesInput = {
   /** GitHub Commits authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubCommitAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** GitHub repository branch, defaults to default branch. */
   branch?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5697,10 +5697,10 @@ export type GitHubCommitsFeedPropertiesInput = {
 export type GitHubCommitsFeedPropertiesUpdateInput = {
   /** GitHub Commits authentication type. */
   authenticationType?: InputMaybe<GitHubCommitAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** GitHub repository branch. */
   branch?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5736,8 +5736,8 @@ export type GitHubFeedProperties = {
 export type GitHubFeedPropertiesInput = {
   /** GitHub authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5754,8 +5754,8 @@ export type GitHubFeedPropertiesInput = {
 export type GitHubFeedPropertiesUpdateInput = {
   /** GitHub authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5797,8 +5797,8 @@ export type GitHubIssuesFeedProperties = {
 export type GitHubIssuesFeedPropertiesInput = {
   /** GitHub Issues authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubIssueAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5854,8 +5854,8 @@ export type GitHubPullRequestsFeedProperties = {
 export type GitHubPullRequestsFeedPropertiesInput = {
   /** GitHub Pull Requests authentication type, defaults to PersonalAccessToken. */
   authenticationType?: InputMaybe<GitHubPullRequestAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5872,8 +5872,8 @@ export type GitHubPullRequestsFeedPropertiesInput = {
 export type GitHubPullRequestsFeedPropertiesUpdateInput = {
   /** GitHub Pull Requests authentication type. */
   authenticationType?: InputMaybe<GitHubPullRequestAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** GitHub personal access token, requires PersonalAccessToken authentication type. */
   personalAccessToken?: InputMaybe<Scalars['String']['input']>;
   /** GitHub refresh token, requires OAuth authentication type. */
@@ -5993,8 +5993,6 @@ export type GoogleCalendarFeedPropertiesInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Email calendar identifier, optional. */
@@ -6003,6 +6001,8 @@ export type GoogleCalendarFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Calendar listing type, i.e. past or new events. */
@@ -6015,8 +6015,6 @@ export type GoogleCalendarFeedPropertiesUpdateInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Google Email calendar identifier, optional. */
@@ -6025,6 +6023,8 @@ export type GoogleCalendarFeedPropertiesUpdateInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Calendar listing type, i.e. past or new events. */
@@ -6035,12 +6035,12 @@ export type GoogleCalendarFeedPropertiesUpdateInput = {
 export type GoogleCalendarsInput = {
   /** Google Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -6069,12 +6069,12 @@ export type GoogleContactsCrmFeedProperties = {
 export type GoogleContactsCrmFeedPropertiesInput = {
   /** Google Contacts authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleContactsAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -6083,12 +6083,12 @@ export type GoogleContactsCrmFeedPropertiesInput = {
 export type GoogleContactsCrmFeedPropertiesUpdateInput = {
   /** Google Contacts authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleContactsAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -6128,12 +6128,12 @@ export type GoogleDriveFeedProperties = {
 export type GoogleDriveFeedPropertiesInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -6148,12 +6148,12 @@ export type GoogleDriveFeedPropertiesInput = {
 export type GoogleDriveFeedPropertiesUpdateInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Google Drive folder identifier. */
@@ -6184,12 +6184,12 @@ export type GoogleDriveFolderResults = {
 export type GoogleDriveFoldersInput = {
   /** Google Drive authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client identifier. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google OAuth2 client secret. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Google OAuth2 refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -6230,12 +6230,12 @@ export type GoogleEmailFeedProperties = {
 export type GoogleEmailFeedPropertiesInput = {
   /** Google Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Email filter in format 'key:value key:value' (supported: from, to, subject, has:attachment, is:unread, label, before, after). */
@@ -6256,12 +6256,12 @@ export type GoogleEmailFeedPropertiesInput = {
 export type GoogleEmailFeedPropertiesUpdateInput = {
   /** Google Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<GoogleEmailAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Google client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Google client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Email filter in format 'key:value key:value' (supported: from, to, subject, has:attachment, is:unread, label, before, after). */
@@ -10421,8 +10421,6 @@ export type MicrosoftCalendarFeedPropertiesInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Email calendar identifier, optional. */
@@ -10431,6 +10429,8 @@ export type MicrosoftCalendarFeedPropertiesInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Calendar listing type, i.e. past or new events. */
@@ -10443,8 +10443,6 @@ export type MicrosoftCalendarFeedPropertiesUpdateInput = {
   afterDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Read calendar events before this date (inclusive), optional. */
   beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Microsoft Email calendar identifier, optional. */
@@ -10453,6 +10451,8 @@ export type MicrosoftCalendarFeedPropertiesUpdateInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Calendar listing type, i.e. past or new events. */
@@ -10463,12 +10463,12 @@ export type MicrosoftCalendarFeedPropertiesUpdateInput = {
 export type MicrosoftCalendarsInput = {
   /** Microsoft Calendar authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10499,12 +10499,12 @@ export type MicrosoftContactsCrmFeedProperties = {
 export type MicrosoftContactsCrmFeedPropertiesInput = {
   /** Microsoft Contacts authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftContactsAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, optional. */
@@ -10515,12 +10515,12 @@ export type MicrosoftContactsCrmFeedPropertiesInput = {
 export type MicrosoftContactsCrmFeedPropertiesUpdateInput = {
   /** Microsoft Contacts authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftContactsAuthenticationTypes>;
-  /** Authorization identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, for User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, for User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, for User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, optional. */
@@ -10563,12 +10563,12 @@ export type MicrosoftEmailFeedProperties = {
 export type MicrosoftEmailFeedPropertiesInput = {
   /** Microsoft Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Email filter in format 'key:value key:value' (supported: from, to, subject, has:attachment, is:unread, label, before, after). */
@@ -10589,12 +10589,12 @@ export type MicrosoftEmailFeedPropertiesInput = {
 export type MicrosoftEmailFeedPropertiesUpdateInput = {
   /** Microsoft Email authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftEmailAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Email client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Whether to exclude Sent messages in email listing. Default is False. */
   excludeSentItems?: InputMaybe<Scalars['Boolean']['input']>;
   /** Email filter in format 'key:value key:value' (supported: from, to, subject, has:attachment, is:unread, label, before, after). */
@@ -10636,12 +10636,12 @@ export type MicrosoftTeamsChannelResults = {
 export type MicrosoftTeamsChannelsInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Teams refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10673,14 +10673,14 @@ export type MicrosoftTeamsFeedProperties = {
 export type MicrosoftTeamsFeedPropertiesInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['input'];
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
@@ -10695,14 +10695,14 @@ export type MicrosoftTeamsFeedPropertiesInput = {
 export type MicrosoftTeamsFeedPropertiesUpdateInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['input'];
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
@@ -10733,12 +10733,12 @@ export type MicrosoftTeamsTeamResults = {
 export type MicrosoftTeamsTeamsInput = {
   /** Microsoft Teams authentication type, defaults to User. */
   authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Teams client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Teams refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -13416,12 +13416,12 @@ export type OneDriveFeedProperties = {
 export type OneDriveFeedPropertiesInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
@@ -13434,12 +13434,12 @@ export type OneDriveFeedPropertiesInput = {
 export type OneDriveFeedPropertiesUpdateInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** OneDrive client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** OneDrive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   /** OneDrive folder identifier. */
@@ -13468,12 +13468,12 @@ export type OneDriveFolderResults = {
 export type OneDriveFoldersInput = {
   /** OneDrive authentication type, defaults to User. */
   authenticationType?: InputMaybe<OneDriveAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -13731,6 +13731,10 @@ export enum OpenAiModels {
   Gpt51_400K = 'GPT51_400K',
   /** GPT 5.1 400k (2025-11-13 version) */
   Gpt51_400K_20251113 = 'GPT51_400K_20251113',
+  /** GPT 5.2 400k (Latest) */
+  Gpt52_400K = 'GPT52_400K',
+  /** GPT 5.2 400k (2025-12-11 version) */
+  Gpt52_400K_20251211 = 'GPT52_400K_20251211',
   /** o1 200k (Latest) */
   O1_200K = 'O1_200K',
   /** o1 200k (2024-12-17 version) */
@@ -17699,12 +17703,12 @@ export type SharePointFeedPropertiesInput = {
   accountName: Scalars['String']['input'];
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires user authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires user authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -17721,8 +17725,8 @@ export type SharePointFeedPropertiesUpdateInput = {
   accountName?: InputMaybe<Scalars['String']['input']>;
   /** SharePoint authentication type. */
   authenticationType?: InputMaybe<SharePointAuthenticationTypes>;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** SharePoint folder identifier. */
   folderId?: InputMaybe<Scalars['ID']['input']>;
   /** SharePoint library identifier. */
@@ -17755,12 +17759,12 @@ export type SharePointFolderResults = {
 export type SharePointFoldersInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, requires Application authentication type. */
@@ -17771,12 +17775,12 @@ export type SharePointFoldersInput = {
 export type SharePointLibrariesInput = {
   /** SharePoint authentication type. */
   authenticationType: SharePointAuthenticationTypes;
-  /** Authentication identifier, for Connector authentication type. */
-  authorizationId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client identifier, requires User authentication type. */
   clientId?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID client secret, requires User authentication type. */
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
   /** Microsoft Entra ID refresh token, requires User authentication type. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Microsoft Entra ID tenant identifier, requires Application authentication type. */
