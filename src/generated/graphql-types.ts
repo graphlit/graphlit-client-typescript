@@ -128,6 +128,8 @@ export type AlertFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter alert(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter alert(s) by their states. */
@@ -1646,6 +1648,8 @@ export type CategoryFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter category(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter category(s) by their states. */
@@ -1923,6 +1927,8 @@ export type CollectionFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter collection(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter collection(s) by their states. */
@@ -2089,6 +2095,8 @@ export type ConnectorFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter connector(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter connector(s) by their states. */
@@ -2649,6 +2657,8 @@ export type ContentFilter = {
   originalDateRange?: InputMaybe<DateRangeFilter>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter content(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -3102,6 +3112,8 @@ export type ConversationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter conversation(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -4763,6 +4775,8 @@ export type EventFilter = {
   priceCurrency?: InputMaybe<Scalars['String']['input']>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter event(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -5193,6 +5207,8 @@ export type FeedFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter feed(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter feed(s) by their states. */
@@ -7315,6 +7331,8 @@ export type InvestmentFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter investment(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -7463,6 +7481,8 @@ export type InvestmentFundFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter investmentfund(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -7910,6 +7930,8 @@ export type LabelFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter label(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter label(s) by their states. */
@@ -8365,6 +8387,8 @@ export type MedicalConditionFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalcondition(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -8540,6 +8564,8 @@ export type MedicalContraindicationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalcontraindication(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -8715,6 +8741,8 @@ export type MedicalDeviceFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicaldevice(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -8935,6 +8963,8 @@ export type MedicalDrugClassFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicaldrugclass(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9065,6 +9095,8 @@ export type MedicalDrugFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicaldrug(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9240,6 +9272,8 @@ export type MedicalGuidelineFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalguideline(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9415,6 +9449,8 @@ export type MedicalIndicationFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalindication(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9590,6 +9626,8 @@ export type MedicalProcedureFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalprocedure(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9767,6 +9805,8 @@ export type MedicalStudyFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicalstudy(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -9946,6 +9986,8 @@ export type MedicalTestFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicaltest(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -10121,6 +10163,8 @@ export type MedicalTherapyFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter medicaltherapy(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -10282,6 +10326,8 @@ export type MetadataFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter metadata(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter metadata(s) by their states. */
@@ -13049,7 +13095,13 @@ export enum OAuthProviders {
   /** Box authentication provider */
   Box = 'BOX',
   /** Dropbox authentication provider */
-  Dropbox = 'DROPBOX'
+  Dropbox = 'DROPBOX',
+  /** GitHub authentication provider */
+  GitHub = 'GIT_HUB',
+  /** Google authentication provider */
+  Google = 'GOOGLE',
+  /** Microsoft authentication provider */
+  Microsoft = 'MICROSOFT'
 }
 
 /** Represents an extracted observable entity. */
@@ -13939,6 +13991,8 @@ export type OrganizationFilter = {
   organizations?: InputMaybe<Array<EntityReferenceFilter>>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter organization(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -14359,6 +14413,8 @@ export type PersonFilter = {
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter person(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -14605,6 +14661,8 @@ export type PlaceFilter = {
   places?: InputMaybe<Array<EntityReferenceFilter>>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter place(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -14967,6 +15025,8 @@ export type ProductFilter = {
   queryType?: InputMaybe<SearchQueryTypes>;
   /** Filter by release date range. */
   releaseDateRange?: InputMaybe<DateRangeFilter>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter product(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -15170,6 +15230,8 @@ export type ProjectFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter project(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter project(s) by their states. */
@@ -17226,6 +17288,8 @@ export type RepoFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter by code repositories. */
   repos?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter repo(s) by searching for similar text. */
@@ -18040,6 +18104,8 @@ export type SoftwareFilter = {
   orderBy?: InputMaybe<OrderByTypes>;
   /** The query syntax for the search text. Defaults to Simple. */
   queryType?: InputMaybe<SearchQueryTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter software(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
@@ -18204,6 +18270,8 @@ export type SpecificationFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter specification(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter by LLM service types. */
@@ -18948,6 +19016,8 @@ export type UserFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter user(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter user(s) by their states. */
@@ -19101,6 +19171,8 @@ export type ViewFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter view(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter view(s) by their states. */
@@ -19339,6 +19411,8 @@ export type WorkflowFilter = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter workflow(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
   /** Filter workflow(s) by their states. */
