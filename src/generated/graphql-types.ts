@@ -13560,6 +13560,8 @@ export enum OpenAiImageModels {
   Custom = 'CUSTOM',
   /** GPT Image-1 */
   GptImage_1 = 'GPT_IMAGE_1',
+  /** GPT Image-1.5 */
+  GptImage_1_5 = 'GPT_IMAGE_1_5',
   /** GPT Image-1 Mini */
   GptImage_1Mini = 'GPT_IMAGE_1_MINI'
 }
