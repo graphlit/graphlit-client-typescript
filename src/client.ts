@@ -7272,11 +7272,21 @@ class Graphlit {
         variables: variables || ({} as TVariables),
       });
 
-      if (result.errors) {
-        const errorMessage = result.errors
-          .map((err: any) => this.prettyPrintGraphQLError(err))
-          .join("\n");
-        throw new Error(errorMessage);
+      if (result.errors && result.errors.length > 0) {
+        // Only throw if we have no usable data - allow partial data through
+        if (!result.data) {
+          const errorMessage = result.errors
+            .map((err: any) => this.prettyPrintGraphQLError(err))
+            .join("\n");
+          throw new Error(errorMessage);
+        }
+        // Log warning but continue with partial data
+        console.warn(
+          "GraphQL mutation returned partial data with errors:",
+          result.errors
+            .map((err: any) => this.prettyPrintGraphQLError(err))
+            .join("\n"),
+        );
       }
 
       if (!result.data) {
@@ -7286,6 +7296,23 @@ class Graphlit {
       return result.data;
     } catch (error) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
+        // Check if we have partial data in the error
+        const apolloError = error as ApolloError;
+        if (apolloError.networkError && "result" in apolloError.networkError) {
+          const networkResult = (apolloError.networkError as any).result;
+          if (networkResult?.data) {
+            console.warn(
+              "GraphQL mutation returned partial data with errors:",
+              error.graphQLErrors
+                .map((err: GraphQLFormattedError) =>
+                  this.prettyPrintGraphQLError(err),
+                )
+                .join("\n"),
+            );
+            return networkResult.data as TData;
+          }
+        }
+
         const errorMessage = error.graphQLErrors
           .map((err: GraphQLFormattedError) =>
             this.prettyPrintGraphQLError(err),
@@ -7321,11 +7348,21 @@ class Graphlit {
         variables: variables || ({} as TVariables),
       });
 
-      if (result.errors) {
-        const errorMessage = result.errors
-          .map((err: any) => this.prettyPrintGraphQLError(err))
-          .join("\n");
-        throw new Error(errorMessage);
+      if (result.errors && result.errors.length > 0) {
+        // Only throw if we have no usable data - allow partial data through
+        if (!result.data) {
+          const errorMessage = result.errors
+            .map((err: any) => this.prettyPrintGraphQLError(err))
+            .join("\n");
+          throw new Error(errorMessage);
+        }
+        // Log warning but continue with partial data
+        console.warn(
+          "GraphQL query returned partial data with errors:",
+          result.errors
+            .map((err: any) => this.prettyPrintGraphQLError(err))
+            .join("\n"),
+        );
       }
 
       if (!result.data) {
@@ -7335,6 +7372,21 @@ class Graphlit {
       return result.data;
     } catch (error: unknown) {
       if (error instanceof ApolloError && error.graphQLErrors.length > 0) {
+        // Check if we have partial data in the error
+        const apolloError = error as ApolloError;
+        if (apolloError.networkError && "result" in apolloError.networkError) {
+          const networkResult = (apolloError.networkError as any).result;
+          if (networkResult?.data) {
+            console.warn(
+              "GraphQL query returned partial data with errors:",
+              error.graphQLErrors
+                .map((err: any) => this.prettyPrintGraphQLError(err))
+                .join("\n"),
+            );
+            return networkResult.data as TData;
+          }
+        }
+
         const errorMessage = error.graphQLErrors
           .map((err: any) => this.prettyPrintGraphQLError(err))
           .join("\n");
