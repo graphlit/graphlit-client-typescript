@@ -6206,6 +6206,8 @@ export type GoogleDriveFolderResult = {
   folderId?: Maybe<Scalars['ID']['output']>;
   /** The Google Drive folder name. */
   folderName?: Maybe<Scalars['String']['output']>;
+  /** The relative path to this folder from the drive root. */
+  folderPath?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents Google Drive folders. */
@@ -13522,6 +13524,8 @@ export type OneDriveFolderResult = {
   folderId?: Maybe<Scalars['ID']['output']>;
   /** The OneDrive folder name. */
   folderName?: Maybe<Scalars['String']['output']>;
+  /** The relative path to this folder from the drive root. */
+  folderPath?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents OneDrive folders. */
@@ -17818,6 +17822,8 @@ export type SharePointFolderResult = {
   folderId?: Maybe<Scalars['ID']['output']>;
   /** The SharePoint folder name. */
   folderName?: Maybe<Scalars['String']['output']>;
+  /** The relative path to this folder from the drive root. */
+  folderPath?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents SharePoint folders. */
