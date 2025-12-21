@@ -7472,6 +7472,8 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
         refreshToken
         personalAccessToken
         connector {
@@ -7918,6 +7920,8 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
           refreshToken
           personalAccessToken
           connector {
@@ -13446,17 +13450,12 @@ export const LookupUsage = gql`
     modelService
     modelName
     processorName
-    prompt
     promptTokens
-    completion
     completionTokens
     tokens
     count
     operation
     operationType
-    request
-    variables
-    response
   }
 }
     `;
@@ -13534,17 +13533,12 @@ export const QueryUsage = gql`
     modelService
     modelName
     processorName
-    prompt
     promptTokens
-    completion
     completionTokens
     tokens
     count
     operation
     operationType
-    request
-    variables
-    response
   }
 }
     `;
