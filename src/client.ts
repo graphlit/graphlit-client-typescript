@@ -569,6 +569,10 @@ class Graphlit {
     this.token = jwt.sign(payload, this.jwtSecret, { algorithm: "HS256" });
   }
 
+  /**
+   * Fetch current project.
+   * @returns The project.
+   */
   public async getProject(): Promise<Types.GetProjectQuery> {
     return this.queryAndCheckError<
       Types.GetProjectQuery,
@@ -576,6 +580,11 @@ class Graphlit {
     >(Documents.GetProject, {});
   }
 
+  /**
+   * Updates a project.
+   * @param project - The project to update.
+   * @returns The updated project.
+   */
   public async updateProject(
     project: Types.ProjectUpdateInput,
   ): Promise<Types.UpdateProjectMutation> {
@@ -585,6 +594,13 @@ class Graphlit {
     >(Documents.UpdateProject, { project: project });
   }
 
+  /**
+   * Lookup usage records given tenant correlation identifier.
+   * @param correlationId - The tenant correlation identifier.
+   * @param startDate - The start date of records to be returned, optional. Defaults to last 30 days.
+   * @param duration - The duration of records to be returned, optional. Defaults to last 30 days.
+   * @returns The project usage records.
+   */
   public async lookupProjectUsage(
     correlationId: string,
     startDate?: Types.Scalars["DateTime"]["input"],
@@ -600,6 +616,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup credit usage given tenant correlation identifier.
+   * @param correlationId - The tenant correlation identifier.
+   * @param startDate - The start date of records to be returned, optional. Defaults to last 30 days.
+   * @param duration - The duration of records to be returned, optional. Defaults to last 30 days.
+   * @returns The project credits.
+   */
   public async lookupProjectCredits(
     correlationId: string,
     startDate?: Types.Scalars["DateTime"]["input"],
@@ -615,6 +638,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves project tokens.
+   * @param startDate - The start date of tokens to be returned.
+   * @param duration - The duration of tokens to be returned.
+   * @returns The project tokens.
+   */
   public async queryProjectTokens(
     startDate: Types.Scalars["DateTime"]["input"],
     duration: Types.Scalars["TimeSpan"]["input"],
@@ -625,6 +654,16 @@ class Graphlit {
     >(Documents.QueryTokens, { startDate: startDate, duration: duration });
   }
 
+  /**
+   * Retrieves project usage.
+   * @param startDate - The start date of records to be returned.
+   * @param duration - The duration of records to be returned.
+   * @param names - Filter by allowed usage record names, defaults to 'GraphQL'.
+   * @param excludedNames - Filter by excluded usage record names.
+   * @param offset - The offset to the records to be returned, defaults to 0.
+   * @param limit - The number of records to be returned, defaults to 1000.
+   * @returns The project usage records.
+   */
   public async queryProjectUsage(
     startDate: Types.Scalars["DateTime"]["input"],
     duration: Types.Scalars["TimeSpan"]["input"],
@@ -646,6 +685,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves project credits.
+   * @param startDate - The start date of credits to be returned.
+   * @param duration - The duration of credits to be returned.
+   * @returns The project credits.
+   */
   public async queryProjectCredits(
     startDate: Types.Scalars["DateTime"]["input"],
     duration: Types.Scalars["TimeSpan"]["input"],
@@ -656,6 +701,13 @@ class Graphlit {
     >(Documents.QueryCredits, { startDate: startDate, duration: duration });
   }
 
+  /**
+   * Sends a notification.
+   * @param connector - The integration connector used to send the notification.
+   * @param text - The notification text.
+   * @param textType - The text type, optional.
+   * @returns The result of the notification.
+   */
   public async sendNotification(
     connector: Types.IntegrationConnectorInput,
     text: string,
@@ -671,6 +723,14 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enumerates the web pages at or beneath the provided URL using web sitemap.
+   * @param uri - The URI of the web page to be mapped.
+   * @param allowedPaths - The list of regular expressions for URL paths to be crawled, i.e. "^\/public\/blogs\/.*".
+   * @param excludedPaths - The list of regular expressions for URL paths to not be crawled, i.e. "^\/internal\/private\/.*".
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The mapped URIs.
+   */
   public async mapWeb(
     uri: string,
     allowedPaths?: string[],
@@ -688,6 +748,14 @@ class Graphlit {
     });
   }
 
+  /**
+   * Searches the web based on the provided properties.
+   * @param text - The web search text.
+   * @param service - The web search service type, defaults to Tavily.
+   * @param limit - The number of web search results to be returned, defaults to 10.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The web search results.
+   */
   public async searchWeb(
     text: string,
     service?: Types.SearchServiceTypes,
@@ -705,6 +773,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates an alert.
+   * @param alert - The alert to create.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The created alert.
+   */
   public async createAlert(
     alert: Types.AlertInput,
     correlationId?: string,
@@ -715,6 +789,11 @@ class Graphlit {
     >(Documents.CreateAlert, { alert: alert, correlationId: correlationId });
   }
 
+  /**
+   * Updates an alert.
+   * @param alert - The alert to update.
+   * @returns The updated alert.
+   */
   public async updateAlert(
     alert: Types.AlertUpdateInput,
   ): Promise<Types.UpdateAlertMutation> {
@@ -724,6 +803,11 @@ class Graphlit {
     >(Documents.UpdateAlert, { alert: alert });
   }
 
+  /**
+   * Creates or updates an alert.
+   * @param alert - The alert to create or update.
+   * @returns The created or updated alert.
+   */
   public async upsertAlert(
     alert: Types.AlertInput,
   ): Promise<Types.UpsertAlertMutation> {
@@ -733,6 +817,11 @@ class Graphlit {
     >(Documents.UpsertAlert, { alert: alert });
   }
 
+  /**
+   * Deletes an alert.
+   * @param id - The ID of the alert to delete.
+   * @returns The deleted alert.
+   */
   public async deleteAlert(id: string): Promise<Types.DeleteAlertMutation> {
     return this.mutateAndCheckError<
       Types.DeleteAlertMutation,
@@ -740,6 +829,12 @@ class Graphlit {
     >(Documents.DeleteAlert, { id: id });
   }
 
+  /**
+   * Deletes multiple alerts.
+   * @param ids - The IDs of the alerts to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted alerts.
+   */
   public async deleteAlerts(
     ids: string[],
     isSynchronous?: boolean,
@@ -750,6 +845,13 @@ class Graphlit {
     >(Documents.DeleteAlerts, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all alerts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting alerts.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllAlerts(
     filter?: Types.AlertFilter,
     isSynchronous?: boolean,
@@ -765,6 +867,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enables an alert.
+   * @param id - The ID of the alert to enable.
+   * @returns The enabled alert.
+   */
   public async enableAlert(id: string): Promise<Types.EnableAlertMutation> {
     return this.mutateAndCheckError<
       Types.EnableAlertMutation,
@@ -772,6 +879,11 @@ class Graphlit {
     >(Documents.EnableAlert, { id: id });
   }
 
+  /**
+   * Disables an alert.
+   * @param id - The ID of the alert to disable.
+   * @returns The disabled alert.
+   */
   public async disableAlert(id: string): Promise<Types.DisableAlertMutation> {
     return this.mutateAndCheckError<
       Types.DisableAlertMutation,
@@ -779,6 +891,11 @@ class Graphlit {
     >(Documents.DisableAlert, { id: id });
   }
 
+  /**
+   * Lookup an alert given its ID.
+   * @param id - ID of the alert.
+   * @returns The alert.
+   */
   public async getAlert(id: string): Promise<Types.GetAlertQuery> {
     return this.queryAndCheckError<
       Types.GetAlertQuery,
@@ -786,6 +903,11 @@ class Graphlit {
     >(Documents.GetAlert, { id: id });
   }
 
+  /**
+   * Retrieves alerts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving alerts.
+   * @returns The alerts.
+   */
   public async queryAlerts(
     filter?: Types.AlertFilter,
   ): Promise<Types.QueryAlertsQuery> {
@@ -795,6 +917,11 @@ class Graphlit {
     >(Documents.QueryAlerts, { filter: filter });
   }
 
+  /**
+   * Counts alerts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting alerts.
+   * @returns The count of alerts.
+   */
   public async countAlerts(
     filter?: Types.AlertFilter,
   ): Promise<Types.CountAlertsQuery> {
@@ -804,6 +931,11 @@ class Graphlit {
     >(Documents.CountAlerts, { filter: filter });
   }
 
+  /**
+   * Creates a collection.
+   * @param collection - The collection to create.
+   * @returns The created collection.
+   */
   public async createCollection(
     collection: Types.CollectionInput,
   ): Promise<Types.CreateCollectionMutation> {
@@ -813,6 +945,11 @@ class Graphlit {
     >(Documents.CreateCollection, { collection: collection });
   }
 
+  /**
+   * Updates a collection.
+   * @param collection - The collection to update.
+   * @returns The updated collection.
+   */
   public async updateCollection(
     collection: Types.CollectionUpdateInput,
   ): Promise<Types.UpdateCollectionMutation> {
@@ -822,6 +959,11 @@ class Graphlit {
     >(Documents.UpdateCollection, { collection: collection });
   }
 
+  /**
+   * Deletes a collection.
+   * @param id - The ID of the collection to delete.
+   * @returns The deleted collection.
+   */
   public async deleteCollection(
     id: string,
   ): Promise<Types.DeleteCollectionMutation> {
@@ -831,6 +973,12 @@ class Graphlit {
     >(Documents.DeleteCollection, { id: id });
   }
 
+  /**
+   * Deletes multiple collections.
+   * @param ids - The IDs of the collections to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted collections.
+   */
   public async deleteCollections(
     ids: string[],
     isSynchronous?: boolean,
@@ -841,6 +989,13 @@ class Graphlit {
     >(Documents.DeleteCollections, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all collections based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting collections.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllCollections(
     filter?: Types.CollectionFilter,
     isSynchronous?: boolean,
@@ -856,6 +1011,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Adds contents to collections.
+   * @param contents - The contents to add.
+   * @param collections - The collections to add the contents to.
+   * @returns The result of the operation.
+   */
   public async addContentsToCollections(
     contents: Types.EntityReferenceInput[],
     collections: Types.EntityReferenceInput[],
@@ -869,6 +1030,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Removes contents from a collection.
+   * @param contents - The contents to remove.
+   * @param collection - The collection to remove the contents from.
+   * @returns The result of the operation.
+   */
   public async removeContentsFromCollection(
     contents: Types.EntityReferenceInput[],
     collection: Types.EntityReferenceInput,
@@ -882,6 +1049,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a collection given its ID.
+   * @param id - ID of the collection.
+   * @returns The collection.
+   */
   public async getCollection(id: string): Promise<Types.GetCollectionQuery> {
     return this.queryAndCheckError<
       Types.GetCollectionQuery,
@@ -889,6 +1061,11 @@ class Graphlit {
     >(Documents.GetCollection, { id: id });
   }
 
+  /**
+   * Retrieves collections based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving collections.
+   * @returns The collections.
+   */
   public async queryCollections(
     filter?: Types.CollectionFilter,
   ): Promise<Types.QueryCollectionsQuery> {
@@ -898,6 +1075,11 @@ class Graphlit {
     >(Documents.QueryCollections, { filter: filter });
   }
 
+  /**
+   * Counts collections based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting collections.
+   * @returns The count of collections.
+   */
   public async countCollections(
     filter?: Types.CollectionFilter,
   ): Promise<Types.CountCollectionsQuery> {
@@ -907,6 +1089,14 @@ class Graphlit {
     >(Documents.CountCollections, { filter: filter });
   }
 
+  /**
+   * Describes an image using a multimodal LLM.
+   * @param prompt - The prompt to use for describing the image.
+   * @param uri - The URI of the image to describe.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The image description.
+   */
   public async describeImage(
     prompt: string,
     uri: string,
@@ -924,6 +1114,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Describes a base64-encoded image using a multimodal LLM.
+   * @param prompt - The prompt to use for describing the image.
+   * @param mimeType - The MIME type of the image.
+   * @param data - The base64-encoded image data.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The image description.
+   */
   public async describeEncodedImage(
     prompt: string,
     mimeType: string,
@@ -943,6 +1142,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Takes a screenshot of a web page.
+   * @param uri - The URI of the web page to screenshot.
+   * @param maximumHeight - The maximum height of the screenshot, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param workflow - The workflow to use for processing, optional.
+   * @param collections - The collections to add the content to, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The screenshot content.
+   */
   public async screenshotPage(
     uri: string,
     maximumHeight?: number,
@@ -964,6 +1173,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests a batch of text contents.
+   * @param batch - The batch of text contents to ingest.
+   * @param textType - The type of text (plain, markdown, HTML).
+   * @param collections - The collections to add the contents to, optional.
+   * @param observations - The observations to assign to the contents, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested contents.
+   */
   public async ingestTextBatch(
     batch: Types.TextContentInput[],
     textType: Types.TextTypes,
@@ -983,6 +1201,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests a batch of URIs.
+   * @param uris - The URIs to ingest.
+   * @param workflow - The workflow to use for processing, optional.
+   * @param collections - The collections to add the contents to, optional.
+   * @param observations - The observations to assign to the contents, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested contents.
+   */
   public async ingestBatch(
     uris: string[],
     workflow?: Types.EntityReferenceInput,
@@ -1002,6 +1229,19 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests content from a URI.
+   * @param uri - The URI of the content to ingest.
+   * @param name - The name of the content, optional.
+   * @param id - The ID to assign to the content, optional.
+   * @param identifier - The external identifier for the content, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param workflow - The workflow to use for processing, optional.
+   * @param collections - The collections to add the content to, optional.
+   * @param observations - The observations to assign to the content, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested content.
+   */
   public async ingestUri(
     uri: string,
     name?: string,
@@ -1029,6 +1269,21 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests text content.
+   * @param text - The text to ingest.
+   * @param name - The name of the content, optional.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param uri - The URI associated with the content, optional.
+   * @param id - The ID to assign to the content, optional.
+   * @param identifier - The external identifier for the content, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param workflow - The workflow to use for processing, optional.
+   * @param collections - The collections to add the content to, optional.
+   * @param observations - The observations to assign to the content, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested content.
+   */
   public async ingestText(
     text: string,
     name?: string,
@@ -1060,6 +1315,17 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests a memory (ephemeral text content).
+   * @param text - The text to ingest as memory.
+   * @param name - The name of the memory, optional.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param id - The ID to assign to the memory, optional.
+   * @param identifier - The external identifier for the memory, optional.
+   * @param collections - The collections to add the memory to, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested memory.
+   */
   public async ingestMemory(
     text: string,
     name?: string,
@@ -1083,6 +1349,18 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests an event.
+   * @param markdown - The markdown content of the event.
+   * @param name - The name of the event, optional.
+   * @param description - The description of the event, optional.
+   * @param eventDate - The date of the event, optional.
+   * @param id - The ID to assign to the event, optional.
+   * @param identifier - The external identifier for the event, optional.
+   * @param collections - The collections to add the event to, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested event.
+   */
   public async ingestEvent(
     markdown: string,
     name?: string,
@@ -1108,6 +1386,22 @@ class Graphlit {
     });
   }
 
+  /**
+   * Ingests a base64-encoded file.
+   * @param name - The name of the file.
+   * @param data - The base64-encoded file data.
+   * @param mimeType - The MIME type of the file.
+   * @param fileCreationDate - The file creation date, optional.
+   * @param fileModifiedDate - The file modified date, optional.
+   * @param id - The ID to assign to the content, optional.
+   * @param identifier - The external identifier for the content, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param workflow - The workflow to use for processing, optional.
+   * @param collections - The collections to add the content to, optional.
+   * @param observations - The observations to assign to the content, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The ingested content.
+   */
   public async ingestEncodedFile(
     name: string,
     data: string,
@@ -1141,6 +1435,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Updates content.
+   * @param content - The content to update.
+   * @returns The updated content.
+   */
   public async updateContent(
     content: Types.ContentUpdateInput,
   ): Promise<Types.UpdateContentMutation> {
@@ -1150,6 +1449,11 @@ class Graphlit {
     >(Documents.UpdateContent, { content: content });
   }
 
+  /**
+   * Deletes content.
+   * @param id - The ID of the content to delete.
+   * @returns The deleted content.
+   */
   public async deleteContent(id: string): Promise<Types.DeleteContentMutation> {
     return this.mutateAndCheckError<
       Types.DeleteContentMutation,
@@ -1157,6 +1461,12 @@ class Graphlit {
     >(Documents.DeleteContent, { id: id });
   }
 
+  /**
+   * Deletes multiple contents.
+   * @param ids - The IDs of the contents to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted contents.
+   */
   public async deleteContents(
     ids: string[],
     isSynchronous?: boolean,
@@ -1167,6 +1477,13 @@ class Graphlit {
     >(Documents.DeleteContents, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all contents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting contents.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllContents(
     filter?: Types.ContentFilter,
     isSynchronous?: boolean,
@@ -1182,6 +1499,14 @@ class Graphlit {
     });
   }
 
+  /**
+   * Summarizes text using the specified summarization strategy.
+   * @param summarization - The summarization strategy to use.
+   * @param text - The text to summarize.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The summarized text.
+   */
   public async summarizeText(
     summarization: Types.SummarizationStrategyInput,
     text: string,
@@ -1199,6 +1524,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Summarizes contents using the specified summarization strategies.
+   * @param summarizations - The summarization strategies to use.
+   * @param filter - The filter criteria to apply when retrieving contents to summarize.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The summarized contents.
+   */
   public async summarizeContents(
     summarizations: Types.SummarizationStrategyInput[],
     filter?: Types.ContentFilter,
@@ -1214,6 +1546,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Extracts structured data from text using tool definitions.
+   * @param prompt - The prompt to guide extraction.
+   * @param text - The text to extract from.
+   * @param tools - The tool definitions for extraction.
+   * @param specification - The LLM specification to use, optional.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The extracted data.
+   */
   public async extractText(
     prompt: string,
     text: string,
@@ -1235,6 +1577,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Extracts structured data from contents using tool definitions.
+   * @param prompt - The prompt to guide extraction.
+   * @param tools - The tool definitions for extraction.
+   * @param specification - The LLM specification to use, optional.
+   * @param filter - The filter criteria to apply when retrieving contents.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The extracted data.
+   */
   public async extractContents(
     prompt: string,
     tools: Types.ToolDefinitionInput[],
@@ -1254,6 +1605,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Extracts observables (entities) from text.
+   * @param text - The text to extract observables from.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param observableTypes - The types of observables to extract, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The extracted observables.
+   */
   public async extractObservables(
     text: string,
     textType?: Types.TextTypes,
@@ -1273,6 +1633,21 @@ class Graphlit {
     });
   }
 
+  /**
+   * Publishes contents to an external connector.
+   * @param publishPrompt - The prompt for publishing.
+   * @param connector - The publishing connector to use.
+   * @param summaryPrompt - The prompt for summarizing each content, optional.
+   * @param summarySpecification - The LLM specification for summarization, optional.
+   * @param publishSpecification - The LLM specification for publishing, optional.
+   * @param name - The name of the published content, optional.
+   * @param filter - The filter criteria for selecting contents, optional.
+   * @param workflow - The workflow to use, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param includeDetails - Whether to include details in publishing, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The published content.
+   */
   public async publishContents(
     publishPrompt: string,
     connector: Types.ContentPublishingConnectorInput,
@@ -1304,6 +1679,17 @@ class Graphlit {
     });
   }
 
+  /**
+   * Publishes text to an external connector.
+   * @param text - The text to publish.
+   * @param textType - The type of text (plain, markdown, HTML).
+   * @param connector - The publishing connector to use.
+   * @param name - The name of the published content, optional.
+   * @param workflow - The workflow to use, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The published content.
+   */
   public async publishText(
     text: string,
     textType: Types.TextTypes,
@@ -1327,6 +1713,17 @@ class Graphlit {
     });
   }
 
+  /**
+   * Researches contents and publishes the results.
+   * @param connector - The publishing connector to use.
+   * @param filter - The filter criteria for selecting contents, optional.
+   * @param name - The name of the research output, optional.
+   * @param summarySpecification - The LLM specification for summarization, optional.
+   * @param publishSpecification - The LLM specification for publishing, optional.
+   * @param workflow - The workflow to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The research results.
+   */
   public async researchContents(
     connector: Types.ContentPublishingConnectorInput,
     filter?: Types.ContentFilter,
@@ -1350,6 +1747,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup content given its ID.
+   * @param id - ID of the content.
+   * @returns The content.
+   */
   public async getContent(id: string): Promise<Types.GetContentQuery> {
     return this.queryAndCheckError<
       Types.GetContentQuery,
@@ -1357,6 +1759,11 @@ class Graphlit {
     >(Documents.GetContent, { id: id });
   }
 
+  /**
+   * Lookup multiple contents given their IDs.
+   * @param ids - IDs of the contents.
+   * @returns The contents.
+   */
   public async lookupContents(
     ids: string[],
   ): Promise<Types.LookupContentsQuery> {
@@ -1366,6 +1773,11 @@ class Graphlit {
     >(Documents.LookupContents, { ids: ids });
   }
 
+  /**
+   * Retrieves observables based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving observables.
+   * @returns The observables.
+   */
   public async queryObservables(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryObservablesQuery> {
@@ -1375,6 +1787,11 @@ class Graphlit {
     >(Documents.QueryObservables, { filter: filter });
   }
 
+  /**
+   * Retrieves contents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving contents.
+   * @returns The contents.
+   */
   public async queryContents(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsQuery> {
@@ -1384,6 +1801,11 @@ class Graphlit {
     >(Documents.QueryContents, { filter: filter });
   }
 
+  /**
+   * Retrieves contents with their observations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving contents.
+   * @returns The contents with observations.
+   */
   public async queryContentsObservations(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsObservationsQuery> {
@@ -1393,6 +1815,11 @@ class Graphlit {
     >(Documents.QueryContentsObservations, { filter: filter });
   }
 
+  /**
+   * Retrieves content facets based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving facets.
+   * @returns The content facets.
+   */
   public async queryContentsFacets(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsFacetsQuery> {
@@ -1402,6 +1829,11 @@ class Graphlit {
     >(Documents.QueryContentsFacets, { filter: filter });
   }
 
+  /**
+   * Retrieves the content knowledge graph based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving the graph.
+   * @returns The content knowledge graph.
+   */
   public async queryContentsGraph(
     filter?: Types.ContentFilter,
   ): Promise<Types.QueryContentsGraphQuery> {
@@ -1416,6 +1848,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves the knowledge graph based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving the graph.
+   * @param graph - The graph configuration, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The knowledge graph.
+   */
   public async queryGraph(
     filter?: Types.GraphFilter,
     graph?: Types.GraphInput,
@@ -1431,6 +1870,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup an entity and its relationships.
+   * @param filter - The filter criteria for entity relationships.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The entity with relationships.
+   */
   public async lookupEntity(
     filter: Types.EntityRelationshipsFilter,
     correlationId?: string,
@@ -1444,6 +1889,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts contents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting contents.
+   * @returns The count of contents.
+   */
   public async countContents(
     filter?: Types.ContentFilter,
   ): Promise<Types.CountContentsQuery> {
@@ -1453,6 +1903,11 @@ class Graphlit {
     >(Documents.CountContents, { filter: filter });
   }
 
+  /**
+   * Checks if content processing is complete.
+   * @param id - ID of the content.
+   * @returns Whether the content is done processing.
+   */
   public async isContentDone(id: string): Promise<Types.IsContentDoneQuery> {
     return this.queryAndCheckError<
       Types.IsContentDoneQuery,
@@ -1460,6 +1915,12 @@ class Graphlit {
     >(Documents.IsContentDone, { id: id });
   }
 
+  /**
+   * Creates a conversation.
+   * @param conversation - The conversation to create.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The created conversation.
+   */
   public async createConversation(
     conversation: Types.ConversationInput,
     correlationId?: string,
@@ -1473,6 +1934,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Updates a conversation.
+   * @param conversation - The conversation to update.
+   * @returns The updated conversation.
+   */
   public async updateConversation(
     conversation: Types.ConversationUpdateInput,
   ): Promise<Types.UpdateConversationMutation> {
@@ -1482,6 +1948,11 @@ class Graphlit {
     >(Documents.UpdateConversation, { conversation: conversation });
   }
 
+  /**
+   * Deletes a conversation.
+   * @param id - The ID of the conversation to delete.
+   * @returns The deleted conversation.
+   */
   public async deleteConversation(
     id: string,
   ): Promise<Types.DeleteConversationMutation> {
@@ -1491,6 +1962,12 @@ class Graphlit {
     >(Documents.DeleteConversation, { id: id });
   }
 
+  /**
+   * Deletes multiple conversations.
+   * @param ids - The IDs of the conversations to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted conversations.
+   */
   public async deleteConversations(
     ids: string[],
     isSynchronous?: boolean,
@@ -1504,6 +1981,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Deletes all conversations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting conversations.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllConversations(
     filter?: Types.ConversationFilter,
     isSynchronous?: boolean,
@@ -1519,6 +2003,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Clears all messages from a conversation.
+   * @param id - The ID of the conversation to clear.
+   * @returns The cleared conversation.
+   */
   public async clearConversation(
     id: string,
   ): Promise<Types.ClearConversationMutation> {
@@ -1528,6 +2017,11 @@ class Graphlit {
     >(Documents.ClearConversation, { id: id });
   }
 
+  /**
+   * Closes a conversation.
+   * @param id - The ID of the conversation to close.
+   * @returns The closed conversation.
+   */
   public async closeConversation(
     id: string,
   ): Promise<Types.CloseConversationMutation> {
@@ -1537,6 +2031,11 @@ class Graphlit {
     >(Documents.CloseConversation, { id: id });
   }
 
+  /**
+   * Lookup a conversation given its ID.
+   * @param id - ID of the conversation.
+   * @returns The conversation.
+   */
   public async getConversation(
     id: string,
   ): Promise<Types.GetConversationQuery> {
@@ -1546,6 +2045,11 @@ class Graphlit {
     >(Documents.GetConversation, { id: id });
   }
 
+  /**
+   * Retrieves conversations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving conversations.
+   * @returns The conversations.
+   */
   public async queryConversations(
     filter?: Types.ConversationFilter,
   ): Promise<Types.QueryConversationsQuery> {
@@ -1555,6 +2059,11 @@ class Graphlit {
     >(Documents.QueryConversations, { filter: filter });
   }
 
+  /**
+   * Counts conversations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting conversations.
+   * @returns The count of conversations.
+   */
   public async countConversations(
     filter?: Types.ConversationFilter,
   ): Promise<Types.CountConversationsQuery> {
@@ -1564,6 +2073,15 @@ class Graphlit {
     >(Documents.CountConversations, { filter: filter });
   }
 
+  /**
+   * Revises an image in an existing conversation using a multimodal LLM.
+   * @param prompt - The prompt to use for revision.
+   * @param uri - The URI of the image to revise.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The revised conversation message.
+   */
   public async reviseImage(
     prompt: string,
     uri: string,
@@ -1583,6 +2101,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Revises a base64-encoded image in an existing conversation using a multimodal LLM.
+   * @param prompt - The prompt to use for revision.
+   * @param mimeType - The MIME type of the image.
+   * @param data - The base64-encoded image data.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The revised conversation message.
+   */
   public async reviseEncodedImage(
     prompt: string,
     mimeType: string,
@@ -1604,6 +2132,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Revises text in an existing conversation.
+   * @param prompt - The prompt to use for revision.
+   * @param text - The text to revise.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The revised conversation message.
+   */
   public async reviseText(
     prompt: string,
     text: string,
@@ -1623,6 +2160,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Revises content in an existing conversation.
+   * @param prompt - The prompt to use for revision.
+   * @param content - The content to revise.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The revised conversation message.
+   */
   public async reviseContent(
     prompt: string,
     content: Types.EntityReferenceInput,
@@ -1642,6 +2188,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Prompts an LLM without a conversation context.
+   * @param prompt - The prompt text, optional.
+   * @param mimeType - The MIME type for multimodal input, optional.
+   * @param data - The base64-encoded data for multimodal input, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param messages - Previous messages for context, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The LLM response.
+   */
   public async prompt(
     prompt?: string,
     mimeType?: string,
@@ -1663,6 +2219,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves relevant sources from a view for RAG.
+   * @param prompt - The prompt to use for retrieval.
+   * @param id - The view ID.
+   * @param retrievalStrategy - The retrieval strategy, optional.
+   * @param rerankingStrategy - The reranking strategy, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The retrieved sources.
+   */
   public async retrieveView(
     prompt: string,
     id: string,
@@ -1682,6 +2247,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves relevant sources for RAG.
+   * @param prompt - The prompt to use for retrieval.
+   * @param filter - The filter criteria for selecting contents, optional.
+   * @param augmentedFilter - Additional filter for augmented retrieval, optional.
+   * @param retrievalStrategy - The retrieval strategy, optional.
+   * @param rerankingStrategy - The reranking strategy, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The retrieved sources.
+   */
   public async retrieveSources(
     prompt: string,
     filter?: Types.ContentFilter,
@@ -1703,6 +2278,17 @@ class Graphlit {
     });
   }
 
+  /**
+   * Formats a conversation for external LLM completion.
+   * @param prompt - The prompt to format.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param tools - Tool definitions for function calling, optional.
+   * @param systemPrompt - The system prompt, optional.
+   * @param includeDetails - Whether to include details, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The formatted conversation.
+   */
   public async formatConversation(
     prompt: string,
     id?: string,
@@ -1726,6 +2312,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Completes a conversation with an external LLM response.
+   * @param completion - The completion text from the external LLM.
+   * @param id - The conversation ID.
+   * @param completionTime - The time taken for completion, optional.
+   * @param ttft - Time to first token, optional.
+   * @param throughput - Tokens per second throughput, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The completed conversation.
+   */
   public async completeConversation(
     completion: string,
     id: string,
@@ -1747,6 +2343,15 @@ class Graphlit {
     });
   }
 
+  /**
+   * Asks a question about Graphlit SDK usage.
+   * @param prompt - The question about Graphlit.
+   * @param type - The SDK type (Node.js, Python, .NET), optional.
+   * @param id - The conversation ID, optional.
+   * @param specification - The LLM specification to use, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The Graphlit answer.
+   */
   public async askGraphlit(
     prompt: string,
     type?: Types.SdkTypes,
@@ -1766,6 +2371,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a branch of an existing conversation.
+   * @param id - The conversation ID to branch from.
+   * @returns The branched conversation.
+   */
   public async branchConversation(
     id: string,
   ): Promise<Types.BranchConversationMutation> {
@@ -1777,6 +2387,20 @@ class Graphlit {
     });
   }
 
+  /**
+   * Prompts a conversation with an LLM.
+   * @param prompt - The prompt text.
+   * @param id - The conversation ID, optional. If not provided, creates a new conversation.
+   * @param specification - The LLM specification to use, optional.
+   * @param mimeType - The MIME type for multimodal input, optional.
+   * @param data - The base64-encoded data for multimodal input, optional.
+   * @param tools - Tool definitions for function calling, optional.
+   * @param requireTool - Whether to require a tool call, optional.
+   * @param systemPrompt - The system prompt, optional.
+   * @param includeDetails - Whether to include details, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The conversation response.
+   */
   public async promptConversation(
     prompt: string,
     id?: string,
@@ -1806,6 +2430,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Continues a conversation with tool responses.
+   * @param id - The conversation ID.
+   * @param responses - The tool call responses.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The continued conversation.
+   */
   public async continueConversation(
     id: string,
     responses: Types.ConversationToolResponseInput[],
@@ -1821,6 +2452,16 @@ class Graphlit {
     });
   }
 
+  /**
+   * Publishes a conversation to an external connector.
+   * @param id - The conversation ID.
+   * @param connector - The publishing connector to use.
+   * @param name - The name of the published conversation, optional.
+   * @param workflow - The workflow to use, optional.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The published conversation.
+   */
   public async publishConversation(
     id: string,
     connector: Types.ContentPublishingConnectorInput,
@@ -1842,6 +2483,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Suggests follow-up prompts for a conversation.
+   * @param id - The conversation ID.
+   * @param count - The number of suggestions to generate, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The suggested prompts.
+   */
   public async suggestConversation(
     id: string,
     count?: number,
@@ -1857,6 +2505,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Microsoft calendars.
+   * @param properties - The Microsoft calendar query properties.
+   * @returns The Microsoft calendars.
+   */
   public async queryMicrosoftCalendars(
     properties: Types.MicrosoftCalendarsInput,
   ): Promise<Types.QueryMicrosoftCalendarsQuery> {
@@ -1868,6 +2521,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Google calendars.
+   * @param properties - The Google calendar query properties.
+   * @returns The Google calendars.
+   */
   public async queryGoogleCalendars(
     properties: Types.GoogleCalendarsInput,
   ): Promise<Types.QueryGoogleCalendarsQuery> {
@@ -1879,6 +2537,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Box folders.
+   * @param properties - The Box folder query properties.
+   * @param folderId - The parent folder ID, optional.
+   * @returns The Box folders.
+   */
   public async queryBoxFolders(
     properties: Types.BoxFoldersInput,
     folderId?: string,
@@ -1892,6 +2556,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Dropbox folders.
+   * @param properties - The Dropbox folder query properties.
+   * @param folderPath - The folder path, optional.
+   * @returns The Dropbox folders.
+   */
   public async queryDropboxFolders(
     properties: Types.DropboxFoldersInput,
     folderPath?: string,
@@ -1905,6 +2575,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Google Drive folders.
+   * @param properties - The Google Drive folder query properties.
+   * @param folderId - The parent folder ID, optional.
+   * @returns The Google Drive folders.
+   */
   public async queryGoogleDriveFolders(
     properties: Types.GoogleDriveFoldersInput,
     folderId?: string,
@@ -1918,6 +2594,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries OneDrive folders.
+   * @param properties - The OneDrive folder query properties.
+   * @param folderId - The parent folder ID, optional.
+   * @returns The OneDrive folders.
+   */
   public async queryOneDriveFolders(
     properties: Types.OneDriveFoldersInput,
     folderId?: string,
@@ -1931,6 +2613,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries SharePoint folders.
+   * @param properties - The SharePoint folder query properties.
+   * @param libraryId - The library ID.
+   * @param folderId - The parent folder ID, optional.
+   * @returns The SharePoint folders.
+   */
   public async querySharePointFolders(
     properties: Types.SharePointFoldersInput,
     libraryId: string,
@@ -1946,6 +2635,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries SharePoint libraries.
+   * @param properties - The SharePoint library query properties.
+   * @returns The SharePoint libraries.
+   */
   public async querySharePointLibraries(
     properties: Types.SharePointLibrariesInput,
   ): Promise<Types.QuerySharePointLibrariesQuery> {
@@ -1955,6 +2649,11 @@ class Graphlit {
     >(Documents.QuerySharePointLibraries, { properties: properties });
   }
 
+  /**
+   * Queries Microsoft Teams teams.
+   * @param properties - The Microsoft Teams query properties.
+   * @returns The Microsoft Teams teams.
+   */
   public async queryMicrosoftTeamsTeams(
     properties: Types.MicrosoftTeamsTeamsInput,
   ): Promise<Types.QueryMicrosoftTeamsTeamsQuery> {
@@ -1964,6 +2663,12 @@ class Graphlit {
     >(Documents.QueryMicrosoftTeamsTeams, { properties: properties });
   }
 
+  /**
+   * Queries Microsoft Teams channels.
+   * @param properties - The Microsoft Teams channel query properties.
+   * @param teamId - The team ID.
+   * @returns The Microsoft Teams channels.
+   */
   public async queryMicrosoftTeamsChannels(
     properties: Types.MicrosoftTeamsChannelsInput,
     teamId: string,
@@ -1977,6 +2682,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Discord guilds (servers).
+   * @param properties - The Discord guild query properties.
+   * @returns The Discord guilds.
+   */
   public async queryDiscordGuilds(
     properties: Types.DiscordGuildsInput,
   ): Promise<Types.QueryDiscordGuildsQuery> {
@@ -1986,6 +2696,11 @@ class Graphlit {
     >(Documents.QueryDiscordGuilds, { properties: properties });
   }
 
+  /**
+   * Queries Discord channels.
+   * @param properties - The Discord channel query properties.
+   * @returns The Discord channels.
+   */
   public async queryDiscordChannels(
     properties: Types.DiscordChannelsInput,
   ): Promise<Types.QueryDiscordChannelsQuery> {
@@ -1995,6 +2710,11 @@ class Graphlit {
     >(Documents.QueryDiscordChannels, { properties: properties });
   }
 
+  /**
+   * Queries Slack channels.
+   * @param properties - The Slack channel query properties.
+   * @returns The Slack channels.
+   */
   public async querySlackChannels(
     properties: Types.SlackChannelsInput,
   ): Promise<Types.QuerySlackChannelsQuery> {
@@ -2004,6 +2724,11 @@ class Graphlit {
     >(Documents.QuerySlackChannels, { properties: properties });
   }
 
+  /**
+   * Queries Linear projects.
+   * @param properties - The Linear project query properties.
+   * @returns The Linear projects.
+   */
   public async queryLinearProjects(
     properties: Types.LinearProjectsInput,
   ): Promise<Types.QueryLinearProjectsQuery> {
@@ -2013,6 +2738,12 @@ class Graphlit {
     >(Documents.QueryLinearProjects, { properties: properties });
   }
 
+  /**
+   * Queries GitHub repositories.
+   * @param properties - The GitHub repository query properties.
+   * @param sortBy - The sort order, optional.
+   * @returns The GitHub repositories.
+   */
   public async queryGitHubRepositories(
     properties: Types.GitHubRepositoriesInput,
     sortBy?: Types.GitHubRepositorySortTypes,
@@ -2026,6 +2757,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Queries Notion databases.
+   * @param properties - The Notion database query properties.
+   * @returns The Notion databases.
+   */
   public async queryNotionDatabases(
     properties: Types.NotionDatabasesInput,
   ): Promise<Types.QueryNotionDatabasesQuery> {
@@ -2035,6 +2771,12 @@ class Graphlit {
     >(Documents.QueryNotionDatabases, { properties: properties });
   }
 
+  /**
+   * Queries Notion pages.
+   * @param properties - The Notion page query properties.
+   * @param identifier - The Notion database or page identifier.
+   * @returns The Notion pages.
+   */
   public async queryNotionPages(
     properties: Types.NotionPagesInput,
     identifier: string,
@@ -2048,6 +2790,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a feed.
+   * @param feed - The feed to create.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The created feed.
+   */
   public async createFeed(
     feed: Types.FeedInput,
     correlationId?: string,
@@ -2058,6 +2806,11 @@ class Graphlit {
     >(Documents.CreateFeed, { feed: feed, correlationId: correlationId });
   }
 
+  /**
+   * Updates a feed.
+   * @param feed - The feed to update.
+   * @returns The updated feed.
+   */
   public async updateFeed(
     feed: Types.FeedUpdateInput,
   ): Promise<Types.UpdateFeedMutation> {
@@ -2067,6 +2820,11 @@ class Graphlit {
     >(Documents.UpdateFeed, { feed: feed });
   }
 
+  /**
+   * Deletes a feed.
+   * @param id - The ID of the feed to delete.
+   * @returns The deleted feed.
+   */
   public async deleteFeed(id: string): Promise<Types.DeleteFeedMutation> {
     return this.mutateAndCheckError<
       Types.DeleteFeedMutation,
@@ -2074,6 +2832,12 @@ class Graphlit {
     >(Documents.DeleteFeed, { id: id });
   }
 
+  /**
+   * Deletes multiple feeds.
+   * @param ids - The IDs of the feeds to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted feeds.
+   */
   public async deleteFeeds(
     ids: string[],
     isSynchronous?: boolean,
@@ -2084,6 +2848,13 @@ class Graphlit {
     >(Documents.DeleteFeeds, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all feeds based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting feeds.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllFeeds(
     filter?: Types.FeedFilter,
     isSynchronous?: boolean,
@@ -2099,6 +2870,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Triggers a feed to run immediately.
+   * @param id - The ID of the feed to trigger.
+   * @returns The triggered feed.
+   */
   public async triggerFeed(id: string): Promise<Types.TriggerFeedMutation> {
     return this.mutateAndCheckError<
       Types.TriggerFeedMutation,
@@ -2106,6 +2882,11 @@ class Graphlit {
     >(Documents.TriggerFeed, { id: id });
   }
 
+  /**
+   * Enables a feed.
+   * @param id - The ID of the feed to enable.
+   * @returns The enabled feed.
+   */
   public async enableFeed(id: string): Promise<Types.EnableFeedMutation> {
     return this.mutateAndCheckError<
       Types.EnableFeedMutation,
@@ -2113,6 +2894,11 @@ class Graphlit {
     >(Documents.EnableFeed, { id: id });
   }
 
+  /**
+   * Disables a feed.
+   * @param id - The ID of the feed to disable.
+   * @returns The disabled feed.
+   */
   public async disableFeed(id: string): Promise<Types.DisableFeedMutation> {
     return this.mutateAndCheckError<
       Types.DisableFeedMutation,
@@ -2120,6 +2906,11 @@ class Graphlit {
     >(Documents.DisableFeed, { id: id });
   }
 
+  /**
+   * Lookup a feed given its ID.
+   * @param id - ID of the feed.
+   * @returns The feed.
+   */
   public async getFeed(id: string): Promise<Types.GetFeedQuery> {
     return this.queryAndCheckError<
       Types.GetFeedQuery,
@@ -2127,6 +2918,11 @@ class Graphlit {
     >(Documents.GetFeed, { id: id });
   }
 
+  /**
+   * Retrieves feeds based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving feeds.
+   * @returns The feeds.
+   */
   public async queryFeeds(
     filter?: Types.FeedFilter,
   ): Promise<Types.QueryFeedsQuery> {
@@ -2136,6 +2932,11 @@ class Graphlit {
     >(Documents.QueryFeeds, { filter: filter });
   }
 
+  /**
+   * Counts feeds based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting feeds.
+   * @returns The count of feeds.
+   */
   public async countFeeds(
     filter?: Types.FeedFilter,
   ): Promise<Types.CountFeedsQuery> {
@@ -2145,6 +2946,11 @@ class Graphlit {
     >(Documents.CountFeeds, { filter: filter });
   }
 
+  /**
+   * Checks if a feed exists based on the provided filter criteria.
+   * @param filter - The filter criteria to apply.
+   * @returns Whether the feed exists.
+   */
   public async feedExists(
     filter?: Types.FeedFilter,
   ): Promise<Types.FeedExistsQuery> {
@@ -2154,6 +2960,11 @@ class Graphlit {
     >(Documents.FeedExists, { filter: filter });
   }
 
+  /**
+   * Checks if feed processing is complete.
+   * @param id - ID of the feed.
+   * @returns Whether the feed is done processing.
+   */
   public async isFeedDone(id: string): Promise<Types.IsFeedDoneQuery> {
     return this.queryAndCheckError<
       Types.IsFeedDoneQuery,
@@ -2161,6 +2972,12 @@ class Graphlit {
     >(Documents.IsFeedDone, { id: id });
   }
 
+  /**
+   * Prompts multiple specifications and returns the best response.
+   * @param prompt - The prompt to send to each specification.
+   * @param ids - The IDs of the specifications to prompt.
+   * @returns The best response.
+   */
   public async promptSpecifications(
     prompt: string,
     ids: string[],
@@ -2171,6 +2988,11 @@ class Graphlit {
     >(Documents.PromptSpecifications, { prompt: prompt, ids: ids });
   }
 
+  /**
+   * Creates a specification (LLM configuration).
+   * @param specification - The specification to create.
+   * @returns The created specification.
+   */
   public async createSpecification(
     specification: Types.SpecificationInput,
   ): Promise<Types.CreateSpecificationMutation> {
@@ -2180,6 +3002,11 @@ class Graphlit {
     >(Documents.CreateSpecification, { specification: specification });
   }
 
+  /**
+   * Updates a specification.
+   * @param specification - The specification to update.
+   * @returns The updated specification.
+   */
   public async updateSpecification(
     specification: Types.SpecificationUpdateInput,
   ): Promise<Types.UpdateSpecificationMutation> {
@@ -2189,6 +3016,11 @@ class Graphlit {
     >(Documents.UpdateSpecification, { specification: specification });
   }
 
+  /**
+   * Creates or updates a specification.
+   * @param specification - The specification to create or update.
+   * @returns The created or updated specification.
+   */
   public async upsertSpecification(
     specification: Types.SpecificationInput,
   ): Promise<Types.UpsertSpecificationMutation> {
@@ -2198,6 +3030,11 @@ class Graphlit {
     >(Documents.UpsertSpecification, { specification: specification });
   }
 
+  /**
+   * Deletes a specification.
+   * @param id - The ID of the specification to delete.
+   * @returns The deleted specification.
+   */
   public async deleteSpecification(
     id: string,
   ): Promise<Types.DeleteSpecificationMutation> {
@@ -2207,6 +3044,12 @@ class Graphlit {
     >(Documents.DeleteSpecification, { id: id });
   }
 
+  /**
+   * Deletes multiple specifications.
+   * @param ids - The IDs of the specifications to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted specifications.
+   */
   public async deleteSpecifications(
     ids: string[],
     isSynchronous?: boolean,
@@ -2220,6 +3063,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Deletes all specifications based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting specifications.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllSpecifications(
     filter?: Types.SpecificationFilter,
     isSynchronous?: boolean,
@@ -2235,6 +3085,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a specification given its ID.
+   * @param id - ID of the specification.
+   * @returns The specification.
+   */
   public async getSpecification(
     id: string,
   ): Promise<Types.GetSpecificationQuery> {
@@ -2244,6 +3099,11 @@ class Graphlit {
     >(Documents.GetSpecification, { id: id });
   }
 
+  /**
+   * Retrieves specifications based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving specifications.
+   * @returns The specifications.
+   */
   public async querySpecifications(
     filter?: Types.SpecificationFilter,
   ): Promise<Types.QuerySpecificationsQuery> {
@@ -2253,6 +3113,11 @@ class Graphlit {
     >(Documents.QuerySpecifications, { filter: filter });
   }
 
+  /**
+   * Counts specifications based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting specifications.
+   * @returns The count of specifications.
+   */
   public async countSpecifications(
     filter?: Types.SpecificationFilter,
   ): Promise<Types.CountSpecificationsQuery> {
@@ -2262,6 +3127,11 @@ class Graphlit {
     >(Documents.CountSpecifications, { filter: filter });
   }
 
+  /**
+   * Checks if a specification exists based on the provided filter criteria.
+   * @param filter - The filter criteria to apply.
+   * @returns Whether the specification exists.
+   */
   public async specificationExists(
     filter?: Types.SpecificationFilter,
   ): Promise<Types.SpecificationExistsQuery> {
@@ -2271,6 +3141,11 @@ class Graphlit {
     >(Documents.SpecificationExists, { filter: filter });
   }
 
+  /**
+   * Retrieves available LLM models based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving models.
+   * @returns The available models.
+   */
   public async queryModels(
     filter?: Types.ModelFilter,
   ): Promise<Types.QueryModelsQuery> {
@@ -2280,6 +3155,11 @@ class Graphlit {
     >(Documents.QueryModels, { filter: filter });
   }
 
+  /**
+   * Creates a connector for external integrations.
+   * @param connector - The connector to create.
+   * @returns The created connector.
+   */
   public async createConnector(
     connector: Types.ConnectorInput,
   ): Promise<Types.CreateConnectorMutation> {
@@ -2289,6 +3169,11 @@ class Graphlit {
     >(Documents.CreateConnector, { connector: connector });
   }
 
+  /**
+   * Updates a connector.
+   * @param connector - The connector to update.
+   * @returns The updated connector.
+   */
   public async updateConnector(
     connector: Types.ConnectorUpdateInput,
   ): Promise<Types.UpdateConnectorMutation> {
@@ -2309,6 +3194,11 @@ class Graphlit {
   }
   */
 
+  /**
+   * Deletes a connector.
+   * @param id - The ID of the connector to delete.
+   * @returns The deleted connector.
+   */
   public async deleteConnector(
     id: string,
   ): Promise<Types.DeleteConnectorMutation> {
@@ -2349,6 +3239,11 @@ class Graphlit {
   }
   */
 
+  /**
+   * Lookup a connector given its ID.
+   * @param id - ID of the connector.
+   * @returns The connector.
+   */
   public async getConnector(id: string): Promise<Types.GetConnectorQuery> {
     return this.queryAndCheckError<
       Types.GetConnectorQuery,
@@ -2356,6 +3251,11 @@ class Graphlit {
     >(Documents.GetConnector, { id: id });
   }
 
+  /**
+   * Retrieves connectors based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving connectors.
+   * @returns The connectors.
+   */
   public async queryConnectors(
     filter?: Types.ConnectorFilter,
   ): Promise<Types.QueryConnectorsQuery> {
@@ -2365,6 +3265,11 @@ class Graphlit {
     >(Documents.QueryConnectors, { filter: filter });
   }
 
+  /**
+   * Counts connectors based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting connectors.
+   * @returns The count of connectors.
+   */
   public async countConnectors(
     filter?: Types.ConnectorFilter,
   ): Promise<Types.CountConnectorsQuery> {
@@ -2382,6 +3287,11 @@ class Graphlit {
   }
   */
 
+  /**
+   * Creates a view for content filtering.
+   * @param view - The view to create.
+   * @returns The created view.
+   */
   public async createView(
     view: Types.ViewInput,
   ): Promise<Types.CreateViewMutation> {
@@ -2391,6 +3301,11 @@ class Graphlit {
     >(Documents.CreateView, { view: view });
   }
 
+  /**
+   * Updates a view.
+   * @param view - The view to update.
+   * @returns The updated view.
+   */
   public async updateView(
     view: Types.ViewUpdateInput,
   ): Promise<Types.UpdateViewMutation> {
@@ -2400,6 +3315,11 @@ class Graphlit {
     >(Documents.UpdateView, { view: view });
   }
 
+  /**
+   * Creates or updates a view.
+   * @param view - The view to create or update.
+   * @returns The created or updated view.
+   */
   public async upsertView(
     view: Types.ViewInput,
   ): Promise<Types.UpsertViewMutation> {
@@ -2409,6 +3329,11 @@ class Graphlit {
     >(Documents.UpsertView, { view: view });
   }
 
+  /**
+   * Deletes a view.
+   * @param id - The ID of the view to delete.
+   * @returns The deleted view.
+   */
   public async deleteView(id: string): Promise<Types.DeleteViewMutation> {
     return this.mutateAndCheckError<
       Types.DeleteViewMutation,
@@ -2416,6 +3341,12 @@ class Graphlit {
     >(Documents.DeleteView, { id: id });
   }
 
+  /**
+   * Deletes multiple views.
+   * @param ids - The IDs of the views to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted views.
+   */
   public async deleteViews(
     ids: string[],
     isSynchronous?: boolean,
@@ -2426,6 +3357,13 @@ class Graphlit {
     >(Documents.DeleteViews, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all views based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting views.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllViews(
     filter?: Types.ViewFilter,
     isSynchronous?: boolean,
@@ -2441,6 +3379,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a view given its ID.
+   * @param id - ID of the view.
+   * @returns The view.
+   */
   public async getView(id: string): Promise<Types.GetViewQuery> {
     return this.queryAndCheckError<
       Types.GetViewQuery,
@@ -2448,6 +3391,11 @@ class Graphlit {
     >(Documents.GetView, { id: id });
   }
 
+  /**
+   * Retrieves views based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving views.
+   * @returns The views.
+   */
   public async queryViews(
     filter?: Types.ViewFilter,
   ): Promise<Types.QueryViewsQuery> {
@@ -2457,6 +3405,11 @@ class Graphlit {
     >(Documents.QueryViews, { filter: filter });
   }
 
+  /**
+   * Counts views based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting views.
+   * @returns The count of views.
+   */
   public async countViews(
     filter?: Types.ViewFilter,
   ): Promise<Types.CountViewsQuery> {
@@ -2466,6 +3419,11 @@ class Graphlit {
     >(Documents.CountViews, { filter: filter });
   }
 
+  /**
+   * Checks if a view exists based on the provided filter criteria.
+   * @param filter - The filter criteria to apply.
+   * @returns Whether the view exists.
+   */
   public async viewExists(
     filter?: Types.ViewFilter,
   ): Promise<Types.ViewExistsQuery> {
@@ -2475,6 +3433,11 @@ class Graphlit {
     >(Documents.ViewExists, { filter: filter });
   }
 
+  /**
+   * Creates a workflow for content processing.
+   * @param workflow - The workflow to create.
+   * @returns The created workflow.
+   */
   public async createWorkflow(
     workflow: Types.WorkflowInput,
   ): Promise<Types.CreateWorkflowMutation> {
@@ -2484,6 +3447,11 @@ class Graphlit {
     >(Documents.CreateWorkflow, { workflow: workflow });
   }
 
+  /**
+   * Updates a workflow.
+   * @param workflow - The workflow to update.
+   * @returns The updated workflow.
+   */
   public async updateWorkflow(
     workflow: Types.WorkflowUpdateInput,
   ): Promise<Types.UpdateWorkflowMutation> {
@@ -2493,6 +3461,11 @@ class Graphlit {
     >(Documents.UpdateWorkflow, { workflow: workflow });
   }
 
+  /**
+   * Creates or updates a workflow.
+   * @param workflow - The workflow to create or update.
+   * @returns The created or updated workflow.
+   */
   public async upsertWorkflow(
     workflow: Types.WorkflowInput,
   ): Promise<Types.UpsertWorkflowMutation> {
@@ -2502,6 +3475,11 @@ class Graphlit {
     >(Documents.UpsertWorkflow, { workflow: workflow });
   }
 
+  /**
+   * Deletes a workflow.
+   * @param id - The ID of the workflow to delete.
+   * @returns The deleted workflow.
+   */
   public async deleteWorkflow(
     id: string,
   ): Promise<Types.DeleteWorkflowMutation> {
@@ -2511,6 +3489,12 @@ class Graphlit {
     >(Documents.DeleteWorkflow, { id: id });
   }
 
+  /**
+   * Deletes multiple workflows.
+   * @param ids - The IDs of the workflows to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted workflows.
+   */
   public async deleteWorkflows(
     ids: string[],
     isSynchronous?: boolean,
@@ -2521,6 +3505,13 @@ class Graphlit {
     >(Documents.DeleteWorkflows, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all workflows based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting workflows.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllWorkflows(
     filter?: Types.WorkflowFilter,
     isSynchronous?: boolean,
@@ -2536,6 +3527,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a workflow given its ID.
+   * @param id - ID of the workflow.
+   * @returns The workflow.
+   */
   public async getWorkflow(id: string): Promise<Types.GetWorkflowQuery> {
     return this.queryAndCheckError<
       Types.GetWorkflowQuery,
@@ -2543,6 +3539,11 @@ class Graphlit {
     >(Documents.GetWorkflow, { id: id });
   }
 
+  /**
+   * Retrieves workflows based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving workflows.
+   * @returns The workflows.
+   */
   public async queryWorkflows(
     filter?: Types.WorkflowFilter,
   ): Promise<Types.QueryWorkflowsQuery> {
@@ -2552,6 +3553,11 @@ class Graphlit {
     >(Documents.QueryWorkflows, { filter: filter });
   }
 
+  /**
+   * Counts workflows based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting workflows.
+   * @returns The count of workflows.
+   */
   public async countWorkflows(
     filter?: Types.WorkflowFilter,
   ): Promise<Types.CountWorkflowsQuery> {
@@ -2561,6 +3567,11 @@ class Graphlit {
     >(Documents.CountWorkflows, { filter: filter });
   }
 
+  /**
+   * Checks if a workflow exists based on the provided filter criteria.
+   * @param filter - The filter criteria to apply.
+   * @returns Whether the workflow exists.
+   */
   public async workflowExists(
     filter?: Types.WorkflowFilter,
   ): Promise<Types.WorkflowExistsQuery> {
@@ -2570,6 +3581,11 @@ class Graphlit {
     >(Documents.WorkflowExists, { filter: filter });
   }
 
+  /**
+   * Creates a user.
+   * @param user - The user to create.
+   * @returns The created user.
+   */
   public async createUser(
     user: Types.UserInput,
   ): Promise<Types.CreateUserMutation> {
@@ -2579,6 +3595,11 @@ class Graphlit {
     >(Documents.CreateUser, { user: user });
   }
 
+  /**
+   * Updates a user.
+   * @param user - The user to update.
+   * @returns The updated user.
+   */
   public async updateUser(
     user: Types.UserUpdateInput,
   ): Promise<Types.UpdateUserMutation> {
@@ -2588,6 +3609,11 @@ class Graphlit {
     >(Documents.UpdateUser, { user: user });
   }
 
+  /**
+   * Deletes a user.
+   * @param id - The ID of the user to delete.
+   * @returns The deleted user.
+   */
   public async deleteUser(id: string): Promise<Types.DeleteUserMutation> {
     return this.mutateAndCheckError<
       Types.DeleteUserMutation,
@@ -2595,6 +3621,11 @@ class Graphlit {
     >(Documents.DeleteUser, { id: id });
   }
 
+  /**
+   * Lookup a user by their external identifier.
+   * @param identifier - The external identifier.
+   * @returns The user.
+   */
   public async getUserByIdentifier(
     identifier: string,
   ): Promise<Types.GetUserByIdentifierQuery> {
@@ -2604,6 +3635,10 @@ class Graphlit {
     >(Documents.GetUserByIdentifier, { identifier: identifier });
   }
 
+  /**
+   * Gets the current authenticated user.
+   * @returns The current user.
+   */
   public async getUser(): Promise<Types.GetUserQuery> {
     return this.queryAndCheckError<
       Types.GetUserQuery,
@@ -2611,6 +3646,11 @@ class Graphlit {
     >(Documents.GetUser, {});
   }
 
+  /**
+   * Retrieves users based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving users.
+   * @returns The users.
+   */
   public async queryUsers(
     filter?: Types.UserFilter,
   ): Promise<Types.QueryUsersQuery> {
@@ -2620,6 +3660,11 @@ class Graphlit {
     >(Documents.QueryUsers, { filter: filter });
   }
 
+  /**
+   * Counts users based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting users.
+   * @returns The count of users.
+   */
   public async countUsers(
     filter?: Types.UserFilter,
   ): Promise<Types.CountUsersQuery> {
@@ -2629,6 +3674,11 @@ class Graphlit {
     >(Documents.CountUsers, { filter: filter });
   }
 
+  /**
+   * Enables a user.
+   * @param id - The ID of the user to enable.
+   * @returns The enabled user.
+   */
   public async enableUser(id: string): Promise<Types.EnableUserMutation> {
     return this.mutateAndCheckError<
       Types.EnableUserMutation,
@@ -2636,6 +3686,11 @@ class Graphlit {
     >(Documents.EnableUser, { id: id });
   }
 
+  /**
+   * Disables a user.
+   * @param id - The ID of the user to disable.
+   * @returns The disabled user.
+   */
   public async disableUser(id: string): Promise<Types.DisableUserMutation> {
     return this.mutateAndCheckError<
       Types.DisableUserMutation,
@@ -2643,6 +3698,11 @@ class Graphlit {
     >(Documents.DisableUser, { id: id });
   }
 
+  /**
+   * Creates a category for content classification.
+   * @param category - The category to create.
+   * @returns The created category.
+   */
   public async createCategory(
     category: Types.CategoryInput,
   ): Promise<Types.CreateCategoryMutation> {
@@ -2652,6 +3712,11 @@ class Graphlit {
     >(Documents.CreateCategory, { category: category });
   }
 
+  /**
+   * Updates a category.
+   * @param category - The category to update.
+   * @returns The updated category.
+   */
   public async updateCategory(
     category: Types.CategoryUpdateInput,
   ): Promise<Types.UpdateCategoryMutation> {
@@ -2661,6 +3726,11 @@ class Graphlit {
     >(Documents.UpdateCategory, { category: category });
   }
 
+  /**
+   * Creates or updates a category.
+   * @param category - The category to create or update.
+   * @returns The created or updated category.
+   */
   public async upsertCategory(
     category: Types.CategoryInput,
   ): Promise<Types.UpsertCategoryMutation> {
@@ -2670,6 +3740,11 @@ class Graphlit {
     >(Documents.UpsertCategory, { category: category });
   }
 
+  /**
+   * Deletes a category.
+   * @param id - The ID of the category to delete.
+   * @returns The deleted category.
+   */
   public async deleteCategory(
     id: string,
   ): Promise<Types.DeleteCategoryMutation> {
@@ -2679,6 +3754,12 @@ class Graphlit {
     >(Documents.DeleteCategory, { id: id });
   }
 
+  /**
+   * Deletes multiple categories.
+   * @param ids - The IDs of the categories to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted categories.
+   */
   public async deleteCategories(
     ids: string[],
     isSynchronous?: boolean,
@@ -2689,6 +3770,13 @@ class Graphlit {
     >(Documents.DeleteCategories, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all categories based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting categories.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllCategories(
     filter?: Types.CategoryFilter,
     isSynchronous?: boolean,
@@ -2704,6 +3792,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a category given its ID.
+   * @param id - ID of the category.
+   * @returns The category.
+   */
   public async getCategory(id: string): Promise<Types.GetCategoryQuery> {
     return this.queryAndCheckError<
       Types.GetCategoryQuery,
@@ -2711,6 +3804,11 @@ class Graphlit {
     >(Documents.GetCategory, { id: id });
   }
 
+  /**
+   * Retrieves categories based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving categories.
+   * @returns The categories.
+   */
   public async queryCategories(
     filter?: Types.CategoryFilter,
   ): Promise<Types.QueryCategoriesQuery> {
@@ -2720,6 +3818,12 @@ class Graphlit {
     >(Documents.QueryCategories, { filter: filter });
   }
 
+  /**
+   * Counts categories based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting categories.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of categories.
+   */
   public async countCategories(
     filter?: Types.CategoryFilter,
     correlationId?: string,
@@ -2733,6 +3837,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a label for content tagging.
+   * @param label - The label to create.
+   * @returns The created label.
+   */
   public async createLabel(
     label: Types.LabelInput,
   ): Promise<Types.CreateLabelMutation> {
@@ -2742,6 +3851,11 @@ class Graphlit {
     >(Documents.CreateLabel, { label: label });
   }
 
+  /**
+   * Updates a label.
+   * @param label - The label to update.
+   * @returns The updated label.
+   */
   public async updateLabel(
     label: Types.LabelUpdateInput,
   ): Promise<Types.UpdateLabelMutation> {
@@ -2751,6 +3865,11 @@ class Graphlit {
     >(Documents.UpdateLabel, { label: label });
   }
 
+  /**
+   * Creates or updates a label.
+   * @param label - The label to create or update.
+   * @returns The created or updated label.
+   */
   public async upsertLabel(
     label: Types.LabelInput,
   ): Promise<Types.UpsertLabelMutation> {
@@ -2760,6 +3879,11 @@ class Graphlit {
     >(Documents.UpsertLabel, { label: label });
   }
 
+  /**
+   * Deletes a label.
+   * @param id - The ID of the label to delete.
+   * @returns The deleted label.
+   */
   public async deleteLabel(id: string): Promise<Types.DeleteLabelMutation> {
     return this.mutateAndCheckError<
       Types.DeleteLabelMutation,
@@ -2767,6 +3891,12 @@ class Graphlit {
     >(Documents.DeleteLabel, { id: id });
   }
 
+  /**
+   * Deletes multiple labels.
+   * @param ids - The IDs of the labels to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted labels.
+   */
   public async deleteLabels(
     ids: string[],
     isSynchronous?: boolean,
@@ -2777,6 +3907,13 @@ class Graphlit {
     >(Documents.DeleteLabels, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all labels based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting labels.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllLabels(
     filter?: Types.LabelFilter,
     isSynchronous?: boolean,
@@ -2792,6 +3929,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a label given its ID.
+   * @param id - ID of the label.
+   * @returns The label.
+   */
   public async getLabel(id: string): Promise<Types.GetLabelQuery> {
     return this.queryAndCheckError<
       Types.GetLabelQuery,
@@ -2799,6 +3941,11 @@ class Graphlit {
     >(Documents.GetLabel, { id: id });
   }
 
+  /**
+   * Retrieves labels based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving labels.
+   * @returns The labels.
+   */
   public async queryLabels(
     filter?: Types.LabelFilter,
   ): Promise<Types.QueryLabelsQuery> {
@@ -2808,6 +3955,12 @@ class Graphlit {
     >(Documents.QueryLabels, { filter: filter });
   }
 
+  /**
+   * Counts labels based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting labels.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of labels.
+   */
   public async countLabels(
     filter?: Types.LabelFilter,
     correlationId?: string,
@@ -2821,6 +3974,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a person entity.
+   * @param person - The person to create.
+   * @returns The created person.
+   */
   public async createPerson(
     person: Types.PersonInput,
   ): Promise<Types.CreatePersonMutation> {
@@ -2830,6 +3988,11 @@ class Graphlit {
     >(Documents.CreatePerson, { person: person });
   }
 
+  /**
+   * Updates a person entity.
+   * @param person - The person to update.
+   * @returns The updated person.
+   */
   public async updatePerson(
     person: Types.PersonUpdateInput,
   ): Promise<Types.UpdatePersonMutation> {
@@ -2839,6 +4002,11 @@ class Graphlit {
     >(Documents.UpdatePerson, { person: person });
   }
 
+  /**
+   * Deletes a person entity.
+   * @param id - The ID of the person to delete.
+   * @returns The deleted person.
+   */
   public async deletePerson(id: string): Promise<Types.DeletePersonMutation> {
     return this.mutateAndCheckError<
       Types.DeletePersonMutation,
@@ -2846,6 +4014,12 @@ class Graphlit {
     >(Documents.DeletePerson, { id: id });
   }
 
+  /**
+   * Deletes multiple person entities.
+   * @param ids - The IDs of the persons to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted persons.
+   */
   public async deletePersons(
     ids: string[],
     isSynchronous?: boolean,
@@ -2856,6 +4030,13 @@ class Graphlit {
     >(Documents.DeletePersons, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all persons based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting persons.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllPersons(
     filter?: Types.PersonFilter,
     isSynchronous?: boolean,
@@ -2871,6 +4052,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a person given their ID.
+   * @param id - ID of the person.
+   * @returns The person.
+   */
   public async getPerson(id: string): Promise<Types.GetPersonQuery> {
     return this.queryAndCheckError<
       Types.GetPersonQuery,
@@ -2878,6 +4064,12 @@ class Graphlit {
     >(Documents.GetPerson, { id: id });
   }
 
+  /**
+   * Retrieves persons based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving persons.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The persons.
+   */
   public async queryPersons(
     filter?: Types.PersonFilter,
     correlationId?: string,
@@ -2888,6 +4080,13 @@ class Graphlit {
     >(Documents.QueryPersons, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves persons with clustering information.
+   * @param filter - The filter criteria to apply when retrieving persons.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The persons with clusters.
+   */
   public async queryPersonsClusters(
     filter?: Types.PersonFilter,
     clusters?: Types.EntityClustersInput,
@@ -2903,6 +4102,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves persons with expanded details.
+   * @param filter - The filter criteria to apply when retrieving persons.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The persons with expanded details.
+   */
   public async queryPersonsExpanded(
     filter?: Types.PersonFilter,
     correlationId?: string,
@@ -2916,6 +4121,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts persons based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting persons.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of persons.
+   */
   public async countPersons(
     filter?: Types.PersonFilter,
     correlationId?: string,
@@ -2929,6 +4140,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enriches persons using an external connector.
+   * @param connector - The enrichment connector configuration.
+   * @param filter - The filter criteria to apply when selecting persons.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The enrichment result.
+   */
   public async enrichPersons(
     connector: Types.EntityEnrichmentConnectorInput,
     filter?: Types.PersonFilter,
@@ -2944,6 +4162,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates an organization entity.
+   * @param organization - The organization to create.
+   * @returns The created organization.
+   */
   public async createOrganization(
     organization: Types.OrganizationInput,
   ): Promise<Types.CreateOrganizationMutation> {
@@ -2953,6 +4176,11 @@ class Graphlit {
     >(Documents.CreateOrganization, { organization: organization });
   }
 
+  /**
+   * Updates an organization entity.
+   * @param organization - The organization to update.
+   * @returns The updated organization.
+   */
   public async updateOrganization(
     organization: Types.OrganizationUpdateInput,
   ): Promise<Types.UpdateOrganizationMutation> {
@@ -2962,6 +4190,11 @@ class Graphlit {
     >(Documents.UpdateOrganization, { organization: organization });
   }
 
+  /**
+   * Deletes an organization entity.
+   * @param id - The ID of the organization to delete.
+   * @returns The deleted organization.
+   */
   public async deleteOrganization(
     id: string,
   ): Promise<Types.DeleteOrganizationMutation> {
@@ -2971,6 +4204,12 @@ class Graphlit {
     >(Documents.DeleteOrganization, { id: id });
   }
 
+  /**
+   * Deletes multiple organization entities.
+   * @param ids - The IDs of the organizations to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted organizations.
+   */
   public async deleteOrganizations(
     ids: string[],
     isSynchronous?: boolean,
@@ -2984,6 +4223,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Deletes all organizations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting organizations.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllOrganizations(
     filter?: Types.OrganizationFilter,
     isSynchronous?: boolean,
@@ -2999,6 +4245,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup an organization given its ID.
+   * @param id - ID of the organization.
+   * @returns The organization.
+   */
   public async getOrganization(
     id: string,
   ): Promise<Types.GetOrganizationQuery> {
@@ -3008,6 +4259,12 @@ class Graphlit {
     >(Documents.GetOrganization, { id: id });
   }
 
+  /**
+   * Retrieves organizations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving organizations.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The organizations.
+   */
   public async queryOrganizations(
     filter?: Types.OrganizationFilter,
     correlationId?: string,
@@ -3018,6 +4275,13 @@ class Graphlit {
     >(Documents.QueryOrganizations, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves organizations with clustering information.
+   * @param filter - The filter criteria to apply when retrieving organizations.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The organizations with clusters.
+   */
   public async queryOrganizationsClusters(
     filter?: Types.OrganizationFilter,
     clusters?: Types.EntityClustersInput,
@@ -3033,6 +4297,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Retrieves organizations with expanded details.
+   * @param filter - The filter criteria to apply when retrieving organizations.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The organizations with expanded details.
+   */
   public async queryOrganizationsExpanded(
     filter?: Types.OrganizationFilter,
     correlationId?: string,
@@ -3046,6 +4316,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts organizations based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting organizations.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of organizations.
+   */
   public async countOrganizations(
     filter?: Types.OrganizationFilter,
     correlationId?: string,
@@ -3059,6 +4335,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enriches organizations using an external connector.
+   * @param connector - The enrichment connector configuration.
+   * @param filter - The filter criteria to apply when selecting organizations.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The enrichment result.
+   */
   public async enrichOrganizations(
     connector: Types.EntityEnrichmentConnectorInput,
     filter?: Types.OrganizationFilter,
@@ -3074,6 +4357,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a place entity.
+   * @param place - The place to create.
+   * @returns The created place.
+   */
   public async createPlace(
     place: Types.PlaceInput,
   ): Promise<Types.CreatePlaceMutation> {
@@ -3083,6 +4371,11 @@ class Graphlit {
     >(Documents.CreatePlace, { place: place });
   }
 
+  /**
+   * Updates a place entity.
+   * @param place - The place to update.
+   * @returns The updated place.
+   */
   public async updatePlace(
     place: Types.PlaceUpdateInput,
   ): Promise<Types.UpdatePlaceMutation> {
@@ -3092,6 +4385,11 @@ class Graphlit {
     >(Documents.UpdatePlace, { place: place });
   }
 
+  /**
+   * Deletes a place entity.
+   * @param id - The ID of the place to delete.
+   * @returns The deleted place.
+   */
   public async deletePlace(id: string): Promise<Types.DeletePlaceMutation> {
     return this.mutateAndCheckError<
       Types.DeletePlaceMutation,
@@ -3099,6 +4397,12 @@ class Graphlit {
     >(Documents.DeletePlace, { id: id });
   }
 
+  /**
+   * Deletes multiple place entities.
+   * @param ids - The IDs of the places to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted places.
+   */
   public async deletePlaces(
     ids: string[],
     isSynchronous?: boolean,
@@ -3109,6 +4413,13 @@ class Graphlit {
     >(Documents.DeletePlaces, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all places based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting places.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllPlaces(
     filter?: Types.PlaceFilter,
     isSynchronous?: boolean,
@@ -3124,6 +4435,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a place given its ID.
+   * @param id - ID of the place.
+   * @returns The place.
+   */
   public async getPlace(id: string): Promise<Types.GetPlaceQuery> {
     return this.queryAndCheckError<
       Types.GetPlaceQuery,
@@ -3131,6 +4447,12 @@ class Graphlit {
     >(Documents.GetPlace, { id: id });
   }
 
+  /**
+   * Retrieves places based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving places.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The places.
+   */
   public async queryPlaces(
     filter?: Types.PlaceFilter,
     correlationId?: string,
@@ -3141,6 +4463,13 @@ class Graphlit {
     >(Documents.QueryPlaces, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves places with clustering information.
+   * @param filter - The filter criteria to apply when retrieving places.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The places with clusters.
+   */
   public async queryPlacesClusters(
     filter?: Types.PlaceFilter,
     clusters?: Types.EntityClustersInput,
@@ -3156,6 +4485,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts places based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting places.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of places.
+   */
   public async countPlaces(
     filter?: Types.PlaceFilter,
     correlationId?: string,
@@ -3169,6 +4504,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enriches places using an external connector.
+   * @param connector - The enrichment connector configuration.
+   * @param filter - The filter criteria to apply when selecting places.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The enrichment result.
+   */
   public async enrichPlaces(
     connector: Types.EntityEnrichmentConnectorInput,
     filter?: Types.PlaceFilter,
@@ -3184,6 +4526,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates an event entity.
+   * @param event - The event to create.
+   * @returns The created event.
+   */
   public async createEvent(
     event: Types.EventInput,
   ): Promise<Types.CreateEventMutation> {
@@ -3193,6 +4540,11 @@ class Graphlit {
     >(Documents.CreateEvent, { event: event });
   }
 
+  /**
+   * Updates an event entity.
+   * @param event - The event to update.
+   * @returns The updated event.
+   */
   public async updateEvent(
     event: Types.EventUpdateInput,
   ): Promise<Types.UpdateEventMutation> {
@@ -3202,6 +4554,11 @@ class Graphlit {
     >(Documents.UpdateEvent, { event: event });
   }
 
+  /**
+   * Deletes an event entity.
+   * @param id - The ID of the event to delete.
+   * @returns The deleted event.
+   */
   public async deleteEvent(id: string): Promise<Types.DeleteEventMutation> {
     return this.mutateAndCheckError<
       Types.DeleteEventMutation,
@@ -3209,6 +4566,12 @@ class Graphlit {
     >(Documents.DeleteEvent, { id: id });
   }
 
+  /**
+   * Deletes multiple event entities.
+   * @param ids - The IDs of the events to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted events.
+   */
   public async deleteEvents(
     ids: string[],
     isSynchronous?: boolean,
@@ -3219,6 +4582,13 @@ class Graphlit {
     >(Documents.DeleteEvents, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all events based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting events.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllEvents(
     filter?: Types.EventFilter,
     isSynchronous?: boolean,
@@ -3234,6 +4604,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup an event given its ID.
+   * @param id - ID of the event.
+   * @returns The event.
+   */
   public async getEvent(id: string): Promise<Types.GetEventQuery> {
     return this.queryAndCheckError<
       Types.GetEventQuery,
@@ -3241,6 +4616,12 @@ class Graphlit {
     >(Documents.GetEvent, { id: id });
   }
 
+  /**
+   * Retrieves events based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving events.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The events.
+   */
   public async queryEvents(
     filter?: Types.EventFilter,
     correlationId?: string,
@@ -3251,6 +4632,13 @@ class Graphlit {
     >(Documents.QueryEvents, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves events with clustering information.
+   * @param filter - The filter criteria to apply when retrieving events.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The events with clusters.
+   */
   public async queryEventsClusters(
     filter?: Types.EventFilter,
     clusters?: Types.EntityClustersInput,
@@ -3266,6 +4654,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts events based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting events.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of events.
+   */
   public async countEvents(
     filter?: Types.EventFilter,
     correlationId?: string,
@@ -3279,6 +4673,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a product entity.
+   * @param product - The product to create.
+   * @returns The created product.
+   */
   public async createProduct(
     product: Types.ProductInput,
   ): Promise<Types.CreateProductMutation> {
@@ -3288,6 +4687,11 @@ class Graphlit {
     >(Documents.CreateProduct, { product: product });
   }
 
+  /**
+   * Updates a product entity.
+   * @param product - The product to update.
+   * @returns The updated product.
+   */
   public async updateProduct(
     product: Types.ProductUpdateInput,
   ): Promise<Types.UpdateProductMutation> {
@@ -3297,6 +4701,11 @@ class Graphlit {
     >(Documents.UpdateProduct, { product: product });
   }
 
+  /**
+   * Deletes a product entity.
+   * @param id - The ID of the product to delete.
+   * @returns The deleted product.
+   */
   public async deleteProduct(id: string): Promise<Types.DeleteProductMutation> {
     return this.mutateAndCheckError<
       Types.DeleteProductMutation,
@@ -3304,6 +4713,12 @@ class Graphlit {
     >(Documents.DeleteProduct, { id: id });
   }
 
+  /**
+   * Deletes multiple product entities.
+   * @param ids - The IDs of the products to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted products.
+   */
   public async deleteProducts(
     ids: string[],
     isSynchronous?: boolean,
@@ -3314,6 +4729,13 @@ class Graphlit {
     >(Documents.DeleteProducts, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all products based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting products.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllProducts(
     filter?: Types.ProductFilter,
     isSynchronous?: boolean,
@@ -3329,6 +4751,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a product given its ID.
+   * @param id - ID of the product.
+   * @returns The product.
+   */
   public async getProduct(id: string): Promise<Types.GetProductQuery> {
     return this.queryAndCheckError<
       Types.GetProductQuery,
@@ -3336,6 +4763,12 @@ class Graphlit {
     >(Documents.GetProduct, { id: id });
   }
 
+  /**
+   * Retrieves products based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving products.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The products.
+   */
   public async queryProducts(
     filter?: Types.ProductFilter,
     correlationId?: string,
@@ -3346,6 +4779,13 @@ class Graphlit {
     >(Documents.QueryProducts, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves products with clustering information.
+   * @param filter - The filter criteria to apply when retrieving products.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The products with clusters.
+   */
   public async queryProductsClusters(
     filter?: Types.ProductFilter,
     clusters?: Types.EntityClustersInput,
@@ -3361,6 +4801,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts products based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting products.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of products.
+   */
   public async countProducts(
     filter?: Types.ProductFilter,
     correlationId?: string,
@@ -3374,6 +4820,13 @@ class Graphlit {
     });
   }
 
+  /**
+   * Enriches products using an external connector.
+   * @param connector - The enrichment connector configuration.
+   * @param filter - The filter criteria to apply when selecting products.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The enrichment result.
+   */
   public async enrichProducts(
     connector: Types.EntityEnrichmentConnectorInput,
     filter?: Types.ProductFilter,
@@ -3389,6 +4842,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a repo (code repository) entity.
+   * @param repo - The repo to create.
+   * @returns The created repo.
+   */
   public async createRepo(
     repo: Types.RepoInput,
   ): Promise<Types.CreateRepoMutation> {
@@ -3398,6 +4856,11 @@ class Graphlit {
     >(Documents.CreateRepo, { repo: repo });
   }
 
+  /**
+   * Updates a repo entity.
+   * @param repo - The repo to update.
+   * @returns The updated repo.
+   */
   public async updateRepo(
     repo: Types.RepoUpdateInput,
   ): Promise<Types.UpdateRepoMutation> {
@@ -3407,6 +4870,11 @@ class Graphlit {
     >(Documents.UpdateRepo, { repo: repo });
   }
 
+  /**
+   * Deletes a repo entity.
+   * @param id - The ID of the repo to delete.
+   * @returns The deleted repo.
+   */
   public async deleteRepo(id: string): Promise<Types.DeleteRepoMutation> {
     return this.mutateAndCheckError<
       Types.DeleteRepoMutation,
@@ -3414,6 +4882,12 @@ class Graphlit {
     >(Documents.DeleteRepo, { id: id });
   }
 
+  /**
+   * Deletes multiple repo entities.
+   * @param ids - The IDs of the repos to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted repos.
+   */
   public async deleteRepos(
     ids: string[],
     isSynchronous?: boolean,
@@ -3424,6 +4898,13 @@ class Graphlit {
     >(Documents.DeleteRepos, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all repos based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting repos.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllRepos(
     filter?: Types.RepoFilter,
     isSynchronous?: boolean,
@@ -3439,6 +4920,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a repo given its ID.
+   * @param id - ID of the repo.
+   * @returns The repo.
+   */
   public async getRepo(id: string): Promise<Types.GetRepoQuery> {
     return this.queryAndCheckError<
       Types.GetRepoQuery,
@@ -3446,6 +4932,12 @@ class Graphlit {
     >(Documents.GetRepo, { id: id });
   }
 
+  /**
+   * Retrieves repos based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving repos.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The repos.
+   */
   public async queryRepos(
     filter?: Types.RepoFilter,
     correlationId?: string,
@@ -3456,6 +4948,13 @@ class Graphlit {
     >(Documents.QueryRepos, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves repos with clustering information.
+   * @param filter - The filter criteria to apply when retrieving repos.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The repos with clusters.
+   */
   public async queryReposClusters(
     filter?: Types.RepoFilter,
     clusters?: Types.EntityClustersInput,
@@ -3471,6 +4970,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts repos based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting repos.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of repos.
+   */
   public async countRepos(
     filter?: Types.RepoFilter,
     correlationId?: string,
@@ -3484,6 +4989,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Creates a software entity.
+   * @param software - The software to create.
+   * @returns The created software.
+   */
   public async createSoftware(
     software: Types.SoftwareInput,
   ): Promise<Types.CreateSoftwareMutation> {
@@ -3493,6 +5003,11 @@ class Graphlit {
     >(Documents.CreateSoftware, { software: software });
   }
 
+  /**
+   * Updates a software entity.
+   * @param software - The software to update.
+   * @returns The updated software.
+   */
   public async updateSoftware(
     software: Types.SoftwareUpdateInput,
   ): Promise<Types.UpdateSoftwareMutation> {
@@ -3502,6 +5017,11 @@ class Graphlit {
     >(Documents.UpdateSoftware, { software: software });
   }
 
+  /**
+   * Deletes a software entity.
+   * @param id - The ID of the software to delete.
+   * @returns The deleted software.
+   */
   public async deleteSoftware(
     id: string,
   ): Promise<Types.DeleteSoftwareMutation> {
@@ -3511,6 +5031,12 @@ class Graphlit {
     >(Documents.DeleteSoftware, { id: id });
   }
 
+  /**
+   * Deletes multiple software entities.
+   * @param ids - The IDs of the software to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted software.
+   */
   public async deleteSoftwares(
     ids: string[],
     isSynchronous?: boolean,
@@ -3521,6 +5047,13 @@ class Graphlit {
     >(Documents.DeleteSoftwares, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /**
+   * Deletes all software based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting software.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
   public async deleteAllSoftwares(
     filter?: Types.SoftwareFilter,
     isSynchronous?: boolean,
@@ -3536,6 +5069,11 @@ class Graphlit {
     });
   }
 
+  /**
+   * Lookup a software given its ID.
+   * @param id - ID of the software.
+   * @returns The software.
+   */
   public async getSoftware(id: string): Promise<Types.GetSoftwareQuery> {
     return this.queryAndCheckError<
       Types.GetSoftwareQuery,
@@ -3543,6 +5081,12 @@ class Graphlit {
     >(Documents.GetSoftware, { id: id });
   }
 
+  /**
+   * Retrieves software based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving software.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The software.
+   */
   public async querySoftwares(
     filter?: Types.SoftwareFilter,
     correlationId?: string,
@@ -3553,6 +5097,13 @@ class Graphlit {
     >(Documents.QuerySoftwares, { filter: filter, correlationId: correlationId });
   }
 
+  /**
+   * Retrieves software with clustering information.
+   * @param filter - The filter criteria to apply when retrieving software.
+   * @param clusters - The clustering configuration.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The software with clusters.
+   */
   public async querySoftwaresClusters(
     filter?: Types.SoftwareFilter,
     clusters?: Types.EntityClustersInput,
@@ -3568,6 +5119,12 @@ class Graphlit {
     });
   }
 
+  /**
+   * Counts software based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting software.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of software.
+   */
   public async countSoftwares(
     filter?: Types.SoftwareFilter,
     correlationId?: string,
@@ -3581,6 +5138,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical condition entity. */
   public async createMedicalCondition(
     MedicalCondition: Types.MedicalConditionInput,
   ): Promise<Types.CreateMedicalConditionMutation> {
@@ -3590,6 +5148,7 @@ class Graphlit {
     >(Documents.CreateMedicalCondition, { medicalCondition: MedicalCondition });
   }
 
+  /** Updates a medical condition entity. */
   public async updateMedicalCondition(
     MedicalCondition: Types.MedicalConditionUpdateInput,
   ): Promise<Types.UpdateMedicalConditionMutation> {
@@ -3599,6 +5158,7 @@ class Graphlit {
     >(Documents.UpdateMedicalCondition, { medicalCondition: MedicalCondition });
   }
 
+  /** Deletes a medical condition entity. */
   public async deleteMedicalCondition(
     id: string,
   ): Promise<Types.DeleteMedicalConditionMutation> {
@@ -3608,6 +5168,7 @@ class Graphlit {
     >(Documents.DeleteMedicalCondition, { id: id });
   }
 
+  /** Deletes multiple medical condition entities. */
   public async deleteMedicalConditions(
     ids: string[],
     isSynchronous?: boolean,
@@ -3621,6 +5182,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical conditions based on filter criteria. */
   public async deleteAllMedicalConditions(
     filter?: Types.MedicalConditionFilter,
     isSynchronous?: boolean,
@@ -3636,6 +5198,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical condition given its ID. */
   public async getMedicalCondition(
     id: string,
   ): Promise<Types.GetMedicalConditionQuery> {
@@ -3645,6 +5208,7 @@ class Graphlit {
     >(Documents.GetMedicalCondition, { id: id });
   }
 
+  /** Retrieves medical conditions based on filter criteria. */
   public async queryMedicalConditions(
     filter?: Types.MedicalConditionFilter,
     correlationId?: string,
@@ -3655,6 +5219,7 @@ class Graphlit {
     >(Documents.QueryMedicalConditions, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical conditions with clustering information. */
   public async queryMedicalConditionsClusters(
     filter?: Types.MedicalConditionFilter,
     clusters?: Types.EntityClustersInput,
@@ -3670,6 +5235,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical conditions based on filter criteria. */
   public async countMedicalConditions(
     filter?: Types.MedicalConditionFilter,
     correlationId?: string,
@@ -3683,6 +5249,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical guideline entity. */
   public async createMedicalGuideline(
     MedicalGuideline: Types.MedicalGuidelineInput,
   ): Promise<Types.CreateMedicalGuidelineMutation> {
@@ -3692,6 +5259,7 @@ class Graphlit {
     >(Documents.CreateMedicalGuideline, { medicalGuideline: MedicalGuideline });
   }
 
+  /** Updates a medical guideline entity. */
   public async updateMedicalGuideline(
     MedicalGuideline: Types.MedicalGuidelineUpdateInput,
   ): Promise<Types.UpdateMedicalGuidelineMutation> {
@@ -3701,6 +5269,7 @@ class Graphlit {
     >(Documents.UpdateMedicalGuideline, { medicalGuideline: MedicalGuideline });
   }
 
+  /** Deletes a medical guideline entity. */
   public async deleteMedicalGuideline(
     id: string,
   ): Promise<Types.DeleteMedicalGuidelineMutation> {
@@ -3710,6 +5279,7 @@ class Graphlit {
     >(Documents.DeleteMedicalGuideline, { id: id });
   }
 
+  /** Deletes multiple medical guideline entities. */
   public async deleteMedicalGuidelines(
     ids: string[],
     isSynchronous?: boolean,
@@ -3723,6 +5293,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical guidelines based on filter criteria. */
   public async deleteAllMedicalGuidelines(
     filter?: Types.MedicalGuidelineFilter,
     isSynchronous?: boolean,
@@ -3738,6 +5309,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical guideline given its ID. */
   public async getMedicalGuideline(
     id: string,
   ): Promise<Types.GetMedicalGuidelineQuery> {
@@ -3747,6 +5319,7 @@ class Graphlit {
     >(Documents.GetMedicalGuideline, { id: id });
   }
 
+  /** Retrieves medical guidelines based on filter criteria. */
   public async queryMedicalGuidelines(
     filter?: Types.MedicalGuidelineFilter,
     correlationId?: string,
@@ -3757,6 +5330,7 @@ class Graphlit {
     >(Documents.QueryMedicalGuidelines, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical guidelines with clustering information. */
   public async queryMedicalGuidelinesClusters(
     filter?: Types.MedicalGuidelineFilter,
     clusters?: Types.EntityClustersInput,
@@ -3785,6 +5359,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical drug entity. */
   public async createMedicalDrug(
     MedicalDrug: Types.MedicalDrugInput,
   ): Promise<Types.CreateMedicalDrugMutation> {
@@ -3794,6 +5369,7 @@ class Graphlit {
     >(Documents.CreateMedicalDrug, { medicalDrug: MedicalDrug });
   }
 
+  /** Updates a medical drug entity. */
   public async updateMedicalDrug(
     MedicalDrug: Types.MedicalDrugUpdateInput,
   ): Promise<Types.UpdateMedicalDrugMutation> {
@@ -3803,6 +5379,7 @@ class Graphlit {
     >(Documents.UpdateMedicalDrug, { medicalDrug: MedicalDrug });
   }
 
+  /** Deletes a medical drug entity. */
   public async deleteMedicalDrug(
     id: string,
   ): Promise<Types.DeleteMedicalDrugMutation> {
@@ -3812,6 +5389,7 @@ class Graphlit {
     >(Documents.DeleteMedicalDrug, { id: id });
   }
 
+  /** Deletes multiple medical drug entities. */
   public async deleteMedicalDrugs(
     ids: string[],
     isSynchronous?: boolean,
@@ -3822,6 +5400,7 @@ class Graphlit {
     >(Documents.DeleteMedicalDrugs, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /** Deletes all medical drugs based on filter criteria. */
   public async deleteAllMedicalDrugs(
     filter?: Types.MedicalDrugFilter,
     isSynchronous?: boolean,
@@ -3837,6 +5416,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical drug given its ID. */
   public async getMedicalDrug(id: string): Promise<Types.GetMedicalDrugQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalDrugQuery,
@@ -3844,6 +5424,7 @@ class Graphlit {
     >(Documents.GetMedicalDrug, { id: id });
   }
 
+  /** Retrieves medical drugs based on filter criteria. */
   public async queryMedicalDrugs(
     filter?: Types.MedicalDrugFilter,
     correlationId?: string,
@@ -3854,6 +5435,7 @@ class Graphlit {
     >(Documents.QueryMedicalDrugs, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical drugs with clustering information. */
   public async queryMedicalDrugsClusters(
     filter?: Types.MedicalDrugFilter,
     clusters?: Types.EntityClustersInput,
@@ -3869,6 +5451,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical drugs based on filter criteria. */
   public async countMedicalDrugs(
     filter?: Types.MedicalDrugFilter,
     correlationId?: string,
@@ -3882,6 +5465,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical indication entity. */
   public async createMedicalIndication(
     MedicalIndication: Types.MedicalIndicationInput,
   ): Promise<Types.CreateMedicalIndicationMutation> {
@@ -3893,6 +5477,7 @@ class Graphlit {
     });
   }
 
+  /** Updates a medical indication entity. */
   public async updateMedicalIndication(
     MedicalIndication: Types.MedicalIndicationUpdateInput,
   ): Promise<Types.UpdateMedicalIndicationMutation> {
@@ -3904,6 +5489,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes a medical indication entity. */
   public async deleteMedicalIndication(
     id: string,
   ): Promise<Types.DeleteMedicalIndicationMutation> {
@@ -3913,6 +5499,7 @@ class Graphlit {
     >(Documents.DeleteMedicalIndication, { id: id });
   }
 
+  /** Deletes multiple medical indication entities. */
   public async deleteMedicalIndications(
     ids: string[],
     isSynchronous?: boolean,
@@ -3926,6 +5513,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical indications based on filter criteria. */
   public async deleteAllMedicalIndications(
     filter?: Types.MedicalIndicationFilter,
     isSynchronous?: boolean,
@@ -3941,6 +5529,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical indication given its ID. */
   public async getMedicalIndication(
     id: string,
   ): Promise<Types.GetMedicalIndicationQuery> {
@@ -3950,6 +5539,7 @@ class Graphlit {
     >(Documents.GetMedicalIndication, { id: id });
   }
 
+  /** Retrieves medical indications based on filter criteria. */
   public async queryMedicalIndications(
     filter?: Types.MedicalIndicationFilter,
     correlationId?: string,
@@ -3960,6 +5550,7 @@ class Graphlit {
     >(Documents.QueryMedicalIndications, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical indications with clustering information. */
   public async queryMedicalIndicationsClusters(
     filter?: Types.MedicalIndicationFilter,
     clusters?: Types.EntityClustersInput,
@@ -3975,6 +5566,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical indications based on filter criteria. */
   public async countMedicalIndications(
     filter?: Types.MedicalIndicationFilter,
     correlationId?: string,
@@ -3988,6 +5580,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical contraindication entity. */
   public async createMedicalContraindication(
     MedicalContraindication: Types.MedicalContraindicationInput,
   ): Promise<Types.CreateMedicalContraindicationMutation> {
@@ -3999,6 +5592,7 @@ class Graphlit {
     });
   }
 
+  /** Updates a medical contraindication entity. */
   public async updateMedicalContraindication(
     MedicalContraindication: Types.MedicalContraindicationUpdateInput,
   ): Promise<Types.UpdateMedicalContraindicationMutation> {
@@ -4010,6 +5604,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes a medical contraindication entity. */
   public async deleteMedicalContraindication(
     id: string,
   ): Promise<Types.DeleteMedicalContraindicationMutation> {
@@ -4019,6 +5614,7 @@ class Graphlit {
     >(Documents.DeleteMedicalContraindication, { id: id });
   }
 
+  /** Deletes multiple medical contraindication entities. */
   public async deleteMedicalContraindications(
     ids: string[],
     isSynchronous?: boolean,
@@ -4032,6 +5628,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical contraindications based on filter criteria. */
   public async deleteAllMedicalContraindications(
     filter?: Types.MedicalContraindicationFilter,
     isSynchronous?: boolean,
@@ -4047,6 +5644,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical contraindication given its ID. */
   public async getMedicalContraindication(
     id: string,
   ): Promise<Types.GetMedicalContraindicationQuery> {
@@ -4056,6 +5654,7 @@ class Graphlit {
     >(Documents.GetMedicalContraindication, { id: id });
   }
 
+  /** Retrieves medical contraindications based on filter criteria. */
   public async queryMedicalContraindications(
     filter?: Types.MedicalContraindicationFilter,
     correlationId?: string,
@@ -4066,6 +5665,7 @@ class Graphlit {
     >(Documents.QueryMedicalContraindications, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical contraindications with clustering information. */
   public async queryMedicalContraindicationsClusters(
     filter?: Types.MedicalContraindicationFilter,
     clusters?: Types.EntityClustersInput,
@@ -4081,6 +5681,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical contraindications based on filter criteria. */
   public async countMedicalContraindications(
     filter?: Types.MedicalContraindicationFilter,
     correlationId?: string,
@@ -4094,6 +5695,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical test entity. */
   public async createMedicalTest(
     MedicalTest: Types.MedicalTestInput,
   ): Promise<Types.CreateMedicalTestMutation> {
@@ -4103,6 +5705,7 @@ class Graphlit {
     >(Documents.CreateMedicalTest, { medicalTest: MedicalTest });
   }
 
+  /** Updates a medical test entity. */
   public async updateMedicalTest(
     MedicalTest: Types.MedicalTestUpdateInput,
   ): Promise<Types.UpdateMedicalTestMutation> {
@@ -4112,6 +5715,7 @@ class Graphlit {
     >(Documents.UpdateMedicalTest, { medicalTest: MedicalTest });
   }
 
+  /** Deletes a medical test entity. */
   public async deleteMedicalTest(
     id: string,
   ): Promise<Types.DeleteMedicalTestMutation> {
@@ -4121,6 +5725,7 @@ class Graphlit {
     >(Documents.DeleteMedicalTest, { id: id });
   }
 
+  /** Deletes multiple medical test entities. */
   public async deleteMedicalTests(
     ids: string[],
     isSynchronous?: boolean,
@@ -4131,6 +5736,7 @@ class Graphlit {
     >(Documents.DeleteMedicalTests, { ids: ids, isSynchronous: isSynchronous });
   }
 
+  /** Deletes all medical tests based on filter criteria. */
   public async deleteAllMedicalTests(
     filter?: Types.MedicalTestFilter,
     isSynchronous?: boolean,
@@ -4146,6 +5752,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical test given its ID. */
   public async getMedicalTest(id: string): Promise<Types.GetMedicalTestQuery> {
     return this.queryAndCheckError<
       Types.GetMedicalTestQuery,
@@ -4153,6 +5760,7 @@ class Graphlit {
     >(Documents.GetMedicalTest, { id: id });
   }
 
+  /** Retrieves medical tests based on filter criteria. */
   public async queryMedicalTests(
     filter?: Types.MedicalTestFilter,
     correlationId?: string,
@@ -4163,6 +5771,7 @@ class Graphlit {
     >(Documents.QueryMedicalTests, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical tests with clustering information. */
   public async queryMedicalTestsClusters(
     filter?: Types.MedicalTestFilter,
     clusters?: Types.EntityClustersInput,
@@ -4178,6 +5787,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical tests based on filter criteria. */
   public async countMedicalTests(
     filter?: Types.MedicalTestFilter,
     correlationId?: string,
@@ -4191,6 +5801,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical device entity. */
   public async createMedicalDevice(
     MedicalDevice: Types.MedicalDeviceInput,
   ): Promise<Types.CreateMedicalDeviceMutation> {
@@ -4200,6 +5811,7 @@ class Graphlit {
     >(Documents.CreateMedicalDevice, { medicalDevice: MedicalDevice });
   }
 
+  /** Updates a medical device entity. */
   public async updateMedicalDevice(
     MedicalDevice: Types.MedicalDeviceUpdateInput,
   ): Promise<Types.UpdateMedicalDeviceMutation> {
@@ -4209,6 +5821,7 @@ class Graphlit {
     >(Documents.UpdateMedicalDevice, { medicalDevice: MedicalDevice });
   }
 
+  /** Deletes a medical device entity. */
   public async deleteMedicalDevice(
     id: string,
   ): Promise<Types.DeleteMedicalDeviceMutation> {
@@ -4218,6 +5831,7 @@ class Graphlit {
     >(Documents.DeleteMedicalDevice, { id: id });
   }
 
+  /** Deletes multiple medical device entities. */
   public async deleteMedicalDevices(
     ids: string[],
     isSynchronous?: boolean,
@@ -4231,6 +5845,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical devices based on filter criteria. */
   public async deleteAllMedicalDevices(
     filter?: Types.MedicalDeviceFilter,
     isSynchronous?: boolean,
@@ -4246,6 +5861,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical device given its ID. */
   public async getMedicalDevice(
     id: string,
   ): Promise<Types.GetMedicalDeviceQuery> {
@@ -4255,6 +5871,7 @@ class Graphlit {
     >(Documents.GetMedicalDevice, { id: id });
   }
 
+  /** Retrieves medical devices based on filter criteria. */
   public async queryMedicalDevices(
     filter?: Types.MedicalDeviceFilter,
     correlationId?: string,
@@ -4265,6 +5882,7 @@ class Graphlit {
     >(Documents.QueryMedicalDevices, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical devices with clustering information. */
   public async queryMedicalDevicesClusters(
     filter?: Types.MedicalDeviceFilter,
     clusters?: Types.EntityClustersInput,
@@ -4280,6 +5898,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical devices based on filter criteria. */
   public async countMedicalDevices(
     filter?: Types.MedicalDeviceFilter,
     correlationId?: string,
@@ -4293,6 +5912,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical procedure entity. */
   public async createMedicalProcedure(
     MedicalProcedure: Types.MedicalProcedureInput,
   ): Promise<Types.CreateMedicalProcedureMutation> {
@@ -4302,6 +5922,7 @@ class Graphlit {
     >(Documents.CreateMedicalProcedure, { medicalProcedure: MedicalProcedure });
   }
 
+  /** Updates a medical procedure entity. */
   public async updateMedicalProcedure(
     MedicalProcedure: Types.MedicalProcedureUpdateInput,
   ): Promise<Types.UpdateMedicalProcedureMutation> {
@@ -4311,6 +5932,7 @@ class Graphlit {
     >(Documents.UpdateMedicalProcedure, { medicalProcedure: MedicalProcedure });
   }
 
+  /** Deletes a medical procedure entity. */
   public async deleteMedicalProcedure(
     id: string,
   ): Promise<Types.DeleteMedicalProcedureMutation> {
@@ -4320,6 +5942,7 @@ class Graphlit {
     >(Documents.DeleteMedicalProcedure, { id: id });
   }
 
+  /** Deletes multiple medical procedure entities. */
   public async deleteMedicalProcedures(
     ids: string[],
     isSynchronous?: boolean,
@@ -4333,6 +5956,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical procedures based on filter criteria. */
   public async deleteAllMedicalProcedures(
     filter?: Types.MedicalProcedureFilter,
     isSynchronous?: boolean,
@@ -4348,6 +5972,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical procedure given its ID. */
   public async getMedicalProcedure(
     id: string,
   ): Promise<Types.GetMedicalProcedureQuery> {
@@ -4357,6 +5982,7 @@ class Graphlit {
     >(Documents.GetMedicalProcedure, { id: id });
   }
 
+  /** Retrieves medical procedures based on filter criteria. */
   public async queryMedicalProcedures(
     filter?: Types.MedicalProcedureFilter,
     correlationId?: string,
@@ -4367,6 +5993,7 @@ class Graphlit {
     >(Documents.QueryMedicalProcedures, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical procedures with clustering information. */
   public async queryMedicalProceduresClusters(
     filter?: Types.MedicalProcedureFilter,
     clusters?: Types.EntityClustersInput,
@@ -4382,6 +6009,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical procedures based on filter criteria. */
   public async countMedicalProcedures(
     filter?: Types.MedicalProcedureFilter,
     correlationId?: string,
@@ -4395,6 +6023,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical study entity. */
   public async createMedicalStudy(
     MedicalStudy: Types.MedicalStudyInput,
   ): Promise<Types.CreateMedicalStudyMutation> {
@@ -4404,6 +6033,7 @@ class Graphlit {
     >(Documents.CreateMedicalStudy, { medicalStudy: MedicalStudy });
   }
 
+  /** Updates a medical study entity. */
   public async updateMedicalStudy(
     MedicalStudy: Types.MedicalStudyUpdateInput,
   ): Promise<Types.UpdateMedicalStudyMutation> {
@@ -4413,6 +6043,7 @@ class Graphlit {
     >(Documents.UpdateMedicalStudy, { medicalStudy: MedicalStudy });
   }
 
+  /** Deletes a medical study entity. */
   public async deleteMedicalStudy(
     id: string,
   ): Promise<Types.DeleteMedicalStudyMutation> {
@@ -4422,6 +6053,7 @@ class Graphlit {
     >(Documents.DeleteMedicalStudy, { id: id });
   }
 
+  /** Deletes multiple medical study entities. */
   public async deleteMedicalStudies(
     ids: string[],
     isSynchronous?: boolean,
@@ -4435,6 +6067,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical studies based on filter criteria. */
   public async deleteAllMedicalStudies(
     filter?: Types.MedicalStudyFilter,
     isSynchronous?: boolean,
@@ -4450,6 +6083,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical study given its ID. */
   public async getMedicalStudy(
     id: string,
   ): Promise<Types.GetMedicalStudyQuery> {
@@ -4459,6 +6093,7 @@ class Graphlit {
     >(Documents.GetMedicalStudy, { id: id });
   }
 
+  /** Retrieves medical studies based on filter criteria. */
   public async queryMedicalStudies(
     filter?: Types.MedicalStudyFilter,
     correlationId?: string,
@@ -4469,6 +6104,7 @@ class Graphlit {
     >(Documents.QueryMedicalStudies, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical studies with clustering information. */
   public async queryMedicalStudiesClusters(
     filter?: Types.MedicalStudyFilter,
     clusters?: Types.EntityClustersInput,
@@ -4484,6 +6120,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical studies based on filter criteria. */
   public async countMedicalStudies(
     filter?: Types.MedicalStudyFilter,
     correlationId?: string,
@@ -4497,6 +6134,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical drug class entity. */
   public async createMedicalDrugClass(
     MedicalDrugClass: Types.MedicalDrugClassInput,
   ): Promise<Types.CreateMedicalDrugClassMutation> {
@@ -4506,6 +6144,7 @@ class Graphlit {
     >(Documents.CreateMedicalDrugClass, { medicalDrugClass: MedicalDrugClass });
   }
 
+  /** Updates a medical drug class entity. */
   public async updateMedicalDrugClass(
     MedicalDrugClass: Types.MedicalDrugClassUpdateInput,
   ): Promise<Types.UpdateMedicalDrugClassMutation> {
@@ -4515,6 +6154,7 @@ class Graphlit {
     >(Documents.UpdateMedicalDrugClass, { medicalDrugClass: MedicalDrugClass });
   }
 
+  /** Deletes a medical drug class entity. */
   public async deleteMedicalDrugClass(
     id: string,
   ): Promise<Types.DeleteMedicalDrugClassMutation> {
@@ -4524,6 +6164,7 @@ class Graphlit {
     >(Documents.DeleteMedicalDrugClass, { id: id });
   }
 
+  /** Deletes multiple medical drug class entities. */
   public async deleteMedicalDrugClasses(
     ids: string[],
     isSynchronous?: boolean,
@@ -4537,6 +6178,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical drug classes based on filter criteria. */
   public async deleteAllMedicalDrugClasses(
     filter?: Types.MedicalDrugClassFilter,
     isSynchronous?: boolean,
@@ -4552,6 +6194,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical drug class given its ID. */
   public async getMedicalDrugClass(
     id: string,
   ): Promise<Types.GetMedicalDrugClassQuery> {
@@ -4561,6 +6204,7 @@ class Graphlit {
     >(Documents.GetMedicalDrugClass, { id: id });
   }
 
+  /** Retrieves medical drug classes based on filter criteria. */
   public async queryMedicalDrugClasses(
     filter?: Types.MedicalDrugClassFilter,
     correlationId?: string,
@@ -4571,6 +6215,7 @@ class Graphlit {
     >(Documents.QueryMedicalDrugClasses, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical drug classes with clustering information. */
   public async queryMedicalDrugClassesClusters(
     filter?: Types.MedicalDrugClassFilter,
     clusters?: Types.EntityClustersInput,
@@ -4586,6 +6231,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical drug classes based on filter criteria. */
   public async countMedicalDrugClasses(
     filter?: Types.MedicalDrugClassFilter,
     correlationId?: string,
@@ -4599,6 +6245,7 @@ class Graphlit {
     });
   }
 
+  /** Creates a medical therapy entity. */
   public async createMedicalTherapy(
     MedicalTherapy: Types.MedicalTherapyInput,
   ): Promise<Types.CreateMedicalTherapyMutation> {
@@ -4608,6 +6255,7 @@ class Graphlit {
     >(Documents.CreateMedicalTherapy, { medicalTherapy: MedicalTherapy });
   }
 
+  /** Updates a medical therapy entity. */
   public async updateMedicalTherapy(
     MedicalTherapy: Types.MedicalTherapyUpdateInput,
   ): Promise<Types.UpdateMedicalTherapyMutation> {
@@ -4617,6 +6265,7 @@ class Graphlit {
     >(Documents.UpdateMedicalTherapy, { medicalTherapy: MedicalTherapy });
   }
 
+  /** Deletes a medical therapy entity. */
   public async deleteMedicalTherapy(
     id: string,
   ): Promise<Types.DeleteMedicalTherapyMutation> {
@@ -4626,6 +6275,7 @@ class Graphlit {
     >(Documents.DeleteMedicalTherapy, { id: id });
   }
 
+  /** Deletes multiple medical therapy entities. */
   public async deleteMedicalTherapies(
     ids: string[],
     isSynchronous?: boolean,
@@ -4639,6 +6289,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all medical therapies based on filter criteria. */
   public async deleteAllMedicalTherapies(
     filter?: Types.MedicalTherapyFilter,
     isSynchronous?: boolean,
@@ -4654,6 +6305,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup a medical therapy given its ID. */
   public async getMedicalTherapy(
     id: string,
   ): Promise<Types.GetMedicalTherapyQuery> {
@@ -4663,6 +6315,7 @@ class Graphlit {
     >(Documents.GetMedicalTherapy, { id: id });
   }
 
+  /** Retrieves medical therapies based on filter criteria. */
   public async queryMedicalTherapies(
     filter?: Types.MedicalTherapyFilter,
     correlationId?: string,
@@ -4673,6 +6326,7 @@ class Graphlit {
     >(Documents.QueryMedicalTherapies, { filter: filter, correlationId: correlationId });
   }
 
+  /** Retrieves medical therapies with clustering information. */
   public async queryMedicalTherapiesClusters(
     filter?: Types.MedicalTherapyFilter,
     clusters?: Types.EntityClustersInput,
@@ -4688,6 +6342,7 @@ class Graphlit {
     });
   }
 
+  /** Counts medical therapies based on filter criteria. */
   public async countMedicalTherapies(
     filter?: Types.MedicalTherapyFilter,
     correlationId?: string,
@@ -4701,6 +6356,7 @@ class Graphlit {
     });
   }
 
+  /** Creates an observation entity. */
   public async createObservation(
     observation: Types.ObservationInput,
   ): Promise<Types.CreateObservationMutation> {
@@ -4710,6 +6366,7 @@ class Graphlit {
     >(Documents.CreateObservation, { observation: observation });
   }
 
+  /** Updates an observation entity. */
   public async updateObservation(
     observation: Types.ObservationUpdateInput,
   ): Promise<Types.UpdateObservationMutation> {
@@ -4719,6 +6376,7 @@ class Graphlit {
     >(Documents.UpdateObservation, { observation: observation });
   }
 
+  /** Deletes an observation entity. */
   public async deleteObservation(
     id: string,
   ): Promise<Types.DeleteObservationMutation> {
@@ -4728,6 +6386,7 @@ class Graphlit {
     >(Documents.DeleteObservation, { id: id });
   }
 
+  /** Matches an observable against candidate entities using AI. */
   public async matchEntity(
     observable: Types.ObservableInput,
     candidates: Types.EntityReferenceInput[],
@@ -4745,6 +6404,7 @@ class Graphlit {
     });
   }
 
+  /** Resolves multiple entities of a given type using AI similarity matching. */
   public async resolveEntities(
     type: Types.ObservableTypes,
     entities: Types.EntityReferenceInput[],
@@ -4764,6 +6424,7 @@ class Graphlit {
     });
   }
 
+  /** Resolves a source entity against a target entity using AI similarity matching. */
   public async resolveEntity(
     type: Types.ObservableTypes,
     source: Types.EntityReferenceInput,
@@ -4783,6 +6444,7 @@ class Graphlit {
     });
   }
 
+  /** Creates an investment entity. */
   public async createInvestment(
     investment: Types.InvestmentInput,
   ): Promise<Types.CreateInvestmentMutation> {
@@ -4792,6 +6454,7 @@ class Graphlit {
     >(Documents.CreateInvestment, { investment: investment });
   }
 
+  /** Updates an investment entity. */
   public async updateInvestment(
     investment: Types.InvestmentUpdateInput,
   ): Promise<Types.UpdateInvestmentMutation> {
@@ -4801,6 +6464,7 @@ class Graphlit {
     >(Documents.UpdateInvestment, { investment: investment });
   }
 
+  /** Deletes an investment entity. */
   public async deleteInvestment(
     id: string,
   ): Promise<Types.DeleteInvestmentMutation> {
@@ -4810,6 +6474,7 @@ class Graphlit {
     >(Documents.DeleteInvestment, { id: id });
   }
 
+  /** Deletes multiple investment entities. */
   public async deleteInvestments(
     ids: string[],
     isSynchronous?: boolean,
@@ -4823,6 +6488,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all investments based on filter criteria. */
   public async deleteAllInvestments(
     filter?: Types.InvestmentFilter,
     isSynchronous?: boolean,
@@ -4838,6 +6504,7 @@ class Graphlit {
     });
   }
 
+  /** Creates an investment fund entity. */
   public async createInvestmentFund(
     investmentFund: Types.InvestmentFundInput,
   ): Promise<Types.CreateInvestmentFundMutation> {
@@ -4847,6 +6514,7 @@ class Graphlit {
     >(Documents.CreateInvestmentFund, { investmentFund: investmentFund });
   }
 
+  /** Updates an investment fund entity. */
   public async updateInvestmentFund(
     investmentFund: Types.InvestmentFundUpdateInput,
   ): Promise<Types.UpdateInvestmentFundMutation> {
@@ -4856,6 +6524,7 @@ class Graphlit {
     >(Documents.UpdateInvestmentFund, { investmentFund: investmentFund });
   }
 
+  /** Deletes an investment fund entity. */
   public async deleteInvestmentFund(
     id: string,
   ): Promise<Types.DeleteInvestmentFundMutation> {
@@ -4865,6 +6534,7 @@ class Graphlit {
     >(Documents.DeleteInvestmentFund, { id: id });
   }
 
+  /** Deletes multiple investment fund entities. */
   public async deleteInvestmentFunds(
     ids: string[],
     isSynchronous?: boolean,
@@ -4878,6 +6548,7 @@ class Graphlit {
     });
   }
 
+  /** Deletes all investment funds based on filter criteria. */
   public async deleteAllInvestmentFunds(
     filter?: Types.InvestmentFundFilter,
     isSynchronous?: boolean,
@@ -4893,6 +6564,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup an investment given its ID. */
   public async getInvestment(
     id: string,
     correlationId?: string,
@@ -4903,6 +6575,7 @@ class Graphlit {
     >(Documents.GetInvestment, { id: id, correlationId: correlationId });
   }
 
+  /** Retrieves investments based on filter criteria. */
   public async queryInvestments(
     filter?: Types.InvestmentFilter,
     correlationId?: string,
@@ -4916,6 +6589,7 @@ class Graphlit {
     });
   }
 
+  /** Retrieves investments with clustering information. */
   public async queryInvestmentsClusters(
     filter?: Types.InvestmentFilter,
     clusters?: Types.EntityClustersInput,
@@ -4931,6 +6605,7 @@ class Graphlit {
     });
   }
 
+  /** Retrieves investments with expanded relationship data. */
   public async queryInvestmentsExpanded(
     filter?: Types.InvestmentFilter,
     correlationId?: string,
@@ -4944,6 +6619,7 @@ class Graphlit {
     });
   }
 
+  /** Counts investments based on filter criteria. */
   public async countInvestments(
     filter?: Types.InvestmentFilter,
     correlationId?: string,
@@ -4957,6 +6633,7 @@ class Graphlit {
     });
   }
 
+  /** Lookup an investment fund given its ID. */
   public async getInvestmentFund(
     id: string,
     correlationId?: string,
@@ -4967,6 +6644,7 @@ class Graphlit {
     >(Documents.GetInvestmentFund, { id: id, correlationId: correlationId });
   }
 
+  /** Retrieves investment funds based on filter criteria. */
   public async queryInvestmentFunds(
     filter?: Types.InvestmentFundFilter,
     correlationId?: string,
@@ -4980,6 +6658,7 @@ class Graphlit {
     });
   }
 
+  /** Retrieves investment funds with clustering information. */
   public async queryInvestmentFundsClusters(
     filter?: Types.InvestmentFundFilter,
     clusters?: Types.EntityClustersInput,
@@ -4995,6 +6674,7 @@ class Graphlit {
     });
   }
 
+  /** Retrieves investment funds with expanded relationship data. */
   public async queryInvestmentFundsExpanded(
     filter?: Types.InvestmentFundFilter,
     correlationId?: string,
@@ -5008,6 +6688,7 @@ class Graphlit {
     });
   }
 
+  /** Counts investment funds based on filter criteria. */
   public async countInvestmentFunds(
     filter?: Types.InvestmentFundFilter,
     correlationId?: string,
