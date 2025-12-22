@@ -10771,6 +10771,8 @@ export type MicrosoftTeamsFeedProperties = {
   clientSecret?: Maybe<Scalars['String']['output']>;
   /** Authentication connector reference. */
   connector?: Maybe<EntityReference>;
+  /** Should the Microsoft Teams feed include attachments. */
+  includeAttachments?: Maybe<Scalars['Boolean']['output']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
   /** Microsoft Teams refresh token. */
@@ -10793,6 +10795,8 @@ export type MicrosoftTeamsFeedPropertiesInput = {
   clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** The authentication connector reference. */
   connector?: InputMaybe<EntityReferenceInput>;
+  /** Should the Microsoft Teams feed include attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
@@ -10815,6 +10819,8 @@ export type MicrosoftTeamsFeedPropertiesUpdateInput = {
   clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** The authentication connector reference. */
   connector?: InputMaybe<EntityReferenceInput>;
+  /** Should the Microsoft Teams feed include attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Microsoft Teams refresh token, requires User authentication type. */
