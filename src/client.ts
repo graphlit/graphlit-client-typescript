@@ -332,31 +332,33 @@ class Graphlit {
       ...options.retryConfig,
     };
 
-    if (!this.organizationId) {
-      throw new Error("Graphlit organization identifier is required.");
-    }
+    // Skip all validation if pre-signed token is provided
+    if (!options.token) {
+      if (!this.organizationId) {
+        throw new Error("Graphlit organization identifier is required.");
+      }
 
-    if (!isValidGuid(this.organizationId)) {
-      throw new Error(
-        `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      );
-    }
+      if (!isValidGuid(this.organizationId)) {
+        throw new Error(
+          `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        );
+      }
 
-    if (!this.environmentId) {
-      throw new Error("Graphlit environment identifier is required.");
-    }
+      if (!this.environmentId) {
+        throw new Error("Graphlit environment identifier is required.");
+      }
 
-    if (!isValidGuid(this.environmentId)) {
-      throw new Error(
-        `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      );
-    }
+      if (!isValidGuid(this.environmentId)) {
+        throw new Error(
+          `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        );
+      }
 
-    // jwtSecret is only required if no pre-signed token is provided
-    if (!this.jwtSecret && !options.token) {
-      throw new Error("Graphlit environment JWT secret is required.");
+      if (!this.jwtSecret) {
+        throw new Error("Graphlit environment JWT secret is required.");
+      }
     }
 
     // Validate optional userId if provided (ownerId can be any format)
