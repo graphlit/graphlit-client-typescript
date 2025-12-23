@@ -225,6 +225,8 @@ export interface GraphlitClientOptions {
   ownerId?: string;
   userId?: string;
   apiUri?: string;
+  /** Pre-signed JWT token. When provided, jwtSecret is not required. */
+  token?: string;
   /** Retry configuration for network errors */
   retryConfig?: RetryConfig;
 }
@@ -352,7 +354,8 @@ class Graphlit {
       );
     }
 
-    if (!this.jwtSecret) {
+    // jwtSecret is only required if no pre-signed token is provided
+    if (!this.jwtSecret && !options.token) {
       throw new Error("Graphlit environment JWT secret is required.");
     }
 
@@ -364,13 +367,31 @@ class Graphlit {
       );
     }
 
-    this.refreshClient();
+    // If a pre-signed token is provided, use it directly instead of generating one
+    if (options.token) {
+      this.token = options.token;
+      this.initializeClient();
+    } else {
+      this.refreshClient();
+    }
+  }
+
+  /**
+   * Initialize the Apollo client without regenerating the token.
+   * Used when a pre-signed token is provided.
+   */
+  private initializeClient() {
+    this.client = undefined;
+    this.setupApolloClient();
   }
 
   public refreshClient() {
     this.client = undefined;
     this.generateToken();
+    this.setupApolloClient();
+  }
 
+  private setupApolloClient() {
     const httpLink = createHttpLink({
       uri: this.apiUri,
     });
