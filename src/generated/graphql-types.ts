@@ -18499,6 +18499,8 @@ export type SpecificationResults = {
 
 /** Specification type */
 export enum SpecificationTypes {
+  /** Agentic completion, used with formatConversation/completeConversation */
+  Agentic = 'AGENTIC',
   /** Content classification */
   Classification = 'CLASSIFICATION',
   /** Prompt completion */
