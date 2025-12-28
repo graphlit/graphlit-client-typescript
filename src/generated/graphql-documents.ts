@@ -7432,6 +7432,38 @@ export const QueryFacts = gql`
   }
 }
     `;
+export const QueryFactsClusters = gql`
+    query QueryFactsClusters($filter: FactFilter, $clusters: EntityClustersInput, $correlationId: String) {
+  facts(filter: $filter, clusters: $clusters, correlationId: $correlationId) {
+    results {
+      id
+      creationDate
+      owner {
+        id
+      }
+      text
+      status
+      validAt
+      invalidAt
+      relevance
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+      }
+    }
+    clusters {
+      entities {
+        id
+        name
+      }
+      similarity
+    }
+  }
+}
+    `;
 export const QueryFactsGraph = gql`
     query QueryFactsGraph($filter: FactFilter, $graph: FactGraphInput, $correlationId: String) {
   facts(filter: $filter, graph: $graph, correlationId: $correlationId) {

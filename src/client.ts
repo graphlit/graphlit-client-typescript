@@ -1087,6 +1087,28 @@ class Graphlit {
   }
 
   /**
+   * Retrieves facts with clustering.
+   * @param filter - The filter criteria to apply when retrieving facts, optional.
+   * @param clusters - The clustering input parameters, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The facts with clusters.
+   */
+  public async queryFactsClusters(
+    filter?: Types.FactFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryFactsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryFactsClustersQuery,
+      Types.QueryFactsClustersQueryVariables
+    >(Documents.QueryFactsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Counts facts based on the provided filter criteria.
    * @param filter - The filter criteria to apply when counting facts.
    * @param correlationId - The tenant correlation identifier, optional.

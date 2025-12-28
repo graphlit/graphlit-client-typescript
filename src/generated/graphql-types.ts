@@ -5165,6 +5165,8 @@ export type FactInput = {
 /** Represents fact query results. */
 export type FactResults = {
   __typename?: 'FactResults';
+  /** The entity clusters generated from the retrieved facts. */
+  clusters?: Maybe<Array<Maybe<EntityCluster>>>;
   /** The knowledge graph generated from the retrieved facts. */
   graph?: Maybe<Graph>;
   /** The fact results. */
@@ -16710,6 +16712,7 @@ export type QueryFactArgs = {
 
 
 export type QueryFactsArgs = {
+  clusters?: InputMaybe<EntityClustersInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FactFilter>;
   graph?: InputMaybe<FactGraphInput>;
@@ -21139,6 +21142,15 @@ export type QueryFactsQueryVariables = Exact<{
 
 
 export type QueryFactsQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, owner: { __typename?: 'Owner', id: string } } | null> | null } | null };
+
+export type QueryFactsClustersQueryVariables = Exact<{
+  filter?: InputMaybe<FactFilter>;
+  clusters?: InputMaybe<EntityClustersInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryFactsClustersQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, clusters?: Array<{ __typename?: 'EntityCluster', similarity?: number | null, entities: Array<{ __typename?: 'NamedEntityReference', id: string, name?: string | null }> } | null> | null } | null };
 
 export type QueryFactsGraphQueryVariables = Exact<{
   filter?: InputMaybe<FactFilter>;
