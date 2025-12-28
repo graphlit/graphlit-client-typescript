@@ -7418,6 +7418,25 @@ export const QueryFacts = gql`
   }
 }
     `;
+export const QueryFactsGraph = gql`
+    query QueryFactsGraph($filter: FactFilter, $graph: FactGraphInput, $correlationId: String) {
+  facts(filter: $filter, graph: $graph, correlationId: $correlationId) {
+    graph {
+      nodes {
+        id
+        name
+        type
+        metadata
+      }
+      edges {
+        from
+        to
+        relation
+      }
+    }
+  }
+}
+    `;
 export const UpdateFact = gql`
     mutation UpdateFact($fact: FactUpdateInput!) {
   updateFact(fact: $fact) {

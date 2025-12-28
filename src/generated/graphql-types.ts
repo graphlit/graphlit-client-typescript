@@ -21140,6 +21140,15 @@ export type QueryFactsQueryVariables = Exact<{
 
 export type QueryFactsQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, owner: { __typename?: 'Owner', id: string } } | null> | null } | null };
 
+export type QueryFactsGraphQueryVariables = Exact<{
+  filter?: InputMaybe<FactFilter>;
+  graph?: InputMaybe<FactGraphInput>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryFactsGraphQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null } | null };
+
 export type UpdateFactMutationVariables = Exact<{
   fact: FactUpdateInput;
 }>;
