@@ -20927,7 +20927,7 @@ export type RetrieveFactsMutationVariables = Exact<{
 }>;
 
 
-export type RetrieveFactsMutation = { __typename?: 'Mutation', retrieveFacts?: { __typename?: 'RetrievedFactResults', results?: Array<{ __typename?: 'RetrievedFact', relevance?: number | null, fact: { __typename?: 'Fact', id: string, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, state: EntityState }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
+export type RetrieveFactsMutation = { __typename?: 'Mutation', retrieveFacts?: { __typename?: 'RetrievedFactResults', results?: Array<{ __typename?: 'RetrievedFact', relevance?: number | null, fact: { __typename?: 'Fact', id: string, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, state: EntityState, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
 
 export type RetrieveSourcesMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21130,7 +21130,7 @@ export type GetFactQueryVariables = Exact<{
 }>;
 
 
-export type GetFactQuery = { __typename?: 'Query', fact?: { __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, owner: { __typename?: 'Owner', id: string } } | null };
+export type GetFactQuery = { __typename?: 'Query', fact?: { __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null };
 
 export type QueryFactsQueryVariables = Exact<{
   filter?: InputMaybe<FactFilter>;

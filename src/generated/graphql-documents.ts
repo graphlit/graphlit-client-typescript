@@ -6375,6 +6375,13 @@ export const RetrieveFacts = gql`
         validAt
         invalidAt
         state
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+        }
       }
       relevance
       content {
@@ -7397,6 +7404,13 @@ export const GetFact = gql`
     validAt
     invalidAt
     relevance
+    mentions {
+      type
+      observable {
+        id
+        name
+      }
+    }
   }
 }
     `;

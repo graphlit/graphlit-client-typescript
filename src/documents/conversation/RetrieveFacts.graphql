@@ -8,6 +8,13 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
         validAt
         invalidAt
         state
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+        }
       }
       relevance
       content {

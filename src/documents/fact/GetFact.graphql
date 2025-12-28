@@ -10,5 +10,12 @@ query GetFact($id: ID!, $correlationId: String) {
     validAt
     invalidAt
     relevance
+    mentions {
+      type
+      observable {
+        id
+        name
+      }
+    }
   }
 }
