@@ -994,43 +994,43 @@ class Graphlit {
     >(Documents.DeleteFact, { id: id });
   }
 
-  // /**
-  //  * Deletes multiple facts.
-  //  * @param ids - The IDs of the facts to delete.
-  //  * @param isSynchronous - Whether this mutation is synchronous.
-  //  * @returns The deleted facts.
-  //  */
-  // public async deleteFacts(
-  //   ids: string[],
-  //   isSynchronous?: boolean,
-  // ): Promise<Types.DeleteFactsMutation> {
-  //   return this.mutateAndCheckError<
-  //     Types.DeleteFactsMutation,
-  //     Types.DeleteFactsMutationVariables
-  //   >(Documents.DeleteFacts, { ids: ids, isSynchronous: isSynchronous });
-  // }
+  /**
+   * Deletes multiple facts.
+   * @param ids - The IDs of the facts to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted facts.
+   */
+  public async deleteFacts(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteFactsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteFactsMutation,
+      Types.DeleteFactsMutationVariables
+    >(Documents.DeleteFacts, { ids: ids, isSynchronous: isSynchronous });
+  }
 
-  // /**
-  //  * Deletes all facts based on the provided filter criteria.
-  //  * @param filter - The filter criteria to apply when deleting facts.
-  //  * @param isSynchronous - Whether this mutation is synchronous.
-  //  * @param correlationId - The tenant correlation identifier, optional.
-  //  * @returns The result of the deletion.
-  //  */
-  // public async deleteAllFacts(
-  //   filter?: Types.FactFilter,
-  //   isSynchronous?: boolean,
-  //   correlationId?: string,
-  // ): Promise<Types.DeleteAllFactsMutation> {
-  //   return this.mutateAndCheckError<
-  //     Types.DeleteAllFactsMutation,
-  //     Types.DeleteAllFactsMutationVariables
-  //   >(Documents.DeleteAllFacts, {
-  //     filter: filter,
-  //     isSynchronous: isSynchronous,
-  //     correlationId: correlationId,
-  //   });
-  // }
+  /**
+   * Deletes all facts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting facts.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllFacts(
+    filter?: Types.FactFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllFactsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllFactsMutation,
+      Types.DeleteAllFactsMutationVariables
+    >(Documents.DeleteAllFacts, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
 
   /**
    * Lookup a fact given its ID.

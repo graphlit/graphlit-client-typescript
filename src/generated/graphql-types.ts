@@ -11442,6 +11442,8 @@ export type Mutation = {
   deleteAllConversations?: Maybe<Array<Maybe<Conversation>>>;
   /** Bulk deletes events based on the provided filter criteria. */
   deleteAllEvents?: Maybe<Array<Maybe<Event>>>;
+  /** Bulk deletes facts based on the provided filter criteria. */
+  deleteAllFacts?: Maybe<Array<Maybe<Fact>>>;
   /** Bulk deletes feeds based on the provided filter criteria. */
   deleteAllFeeds?: Maybe<Array<Maybe<Feed>>>;
   /** Bulk deletes investment funds based on the provided filter criteria. */
@@ -11514,6 +11516,8 @@ export type Mutation = {
   deleteEvents?: Maybe<Array<Maybe<Event>>>;
   /** Deletes a fact. */
   deleteFact?: Maybe<Fact>;
+  /** Bulk deletes facts. */
+  deleteFacts?: Maybe<Array<Maybe<Fact>>>;
   /** Deletes a feed. */
   deleteFeed?: Maybe<Feed>;
   /** Bulk deletes feeds. */
@@ -12100,6 +12104,13 @@ export type MutationDeleteAllEventsArgs = {
 };
 
 
+export type MutationDeleteAllFactsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<FactFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationDeleteAllFeedsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FeedFilter>;
@@ -12330,6 +12341,12 @@ export type MutationDeleteEventsArgs = {
 
 export type MutationDeleteFactArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteFactsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -21083,12 +21100,29 @@ export type CreateFactMutationVariables = Exact<{
 
 export type CreateFactMutation = { __typename?: 'Mutation', createFact?: { __typename?: 'Fact', id: string, state: EntityState } | null };
 
+export type DeleteAllFactsMutationVariables = Exact<{
+  filter?: InputMaybe<FactFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllFactsMutation = { __typename?: 'Mutation', deleteAllFacts?: Array<{ __typename?: 'Fact', id: string, state: EntityState } | null> | null };
+
 export type DeleteFactMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
 export type DeleteFactMutation = { __typename?: 'Mutation', deleteFact?: { __typename?: 'Fact', id: string, state: EntityState } | null };
+
+export type DeleteFactsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteFactsMutation = { __typename?: 'Mutation', deleteFacts?: Array<{ __typename?: 'Fact', id: string, state: EntityState } | null> | null };
 
 export type GetFactQueryVariables = Exact<{
   id: Scalars['ID']['input'];

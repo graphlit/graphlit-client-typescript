@@ -7356,9 +7356,29 @@ export const CreateFact = gql`
   }
 }
     `;
+export const DeleteAllFacts = gql`
+    mutation DeleteAllFacts($filter: FactFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllFacts(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
 export const DeleteFact = gql`
     mutation DeleteFact($id: ID!) {
   deleteFact(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteFacts = gql`
+    mutation DeleteFacts($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteFacts(ids: $ids, isSynchronous: $isSynchronous) {
     id
     state
   }
