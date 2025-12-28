@@ -6345,6 +6345,45 @@ export const QueryConversations = gql`
   }
 }
     `;
+export const RetrieveEntities = gql`
+    mutation RetrieveEntities($prompt: String!, $types: [ObservableTypes!], $searchType: SearchTypes, $limit: Int, $correlationId: String) {
+  retrieveEntities(
+    prompt: $prompt
+    types: $types
+    searchType: $searchType
+    limit: $limit
+    correlationId: $correlationId
+  ) {
+    results {
+      id
+      name
+      type
+      relevance
+      metadata
+    }
+  }
+}
+    `;
+export const RetrieveFacts = gql`
+    mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: String) {
+  retrieveFacts(prompt: $prompt, filter: $filter, correlationId: $correlationId) {
+    results {
+      fact {
+        id
+        text
+        status
+        validAt
+        invalidAt
+        state
+      }
+      relevance
+      content {
+        id
+      }
+    }
+  }
+}
+    `;
 export const RetrieveSources = gql`
     mutation RetrieveSources($prompt: String!, $filter: ContentFilter, $augmentedFilter: ContentFilter, $retrievalStrategy: RetrievalStrategyInput, $rerankingStrategy: RerankingStrategyInput, $correlationId: String) {
   retrieveSources(
@@ -7302,6 +7341,71 @@ export const UpdateEvent = gql`
   }
 }
     `;
+export const CountFacts = gql`
+    query CountFacts($filter: FactFilter, $correlationId: String) {
+  countFacts(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateFact = gql`
+    mutation CreateFact($fact: FactInput!) {
+  createFact(fact: $fact) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteFact = gql`
+    mutation DeleteFact($id: ID!) {
+  deleteFact(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetFact = gql`
+    query GetFact($id: ID!, $correlationId: String) {
+  fact(id: $id, correlationId: $correlationId) {
+    id
+    creationDate
+    owner {
+      id
+    }
+    text
+    status
+    validAt
+    invalidAt
+    relevance
+  }
+}
+    `;
+export const QueryFacts = gql`
+    query QueryFacts($filter: FactFilter, $correlationId: String) {
+  facts(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      creationDate
+      owner {
+        id
+      }
+      text
+      status
+      validAt
+      invalidAt
+      relevance
+    }
+  }
+}
+    `;
+export const UpdateFact = gql`
+    mutation UpdateFact($fact: FactUpdateInput!) {
+  updateFact(fact: $fact) {
+    id
+    state
+  }
+}
+    `;
 export const CountFeeds = gql`
     query CountFeeds($filter: FeedFilter, $correlationId: String) {
   countFeeds(filter: $filter, correlationId: $correlationId) {
@@ -7536,6 +7640,8 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
         refreshToken
         personalAccessToken
         connector {
@@ -7567,6 +7673,8 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
         refreshToken
         personalAccessToken
         connector {
@@ -7582,6 +7690,8 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
         refreshToken
         personalAccessToken
         connector {
@@ -7720,6 +7830,7 @@ export const GetFeed = gql`
       }
       teamId
       channelId
+      includeAttachments
     }
     discord {
       readLimit
@@ -7984,6 +8095,8 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
           refreshToken
           personalAccessToken
           connector {
@@ -8015,6 +8128,8 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
           refreshToken
           personalAccessToken
           connector {
@@ -8030,6 +8145,8 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
           refreshToken
           personalAccessToken
           connector {
@@ -8168,6 +8285,7 @@ export const QueryFeeds = gql`
         }
         teamId
         channelId
+        includeAttachments
       }
       discord {
         readLimit
@@ -14131,6 +14249,9 @@ export const GetSpecification = gql`
       generateGraph
       observableLimit
     }
+    factStrategy {
+      factLimit
+    }
     revisionStrategy {
       type
       customRevision
@@ -14508,6 +14629,9 @@ export const QuerySpecifications = gql`
         type
         generateGraph
         observableLimit
+      }
+      factStrategy {
+        factLimit
       }
       revisionStrategy {
         type
@@ -16139,6 +16263,7 @@ export const CreateWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            extractionType
           }
         }
       }
@@ -16410,6 +16535,7 @@ export const GetWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            extractionType
           }
         }
       }
@@ -16655,6 +16781,7 @@ export const QueryWorkflows = gql`
               tokenThreshold
               timeBudget
               entityBudget
+              extractionType
             }
           }
         }
@@ -16894,6 +17021,7 @@ export const UpdateWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            extractionType
           }
         }
       }
@@ -17132,6 +17260,7 @@ export const UpsertWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            extractionType
           }
         }
       }

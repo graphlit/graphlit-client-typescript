@@ -955,6 +955,132 @@ class Graphlit {
   }
 
   /**
+   * Creates a fact.
+   * @param fact - The fact to create.
+   * @returns The created fact.
+   */
+  public async createFact(
+    fact: Types.FactInput,
+  ): Promise<Types.CreateFactMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateFactMutation,
+      Types.CreateFactMutationVariables
+    >(Documents.CreateFact, { fact: fact });
+  }
+
+  /**
+   * Updates a fact.
+   * @param fact - The fact to update.
+   * @returns The updated fact.
+   */
+  public async updateFact(
+    fact: Types.FactUpdateInput,
+  ): Promise<Types.UpdateFactMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateFactMutation,
+      Types.UpdateFactMutationVariables
+    >(Documents.UpdateFact, { fact: fact });
+  }
+
+  /**
+   * Deletes a fact.
+   * @param id - The ID of the fact to delete.
+   * @returns The deleted fact.
+   */
+  public async deleteFact(id: string): Promise<Types.DeleteFactMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteFactMutation,
+      Types.DeleteFactMutationVariables
+    >(Documents.DeleteFact, { id: id });
+  }
+
+  // /**
+  //  * Deletes multiple facts.
+  //  * @param ids - The IDs of the facts to delete.
+  //  * @param isSynchronous - Whether this mutation is synchronous.
+  //  * @returns The deleted facts.
+  //  */
+  // public async deleteFacts(
+  //   ids: string[],
+  //   isSynchronous?: boolean,
+  // ): Promise<Types.DeleteFactsMutation> {
+  //   return this.mutateAndCheckError<
+  //     Types.DeleteFactsMutation,
+  //     Types.DeleteFactsMutationVariables
+  //   >(Documents.DeleteFacts, { ids: ids, isSynchronous: isSynchronous });
+  // }
+
+  // /**
+  //  * Deletes all facts based on the provided filter criteria.
+  //  * @param filter - The filter criteria to apply when deleting facts.
+  //  * @param isSynchronous - Whether this mutation is synchronous.
+  //  * @param correlationId - The tenant correlation identifier, optional.
+  //  * @returns The result of the deletion.
+  //  */
+  // public async deleteAllFacts(
+  //   filter?: Types.FactFilter,
+  //   isSynchronous?: boolean,
+  //   correlationId?: string,
+  // ): Promise<Types.DeleteAllFactsMutation> {
+  //   return this.mutateAndCheckError<
+  //     Types.DeleteAllFactsMutation,
+  //     Types.DeleteAllFactsMutationVariables
+  //   >(Documents.DeleteAllFacts, {
+  //     filter: filter,
+  //     isSynchronous: isSynchronous,
+  //     correlationId: correlationId,
+  //   });
+  // }
+
+  /**
+   * Lookup a fact given its ID.
+   * @param id - ID of the fact.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The fact.
+   */
+  public async getFact(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetFactQuery> {
+    return this.queryAndCheckError<
+      Types.GetFactQuery,
+      Types.GetFactQueryVariables
+    >(Documents.GetFact, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves facts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving facts.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The facts.
+   */
+  public async queryFacts(
+    filter?: Types.FactFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryFactsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryFactsQuery,
+      Types.QueryFactsQueryVariables
+    >(Documents.QueryFacts, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Counts facts based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting facts.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of facts.
+   */
+  public async countFacts(
+    filter?: Types.FactFilter,
+    correlationId?: string,
+  ): Promise<Types.CountFactsQuery> {
+    return this.queryAndCheckError<
+      Types.CountFactsQuery,
+      Types.CountFactsQueryVariables
+    >(Documents.CountFacts, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
    * Creates a collection.
    * @param collection - The collection to create.
    * @returns The created collection.
@@ -2297,6 +2423,56 @@ class Graphlit {
       augmentedFilter: augmentedFilter,
       retrievalStrategy: retrievalStrategy,
       rerankingStrategy: rerankingStrategy,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Retrieves entities based on the provided prompt.
+   * @param prompt - The prompt for entity retrieval.
+   * @param types - The observable types to filter by, optional.
+   * @param searchType - The search type to use, optional.
+   * @param limit - The maximum number of results to return, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The retrieved entities.
+   */
+  public async retrieveEntities(
+    prompt: string,
+    types?: Types.ObservableTypes[],
+    searchType?: Types.SearchTypes,
+    limit?: number,
+    correlationId?: string,
+  ): Promise<Types.RetrieveEntitiesMutation> {
+    return this.mutateAndCheckError<
+      Types.RetrieveEntitiesMutation,
+      Types.RetrieveEntitiesMutationVariables
+    >(Documents.RetrieveEntities, {
+      prompt: prompt,
+      types: types,
+      searchType: searchType,
+      limit: limit,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Retrieves facts based on the provided prompt.
+   * @param prompt - The prompt for fact retrieval.
+   * @param filter - The filter criteria to apply when retrieving facts, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The retrieved facts.
+   */
+  public async retrieveFacts(
+    prompt: string,
+    filter?: Types.FactFilter,
+    correlationId?: string,
+  ): Promise<Types.RetrieveFactsMutation> {
+    return this.mutateAndCheckError<
+      Types.RetrieveFactsMutation,
+      Types.RetrieveFactsMutationVariables
+    >(Documents.RetrieveFacts, {
+      prompt: prompt,
+      filter: filter,
       correlationId: correlationId,
     });
   }

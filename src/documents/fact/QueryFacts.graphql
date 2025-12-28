@@ -1,0 +1,16 @@
+query QueryFacts($filter: FactFilter, $correlationId: String) {
+  facts(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      creationDate
+      owner {
+        id
+      }
+      text
+      status
+      validAt
+      invalidAt
+      relevance
+    }
+  }
+}

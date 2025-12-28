@@ -1,0 +1,18 @@
+mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: String) {
+  retrieveFacts(prompt: $prompt, filter: $filter, correlationId: $correlationId) {
+    results {
+      fact {
+        id
+        text
+        status
+        validAt
+        invalidAt
+        state
+      }
+      relevance
+      content {
+        id
+      }
+    }
+  }
+}
