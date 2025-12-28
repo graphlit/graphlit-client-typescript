@@ -1065,6 +1065,28 @@ class Graphlit {
   }
 
   /**
+   * Retrieves facts as a knowledge graph.
+   * @param filter - The filter criteria to apply when retrieving facts, optional.
+   * @param graph - The graph input parameters, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The facts graph with nodes and edges.
+   */
+  public async queryFactsGraph(
+    filter?: Types.FactFilter,
+    graph?: Types.FactGraphInput,
+    correlationId?: string,
+  ): Promise<Types.QueryFactsGraphQuery> {
+    return this.queryAndCheckError<
+      Types.QueryFactsGraphQuery,
+      Types.QueryFactsGraphQueryVariables
+    >(Documents.QueryFactsGraph, {
+      filter: filter,
+      graph: graph,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Counts facts based on the provided filter criteria.
    * @param filter - The filter criteria to apply when counting facts.
    * @param correlationId - The tenant correlation identifier, optional.
