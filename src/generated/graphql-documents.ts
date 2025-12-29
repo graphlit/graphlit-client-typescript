@@ -7466,6 +7466,32 @@ export const QueryFacts = gql`
       validAt
       invalidAt
       relevance
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+        start
+        end
+      }
+      feeds {
+        id
+      }
+      assertions {
+        text
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+          start
+          end
+        }
+      }
+      category
+      confidence
     }
   }
 }
