@@ -20,9 +20,6 @@ query QueryFactsClusters($filter: FactFilter, $clusters: EntityClustersInput, $c
         start
         end
       }
-      feeds {
-        id
-      }
       assertions {
         text
         mentions {
@@ -34,6 +31,10 @@ query QueryFactsClusters($filter: FactFilter, $clusters: EntityClustersInput, $c
           start
           end
         }
+      }
+      feeds {
+        id
+        name
       }
       category
       confidence

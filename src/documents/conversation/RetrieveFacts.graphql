@@ -17,9 +17,6 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
           start
           end
         }
-        feeds {
-          id
-        }
         assertions {
           text
           mentions {
@@ -31,6 +28,10 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
             start
             end
           }
+        }
+        feeds {
+          id
+          name
         }
         category
         confidence

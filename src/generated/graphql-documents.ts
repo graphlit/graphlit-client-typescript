@@ -6384,9 +6384,6 @@ export const RetrieveFacts = gql`
           start
           end
         }
-        feeds {
-          id
-        }
         assertions {
           text
           mentions {
@@ -6398,6 +6395,10 @@ export const RetrieveFacts = gql`
             start
             end
           }
+        }
+        feeds {
+          id
+          name
         }
         category
         confidence
@@ -7432,9 +7433,6 @@ export const GetFact = gql`
       start
       end
     }
-    feeds {
-      id
-    }
     assertions {
       text
       mentions {
@@ -7446,6 +7444,10 @@ export const GetFact = gql`
         start
         end
       }
+    }
+    feeds {
+      id
+      name
     }
     category
     confidence
@@ -7475,9 +7477,6 @@ export const QueryFacts = gql`
         start
         end
       }
-      feeds {
-        id
-      }
       assertions {
         text
         mentions {
@@ -7489,6 +7488,10 @@ export const QueryFacts = gql`
           start
           end
         }
+      }
+      feeds {
+        id
+        name
       }
       category
       confidence
@@ -7519,9 +7522,6 @@ export const QueryFactsClusters = gql`
         start
         end
       }
-      feeds {
-        id
-      }
       assertions {
         text
         mentions {
@@ -7533,6 +7533,10 @@ export const QueryFactsClusters = gql`
           start
           end
         }
+      }
+      feeds {
+        id
+        name
       }
       category
       confidence
