@@ -1067,13 +1067,11 @@ class Graphlit {
   /**
    * Retrieves facts as a knowledge graph.
    * @param filter - The filter criteria to apply when retrieving facts, optional.
-   * @param graph - The graph input parameters, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The facts graph with nodes and edges.
    */
   public async queryFactsGraph(
     filter?: Types.FactFilter,
-    graph?: Types.FactGraphInput,
     correlationId?: string,
   ): Promise<Types.QueryFactsGraphQuery> {
     return this.queryAndCheckError<
@@ -1081,7 +1079,9 @@ class Graphlit {
       Types.QueryFactsGraphQueryVariables
     >(Documents.QueryFactsGraph, {
       filter: filter,
-      graph: graph,
+      graph: {
+        /* return everything */
+      },
       correlationId: correlationId,
     });
   }
