@@ -16,6 +16,25 @@ query GetFact($id: ID!, $correlationId: String) {
         id
         name
       }
+      start
+      end
     }
+    feeds {
+      id
+    }
+    assertions {
+      text
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+        start
+        end
+      }
+    }
+    category
+    confidence
   }
 }

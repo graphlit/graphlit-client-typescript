@@ -6381,7 +6381,26 @@ export const RetrieveFacts = gql`
             id
             name
           }
+          start
+          end
         }
+        feeds {
+          id
+        }
+        assertions {
+          text
+          mentions {
+            type
+            observable {
+              id
+              name
+            }
+            start
+            end
+          }
+        }
+        category
+        confidence
       }
       relevance
       content {
@@ -7410,7 +7429,26 @@ export const GetFact = gql`
         id
         name
       }
+      start
+      end
     }
+    feeds {
+      id
+    }
+    assertions {
+      text
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+        start
+        end
+      }
+    }
+    category
+    confidence
   }
 }
     `;
@@ -7452,7 +7490,26 @@ export const QueryFactsClusters = gql`
           id
           name
         }
+        start
+        end
       }
+      feeds {
+        id
+      }
+      assertions {
+        text
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+          start
+          end
+        }
+      }
+      category
+      confidence
     }
     clusters {
       entities {

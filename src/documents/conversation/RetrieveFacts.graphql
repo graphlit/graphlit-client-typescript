@@ -14,7 +14,26 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
             id
             name
           }
+          start
+          end
         }
+        feeds {
+          id
+        }
+        assertions {
+          text
+          mentions {
+            type
+            observable {
+              id
+              name
+            }
+            start
+            end
+          }
+        }
+        category
+        confidence
       }
       relevance
       content {
