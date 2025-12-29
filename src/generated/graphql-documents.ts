@@ -6400,6 +6400,10 @@ export const RetrieveFacts = gql`
           id
           name
         }
+        content {
+          id
+          name
+        }
         category
         confidence
       }
@@ -7449,6 +7453,10 @@ export const GetFact = gql`
       id
       name
     }
+    content {
+      id
+      name
+    }
     category
     confidence
   }
@@ -7490,6 +7498,10 @@ export const QueryFacts = gql`
         }
       }
       feeds {
+        id
+        name
+      }
+      content {
         id
         name
       }
@@ -7535,6 +7547,10 @@ export const QueryFactsClusters = gql`
         }
       }
       feeds {
+        id
+        name
+      }
+      content {
         id
         name
       }

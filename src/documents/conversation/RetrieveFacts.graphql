@@ -33,6 +33,10 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
           id
           name
         }
+        content {
+          id
+          name
+        }
         category
         confidence
       }

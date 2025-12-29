@@ -35,6 +35,10 @@ query GetFact($id: ID!, $correlationId: String) {
       id
       name
     }
+    content {
+      id
+      name
+    }
     category
     confidence
   }
