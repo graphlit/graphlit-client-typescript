@@ -7,7 +7,6 @@ query QueryFacts($filter: FactFilter, $correlationId: String) {
         id
       }
       text
-      status
       validAt
       invalidAt
       relevance

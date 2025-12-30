@@ -7,7 +7,6 @@ query QueryFactsClusters($filter: FactFilter, $clusters: EntityClustersInput, $c
         id
       }
       text
-      status
       validAt
       invalidAt
       relevance

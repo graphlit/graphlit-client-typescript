@@ -6371,7 +6371,6 @@ export const RetrieveFacts = gql`
       fact {
         id
         text
-        status
         validAt
         invalidAt
         state
@@ -7424,7 +7423,6 @@ export const GetFact = gql`
       id
     }
     text
-    status
     validAt
     invalidAt
     relevance
@@ -7472,7 +7470,6 @@ export const QueryFacts = gql`
         id
       }
       text
-      status
       validAt
       invalidAt
       relevance
@@ -7521,7 +7518,6 @@ export const QueryFactsClusters = gql`
         id
       }
       text
-      status
       validAt
       invalidAt
       relevance

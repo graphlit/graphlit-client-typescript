@@ -6,7 +6,6 @@ query GetFact($id: ID!, $correlationId: String) {
       id
     }
     text
-    status
     validAt
     invalidAt
     relevance

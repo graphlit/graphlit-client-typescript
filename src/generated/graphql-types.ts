@@ -5096,8 +5096,6 @@ export type Fact = {
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the fact (i.e. created, finished). */
   state: EntityState;
-  /** The resolution status of the fact. */
-  status?: Maybe<FactStatus>;
   /** The fact assertion text. */
   text: Scalars['String']['output'];
   /** The date/time when this fact became valid. */
@@ -5125,10 +5123,14 @@ export type FactAssertionInput = {
 export enum FactCategory {
   /** An authorization granted by someone with authority. */
   Approval = 'APPROVAL',
+  /** A skill, ability, or competency. */
+  Capability = 'CAPABILITY',
   /** A change from one state to another. */
   Change = 'CHANGE',
   /** A promise or obligation created. */
   Commitment = 'COMMITMENT',
+  /** A hard limit or restriction. */
+  Constraint = 'CONSTRAINT',
   /** An explicit decision or choice made. */
   Decision = 'DECISION',
   /** An assignment of responsibility. */
@@ -5139,6 +5141,10 @@ export enum FactCategory {
   Event = 'EVENT',
   /** A deviation from standard policy or process. */
   Exception = 'EXCEPTION',
+  /** A general factual assertion. */
+  Fact = 'FACT',
+  /** An objective or intention to achieve something. */
+  Goal = 'GOAL',
   /** A manual override of a system recommendation. */
   Override = 'OVERRIDE',
   /** A reference to how a similar situation was handled. */
@@ -5150,9 +5156,7 @@ export enum FactCategory {
   /** Explicit reasoning behind a decision. */
   Rationale = 'RATIONALE',
   /** A relationship between entities. */
-  Relationship = 'RELATIONSHIP',
-  /** A state or property. */
-  State = 'STATE'
+  Relationship = 'RELATIONSHIP'
 }
 
 /** Represents a filter for facts. */
@@ -5201,8 +5205,6 @@ export type FactFilter = {
   searchType?: InputMaybe<SearchTypes>;
   /** Filter fact(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
-  /** Filter by fact statuses. */
-  statuses?: InputMaybe<Array<InputMaybe<FactStatus>>>;
   /** Point-in-time filter: returns facts that were valid at this date (ValidAt <= date AND (InvalidAt is null OR InvalidAt > date)). */
   validAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -5227,8 +5229,6 @@ export type FactInput = {
   feeds?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
   /** The date/time when this fact became invalid. */
   invalidAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The resolution status of the fact. */
-  status?: InputMaybe<FactStatus>;
   /** The fact assertion text. */
   text: Scalars['String']['input'];
   /** The date/time when this fact became valid. */
@@ -5245,18 +5245,6 @@ export type FactResults = {
   /** The fact results. */
   results?: Maybe<Array<Maybe<Fact>>>;
 };
-
-/** The resolution status of a fact. */
-export enum FactStatus {
-  /** Inactive or archived fact. */
-  Archived = 'ARCHIVED',
-  /** Authoritative version of the fact. */
-  Canonical = 'CANONICAL',
-  /** Duplicate of a canonical fact. */
-  Duplicate = 'DUPLICATE',
-  /** Replaced by a newer fact. */
-  Superseded = 'SUPERSEDED'
-}
 
 /** Represents a fact injection strategy for RAG. */
 export type FactStrategy = {
@@ -5283,8 +5271,6 @@ export type FactUpdateInput = {
   id: Scalars['ID']['input'];
   /** The date/time when this fact became invalid. */
   invalidAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The resolution status of the fact. */
-  status?: InputMaybe<FactStatus>;
   /** The fact assertion text. */
   text?: InputMaybe<Scalars['String']['input']>;
   /** The date/time when this fact became valid. */
@@ -21019,7 +21005,7 @@ export type RetrieveFactsMutationVariables = Exact<{
 }>;
 
 
-export type RetrieveFactsMutation = { __typename?: 'Mutation', retrieveFacts?: { __typename?: 'RetrievedFactResults', results?: Array<{ __typename?: 'RetrievedFact', relevance?: number | null, fact: { __typename?: 'Fact', id: string, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
+export type RetrieveFactsMutation = { __typename?: 'Mutation', retrieveFacts?: { __typename?: 'RetrievedFactResults', results?: Array<{ __typename?: 'RetrievedFact', relevance?: number | null, fact: { __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null }, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null } | null };
 
 export type RetrieveSourcesMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21222,7 +21208,7 @@ export type GetFactQueryVariables = Exact<{
 }>;
 
 
-export type GetFactQuery = { __typename?: 'Query', fact?: { __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null };
+export type GetFactQuery = { __typename?: 'Query', fact?: { __typename?: 'Fact', id: string, creationDate: any, text: string, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null };
 
 export type QueryFactsQueryVariables = Exact<{
   filter?: InputMaybe<FactFilter>;
@@ -21230,7 +21216,7 @@ export type QueryFactsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFactsQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null> | null } | null };
+export type QueryFactsQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null> | null } | null };
 
 export type QueryFactsClustersQueryVariables = Exact<{
   filter?: InputMaybe<FactFilter>;
@@ -21239,7 +21225,7 @@ export type QueryFactsClustersQueryVariables = Exact<{
 }>;
 
 
-export type QueryFactsClustersQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, status?: FactStatus | null, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null> | null, clusters?: Array<{ __typename?: 'EntityCluster', similarity?: number | null, entities: Array<{ __typename?: 'NamedEntityReference', id: string, name?: string | null }> } | null> | null } | null };
+export type QueryFactsClustersQuery = { __typename?: 'Query', facts?: { __typename?: 'FactResults', results?: Array<{ __typename?: 'Fact', id: string, creationDate: any, text: string, validAt?: any | null, invalidAt?: any | null, relevance?: number | null, category?: FactCategory | null, confidence?: number | null, owner: { __typename?: 'Owner', id: string }, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null, assertions?: Array<{ __typename?: 'FactAssertion', text: string, mentions?: Array<{ __typename?: 'MentionReference', type?: ObservableTypes | null, start?: number | null, end?: number | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null> | null } | null> | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null, content?: { __typename?: 'Content', id: string, name: string } | null } | null> | null, clusters?: Array<{ __typename?: 'EntityCluster', similarity?: number | null, entities: Array<{ __typename?: 'NamedEntityReference', id: string, name?: string | null }> } | null> | null } | null };
 
 export type QueryFactsGraphQueryVariables = Exact<{
   filter?: InputMaybe<FactFilter>;
