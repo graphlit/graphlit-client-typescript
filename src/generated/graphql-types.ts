@@ -5173,6 +5173,8 @@ export type FactFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Whether to disable inheritance from project to owner, upon fact retrieval. Defaults to False. */
   disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by specific facts. */
+  facts?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
   /** Filter by feeds that discovered the fact. */
   feeds?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
   /** Filter fact(s) by their unique ID. */
@@ -5203,6 +5205,8 @@ export type FactFilter = {
   search?: InputMaybe<Scalars['String']['input']>;
   /** The type of search to be used. Defaults to Vector. */
   searchType?: InputMaybe<SearchTypes>;
+  /** Filter by similar facts using vector search. */
+  similarFacts?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
   /** Filter fact(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
   /** Point-in-time filter: returns facts that were valid at this date (ValidAt <= date AND (InvalidAt is null OR InvalidAt > date)). */
