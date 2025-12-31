@@ -2388,6 +2388,8 @@ class Graphlit {
    * @param data - The base64-encoded data for multimodal input, optional.
    * @param specification - The LLM specification to use, optional.
    * @param messages - Previous messages for context, optional.
+   * @param tools - Tool definitions for function calling, optional.
+   * @param requireTool - Whether to require tool usage, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The LLM response.
    */
@@ -2397,6 +2399,8 @@ class Graphlit {
     data?: string,
     specification?: Types.EntityReferenceInput,
     messages?: Types.ConversationMessageInput[],
+    tools?: Types.ToolDefinitionInput[],
+    requireTool?: boolean,
     correlationId?: string,
   ): Promise<Types.PromptMutation> {
     return this.mutateAndCheckError<
@@ -2408,6 +2412,8 @@ class Graphlit {
       data: data,
       specification: specification,
       messages: messages,
+      tools: tools,
+      requireTool: requireTool,
       correlationId: correlationId,
     });
   }
