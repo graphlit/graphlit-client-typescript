@@ -7748,6 +7748,9 @@ export const GetFeed = gql`
         appKey
         appSecret
         refreshToken
+        connector {
+          id
+        }
       }
       box {
         authenticationType
@@ -7756,6 +7759,9 @@ export const GetFeed = gql`
         clientSecret
         refreshToken
         redirectUri
+        connector {
+          id
+        }
       }
       github {
         authenticationType
@@ -8000,7 +8006,14 @@ export const GetFeed = gql`
     slack {
       readLimit
       type
+      authenticationType
       token
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
       channel
       includeAttachments
     }
@@ -8203,6 +8216,9 @@ export const QueryFeeds = gql`
           appKey
           appSecret
           refreshToken
+          connector {
+            id
+          }
         }
         box {
           authenticationType
@@ -8211,6 +8227,9 @@ export const QueryFeeds = gql`
           clientSecret
           refreshToken
           redirectUri
+          connector {
+            id
+          }
         }
         github {
           authenticationType
@@ -8455,7 +8474,14 @@ export const QueryFeeds = gql`
       slack {
         readLimit
         type
+        authenticationType
         token
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
         channel
         includeAttachments
       }
