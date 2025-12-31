@@ -3194,7 +3194,7 @@ export type ConversationMessageInput = {
   /** The Base64-encoded image which will be supplied to the LLM with the conversation message, optional. */
   data?: InputMaybe<Scalars['String']['input']>;
   /** The conversation message. */
-  message: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
   /** The MIME type of the Base64-encoded image, optional. */
   mimeType?: InputMaybe<Scalars['String']['input']>;
   /** The conversation message role. */
@@ -3205,6 +3205,12 @@ export type ConversationMessageInput = {
   timestamp?: InputMaybe<Scalars['DateTime']['input']>;
   /** The conversation message token usage, not including RAG context tokens. */
   tokens?: InputMaybe<Scalars['Int']['input']>;
+  /** The tool call identifier for a tool response message, optional. */
+  toolCallId?: InputMaybe<Scalars['String']['input']>;
+  /** The tool call response content for a tool response message, optional. */
+  toolCallResponse?: InputMaybe<Scalars['String']['input']>;
+  /** The tool calls from an assistant message, optional. */
+  toolCalls?: InputMaybe<Array<ConversationToolCallInput>>;
   /** The time to first token (TTFT) for the model to complete the prompt. */
   ttft?: InputMaybe<Scalars['TimeSpan']['input']>;
 };
@@ -3310,6 +3316,16 @@ export type ConversationToolCall = {
   id: Scalars['String']['output'];
   /** The tool name. */
   name: Scalars['String']['output'];
+};
+
+/** Represents a tool call from an assistant message. */
+export type ConversationToolCallInput = {
+  /** The tool call arguments as JSON. */
+  arguments?: InputMaybe<Scalars['String']['input']>;
+  /** The tool call identifier. */
+  id: Scalars['String']['input'];
+  /** The tool name. */
+  name: Scalars['String']['input'];
 };
 
 /** Represents a conversation tool calling response. */
@@ -12952,7 +12968,9 @@ export type MutationPromptArgs = {
   messages?: InputMaybe<Array<ConversationMessageInput>>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   prompt?: InputMaybe<Scalars['String']['input']>;
+  requireTool?: InputMaybe<Scalars['Boolean']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
+  tools?: InputMaybe<Array<ToolDefinitionInput>>;
 };
 
 
@@ -20949,6 +20967,8 @@ export type PromptMutationVariables = Exact<{
   data?: InputMaybe<Scalars['String']['input']>;
   specification?: InputMaybe<EntityReferenceInput>;
   messages?: InputMaybe<Array<ConversationMessageInput> | ConversationMessageInput>;
+  tools?: InputMaybe<Array<ToolDefinitionInput> | ToolDefinitionInput>;
+  requireTool?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
