@@ -13557,6 +13557,8 @@ export type OAuthAuthenticationProperties = {
   metadata?: Maybe<Scalars['String']['output']>;
   /** OAuth provider. */
   provider: OAuthProviders;
+  /** OAuth redirect URI. */
+  redirectUri?: Maybe<Scalars['String']['output']>;
   /** OAuth refresh token. */
   refreshToken: Scalars['String']['output'];
 };
@@ -13571,6 +13573,8 @@ export type OAuthAuthenticationPropertiesInput = {
   metadata?: InputMaybe<Scalars['String']['input']>;
   /** OAuth provider. */
   provider: OAuthProviders;
+  /** OAuth redirect URI. */
+  redirectUri?: InputMaybe<Scalars['String']['input']>;
   /** OAuth refresh token. */
   refreshToken: Scalars['String']['input'];
 };
