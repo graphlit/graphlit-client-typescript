@@ -711,6 +711,7 @@ export const GetConnector = gql`
         clientId
         clientSecret
         refreshToken
+        redirectUri
         metadata
       }
       arcade {
@@ -775,6 +776,7 @@ export const QueryConnectors = gql`
           clientId
           clientSecret
           refreshToken
+          redirectUri
           metadata
         }
         arcade {
@@ -8577,6 +8579,7 @@ export const QueryGoogleDriveFolders = gql`
     results {
       folderName
       folderId
+      folderPath
     }
   }
 }
@@ -8644,6 +8647,7 @@ export const QueryOneDriveFolders = gql`
     results {
       folderName
       folderId
+      folderPath
     }
   }
 }
@@ -8659,6 +8663,7 @@ export const QuerySharePointFolders = gql`
     results {
       folderName
       folderId
+      folderPath
     }
   }
 }
@@ -15111,6 +15116,7 @@ export const GetUser = gql`
           clientId
           clientSecret
           refreshToken
+          redirectUri
           metadata
         }
         arcade {
@@ -15182,6 +15188,7 @@ export const GetUserByIdentifier = gql`
           clientId
           clientSecret
           refreshToken
+          redirectUri
           metadata
         }
         arcade {
@@ -15254,6 +15261,7 @@ export const QueryUsers = gql`
             clientId
             clientSecret
             refreshToken
+            redirectUri
             metadata
           }
           arcade {
