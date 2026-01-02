@@ -192,6 +192,16 @@ query GetFeed($id: ID!, $correlationId: String) {
       attio {
         apiKey
       }
+      salesforce {
+        authenticationType
+        isSandbox
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+      }
       readLimit
     }
     commit {
@@ -253,6 +263,17 @@ query GetFeed($id: ID!, $correlationId: String) {
           id
         }
       }
+      salesforce {
+        authenticationType
+        instanceUrl
+        isSandbox
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+      }
       readLimit
     }
     calendar {
@@ -287,6 +308,25 @@ query GetFeed($id: ID!, $correlationId: String) {
         }
       }
       readLimit
+    }
+    meeting {
+      type
+      readLimit
+      fireflies {
+        apiKey
+        beforeDate
+        afterDate
+      }
+      attio {
+        apiKey
+        afterDate
+        beforeDate
+      }
+      fathom {
+        apiKey
+        afterDate
+        beforeDate
+      }
     }
     rss {
       readLimit
@@ -377,6 +417,17 @@ query GetFeed($id: ID!, $correlationId: String) {
     attio {
       readLimit
       apiKey
+    }
+    salesforce {
+      readLimit
+      authenticationType
+      isSandbox
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
     }
     research {
       readLimit

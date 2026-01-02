@@ -7858,6 +7858,16 @@ export const GetFeed = gql`
       attio {
         apiKey
       }
+      salesforce {
+        authenticationType
+        isSandbox
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+      }
       readLimit
     }
     commit {
@@ -7919,6 +7929,17 @@ export const GetFeed = gql`
           id
         }
       }
+      salesforce {
+        authenticationType
+        instanceUrl
+        isSandbox
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+      }
       readLimit
     }
     calendar {
@@ -7953,6 +7974,25 @@ export const GetFeed = gql`
         }
       }
       readLimit
+    }
+    meeting {
+      type
+      readLimit
+      fireflies {
+        apiKey
+        beforeDate
+        afterDate
+      }
+      attio {
+        apiKey
+        afterDate
+        beforeDate
+      }
+      fathom {
+        apiKey
+        afterDate
+        beforeDate
+      }
     }
     rss {
       readLimit
@@ -8043,6 +8083,17 @@ export const GetFeed = gql`
     attio {
       readLimit
       apiKey
+    }
+    salesforce {
+      readLimit
+      authenticationType
+      isSandbox
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
     }
     research {
       readLimit
@@ -8326,6 +8377,16 @@ export const QueryFeeds = gql`
         attio {
           apiKey
         }
+        salesforce {
+          authenticationType
+          isSandbox
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+        }
         readLimit
       }
       commit {
@@ -8387,6 +8448,17 @@ export const QueryFeeds = gql`
             id
           }
         }
+        salesforce {
+          authenticationType
+          instanceUrl
+          isSandbox
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+        }
         readLimit
       }
       calendar {
@@ -8421,6 +8493,25 @@ export const QueryFeeds = gql`
           }
         }
         readLimit
+      }
+      meeting {
+        type
+        readLimit
+        fireflies {
+          apiKey
+          beforeDate
+          afterDate
+        }
+        attio {
+          apiKey
+          afterDate
+          beforeDate
+        }
+        fathom {
+          apiKey
+          afterDate
+          beforeDate
+        }
       }
       rss {
         readLimit
@@ -8511,6 +8602,17 @@ export const QueryFeeds = gql`
       attio {
         readLimit
         apiKey
+      }
+      salesforce {
+        readLimit
+        authenticationType
+        isSandbox
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       research {
         readLimit
