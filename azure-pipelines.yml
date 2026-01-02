@@ -2,11 +2,22 @@ trigger:
   branches:
     include:
       - main
+      - develop
 
 name: $(Date:yyyyMMdd)$(Rev:rrr)
 
 pool:
   vmImage: "ubuntu-latest"
+
+variables:
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+    GRAPHQL_SCHEMA_URL: "https://data-scus-dev.graphlit.io/api/v1/graphql"
+    NPM_VERSION_SUFFIX: "-dev"
+    NPM_TAG: "dev"
+  ${{ else }}:
+    GRAPHQL_SCHEMA_URL: "https://data-scus.graphlit.io/api/v1/graphql"
+    NPM_VERSION_SUFFIX: ""
+    NPM_TAG: "latest"
 
 steps:
   - task: NodeTool@0
@@ -18,7 +29,7 @@ steps:
       npm install
       npm run generate
       npm run build
-      npm version 1.0.$(Build.BuildNumber) --no-git-tag-version --allow-same-version
+      npm version 1.0.$(Build.BuildNumber)$(NPM_VERSION_SUFFIX) --no-git-tag-version --allow-same-version
     displayName: "Install dependencies and build"
 
   - task: CopyFiles@2
@@ -34,8 +45,10 @@ steps:
       TargetFolder: "$(Build.ArtifactStagingDirectory)/dist"
 
   - task: Npm@1
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     inputs:
-      command: publish
+      command: custom
+      customCommand: "publish --tag $(NPM_TAG)"
       publishRegistry: useExternalRegistry
       publishEndpoint: "NPM"
+      workingDir: "$(Build.ArtifactStagingDirectory)/dist"
