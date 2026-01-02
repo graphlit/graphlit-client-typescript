@@ -47,8 +47,7 @@ steps:
   - task: Npm@1
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     inputs:
-      command: custom
-      customCommand: "publish --tag $(NPM_TAG)"
+      command: publish
       publishRegistry: useExternalRegistry
       publishEndpoint: "NPM"
-      workingDir: "$(Build.SourcesDirectory)"
+      publishTag: "$(NPM_TAG)"
