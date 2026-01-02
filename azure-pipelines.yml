@@ -51,4 +51,4 @@ steps:
       customCommand: "publish --tag $(NPM_TAG)"
       publishRegistry: useExternalRegistry
       publishEndpoint: "NPM"
-      workingDir: "$(Build.ArtifactStagingDirectory)/dist"
+      workingDir: "$(Build.SourcesDirectory)"
