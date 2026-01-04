@@ -1627,6 +1627,32 @@ export const GetContent = gql`
       folderCount
       isEncrypted
     }
+    meeting {
+      title
+      duration
+      summary
+      actionItems
+      keywords
+      organizer {
+        name
+        email
+        givenName
+        familyName
+      }
+      participants {
+        name
+        email
+        givenName
+        familyName
+      }
+      source
+      externalId
+    }
+    transcript {
+      duration
+      segmentCount
+      speakerCount
+    }
     language {
       languages
     }
@@ -2458,6 +2484,32 @@ export const LookupContents = gql`
         folderCount
         isEncrypted
       }
+      meeting {
+        title
+        duration
+        summary
+        actionItems
+        keywords
+        organizer {
+          name
+          email
+          givenName
+          familyName
+        }
+        participants {
+          name
+          email
+          givenName
+          familyName
+        }
+        source
+        externalId
+      }
+      transcript {
+        duration
+        segmentCount
+        speakerCount
+      }
       language {
         languages
       }
@@ -3150,6 +3202,32 @@ export const QueryContents = gql`
         folderCount
         isEncrypted
       }
+      meeting {
+        title
+        duration
+        summary
+        actionItems
+        keywords
+        organizer {
+          name
+          email
+          givenName
+          familyName
+        }
+        participants {
+          name
+          email
+          givenName
+          familyName
+        }
+        source
+        externalId
+      }
+      transcript {
+        duration
+        segmentCount
+        speakerCount
+      }
       language {
         languages
       }
@@ -3551,6 +3629,32 @@ export const QueryContentsObservations = gql`
         fileCount
         folderCount
         isEncrypted
+      }
+      meeting {
+        title
+        duration
+        summary
+        actionItems
+        keywords
+        organizer {
+          name
+          email
+          givenName
+          familyName
+        }
+        participants {
+          name
+          email
+          givenName
+          familyName
+        }
+        source
+        externalId
+      }
+      transcript {
+        duration
+        segmentCount
+        speakerCount
       }
       language {
         languages
