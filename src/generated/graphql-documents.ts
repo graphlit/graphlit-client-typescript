@@ -7711,8 +7711,8 @@ export const CreateFeed = gql`
     id
     name
     state
+    identifier
     type
-    syncMode
   }
 }
     `;
@@ -7778,6 +7778,8 @@ export const GetFeed = gql`
       id
     }
     state
+    identifier
+    description
     correlationId
     type
     syncMode
@@ -8297,6 +8299,8 @@ export const QueryFeeds = gql`
         id
       }
       state
+      identifier
+      description
       correlationId
       type
       syncMode
@@ -8908,8 +8912,8 @@ export const UpdateFeed = gql`
     id
     name
     state
+    identifier
     type
-    syncMode
   }
 }
     `;

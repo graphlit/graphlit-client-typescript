@@ -10,6 +10,8 @@ query QueryFeeds($filter: FeedFilter, $correlationId: String) {
         id
       }
       state
+      identifier
+      description
       correlationId
       type
       syncMode
