@@ -23,7 +23,6 @@ import type {
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
-import * as dotenv from "dotenv";
 import { getServiceType, getModelName, getModelEnum } from "./model-mapping.js";
 import {
   AgentOptions,
@@ -301,7 +300,13 @@ class Graphlit {
       "https://data-scus.graphlit.io/api/v1/graphql";
 
     if (typeof process !== "undefined") {
-      dotenv.config();
+      // Attempt to load dotenv if available (optional dependency)
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        require("dotenv").config();
+      } catch {
+        // dotenv not installed, user must set env vars manually
+      }
 
       this.organizationId =
         options.organizationId || process.env.GRAPHLIT_ORGANIZATION_ID;
