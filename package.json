@@ -24,7 +24,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "generate": "graphql-codegen --config codegen.yml",
+    "generate": "GRAPHQL_SCHEMA_URL=https://data-scus.graphlit.io/api/v1/graphql graphql-codegen --config codegen.yml",
     "generate:dev": "GRAPHQL_SCHEMA_URL=https://data-scus-dev.graphlit.io/api/v1/graphql graphql-codegen --config codegen.yml",
     "format": "prettier --write .",
     "build": "tsc -p tsconfig.json",
