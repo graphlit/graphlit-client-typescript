@@ -2513,14 +2513,6 @@ export const LookupContents = gql`
       language {
         languages
       }
-      parent {
-        id
-        name
-      }
-      children {
-        id
-        name
-      }
       feed {
         id
         name
