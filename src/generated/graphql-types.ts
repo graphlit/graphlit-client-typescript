@@ -235,6 +235,8 @@ export type AmazonFeedProperties = {
   accessKey?: Maybe<Scalars['String']['output']>;
   /** S3 bucket name. */
   bucketName?: Maybe<Scalars['String']['output']>;
+  /** Custom S3-compatible endpoint URL (e.g. Cloudflare R2, MinIO, Wasabi). */
+  customEndpoint?: Maybe<Scalars['String']['output']>;
   /** S3 bucket prefix. */
   prefix?: Maybe<Scalars['String']['output']>;
   /** S3 region. */
@@ -249,6 +251,8 @@ export type AmazonFeedPropertiesInput = {
   accessKey: Scalars['String']['input'];
   /** S3 bucket name. */
   bucketName: Scalars['String']['input'];
+  /** Custom S3-compatible endpoint URL (e.g. Cloudflare R2, MinIO, Wasabi). */
+  customEndpoint?: InputMaybe<Scalars['String']['input']>;
   /** S3 bucket prefix. */
   prefix?: InputMaybe<Scalars['String']['input']>;
   /** S3 region. */
@@ -263,6 +267,8 @@ export type AmazonFeedPropertiesUpdateInput = {
   accessKey?: InputMaybe<Scalars['String']['input']>;
   /** S3 bucket name. */
   bucketName?: InputMaybe<Scalars['String']['input']>;
+  /** Custom S3-compatible endpoint URL (e.g. Cloudflare R2, MinIO, Wasabi). */
+  customEndpoint?: InputMaybe<Scalars['String']['input']>;
   /** S3 bucket prefix. */
   prefix?: InputMaybe<Scalars['String']['input']>;
   /** S3 region. */
@@ -16601,7 +16607,7 @@ export type Query = {
   lookupContents?: Maybe<LookupContentsResults>;
   /** Lookup credit usage given tenant correlation identifier. */
   lookupCredits?: Maybe<ProjectCredits>;
-  /** Lookup entity relationships via direct Gremlin traversal. */
+  /** Lookup entity relationships via graph traversal. */
   lookupEntity?: Maybe<EntityRelationshipsResult>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
