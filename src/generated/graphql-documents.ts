@@ -7787,6 +7787,7 @@ export const GetFeed = gql`
         bucketName
         prefix
         region
+        customEndpoint
       }
       azureBlob {
         storageAccessKey
@@ -8308,6 +8309,7 @@ export const QueryFeeds = gql`
           bucketName
           prefix
           region
+          customEndpoint
         }
         azureBlob {
           storageAccessKey
