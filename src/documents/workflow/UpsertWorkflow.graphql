@@ -207,6 +207,16 @@ mutation UpsertWorkflow($workflow: WorkflowInput!) {
         enableSnapshots
         snapshotCount
       }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
+      }
     }
     actions {
       connector {

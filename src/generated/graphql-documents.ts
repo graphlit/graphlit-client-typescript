@@ -16766,6 +16766,16 @@ export const CreateWorkflow = gql`
         enableSnapshots
         snapshotCount
       }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
+      }
     }
     actions {
       connector {
@@ -17038,6 +17048,16 @@ export const GetWorkflow = gql`
         enableSnapshots
         snapshotCount
       }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
+      }
     }
     actions {
       connector {
@@ -17284,6 +17304,16 @@ export const QueryWorkflows = gql`
           enableSnapshots
           snapshotCount
         }
+        gate {
+          type
+          specification {
+            id
+          }
+          rules {
+            if
+          }
+          uri
+        }
       }
       actions {
         connector {
@@ -17524,6 +17554,16 @@ export const UpdateWorkflow = gql`
         enableSnapshots
         snapshotCount
       }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
+      }
     }
     actions {
       connector {
@@ -17762,6 +17802,16 @@ export const UpsertWorkflow = gql`
         embeddingTypes
         enableSnapshots
         snapshotCount
+      }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
       }
     }
     actions {
