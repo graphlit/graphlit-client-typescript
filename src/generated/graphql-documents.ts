@@ -822,6 +822,14 @@ export const UpdateConnector = gql`
   }
 }
     `;
+export const ApproveContent = gql`
+    mutation ApproveContent($id: ID!) {
+  approveContent(id: $id) {
+    id
+    state
+  }
+}
+    `;
 export const CountContents = gql`
     query CountContents($filter: ContentFilter, $correlationId: String) {
   countContents(filter: $filter, correlationId: $correlationId) {
@@ -3760,6 +3768,14 @@ export const QueryObservables = gql`
   }
 }
     `;
+export const RejectContent = gql`
+    mutation RejectContent($id: ID!, $reason: String) {
+  rejectContent(id: $id, reason: $reason) {
+    id
+    state
+  }
+}
+    `;
 export const ResearchContents = gql`
     mutation ResearchContents($connector: ContentPublishingConnectorInput!, $filter: ContentFilter, $name: String, $summarySpecification: EntityReferenceInput, $publishSpecification: EntityReferenceInput, $workflow: EntityReferenceInput, $correlationId: String) {
   researchContents(
@@ -3772,6 +3788,14 @@ export const ResearchContents = gql`
     correlationId: $correlationId
   ) {
     result
+  }
+}
+    `;
+export const RestartContent = gql`
+    mutation RestartContent($id: ID!) {
+  restartContent(id: $id) {
+    id
+    state
   }
 }
     `;
@@ -16775,6 +16799,7 @@ export const CreateWorkflow = gql`
           if
         }
         uri
+        onReject
       }
     }
     actions {
@@ -17057,6 +17082,7 @@ export const GetWorkflow = gql`
           if
         }
         uri
+        onReject
       }
     }
     actions {
@@ -17313,6 +17339,7 @@ export const QueryWorkflows = gql`
             if
           }
           uri
+          onReject
         }
       }
       actions {
@@ -17563,6 +17590,7 @@ export const UpdateWorkflow = gql`
           if
         }
         uri
+        onReject
       }
     }
     actions {
@@ -17812,6 +17840,7 @@ export const UpsertWorkflow = gql`
           if
         }
         uri
+        onReject
       }
     }
     actions {

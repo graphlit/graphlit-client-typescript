@@ -1660,6 +1660,46 @@ class Graphlit {
   }
 
   /**
+   * Approves content.
+   * @param id - The ID of the content to approve.
+   * @returns The approved content.
+   */
+  public async approveContent(id: string): Promise<Types.ApproveContentMutation> {
+    return this.mutateAndCheckError<
+      Types.ApproveContentMutation,
+      Types.ApproveContentMutationVariables
+    >(Documents.ApproveContent, { id: id });
+  }
+
+  /**
+   * Rejects content.
+   * @param id - The ID of the content to reject.
+   * @param reason - The reason for rejection.
+   * @returns The rejected content.
+   */
+  public async rejectContent(
+    id: string,
+    reason?: string,
+  ): Promise<Types.RejectContentMutation> {
+    return this.mutateAndCheckError<
+      Types.RejectContentMutation,
+      Types.RejectContentMutationVariables
+    >(Documents.RejectContent, { id: id, reason: reason });
+  }
+
+  /**
+   * Restarts content processing.
+   * @param id - The ID of the content to restart.
+   * @returns The restarted content.
+   */
+  public async restartContent(id: string): Promise<Types.RestartContentMutation> {
+    return this.mutateAndCheckError<
+      Types.RestartContentMutation,
+      Types.RestartContentMutationVariables
+    >(Documents.RestartContent, { id: id });
+  }
+
+  /**
    * Deletes multiple contents.
    * @param ids - The IDs of the contents to delete.
    * @param isSynchronous - Whether this mutation is synchronous.

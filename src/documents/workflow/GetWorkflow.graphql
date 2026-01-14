@@ -221,6 +221,7 @@ query GetWorkflow($id: ID!, $correlationId: String) {
           if
         }
         uri
+        onReject
       }
     }
     actions {

@@ -216,6 +216,7 @@ mutation UpsertWorkflow($workflow: WorkflowInput!) {
           if
         }
         uri
+        onReject
       }
     }
     actions {

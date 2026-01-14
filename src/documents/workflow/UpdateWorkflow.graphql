@@ -216,6 +216,7 @@ mutation UpdateWorkflow($workflow: WorkflowUpdateInput!) {
           if
         }
         uri
+        onReject
       }
     }
     actions {
