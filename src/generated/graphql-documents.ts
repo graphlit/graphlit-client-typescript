@@ -8120,6 +8120,9 @@ export const GetFeed = gql`
         clientSecret
         refreshToken
         accessToken
+        connector {
+          id
+        }
       }
       readLimit
     }
@@ -8331,6 +8334,17 @@ export const GetFeed = gql`
       connector {
         id
       }
+    }
+    intercomConversations {
+      readLimit
+      authenticationType
+      accessToken
+      connector {
+        id
+      }
+      state
+      includeNotes
+      includeAttachments
     }
     research {
       readLimit
@@ -8791,6 +8805,9 @@ export const QueryFeeds = gql`
           clientSecret
           refreshToken
           accessToken
+          connector {
+            id
+          }
         }
         readLimit
       }
@@ -9002,6 +9019,17 @@ export const QueryFeeds = gql`
         connector {
           id
         }
+      }
+      intercomConversations {
+        readLimit
+        authenticationType
+        accessToken
+        connector {
+          id
+        }
+        state
+        includeNotes
+        includeAttachments
       }
       research {
         readLimit
