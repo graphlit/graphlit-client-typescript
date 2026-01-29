@@ -358,9 +358,9 @@ export enum AnthropicModels {
   Claude_2_0 = 'CLAUDE_2_0',
   /** @deprecated Use Claude 4.x instead. */
   Claude_2_1 = 'CLAUDE_2_1',
-  /** Claude 3.5 Haiku (Latest) */
+  /** @deprecated Use Claude 4.5 Haiku instead. */
   Claude_3_5Haiku = 'CLAUDE_3_5_HAIKU',
-  /** Claude 3.5 Haiku (10-22-2024 version) */
+  /** @deprecated Use Claude 4.5 Haiku instead. */
   Claude_3_5Haiku_20241022 = 'CLAUDE_3_5_HAIKU_20241022',
   /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_5Sonnet = 'CLAUDE_3_5_SONNET',
@@ -368,9 +368,9 @@ export enum AnthropicModels {
   Claude_3_5Sonnet_20240620 = 'CLAUDE_3_5_SONNET_20240620',
   /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_5Sonnet_20241022 = 'CLAUDE_3_5_SONNET_20241022',
-  /** Claude 3.7 Sonnet (Latest) */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_7Sonnet = 'CLAUDE_3_7_SONNET',
-  /** Claude 3.7 Sonnet (02-19-2025 version) */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_7Sonnet_20250219 = 'CLAUDE_3_7_SONNET_20250219',
   /** Claude 3 Haiku (Latest) */
   Claude_3Haiku = 'CLAUDE_3_HAIKU',
@@ -408,9 +408,9 @@ export enum AnthropicModels {
   Claude_4Sonnet = 'CLAUDE_4_SONNET',
   /** Claude 4 Sonnet (05-14-2025 version) */
   Claude_4Sonnet_20250514 = 'CLAUDE_4_SONNET_20250514',
-  /** @deprecated Use Claude 3.5 Haiku instead. */
+  /** @deprecated Use Claude 4.5 Haiku instead. */
   ClaudeInstant_1 = 'CLAUDE_INSTANT_1',
-  /** @deprecated Use Claude 3.5 Haiku instead. */
+  /** @deprecated Use Claude 4.5 Haiku instead. */
   ClaudeInstant_1_2 = 'CLAUDE_INSTANT_1_2',
   /** Developer-specified model */
   Custom = 'CUSTOM'
@@ -456,6 +456,80 @@ export enum ArcadeProviders {
   /** Microsoft Arcade provider */
   Microsoft = 'MICROSOFT'
 }
+
+export enum AsanaAuthenticationTypes {
+  OAuth = 'O_AUTH',
+  PersonalAccessToken = 'PERSONAL_ACCESS_TOKEN'
+}
+
+/** Represents Asana feed properties. */
+export type AsanaFeedProperties = {
+  __typename?: 'AsanaFeedProperties';
+  /** Asana authentication type. */
+  authenticationType?: Maybe<AsanaAuthenticationTypes>;
+  /** Asana OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** Asana OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Asana personal access token. */
+  personalAccessToken?: Maybe<Scalars['String']['output']>;
+  /** Asana project identifier. */
+  projectId?: Maybe<Scalars['String']['output']>;
+  /** Asana OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+  /** Asana workspace identifier. */
+  workspaceId?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Asana feed properties. */
+export type AsanaFeedPropertiesInput = {
+  /** Asana authentication type. */
+  authenticationType?: InputMaybe<AsanaAuthenticationTypes>;
+  /** Asana OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Asana OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Asana personal access token. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Asana project identifier. */
+  projectId?: InputMaybe<Scalars['String']['input']>;
+  /** Asana OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Asana workspace identifier. */
+  workspaceId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Asana feed properties. */
+export type AsanaFeedPropertiesUpdateInput = {
+  /** Asana authentication type. */
+  authenticationType?: InputMaybe<AsanaAuthenticationTypes>;
+  /** Asana OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Asana OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Asana personal access token. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Asana project identifier. */
+  projectId?: InputMaybe<Scalars['String']['input']>;
+  /** Asana OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Asana workspace identifier. */
+  workspaceId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Asana projects properties. */
+export type AsanaProjectsInput = {
+  /** Asana personal access token. */
+  personalAccessToken: Scalars['String']['input'];
+  /** Asana workspace identifier. */
+  workspaceId: Scalars['String']['input'];
+};
+
+/** Represents Asana workspaces properties. */
+export type AsanaWorkspacesInput = {
+  /** Asana personal access token. */
+  personalAccessToken: Scalars['String']['input'];
+};
 
 /** Represents a prompted question about Graphlit. */
 export type AskGraphlit = {
@@ -1113,6 +1187,49 @@ export type AzureTextExtractionPropertiesInput = {
   enablePII?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export enum BambooHrAuthenticationTypes {
+  ApiKey = 'API_KEY'
+}
+
+/** Represents BambooHR HRIS feed properties. */
+export type BambooHrhrisFeedProperties = {
+  __typename?: 'BambooHRHRISFeedProperties';
+  /** BambooHR API key. */
+  apiKey?: Maybe<Scalars['String']['output']>;
+  /** BambooHR authentication type. */
+  authenticationType?: Maybe<BambooHrAuthenticationTypes>;
+  /** BambooHR company domain (subdomain). */
+  companyDomain?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents BambooHR HRIS feed properties. */
+export type BambooHrhrisFeedPropertiesInput = {
+  /** BambooHR API key. */
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  /** BambooHR authentication type. */
+  authenticationType?: InputMaybe<BambooHrAuthenticationTypes>;
+  /** BambooHR company domain (subdomain). */
+  companyDomain?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents BambooHR HRIS feed properties. */
+export type BambooHrhrisFeedPropertiesUpdateInput = {
+  /** BambooHR API key. */
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  /** BambooHR authentication type. */
+  authenticationType?: InputMaybe<BambooHrAuthenticationTypes>;
+  /** BambooHR company domain (subdomain). */
+  companyDomain?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Input for querying BambooHR options (departments, locations, etc.). */
+export type BambooHrOptionsInput = {
+  /** BambooHR API key. */
+  apiKey: Scalars['String']['input'];
+  /** BambooHR company domain (subdomain). */
+  companyDomain: Scalars['String']['input'];
+};
+
 /** Represents Amazon Bedrock model properties. */
 export type BedrockModelProperties = {
   __typename?: 'BedrockModelProperties';
@@ -1188,7 +1305,7 @@ export type BedrockModelPropertiesUpdateInput = {
 
 /** Amazon Bedrock model type */
 export enum BedrockModels {
-  /** Claude 3.7 Sonnet */
+  /** @deprecated Use Claude 4.5 Sonnet instead. */
   Claude_3_7Sonnet = 'CLAUDE_3_7_SONNET',
   /** Developer-specified model */
   Custom = 'CUSTOM',
@@ -1357,6 +1474,8 @@ export type CrmFeedProperties = {
   connectorType: FeedConnectorTypes;
   /** Google Contacts CRM properties. */
   googleContacts?: Maybe<GoogleContactsCrmFeedProperties>;
+  /** HubSpot CRM properties. */
+  hubSpot?: Maybe<HubSpotCrmFeedProperties>;
   /** Microsoft Contacts CRM properties. */
   microsoftContacts?: Maybe<MicrosoftContactsCrmFeedProperties>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -1373,6 +1492,8 @@ export type CrmFeedPropertiesInput = {
   attio?: InputMaybe<AttioCrmFeedPropertiesInput>;
   /** Google Contacts CRM properties. */
   googleContacts?: InputMaybe<GoogleContactsCrmFeedPropertiesInput>;
+  /** HubSpot CRM properties. */
+  hubSpot?: InputMaybe<HubSpotCrmFeedPropertiesInput>;
   /** Microsoft Contacts CRM properties. */
   microsoftContacts?: InputMaybe<MicrosoftContactsCrmFeedPropertiesInput>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -1389,6 +1510,8 @@ export type CrmFeedPropertiesUpdateInput = {
   attio?: InputMaybe<AttioCrmFeedPropertiesUpdateInput>;
   /** Google Contacts CRM properties. */
   googleContacts?: InputMaybe<GoogleContactsCrmFeedPropertiesUpdateInput>;
+  /** HubSpot CRM properties. */
+  hubSpot?: InputMaybe<HubSpotCrmFeedPropertiesUpdateInput>;
   /** Microsoft Contacts CRM properties. */
   microsoftContacts?: InputMaybe<MicrosoftContactsCrmFeedPropertiesUpdateInput>;
   /** The limit of items to be read from feed, defaults to 100. */
@@ -2102,6 +2225,108 @@ export type CommitMetadata = {
   /** The commit team name. */
   team?: Maybe<Scalars['String']['output']>;
 };
+
+/** Represents Confluence feed properties. */
+export type ConfluenceFeedProperties = {
+  __typename?: 'ConfluenceFeedProperties';
+  /** The Atlassian account email address. */
+  email: Scalars['String']['output'];
+  /** The Confluence page identifiers. */
+  identifiers?: Maybe<Array<Scalars['String']['output']>>;
+  /** Should the feed include page attachments. */
+  includeAttachments?: Maybe<Scalars['Boolean']['output']>;
+  /** Should the feed enumerate Confluence pages recursively. */
+  isRecursive?: Maybe<Scalars['Boolean']['output']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** The Confluence space keys. */
+  spaceKeys?: Maybe<Array<Scalars['String']['output']>>;
+  /** The Atlassian API token. */
+  token: Scalars['String']['output'];
+  /** The Confluence object type, i.e. space or page. */
+  type: ConfluenceTypes;
+  /** The Confluence base URI. */
+  uri: Scalars['String']['output'];
+};
+
+/** Represents Confluence feed properties. */
+export type ConfluenceFeedPropertiesInput = {
+  /** The Atlassian account email address. */
+  email: Scalars['String']['input'];
+  /** The Confluence page identifiers. */
+  identifiers?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Should the feed include page attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Should the feed enumerate Confluence pages recursively. */
+  isRecursive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The Confluence space keys. */
+  spaceKeys?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The Atlassian API token. */
+  token: Scalars['String']['input'];
+  /** The Confluence object type, i.e. space or page. */
+  type: ConfluenceTypes;
+  /** The Confluence base URI. */
+  uri: Scalars['String']['input'];
+};
+
+/** Represents Confluence feed properties. */
+export type ConfluenceFeedPropertiesUpdateInput = {
+  /** The Atlassian account email address. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** The Confluence page identifiers. */
+  identifiers?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Should the feed include page attachments. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Should the feed enumerate Confluence pages recursively. */
+  isRecursive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The Confluence space keys. */
+  spaceKeys?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The Atlassian API token. */
+  token?: InputMaybe<Scalars['String']['input']>;
+  /** The Confluence object type, i.e. space or page. */
+  type?: InputMaybe<ConfluenceTypes>;
+  /** The Confluence base URI. */
+  uri?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Confluence space. */
+export type ConfluenceSpaceResult = {
+  __typename?: 'ConfluenceSpaceResult';
+  /** The Confluence space identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The Confluence space key. */
+  key?: Maybe<Scalars['String']['output']>;
+  /** The Confluence space name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Confluence spaces. */
+export type ConfluenceSpaceResults = {
+  __typename?: 'ConfluenceSpaceResults';
+  /** The Confluence spaces. */
+  results?: Maybe<Array<Maybe<ConfluenceSpaceResult>>>;
+};
+
+/** Represents Confluence spaces properties. */
+export type ConfluenceSpacesInput = {
+  /** Atlassian account email address. */
+  emailAddress: Scalars['String']['input'];
+  /** Atlassian API token. */
+  token: Scalars['String']['input'];
+  /** Confluence base URI. */
+  uri: Scalars['String']['input'];
+};
+
+export enum ConfluenceTypes {
+  /** Confluence Page */
+  Page = 'PAGE',
+  /** Confluence Space */
+  Space = 'SPACE'
+}
 
 /** Represents a connector. */
 export type Connector = {
@@ -3075,6 +3300,10 @@ export type Conversation = {
   specification?: Maybe<Specification>;
   /** The state of the conversation (i.e. created, finished). */
   state: EntityState;
+  /** The URI to the conversation transcript stored in blob storage. */
+  transcriptUri?: Maybe<Scalars['URL']['output']>;
+  /** The conversation turns, populated when transcript is stored in blob storage. */
+  turns?: Maybe<Array<Maybe<ConversationTurn>>>;
   /** The conversation type. */
   type?: Maybe<ConversationTypes>;
 };
@@ -3083,7 +3312,7 @@ export type Conversation = {
 export type ConversationCitation = {
   __typename?: 'ConversationCitation';
   /** The cited content in the conversation message. */
-  content?: Maybe<Content>;
+  content?: Maybe<EntityReference>;
   /** The citation end time, within the referenced audio or video content. */
   endTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The citation frame number, within the referenced image content. */
@@ -3393,6 +3622,38 @@ export type ConversationToolResponseInput = {
   content: Scalars['String']['input'];
   /** The tool call identifier. */
   id: Scalars['String']['input'];
+};
+
+/** Represents a conversation turn (user message through assistant response). */
+export type ConversationTurn = {
+  __typename?: 'ConversationTurn';
+  /** The turn index within the conversation. */
+  index?: Maybe<Scalars['Int']['output']>;
+  /** The messages within this turn. */
+  messages?: Maybe<Array<Maybe<ConversationTurnMessage>>>;
+  /** The relevance score when returned from vector search. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The combined text of the turn (for search results). */
+  text?: Maybe<Scalars['String']['output']>;
+  /** The timestamp of the first message in this turn. */
+  timestamp?: Maybe<Scalars['DateTime']['output']>;
+  /** The total token count for this turn. */
+  tokens?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents a message within a conversation turn. */
+export type ConversationTurnMessage = {
+  __typename?: 'ConversationTurnMessage';
+  /** The message author. */
+  author?: Maybe<Scalars['String']['output']>;
+  /** The message text. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The message role. */
+  role: ConversationRoleTypes;
+  /** The message timestamp. */
+  timestamp?: Maybe<Scalars['DateTime']['output']>;
+  /** The message token count. */
+  tokens?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Conversation type */
@@ -4025,6 +4286,47 @@ export type ElevenLabsPublishingPropertiesInput = {
   /** The ElevenLabs voice identifier. */
   voice?: InputMaybe<Scalars['String']['input']>;
 };
+
+/** Represents the ElevenLabs Scribe preparation properties. */
+export type ElevenLabsScribeAudioPreparationProperties = {
+  __typename?: 'ElevenLabsScribeAudioPreparationProperties';
+  /** Whether to auto-detect the speaker(s) language during ElevenLabs Scribe audio transcription. */
+  detectLanguage?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether to enable speaker diarization during ElevenLabs Scribe audio transcription. */
+  enableSpeakerDiarization?: Maybe<Scalars['Boolean']['output']>;
+  /** The ElevenLabs API key, optional. */
+  key?: Maybe<Scalars['String']['output']>;
+  /** Specify the language to transcribe during ElevenLabs Scribe audio transcription. Expected language in ISO-639-1 or ISO-639-3 format. */
+  language?: Maybe<Scalars['String']['output']>;
+  /** The ElevenLabs Scribe transcription model. */
+  model?: Maybe<ElevenLabsScribeModels>;
+  /** Whether to tag audio events like laughter, applause, etc. in the transcription. */
+  tagAudioEvents?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Represents the ElevenLabs Scribe preparation properties. */
+export type ElevenLabsScribeAudioPreparationPropertiesInput = {
+  /** Whether to auto-detect the speaker(s) language during ElevenLabs Scribe audio transcription. */
+  detectLanguage?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Whether to enable speaker diarization during ElevenLabs Scribe audio transcription. */
+  enableSpeakerDiarization?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The ElevenLabs API key, optional. */
+  key?: InputMaybe<Scalars['String']['input']>;
+  /** Specify the language to transcribe during ElevenLabs Scribe audio transcription. Expected language in ISO-639-1 or ISO-639-3 format, such as 'eng' or 'en'. */
+  language?: InputMaybe<Scalars['String']['input']>;
+  /** The ElevenLabs Scribe transcription model. */
+  model?: InputMaybe<ElevenLabsScribeModels>;
+  /** Whether to tag audio events like laughter, applause, etc. in the transcription. */
+  tagAudioEvents?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** ElevenLabs Scribe models */
+export enum ElevenLabsScribeModels {
+  /** Scribe V1 */
+  ScribeV1 = 'SCRIBE_V1',
+  /** Scribe V2 */
+  ScribeV2 = 'SCRIBE_V2'
+}
 
 /** Represents email feed properties. */
 export type EmailFeedProperties = {
@@ -5406,6 +5708,8 @@ export type Feed = {
   calendar?: Maybe<CalendarFeedProperties>;
   /** The commit feed properties. */
   commit?: Maybe<CommitFeedProperties>;
+  /** The Confluence feed properties. */
+  confluence?: Maybe<ConfluenceFeedProperties>;
   /** The contents sourced from the feed. */
   contents?: Maybe<Array<Maybe<Content>>>;
   /** The tenant correlation identifier. */
@@ -5424,6 +5728,10 @@ export type Feed = {
   entity?: Maybe<EntityFeedProperties>;
   /** If feed failed, the error message. */
   error?: Maybe<Scalars['String']['output']>;
+  /** The HRIS feed properties. */
+  hris?: Maybe<HrisFeedProperties>;
+  /** The HubSpot Conversations feed properties. */
+  hubSpotConversations?: Maybe<HubSpotConversationsFeedProperties>;
   /** The ID of the feed. */
   id: Scalars['ID']['output'];
   /** The feed external identifier. */
@@ -5491,6 +5799,8 @@ export type Feed = {
 export enum FeedConnectorTypes {
   /** Amazon Web Services feed connector */
   Amazon = 'AMAZON',
+  /** Asana feed connector */
+  Asana = 'ASANA',
   /** Atlassian feed connector */
   Atlassian = 'ATLASSIAN',
   /** Attio feed connector */
@@ -5499,6 +5809,8 @@ export enum FeedConnectorTypes {
   AttioMeeting = 'ATTIO_MEETING',
   /** Microsoft Azure feed connector */
   Azure = 'AZURE',
+  /** BambooHR feed connector */
+  BambooHr = 'BAMBOO_HR',
   /** Box feed connector */
   Box = 'BOX',
   /** Dropbox feed connector */
@@ -5519,8 +5831,14 @@ export enum FeedConnectorTypes {
   GoogleDrive = 'GOOGLE_DRIVE',
   /** Google Mail feed connector */
   GoogleEmail = 'GOOGLE_EMAIL',
+  /** Gusto feed connector */
+  Gusto = 'GUSTO',
+  /** HubSpot feed connector */
+  HubSpot = 'HUB_SPOT',
   /** Intercom feed connector */
   Intercom = 'INTERCOM',
+  /** Krisp feed connector */
+  Krisp = 'KRISP',
   /** Linear feed connector */
   Linear = 'LINEAR',
   /** Microsoft Calendar feed connector */
@@ -5529,6 +5847,8 @@ export enum FeedConnectorTypes {
   MicrosoftContacts = 'MICROSOFT_CONTACTS',
   /** Microsoft Outlook Email feed connector */
   MicrosoftEmail = 'MICROSOFT_EMAIL',
+  /** Monday.com feed connector */
+  Monday = 'MONDAY',
   /** Microsoft OneDrive feed connector */
   OneDrive = 'ONE_DRIVE',
   /** Parallel feed connector */
@@ -5585,6 +5905,8 @@ export type FeedInput = {
   calendar?: InputMaybe<CalendarFeedPropertiesInput>;
   /** The commit feed properties. */
   commit?: InputMaybe<CommitFeedPropertiesInput>;
+  /** The Confluence feed properties. */
+  confluence?: InputMaybe<ConfluenceFeedPropertiesInput>;
   /** The CRM feed properties. */
   crm?: InputMaybe<CrmFeedPropertiesInput>;
   /** The feed description. */
@@ -5595,6 +5917,10 @@ export type FeedInput = {
   email?: InputMaybe<EmailFeedPropertiesInput>;
   /** The Entity discovery feed properties. */
   entity?: InputMaybe<EntityFeedPropertiesInput>;
+  /** The HRIS feed properties. */
+  hris?: InputMaybe<HrisFeedPropertiesInput>;
+  /** The HubSpot Conversations feed properties. */
+  hubSpotConversations?: InputMaybe<HubSpotConversationsFeedPropertiesInput>;
   /** The feed external identifier. */
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** The Intercom feed properties. */
@@ -5677,6 +6003,10 @@ export type FeedSchedulePolicyInput = {
 
 /** Feed service type */
 export enum FeedServiceTypes {
+  /** Asana feed service */
+  Asana = 'ASANA',
+  /** Atlassian Confluence feed service */
+  AtlassianConfluence = 'ATLASSIAN_CONFLUENCE',
   /** Atlassian Jira feed service */
   AtlassianJira = 'ATLASSIAN_JIRA',
   /** Attio Meeting Transcripts feed service */
@@ -5691,6 +6021,8 @@ export enum FeedServiceTypes {
   AzureBlob = 'AZURE_BLOB',
   /** Azure File feed service */
   AzureFile = 'AZURE_FILE',
+  /** BambooHR HRIS feed service */
+  BambooHr = 'BAMBOO_HR',
   /** Box feed service */
   Box = 'BOX',
   /** Dropbox feed service */
@@ -5717,10 +6049,24 @@ export enum FeedServiceTypes {
   GoogleDrive = 'GOOGLE_DRIVE',
   /** Google Mail feed service */
   GoogleEmail = 'GOOGLE_EMAIL',
+  /** Gusto HRIS feed service */
+  GustoHris = 'GUSTO_HRIS',
+  /** HubSpot Conversations feed service */
+  HubSpotConversations = 'HUB_SPOT_CONVERSATIONS',
+  /** HubSpot Meeting Transcripts feed service */
+  HubSpotMeeting = 'HUB_SPOT_MEETING',
+  /** HubSpot Notes feed service */
+  HubSpotNotes = 'HUB_SPOT_NOTES',
+  /** HubSpot Objects feed service */
+  HubSpotObjects = 'HUB_SPOT_OBJECTS',
+  /** HubSpot Tasks feed service */
+  HubSpotTasks = 'HUB_SPOT_TASKS',
   /** Intercom Articles feed service */
   IntercomArticles = 'INTERCOM_ARTICLES',
   /** Intercom Tickets feed service */
   IntercomTickets = 'INTERCOM_TICKETS',
+  /** Krisp feed service */
+  Krisp = 'KRISP',
   /** Linear feed service */
   Linear = 'LINEAR',
   /** Microsoft Calendar feed service */
@@ -5729,6 +6075,8 @@ export enum FeedServiceTypes {
   MicrosoftContacts = 'MICROSOFT_CONTACTS',
   /** Microsoft Outlook Email feed service */
   MicrosoftEmail = 'MICROSOFT_EMAIL',
+  /** Monday.com feed service */
+  Monday = 'MONDAY',
   /** Microsoft OneDrive feed service */
   OneDrive = 'ONE_DRIVE',
   /** Parallel feed service */
@@ -5769,6 +6117,8 @@ export enum FeedTypes {
   Calendar = 'CALENDAR',
   /** Commit feed */
   Commit = 'COMMIT',
+  /** Confluence feed */
+  Confluence = 'CONFLUENCE',
   /** CRM feed */
   Crm = 'CRM',
   /** Discord channel feed */
@@ -5777,6 +6127,12 @@ export enum FeedTypes {
   Email = 'EMAIL',
   /** Entity discovery feed */
   Entity = 'ENTITY',
+  /** HRIS feed */
+  Hris = 'HRIS',
+  /** HubSpot feed */
+  HubSpot = 'HUB_SPOT',
+  /** HubSpot Conversations feed */
+  HubSpotConversations = 'HUB_SPOT_CONVERSATIONS',
   /** Intercom articles feed */
   Intercom = 'INTERCOM',
   /** Issue feed */
@@ -5821,6 +6177,8 @@ export type FeedUpdateInput = {
   calendar?: InputMaybe<CalendarFeedPropertiesUpdateInput>;
   /** The commit feed properties. */
   commit?: InputMaybe<CommitFeedPropertiesUpdateInput>;
+  /** The Confluence feed properties. */
+  confluence?: InputMaybe<ConfluenceFeedPropertiesUpdateInput>;
   /** The CRM feed properties. */
   crm?: InputMaybe<CrmFeedPropertiesUpdateInput>;
   /** The feed description. */
@@ -5831,6 +6189,10 @@ export type FeedUpdateInput = {
   email?: InputMaybe<EmailFeedPropertiesUpdateInput>;
   /** The Entity discovery feed properties. */
   entity?: InputMaybe<EntityFeedPropertiesUpdateInput>;
+  /** The HRIS feed properties. */
+  hris?: InputMaybe<HrisFeedPropertiesUpdateInput>;
+  /** The HubSpot Conversations feed properties. */
+  hubSpotConversations?: InputMaybe<HubSpotConversationsFeedPropertiesUpdateInput>;
   /** The ID of the feed to update. */
   id: Scalars['ID']['input'];
   /** The feed external identifier. */
@@ -5892,6 +6254,8 @@ export type FilePreparationConnector = {
   deepgram?: Maybe<DeepgramAudioPreparationProperties>;
   /** The specific properties for document preparation. */
   document?: Maybe<DocumentPreparationProperties>;
+  /** The specific properties for ElevenLabs Scribe preparation. */
+  elevenLabsScribe?: Maybe<ElevenLabsScribeAudioPreparationProperties>;
   /** The specific properties for email preparation. */
   email?: Maybe<EmailPreparationProperties>;
   /** The file types to be prepared. */
@@ -5918,6 +6282,8 @@ export type FilePreparationConnectorInput = {
   deepgram?: InputMaybe<DeepgramAudioPreparationPropertiesInput>;
   /** The specific properties for document preparation. */
   document?: InputMaybe<DocumentPreparationPropertiesInput>;
+  /** The specific properties for ElevenLabs Scribe preparation. */
+  elevenLabsScribe?: InputMaybe<ElevenLabsScribeAudioPreparationPropertiesInput>;
   /** The specific properties for email preparation. */
   email?: InputMaybe<EmailPreparationPropertiesInput>;
   /** The file types to be prepared. */
@@ -5944,6 +6310,8 @@ export enum FilePreparationServiceTypes {
   Deepgram = 'DEEPGRAM',
   /** Document Preparation */
   Document = 'DOCUMENT',
+  /** ElevenLabs Scribe Audio Transcription */
+  ElevenLabsScribe = 'ELEVEN_LABS_SCRIBE',
   /** Email Preparation */
   Email = 'EMAIL',
   /** Mistral OCR Document Preparation */
@@ -6824,7 +7192,7 @@ export type GoogleFeedPropertiesUpdateInput = {
 export enum GoogleImageModels {
   /** Developer-specified model */
   Custom = 'CUSTOM',
-  /** Gemini 2.5 Flash Image Preview */
+  /** @deprecated Model has been shut down. Use Gemini 3 Pro Image Preview instead. */
   Gemini_2_5FlashImagePreview = 'GEMINI_2_5_FLASH_IMAGE_PREVIEW',
   /** Gemini 3 Pro Image Preview */
   Gemini_3ProImagePreview = 'GEMINI_3_PRO_IMAGE_PREVIEW'
@@ -6870,7 +7238,9 @@ export type GoogleModelProperties = {
   probability?: Maybe<Scalars['Float']['output']>;
   /** The model temperature. */
   temperature?: Maybe<Scalars['Float']['output']>;
-  /** The limit of thinking tokens allowed for Gemini's internal reasoning process. */
+  /** The thinking level for Gemini 3 models (recommended). Options: MINIMAL (Flash only), LOW (~1K tokens), MEDIUM (~8K tokens, Flash only), HIGH (~24K tokens, default). */
+  thinkingLevel?: Maybe<GoogleThinkingLevels>;
+  /** The limit of thinking tokens for Gemini 2.5 models. For Gemini 3, use thinkingLevel instead. */
   thinkingTokenLimit?: Maybe<Scalars['Int']['output']>;
   /** The number of tokens which can provided to the Google model, if using developer's own account. */
   tokenLimit?: Maybe<Scalars['Int']['output']>;
@@ -6894,7 +7264,9 @@ export type GoogleModelPropertiesInput = {
   probability?: InputMaybe<Scalars['Float']['input']>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
-  /** The limit of thinking tokens allowed for Gemini's internal reasoning process. */
+  /** The thinking level for Gemini 3 models (recommended). Options: MINIMAL (Flash only), LOW (~1K tokens), MEDIUM (~8K tokens, Flash only), HIGH (~24K tokens, default). For Gemini 2.5, use thinkingTokenLimit. */
+  thinkingLevel?: InputMaybe<GoogleThinkingLevels>;
+  /** The limit of thinking tokens for Gemini 2.5 models. For Gemini 3, use thinkingLevel instead. */
   thinkingTokenLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The number of tokens which can provided to the Google model, if using developer's own account. */
   tokenLimit?: InputMaybe<Scalars['Int']['input']>;
@@ -6918,7 +7290,9 @@ export type GoogleModelPropertiesUpdateInput = {
   probability?: InputMaybe<Scalars['Float']['input']>;
   /** The model temperature. */
   temperature?: InputMaybe<Scalars['Float']['input']>;
-  /** The limit of thinking tokens allowed for Gemini's internal reasoning process. */
+  /** The thinking level for Gemini 3 models (recommended). Options: MINIMAL (Flash only), LOW (~1K tokens), MEDIUM (~8K tokens, Flash only), HIGH (~24K tokens, default). For Gemini 2.5, use thinkingTokenLimit. */
+  thinkingLevel?: InputMaybe<GoogleThinkingLevels>;
+  /** The limit of thinking tokens for Gemini 2.5 models. For Gemini 3, use thinkingLevel instead. */
   thinkingTokenLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The number of tokens which can provided to the Google model, if using developer's own account. */
   tokenLimit?: InputMaybe<Scalars['Int']['input']>;
@@ -6930,34 +7304,34 @@ export enum GoogleModels {
   Custom = 'CUSTOM',
   /** Embed (004 version) */
   Embedding_004 = 'EMBEDDING_004',
-  /** Gemini 1.5 Flash (Latest) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash = 'GEMINI_1_5_FLASH',
-  /** Gemini 1.5 Flash (001 version) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash_001 = 'GEMINI_1_5_FLASH_001',
-  /** Gemini 1.5 Flash (002 version) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash_002 = 'GEMINI_1_5_FLASH_002',
-  /** Gemini 1.5 Flash 8b (Latest) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash_8B = 'GEMINI_1_5_FLASH_8B',
-  /** Gemini 1.5 Flash 8b (001 version) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash_8B_001 = 'GEMINI_1_5_FLASH_8B_001',
-  /** Gemini 1.5 Pro (Latest) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Pro instead. */
   Gemini_1_5Pro = 'GEMINI_1_5_PRO',
-  /** Gemini 1.5 Pro (001 version) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Pro instead. */
   Gemini_1_5Pro_001 = 'GEMINI_1_5_PRO_001',
-  /** Gemini 1.5 Pro (002 version) */
+  /** @deprecated Model has been shut down. Use Gemini 2.5 Pro instead. */
   Gemini_1_5Pro_002 = 'GEMINI_1_5_PRO_002',
-  /** Gemini 2.0 Flash (Latest) */
+  /** @deprecated Use Gemini 2.5 Flash instead. */
   Gemini_2_0Flash = 'GEMINI_2_0_FLASH',
-  /** Gemini 2.0 Flash (001 version) */
+  /** @deprecated Use Gemini 2.5 Flash instead. */
   Gemini_2_0Flash_001 = 'GEMINI_2_0_FLASH_001',
   /**
    * Gemini 2.0 Flash (Experimental)
-   * @deprecated Use Gemini 2.0 Flash (Latest) instead.
+   * @deprecated Use Gemini 2.5 Flash instead.
    */
   Gemini_2_0FlashExperimental = 'GEMINI_2_0_FLASH_EXPERIMENTAL',
   /**
    * Gemini 2.0 Flash Thinking (Experimental)
-   * @deprecated Use Gemini 2.5 Flash (Preview) instead.
+   * @deprecated Use Gemini 2.5 Flash instead.
    */
   Gemini_2_0FlashThinkingExperimental = 'GEMINI_2_0_FLASH_THINKING_EXPERIMENTAL',
   /**
@@ -6969,7 +7343,7 @@ export enum GoogleModels {
   Gemini_2_5Flash = 'GEMINI_2_5_FLASH',
   /** Gemini 2.5 Flash Lite */
   Gemini_2_5FlashLite = 'GEMINI_2_5_FLASH_LITE',
-  /** Gemini 2.5 Flash (Preview) */
+  /** @deprecated Use Gemini 2.5 Flash instead. */
   Gemini_2_5FlashPreview = 'GEMINI_2_5_FLASH_PREVIEW',
   /** Gemini 2.5 Pro */
   Gemini_2_5Pro = 'GEMINI_2_5_PRO',
@@ -6988,6 +7362,18 @@ export enum GoogleModels {
   GeminiFlashLatest = 'GEMINI_FLASH_LATEST',
   /** Gemini Flash Lite (Latest) */
   GeminiFlashLiteLatest = 'GEMINI_FLASH_LITE_LATEST'
+}
+
+/** Google thinking levels for Gemini models */
+export enum GoogleThinkingLevels {
+  /** High thinking effort (default for Gemini 3) */
+  High = 'HIGH',
+  /** Low thinking effort */
+  Low = 'LOW',
+  /** Medium thinking effort (Gemini 3 Flash only) */
+  Medium = 'MEDIUM',
+  /** Minimal thinking (Gemini 3 Flash only) */
+  Minimal = 'MINIMAL'
 }
 
 /** Represents a knowledge graph. */
@@ -7220,6 +7606,120 @@ export enum GroqModels {
   Qwen_3_32B = 'QWEN_3_32B'
 }
 
+export enum GustoAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  User = 'USER'
+}
+
+/** Input for querying Gusto companies. */
+export type GustoCompaniesInput = {
+  /** Gusto OAuth client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Gusto OAuth client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Gusto OAuth refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
+/** Represents a Gusto company. */
+export type GustoCompanyResult = {
+  __typename?: 'GustoCompanyResult';
+  /** The company EIN. */
+  ein?: Maybe<Scalars['String']['output']>;
+  /** The company identifier (UUID). */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The company name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Gusto companies. */
+export type GustoCompanyResults = {
+  __typename?: 'GustoCompanyResults';
+  /** The Gusto companies. */
+  results?: Maybe<Array<Maybe<GustoCompanyResult>>>;
+};
+
+/** Represents Gusto HRIS feed properties. */
+export type GustoHrisFeedProperties = {
+  __typename?: 'GustoHRISFeedProperties';
+  /** Gusto authentication type. */
+  authenticationType?: Maybe<GustoAuthenticationTypes>;
+  /** Gusto OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** Gusto OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Gusto company identifier. */
+  companyId?: Maybe<Scalars['String']['output']>;
+  /** Gusto OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Gusto HRIS feed properties. */
+export type GustoHrisFeedPropertiesInput = {
+  /** Gusto authentication type. */
+  authenticationType?: InputMaybe<GustoAuthenticationTypes>;
+  /** Gusto OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto company identifier. */
+  companyId?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Gusto HRIS feed properties. */
+export type GustoHrisFeedPropertiesUpdateInput = {
+  /** Gusto authentication type. */
+  authenticationType?: InputMaybe<GustoAuthenticationTypes>;
+  /** Gusto OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto company identifier. */
+  companyId?: InputMaybe<Scalars['String']['input']>;
+  /** Gusto OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Gusto company location. */
+export type GustoLocationResult = {
+  __typename?: 'GustoLocationResult';
+  /** The city. */
+  city?: Maybe<Scalars['String']['output']>;
+  /** The country. */
+  country?: Maybe<Scalars['String']['output']>;
+  /** The location identifier (UUID). */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The state. */
+  state?: Maybe<Scalars['String']['output']>;
+  /** The street address line 1. */
+  street1?: Maybe<Scalars['String']['output']>;
+  /** The street address line 2. */
+  street2?: Maybe<Scalars['String']['output']>;
+  /** The ZIP code. */
+  zip?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Gusto company locations. */
+export type GustoLocationResults = {
+  __typename?: 'GustoLocationResults';
+  /** The Gusto locations. */
+  results?: Maybe<Array<Maybe<GustoLocationResult>>>;
+};
+
+/** Input for querying Gusto departments or locations. */
+export type GustoOptionsInput = {
+  /** Gusto OAuth client identifier. */
+  clientId: Scalars['String']['input'];
+  /** Gusto OAuth client secret. */
+  clientSecret: Scalars['String']['input'];
+  /** Gusto company identifier (UUID). */
+  companyId: Scalars['String']['input'];
+  /** Gusto OAuth refresh token. */
+  refreshToken: Scalars['String']['input'];
+};
+
 /** Represents an H3 index. */
 export type H3 = {
   __typename?: 'H3';
@@ -7330,6 +7830,320 @@ export enum H3ResolutionTypes {
   /** H3R15 */
   R15 = 'R15'
 }
+
+/** Represents HRIS feed properties. */
+export type HrisFeedProperties = {
+  __typename?: 'HRISFeedProperties';
+  /** BambooHR HRIS properties. */
+  bambooHR?: Maybe<BambooHrhrisFeedProperties>;
+  /** Feed connector type. */
+  connectorType: FeedConnectorTypes;
+  /** Gusto HRIS properties. */
+  gusto?: Maybe<GustoHrisFeedProperties>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** Feed service type. */
+  type: FeedServiceTypes;
+};
+
+/** Represents HRIS feed properties. */
+export type HrisFeedPropertiesInput = {
+  /** BambooHR HRIS properties. */
+  bambooHR?: InputMaybe<BambooHrhrisFeedPropertiesInput>;
+  /** Gusto HRIS properties. */
+  gusto?: InputMaybe<GustoHrisFeedPropertiesInput>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** Feed service type. */
+  type: FeedServiceTypes;
+};
+
+/** Represents HRIS feed properties. */
+export type HrisFeedPropertiesUpdateInput = {
+  /** BambooHR HRIS properties. */
+  bambooHR?: InputMaybe<BambooHrhrisFeedPropertiesUpdateInput>;
+  /** Gusto HRIS properties. */
+  gusto?: InputMaybe<GustoHrisFeedPropertiesUpdateInput>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Represents an HRIS option (department, location, etc.). */
+export type HrisOptionResult = {
+  __typename?: 'HRISOptionResult';
+  /** The option identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The option name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents HRIS options. */
+export type HrisOptionResults = {
+  __typename?: 'HRISOptionResults';
+  /** The HRIS options. */
+  results?: Maybe<Array<Maybe<HrisOptionResult>>>;
+};
+
+export enum HubSpotAuthenticationTypes {
+  PrivateApp = 'PRIVATE_APP',
+  User = 'USER'
+}
+
+/** Represents HubSpot CRM feed properties. */
+export type HubSpotCrmFeedProperties = {
+  __typename?: 'HubSpotCRMFeedProperties';
+  /** HubSpot private app access token. */
+  accessToken?: Maybe<Scalars['String']['output']>;
+  /** HubSpot authentication type. */
+  authenticationType?: Maybe<HubSpotAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents HubSpot CRM feed properties. */
+export type HubSpotCrmFeedPropertiesInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents HubSpot CRM feed properties. */
+export type HubSpotCrmFeedPropertiesUpdateInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents HubSpot Conversations feed properties. */
+export type HubSpotConversationsFeedProperties = {
+  __typename?: 'HubSpotConversationsFeedProperties';
+  /** HubSpot private app access token. */
+  accessToken?: Maybe<Scalars['String']['output']>;
+  /** HubSpot authentication type. */
+  authenticationType?: Maybe<HubSpotFeedAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Connector reference for credential retrieval. */
+  connector?: Maybe<EntityReference>;
+  /** Optional inbox ID to filter conversations by inbox. */
+  inboxId?: Maybe<Scalars['String']['output']>;
+  /** Include attachments from conversation messages. */
+  includeAttachments?: Maybe<Scalars['Boolean']['output']>;
+  /** Include closed threads in addition to open threads. */
+  includeClosedThreads?: Maybe<Scalars['Boolean']['output']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+  /** Feed listing type, i.e. past or new conversations. */
+  type?: Maybe<FeedListingTypes>;
+};
+
+/** Represents HubSpot Conversations feed properties. */
+export type HubSpotConversationsFeedPropertiesInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotFeedAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Optional inbox ID to filter conversations by inbox. */
+  inboxId?: InputMaybe<Scalars['String']['input']>;
+  /** Include attachments from conversation messages. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include closed threads in addition to open threads. */
+  includeClosedThreads?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Feed listing type, i.e. past or new conversations. */
+  type?: InputMaybe<FeedListingTypes>;
+};
+
+/** Represents HubSpot Conversations feed properties. */
+export type HubSpotConversationsFeedPropertiesUpdateInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotFeedAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Optional inbox ID to filter conversations by inbox. */
+  inboxId?: InputMaybe<Scalars['String']['input']>;
+  /** Include attachments from conversation messages. */
+  includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include closed threads in addition to open threads. */
+  includeClosedThreads?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Feed listing type, i.e. past or new conversations. */
+  type?: InputMaybe<FeedListingTypes>;
+};
+
+export enum HubSpotFeedAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  PrivateApp = 'PRIVATE_APP',
+  User = 'USER'
+}
+
+export enum HubSpotIssueAuthenticationTypes {
+  Connector = 'CONNECTOR',
+  PrivateApp = 'PRIVATE_APP',
+  User = 'USER'
+}
+
+/** Represents HubSpot meeting feed properties. */
+export type HubSpotMeetingProperties = {
+  __typename?: 'HubSpotMeetingProperties';
+  /** HubSpot private app access token. */
+  accessToken?: Maybe<Scalars['String']['output']>;
+  /** Only include calls/meetings after this date. */
+  afterDate?: Maybe<Scalars['DateTime']['output']>;
+  /** HubSpot authentication type. */
+  authenticationType?: Maybe<HubSpotFeedAuthenticationTypes>;
+  /** Only include calls/meetings before this date. */
+  beforeDate?: Maybe<Scalars['DateTime']['output']>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Connector reference for credential retrieval. */
+  connector?: Maybe<EntityReference>;
+  /** Include call transcripts if available. */
+  includeTranscripts?: Maybe<Scalars['Boolean']['output']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: Maybe<Scalars['Int']['output']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents HubSpot meeting feed properties. */
+export type HubSpotMeetingPropertiesInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Only include calls/meetings after this date. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotFeedAuthenticationTypes>;
+  /** Only include calls/meetings before this date. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Include call transcripts if available. */
+  includeTranscripts?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents HubSpot meeting feed properties. */
+export type HubSpotMeetingPropertiesUpdateInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Only include calls/meetings after this date. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotFeedAuthenticationTypes>;
+  /** Only include calls/meetings before this date. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Include call transcripts if available. */
+  includeTranscripts?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The limit of items to be read from feed, defaults to 100. */
+  readLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents HubSpot Tasks feed properties. */
+export type HubSpotTasksFeedProperties = {
+  __typename?: 'HubSpotTasksFeedProperties';
+  /** HubSpot private app access token. */
+  accessToken?: Maybe<Scalars['String']['output']>;
+  /** HubSpot authentication type. */
+  authenticationType?: Maybe<HubSpotIssueAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: Maybe<Scalars['String']['output']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  /** Connector reference for credential retrieval. */
+  connector?: Maybe<EntityReference>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents HubSpot Tasks feed properties. */
+export type HubSpotTasksFeedPropertiesInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotIssueAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents HubSpot Tasks feed properties. */
+export type HubSpotTasksFeedPropertiesUpdateInput = {
+  /** HubSpot private app access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot authentication type. */
+  authenticationType?: InputMaybe<HubSpotIssueAuthenticationTypes>;
+  /** HubSpot OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** HubSpot OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** HubSpot OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** Represents an embedded image in a text page. */
 export type ImageChunk = {
@@ -8195,12 +9009,16 @@ export type InvestmentUpdateInput = {
 /** Represents issue feed properties. */
 export type IssueFeedProperties = {
   __typename?: 'IssueFeedProperties';
+  /** Asana properties. */
+  asana?: Maybe<AsanaFeedProperties>;
   /** Attio Tasks properties. */
   attio?: Maybe<AttioTasksFeedProperties>;
   /** Feed connector type. */
   connectorType: FeedConnectorTypes;
   /** GitHub Issues properties. */
   github?: Maybe<GitHubIssuesFeedProperties>;
+  /** HubSpot Tasks properties. */
+  hubSpot?: Maybe<HubSpotTasksFeedProperties>;
   /** Should the issue feed include attachments. */
   includeAttachments?: Maybe<Scalars['Boolean']['output']>;
   /** Intercom Tickets properties. */
@@ -8209,6 +9027,8 @@ export type IssueFeedProperties = {
   jira?: Maybe<AtlassianJiraFeedProperties>;
   /** Linear properties. */
   linear?: Maybe<LinearFeedProperties>;
+  /** Monday.com properties. */
+  monday?: Maybe<MondayFeedProperties>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
   /** Salesforce Tasks properties. */
@@ -8223,10 +9043,14 @@ export type IssueFeedProperties = {
 
 /** Represents issue feed properties. */
 export type IssueFeedPropertiesInput = {
+  /** Asana properties. */
+  asana?: InputMaybe<AsanaFeedPropertiesInput>;
   /** Attio Tasks properties. */
   attio?: InputMaybe<AttioTasksFeedPropertiesInput>;
   /** GitHub Issues properties. */
   github?: InputMaybe<GitHubIssuesFeedPropertiesInput>;
+  /** HubSpot Tasks properties. */
+  hubSpot?: InputMaybe<HubSpotTasksFeedPropertiesInput>;
   /** Should the issue feed include attachments. */
   includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
   /** Intercom Tickets properties. */
@@ -8235,6 +9059,8 @@ export type IssueFeedPropertiesInput = {
   jira?: InputMaybe<AtlassianJiraFeedPropertiesInput>;
   /** Linear properties. */
   linear?: InputMaybe<LinearFeedPropertiesInput>;
+  /** Monday.com properties. */
+  monday?: InputMaybe<MondayFeedPropertiesInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Salesforce Tasks properties. */
@@ -8249,10 +9075,14 @@ export type IssueFeedPropertiesInput = {
 
 /** Represents issue feed properties. */
 export type IssueFeedPropertiesUpdateInput = {
+  /** Asana properties. */
+  asana?: InputMaybe<AsanaFeedPropertiesUpdateInput>;
   /** Attio Tasks properties. */
   attio?: InputMaybe<AttioTasksFeedPropertiesUpdateInput>;
   /** GitHub Issues properties. */
   github?: InputMaybe<GitHubIssuesFeedPropertiesUpdateInput>;
+  /** HubSpot Tasks properties. */
+  hubSpot?: InputMaybe<HubSpotTasksFeedPropertiesUpdateInput>;
   /** Should the issue feed include attachments. */
   includeAttachments?: InputMaybe<Scalars['Boolean']['input']>;
   /** Intercom Tickets properties. */
@@ -8261,6 +9091,8 @@ export type IssueFeedPropertiesUpdateInput = {
   jira?: InputMaybe<AtlassianJiraFeedPropertiesUpdateInput>;
   /** Linear properties. */
   linear?: InputMaybe<LinearFeedPropertiesUpdateInput>;
+  /** Monday.com properties. */
+  monday?: InputMaybe<MondayFeedPropertiesUpdateInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Salesforce Tasks properties. */
@@ -8370,6 +9202,43 @@ export enum JinaModels {
   /** Embed 3.0 */
   Embed_3_0 = 'EMBED_3_0'
 }
+
+/** Represents Krisp meeting transcript properties. Krisp uses webhook-based delivery (MONITOR schedule policy). */
+export type KrispProperties = {
+  __typename?: 'KrispProperties';
+  /** Optional authentication token for webhook verification. */
+  authToken?: Maybe<Scalars['String']['output']>;
+  /** Include AI-generated notes and action items from notes_generated events. */
+  includeNotes?: Maybe<Scalars['Boolean']['output']>;
+  /** Include meeting outline from outline_generated events. */
+  includeOutline?: Maybe<Scalars['Boolean']['output']>;
+  /** Include transcript content from transcript_created events. */
+  includeTranscript?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/** Represents Krisp meeting transcript properties. Krisp uses webhook-based delivery (MONITOR schedule policy). */
+export type KrispPropertiesInput = {
+  /** Optional authentication token for webhook verification. */
+  authToken?: InputMaybe<Scalars['String']['input']>;
+  /** Include AI-generated notes and action items from notes_generated events. Default: true. */
+  includeNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include meeting outline from outline_generated events. Default: false. */
+  includeOutline?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include transcript content from transcript_created events. Default: true. */
+  includeTranscript?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Represents Krisp meeting transcript properties. Krisp uses webhook-based delivery (MONITOR schedule policy). */
+export type KrispPropertiesUpdateInput = {
+  /** Optional authentication token for webhook verification. */
+  authToken?: InputMaybe<Scalars['String']['input']>;
+  /** Include AI-generated notes and action items from notes_generated events. */
+  includeNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include meeting outline from outline_generated events. */
+  includeOutline?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Include transcript content from transcript_created events. */
+  includeTranscript?: InputMaybe<Scalars['Boolean']['input']>;
+};
 
 /** Represents a label. */
 export type Label = {
@@ -8642,6 +9511,8 @@ export enum LinkTypes {
   GitHubPages = 'GIT_HUB_PAGES',
   /** Google link */
   Google = 'GOOGLE',
+  /** HubSpot link */
+  HubSpot = 'HUB_SPOT',
   /** IFTTT link */
   Ifttt = 'IFTTT',
   /** Instagram link */
@@ -10752,6 +11623,10 @@ export type MeetingFeedProperties = {
   fathom?: Maybe<FathomProperties>;
   /** Fireflies.ai properties. */
   fireflies?: Maybe<FirefliesFeedProperties>;
+  /** HubSpot meeting transcript properties. */
+  hubSpot?: Maybe<HubSpotMeetingProperties>;
+  /** Krisp meeting transcript properties. */
+  krisp?: Maybe<KrispProperties>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: Maybe<Scalars['Int']['output']>;
   /** Feed service type. */
@@ -10766,6 +11641,10 @@ export type MeetingFeedPropertiesInput = {
   fathom?: InputMaybe<FathomPropertiesInput>;
   /** Fireflies.ai properties. */
   fireflies?: InputMaybe<FirefliesFeedPropertiesInput>;
+  /** HubSpot call transcript properties. */
+  hubSpot?: InputMaybe<HubSpotMeetingPropertiesInput>;
+  /** Krisp meeting transcript properties (webhook-based). */
+  krisp?: InputMaybe<KrispPropertiesInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
   /** Feed service type. */
@@ -10780,6 +11659,10 @@ export type MeetingFeedPropertiesUpdateInput = {
   fathom?: InputMaybe<FathomPropertiesUpdateInput>;
   /** Fireflies.ai properties. */
   fireflies?: InputMaybe<FirefliesFeedPropertiesUpdateInput>;
+  /** HubSpot call transcript properties. */
+  hubSpot?: InputMaybe<HubSpotMeetingPropertiesUpdateInput>;
+  /** Krisp meeting transcript properties (webhook-based). */
+  krisp?: InputMaybe<KrispPropertiesUpdateInput>;
   /** The limit of items to be read from feed, defaults to 100. */
   readLimit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -11684,6 +12567,37 @@ export enum ModelTypes {
   /** Text embedding */
   TextEmbedding = 'TEXT_EMBEDDING'
 }
+
+/** Represents Monday.com boards properties. */
+export type MondayBoardsInput = {
+  /** Monday.com API token. */
+  apiToken: Scalars['String']['input'];
+};
+
+/** Represents Monday.com feed properties. */
+export type MondayFeedProperties = {
+  __typename?: 'MondayFeedProperties';
+  /** Monday.com API token. */
+  apiToken: Scalars['String']['output'];
+  /** Monday.com board identifier. */
+  boardId: Scalars['String']['output'];
+};
+
+/** Represents Monday.com feed properties. */
+export type MondayFeedPropertiesInput = {
+  /** Monday.com API token. */
+  apiToken: Scalars['String']['input'];
+  /** Monday.com board identifier. */
+  boardId: Scalars['String']['input'];
+};
+
+/** Represents Monday.com feed properties. */
+export type MondayFeedPropertiesUpdateInput = {
+  /** Monday.com API token. */
+  apiToken?: InputMaybe<Scalars['String']['input']>;
+  /** Monday.com board identifier. */
+  boardId?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -16482,6 +17396,18 @@ export type Query = {
   alert?: Maybe<Alert>;
   /** Retrieves alerts based on the provided filter criteria. */
   alerts?: Maybe<AlertResults>;
+  /** Retrieves available Asana projects within a workspace. */
+  asanaProjects?: Maybe<StringResults>;
+  /** Retrieves available Asana workspaces. */
+  asanaWorkspaces?: Maybe<StringResults>;
+  /** Retrieves available BambooHR departments. */
+  bambooHRDepartments?: Maybe<HrisOptionResults>;
+  /** Retrieves available BambooHR divisions. */
+  bambooHRDivisions?: Maybe<HrisOptionResults>;
+  /** Retrieves available BambooHR employment statuses. */
+  bambooHREmploymentStatuses?: Maybe<HrisOptionResults>;
+  /** Retrieves available BambooHR locations. */
+  bambooHRLocations?: Maybe<HrisOptionResults>;
   /** Retrieves available Box folders. */
   boxFolders?: Maybe<BoxFolderResults>;
   /** Retrieves categories based on the provided filter criteria. */
@@ -16492,6 +17418,8 @@ export type Query = {
   collection?: Maybe<Collection>;
   /** Retrieves collections based on the provided filter criteria. */
   collections?: Maybe<CollectionResults>;
+  /** Retrieves available Confluence spaces. */
+  confluenceSpaces?: Maybe<ConfluenceSpaceResults>;
   /** Lookup a connector given its ID. */
   connector?: Maybe<Connector>;
   /** Retrieves connectors based on the provided filter criteria. */
@@ -16600,6 +17528,12 @@ export type Query = {
   googleDriveFolders?: Maybe<GoogleDriveFolderResults>;
   /** Retrieves entity knowledge graph based on filter criteria. */
   graph?: Maybe<Graph>;
+  /** Retrieves available Gusto companies. */
+  gustoCompanies?: Maybe<GustoCompanyResults>;
+  /** Retrieves available Gusto departments for a company. */
+  gustoDepartments?: Maybe<HrisOptionResults>;
+  /** Retrieves available Gusto locations for a company. */
+  gustoLocations?: Maybe<GustoLocationResults>;
   /** Lookup a investment given its ID. */
   investment?: Maybe<Investment>;
   /** Lookup a investment fund given its ID. */
@@ -16680,6 +17614,8 @@ export type Query = {
   microsoftTeamsTeams?: Maybe<MicrosoftTeamsTeamResults>;
   /** Retrieves available LLMs, embedding models and reranker models. */
   models?: Maybe<ModelCardResults>;
+  /** Retrieves available Monday.com boards. */
+  mondayBoards?: Maybe<StringResults>;
   /** Retrieves available Notion databases. */
   notionDatabases?: Maybe<NotionDatabaseResults>;
   /** Retrieves available Notion pages within Notion database, non-recursive. */
@@ -16771,6 +17707,36 @@ export type QueryAlertsArgs = {
 };
 
 
+export type QueryAsanaProjectsArgs = {
+  properties: AsanaProjectsInput;
+};
+
+
+export type QueryAsanaWorkspacesArgs = {
+  properties: AsanaWorkspacesInput;
+};
+
+
+export type QueryBambooHrDepartmentsArgs = {
+  properties: BambooHrOptionsInput;
+};
+
+
+export type QueryBambooHrDivisionsArgs = {
+  properties: BambooHrOptionsInput;
+};
+
+
+export type QueryBambooHrEmploymentStatusesArgs = {
+  properties: BambooHrOptionsInput;
+};
+
+
+export type QueryBambooHrLocationsArgs = {
+  properties: BambooHrOptionsInput;
+};
+
+
 export type QueryBoxFoldersArgs = {
   folderId?: InputMaybe<Scalars['ID']['input']>;
   properties: BoxFoldersInput;
@@ -16799,6 +17765,11 @@ export type QueryCollectionArgs = {
 export type QueryCollectionsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CollectionFilter>;
+};
+
+
+export type QueryConfluenceSpacesArgs = {
+  properties: ConfluenceSpacesInput;
 };
 
 
@@ -17130,6 +18101,21 @@ export type QueryGraphArgs = {
 };
 
 
+export type QueryGustoCompaniesArgs = {
+  properties: GustoCompaniesInput;
+};
+
+
+export type QueryGustoDepartmentsArgs = {
+  properties: GustoOptionsInput;
+};
+
+
+export type QueryGustoLocationsArgs = {
+  properties: GustoOptionsInput;
+};
+
+
 export type QueryInvestmentArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -17394,6 +18380,11 @@ export type QueryMicrosoftTeamsTeamsArgs = {
 
 export type QueryModelsArgs = {
   filter?: InputMaybe<ModelFilter>;
+};
+
+
+export type QueryMondayBoardsArgs = {
+  properties: MondayBoardsInput;
 };
 
 
@@ -21112,7 +22103,7 @@ export type DescribeEncodedImageMutationVariables = Exact<{
 }>;
 
 
-export type DescribeEncodedImageMutation = { __typename?: 'Mutation', describeEncodedImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
+export type DescribeEncodedImageMutation = { __typename?: 'Mutation', describeEncodedImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
 
 export type DescribeImageMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21122,7 +22113,7 @@ export type DescribeImageMutationVariables = Exact<{
 }>;
 
 
-export type DescribeImageMutation = { __typename?: 'Mutation', describeImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
+export type DescribeImageMutation = { __typename?: 'Mutation', describeImage?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null };
 
 export type ExtractContentsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21446,7 +22437,7 @@ export type AskGraphlitMutationVariables = Exact<{
 }>;
 
 
-export type AskGraphlitMutation = { __typename?: 'Mutation', askGraphlit?: { __typename?: 'AskGraphlit', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+export type AskGraphlitMutation = { __typename?: 'Mutation', askGraphlit?: { __typename?: 'AskGraphlit', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type BranchConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21479,7 +22470,7 @@ export type CompleteConversationMutationVariables = Exact<{
 }>;
 
 
-export type CompleteConversationMutation = { __typename?: 'Mutation', completeConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
+export type CompleteConversationMutation = { __typename?: 'Mutation', completeConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
 
 export type ContinueConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21488,7 +22479,7 @@ export type ContinueConversationMutationVariables = Exact<{
 }>;
 
 
-export type ContinueConversationMutation = { __typename?: 'Mutation', continueConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
+export type ContinueConversationMutation = { __typename?: 'Mutation', continueConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
 
 export type CountConversationsQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
@@ -21541,7 +22532,7 @@ export type FormatConversationMutationVariables = Exact<{
 }>;
 
 
-export type FormatConversationMutation = { __typename?: 'Mutation', formatConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
+export type FormatConversationMutation = { __typename?: 'Mutation', formatConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
 
 export type GetConversationQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21549,7 +22540,7 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
 
 export type PromptMutationVariables = Exact<{
   prompt?: InputMaybe<Scalars['String']['input']>;
@@ -21563,7 +22554,7 @@ export type PromptMutationVariables = Exact<{
 }>;
 
 
-export type PromptMutation = { __typename?: 'Mutation', prompt?: { __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null };
+export type PromptMutation = { __typename?: 'Mutation', prompt?: { __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null };
 
 export type PromptConversationMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21579,7 +22570,7 @@ export type PromptConversationMutationVariables = Exact<{
 }>;
 
 
-export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
+export type PromptConversationMutation = { __typename?: 'Mutation', promptConversation?: { __typename?: 'PromptConversation', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null, facets?: Array<{ __typename?: 'ContentFacet', type?: FacetValueTypes | null, value?: string | null, count?: any | null, facet?: ContentFacetTypes | null, range?: { __typename?: 'StringRange', from?: string | null, to?: string | null } | null, observable?: { __typename?: 'ObservableFacet', type?: ObservableTypes | null, observable?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null } | null } | null> | null, graph?: { __typename?: 'Graph', nodes?: Array<{ __typename?: 'GraphNode', id: string, name: string, type: EntityTypes, metadata?: string | null } | null> | null, edges?: Array<{ __typename?: 'GraphEdge', from: string, to: string, relation?: string | null } | null> | null } | null, details?: { __typename?: 'ConversationDetails', modelService?: ModelServiceTypes | null, model?: string | null, supportsToolCalling?: boolean | null, sourceCount?: number | null, observableCount?: number | null, toolCount?: number | null, renderedSourceCount?: number | null, renderedObservableCount?: number | null, renderedToolCount?: number | null, rankedSourceCount?: number | null, rankedObservableCount?: number | null, rankedToolCount?: number | null, tokenLimit?: number | null, completionTokenLimit?: number | null, sources?: string | null, formattedSources?: string | null, formattedObservables?: string | null, formattedInstructions?: string | null, formattedTools?: string | null, specification?: string | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null } | null };
 
 export type PublishConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21599,7 +22590,7 @@ export type QueryConversationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
 
 export type RetrieveEntitiesMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21653,7 +22644,7 @@ export type ReviseContentMutationVariables = Exact<{
 }>;
 
 
-export type ReviseContentMutation = { __typename?: 'Mutation', reviseContent?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+export type ReviseContentMutation = { __typename?: 'Mutation', reviseContent?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type ReviseEncodedImageMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21665,7 +22656,7 @@ export type ReviseEncodedImageMutationVariables = Exact<{
 }>;
 
 
-export type ReviseEncodedImageMutation = { __typename?: 'Mutation', reviseEncodedImage?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+export type ReviseEncodedImageMutation = { __typename?: 'Mutation', reviseEncodedImage?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type ReviseImageMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21676,7 +22667,7 @@ export type ReviseImageMutationVariables = Exact<{
 }>;
 
 
-export type ReviseImageMutation = { __typename?: 'Mutation', reviseImage?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+export type ReviseImageMutation = { __typename?: 'Mutation', reviseImage?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type ReviseTextMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -21687,7 +22678,7 @@ export type ReviseTextMutationVariables = Exact<{
 }>;
 
 
-export type ReviseTextMutation = { __typename?: 'Mutation', reviseText?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
+export type ReviseTextMutation = { __typename?: 'Mutation', reviseText?: { __typename?: 'ReviseContent', messageCount?: number | null, conversation?: { __typename?: 'EntityReference', id: string } | null, message?: { __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null } | null };
 
 export type SuggestConversationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21925,7 +22916,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', apiKey: string } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null } | null, attio?: { __typename?: 'AttioMeetingProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, apiKey: string } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query: string, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', apiKey: string } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null } | null, attio?: { __typename?: 'AttioMeetingProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, includeTranscript?: boolean | null, includeNotes?: boolean | null, includeOutline?: boolean | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, uri: string, email: string, token: string, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, apiKey: string } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query: string, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -21941,6 +22932,48 @@ export type IsFeedDoneQueryVariables = Exact<{
 
 export type IsFeedDoneQuery = { __typename?: 'Query', isFeedDone?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
 
+export type QueryAsanaProjectsQueryVariables = Exact<{
+  properties: AsanaProjectsInput;
+}>;
+
+
+export type QueryAsanaProjectsQuery = { __typename?: 'Query', asanaProjects?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
+
+export type QueryAsanaWorkspacesQueryVariables = Exact<{
+  properties: AsanaWorkspacesInput;
+}>;
+
+
+export type QueryAsanaWorkspacesQuery = { __typename?: 'Query', asanaWorkspaces?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
+
+export type QueryBambooHrDepartmentsQueryVariables = Exact<{
+  properties: BambooHrOptionsInput;
+}>;
+
+
+export type QueryBambooHrDepartmentsQuery = { __typename?: 'Query', bambooHRDepartments?: { __typename?: 'HRISOptionResults', results?: Array<{ __typename?: 'HRISOptionResult', name?: string | null, identifier?: string | null } | null> | null } | null };
+
+export type QueryBambooHrDivisionsQueryVariables = Exact<{
+  properties: BambooHrOptionsInput;
+}>;
+
+
+export type QueryBambooHrDivisionsQuery = { __typename?: 'Query', bambooHRDivisions?: { __typename?: 'HRISOptionResults', results?: Array<{ __typename?: 'HRISOptionResult', name?: string | null, identifier?: string | null } | null> | null } | null };
+
+export type QueryBambooHrEmploymentStatusesQueryVariables = Exact<{
+  properties: BambooHrOptionsInput;
+}>;
+
+
+export type QueryBambooHrEmploymentStatusesQuery = { __typename?: 'Query', bambooHREmploymentStatuses?: { __typename?: 'HRISOptionResults', results?: Array<{ __typename?: 'HRISOptionResult', name?: string | null, identifier?: string | null } | null> | null } | null };
+
+export type QueryBambooHrLocationsQueryVariables = Exact<{
+  properties: BambooHrOptionsInput;
+}>;
+
+
+export type QueryBambooHrLocationsQuery = { __typename?: 'Query', bambooHRLocations?: { __typename?: 'HRISOptionResults', results?: Array<{ __typename?: 'HRISOptionResult', name?: string | null, identifier?: string | null } | null> | null } | null };
+
 export type QueryBoxFoldersQueryVariables = Exact<{
   properties: BoxFoldersInput;
   folderId?: InputMaybe<Scalars['ID']['input']>;
@@ -21948,6 +22981,13 @@ export type QueryBoxFoldersQueryVariables = Exact<{
 
 
 export type QueryBoxFoldersQuery = { __typename?: 'Query', boxFolders?: { __typename?: 'BoxFolderResults', results?: Array<{ __typename?: 'BoxFolderResult', folderName?: string | null, folderId?: string | null } | null> | null } | null };
+
+export type QueryConfluenceSpacesQueryVariables = Exact<{
+  properties: ConfluenceSpacesInput;
+}>;
+
+
+export type QueryConfluenceSpacesQuery = { __typename?: 'Query', confluenceSpaces?: { __typename?: 'ConfluenceSpaceResults', results?: Array<{ __typename?: 'ConfluenceSpaceResult', name?: string | null, identifier?: string | null, key?: string | null } | null> | null } | null };
 
 export type QueryDiscordChannelsQueryVariables = Exact<{
   properties: DiscordChannelsInput;
@@ -21977,7 +23017,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', apiKey: string } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null } | null, attio?: { __typename?: 'AttioMeetingProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, apiKey: string } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query: string, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', uri: any, project: string, email: string, token: string, offset?: any | null } | null, linear?: { __typename?: 'LinearFeedProperties', key: string, project: string } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubIssueAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', accessToken: string } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', subdomain: string, accessToken: string } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', apiKey: string } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null } | null, attio?: { __typename?: 'AttioMeetingProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, includeTranscript?: boolean | null, includeNotes?: boolean | null, includeOutline?: boolean | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text: string } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, token: string, identifiers: Array<string>, type: NotionTypes } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, uri: string, email: string, token: string, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, accessToken: string } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, subdomain: string, accessToken: string } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, token: string, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, apiKey: string } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query: string, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
 
 export type QueryGitHubRepositoriesQueryVariables = Exact<{
   properties: GitHubRepositoriesInput;
@@ -22001,6 +23041,27 @@ export type QueryGoogleDriveFoldersQueryVariables = Exact<{
 
 
 export type QueryGoogleDriveFoldersQuery = { __typename?: 'Query', googleDriveFolders?: { __typename?: 'GoogleDriveFolderResults', results?: Array<{ __typename?: 'GoogleDriveFolderResult', folderName?: string | null, folderId?: string | null, folderPath?: string | null } | null> | null } | null };
+
+export type QueryGustoCompaniesQueryVariables = Exact<{
+  properties: GustoCompaniesInput;
+}>;
+
+
+export type QueryGustoCompaniesQuery = { __typename?: 'Query', gustoCompanies?: { __typename?: 'GustoCompanyResults', results?: Array<{ __typename?: 'GustoCompanyResult', name?: string | null, identifier?: string | null, ein?: string | null } | null> | null } | null };
+
+export type QueryGustoDepartmentsQueryVariables = Exact<{
+  properties: GustoOptionsInput;
+}>;
+
+
+export type QueryGustoDepartmentsQuery = { __typename?: 'Query', gustoDepartments?: { __typename?: 'HRISOptionResults', results?: Array<{ __typename?: 'HRISOptionResult', name?: string | null, identifier?: string | null } | null> | null } | null };
+
+export type QueryGustoLocationsQueryVariables = Exact<{
+  properties: GustoOptionsInput;
+}>;
+
+
+export type QueryGustoLocationsQuery = { __typename?: 'Query', gustoLocations?: { __typename?: 'GustoLocationResults', results?: Array<{ __typename?: 'GustoLocationResult', identifier?: string | null, street1?: string | null, street2?: string | null, city?: string | null, state?: string | null, zip?: string | null, country?: string | null } | null> | null } | null };
 
 export type QueryLinearProjectsQueryVariables = Exact<{
   properties: LinearProjectsInput;
@@ -22030,6 +23091,13 @@ export type QueryMicrosoftTeamsTeamsQueryVariables = Exact<{
 
 
 export type QueryMicrosoftTeamsTeamsQuery = { __typename?: 'Query', microsoftTeamsTeams?: { __typename?: 'MicrosoftTeamsTeamResults', results?: Array<{ __typename?: 'MicrosoftTeamsTeamResult', teamName?: string | null, teamId?: string | null } | null> | null } | null };
+
+export type QueryMondayBoardsQueryVariables = Exact<{
+  properties: MondayBoardsInput;
+}>;
+
+
+export type QueryMondayBoardsQuery = { __typename?: 'Query', mondayBoards?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
 
 export type QueryNotionDatabasesQueryVariables = Exact<{
   properties: NotionDatabasesInput;
@@ -23762,7 +24830,7 @@ export type GetSpecificationQueryVariables = Exact<{
 }>;
 
 
-export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, factStrategy?: { __typename?: 'FactStrategy', factLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, endpoint?: any | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, reasoningEffort?: OpenAiReasoningEffortLevels | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, bedrock?: { __typename?: 'BedrockModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: BedrockModels, accessKey?: string | null, secretAccessKey?: string | null, endpoint?: any | null, region?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, xai?: { __typename?: 'XAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: XaiModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null };
+export type GetSpecificationQuery = { __typename?: 'Query', specification?: { __typename?: 'Specification', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, factStrategy?: { __typename?: 'FactStrategy', factLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, endpoint?: any | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, reasoningEffort?: OpenAiReasoningEffortLevels | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null, thinkingLevel?: GoogleThinkingLevels | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, bedrock?: { __typename?: 'BedrockModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: BedrockModels, accessKey?: string | null, secretAccessKey?: string | null, endpoint?: any | null, region?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, xai?: { __typename?: 'XAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: XaiModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null } | null };
 
 export type PromptSpecificationsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -23770,7 +24838,7 @@ export type PromptSpecificationsMutationVariables = Exact<{
 }>;
 
 
-export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null> | null };
+export type PromptSpecificationsMutation = { __typename?: 'Mutation', promptSpecifications?: Array<{ __typename?: 'PromptCompletion', error?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'EntityReference', id: string } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null } | null> | null } | null> | null };
 
 export type QueryModelsQueryVariables = Exact<{
   filter?: InputMaybe<ModelFilter>;
@@ -23785,7 +24853,7 @@ export type QuerySpecificationsQueryVariables = Exact<{
 }>;
 
 
-export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, factStrategy?: { __typename?: 'FactStrategy', factLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, endpoint?: any | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, reasoningEffort?: OpenAiReasoningEffortLevels | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, bedrock?: { __typename?: 'BedrockModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: BedrockModels, accessKey?: string | null, secretAccessKey?: string | null, endpoint?: any | null, region?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, xai?: { __typename?: 'XAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: XaiModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null }> | null } | null };
+export type QuerySpecificationsQuery = { __typename?: 'Query', specifications?: { __typename?: 'SpecificationResults', results?: Array<{ __typename?: 'Specification', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: SpecificationTypes | null, serviceType?: ModelServiceTypes | null, systemPrompt?: string | null, customGuidance?: string | null, customInstructions?: string | null, searchType?: ConversationSearchTypes | null, numberSimilar?: number | null, owner: { __typename?: 'Owner', id: string }, strategy?: { __typename?: 'ConversationStrategy', type?: ConversationStrategyTypes | null, messageLimit?: number | null, embedCitations?: boolean | null, flattenCitations?: boolean | null, enableFacets?: boolean | null, messagesWeight?: number | null, contentsWeight?: number | null } | null, promptStrategy?: { __typename?: 'PromptStrategy', type: PromptStrategyTypes } | null, retrievalStrategy?: { __typename?: 'RetrievalStrategy', type: RetrievalStrategyTypes, contentLimit?: number | null, disableFallback?: boolean | null } | null, rerankingStrategy?: { __typename?: 'RerankingStrategy', serviceType: RerankingModelServiceTypes, threshold?: number | null } | null, graphStrategy?: { __typename?: 'GraphStrategy', type: GraphStrategyTypes, generateGraph?: boolean | null, observableLimit?: number | null } | null, factStrategy?: { __typename?: 'FactStrategy', factLimit?: number | null } | null, revisionStrategy?: { __typename?: 'RevisionStrategy', type: RevisionStrategyTypes, customRevision?: string | null, count?: number | null } | null, azureAI?: { __typename?: 'AzureAIModelProperties', tokenLimit: number, completionTokenLimit?: number | null, key: string, endpoint: any, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, openAI?: { __typename?: 'OpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: OpenAiModels, key?: string | null, endpoint?: any | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, detailLevel?: OpenAiVisionDetailLevels | null, reasoningEffort?: OpenAiReasoningEffortLevels | null } | null, azureOpenAI?: { __typename?: 'AzureOpenAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AzureOpenAiModels, key?: string | null, endpoint?: any | null, deploymentName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, cohere?: { __typename?: 'CohereModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CohereModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, anthropic?: { __typename?: 'AnthropicModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: AnthropicModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null } | null, google?: { __typename?: 'GoogleModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GoogleModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null, enableThinking?: boolean | null, thinkingTokenLimit?: number | null, thinkingLevel?: GoogleThinkingLevels | null } | null, replicate?: { __typename?: 'ReplicateModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: ReplicateModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, mistral?: { __typename?: 'MistralModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: MistralModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null, chunkTokenLimit?: number | null } | null, bedrock?: { __typename?: 'BedrockModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: BedrockModels, accessKey?: string | null, secretAccessKey?: string | null, endpoint?: any | null, region?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, xai?: { __typename?: 'XAIModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: XaiModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, groq?: { __typename?: 'GroqModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: GroqModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, cerebras?: { __typename?: 'CerebrasModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: CerebrasModels, key?: string | null, modelName?: string | null, endpoint?: any | null, temperature?: number | null, probability?: number | null } | null, deepseek?: { __typename?: 'DeepseekModelProperties', tokenLimit?: number | null, completionTokenLimit?: number | null, model: DeepseekModels, key?: string | null, modelName?: string | null, temperature?: number | null, probability?: number | null } | null, jina?: { __typename?: 'JinaModelProperties', model: JinaModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null, voyage?: { __typename?: 'VoyageModelProperties', model: VoyageModels, key?: string | null, modelName?: string | null, chunkTokenLimit?: number | null } | null }> | null } | null };
 
 export type SpecificationExistsQueryVariables = Exact<{
   filter?: InputMaybe<SpecificationFilter>;
@@ -23962,7 +25030,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, elevenLabsScribe?: { __typename?: 'ElevenLabsScribeAudioPreparationProperties', model?: ElevenLabsScribeModels | null, key?: string | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null, tagAudioEvents?: boolean | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
 
 export type DeleteAllWorkflowsMutationVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -23994,7 +25062,7 @@ export type GetWorkflowQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
+export type GetWorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, elevenLabsScribe?: { __typename?: 'ElevenLabsScribeAudioPreparationProperties', model?: ElevenLabsScribeModels | null, key?: string | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null, tagAudioEvents?: boolean | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
 
 export type QueryWorkflowsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;
@@ -24002,21 +25070,21 @@ export type QueryWorkflowsQueryVariables = Exact<{
 }>;
 
 
-export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null }> | null } | null };
+export type QueryWorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowResults', results?: Array<{ __typename?: 'Workflow', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, owner: { __typename?: 'Owner', id: string }, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, elevenLabsScribe?: { __typename?: 'ElevenLabsScribeAudioPreparationProperties', model?: ElevenLabsScribeModels | null, key?: string | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null, tagAudioEvents?: boolean | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null }> | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   workflow: WorkflowUpdateInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, elevenLabsScribe?: { __typename?: 'ElevenLabsScribeAudioPreparationProperties', model?: ElevenLabsScribeModels | null, key?: string | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null, tagAudioEvents?: boolean | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
 
 export type UpsertWorkflowMutationVariables = Exact<{
   workflow: WorkflowInput;
 }>;
 
 
-export type UpsertWorkflowMutation = { __typename?: 'Mutation', upsertWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
+export type UpsertWorkflowMutation = { __typename?: 'Mutation', upsertWorkflow?: { __typename?: 'Workflow', id: string, name: string, state: EntityState, ingestion?: { __typename?: 'IngestionWorkflowStage', enableEmailCollections?: boolean | null, enableFolderCollections?: boolean | null, enableMessageCollections?: boolean | null, if?: { __typename?: 'IngestionContentFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string | null> | null, fileExtensions?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, collections?: Array<{ __typename?: 'EntityReference', id: string } | null> | null, observations?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null, indexing?: { __typename?: 'IndexingWorkflowStage', jobs?: Array<{ __typename?: 'IndexingWorkflowJob', connector?: { __typename?: 'ContentIndexingConnector', type?: ContentIndexingServiceTypes | null, contentType?: ContentTypes | null, fileType?: FileTypes | null } | null } | null> | null } | null, preparation?: { __typename?: 'PreparationWorkflowStage', enableUnblockedCapture?: boolean | null, disableSmartCapture?: boolean | null, summarizations?: Array<{ __typename?: 'SummarizationStrategy', type: SummarizationTypes, tokens?: number | null, items?: number | null, prompt?: string | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null> | null, jobs?: Array<{ __typename?: 'PreparationWorkflowJob', connector?: { __typename?: 'FilePreparationConnector', type: FilePreparationServiceTypes, fileTypes?: Array<FileTypes> | null, azureDocument?: { __typename?: 'AzureDocumentPreparationProperties', version?: AzureDocumentIntelligenceVersions | null, model?: AzureDocumentIntelligenceModels | null, endpoint?: any | null, key?: string | null } | null, deepgram?: { __typename?: 'DeepgramAudioPreparationProperties', model?: DeepgramModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, assemblyAI?: { __typename?: 'AssemblyAIAudioPreparationProperties', model?: AssemblyAiModels | null, key?: string | null, enableRedaction?: boolean | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null } | null, elevenLabsScribe?: { __typename?: 'ElevenLabsScribeAudioPreparationProperties', model?: ElevenLabsScribeModels | null, key?: string | null, enableSpeakerDiarization?: boolean | null, detectLanguage?: boolean | null, language?: string | null, tagAudioEvents?: boolean | null } | null, page?: { __typename?: 'PagePreparationProperties', enableScreenshot?: boolean | null } | null, document?: { __typename?: 'DocumentPreparationProperties', includeImages?: boolean | null } | null, email?: { __typename?: 'EmailPreparationProperties', includeAttachments?: boolean | null } | null, modelDocument?: { __typename?: 'ModelDocumentPreparationProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, reducto?: { __typename?: 'ReductoDocumentPreparationProperties', ocrMode?: ReductoOcrModes | null, ocrSystem?: ReductoOcrSystems | null, extractionMode?: ReductoExtractionModes | null, enableEnrichment?: boolean | null, enrichmentMode?: ReductoEnrichmentModes | null, key?: string | null } | null, mistral?: { __typename?: 'MistralDocumentPreparationProperties', key?: string | null } | null } | null } | null> | null } | null, extraction?: { __typename?: 'ExtractionWorkflowStage', jobs?: Array<{ __typename?: 'ExtractionWorkflowJob', connector?: { __typename?: 'EntityExtractionConnector', type: EntityExtractionServiceTypes, contentTypes?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, extractedTypes?: Array<ObservableTypes> | null, extractedCount?: number | null, azureText?: { __typename?: 'AzureTextExtractionProperties', confidenceThreshold?: number | null, enablePII?: boolean | null } | null, azureImage?: { __typename?: 'AzureImageExtractionProperties', confidenceThreshold?: number | null } | null, modelImage?: { __typename?: 'ModelImageExtractionProperties', specification?: { __typename?: 'EntityReference', id: string } | null } | null, modelText?: { __typename?: 'ModelTextExtractionProperties', tokenThreshold?: number | null, timeBudget?: any | null, entityBudget?: number | null, extractionType?: ExtractionTypes | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null } | null> | null } | null, classification?: { __typename?: 'ClassificationWorkflowStage', jobs?: Array<{ __typename?: 'ClassificationWorkflowJob', connector?: { __typename?: 'ContentClassificationConnector', type: ContentClassificationServiceTypes, contentType?: ContentTypes | null, fileType?: FileTypes | null, model?: { __typename?: 'ModelContentClassificationProperties', specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null } | null> | null } | null, regex?: { __typename?: 'RegexContentClassificationProperties', rules?: Array<{ __typename?: 'RegexClassificationRule', then?: string | null, type?: RegexSourceTypes | null, path?: string | null, matches?: string | null } | null> | null } | null } | null } | null> | null } | null, enrichment?: { __typename?: 'EnrichmentWorkflowStage', link?: { __typename?: 'LinkStrategy', enableCrawling?: boolean | null, allowedDomains?: Array<string> | null, excludedDomains?: Array<string> | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, allowedLinks?: Array<LinkTypes> | null, excludedLinks?: Array<LinkTypes> | null, allowedFiles?: Array<FileTypes> | null, excludedFiles?: Array<FileTypes> | null, allowedContentTypes?: Array<ContentTypes> | null, excludedContentTypes?: Array<ContentTypes> | null, allowContentDomain?: boolean | null, maximumLinks?: number | null } | null, jobs?: Array<{ __typename?: 'EnrichmentWorkflowJob', connector?: { __typename?: 'EntityEnrichmentConnector', type?: EntityEnrichmentServiceTypes | null, enrichedTypes?: Array<ObservableTypes> | null, fhir?: { __typename?: 'FHIREnrichmentProperties', endpoint?: any | null } | null, diffbot?: { __typename?: 'DiffbotEnrichmentProperties', key?: any | null } | null, parallel?: { __typename?: 'ParallelEnrichmentProperties', processor?: ParallelProcessors | null, isSynchronous?: boolean | null } | null } | null } | null> | null, entityResolution?: { __typename?: 'EntityResolutionStrategy', strategy?: EntityResolutionStrategyTypes | null, threshold?: number | null, specification?: { __typename?: 'EntityReference', id: string } | null } | null } | null, storage?: { __typename?: 'StorageWorkflowStage', policy?: { __typename?: 'StoragePolicy', type?: StoragePolicyTypes | null, allowDuplicates?: boolean | null, embeddingTypes?: Array<EmbeddingTypes> | null, enableSnapshots?: boolean | null, snapshotCount?: number | null } | null, gate?: { __typename?: 'StorageGate', type: StorageGateTypes, uri?: any | null, onReject?: StorageGateRejectionActions | null, specification?: { __typename?: 'EntityReference', id: string } | null, rules?: Array<{ __typename?: 'StorageGateRule', if: string }> | null } | null } | null, actions?: Array<{ __typename?: 'WorkflowAction', connector?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null } | null };
 
 export type WorkflowExistsQueryVariables = Exact<{
   filter?: InputMaybe<WorkflowFilter>;

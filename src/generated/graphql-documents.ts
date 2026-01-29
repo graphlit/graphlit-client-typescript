@@ -880,106 +880,6 @@ export const DescribeEncodedImage = gql`
     citations {
       content {
         id
-        name
-        state
-        originalDate
-        identifier
-        uri
-        type
-        fileType
-        mimeType
-        format
-        formatName
-        fileExtension
-        fileName
-        fileSize
-        fileMetadata
-        relativeFolderPath
-        masterUri
-        imageUri
-        textUri
-        audioUri
-        transcriptUri
-        snapshotsUri
-        snapshotCount
-        summary
-        customSummary
-        keywords
-        bullets
-        headlines
-        posts
-        chapters
-        questions
-        quotes
-        video {
-          width
-          height
-          duration
-          make
-          model
-          software
-          title
-          description
-          keywords
-          author
-        }
-        audio {
-          keywords
-          author
-          series
-          episode
-          episodeType
-          season
-          publisher
-          copyright
-          genre
-          title
-          description
-          bitrate
-          channels
-          sampleRate
-          bitsPerSample
-          duration
-        }
-        image {
-          width
-          height
-          resolutionX
-          resolutionY
-          bitsPerComponent
-          components
-          projectionType
-          orientation
-          description
-          make
-          model
-          software
-          lens
-          focalLength
-          exposureTime
-          fNumber
-          iso
-          heading
-          pitch
-        }
-        document {
-          title
-          subject
-          summary
-          author
-          lastModifiedBy
-          publisher
-          description
-          keywords
-          pageCount
-          worksheetCount
-          slideCount
-          wordCount
-          lineCount
-          paragraphCount
-          isEncrypted
-          hasDigitalSignature
-        }
       }
       index
       text
@@ -1021,106 +921,6 @@ export const DescribeImage = gql`
     citations {
       content {
         id
-        name
-        state
-        originalDate
-        identifier
-        uri
-        type
-        fileType
-        mimeType
-        format
-        formatName
-        fileExtension
-        fileName
-        fileSize
-        fileMetadata
-        relativeFolderPath
-        masterUri
-        imageUri
-        textUri
-        audioUri
-        transcriptUri
-        snapshotsUri
-        snapshotCount
-        summary
-        customSummary
-        keywords
-        bullets
-        headlines
-        posts
-        chapters
-        questions
-        quotes
-        video {
-          width
-          height
-          duration
-          make
-          model
-          software
-          title
-          description
-          keywords
-          author
-        }
-        audio {
-          keywords
-          author
-          series
-          episode
-          episodeType
-          season
-          publisher
-          copyright
-          genre
-          title
-          description
-          bitrate
-          channels
-          sampleRate
-          bitsPerSample
-          duration
-        }
-        image {
-          width
-          height
-          resolutionX
-          resolutionY
-          bitsPerComponent
-          components
-          projectionType
-          orientation
-          description
-          make
-          model
-          software
-          lens
-          focalLength
-          exposureTime
-          fNumber
-          iso
-          heading
-          pitch
-        }
-        document {
-          title
-          subject
-          summary
-          author
-          lastModifiedBy
-          publisher
-          description
-          keywords
-          pageCount
-          worksheetCount
-          slideCount
-          wordCount
-          lineCount
-          paragraphCount
-          isEncrypted
-          hasDigitalSignature
-        }
       }
       index
       text
@@ -3964,106 +3764,6 @@ export const AskGraphlit = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -4143,106 +3843,6 @@ export const CompleteConversation = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -4327,106 +3927,6 @@ export const CompleteConversation = gql`
         citations {
           content {
             id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
           }
           index
           text
@@ -4473,106 +3973,6 @@ export const ContinueConversation = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -4657,106 +4057,6 @@ export const ContinueConversation = gql`
         citations {
           content {
             id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
           }
           index
           text
@@ -4852,106 +4152,6 @@ export const FormatConversation = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -5036,106 +4236,6 @@ export const FormatConversation = gql`
         citations {
           content {
             id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
           }
           index
           text
@@ -5185,106 +4285,6 @@ export const GetConversation = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -5309,6 +4309,21 @@ export const GetConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+    }
+    transcriptUri
+    turns {
+      index
+      messages {
+        role
+        author
+        message
+        tokens
+        timestamp
+      }
+      tokens
+      timestamp
+      text
+      relevance
     }
     specification {
       id
@@ -5529,106 +4544,6 @@ export const Prompt = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -5682,106 +4597,6 @@ export const PromptConversation = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -5866,106 +4681,6 @@ export const PromptConversation = gql`
         citations {
           content {
             id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
           }
           index
           text
@@ -6146,106 +4861,6 @@ export const QueryConversations = gql`
         citations {
           content {
             id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
           }
           index
           text
@@ -6270,6 +4885,21 @@ export const QueryConversations = gql`
         mimeType
         toolCallId
         toolCallResponse
+      }
+      transcriptUri
+      turns {
+        index
+        messages {
+          role
+          author
+          message
+          tokens
+          timestamp
+        }
+        tokens
+        timestamp
+        text
+        relevance
       }
       specification {
         id
@@ -6608,106 +5238,6 @@ export const ReviseContent = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -6757,106 +5287,6 @@ export const ReviseEncodedImage = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -6905,106 +5335,6 @@ export const ReviseImage = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -7053,106 +5383,6 @@ export const ReviseText = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -7991,6 +6221,27 @@ export const GetFeed = gql`
           id
         }
       }
+      hubSpot {
+        authenticationType
+        clientId
+        accessToken
+        connector {
+          id
+        }
+      }
+      asana {
+        authenticationType
+        personalAccessToken
+        clientId
+        clientSecret
+        refreshToken
+        workspaceId
+        projectId
+      }
+      monday {
+        apiToken
+        boardId
+      }
       readLimit
     }
     commit {
@@ -8063,6 +6314,29 @@ export const GetFeed = gql`
           id
         }
       }
+      hubSpot {
+        authenticationType
+        clientId
+        clientSecret
+        refreshToken
+        accessToken
+      }
+      readLimit
+    }
+    hris {
+      type
+      bambooHR {
+        authenticationType
+        apiKey
+        companyDomain
+      }
+      gusto {
+        authenticationType
+        clientId
+        clientSecret
+        refreshToken
+        companyId
+      }
       readLimit
     }
     calendar {
@@ -8116,6 +6390,24 @@ export const GetFeed = gql`
         afterDate
         beforeDate
       }
+      hubSpot {
+        authenticationType
+        clientId
+        accessToken
+        includeTranscripts
+        afterDate
+        beforeDate
+        readLimit
+        connector {
+          id
+        }
+      }
+      krisp {
+        authToken
+        includeTranscript
+        includeNotes
+        includeOutline
+      }
     }
     rss {
       readLimit
@@ -8142,6 +6434,16 @@ export const GetFeed = gql`
       token
       identifiers
       type
+    }
+    confluence {
+      readLimit
+      uri
+      email
+      token
+      spaceKeys
+      identifiers
+      type
+      includeAttachments
     }
     intercom {
       readLimit
@@ -8218,6 +6520,18 @@ export const GetFeed = gql`
         id
       }
     }
+    hubSpotConversations {
+      readLimit
+      authenticationType
+      clientId
+      accessToken
+      inboxId
+      includeClosedThreads
+      includeAttachments
+      connector {
+        id
+      }
+    }
     research {
       readLimit
       type
@@ -8263,12 +6577,77 @@ export const IsFeedDone = gql`
   }
 }
     `;
+export const QueryAsanaProjects = gql`
+    query QueryAsanaProjects($properties: AsanaProjectsInput!) {
+  asanaProjects(properties: $properties) {
+    results
+  }
+}
+    `;
+export const QueryAsanaWorkspaces = gql`
+    query QueryAsanaWorkspaces($properties: AsanaWorkspacesInput!) {
+  asanaWorkspaces(properties: $properties) {
+    results
+  }
+}
+    `;
+export const QueryBambooHrDepartments = gql`
+    query QueryBambooHRDepartments($properties: BambooHROptionsInput!) {
+  bambooHRDepartments(properties: $properties) {
+    results {
+      name
+      identifier
+    }
+  }
+}
+    `;
+export const QueryBambooHrDivisions = gql`
+    query QueryBambooHRDivisions($properties: BambooHROptionsInput!) {
+  bambooHRDivisions(properties: $properties) {
+    results {
+      name
+      identifier
+    }
+  }
+}
+    `;
+export const QueryBambooHrEmploymentStatuses = gql`
+    query QueryBambooHREmploymentStatuses($properties: BambooHROptionsInput!) {
+  bambooHREmploymentStatuses(properties: $properties) {
+    results {
+      name
+      identifier
+    }
+  }
+}
+    `;
+export const QueryBambooHrLocations = gql`
+    query QueryBambooHRLocations($properties: BambooHROptionsInput!) {
+  bambooHRLocations(properties: $properties) {
+    results {
+      name
+      identifier
+    }
+  }
+}
+    `;
 export const QueryBoxFolders = gql`
     query QueryBoxFolders($properties: BoxFoldersInput!, $folderId: ID) {
   boxFolders(properties: $properties, folderId: $folderId) {
     results {
       folderName
       folderId
+    }
+  }
+}
+    `;
+export const QueryConfluenceSpaces = gql`
+    query QueryConfluenceSpaces($properties: ConfluenceSpacesInput!) {
+  confluenceSpaces(properties: $properties) {
+    results {
+      name
+      identifier
+      key
     }
   }
 }
@@ -8513,6 +6892,27 @@ export const QueryFeeds = gql`
             id
           }
         }
+        hubSpot {
+          authenticationType
+          clientId
+          accessToken
+          connector {
+            id
+          }
+        }
+        asana {
+          authenticationType
+          personalAccessToken
+          clientId
+          clientSecret
+          refreshToken
+          workspaceId
+          projectId
+        }
+        monday {
+          apiToken
+          boardId
+        }
         readLimit
       }
       commit {
@@ -8585,6 +6985,29 @@ export const QueryFeeds = gql`
             id
           }
         }
+        hubSpot {
+          authenticationType
+          clientId
+          clientSecret
+          refreshToken
+          accessToken
+        }
+        readLimit
+      }
+      hris {
+        type
+        bambooHR {
+          authenticationType
+          apiKey
+          companyDomain
+        }
+        gusto {
+          authenticationType
+          clientId
+          clientSecret
+          refreshToken
+          companyId
+        }
         readLimit
       }
       calendar {
@@ -8638,6 +7061,24 @@ export const QueryFeeds = gql`
           afterDate
           beforeDate
         }
+        hubSpot {
+          authenticationType
+          clientId
+          accessToken
+          includeTranscripts
+          afterDate
+          beforeDate
+          readLimit
+          connector {
+            id
+          }
+        }
+        krisp {
+          authToken
+          includeTranscript
+          includeNotes
+          includeOutline
+        }
       }
       rss {
         readLimit
@@ -8664,6 +7105,16 @@ export const QueryFeeds = gql`
         token
         identifiers
         type
+      }
+      confluence {
+        readLimit
+        uri
+        email
+        token
+        spaceKeys
+        identifiers
+        type
+        includeAttachments
       }
       intercom {
         readLimit
@@ -8740,6 +7191,18 @@ export const QueryFeeds = gql`
           id
         }
       }
+      hubSpotConversations {
+        readLimit
+        authenticationType
+        clientId
+        accessToken
+        inboxId
+        includeClosedThreads
+        includeAttachments
+        connector {
+          id
+        }
+      }
       research {
         readLimit
         type
@@ -8812,6 +7275,42 @@ export const QueryGoogleDriveFolders = gql`
   }
 }
     `;
+export const QueryGustoCompanies = gql`
+    query QueryGustoCompanies($properties: GustoCompaniesInput!) {
+  gustoCompanies(properties: $properties) {
+    results {
+      name
+      identifier
+      ein
+    }
+  }
+}
+    `;
+export const QueryGustoDepartments = gql`
+    query QueryGustoDepartments($properties: GustoOptionsInput!) {
+  gustoDepartments(properties: $properties) {
+    results {
+      name
+      identifier
+    }
+  }
+}
+    `;
+export const QueryGustoLocations = gql`
+    query QueryGustoLocations($properties: GustoOptionsInput!) {
+  gustoLocations(properties: $properties) {
+    results {
+      identifier
+      street1
+      street2
+      city
+      state
+      zip
+      country
+    }
+  }
+}
+    `;
 export const QueryLinearProjects = gql`
     query QueryLinearProjects($properties: LinearProjectsInput!) {
   linearProjects(properties: $properties) {
@@ -8846,6 +7345,13 @@ export const QueryMicrosoftTeamsTeams = gql`
       teamName
       teamId
     }
+  }
+}
+    `;
+export const QueryMondayBoards = gql`
+    query QueryMondayBoards($properties: MondayBoardsInput!) {
+  mondayBoards(properties: $properties) {
+    results
   }
 }
     `;
@@ -14767,6 +13273,7 @@ export const GetSpecification = gql`
       chunkTokenLimit
       enableThinking
       thinkingTokenLimit
+      thinkingLevel
     }
     replicate {
       tokenLimit
@@ -14867,106 +13374,6 @@ export const PromptSpecifications = gql`
       citations {
         content {
           id
-          name
-          state
-          originalDate
-          identifier
-          uri
-          type
-          fileType
-          mimeType
-          format
-          formatName
-          fileExtension
-          fileName
-          fileSize
-          fileMetadata
-          relativeFolderPath
-          masterUri
-          imageUri
-          textUri
-          audioUri
-          transcriptUri
-          snapshotsUri
-          snapshotCount
-          summary
-          customSummary
-          keywords
-          bullets
-          headlines
-          posts
-          chapters
-          questions
-          quotes
-          video {
-            width
-            height
-            duration
-            make
-            model
-            software
-            title
-            description
-            keywords
-            author
-          }
-          audio {
-            keywords
-            author
-            series
-            episode
-            episodeType
-            season
-            publisher
-            copyright
-            genre
-            title
-            description
-            bitrate
-            channels
-            sampleRate
-            bitsPerSample
-            duration
-          }
-          image {
-            width
-            height
-            resolutionX
-            resolutionY
-            bitsPerComponent
-            components
-            projectionType
-            orientation
-            description
-            make
-            model
-            software
-            lens
-            focalLength
-            exposureTime
-            fNumber
-            iso
-            heading
-            pitch
-          }
-          document {
-            title
-            subject
-            summary
-            author
-            lastModifiedBy
-            publisher
-            description
-            keywords
-            pageCount
-            worksheetCount
-            slideCount
-            wordCount
-            lineCount
-            paragraphCount
-            isEncrypted
-            hasDigitalSignature
-          }
         }
         index
         text
@@ -15148,6 +13555,7 @@ export const QuerySpecifications = gql`
         chunkTokenLimit
         enableThinking
         thinkingTokenLimit
+        thinkingLevel
       }
       replicate {
         tokenLimit
@@ -16656,6 +15064,14 @@ export const CreateWorkflow = gql`
             detectLanguage
             language
           }
+          elevenLabsScribe {
+            model
+            key
+            enableSpeakerDiarization
+            detectLanguage
+            language
+            tagAudioEvents
+          }
           page {
             enableScreenshot
           }
@@ -16939,6 +15355,14 @@ export const GetWorkflow = gql`
             detectLanguage
             language
           }
+          elevenLabsScribe {
+            model
+            key
+            enableSpeakerDiarization
+            detectLanguage
+            language
+            tagAudioEvents
+          }
           page {
             enableScreenshot
           }
@@ -17196,6 +15620,14 @@ export const QueryWorkflows = gql`
               detectLanguage
               language
             }
+            elevenLabsScribe {
+              model
+              key
+              enableSpeakerDiarization
+              detectLanguage
+              language
+              tagAudioEvents
+            }
             page {
               enableScreenshot
             }
@@ -17447,6 +15879,14 @@ export const UpdateWorkflow = gql`
             detectLanguage
             language
           }
+          elevenLabsScribe {
+            model
+            key
+            enableSpeakerDiarization
+            detectLanguage
+            language
+            tagAudioEvents
+          }
           page {
             enableScreenshot
           }
@@ -17696,6 +16136,14 @@ export const UpsertWorkflow = gql`
             enableSpeakerDiarization
             detectLanguage
             language
+          }
+          elevenLabsScribe {
+            model
+            key
+            enableSpeakerDiarization
+            detectLanguage
+            language
+            tagAudioEvents
           }
           page {
             enableScreenshot
