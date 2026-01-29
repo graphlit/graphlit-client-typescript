@@ -3123,7 +3123,7 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryBambooHrDepartmentsQuery,
       Types.QueryBambooHrDepartmentsQueryVariables
-    >(Documents.QueryBambooHRDepartments, { properties: properties });
+    >(Documents.QueryBambooHrDepartments, { properties: properties });
   }
 
   /**
@@ -3137,7 +3137,7 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryBambooHrDivisionsQuery,
       Types.QueryBambooHrDivisionsQueryVariables
-    >(Documents.QueryBambooHRDivisions, { properties: properties });
+    >(Documents.QueryBambooHrDivisions, { properties: properties });
   }
 
   /**
@@ -3151,7 +3151,7 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryBambooHrEmploymentStatusesQuery,
       Types.QueryBambooHrEmploymentStatusesQueryVariables
-    >(Documents.QueryBambooHREmploymentStatuses, { properties: properties });
+    >(Documents.QueryBambooHrEmploymentStatuses, { properties: properties });
   }
 
   /**
@@ -3165,7 +3165,7 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryBambooHrLocationsQuery,
       Types.QueryBambooHrLocationsQueryVariables
-    >(Documents.QueryBambooHRLocations, { properties: properties });
+    >(Documents.QueryBambooHrLocations, { properties: properties });
   }
 
   /**
