@@ -73,6 +73,14 @@ mutation UpdateWorkflow($workflow: WorkflowUpdateInput!) {
             detectLanguage
             language
           }
+          elevenLabsScribe {
+            model
+            key
+            enableSpeakerDiarization
+            detectLanguage
+            language
+            tagAudioEvents
+          }
           page {
             enableScreenshot
           }
@@ -206,6 +214,17 @@ mutation UpdateWorkflow($workflow: WorkflowUpdateInput!) {
         embeddingTypes
         enableSnapshots
         snapshotCount
+      }
+      gate {
+        type
+        specification {
+          id
+        }
+        rules {
+          if
+        }
+        uri
+        onReject
       }
     }
     actions {

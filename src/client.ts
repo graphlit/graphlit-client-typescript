@@ -1655,6 +1655,46 @@ class Graphlit {
   }
 
   /**
+   * Approves content.
+   * @param id - The ID of the content to approve.
+   * @returns The approved content.
+   */
+  public async approveContent(id: string): Promise<Types.ApproveContentMutation> {
+    return this.mutateAndCheckError<
+      Types.ApproveContentMutation,
+      Types.ApproveContentMutationVariables
+    >(Documents.ApproveContent, { id: id });
+  }
+
+  /**
+   * Rejects content.
+   * @param id - The ID of the content to reject.
+   * @param reason - The reason for rejection.
+   * @returns The rejected content.
+   */
+  public async rejectContent(
+    id: string,
+    reason?: string,
+  ): Promise<Types.RejectContentMutation> {
+    return this.mutateAndCheckError<
+      Types.RejectContentMutation,
+      Types.RejectContentMutationVariables
+    >(Documents.RejectContent, { id: id, reason: reason });
+  }
+
+  /**
+   * Restarts content processing.
+   * @param id - The ID of the content to restart.
+   * @returns The restarted content.
+   */
+  public async restartContent(id: string): Promise<Types.RestartContentMutation> {
+    return this.mutateAndCheckError<
+      Types.RestartContentMutation,
+      Types.RestartContentMutationVariables
+    >(Documents.RestartContent, { id: id });
+  }
+
+  /**
    * Deletes multiple contents.
    * @param ids - The IDs of the contents to delete.
    * @param isSynchronous - Whether this mutation is synchronous.
@@ -3037,6 +3077,160 @@ class Graphlit {
       properties: properties,
       identifier: identifier,
     });
+  }
+
+  /**
+   * Queries Asana projects.
+   * @param properties - The Asana project query properties.
+   * @returns The Asana projects.
+   */
+  public async queryAsanaProjects(
+    properties: Types.AsanaProjectsInput,
+  ): Promise<Types.QueryAsanaProjectsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryAsanaProjectsQuery,
+      Types.QueryAsanaProjectsQueryVariables
+    >(Documents.QueryAsanaProjects, { properties: properties });
+  }
+
+  /**
+   * Queries Asana workspaces.
+   * @param properties - The Asana workspace query properties.
+   * @returns The Asana workspaces.
+   */
+  public async queryAsanaWorkspaces(
+    properties: Types.AsanaWorkspacesInput,
+  ): Promise<Types.QueryAsanaWorkspacesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryAsanaWorkspacesQuery,
+      Types.QueryAsanaWorkspacesQueryVariables
+    >(Documents.QueryAsanaWorkspaces, { properties: properties });
+  }
+
+  /**
+   * Queries BambooHR departments.
+   * @param properties - The BambooHR department query properties.
+   * @returns The BambooHR departments.
+   */
+  public async queryBambooHRDepartments(
+    properties: Types.BambooHrOptionsInput,
+  ): Promise<Types.QueryBambooHrDepartmentsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBambooHrDepartmentsQuery,
+      Types.QueryBambooHrDepartmentsQueryVariables
+    >(Documents.QueryBambooHRDepartments, { properties: properties });
+  }
+
+  /**
+   * Queries BambooHR divisions.
+   * @param properties - The BambooHR division query properties.
+   * @returns The BambooHR divisions.
+   */
+  public async queryBambooHRDivisions(
+    properties: Types.BambooHrOptionsInput,
+  ): Promise<Types.QueryBambooHrDivisionsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBambooHrDivisionsQuery,
+      Types.QueryBambooHrDivisionsQueryVariables
+    >(Documents.QueryBambooHRDivisions, { properties: properties });
+  }
+
+  /**
+   * Queries BambooHR employment statuses.
+   * @param properties - The BambooHR employment status query properties.
+   * @returns The BambooHR employment statuses.
+   */
+  public async queryBambooHREmploymentStatuses(
+    properties: Types.BambooHrOptionsInput,
+  ): Promise<Types.QueryBambooHrEmploymentStatusesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBambooHrEmploymentStatusesQuery,
+      Types.QueryBambooHrEmploymentStatusesQueryVariables
+    >(Documents.QueryBambooHREmploymentStatuses, { properties: properties });
+  }
+
+  /**
+   * Queries BambooHR locations.
+   * @param properties - The BambooHR location query properties.
+   * @returns The BambooHR locations.
+   */
+  public async queryBambooHRLocations(
+    properties: Types.BambooHrOptionsInput,
+  ): Promise<Types.QueryBambooHrLocationsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBambooHrLocationsQuery,
+      Types.QueryBambooHrLocationsQueryVariables
+    >(Documents.QueryBambooHRLocations, { properties: properties });
+  }
+
+  /**
+   * Queries Confluence spaces.
+   * @param properties - The Confluence space query properties.
+   * @returns The Confluence spaces.
+   */
+  public async queryConfluenceSpaces(
+    properties: Types.ConfluenceSpacesInput,
+  ): Promise<Types.QueryConfluenceSpacesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryConfluenceSpacesQuery,
+      Types.QueryConfluenceSpacesQueryVariables
+    >(Documents.QueryConfluenceSpaces, { properties: properties });
+  }
+
+  /**
+   * Queries Gusto companies.
+   * @param properties - The Gusto company query properties.
+   * @returns The Gusto companies.
+   */
+  public async queryGustoCompanies(
+    properties: Types.GustoCompaniesInput,
+  ): Promise<Types.QueryGustoCompaniesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGustoCompaniesQuery,
+      Types.QueryGustoCompaniesQueryVariables
+    >(Documents.QueryGustoCompanies, { properties: properties });
+  }
+
+  /**
+   * Queries Gusto departments.
+   * @param properties - The Gusto department query properties.
+   * @returns The Gusto departments.
+   */
+  public async queryGustoDepartments(
+    properties: Types.GustoOptionsInput,
+  ): Promise<Types.QueryGustoDepartmentsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGustoDepartmentsQuery,
+      Types.QueryGustoDepartmentsQueryVariables
+    >(Documents.QueryGustoDepartments, { properties: properties });
+  }
+
+  /**
+   * Queries Gusto locations.
+   * @param properties - The Gusto location query properties.
+   * @returns The Gusto locations.
+   */
+  public async queryGustoLocations(
+    properties: Types.GustoOptionsInput,
+  ): Promise<Types.QueryGustoLocationsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGustoLocationsQuery,
+      Types.QueryGustoLocationsQueryVariables
+    >(Documents.QueryGustoLocations, { properties: properties });
+  }
+
+  /**
+   * Queries Monday boards.
+   * @param properties - The Monday board query properties.
+   * @returns The Monday boards.
+   */
+  public async queryMondayBoards(
+    properties: Types.MondayBoardsInput,
+  ): Promise<Types.QueryMondayBoardsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryMondayBoardsQuery,
+      Types.QueryMondayBoardsQueryVariables
+    >(Documents.QueryMondayBoards, { properties: properties });
   }
 
   /**
