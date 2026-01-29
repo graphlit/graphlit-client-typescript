@@ -8207,9 +8207,6 @@ export const GetFeed = gql`
       }
       krisp {
         authToken
-        includeTranscript
-        includeNotes
-        includeOutline
       }
     }
     rss {
@@ -8892,9 +8889,6 @@ export const QueryFeeds = gql`
         }
         krisp {
           authToken
-          includeTranscript
-          includeNotes
-          includeOutline
         }
       }
       rss {
