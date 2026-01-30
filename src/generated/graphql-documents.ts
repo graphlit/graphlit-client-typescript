@@ -1714,6 +1714,49 @@ export const GetContent = gql`
       }
       state
     }
+    facts {
+      id
+      text
+      validAt
+      invalidAt
+      state
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+        start
+        end
+      }
+      assertions {
+        text
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+          start
+          end
+        }
+      }
+      feeds {
+        id
+        name
+      }
+      content {
+        id
+        name
+      }
+      conversation {
+        id
+        name
+      }
+      sourceType
+      category
+      confidence
+    }
     workflow {
       id
       name
@@ -2570,6 +2613,49 @@ export const LookupContents = gql`
           }
         }
         state
+      }
+      facts {
+        id
+        text
+        validAt
+        invalidAt
+        state
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+          start
+          end
+        }
+        assertions {
+          text
+          mentions {
+            type
+            observable {
+              id
+              name
+            }
+            start
+            end
+          }
+        }
+        feeds {
+          id
+          name
+        }
+        content {
+          id
+          name
+        }
+        conversation {
+          id
+          name
+        }
+        sourceType
+        category
+        confidence
       }
       workflow {
         id
