@@ -1704,6 +1704,7 @@ export const GetContent = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -1798,6 +1799,7 @@ export const IngestBatch = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -1857,6 +1859,7 @@ export const IngestEncodedFile = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -1912,6 +1915,7 @@ export const IngestEvent = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -1966,6 +1970,7 @@ export const IngestMemory = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -2024,6 +2029,7 @@ export const IngestText = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -2077,6 +2083,7 @@ export const IngestTextBatch = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -2134,6 +2141,7 @@ export const IngestUri = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -2553,6 +2561,7 @@ export const LookupContents = gql`
           startTime
           endTime
           pageIndex
+          turnIndex
           boundingBox {
             left
             top
@@ -3725,6 +3734,7 @@ export const QueryContentsObservations = gql`
           startTime
           endTime
           pageIndex
+          turnIndex
           boundingBox {
             left
             top
@@ -3840,6 +3850,7 @@ export const ScreenshotPage = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -3933,6 +3944,7 @@ export const UpdateContent = gql`
         startTime
         endTime
         pageIndex
+        turnIndex
         boundingBox {
           left
           top
@@ -5519,6 +5531,7 @@ export const GetConversation = gql`
       collectionMode
       observationMode
     }
+    summary
   }
 }
     `;
@@ -6495,6 +6508,26 @@ export const QueryConversations = gql`
         collectionMode
         observationMode
       }
+      summary
+    }
+  }
+}
+    `;
+export const QueryConversationsGraph = gql`
+    query QueryConversationsGraph($filter: ConversationFilter, $graph: ConversationGraphInput, $correlationId: String) {
+  conversations(filter: $filter, graph: $graph, correlationId: $correlationId) {
+    graph {
+      nodes {
+        id
+        name
+        type
+        metadata
+      }
+      edges {
+        from
+        to
+        relation
+      }
     }
   }
 }
@@ -6557,6 +6590,11 @@ export const RetrieveFacts = gql`
           id
           name
         }
+        conversation {
+          id
+          name
+        }
+        sourceType
         category
         confidence
       }
@@ -7609,6 +7647,11 @@ export const GetFact = gql`
       id
       name
     }
+    conversation {
+      id
+      name
+    }
+    sourceType
     category
     confidence
   }
@@ -7656,6 +7699,11 @@ export const QueryFacts = gql`
         id
         name
       }
+      conversation {
+        id
+        name
+      }
+      sourceType
       category
       confidence
     }
@@ -7704,6 +7752,11 @@ export const QueryFactsClusters = gql`
         id
         name
       }
+      conversation {
+        id
+        name
+      }
+      sourceType
       category
       confidence
     }
@@ -15002,6 +15055,9 @@ export const GetSpecification = gql`
       embedCitations
       flattenCitations
       enableFacets
+      enableSummarization
+      enableEntityExtraction
+      enableFactExtraction
       messagesWeight
       contentsWeight
     }
@@ -15384,6 +15440,9 @@ export const QuerySpecifications = gql`
         embedCitations
         flattenCitations
         enableFacets
+        enableSummarization
+        enableEntityExtraction
+        enableFactExtraction
         messagesWeight
         contentsWeight
       }

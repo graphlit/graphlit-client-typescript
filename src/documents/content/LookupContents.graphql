@@ -397,6 +397,7 @@ query LookupContents($ids: [ID!]!, $correlationId: String) {
           startTime
           endTime
           pageIndex
+          turnIndex
           boundingBox {
             left
             top
