@@ -2298,6 +2298,50 @@ class Graphlit {
   }
 
   /**
+   * Retrieves Conversations as a knowledge graph.
+   * @param filter - The filter criteria to apply when retrieving Conversations, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The Conversations graph with nodes and edges.
+   */
+  public async queryConversationsGraph(
+    filter?: Types.ConversationFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryConversationsGraphQuery> {
+    return this.queryAndCheckError<
+      Types.QueryConversationsGraphQuery,
+      Types.QueryConversationsGraphQueryVariables
+    >(Documents.QueryConversationsGraph, {
+      filter: filter,
+      graph: {
+        /* return everything */
+      },
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+  * Retrieves Conversations with clustering.
+  * @param filter - The filter criteria to apply when retrieving Conversations, optional.
+  * @param clusters - The clustering input parameters, optional.
+  * @param correlationId - The tenant correlation identifier, optional.
+  * @returns The Conversations with clusters.
+  */
+  public async queryConversationsClusters(
+    filter?: Types.ConversationFilter,
+    clusters?: Types.EntityClustersInput,
+    correlationId?: string,
+  ): Promise<Types.QueryConversationsClustersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryConversationsClustersQuery,
+      Types.QueryConversationsClustersQueryVariables
+    >(Documents.QueryConversationsClusters, {
+      filter: filter,
+      clusters: clusters,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Counts conversations based on the provided filter criteria.
    * @param filter - The filter criteria to apply when counting conversations.
    * @returns The count of conversations.
