@@ -5617,6 +5617,78 @@ export const GetConversation = gql`
       collectionMode
       observationMode
     }
+    observations {
+      id
+      type
+      observable {
+        id
+        name
+      }
+      related {
+        id
+        name
+      }
+      relatedType
+      relation
+      occurrences {
+        type
+        confidence
+        startTime
+        endTime
+        pageIndex
+        turnIndex
+        boundingBox {
+          left
+          top
+          width
+          height
+        }
+      }
+      state
+    }
+    facts {
+      id
+      text
+      validAt
+      invalidAt
+      state
+      mentions {
+        type
+        observable {
+          id
+          name
+        }
+        start
+        end
+      }
+      assertions {
+        text
+        mentions {
+          type
+          observable {
+            id
+            name
+          }
+          start
+          end
+        }
+      }
+      feeds {
+        id
+        name
+      }
+      content {
+        id
+        name
+      }
+      conversation {
+        id
+        name
+      }
+      sourceType
+      category
+      confidence
+    }
     summary
   }
 }
