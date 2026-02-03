@@ -1189,6 +1189,10 @@ export const ExtractObservables = gql`
       name
       metadata
     }
+    emotions {
+      name
+      metadata
+    }
     persons {
       name
       metadata
