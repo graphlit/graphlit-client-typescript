@@ -385,6 +385,7 @@ query GetConversation($id: ID!, $correlationId: String) {
       text
       validAt
       invalidAt
+      state
       category
       confidence
     }

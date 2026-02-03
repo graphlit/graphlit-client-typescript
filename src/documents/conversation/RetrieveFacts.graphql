@@ -7,6 +7,7 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
         owner {
           id
         }
+        state
         text
         validAt
         invalidAt

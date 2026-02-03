@@ -1719,6 +1719,7 @@ export const GetContent = gql`
       text
       validAt
       invalidAt
+      state
       category
       confidence
     }
@@ -2584,6 +2585,7 @@ export const LookupContents = gql`
         text
         validAt
         invalidAt
+        state
         category
         confidence
       }
@@ -5581,6 +5583,7 @@ export const GetConversation = gql`
       text
       validAt
       invalidAt
+      state
       category
       confidence
     }
@@ -6986,6 +6989,7 @@ export const RetrieveFacts = gql`
         owner {
           id
         }
+        state
         text
         validAt
         invalidAt
@@ -8125,6 +8129,7 @@ export const GetFact = gql`
     owner {
       id
     }
+    state
     text
     validAt
     invalidAt
@@ -8177,6 +8182,7 @@ export const QueryFacts = gql`
       owner {
         id
       }
+      state
       text
       validAt
       invalidAt
@@ -8230,6 +8236,7 @@ export const QueryFactsClusters = gql`
       owner {
         id
       }
+      state
       text
       validAt
       invalidAt

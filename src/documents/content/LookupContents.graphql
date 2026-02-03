@@ -412,6 +412,7 @@ query LookupContents($ids: [ID!]!, $correlationId: String) {
         text
         validAt
         invalidAt
+        state
         category
         confidence
       }
