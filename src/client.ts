@@ -5019,6 +5019,135 @@ class Graphlit {
   }
 
   /**
+   * Creates an emotion entity.
+   * @param emotion - The emotion to create.
+   * @returns The created emotion.
+   */
+  public async createEmotion(
+    emotion: Types.EmotionInput,
+  ): Promise<Types.CreateEmotionMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateEmotionMutation,
+      Types.CreateEmotionMutationVariables
+    >(Documents.CreateEmotion, { emotion: emotion });
+  }
+
+  /**
+   * Updates an emotion entity.
+   * @param emotion - The emotion to update.
+   * @returns The updated emotion.
+   */
+  public async updateEmotion(
+    emotion: Types.EmotionUpdateInput,
+  ): Promise<Types.UpdateEmotionMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateEmotionMutation,
+      Types.UpdateEmotionMutationVariables
+    >(Documents.UpdateEmotion, { emotion: emotion });
+  }
+
+  /**
+   * Deletes an emotion entity.
+   * @param id - The ID of the emotion to delete.
+   * @returns The deleted emotion.
+   */
+  public async deleteEmotion(id: string): Promise<Types.DeleteEmotionMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteEmotionMutation,
+      Types.DeleteEmotionMutationVariables
+    >(Documents.DeleteEmotion, { id: id });
+  }
+
+  /**
+   * Deletes multiple emotion entities.
+   * @param ids - The IDs of the emotions to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted emotions.
+   */
+  public async deleteEmotions(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteEmotionsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteEmotionsMutation,
+      Types.DeleteEmotionsMutationVariables
+    >(Documents.DeleteEmotions, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all emotions based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting emotions.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllEmotions(
+    filter?: Types.EmotionFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllEmotionsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllEmotionsMutation,
+      Types.DeleteAllEmotionsMutationVariables
+    >(Documents.DeleteAllEmotions, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Lookup an emotion given its ID.
+   * @param id - ID of the emotion.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The emotion.
+   */
+  public async getEmotion(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetEmotionQuery> {
+    return this.queryAndCheckError<
+      Types.GetEmotionQuery,
+      Types.GetEmotionQueryVariables
+    >(Documents.GetEmotion, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves emotions based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving emotions.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The emotions.
+   */
+  public async queryEmotions(
+    filter?: Types.EmotionFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryEmotionsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryEmotionsQuery,
+      Types.QueryEmotionsQueryVariables
+    >(Documents.QueryEmotions, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Counts emotions based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting emotions.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of emotions.
+   */
+  public async countEmotions(
+    filter?: Types.EmotionFilter,
+    correlationId?: string,
+  ): Promise<Types.CountEmotionsQuery> {
+    return this.queryAndCheckError<
+      Types.CountEmotionsQuery,
+      Types.CountEmotionsQueryVariables
+    >(Documents.CountEmotions, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Creates an event entity.
    * @param event - The event to create.
    * @returns The created event.

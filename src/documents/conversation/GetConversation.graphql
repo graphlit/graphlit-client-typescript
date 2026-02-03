@@ -385,41 +385,6 @@ query GetConversation($id: ID!, $correlationId: String) {
       text
       validAt
       invalidAt
-      state
-      mentions {
-        type
-        observable {
-          id
-          name
-        }
-        start
-        end
-      }
-      assertions {
-        text
-        mentions {
-          type
-          observable {
-            id
-            name
-          }
-          start
-          end
-        }
-      }
-      feeds {
-        id
-        name
-      }
-      content {
-        id
-        name
-      }
-      conversation {
-        id
-        name
-      }
-      sourceType
       category
       confidence
     }

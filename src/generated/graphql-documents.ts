@@ -1719,41 +1719,6 @@ export const GetContent = gql`
       text
       validAt
       invalidAt
-      state
-      mentions {
-        type
-        observable {
-          id
-          name
-        }
-        start
-        end
-      }
-      assertions {
-        text
-        mentions {
-          type
-          observable {
-            id
-            name
-          }
-          start
-          end
-        }
-      }
-      feeds {
-        id
-        name
-      }
-      content {
-        id
-        name
-      }
-      conversation {
-        id
-        name
-      }
-      sourceType
       category
       confidence
     }
@@ -2619,41 +2584,6 @@ export const LookupContents = gql`
         text
         validAt
         invalidAt
-        state
-        mentions {
-          type
-          observable {
-            id
-            name
-          }
-          start
-          end
-        }
-        assertions {
-          text
-          mentions {
-            type
-            observable {
-              id
-              name
-            }
-            start
-            end
-          }
-        }
-        feeds {
-          id
-          name
-        }
-        content {
-          id
-          name
-        }
-        conversation {
-          id
-          name
-        }
-        sourceType
         category
         confidence
       }
@@ -5651,41 +5581,6 @@ export const GetConversation = gql`
       text
       validAt
       invalidAt
-      state
-      mentions {
-        type
-        observable {
-          id
-          name
-        }
-        start
-        end
-      }
-      assertions {
-        text
-        mentions {
-          type
-          observable {
-            id
-            name
-          }
-          start
-          end
-        }
-      }
-      feeds {
-        id
-        name
-      }
-      content {
-        id
-        name
-      }
-      conversation {
-        id
-        name
-      }
-      sourceType
       category
       confidence
     }
@@ -7087,10 +6982,14 @@ export const RetrieveFacts = gql`
     results {
       fact {
         id
+        creationDate
+        owner {
+          id
+        }
         text
         validAt
         invalidAt
-        state
+        relevance
         mentions {
           type
           observable {
@@ -7799,6 +7698,88 @@ export const UpdateConversation = gql`
     name
     state
     type
+  }
+}
+    `;
+export const CountEmotions = gql`
+    query CountEmotions($filter: EmotionFilter, $correlationId: String) {
+  countEmotions(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateEmotion = gql`
+    mutation CreateEmotion($emotion: EmotionInput!) {
+  createEmotion(emotion: $emotion) {
+    id
+    name
+  }
+}
+    `;
+export const DeleteAllEmotions = gql`
+    mutation DeleteAllEmotions($filter: EmotionFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllEmotions(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteEmotion = gql`
+    mutation DeleteEmotion($id: ID!) {
+  deleteEmotion(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteEmotions = gql`
+    mutation DeleteEmotions($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteEmotions(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetEmotion = gql`
+    query GetEmotion($id: ID!, $correlationId: String) {
+  emotion(id: $id, correlationId: $correlationId) {
+    id
+    name
+    description
+    creationDate
+    feeds {
+      id
+      name
+    }
+  }
+}
+    `;
+export const QueryEmotions = gql`
+    query QueryEmotions($filter: EmotionFilter, $correlationId: String) {
+  emotions(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      description
+      creationDate
+      relevance
+      feeds {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+export const UpdateEmotion = gql`
+    mutation UpdateEmotion($emotion: EmotionUpdateInput!) {
+  updateEmotion(emotion: $emotion) {
+    id
+    name
   }
 }
     `;
@@ -15588,6 +15569,8 @@ export const GetSpecification = gql`
       enableSummarization
       enableEntityExtraction
       enableFactExtraction
+      entityExtractionLimit
+      factExtractionLimit
       messagesWeight
       contentsWeight
     }
@@ -15973,6 +15956,8 @@ export const QuerySpecifications = gql`
         enableSummarization
         enableEntityExtraction
         enableFactExtraction
+        entityExtractionLimit
+        factExtractionLimit
         messagesWeight
         contentsWeight
       }
@@ -17640,6 +17625,9 @@ export const CreateWorkflow = gql`
             entityBudget
             extractionType
           }
+          hume {
+            confidenceThreshold
+          }
         }
       }
     }
@@ -17931,6 +17919,9 @@ export const GetWorkflow = gql`
             entityBudget
             extractionType
           }
+          hume {
+            confidenceThreshold
+          }
         }
       }
     }
@@ -18196,6 +18187,9 @@ export const QueryWorkflows = gql`
               entityBudget
               extractionType
             }
+            hume {
+              confidenceThreshold
+            }
           }
         }
       }
@@ -18455,6 +18449,9 @@ export const UpdateWorkflow = gql`
             entityBudget
             extractionType
           }
+          hume {
+            confidenceThreshold
+          }
         }
       }
     }
@@ -18712,6 +18709,9 @@ export const UpsertWorkflow = gql`
             timeBudget
             entityBudget
             extractionType
+          }
+          hume {
+            confidenceThreshold
           }
         }
       }

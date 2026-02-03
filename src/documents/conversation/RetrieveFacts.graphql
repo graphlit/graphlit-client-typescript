@@ -3,10 +3,14 @@ mutation RetrieveFacts($prompt: String!, $filter: FactFilter, $correlationId: St
     results {
       fact {
         id
+        creationDate
+        owner {
+          id
+        }
         text
         validAt
         invalidAt
-        state
+        relevance
         mentions {
           type
           observable {
