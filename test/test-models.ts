@@ -112,6 +112,22 @@ export const TEST_MODELS: TestModelConfig[] = [
       },
     },
   },
+  {
+    name: "OpenAI GPT-5.2",
+    config: {
+      name: "Test OpenAI GPT-5.2",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.OpenAi,
+      openAI: {
+        model: Types.OpenAiModels.Gpt52_400K,
+        temperature: 0.7,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
 
   // Anthropic Models
   {
@@ -495,6 +511,7 @@ export const TOOL_LIMIT_TEST_MODELS: TestModelConfig[] = [
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4o Mini")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1")!,
   TEST_MODELS.find((m) => m.name === "OpenAI GPT-4.1 Mini")!,
+  TEST_MODELS.find((m) => m.name === "OpenAI GPT-5.2")!,
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Opus")!,
   TEST_MODELS.find((m) => m.name === "Anthropic Claude 4 Sonnet")!,
   TEST_MODELS.find((m) => m.name === "Google Gemini 2.5 Pro")!,
