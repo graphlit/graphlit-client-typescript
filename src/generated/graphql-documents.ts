@@ -8752,6 +8752,7 @@ export const GetFeed = gql`
     }
     meeting {
       type
+      contentType
       readLimit
       fireflies {
         apiKey
@@ -9434,6 +9435,7 @@ export const QueryFeeds = gql`
       }
       meeting {
         type
+        contentType
         readLimit
         fireflies {
           apiKey
