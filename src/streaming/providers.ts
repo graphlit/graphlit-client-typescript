@@ -677,6 +677,13 @@ export async function streamWithAnthropic(
       }));
     }
 
+    // Check if this is a 1M context model (beta flag, same underlying model ID)
+    const is1MContext =
+      specification.anthropic?.model ===
+        Types.AnthropicModels.Claude_4_6Opus_1M ||
+      specification.anthropic?.model ===
+        Types.AnthropicModels.Claude_4_6Opus_1M_20260205;
+
     // Add thinking config if provided
     if (thinkingConfig) {
       streamConfig.thinking = thinkingConfig;
@@ -688,29 +695,41 @@ export async function streamWithAnthropic(
       }
 
       // Adjust max_tokens to account for thinking budget
+      // 1M context models have a 1,000,000 token window; standard models have 200,000
+      const contextWindowLimit = is1MContext ? 1000000 : 200000;
       const totalTokens =
         streamConfig.max_tokens + thinkingConfig.budget_tokens;
-      if (totalTokens > 200000) {
-        // Claude's context window limit
+      if (totalTokens > contextWindowLimit) {
         console.warn(
-          `⚠️ [Anthropic] Total tokens (${totalTokens}) exceeds context window, adjusting completion tokens...`,
+          `⚠️ [Anthropic] Total tokens (${totalTokens}) exceeds ${is1MContext ? "1M" : "200K"} context window, adjusting completion tokens...`,
         );
         streamConfig.max_tokens = Math.max(
           1000,
-          200000 - thinkingConfig.budget_tokens,
+          contextWindowLimit - thinkingConfig.budget_tokens,
         );
       }
     }
 
+    // Build request options with optional abort signal and 1M context beta header
+    const requestOptions: Record<string, any> = {};
+    if (abortSignal) {
+      requestOptions.signal = abortSignal;
+    }
+    if (is1MContext) {
+      requestOptions.headers = {
+        "anthropic-beta": "context-1m-2025-08-07",
+      };
+    }
+
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}`,
+        `⏱️ [Anthropic] Starting LLM call at: ${new Date().toISOString()}${is1MContext ? " | 1M context beta enabled" : ""}`,
       );
     }
 
     const stream = await anthropicClient.messages.create(
       streamConfig,
-      abortSignal ? { signal: abortSignal } : undefined,
+      Object.keys(requestOptions).length > 0 ? requestOptions : undefined,
     );
 
     let activeContentBlock = false;

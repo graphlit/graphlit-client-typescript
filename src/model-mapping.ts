@@ -115,6 +115,13 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
     "claude-sonnet-4-5-20250929",
   [Types.AnthropicModels.Claude_4_5Haiku]: "claude-haiku-4-5",
   [Types.AnthropicModels.Claude_4_5Haiku_20251001]: "claude-haiku-4-5-20251001",
+
+  // Claude 4.6 models (1M variants use the same model ID; context window is a beta flag)
+  [Types.AnthropicModels.Claude_4_6Opus]: "claude-opus-4-6",
+  [Types.AnthropicModels.Claude_4_6Opus_20260205]: "claude-opus-4-6-20260205",
+  [Types.AnthropicModels.Claude_4_6Opus_1M]: "claude-opus-4-6",
+  [Types.AnthropicModels.Claude_4_6Opus_1M_20260205]:
+    "claude-opus-4-6-20260205",
 };
 
 // Google model mappings
