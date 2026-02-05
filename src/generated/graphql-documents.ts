@@ -15665,6 +15665,7 @@ export const GetSpecification = gql`
       probability
       enableThinking
       thinkingTokenLimit
+      effort
     }
     google {
       tokenLimit
@@ -16052,6 +16053,7 @@ export const QuerySpecifications = gql`
         probability
         enableThinking
         thinkingTokenLimit
+        effort
       }
       google {
         tokenLimit
