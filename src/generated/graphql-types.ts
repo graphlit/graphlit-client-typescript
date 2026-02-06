@@ -7521,7 +7521,7 @@ export type GoogleModelPropertiesUpdateInput = {
 export enum GoogleModels {
   /** Developer-specified model */
   Custom = 'CUSTOM',
-  /** Embed (004 version) */
+  /** @deprecated Model has been shut down. Use Gemini Embedding 001 instead. */
   Embedding_004 = 'EMBEDDING_004',
   /** @deprecated Model has been shut down. Use Gemini 2.5 Flash instead. */
   Gemini_1_5Flash = 'GEMINI_1_5_FLASH',
@@ -7577,6 +7577,8 @@ export enum GoogleModels {
   Gemini_3FlashPreview = 'GEMINI_3_FLASH_PREVIEW',
   /** Gemini 3 Pro (Preview) */
   Gemini_3ProPreview = 'GEMINI_3_PRO_PREVIEW',
+  /** Gemini Embedding (001 version) */
+  GeminiEmbedding_001 = 'GEMINI_EMBEDDING_001',
   /** Gemini Flash (Latest) */
   GeminiFlashLatest = 'GEMINI_FLASH_LATEST',
   /** Gemini Flash Lite (Latest) */
