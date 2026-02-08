@@ -15050,7 +15050,7 @@ export type NotionFeedPropertiesUpdateInput = {
   /** Authentication connector reference. */
   connector?: InputMaybe<EntityReferenceInput>;
   /** Notion identifiers. */
-  identifiers: Array<Scalars['String']['input']>;
+  identifiers?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Should the feed enumerate Notion pages and databases recursively. */
   isRecursive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The limit of items to be read from feed, defaults to 100. */
