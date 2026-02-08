@@ -8807,7 +8807,14 @@ export const GetFeed = gql`
     }
     notion {
       readLimit
+      authenticationType
       token
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
       identifiers
       type
     }
@@ -9490,7 +9497,14 @@ export const QueryFeeds = gql`
       }
       notion {
         readLimit
+        authenticationType
         token
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
         identifiers
         type
       }
