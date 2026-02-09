@@ -614,8 +614,6 @@ export type AtlassianJiraFeedProperties = {
   __typename?: 'AtlassianJiraFeedProperties';
   /** Jira authentication type, defaults to Token. */
   authenticationType?: Maybe<JiraAuthenticationTypes>;
-  /** Authorization identifier. */
-  authorizationId?: Maybe<Scalars['ID']['output']>;
   /** Atlassian OAuth2 client identifier, requires Connector authentication type. */
   clientId?: Maybe<Scalars['String']['output']>;
   /** Atlassian OAuth2 client secret, requires Connector authentication type. */
@@ -930,7 +928,10 @@ export type AuthenticationConnectorInput = {
 
 /** Authentication service type */
 export enum AuthenticationServiceTypes {
-  /** Arcade authentication service */
+  /**
+   * Arcade authentication service
+   * @deprecated Use standard OAuth instead. Arcade no longer supported.
+   */
   Arcade = 'ARCADE',
   /** Auth0 authentication service */
   Auth0 = 'AUTH0',
@@ -12620,11 +12621,6 @@ export type MicrosoftTeamsFeedProperties = {
   __typename?: 'MicrosoftTeamsFeedProperties';
   /** Microsoft Teams authentication type. */
   authenticationType?: Maybe<MicrosoftTeamsAuthenticationTypes>;
-  /**
-   * Arcade authorization identifier.
-   * @deprecated Use Connector instead.
-   */
-  authorizationId?: Maybe<Scalars['ID']['output']>;
   /** Microsoft Teams channel identifier. */
   channelId: Scalars['String']['output'];
   /** Microsoft Teams client identifier. */
