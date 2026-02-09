@@ -3227,6 +3227,34 @@ class Graphlit {
   }
 
   /**
+   * Queries Atlassian sites.
+   * @param properties - The Atlassian site query properties.
+   * @returns The Atlassian sites.
+   */
+  public async queryAtlassianSites(
+    properties: Types.AtlassianSitesInput,
+  ): Promise<Types.QueryAtlassianSitesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryAtlassianSitesQuery,
+      Types.QueryAtlassianSitesQueryVariables
+    >(Documents.QueryAtlassianSites, { properties: properties });
+  }
+
+  /**
+   * Queries Jira projects.
+   * @param properties - The Jira project query properties.
+   * @returns The Jira projects.
+   */
+  public async queryJiraProjects(
+    properties: Types.JiraProjectsInput,
+  ): Promise<Types.QueryJiraProjectsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryJiraProjectsQuery,
+      Types.QueryJiraProjectsQueryVariables
+    >(Documents.QueryJiraProjects, { properties: properties });
+  }
+
+  /**
    * Queries Gusto companies.
    * @param properties - The Gusto company query properties.
    * @returns The Gusto companies.

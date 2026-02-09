@@ -8547,11 +8547,19 @@ export const GetFeed = gql`
       type
       includeAttachments
       jira {
+        authenticationType
         uri
         project
         email
         token
         offset
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        cloudId
       }
       linear {
         key
@@ -8820,9 +8828,17 @@ export const GetFeed = gql`
     }
     confluence {
       readLimit
+      authenticationType
       uri
       email
       token
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
+      cloudId
       spaceKeys
       identifiers
       type
@@ -8982,6 +8998,17 @@ export const QueryAsanaWorkspaces = gql`
     query QueryAsanaWorkspaces($properties: AsanaWorkspacesInput!) {
   asanaWorkspaces(properties: $properties) {
     results
+  }
+}
+    `;
+export const QueryAtlassianSites = gql`
+    query QueryAtlassianSites($properties: AtlassianSitesInput!) {
+  atlassianSites(properties: $properties) {
+    results {
+      identifier
+      name
+      url
+    }
   }
 }
     `;
@@ -9237,11 +9264,19 @@ export const QueryFeeds = gql`
         type
         includeAttachments
         jira {
+          authenticationType
           uri
           project
           email
           token
           offset
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+          cloudId
         }
         linear {
           key
@@ -9510,9 +9545,17 @@ export const QueryFeeds = gql`
       }
       confluence {
         readLimit
+        authenticationType
         uri
         email
         token
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        cloudId
         spaceKeys
         identifiers
         type
@@ -9720,6 +9763,17 @@ export const QueryGustoLocations = gql`
       state
       zip
       country
+    }
+  }
+}
+    `;
+export const QueryJiraProjects = gql`
+    query QueryJiraProjects($properties: JiraProjectsInput!) {
+  jiraProjects(properties: $properties) {
+    results {
+      identifier
+      name
+      key
     }
   }
 }
