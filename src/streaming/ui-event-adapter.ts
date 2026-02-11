@@ -244,6 +244,33 @@ export class UIEventAdapter {
       );
     }
 
+    // Flush chunk buffer and queue to currentMessage before tool calls begin.
+    // This ensures currentMessage reflects the full text so that the \n\n
+    // injection in handleToken works correctly when content resumes after
+    // tool calls complete. Without this, unflushed content (e.g. text ending
+    // with ':' that doesn't trigger the sentence boundary regex) stays in
+    // the buffer, causing currentMessage to be stale and the \n\n separator
+    // to either be skipped or placed at the wrong position.
+    if (this.chunkQueue.length > 0) {
+      this.currentMessage += this.chunkQueue.join("");
+      this.chunkQueue.length = 0;
+    }
+    if (this.chunkBuffer) {
+      const remaining = this.chunkBuffer.flush();
+      if (remaining.length > 0) {
+        this.currentMessage += remaining.join("");
+      }
+    }
+    // Clear any pending chunk emission timer since we just flushed everything
+    if (this.updateTimer) {
+      globalThis.clearTimeout(this.updateTimer);
+      this.updateTimer = undefined;
+    }
+    // Emit updated message so UI shows latest text before tool call indicators
+    if (this.currentMessage.length > 0) {
+      this.emitMessageUpdate(true);
+    }
+
     const conversationToolCall: ConversationToolCall = {
       __typename: "ConversationToolCall",
       id: toolCall.id,
