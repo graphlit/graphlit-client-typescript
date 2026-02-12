@@ -8693,6 +8693,7 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       googleContacts {
         authenticationType
@@ -8702,6 +8703,7 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       microsoftContacts {
         authenticationType
@@ -8712,6 +8714,7 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       salesforce {
         authenticationType
@@ -8723,6 +8726,7 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       hubSpot {
         authenticationType
@@ -8733,6 +8737,7 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       readLimit
     }
@@ -8793,6 +8798,7 @@ export const GetFeed = gql`
         apiKey
         beforeDate
         afterDate
+        type
       }
       attio {
         authenticationType
@@ -8805,11 +8811,13 @@ export const GetFeed = gql`
         }
         afterDate
         beforeDate
+        type
       }
       fathom {
         apiKey
         afterDate
         beforeDate
+        type
       }
       hubSpot {
         authenticationType
@@ -8822,9 +8830,11 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
       }
       krisp {
         authToken
+        type
       }
     }
     rss {
@@ -9468,6 +9478,7 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         googleContacts {
           authenticationType
@@ -9477,6 +9488,7 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         microsoftContacts {
           authenticationType
@@ -9487,6 +9499,7 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         salesforce {
           authenticationType
@@ -9498,6 +9511,7 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         hubSpot {
           authenticationType
@@ -9508,6 +9522,7 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         readLimit
       }
@@ -9568,6 +9583,7 @@ export const QueryFeeds = gql`
           apiKey
           beforeDate
           afterDate
+          type
         }
         attio {
           authenticationType
@@ -9580,11 +9596,13 @@ export const QueryFeeds = gql`
           }
           afterDate
           beforeDate
+          type
         }
         fathom {
           apiKey
           afterDate
           beforeDate
+          type
         }
         hubSpot {
           authenticationType
@@ -9597,9 +9615,11 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
         }
         krisp {
           authToken
+          type
         }
       }
       rss {
