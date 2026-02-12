@@ -15485,6 +15485,8 @@ export enum OAuthProviders {
   Microsoft = 'MICROSOFT',
   /** Notion authentication provider */
   Notion = 'NOTION',
+  /** Salesforce authentication provider */
+  Salesforce = 'SALESFORCE',
   /** Slack authentication provider */
   Slack = 'SLACK',
   /** Zendesk authentication provider */
