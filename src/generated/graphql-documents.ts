@@ -8795,7 +8795,14 @@ export const GetFeed = gql`
         afterDate
       }
       attio {
+        authenticationType
         apiKey
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
         afterDate
         beforeDate
       }
@@ -9563,7 +9570,14 @@ export const QueryFeeds = gql`
           afterDate
         }
         attio {
+          authenticationType
           apiKey
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
           afterDate
           beforeDate
         }
