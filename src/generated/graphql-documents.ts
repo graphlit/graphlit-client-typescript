@@ -8579,11 +8579,25 @@ export const GetFeed = gql`
         }
       }
       intercom {
+        authenticationType
         accessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       zendesk {
+        authenticationType
         subdomain
         accessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       trello {
         key
@@ -8592,7 +8606,14 @@ export const GetFeed = gql`
         type
       }
       attio {
+        authenticationType
         apiKey
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       salesforce {
         authenticationType
@@ -8666,6 +8687,12 @@ export const GetFeed = gql`
       attio {
         authenticationType
         apiKey
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       googleContacts {
         authenticationType
@@ -8846,12 +8873,26 @@ export const GetFeed = gql`
     }
     intercom {
       readLimit
+      authenticationType
       accessToken
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
     }
     zendesk {
       readLimit
+      authenticationType
       subdomain
       accessToken
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
     }
     youtube {
       readLimit
@@ -8906,7 +8947,14 @@ export const GetFeed = gql`
     }
     attio {
       readLimit
+      authenticationType
       apiKey
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
     }
     salesforce {
       readLimit
@@ -8935,6 +8983,9 @@ export const GetFeed = gql`
       readLimit
       authenticationType
       accessToken
+      clientId
+      clientSecret
+      refreshToken
       connector {
         id
       }
@@ -9296,11 +9347,25 @@ export const QueryFeeds = gql`
           }
         }
         intercom {
+          authenticationType
           accessToken
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
         }
         zendesk {
+          authenticationType
           subdomain
           accessToken
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
         }
         trello {
           key
@@ -9309,7 +9374,14 @@ export const QueryFeeds = gql`
           type
         }
         attio {
+          authenticationType
           apiKey
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
         }
         salesforce {
           authenticationType
@@ -9383,6 +9455,12 @@ export const QueryFeeds = gql`
         attio {
           authenticationType
           apiKey
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
         }
         googleContacts {
           authenticationType
@@ -9563,12 +9641,26 @@ export const QueryFeeds = gql`
       }
       intercom {
         readLimit
+        authenticationType
         accessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       zendesk {
         readLimit
+        authenticationType
         subdomain
         accessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       youtube {
         readLimit
@@ -9623,7 +9715,14 @@ export const QueryFeeds = gql`
       }
       attio {
         readLimit
+        authenticationType
         apiKey
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
       }
       salesforce {
         readLimit
@@ -9652,6 +9751,9 @@ export const QueryFeeds = gql`
         readLimit
         authenticationType
         accessToken
+        clientId
+        clientSecret
+        refreshToken
         connector {
           id
         }
