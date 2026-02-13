@@ -2625,6 +2625,7 @@ class Graphlit {
    * @param systemPrompt - The system prompt, optional.
    * @param includeDetails - Whether to include details, optional.
    * @param correlationId - The tenant correlation identifier, optional.
+   * @param persona - The persona to use, optional.
    * @returns The formatted conversation.
    */
   public async formatConversation(
@@ -2635,6 +2636,7 @@ class Graphlit {
     systemPrompt?: string,
     includeDetails?: boolean,
     correlationId?: string,
+    persona?: Types.EntityReferenceInput,
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
@@ -2643,6 +2645,7 @@ class Graphlit {
       prompt: prompt,
       id: id,
       specification: specification,
+      persona: persona,
       tools: tools,
       systemPrompt: systemPrompt,
       includeDetails: includeDetails,
@@ -2737,6 +2740,7 @@ class Graphlit {
    * @param systemPrompt - The system prompt, optional.
    * @param includeDetails - Whether to include details, optional.
    * @param correlationId - The tenant correlation identifier, optional.
+   * @param persona - The persona to use, optional.
    * @returns The conversation response.
    */
   public async promptConversation(
@@ -2750,6 +2754,7 @@ class Graphlit {
     systemPrompt?: string,
     includeDetails?: boolean,
     correlationId?: string,
+    persona?: Types.EntityReferenceInput,
   ): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<
       Types.PromptConversationMutation,
@@ -2758,6 +2763,7 @@ class Graphlit {
       prompt: prompt,
       id: id,
       specification: specification,
+      persona: persona,
       mimeType: mimeType,
       data: data,
       tools: tools,
@@ -4216,6 +4222,128 @@ class Graphlit {
       Types.DisableUserMutation,
       Types.DisableUserMutationVariables
     >(Documents.DisableUser, { id: id });
+  }
+
+  /**
+   * Creates a persona.
+   * @param persona - The persona to create.
+   * @returns The created persona.
+   */
+  public async createPersona(
+    persona: Types.PersonaInput,
+  ): Promise<Types.CreatePersonaMutation> {
+    return this.mutateAndCheckError<
+      Types.CreatePersonaMutation,
+      Types.CreatePersonaMutationVariables
+    >(Documents.CreatePersona, { persona: persona });
+  }
+
+  /**
+   * Updates a persona.
+   * @param persona - The persona to update.
+   * @returns The updated persona.
+   */
+  public async updatePersona(
+    persona: Types.PersonaUpdateInput,
+  ): Promise<Types.UpdatePersonaMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdatePersonaMutation,
+      Types.UpdatePersonaMutationVariables
+    >(Documents.UpdatePersona, { persona: persona });
+  }
+
+  /**
+   * Deletes a persona.
+   * @param id - The ID of the persona to delete.
+   * @returns The deleted persona.
+   */
+  public async deletePersona(id: string): Promise<Types.DeletePersonaMutation> {
+    return this.mutateAndCheckError<
+      Types.DeletePersonaMutation,
+      Types.DeletePersonaMutationVariables
+    >(Documents.DeletePersona, { id: id });
+  }
+
+  /**
+   * Deletes multiple personas.
+   * @param ids - The IDs of the personas to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted personas.
+   */
+  public async deletePersonas(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeletePersonasMutation> {
+    return this.mutateAndCheckError<
+      Types.DeletePersonasMutation,
+      Types.DeletePersonasMutationVariables
+    >(Documents.DeletePersonas, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all personas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting personas.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllPersonas(
+    filter?: Types.PersonaFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllPersonasMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllPersonasMutation,
+      Types.DeleteAllPersonasMutationVariables
+    >(Documents.DeleteAllPersonas, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Lookup a persona given its ID.
+   * @param id - ID of the persona.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The persona.
+   */
+  public async getPersona(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetPersonaQuery> {
+    return this.queryAndCheckError<
+      Types.GetPersonaQuery,
+      Types.GetPersonaQueryVariables
+    >(Documents.GetPersona, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves personas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving personas.
+   * @returns The personas.
+   */
+  public async queryPersonas(
+    filter?: Types.PersonaFilter,
+  ): Promise<Types.QueryPersonasQuery> {
+    return this.queryAndCheckError<
+      Types.QueryPersonasQuery,
+      Types.QueryPersonasQueryVariables
+    >(Documents.QueryPersonas, { filter: filter });
+  }
+
+  /**
+   * Counts personas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting personas.
+   * @returns The count of personas.
+   */
+  public async countPersonas(
+    filter?: Types.PersonaFilter,
+  ): Promise<Types.CountPersonasQuery> {
+    return this.queryAndCheckError<
+      Types.CountPersonasQuery,
+      Types.CountPersonasQueryVariables
+    >(Documents.CountPersonas, { filter: filter });
   }
 
   /**
@@ -7480,6 +7608,7 @@ class Graphlit {
    * @param contentFilter - Optional filter for content retrieval during conversation
    * @param augmentedFilter - Optional filter to force specific content into LLM context
    * @param correlationId - Optional correlation ID for tracking
+   * @param persona - Optional persona to use
    * @returns Complete agent result with message and tool calls
    */
   public async promptAgent(
@@ -7494,6 +7623,7 @@ class Graphlit {
     contentFilter?: Types.ContentCriteriaInput,
     augmentedFilter?: Types.ContentCriteriaInput,
     correlationId?: string,
+    persona?: Types.EntityReferenceInput,
   ): Promise<AgentResult> {
     const startTime = Date.now();
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
@@ -7535,6 +7665,7 @@ class Graphlit {
         undefined,
         true, // includeDetails - needed for context window tracking
         correlationId,
+        persona,
       );
 
       let currentMessage = promptResponse.promptConversation?.message;
@@ -7691,6 +7822,7 @@ class Graphlit {
    * @param contentFilter - Optional filter for content retrieval during conversation
    * @param augmentedFilter - Optional filter to force specific content into LLM context
    * @param correlationId - Optional correlation ID for tracking
+   * @param persona - Optional persona to use
    * @throws Error if streaming is not supported
    */
   public async streamAgent(
@@ -7706,6 +7838,7 @@ class Graphlit {
     contentFilter?: Types.ContentCriteriaInput,
     augmentedFilter?: Types.ContentCriteriaInput,
     correlationId?: string,
+    persona?: Types.EntityReferenceInput,
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
@@ -7777,6 +7910,7 @@ class Graphlit {
           contentFilter,
           augmentedFilter,
           correlationId,
+          persona,
         );
 
         // Convert promptAgent result to streaming events
@@ -7872,6 +8006,7 @@ class Graphlit {
         mimeType,
         data,
         correlationId,
+        persona,
       );
     } catch (error: unknown) {
       const errorMessage =
@@ -7919,6 +8054,7 @@ class Graphlit {
     mimeType?: string,
     data?: string,
     correlationId?: string,
+    persona?: Types.EntityReferenceInput,
   ): Promise<void> {
     let currentRound = 0;
     let fullMessage = "";
@@ -7938,6 +8074,7 @@ class Graphlit {
       undefined,
       true,
       correlationId,
+      persona,
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
@@ -8503,6 +8640,7 @@ class Graphlit {
           data,
           uiAdapter,
           correlationId,
+          persona,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -8881,6 +9019,7 @@ class Graphlit {
     data: string | undefined,
     uiAdapter: UIEventAdapter,
     correlationId: string | undefined,
+    persona?: Types.EntityReferenceInput,
   ): Promise<void> {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -8899,6 +9038,7 @@ class Graphlit {
       undefined,
       false,
       correlationId,
+      persona,
     );
 
     const message = response.promptConversation?.message;

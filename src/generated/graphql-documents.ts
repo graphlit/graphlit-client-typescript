@@ -4353,6 +4353,7 @@ export const CompleteConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      formattedPersona
       specification
       messages {
         role
@@ -4683,6 +4684,7 @@ export const ContinueConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      formattedPersona
       specification
       messages {
         role
@@ -4866,11 +4868,12 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String) {
   formatConversation(
     prompt: $prompt
     id: $id
     specification: $specification
+    persona: $persona
     tools: $tools
     systemPrompt: $systemPrompt
     includeDetails: $includeDetails
@@ -5062,6 +5065,7 @@ export const FormatConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      formattedPersona
       specification
       messages {
         role
@@ -5358,6 +5362,10 @@ export const GetConversation = gql`
       timestamp
       text
       relevance
+    }
+    persona {
+      id
+      name
     }
     specification {
       id
@@ -5747,13 +5755,14 @@ export const Prompt = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String) {
+    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String) {
   promptConversation(
     prompt: $prompt
     id: $id
     mimeType: $mimeType
     data: $data
     specification: $specification
+    persona: $persona
     tools: $tools
     systemPrompt: $systemPrompt
     requireTool: $requireTool
@@ -5946,6 +5955,7 @@ export const PromptConversation = gql`
       formattedObservables
       formattedInstructions
       formattedTools
+      formattedPersona
       specification
       messages {
         role
@@ -6374,6 +6384,10 @@ export const QueryConversations = gql`
         text
         relevance
       }
+      persona {
+        id
+        name
+      }
       specification {
         id
         name
@@ -6739,6 +6753,10 @@ export const QueryConversationsClusters = gql`
         text
         relevance
       }
+      persona {
+        id
+        name
+      }
       specification {
         id
         name
@@ -7028,6 +7046,10 @@ export const RetrieveFacts = gql`
           name
         }
         conversation {
+          id
+          name
+        }
+        persona {
           id
           name
         }
@@ -8171,6 +8193,10 @@ export const GetFact = gql`
       id
       name
     }
+    persona {
+      id
+      name
+    }
     sourceType
     category
     confidence
@@ -8221,6 +8247,10 @@ export const QueryFacts = gql`
         name
       }
       conversation {
+        id
+        name
+      }
+      persona {
         id
         name
       }
@@ -8275,6 +8305,10 @@ export const QueryFactsClusters = gql`
         name
       }
       conversation {
+        id
+        name
+      }
+      persona {
         id
         name
       }
@@ -8852,6 +8886,9 @@ export const GetFeed = gql`
       readLimit
       type
       text
+      exa {
+        searchType
+      }
     }
     reddit {
       readLimit
@@ -9637,6 +9674,9 @@ export const QueryFeeds = gql`
         readLimit
         type
         text
+        exa {
+          searchType
+        }
       }
       reddit {
         readLimit
@@ -14470,6 +14510,104 @@ export const UpdatePerson = gql`
   }
 }
     `;
+export const CountPersonas = gql`
+    query CountPersonas($filter: PersonaFilter, $correlationId: String) {
+  countPersonas(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreatePersona = gql`
+    mutation CreatePersona($persona: PersonaInput!) {
+  createPersona(persona: $persona) {
+    id
+    name
+    state
+    role
+  }
+}
+    `;
+export const DeleteAllPersonas = gql`
+    mutation DeleteAllPersonas($filter: PersonaFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllPersonas(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePersona = gql`
+    mutation DeletePersona($id: ID!) {
+  deletePersona(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeletePersonas = gql`
+    mutation DeletePersonas($ids: [ID!]!, $isSynchronous: Boolean) {
+  deletePersonas(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetPersona = gql`
+    query GetPersona($id: ID!, $correlationId: String) {
+  persona(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
+    role
+    instructions
+    facts {
+      id
+      text
+    }
+  }
+}
+    `;
+export const QueryPersonas = gql`
+    query QueryPersonas($filter: PersonaFilter, $correlationId: String) {
+  personas(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      role
+      instructions
+      facts {
+        id
+        text
+      }
+    }
+  }
+}
+    `;
+export const UpdatePersona = gql`
+    mutation UpdatePersona($persona: PersonaUpdateInput!) {
+  updatePersona(persona: $persona) {
+    id
+    name
+    state
+    role
+  }
+}
+    `;
 export const CountPlaces = gql`
     query CountPlaces($filter: PlaceFilter, $correlationId: String) {
   countPlaces(filter: $filter, correlationId: $correlationId) {
@@ -16500,6 +16638,17 @@ export const GetUser = gql`
         }
       }
     }
+    personas {
+      id
+      name
+      state
+      role
+      instructions
+      facts {
+        id
+        text
+      }
+    }
   }
 }
     `;
@@ -16570,6 +16719,17 @@ export const GetUserByIdentifier = gql`
           token
           type
         }
+      }
+    }
+    personas {
+      id
+      name
+      state
+      role
+      instructions
+      facts {
+        id
+        text
       }
     }
   }
@@ -16643,6 +16803,17 @@ export const QueryUsers = gql`
             token
             type
           }
+        }
+      }
+      personas {
+        id
+        name
+        state
+        role
+        instructions
+        facts {
+          id
+          text
         }
       }
     }
