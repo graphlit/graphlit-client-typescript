@@ -223,6 +223,14 @@ export const GetAlert = gql`
           id
         }
       }
+      googleVideo {
+        model
+        seconds
+        aspectRatio
+        seed {
+          id
+        }
+      }
       parallel {
         processor
       }
@@ -403,6 +411,14 @@ export const QueryAlerts = gql`
           model
           seconds
           size
+          seed {
+            id
+          }
+        }
+        googleVideo {
+          model
+          seconds
+          aspectRatio
           seed {
             id
           }
