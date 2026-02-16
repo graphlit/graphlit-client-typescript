@@ -9061,6 +9061,7 @@ export const GetFeed = gql`
       readLimit
       parallel {
         generator
+        processor
       }
     }
     error
@@ -9849,6 +9850,7 @@ export const QueryFeeds = gql`
         readLimit
         parallel {
           generator
+          processor
         }
       }
       error
@@ -18013,6 +18015,8 @@ export const CreateWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            pageBudget
+            tokenBudget
             extractionType
           }
           hume {
@@ -18307,6 +18311,8 @@ export const GetWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            pageBudget
+            tokenBudget
             extractionType
           }
           hume {
@@ -18575,6 +18581,8 @@ export const QueryWorkflows = gql`
               tokenThreshold
               timeBudget
               entityBudget
+              pageBudget
+              tokenBudget
               extractionType
             }
             hume {
@@ -18837,6 +18845,8 @@ export const UpdateWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            pageBudget
+            tokenBudget
             extractionType
           }
           hume {
@@ -19098,6 +19108,8 @@ export const UpsertWorkflow = gql`
             tokenThreshold
             timeBudget
             entityBudget
+            pageBudget
+            tokenBudget
             extractionType
           }
           hume {
