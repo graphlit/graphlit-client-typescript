@@ -48,7 +48,17 @@ export interface AnthropicMessage {
         name?: string;
         input?: unknown;
         tool_use_id?: string;
-        content?: string;
+        content?:
+          | string
+          | Array<{
+              type: "text" | "image";
+              text?: string;
+              source?: {
+                type: "base64";
+                media_type: string;
+                data: string;
+              };
+            }>;
       }>;
 }
 
@@ -72,6 +82,154 @@ export interface GoogleMessage {
       response: unknown;
     };
   }>;
+}
+
+/**
+ * Parse a tool result message that may contain MCP-style multimodal content.
+ * If the message is a JSON-stringified MCP result with image content parts,
+ * returns an array of Anthropic content blocks. Otherwise returns the plain string.
+ *
+ * MCP format: { content: [{ type: "text", text: "..." }, { type: "image", data: "base64...", mimeType: "image/png" }] }
+ */
+function parseMultimodalToolResult(
+  message: string,
+):
+  | string
+  | Array<{
+      type: "text" | "image";
+      text?: string;
+      source?: { type: "base64"; media_type: string; data: string };
+    }> {
+  try {
+    const parsed = JSON.parse(message);
+
+    // Check for MCP content array format
+    if (parsed?.content && Array.isArray(parsed.content)) {
+      const hasImages = parsed.content.some(
+        (item: any) => item.type === "image" && item.data && item.mimeType,
+      );
+
+      if (hasImages) {
+        // Convert MCP content to Anthropic content blocks
+        const blocks: Array<{
+          type: "text" | "image";
+          text?: string;
+          source?: { type: "base64"; media_type: string; data: string };
+        }> = [];
+
+        for (const item of parsed.content) {
+          if (item.type === "text" && item.text) {
+            blocks.push({ type: "text", text: item.text });
+          } else if (item.type === "image" && item.data && item.mimeType) {
+            blocks.push({
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: item.mimeType,
+                data: item.data,
+              },
+            });
+          }
+        }
+
+        return blocks.length > 0 ? blocks : message;
+      }
+    }
+  } catch {
+    // Not valid JSON — return as plain string
+  }
+
+  return message;
+}
+
+/**
+ * Strip image content from an MCP-style tool result, keeping only text.
+ * Used for providers that don't support multimodal tool results (OpenAI, Cohere, Mistral, etc.)
+ */
+function stripImagesToText(message: string): string {
+  try {
+    const parsed = JSON.parse(message);
+
+    if (parsed?.content && Array.isArray(parsed.content)) {
+      const hasImages = parsed.content.some(
+        (item: any) => item.type === "image",
+      );
+
+      if (hasImages) {
+        const textParts: string[] = [];
+
+        for (const item of parsed.content) {
+          if (item.type === "text" && item.text) {
+            textParts.push(item.text);
+          } else if (item.type === "image" && item.mimeType) {
+            // Replace image data with a description
+            const title = item.title || "image";
+            textParts.push(
+              `[Generated ${title} (${item.mimeType}) — displayed to user]`,
+            );
+          }
+        }
+
+        return textParts.join("\n");
+      }
+    }
+  } catch {
+    // Not valid JSON — return as-is
+  }
+
+  return message;
+}
+
+/**
+ * Parse a tool result message for Bedrock Converse API format.
+ * Bedrock supports text and image content in tool results.
+ */
+function parseBedrockToolResult(
+  message: string,
+): Array<{
+  text?: string;
+  image?: {
+    format: "png" | "jpeg" | "gif" | "webp";
+    source: { bytes: string };
+  };
+}> {
+  try {
+    const parsed = JSON.parse(message);
+
+    if (parsed?.content && Array.isArray(parsed.content)) {
+      const blocks: Array<{
+        text?: string;
+        image?: {
+          format: "png" | "jpeg" | "gif" | "webp";
+          source: { bytes: string };
+        };
+      }> = [];
+
+      for (const item of parsed.content) {
+        if (item.type === "text" && item.text) {
+          blocks.push({ text: item.text });
+        } else if (item.type === "image" && item.data && item.mimeType) {
+          const format = item.mimeType.split("/")[1] as
+            | "png"
+            | "jpeg"
+            | "gif"
+            | "webp";
+          blocks.push({
+            image: {
+              format,
+              source: { bytes: item.data },
+            },
+          });
+        }
+      }
+
+      if (blocks.length > 0) return blocks;
+    }
+  } catch {
+    // Not valid JSON
+  }
+
+  return [{ text: message }];
 }
 
 /**
@@ -135,7 +293,7 @@ export function formatMessagesForOpenAI(
       case ConversationRoleTypes.Tool:
         formattedMessages.push({
           role: "tool",
-          content: trimmedMessage,
+          content: stripImagesToText(trimmedMessage),
           tool_call_id: message.toolCallId || "",
         });
         break;
@@ -314,13 +472,16 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
 
       case ConversationRoleTypes.Tool:
         // Anthropic expects tool responses as user messages with tool_result content blocks
+        // Check if the message contains MCP-style multimodal content (e.g., images from code execution)
+        const toolResultContent = parseMultimodalToolResult(trimmedMessage);
+
         formattedMessages.push({
           role: "user",
           content: [
             {
               type: "tool_result",
               tool_use_id: message.toolCallId || "",
-              content: trimmedMessage,
+              content: toolResultContent,
             },
           ],
         });
@@ -435,6 +596,25 @@ export function formatMessagesForGoogle(
         });
         break;
 
+      case ConversationRoleTypes.Tool: {
+        // Google Gemini: tool results are user messages with functionResponse parts
+        // Google doesn't support images in function responses, so strip to text
+        const googleToolContent = stripImagesToText(trimmedMessage);
+
+        formattedMessages.push({
+          role: "user",
+          parts: [
+            {
+              functionResponse: {
+                name: (message as any).toolName || "unknown",
+                response: { result: googleToolContent },
+              },
+            },
+          ],
+        });
+        break;
+      }
+
       default: // User messages
         // Check if this message has image data
         if (message.mimeType && message.data) {
@@ -546,11 +726,12 @@ export function formatMessagesForCohere(
         formattedMessages.push(assistantMessage);
         break;
 
-      case ConversationRoleTypes.Tool:
+      case ConversationRoleTypes.Tool: {
         // Cohere expects tool results as TOOL messages
+        const cohereToolContent = stripImagesToText(trimmedMessage);
         formattedMessages.push({
           role: "TOOL",
-          message: trimmedMessage,
+          message: cohereToolContent,
           tool_results: [
             {
               call: {
@@ -559,13 +740,14 @@ export function formatMessagesForCohere(
               },
               outputs: [
                 {
-                  output: trimmedMessage, // Changed from 'text' to 'output'
+                  output: cohereToolContent, // Changed from 'text' to 'output'
                 },
               ],
             },
           ],
         });
         break;
+      }
 
       default: // User messages
         formattedMessages.push({
@@ -668,7 +850,7 @@ export function formatMessagesForMistral(
         formattedMessages.push({
           role: "tool",
           name: (message as any).toolName || "unknown", // Access toolName from extended message
-          content: trimmedMessage,
+          content: stripImagesToText(trimmedMessage),
           tool_call_id: message.toolCallId, // Mistral uses snake_case!
         } as any);
         break;
@@ -736,20 +918,35 @@ export function formatMessagesForMistral(
 }
 
 /**
- * Bedrock Claude message format (similar to Anthropic)
+ * Bedrock Claude message format (Converse API)
  */
 export interface BedrockMessage {
   role: "user" | "assistant";
   content:
     | string
     | Array<{
-        type: "text" | "image";
+        type?: "text" | "image";
         text?: string;
         image?: {
           format: "png" | "jpeg" | "gif" | "webp";
           source: {
             bytes: string; // base64
           };
+        };
+        toolUse?: {
+          toolUseId: string;
+          name: string;
+          input: unknown;
+        };
+        toolResult?: {
+          toolUseId: string;
+          content: Array<{
+            text?: string;
+            image?: {
+              format: "png" | "jpeg" | "gif" | "webp";
+              source: { bytes: string };
+            };
+          }>;
         };
       }>;
 }
@@ -774,32 +971,67 @@ export function formatMessagesForBedrock(messages: ConversationMessage[]): {
         systemPrompt = trimmedMessage;
         break;
 
-      case ConversationRoleTypes.Assistant:
+      case ConversationRoleTypes.Assistant: {
+        // Build content array for assistant messages
+        const assistantContent: BedrockMessage["content"] = [];
+
+        if (trimmedMessage) {
+          assistantContent.push({ text: trimmedMessage });
+        }
+
+        // Add tool use blocks if present
+        if (message.toolCalls && message.toolCalls.length > 0) {
+          for (const toolCall of message.toolCalls) {
+            if (toolCall) {
+              assistantContent.push({
+                toolUse: {
+                  toolUseId: toolCall.id,
+                  name: toolCall.name,
+                  input: toolCall.arguments
+                    ? JSON.parse(toolCall.arguments)
+                    : {},
+                },
+              });
+            }
+          }
+        }
+
         formattedMessages.push({
           role: "assistant",
-          content: trimmedMessage,
+          content:
+            assistantContent.length > 0 ? assistantContent : trimmedMessage,
         });
         break;
+      }
+
+      case ConversationRoleTypes.Tool: {
+        // Bedrock Converse API: tool results are user messages with toolResult blocks
+        // Bedrock Claude supports images in tool results
+        const bedrockToolContent = parseBedrockToolResult(trimmedMessage);
+
+        formattedMessages.push({
+          role: "user",
+          content: [
+            {
+              toolResult: {
+                toolUseId: message.toolCallId || "",
+                content: bedrockToolContent,
+              },
+            },
+          ],
+        });
+        break;
+      }
 
       default: // User messages
         // Check if this message has image data
         if (message.mimeType && message.data) {
           // Multi-modal message with image
-          const contentParts: Array<{
-            type: "text" | "image";
-            text?: string;
-            image?: {
-              format: "png" | "jpeg" | "gif" | "webp";
-              source: {
-                bytes: string;
-              };
-            };
-          }> = [];
+          const contentParts: BedrockMessage["content"] = [];
 
           // Add text content if present
           if (trimmedMessage) {
             contentParts.push({
-              type: "text",
               text: trimmedMessage,
             });
           }
@@ -811,7 +1043,6 @@ export function formatMessagesForBedrock(messages: ConversationMessage[]): {
             | "gif"
             | "webp";
           contentParts.push({
-            type: "image",
             image: {
               format,
               source: {
