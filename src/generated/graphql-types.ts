@@ -3698,6 +3698,10 @@ export type ConversationDetails = {
 
 /** Represents a filter for conversations. */
 export type ConversationFilter = {
+  /** Filter mode for collections. Any: match if in any listed collection. All: must be in all listed collections. Only: must be in listed collections and no others. Defaults to Any. */
+  collectionMode?: InputMaybe<FilterMode>;
+  /** Filter by collections. */
+  collections?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by conversations. */
   conversations?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by creation date recent timespan. For example, a timespan of one day will return conversation(s) created in the last 24 hours. */
@@ -3706,6 +3710,8 @@ export type ConversationFilter = {
   creationDateRange?: InputMaybe<DateRangeFilter>;
   /** The sort direction for query results. */
   direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by presence or absence of associated collections. */
+  hasCollections?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by presence or absence of observations. */
   hasObservations?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter conversation(s) by their unique ID. */
