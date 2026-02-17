@@ -2304,6 +2304,10 @@ export type Collection = {
   contentCount?: Maybe<Scalars['Int']['output']>;
   /** The contents contained by the collection. */
   contents?: Maybe<Array<Maybe<Content>>>;
+  /** The count of the conversations contained by the collection. */
+  conversationCount?: Maybe<Scalars['Int']['output']>;
+  /** The conversations contained by the collection. */
+  conversations?: Maybe<Array<Maybe<Conversation>>>;
   /** The creation date of the collection. */
   creationDate: Scalars['DateTime']['output'];
   /** The expected contents count of the collection. */
@@ -2362,6 +2366,8 @@ export type CollectionFilter = {
 export type CollectionInput = {
   /** The contents contained by the collection. */
   contents?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The conversations contained by the collection. */
+  conversations?: InputMaybe<Array<EntityReferenceInput>>;
   /** The expected contents count of the collection. */
   expectedCount?: InputMaybe<Scalars['Int']['input']>;
   /** The name of the collection. */
@@ -2381,6 +2387,8 @@ export type CollectionResults = {
 export enum CollectionTypes {
   /** Content collection */
   Collection = 'COLLECTION',
+  /** Conversation collection */
+  Conversation = 'CONVERSATION',
   /** Site folder */
   Folder = 'FOLDER',
   /** Recurring event series */
@@ -2393,6 +2401,8 @@ export enum CollectionTypes {
 export type CollectionUpdateInput = {
   /** The contents contained by the collection. */
   contents?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The conversations contained by the collection. */
+  conversations?: InputMaybe<Array<EntityReferenceInput>>;
   /** The expected contents count of the collection. */
   expectedCount?: InputMaybe<Scalars['Int']['input']>;
   /** The ID of the collection to update. */
@@ -3574,6 +3584,8 @@ export type Conversation = {
   __typename?: 'Conversation';
   /** Filter augmented content for conversation. Augmented content will always be added as content sources, without regard to user prompt. */
   augmentedFilter?: Maybe<ContentCriteria>;
+  /** The collections containing this conversation. */
+  collections?: Maybe<Array<Maybe<Collection>>>;
   /** The contents referenced by the conversation. */
   contents?: Maybe<Array<Maybe<Content>>>;
   /** The tenant correlation identifier. */
@@ -13450,6 +13462,8 @@ export type Mutation = {
   addCollectionContents?: Maybe<Collection>;
   /** Adds contents to one or more collections. */
   addContentsToCollections?: Maybe<Array<Maybe<Collection>>>;
+  /** Adds conversations to one or more collections. */
+  addConversationsToCollections?: Maybe<Array<Maybe<Collection>>>;
   /** Approves content, and resumes workflow from the prepared stage (without re-ingesting or re-running the storage gate). */
   approveContent?: Maybe<Content>;
   /** Ask questions about the Graphlit API or SDKs. Can create code samples for any API call. */
@@ -13822,6 +13836,8 @@ export type Mutation = {
   removeCollectionContents?: Maybe<Collection>;
   /** Removes contents from a collection. */
   removeContentsFromCollection?: Maybe<Collection>;
+  /** Removes conversations from a collection. */
+  removeConversationsFromCollection?: Maybe<Collection>;
   /** Research contents via web research based on provided filter criteria. */
   researchContents?: Maybe<StringResult>;
   /** Resolves duplicate entities into a single primary entity using LLM reasoning. Returns clusters of suggested groupings if resolution is not executed. */
@@ -13962,6 +13978,12 @@ export type MutationAddCollectionContentsArgs = {
 export type MutationAddContentsToCollectionsArgs = {
   collections: Array<EntityReferenceInput>;
   contents: Array<EntityReferenceInput>;
+};
+
+
+export type MutationAddConversationsToCollectionsArgs = {
+  collections: Array<EntityReferenceInput>;
+  conversations: Array<EntityReferenceInput>;
 };
 
 
@@ -15136,6 +15158,12 @@ export type MutationRemoveCollectionContentsArgs = {
 export type MutationRemoveContentsFromCollectionArgs = {
   collection: EntityReferenceInput;
   contents: Array<EntityReferenceInput>;
+};
+
+
+export type MutationRemoveConversationsFromCollectionArgs = {
+  collection: EntityReferenceInput;
+  conversations: Array<EntityReferenceInput>;
 };
 
 
@@ -23230,6 +23258,14 @@ export type AddContentsToCollectionsMutationVariables = Exact<{
 
 export type AddContentsToCollectionsMutation = { __typename?: 'Mutation', addContentsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null> | null };
 
+export type AddConversationsToCollectionsMutationVariables = Exact<{
+  conversations: Array<EntityReferenceInput> | EntityReferenceInput;
+  collections: Array<EntityReferenceInput> | EntityReferenceInput;
+}>;
+
+
+export type AddConversationsToCollectionsMutation = { __typename?: 'Mutation', addConversationsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null> | null };
+
 export type CountCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -23275,7 +23311,7 @@ export type GetCollectionQueryVariables = Exact<{
 }>;
 
 
-export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: CollectionTypes | null, owner: { __typename?: 'Owner', id: string }, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
+export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: CollectionTypes | null, owner: { __typename?: 'Owner', id: string }, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, conversations?: Array<{ __typename?: 'Conversation', id: string, name: string } | null> | null } | null };
 
 export type QueryCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -23292,6 +23328,14 @@ export type RemoveContentsFromCollectionMutationVariables = Exact<{
 
 
 export type RemoveContentsFromCollectionMutation = { __typename?: 'Mutation', removeContentsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
+
+export type RemoveConversationsFromCollectionMutationVariables = Exact<{
+  conversations: Array<EntityReferenceInput> | EntityReferenceInput;
+  collection: EntityReferenceInput;
+}>;
+
+
+export type RemoveConversationsFromCollectionMutation = { __typename?: 'Mutation', removeConversationsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
 
 export type UpdateCollectionMutationVariables = Exact<{
   collection: CollectionUpdateInput;

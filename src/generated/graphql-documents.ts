@@ -568,6 +568,23 @@ export const AddContentsToCollections = gql`
   }
 }
     `;
+export const AddConversationsToCollections = gql`
+    mutation AddConversationsToCollections($conversations: [EntityReferenceInput!]!, $collections: [EntityReferenceInput!]!) {
+  addConversationsToCollections(
+    conversations: $conversations
+    collections: $collections
+  ) {
+    id
+    name
+    state
+    type
+    contents {
+      id
+      name
+    }
+  }
+}
+    `;
 export const CountCollections = gql`
     query CountCollections($filter: CollectionFilter, $correlationId: String) {
   countCollections(filter: $filter, correlationId: $correlationId) {
@@ -629,6 +646,10 @@ export const GetCollection = gql`
       id
       name
     }
+    conversations {
+      id
+      name
+    }
   }
 }
     `;
@@ -653,6 +674,23 @@ export const QueryCollections = gql`
 export const RemoveContentsFromCollection = gql`
     mutation RemoveContentsFromCollection($contents: [EntityReferenceInput!]!, $collection: EntityReferenceInput!) {
   removeContentsFromCollection(contents: $contents, collection: $collection) {
+    id
+    name
+    state
+    type
+    contents {
+      id
+      name
+    }
+  }
+}
+    `;
+export const RemoveConversationsFromCollection = gql`
+    mutation RemoveConversationsFromCollection($conversations: [EntityReferenceInput!]!, $collection: EntityReferenceInput!) {
+  removeConversationsFromCollection(
+    conversations: $conversations
+    collection: $collection
+  ) {
     id
     name
     state

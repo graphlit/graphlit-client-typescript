@@ -1248,6 +1248,44 @@ class Graphlit {
   }
 
   /**
+   * Adds conversations to collections.
+   * @param conversations - The conversations to add.
+   * @param collections - The collections to add the conversations to.
+   * @returns The result of the operation.
+   */
+  public async addConversationsToCollections(
+    conversations: Types.EntityReferenceInput[],
+    collections: Types.EntityReferenceInput[],
+  ): Promise<Types.AddConversationsToCollectionsMutation> {
+    return this.mutateAndCheckError<
+      Types.AddConversationsToCollectionsMutation,
+      Types.AddConversationsToCollectionsMutationVariables
+    >(Documents.AddConversationsToCollections, {
+      conversations: conversations,
+      collections: collections,
+    });
+  }
+
+  /**
+   * Removes conversations from a collection.
+   * @param conversations - The conversations to remove.
+   * @param collection - The collection to remove the conversations from.
+   * @returns The result of the operation.
+   */
+  public async removeConversationsFromCollection(
+    conversations: Types.EntityReferenceInput[],
+    collection: Types.EntityReferenceInput,
+  ): Promise<Types.RemoveConversationsFromCollectionMutation> {
+    return this.mutateAndCheckError<
+      Types.RemoveConversationsFromCollectionMutation,
+      Types.RemoveConversationsFromCollectionMutationVariables
+    >(Documents.RemoveConversationsFromCollection, {
+      conversations: conversations,
+      collection: collection,
+    });
+  }
+
+  /**
    * Lookup a collection given its ID.
    * @param id - ID of the collection.
    * @returns The collection.
