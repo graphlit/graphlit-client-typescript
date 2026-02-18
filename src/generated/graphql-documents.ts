@@ -16099,6 +16099,9 @@ export const GetSpecification = gql`
       factExtractionLimit
       messagesWeight
       contentsWeight
+      toolResultTokenLimit
+      toolRoundLimit
+      toolBudgetThreshold
     }
     promptStrategy {
       type
@@ -16493,6 +16496,9 @@ export const QuerySpecifications = gql`
         factExtractionLimit
         messagesWeight
         contentsWeight
+        toolResultTokenLimit
+        toolRoundLimit
+        toolBudgetThreshold
       }
       promptStrategy {
         type

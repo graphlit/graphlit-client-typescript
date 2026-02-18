@@ -8334,15 +8334,21 @@ class Graphlit {
       ? TokenBudgetTracker.fromDetails(details)
       : undefined;
 
-    // Merge caller-provided strategy with server-provided strategy (caller wins)
-    const strategy = contextStrategy ?? {};
+    // Merge: caller overrides > server-side specification strategy > defaults
+    const callerStrategy = contextStrategy ?? {};
+    const serverStrategy = specification.strategy;
     const toolResultTokenLimit =
-      strategy.toolResultTokenLimit ??
+      callerStrategy.toolResultTokenLimit ??
+      serverStrategy?.toolResultTokenLimit ??
       DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit;
     const toolRoundLimit =
-      strategy.toolRoundLimit ?? DEFAULT_CONTEXT_STRATEGY.toolRoundLimit;
+      callerStrategy.toolRoundLimit ??
+      serverStrategy?.toolRoundLimit ??
+      DEFAULT_CONTEXT_STRATEGY.toolRoundLimit;
     const rebudgetThreshold =
-      strategy.rebudgetThreshold ?? DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold;
+      callerStrategy.rebudgetThreshold ??
+      serverStrategy?.toolBudgetThreshold ??
+      DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold;
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
