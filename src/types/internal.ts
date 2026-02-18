@@ -3,6 +3,8 @@
  * These are not exported to consumers of the library
  */
 
+import { ContextManagementAction } from "./agent.js";
+
 /**
  * Low-level streaming events used internally by providers
  * These get transformed into AgentStreamEvent by UIEventAdapter
@@ -45,6 +47,17 @@ export type StreamEvent =
         percentage: number;
         remainingTokens: number;
       };
+    }
+  | {
+      type: "context_management";
+      action: ContextManagementAction;
+      usage: {
+        usedTokens: number;
+        maxTokens: number;
+        percentage: number;
+        remainingTokens: number;
+      };
+      timestamp: Date;
     }
   | {
       type: "reasoning_start";

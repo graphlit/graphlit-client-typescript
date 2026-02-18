@@ -27,9 +27,7 @@ describe("GPT 5.2 Tool Calling Investigation", () => {
   const secret = process.env.GRAPHLIT_JWT_SECRET;
 
   if (!orgId || !envId || !secret) {
-    console.warn(
-      "⚠️  Skipping GPT 5.2 tests - missing Graphlit credentials",
-    );
+    console.warn("⚠️  Skipping GPT 5.2 tests - missing Graphlit credentials");
     return;
   }
 
@@ -213,9 +211,7 @@ describe("GPT 5.2 Tool Calling Investigation", () => {
       );
 
       if (!result.toolCalled) {
-        console.error(
-          `\n❌ ISSUE CONFIRMED: GPT 5.2 did not call the tool!`,
-        );
+        console.error(`\n❌ ISSUE CONFIRMED: GPT 5.2 did not call the tool!`);
         console.error(`   Final message: "${result.finalMessage}"`);
       }
 
@@ -248,7 +244,10 @@ Do NOT respond with an answer until you have called the tool.`,
   });
 
   describe("GPT 5.2 with Reasoning Effort Levels", () => {
-    const reasoningLevels: { level: Types.OpenAiReasoningEffortLevels; name: string }[] = [
+    const reasoningLevels: {
+      level: Types.OpenAiReasoningEffortLevels;
+      name: string;
+    }[] = [
       { level: Types.OpenAiReasoningEffortLevels.Low, name: "low" },
       { level: Types.OpenAiReasoningEffortLevels.Medium, name: "medium" },
       { level: Types.OpenAiReasoningEffortLevels.High, name: "high" },
@@ -266,7 +265,9 @@ Do NOT respond with an answer until you have called the tool.`,
           "Calculate 42 multiplied by 7 using the calculate tool.",
         );
 
-        console.log(`\nReasoning Level '${name}': Tool called = ${result.toolCalled}`);
+        console.log(
+          `\nReasoning Level '${name}': Tool called = ${result.toolCalled}`,
+        );
 
         // Log but don't fail - we want to see behavior across all levels
         if (!result.toolCalled) {
@@ -315,7 +316,9 @@ Do NOT respond with an answer until you have called the tool.`,
       console.log("COMPARISON RESULTS:");
       console.log(`${"=".repeat(60)}`);
       for (const [model, called] of Object.entries(results)) {
-        console.log(`   ${model}: ${called ? "✅ Tool called" : "❌ Tool NOT called"}`);
+        console.log(
+          `   ${model}: ${called ? "✅ Tool called" : "❌ Tool NOT called"}`,
+        );
       }
       console.log(`${"=".repeat(60)}\n`);
 
@@ -351,12 +354,19 @@ Do NOT respond with an answer until you have called the tool.`,
         // Log all events for analysis
         console.log("\n📋 ALL EVENTS:");
         for (const event of result.events) {
-          console.log(`   ${event.type}:`, JSON.stringify(event).substring(0, 200));
+          console.log(
+            `   ${event.type}:`,
+            JSON.stringify(event).substring(0, 200),
+          );
         }
 
         // Check if there are any tool-related events
-        const toolStarts = result.events.filter((e) => e.type === "tool_update" && (e as any).status === "started");
-        const toolCompletes = result.events.filter((e) => e.type === "tool_update" && (e as any).status === "completed");
+        const toolStarts = result.events.filter(
+          (e) => e.type === "tool_update" && (e as any).status === "started",
+        );
+        const toolCompletes = result.events.filter(
+          (e) => e.type === "tool_update" && (e as any).status === "completed",
+        );
 
         console.log(`\n🔍 Tool event breakdown:`);
         console.log(`   tool_update (started): ${toolStarts.length}`);
@@ -513,12 +523,16 @@ The tool call is required for audit purposes.`,
         createdConversations.push(conversationId);
       }
 
-      const reasoningEvents = events.filter((e) => e.type === "reasoning_update");
+      const reasoningEvents = events.filter(
+        (e) => e.type === "reasoning_update",
+      );
 
       console.log(`\n📊 Reasoning Results for ${modelConfig.name}:`);
       console.log(`   Reasoning events: ${reasoningEvents.length}`);
       if (reasoningEvents.length > 0) {
-        const lastReasoning = reasoningEvents[reasoningEvents.length - 1] as any;
+        const lastReasoning = reasoningEvents[
+          reasoningEvents.length - 1
+        ] as any;
         console.log(
           `   Final reasoning length: ${lastReasoning.content?.length || 0} chars`,
         );
@@ -560,9 +574,7 @@ The tool call is required for audit purposes.`,
           console.log(
             `⚠️ NO REASONING EVENTS: OpenAI may not be returning reasoning_details in the stream for this model.`,
           );
-          console.log(
-            `   This could mean:`,
-          );
+          console.log(`   This could mean:`);
           console.log(
             `   1. The model doesn't support streaming reasoning (reasoning happens internally)`,
           );
@@ -590,12 +602,18 @@ The tool call is required for audit purposes.`,
       process.env.DEBUG_GRAPHLIT_SDK_STREAMING = "true";
 
       try {
-        const reasoningLevels: { level: Types.OpenAiReasoningEffortLevels; name: string }[] = [
+        const reasoningLevels: {
+          level: Types.OpenAiReasoningEffortLevels;
+          name: string;
+        }[] = [
           { level: Types.OpenAiReasoningEffortLevels.Low, name: "low" },
           { level: Types.OpenAiReasoningEffortLevels.Medium, name: "medium" },
           { level: Types.OpenAiReasoningEffortLevels.High, name: "high" },
         ];
-        const results: Record<string, { eventCount: number; contentLength: number }> = {};
+        const results: Record<
+          string,
+          { eventCount: number; contentLength: number }
+        > = {};
 
         for (const { level, name } of reasoningLevels) {
           const result = await runReasoningTest(
@@ -608,7 +626,9 @@ The tool call is required for audit purposes.`,
             "What is 15 * 17? Show your thinking.",
           );
 
-          const lastReasoning = result.reasoningEvents[result.reasoningEvents.length - 1] as any;
+          const lastReasoning = result.reasoningEvents[
+            result.reasoningEvents.length - 1
+          ] as any;
           results[name] = {
             eventCount: result.reasoningEvents.length,
             contentLength: lastReasoning?.content?.length || 0,
@@ -662,7 +682,10 @@ The tool call is required for audit purposes.`,
         ];
 
         const prompt = "Solve: If 3x + 7 = 22, what is x? Show your reasoning.";
-        const results: Record<string, { eventCount: number; hasReasoning: boolean }> = {};
+        const results: Record<
+          string,
+          { eventCount: number; hasReasoning: boolean }
+        > = {};
 
         for (const modelConfig of models) {
           try {

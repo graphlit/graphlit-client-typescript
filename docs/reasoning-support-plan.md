@@ -101,26 +101,22 @@ interface ReasoningDetectionConfig {
 ### 1.3 Implementation Steps
 
 1. **Update Type Definitions** (2 hours)
-
    - Add new event types to internal.ts
    - Add UI event types to ui-events.ts
    - Update GraphQL types if needed
 
 2. **Update UIEventAdapter** (3 hours)
-
    - Add reasoning content accumulation
    - Handle reasoning start/delta/end events
    - Emit appropriate UI events
 
 3. **Update Providers** (8 hours total)
-
    - Anthropic: Handle thinking blocks (2 hours)
    - Bedrock: Parse thinking tags (2 hours)
    - Deepseek: Detect markdown reasoning (2 hours)
    - Others: Add extensibility hooks (2 hours)
 
 4. **Add Configuration** (2 hours)
-
    - Add reasoning detection config to specifications
    - Pass config through streaming pipeline
 
@@ -204,12 +200,10 @@ try {
 ### 2.3 Implementation Steps
 
 1. **Update Provider Signatures** (1 hour)
-
    - Add abortSignal parameter to all providers
    - Update internal streaming methods
 
 2. **Implement Cancellation** (4 hours)
-
    - Pass signal to each provider's SDK
    - Handle providers without native support
    - Clean up on cancellation

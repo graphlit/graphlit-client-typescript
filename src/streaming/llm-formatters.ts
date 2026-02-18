@@ -91,9 +91,7 @@ export interface GoogleMessage {
  *
  * MCP format: { content: [{ type: "text", text: "..." }, { type: "image", data: "base64...", mimeType: "image/png" }] }
  */
-function parseMultimodalToolResult(
-  message: string,
-):
+function parseMultimodalToolResult(message: string):
   | string
   | Array<{
       type: "text" | "image";
@@ -184,9 +182,7 @@ function stripImagesToText(message: string): string {
  * Parse a tool result message for Bedrock Converse API format.
  * Bedrock supports text and image content in tool results.
  */
-function parseBedrockToolResult(
-  message: string,
-): Array<{
+function parseBedrockToolResult(message: string): Array<{
   text?: string;
   image?: {
     format: "png" | "jpeg" | "gif" | "webp";

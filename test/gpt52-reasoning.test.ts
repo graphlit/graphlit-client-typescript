@@ -20,7 +20,9 @@ describe("GPT 5.2 Reasoning Events", () => {
   const secret = process.env.GRAPHLIT_JWT_SECRET;
 
   if (!orgId || !envId || !secret) {
-    console.warn("⚠️  Skipping GPT 5.2 reasoning tests - missing Graphlit credentials");
+    console.warn(
+      "⚠️  Skipping GPT 5.2 reasoning tests - missing Graphlit credentials",
+    );
     return;
   }
 
@@ -86,7 +88,9 @@ describe("GPT 5.2 Reasoning Events", () => {
       });
 
       if (!savedSpec?.openAI?.reasoningEffort) {
-        console.warn(`⚠️ WARNING: reasoningEffort was NOT saved to the specification!`);
+        console.warn(
+          `⚠️ WARNING: reasoningEffort was NOT saved to the specification!`,
+        );
         console.warn(`   Input was: ${specConfig.openAI?.reasoningEffort}`);
         console.warn(`   Saved was: ${savedSpec?.openAI?.reasoningEffort}`);
       }
@@ -133,7 +137,9 @@ describe("GPT 5.2 Reasoning Events", () => {
       }
 
       // Analyze results
-      const reasoningEvents = events.filter((e) => e.type === "reasoning_update");
+      const reasoningEvents = events.filter(
+        (e) => e.type === "reasoning_update",
+      );
       const messageEvents = events.filter((e) => e.type === "message_update");
 
       console.log("\n" + "=".repeat(60));
@@ -150,14 +156,22 @@ describe("GPT 5.2 Reasoning Events", () => {
 
       if (reasoningEvents.length > 0) {
         console.log("\n✅ SUCCESS: Received reasoning events from GPT 5.2!");
-        const lastReasoning = reasoningEvents[reasoningEvents.length - 1] as any;
-        console.log(`Total reasoning content: ${lastReasoning.content?.length || 0} chars`);
+        const lastReasoning = reasoningEvents[
+          reasoningEvents.length - 1
+        ] as any;
+        console.log(
+          `Total reasoning content: ${lastReasoning.content?.length || 0} chars`,
+        );
       } else {
         console.log("\n⚠️ NO REASONING EVENTS received.");
         console.log("Possible causes:");
-        console.log("  1. OpenAI not returning reasoning_details in stream for GPT 5.2");
+        console.log(
+          "  1. OpenAI not returning reasoning_details in stream for GPT 5.2",
+        );
         console.log("  2. Different field name or structure than expected");
-        console.log("  3. Reasoning happens internally without streaming output");
+        console.log(
+          "  3. Reasoning happens internally without streaming output",
+        );
       }
       console.log("=".repeat(60) + "\n");
 

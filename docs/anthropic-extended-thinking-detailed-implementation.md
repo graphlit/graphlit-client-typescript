@@ -1330,12 +1330,10 @@ await client.streamAgent(
 ### Technical Risks
 
 1. **API Changes**
-
    - Risk: Anthropic changes thinking API
    - Mitigation: Version lock, feature detection
 
 2. **Performance Impact**
-
    - Risk: Large thinking budgets cause timeouts
    - Mitigation: Implement streaming timeouts, warn about large budgets
 
@@ -1346,7 +1344,6 @@ await client.streamAgent(
 ### Business Risks
 
 1. **Cost Implications**
-
    - Risk: Users unaware of thinking token costs
    - Mitigation: Clear documentation, token usage callbacks
 
@@ -1388,7 +1385,6 @@ await client.streamAgent(
 ## Success Metrics
 
 1. **Functional Success**
-
    - [ ] All Anthropic thinking models supported
    - [ ] Streaming works reliably
    - [ ] Multi-turn conversations preserve thinking
@@ -1396,7 +1392,6 @@ await client.streamAgent(
    - [ ] All tests pass
 
 2. **Performance Success**
-
    - [ ] No significant latency increase
    - [ ] Handles 32k+ thinking budgets
    - [ ] Graceful timeout handling

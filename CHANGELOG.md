@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Real-time streaming support** with the new `streamAgent` method
-
   - Native streaming integration with OpenAI, Anthropic, and Google Gemini models
   - Automatic fallback to regular API calls when streaming providers are not available
   - UI-optimized event stream with automatic message accumulation
@@ -19,14 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Smooth streaming with configurable delays to prevent UI flicker
 
 - **Custom LLM client support**
-
   - `setOpenAIClient()` method to use custom OpenAI instances
   - `setAnthropicClient()` method to use custom Anthropic instances
   - `setGoogleClient()` method to use custom Google Generative AI instances
   - Support for proxy configurations and custom endpoints
 
 - **Enhanced streaming features**
-
   - AbortController support for cancelling ongoing streams
   - Conversation continuity - continue streaming in existing conversations
   - Comprehensive error handling with recoverable error detection

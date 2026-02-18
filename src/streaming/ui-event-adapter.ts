@@ -128,6 +128,10 @@ export class UIEventAdapter {
         this.handleContextWindow(event.usage);
         break;
 
+      case "context_management":
+        this.handleContextManagement(event);
+        break;
+
       case "reasoning_start":
         this.handleReasoningStart(event.format);
         break;
@@ -834,6 +838,30 @@ export class UIEventAdapter {
       type: "context_window",
       usage,
       timestamp: new Date(),
+    });
+  }
+
+  private handleContextManagement(event: {
+    action: import("../types/agent.js").ContextManagementAction;
+    usage: {
+      usedTokens: number;
+      maxTokens: number;
+      percentage: number;
+      remainingTokens: number;
+    };
+    timestamp: Date;
+  }): void {
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `📊 [UIEventAdapter] Context management: ${event.action.type}`,
+      );
+    }
+
+    this.emitUIEvent({
+      type: "context_management",
+      action: event.action,
+      usage: event.usage,
+      timestamp: event.timestamp,
     });
   }
 

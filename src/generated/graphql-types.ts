@@ -3915,6 +3915,12 @@ export type ConversationStrategy = {
   messageLimit?: Maybe<Scalars['Int']['output']>;
   /** The weight of conversation messages within prompt context, in range [0.0 - 1.0]. */
   messagesWeight?: Maybe<Scalars['Float']['output']>;
+  /** The fraction of token budget at which tool round windowing is triggered, in range [0.0 - 1.0]. */
+  toolBudgetThreshold?: Maybe<Scalars['Float']['output']>;
+  /** The maximum number of tokens for a single tool result. Results exceeding this limit are truncated. */
+  toolResultTokenLimit?: Maybe<Scalars['Int']['output']>;
+  /** The maximum number of tool call/response rounds to keep in context. Older rounds are dropped. */
+  toolRoundLimit?: Maybe<Scalars['Int']['output']>;
   /** The conversation strategy type. */
   type?: Maybe<ConversationStrategyTypes>;
 };
@@ -3943,6 +3949,12 @@ export type ConversationStrategyInput = {
   messageLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The weight of conversation messages within prompt context, in range [0.0 - 1.0]. */
   messagesWeight?: InputMaybe<Scalars['Float']['input']>;
+  /** The fraction of token budget at which tool round windowing is triggered, in range [0.0 - 1.0]. */
+  toolBudgetThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** The maximum number of tokens for a single tool result. Results exceeding this limit are truncated. */
+  toolResultTokenLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The maximum number of tool call/response rounds to keep in context. Older rounds are dropped. */
+  toolRoundLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The conversation strategy type. */
   type?: InputMaybe<ConversationStrategyTypes>;
 };
@@ -3979,6 +3991,12 @@ export type ConversationStrategyUpdateInput = {
   messageLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The weight of conversation messages within prompt context, in range [0.0 - 1.0]. */
   messagesWeight?: InputMaybe<Scalars['Float']['input']>;
+  /** The fraction of token budget at which tool round windowing is triggered, in range [0.0 - 1.0]. */
+  toolBudgetThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** The maximum number of tokens for a single tool result. Results exceeding this limit are truncated. */
+  toolResultTokenLimit?: InputMaybe<Scalars['Int']['input']>;
+  /** The maximum number of tool call/response rounds to keep in context. Older rounds are dropped. */
+  toolRoundLimit?: InputMaybe<Scalars['Int']['input']>;
   /** The conversation strategy type. */
   type?: InputMaybe<ConversationStrategyTypes>;
 };

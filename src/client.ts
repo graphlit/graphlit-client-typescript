@@ -28,12 +28,21 @@ import {
   AgentOptions,
   AgentResult,
   ArtifactCollector,
+  ContextManagementAction,
+  ContextStrategy,
   StreamAgentOptions,
   ToolCallResult,
   ToolHandler,
   AgentMetrics,
   UsageInfo,
 } from "./types/agent.js";
+import {
+  TokenBudgetTracker,
+  truncateToolResult,
+  windowToolRounds,
+  estimateTokens,
+  DEFAULT_CONTEXT_STRATEGY,
+} from "./helpers/context-management.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
@@ -182,7 +191,7 @@ try {
   }
 }
 
-const DEFAULT_MAX_TOOL_ROUNDS: number = 1000;
+const DEFAULT_MAX_TOOL_ROUNDS: number = 100;
 
 // Smooth streaming buffer implementation
 
@@ -193,11 +202,21 @@ export type {
   AgentOptions,
   AgentResult,
   ArtifactCollector,
+  ContextStrategy,
+  ContextManagementAction,
   StreamAgentOptions,
   ToolCallResult,
   UsageInfo,
   AgentError,
 } from "./types/agent.js";
+
+// Re-export context management utilities
+export {
+  TokenBudgetTracker,
+  truncateToolResult,
+  estimateTokens,
+  isAccurateTokenCounting,
+} from "./helpers/context-management.js";
 
 // Re-export UI event types
 export type { AgentStreamEvent } from "./types/ui-events.js";
@@ -352,7 +371,7 @@ class Graphlit {
       if (!isValidGuid(this.organizationId)) {
         throw new Error(
           `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -363,7 +382,7 @@ class Graphlit {
       if (!isValidGuid(this.environmentId)) {
         throw new Error(
           `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -376,7 +395,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -1708,7 +1727,9 @@ class Graphlit {
    * @param id - The ID of the content to approve.
    * @returns The approved content.
    */
-  public async approveContent(id: string): Promise<Types.ApproveContentMutation> {
+  public async approveContent(
+    id: string,
+  ): Promise<Types.ApproveContentMutation> {
     return this.mutateAndCheckError<
       Types.ApproveContentMutation,
       Types.ApproveContentMutationVariables
@@ -1736,7 +1757,9 @@ class Graphlit {
    * @param id - The ID of the content to restart.
    * @returns The restarted content.
    */
-  public async restartContent(id: string): Promise<Types.RestartContentMutation> {
+  public async restartContent(
+    id: string,
+  ): Promise<Types.RestartContentMutation> {
     return this.mutateAndCheckError<
       Types.RestartContentMutation,
       Types.RestartContentMutationVariables
@@ -2364,12 +2387,12 @@ class Graphlit {
   }
 
   /**
-  * Retrieves Conversations with clustering.
-  * @param filter - The filter criteria to apply when retrieving Conversations, optional.
-  * @param clusters - The clustering input parameters, optional.
-  * @param correlationId - The tenant correlation identifier, optional.
-  * @returns The Conversations with clusters.
-  */
+   * Retrieves Conversations with clustering.
+   * @param filter - The filter criteria to apply when retrieving Conversations, optional.
+   * @param clusters - The clustering input parameters, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The Conversations with clusters.
+   */
   public async queryConversationsClusters(
     filter?: Types.ConversationFilter,
     clusters?: Types.EntityClustersInput,
@@ -4967,7 +4990,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryOrganizationsQuery,
       Types.QueryOrganizationsQueryVariables
-    >(Documents.QueryOrganizations, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryOrganizations, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /**
@@ -5328,7 +5354,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryEmotionsQuery,
       Types.QueryEmotionsQueryVariables
-    >(Documents.QueryEmotions, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryEmotions, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /**
@@ -5600,7 +5629,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryProductsQuery,
       Types.QueryProductsQueryVariables
-    >(Documents.QueryProducts, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryProducts, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /**
@@ -5918,7 +5950,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QuerySoftwaresQuery,
       Types.QuerySoftwaresQueryVariables
-    >(Documents.QuerySoftwares, { filter: filter, correlationId: correlationId });
+    >(Documents.QuerySoftwares, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /**
@@ -6040,7 +6075,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalConditionsQuery,
       Types.QueryMedicalConditionsQueryVariables
-    >(Documents.QueryMedicalConditions, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalConditions, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical conditions with clustering information. */
@@ -6151,7 +6189,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalGuidelinesQuery,
       Types.QueryMedicalGuidelinesQueryVariables
-    >(Documents.QueryMedicalGuidelines, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalGuidelines, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical guidelines with clustering information. */
@@ -6256,7 +6297,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugsQuery,
       Types.QueryMedicalDrugsQueryVariables
-    >(Documents.QueryMedicalDrugs, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalDrugs, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical drugs with clustering information. */
@@ -6371,7 +6415,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalIndicationsQuery,
       Types.QueryMedicalIndicationsQueryVariables
-    >(Documents.QueryMedicalIndications, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalIndications, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical indications with clustering information. */
@@ -6486,7 +6533,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalContraindicationsQuery,
       Types.QueryMedicalContraindicationsQueryVariables
-    >(Documents.QueryMedicalContraindications, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalContraindications, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical contraindications with clustering information. */
@@ -6592,7 +6642,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalTestsQuery,
       Types.QueryMedicalTestsQueryVariables
-    >(Documents.QueryMedicalTests, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalTests, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical tests with clustering information. */
@@ -6703,7 +6756,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalDevicesQuery,
       Types.QueryMedicalDevicesQueryVariables
-    >(Documents.QueryMedicalDevices, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalDevices, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical devices with clustering information. */
@@ -6814,7 +6870,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalProceduresQuery,
       Types.QueryMedicalProceduresQueryVariables
-    >(Documents.QueryMedicalProcedures, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalProcedures, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical procedures with clustering information. */
@@ -6925,7 +6984,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalStudiesQuery,
       Types.QueryMedicalStudiesQueryVariables
-    >(Documents.QueryMedicalStudies, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalStudies, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical studies with clustering information. */
@@ -7036,7 +7098,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalDrugClassesQuery,
       Types.QueryMedicalDrugClassesQueryVariables
-    >(Documents.QueryMedicalDrugClasses, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalDrugClasses, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical drug classes with clustering information. */
@@ -7147,7 +7212,10 @@ class Graphlit {
     return this.queryAndCheckError<
       Types.QueryMedicalTherapiesQuery,
       Types.QueryMedicalTherapiesQueryVariables
-    >(Documents.QueryMedicalTherapies, { filter: filter, correlationId: correlationId });
+    >(Documents.QueryMedicalTherapies, {
+      filter: filter,
+      correlationId: correlationId,
+    });
   }
 
   /** Retrieves medical therapies with clustering information. */
@@ -7752,6 +7820,12 @@ class Graphlit {
       const toolStartTime = Date.now();
       let toolTime = 0;
 
+      // Context strategy for tool result truncation
+      const strategy = options?.contextStrategy ?? {};
+      const toolResultTokenLimit =
+        strategy.toolResultTokenLimit ??
+        DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit;
+
       while (
         currentMessage.toolCalls?.length &&
         rounds < maxRounds &&
@@ -7759,7 +7833,7 @@ class Graphlit {
       ) {
         rounds++;
 
-        // Execute tools
+        // Execute tools (with truncation)
         const toolExecStart = Date.now();
         const toolResults = await this.executeToolsForPromptAgent(
           currentMessage.toolCalls.filter(
@@ -7768,6 +7842,7 @@ class Graphlit {
           toolHandlers || {},
           allToolCalls,
           abortController.signal,
+          toolResultTokenLimit,
         );
         toolTime += Date.now() - toolExecStart;
 
@@ -7807,11 +7882,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-            promptTokens: 0, // We don't have this breakdown from the API
-            completionTokens: totalTokens,
-            totalTokens: totalTokens,
-            model: currentMessage?.model || undefined,
-          }
+              promptTokens: 0, // We don't have this breakdown from the API
+              completionTokens: totalTokens,
+              totalTokens: totalTokens,
+              model: currentMessage?.model || undefined,
+            }
           : undefined;
 
       return {
@@ -7870,10 +7945,12 @@ class Graphlit {
     // Swallow errors from the previous call so a failed message doesn't
     // permanently block the queue for this conversation.
     // Check the abort signal before starting work so ESC while queued is instant.
-    const next = previous.catch(() => {}).then(() => {
-      if (abortSignal?.aborted) throw new Error("Operation aborted");
-      return work();
-    });
+    const next = previous
+      .catch(() => {})
+      .then(() => {
+        if (abortSignal?.aborted) throw new Error("Operation aborted");
+        return work();
+      });
     this.conversationQueues.set(conversationId, next);
     next.finally(() => {
       if (this.conversationQueues.get(conversationId) === next) {
@@ -7928,7 +8005,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = specification?.id
         ? ((await this.getSpecification(specification.id))
-          .specification as Types.Specification)
+            .specification as Types.Specification)
         : undefined;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && fullSpec) {
@@ -7972,129 +8049,134 @@ class Graphlit {
           timestamp: new Date(),
         });
       }
-      await this.enqueueForConversation(actualConversationId, async () => {
-        // Check streaming support - fallback to promptAgent if not supported
-        if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
-          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-            console.log(
-              "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
+      await this.enqueueForConversation(
+        actualConversationId,
+        async () => {
+          // Check streaming support - fallback to promptAgent if not supported
+          if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
+              );
+            }
+
+            // Fallback to promptAgent using the same conversation and parameters
+            const promptResult = await this.promptAgent(
+              prompt,
+              actualConversationId, // Preserve conversation
+              specification,
+              tools,
+              toolHandlers,
+              {
+                maxToolRounds: maxRounds,
+              },
+              mimeType,
+              data,
+              contentFilter,
+              augmentedFilter,
+              correlationId,
+              persona,
             );
-          }
 
-          // Fallback to promptAgent using the same conversation and parameters
-          const promptResult = await this.promptAgent(
-            prompt,
-            actualConversationId, // Preserve conversation
-            specification,
-            tools,
-            toolHandlers,
-            {
-              maxToolRounds: maxRounds,
-            },
-            mimeType,
-            data,
-            contentFilter,
-            augmentedFilter,
-            correlationId,
-            persona,
-          );
-
-          // Convert promptAgent result to streaming events
-          onEvent({
-            type: "conversation_started",
-            conversationId: actualConversationId,
-            timestamp: new Date(),
-          });
-
-          // Debug logging for fallback
-          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-            console.log(`📊 [streamAgent fallback] promptAgent result:`, {
-              hasMessage: !!promptResult.message,
-              messageLength: promptResult.message?.length,
-              toolCallsCount: promptResult.toolCalls?.length || 0,
-              toolResultsCount: promptResult.toolResults?.length || 0,
-              toolCalls: promptResult.toolCalls,
-              toolResults: promptResult.toolResults?.map((tr) => ({
-                name: tr.name,
-                hasResult: !!tr.result,
-                hasError: !!tr.error,
-              })),
+            // Convert promptAgent result to streaming events
+            onEvent({
+              type: "conversation_started",
+              conversationId: actualConversationId,
+              timestamp: new Date(),
             });
-          }
 
-          // Emit tool events if there were tool calls
-          if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
-            for (const toolCall of promptResult.toolCalls) {
-              onEvent({
-                type: "tool_update",
-                toolCall: toolCall,
-                status: "completed" as const,
+            // Debug logging for fallback
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(`📊 [streamAgent fallback] promptAgent result:`, {
+                hasMessage: !!promptResult.message,
+                messageLength: promptResult.message?.length,
+                toolCallsCount: promptResult.toolCalls?.length || 0,
+                toolResultsCount: promptResult.toolResults?.length || 0,
+                toolCalls: promptResult.toolCalls,
+                toolResults: promptResult.toolResults?.map((tr) => ({
+                  name: tr.name,
+                  hasResult: !!tr.result,
+                  hasError: !!tr.error,
+                })),
               });
             }
+
+            // Emit tool events if there were tool calls
+            if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
+              for (const toolCall of promptResult.toolCalls) {
+                onEvent({
+                  type: "tool_update",
+                  toolCall: toolCall,
+                  status: "completed" as const,
+                });
+              }
+            }
+
+            // Emit the final message as a single update (simulating streaming)
+            onEvent({
+              type: "message_update",
+              message: {
+                __typename: "ConversationMessage" as const,
+                message: promptResult.message,
+                role: Types.ConversationRoleTypes.Assistant,
+                timestamp: new Date().toISOString(),
+                toolCalls: promptResult.toolCalls || [],
+              },
+              isStreaming: false,
+            });
+
+            // Emit completion event
+            onEvent({
+              type: "conversation_completed",
+              message: {
+                __typename: "ConversationMessage" as const,
+                message: promptResult.message,
+                role: Types.ConversationRoleTypes.Assistant,
+                timestamp: new Date().toISOString(),
+                toolCalls: promptResult.toolCalls || [],
+              },
+            });
+
+            return; // Exit early after successful fallback
           }
 
-          // Emit the final message as a single update (simulating streaming)
-          onEvent({
-            type: "message_update",
-            message: {
-              __typename: "ConversationMessage" as const,
-              message: promptResult.message,
-              role: Types.ConversationRoleTypes.Assistant,
-              timestamp: new Date().toISOString(),
-              toolCalls: promptResult.toolCalls || [],
+          // Create UI event adapter with model information
+          const modelName = fullSpec ? getModelName(fullSpec) : undefined;
+          const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
+          const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
+
+          uiAdapter = new UIEventAdapter(
+            onEvent as (event: AgentStreamEvent) => void,
+            actualConversationId,
+            {
+              smoothingEnabled: options?.smoothingEnabled ?? true,
+              chunkingStrategy: options?.chunkingStrategy ?? "word",
+              smoothingDelay: options?.smoothingDelay ?? 30,
+              model: modelEnum,
+              modelName: modelName,
+              modelService: serviceType,
             },
-            isStreaming: false,
-          });
+          );
 
-          // Emit completion event
-          onEvent({
-            type: "conversation_completed",
-            message: {
-              __typename: "ConversationMessage" as const,
-              message: promptResult.message,
-              role: Types.ConversationRoleTypes.Assistant,
-              timestamp: new Date().toISOString(),
-              toolCalls: promptResult.toolCalls || [],
-            },
-          });
-
-          return; // Exit early after successful fallback
-        }
-
-        // Create UI event adapter with model information
-        const modelName = fullSpec ? getModelName(fullSpec) : undefined;
-        const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
-        const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
-
-        uiAdapter = new UIEventAdapter(
-          onEvent as (event: AgentStreamEvent) => void,
-          actualConversationId,
-          {
-            smoothingEnabled: options?.smoothingEnabled ?? true,
-            chunkingStrategy: options?.chunkingStrategy ?? "word",
-            smoothingDelay: options?.smoothingDelay ?? 30,
-            model: modelEnum,
-            modelName: modelName,
-            modelService: serviceType,
-          },
-        );
-
-        // Start the streaming conversation
-        await this.executeStreamingAgent(
-          prompt,
-          actualConversationId,
-          fullSpec!,
-          tools,
-          toolHandlers,
-          uiAdapter,
-          maxRounds,
-          abortSignal,
-          mimeType,
-          data,
-          correlationId,
-          persona,
-        );
-      }, abortSignal);
+          // Start the streaming conversation
+          await this.executeStreamingAgent(
+            prompt,
+            actualConversationId,
+            fullSpec!,
+            tools,
+            toolHandlers,
+            uiAdapter,
+            maxRounds,
+            abortSignal,
+            mimeType,
+            data,
+            correlationId,
+            persona,
+            options?.contextStrategy,
+          );
+        },
+        abortSignal,
+      );
     } catch (error: unknown) {
       const isAbortError =
         (error instanceof Error && error.message === "Operation aborted") ||
@@ -8153,9 +8235,11 @@ class Graphlit {
     data?: string,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    contextStrategy?: ContextStrategy,
   ): Promise<void> {
     let currentRound = 0;
     let fullMessage = "";
+    const contextActions: ContextManagementAction[] = [];
 
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
@@ -8245,8 +8329,32 @@ class Graphlit {
       }
     }
 
+    // Initialize context management
+    const budgetTracker = details
+      ? TokenBudgetTracker.fromDetails(details)
+      : undefined;
+
+    // Merge caller-provided strategy with server-provided strategy (caller wins)
+    const strategy = contextStrategy ?? {};
+    const toolResultTokenLimit =
+      strategy.toolResultTokenLimit ??
+      DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit;
+    const toolRoundLimit =
+      strategy.toolRoundLimit ?? DEFAULT_CONTEXT_STRATEGY.toolRoundLimit;
+    const rebudgetThreshold =
+      strategy.rebudgetThreshold ?? DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold;
+
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
+      console.log(
+        `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
+          `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
+          `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
+          `rebudgetThreshold=${rebudgetThreshold}`,
+      );
+    }
+
     // Build message array with conversation history
-    const messages: Types.ConversationMessage[] = [];
+    let messages: Types.ConversationMessage[] = [];
 
     // Add system prompt if specified
     if (specification.systemPrompt) {
@@ -8326,6 +8434,53 @@ class Graphlit {
     while (currentRound < maxRounds) {
       if (abortSignal?.aborted) {
         throw new Error("Operation aborted");
+      }
+
+      // Context window management: check budget before sending to LLM
+      if (budgetTracker && currentRound > 0) {
+        if (budgetTracker.needsRebudget(rebudgetThreshold)) {
+          const beforeUsage = budgetTracker.usagePercent;
+          const beforeCount = messages.length;
+
+          messages = windowToolRounds(messages, toolRoundLimit);
+          budgetTracker.resetFromMessages(messages);
+
+          const afterUsage = budgetTracker.usagePercent;
+          const droppedRounds = Math.max(
+            0,
+            Math.floor((beforeCount - messages.length) / 2),
+          );
+
+          if (droppedRounds > 0) {
+            const action: ContextManagementAction = {
+              type: "windowed_tool_rounds",
+              droppedRounds,
+              keptRounds: toolRoundLimit,
+            };
+            contextActions.push(action);
+
+            // Notify the UI
+            uiAdapter.handleEvent({
+              type: "context_management",
+              action,
+              usage: budgetTracker.getUsageSnapshot(),
+              timestamp: new Date(),
+            });
+
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `📊 [Context Management] Windowed tool rounds: dropped ${droppedRounds} round(s), ` +
+                  `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
+              );
+            }
+          }
+
+          // Emit updated context window
+          uiAdapter.handleEvent({
+            type: "context_window",
+            usage: budgetTracker.getUsageSnapshot(),
+          });
+        }
       }
 
       let toolCalls: Types.ConversationToolCall[] = [];
@@ -8793,6 +8948,17 @@ class Graphlit {
         };
         messages.push(assistantMessage);
 
+        // Track assistant message in budget (includes tool call arguments)
+        if (budgetTracker) {
+          const assistantTokens =
+            estimateTokens(roundMessage) +
+            toolCalls.reduce(
+              (sum, tc) => sum + estimateTokens(tc.arguments),
+              0,
+            );
+          budgetTracker.addMessage("", assistantTokens);
+        }
+
         // Execute tools and add responses
         for (const toolCall of toolCalls) {
           const handler = toolHandlers[toolCall.name];
@@ -8925,18 +9091,57 @@ class Graphlit {
               result: result,
             });
 
-            // Add tool response to messages
+            // Add tool response to messages (with truncation)
+            const rawResult =
+              typeof result === "string" ? result : JSON.stringify(result);
+            const truncatedResult = truncateToolResult(
+              rawResult,
+              toolResultTokenLimit,
+              toolCall.name,
+            );
+
+            // Track truncation for observability
+            if (truncatedResult.length < rawResult.length) {
+              const action: ContextManagementAction = {
+                type: "truncated_tool_result",
+                toolName: toolCall.name,
+                originalTokens: estimateTokens(rawResult),
+                truncatedTokens: estimateTokens(truncatedResult),
+              };
+              contextActions.push(action);
+
+              if (budgetTracker) {
+                uiAdapter.handleEvent({
+                  type: "context_management",
+                  action,
+                  usage: budgetTracker.getUsageSnapshot(),
+                  timestamp: new Date(),
+                });
+              }
+
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+                console.log(
+                  `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
+                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                );
+              }
+            }
+
             const toolMessage: any = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
-              message:
-                typeof result === "string" ? result : JSON.stringify(result),
+              message: truncatedResult,
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
             };
             // Add tool name for Mistral compatibility
             toolMessage.toolName = toolCall.name;
             messages.push(toolMessage);
+
+            // Track budget
+            if (budgetTracker) {
+              budgetTracker.addMessage(truncatedResult);
+            }
           } catch (error) {
             const errorMessage =
               error instanceof Error ? error.message : "Unknown error";
@@ -8954,18 +9159,31 @@ class Graphlit {
             });
 
             // Add error response
+            const errorText = `Error: ${errorMessage}`;
             const errorToolMessage: any = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
-              message: `Error: ${errorMessage}`,
+              message: errorText,
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
             };
             // Add tool name for Mistral compatibility
             errorToolMessage.toolName = toolCall.name;
             messages.push(errorToolMessage);
+
+            if (budgetTracker) {
+              budgetTracker.addMessage(errorText);
+            }
           }
         }
+      }
+
+      // Emit context window usage after each tool round
+      if (budgetTracker) {
+        uiAdapter.handleEvent({
+          type: "context_window",
+          usage: budgetTracker.getUsageSnapshot(),
+        });
       }
 
       currentRound++;
@@ -9207,13 +9425,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.OPENAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("OpenAI module not available");
-        })());
+            throw new Error("OpenAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9268,13 +9486,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-          apiKey: process.env.ANTHROPIC_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.ANTHROPIC_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Anthropic module not available");
-        })());
+            throw new Error("Anthropic module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9362,8 +9580,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-          throw new Error("Google GenerativeAI module not available");
-        })());
+            throw new Error("Google GenerativeAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9419,8 +9637,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-          throw new Error("Groq module not available");
-        })());
+            throw new Error("Groq module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9464,13 +9682,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-          apiKey: process.env.CEREBRAS_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.CEREBRAS_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Cerebras module not available");
-        })());
+            throw new Error("Cerebras module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9517,8 +9735,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-            throw new Error("Cohere module not available");
-          })());
+              throw new Error("Cohere module not available");
+            })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9562,29 +9780,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-          const apiKey = process.env.MISTRAL_API_KEY;
-          if (!apiKey) {
-            throw new Error(
-              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-            );
-          }
-          return new Mistral({
-            apiKey,
-            retryConfig: {
-              strategy: "backoff",
-              backoff: {
-                initialInterval: 1000,
-                maxInterval: 60000,
-                exponent: 2,
-                maxElapsedTime: 300000, // 5 minutes
+            const apiKey = process.env.MISTRAL_API_KEY;
+            if (!apiKey) {
+              throw new Error(
+                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+              );
+            }
+            return new Mistral({
+              apiKey,
+              retryConfig: {
+                strategy: "backoff",
+                backoff: {
+                  initialInterval: 1000,
+                  maxInterval: 60000,
+                  exponent: 2,
+                  maxElapsedTime: 300000, // 5 minutes
+                },
+                retryConnectionErrors: true,
               },
-              retryConnectionErrors: true,
-            },
-          });
-        })()
+            });
+          })()
         : (() => {
-          throw new Error("Mistral module not available");
-        })());
+            throw new Error("Mistral module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9629,11 +9847,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-          region: process.env.AWS_REGION || "us-east-2",
-        })
+            region: process.env.AWS_REGION || "us-east-2",
+          })
         : (() => {
-          throw new Error("Bedrock module not available");
-        })());
+            throw new Error("Bedrock module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9678,11 +9896,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.deepseek.com",
-          apiKey: process.env.DEEPSEEK_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.deepseek.com",
+            apiKey: process.env.DEEPSEEK_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!deepseekClient) {
@@ -9728,11 +9946,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.x.ai/v1",
-          apiKey: process.env.XAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.x.ai/v1",
+            apiKey: process.env.XAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!xaiClient) {
@@ -9762,6 +9980,7 @@ class Graphlit {
     toolHandlers: Record<string, ToolHandler>,
     allToolCalls: ToolCallResult[],
     signal: AbortSignal,
+    toolResultTokenLimit: number = DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit,
   ): Promise<Types.ConversationToolResponseInput[]> {
     const responses: Types.ConversationToolResponseInput[] = [];
 
@@ -9805,10 +10024,28 @@ class Graphlit {
 
       allToolCalls.push(toolResult);
 
+      // Truncate oversized tool results before sending to server
+      const rawContent = error ? error : result ? JSON.stringify(result) : "";
+      const content = truncateToolResult(
+        rawContent,
+        toolResultTokenLimit,
+        toolCall.name || "unknown",
+      );
+
+      if (
+        content.length < rawContent.length &&
+        process.env.DEBUG_GRAPHLIT_SDK_STREAMING
+      ) {
+        console.log(
+          `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
+            `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
+        );
+      }
+
       // Response for API
       return {
         id: toolCall.id,
-        content: error ? error : result ? JSON.stringify(result) : "",
+        content,
       };
     });
 

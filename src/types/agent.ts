@@ -18,10 +18,22 @@ export type ToolHandler = (
   artifacts?: ArtifactCollector,
 ) => Promise<any>;
 
+// Context strategy for managing token budgets during agentic tool loops.
+// These values can also be driven by the server-side ConversationStrategy on the specification.
+export interface ContextStrategy {
+  /** Max tokens for any single tool result. Results exceeding this are truncated. Default: 8192 */
+  toolResultTokenLimit?: number;
+  /** Max tool call/response rounds to keep in context. Older rounds are dropped FIFO. Default: 10 */
+  toolRoundLimit?: number;
+  /** Fraction of token budget (0.0-1.0) at which client-side windowing is triggered. Default: 0.75 */
+  rebudgetThreshold?: number;
+}
+
 // Agent options for non-streaming calls
 export interface AgentOptions {
-  maxToolRounds?: number; // default: 1000
+  maxToolRounds?: number; // default: 100
   timeout?: number; // milliseconds
+  contextStrategy?: ContextStrategy;
 }
 
 // Performance metrics for agent execution
@@ -43,6 +55,20 @@ export interface ContextWindowUsage {
   remainingTokens: number; // Tokens available for response
 }
 
+// Describes a context management action taken by the SDK
+export type ContextManagementAction =
+  | {
+      type: "truncated_tool_result";
+      toolName: string;
+      originalTokens: number;
+      truncatedTokens: number;
+    }
+  | {
+      type: "windowed_tool_rounds";
+      droppedRounds: number;
+      keptRounds: number;
+    };
+
 // Result from promptAgent with full conversation details
 export interface AgentResult {
   // Core response
@@ -62,8 +88,11 @@ export interface AgentResult {
   // Usage information
   usage?: UsageInfo;
 
-  // Context window usage at start of interaction
+  // Context window usage at end of interaction
   contextWindow?: ContextWindowUsage;
+
+  // Context management actions taken during this interaction
+  contextActions?: ContextManagementAction[];
 
   // Error if any
   error?: AgentError;
@@ -71,11 +100,12 @@ export interface AgentResult {
 
 // Options for streamAgent
 export interface StreamAgentOptions {
-  maxToolRounds?: number; // default: 1000
+  maxToolRounds?: number; // default: 100
   abortSignal?: AbortSignal;
   smoothingEnabled?: boolean; // default: true
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
+  contextStrategy?: ContextStrategy;
 }
 
 // Tool call result

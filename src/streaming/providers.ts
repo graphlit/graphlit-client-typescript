@@ -3547,9 +3547,8 @@ export async function streamWithBedrock(
     }
 
     // Import the ConverseStreamCommand for unified API
-    const { ConverseStreamCommand } = await import(
-      "@aws-sdk/client-bedrock-runtime"
-    );
+    const { ConverseStreamCommand } =
+      await import("@aws-sdk/client-bedrock-runtime");
 
     // Convert messages to Bedrock Converse format
     // The AWS SDK expects content as an array of content blocks

@@ -2,6 +2,7 @@ import {
   ConversationMessage,
   ConversationToolCall,
 } from "../generated/graphql-types.js";
+import { ContextManagementAction } from "./agent.js";
 
 /**
  * Tool execution status for streaming
@@ -66,6 +67,19 @@ export type AgentStreamEvent =
       timestamp: Date;
     }
   | ContextWindowEvent
+  | {
+      // Emitted when context management takes action (tool result truncation,
+      // tool round windowing). Informational — the SDK handled it automatically.
+      type: "context_management";
+      action: ContextManagementAction;
+      usage: {
+        usedTokens: number;
+        maxTokens: number;
+        percentage: number;
+        remainingTokens: number;
+      };
+      timestamp: Date;
+    }
   | {
       type: "message_update";
       message: StreamingConversationMessage;

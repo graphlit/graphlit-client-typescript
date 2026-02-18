@@ -11,19 +11,16 @@ This report summarizes the results of comprehensive streaming tests across 12 LL
 #### **OpenAI Models**
 
 - **o3 Mini (200K)** ✅
-
   - Status: Working with fallback streaming
   - Notes: Latest OpenAI model with 200K context window
   - Events: Standard event sequence functioning
 
 - **GPT-4.1 (1024K)** ✅
-
   - Status: Working with fallback streaming
   - Notes: Extended context window model (1M tokens)
   - Events: Progressive message updates working
 
 - **GPT-4o (128K)** ✅
-
   - Status: Working with fallback streaming
   - Notes: No streaming client available, using regular API with simulated streaming
   - Events: conversation_started, message_update (progressive), conversation_completed
@@ -37,13 +34,11 @@ This report summarizes the results of comprehensive streaming tests across 12 LL
 #### **Anthropic Models**
 
 - **Claude 4 Sonnet** ✅
-
   - Status: Working with fallback streaming
   - Notes: Latest Claude 4 model with enhanced capabilities
   - Events: Progressive message updates working
 
 - **Claude 3.7 Sonnet** ✅
-
   - Status: Working with fallback streaming
   - Notes: Improved version of Claude 3.5 series
   - Events: Standard event sequence functioning
@@ -56,7 +51,6 @@ This report summarizes the results of comprehensive streaming tests across 12 LL
 #### **Google Models**
 
 - **Gemini 2.5 Pro Preview** ✅
-
   - Status: Working with fallback streaming
   - Notes: Latest Gemini model in preview
   - Events: Progressive message updates working

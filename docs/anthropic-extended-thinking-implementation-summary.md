@@ -149,27 +149,22 @@ Tests cover:
 ## Implementation Files Modified
 
 1. **`src/client.ts`**
-
    - Added `getThinkingConfig()` method
    - Updated `streamWithAnthropic()` to pass thinking config
 
 2. **`src/streaming/providers.ts`**
-
    - Enhanced `streamWithAnthropic()` with thinking parameter
    - Added native thinking event handling
    - Improved content block tracking
 
 3. **`src/types/internal.ts`**
-
    - Added `signature?` field to `reasoning_end` event
 
 4. **`src/streaming/ui-event-adapter.ts`**
-
    - Updated reasoning event handlers for signatures
    - Enhanced debugging output
 
 5. **`src/streaming/llm-formatters.ts`**
-
    - Added thinking block preservation in message formatting
    - Backward compatibility for thinking tag detection
 
