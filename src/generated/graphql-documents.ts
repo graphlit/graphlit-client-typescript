@@ -1058,6 +1058,12 @@ export const DescribeEncodedImage = gql`
     mimeType
     toolCallId
     toolCallResponse
+    artifacts {
+      id
+      name
+      mimeType
+      uri
+    }
   }
 }
     `;
@@ -1199,6 +1205,12 @@ export const DescribeImage = gql`
     mimeType
     toolCallId
     toolCallResponse
+    artifacts {
+      id
+      name
+      mimeType
+      uri
+    }
   }
 }
     `;
@@ -4176,6 +4188,12 @@ export const AskGraphlit = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
   }
@@ -4212,13 +4230,14 @@ export const CloseConversation = gql`
 }
     `;
 export const CompleteConversation = gql`
-    mutation CompleteConversation($completion: String!, $id: ID!, $completionTime: TimeSpan, $ttft: TimeSpan, $throughput: Float, $correlationId: String) {
+    mutation CompleteConversation($completion: String!, $id: ID!, $completionTime: TimeSpan, $ttft: TimeSpan, $throughput: Float, $artifacts: [EntityReferenceInput!], $correlationId: String) {
   completeConversation(
     completion: $completion
     id: $id
     completionTime: $completionTime
     ttft: $ttft
     throughput: $throughput
+    artifacts: $artifacts
     correlationId: $correlationId
   ) {
     conversation {
@@ -4355,6 +4374,12 @@ export const CompleteConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
     facets {
@@ -4540,6 +4565,12 @@ export const CompleteConversation = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
     }
   }
@@ -4686,6 +4717,12 @@ export const ContinueConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
     facets {
@@ -4871,6 +4908,12 @@ export const ContinueConversation = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
     }
   }
@@ -5067,6 +5110,12 @@ export const FormatConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
     facets {
@@ -5252,6 +5301,12 @@ export const FormatConversation = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
     }
   }
@@ -5401,6 +5456,12 @@ export const GetConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     transcriptUri
     turns {
@@ -5803,6 +5864,12 @@ export const Prompt = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     error
   }
@@ -5957,6 +6024,12 @@ export const PromptConversation = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
     facets {
@@ -6142,6 +6215,12 @@ export const PromptConversation = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
     }
   }
@@ -6422,6 +6501,12 @@ export const QueryConversations = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
       transcriptUri
       turns {
@@ -6791,6 +6876,12 @@ export const QueryConversationsClusters = gql`
         mimeType
         toolCallId
         toolCallResponse
+        artifacts {
+          id
+          name
+          mimeType
+          uri
+        }
       }
       transcriptUri
       turns {
@@ -7313,6 +7404,12 @@ export const ReviseContent = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
   }
@@ -7462,6 +7559,12 @@ export const ReviseEncodedImage = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
   }
@@ -7610,6 +7713,12 @@ export const ReviseImage = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
   }
@@ -7758,6 +7867,12 @@ export const ReviseText = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     messageCount
   }
@@ -16301,6 +16416,12 @@ export const PromptSpecifications = gql`
       mimeType
       toolCallId
       toolCallResponse
+      artifacts {
+        id
+        name
+        mimeType
+        uri
+      }
     }
     error
   }

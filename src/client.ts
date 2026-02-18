@@ -2702,6 +2702,7 @@ class Graphlit {
    * @param completionTime - The time taken for completion, optional.
    * @param ttft - Time to first token, optional.
    * @param throughput - Tokens per second throughput, optional.
+   * @param artifacts - The artifacts produced during the completion, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The completed conversation.
    */
@@ -2711,6 +2712,7 @@ class Graphlit {
     completionTime?: Types.Scalars["TimeSpan"]["input"],
     ttft?: Types.Scalars["TimeSpan"]["input"],
     throughput?: Types.Scalars["Float"]["input"],
+    artifacts?: Types.EntityReferenceInput[],
     correlationId?: string,
   ): Promise<Types.CompleteConversationMutation> {
     return this.mutateAndCheckError<
@@ -2722,6 +2724,7 @@ class Graphlit {
       completionTime: completionTime,
       ttft: ttft,
       throughput: throughput,
+      artifacts: artifacts,
       correlationId: correlationId,
     });
   }
@@ -7909,6 +7912,7 @@ class Graphlit {
     augmentedFilter?: Types.ContentCriteriaInput,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    artifacts?: Types.EntityReferenceInput[],
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
@@ -8088,6 +8092,7 @@ class Graphlit {
           data,
           correlationId,
           persona,
+          artifacts,
         );
       }, abortSignal);
     } catch (error: unknown) {
@@ -8148,6 +8153,7 @@ class Graphlit {
     data?: string,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    artifacts?: Types.EntityReferenceInput[],
   ): Promise<void> {
     let currentRound = 0;
     let fullMessage = "";
@@ -8976,6 +8982,7 @@ class Graphlit {
         millisecondsToTimeSpan(completionTime),
         millisecondsToTimeSpan(ttft),
         throughput,
+        artifacts,
         correlationId,
       );
 
