@@ -27,6 +27,7 @@ import { getServiceType, getModelName, getModelEnum } from "./model-mapping.js";
 import {
   AgentOptions,
   AgentResult,
+  ArtifactCollector,
   StreamAgentOptions,
   ToolCallResult,
   ToolHandler,
@@ -191,6 +192,7 @@ const DEFAULT_MAX_TOOL_ROUNDS: number = 1000;
 export type {
   AgentOptions,
   AgentResult,
+  ArtifactCollector,
   StreamAgentOptions,
   ToolCallResult,
   UsageInfo,
@@ -7912,7 +7914,6 @@ class Graphlit {
     augmentedFilter?: Types.ContentCriteriaInput,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
-    artifacts?: Types.EntityReferenceInput[],
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
@@ -8092,7 +8093,6 @@ class Graphlit {
           data,
           correlationId,
           persona,
-          artifacts,
         );
       }, abortSignal);
     } catch (error: unknown) {
@@ -8153,10 +8153,23 @@ class Graphlit {
     data?: string,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
-    artifacts?: Types.EntityReferenceInput[],
   ): Promise<void> {
     let currentRound = 0;
     let fullMessage = "";
+
+    // Collects artifact content IDs from tool handlers (e.g. code_execution).
+    // Handlers register async ingestion promises; we await all of them before
+    // completeConversation so the IDs are available without blocking the LLM.
+    const pendingArtifacts: Promise<{ id: string } | undefined>[] = [];
+    const artifactCollector: ArtifactCollector = {
+      addPending(p) {
+        pendingArtifacts.push(p);
+      },
+      async resolve() {
+        const results = await Promise.all(pendingArtifacts);
+        return results.filter((r): r is { id: string } => r != null);
+      },
+    };
 
     // Start the conversation
     uiAdapter.handleEvent({
@@ -8899,7 +8912,7 @@ class Graphlit {
             }
 
             // Execute tool
-            const result = await handler(args);
+            const result = await handler(args, artifactCollector);
 
             // Update UI with complete event including result
             uiAdapter.handleEvent({
@@ -8976,13 +8989,16 @@ class Graphlit {
         return `PT${seconds}S`;
       };
 
+      // Await any pending artifact ingestions so content IDs are available
+      const collectedArtifacts = await artifactCollector.resolve();
+
       const completeResponse = await this.completeConversation(
         trimmedMessage,
         conversationId,
         millisecondsToTimeSpan(completionTime),
         millisecondsToTimeSpan(ttft),
         throughput,
-        artifacts,
+        collectedArtifacts.length > 0 ? collectedArtifacts : undefined,
         correlationId,
       );
 

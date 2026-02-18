@@ -3799,8 +3799,6 @@ export type ConversationMessage = {
   completionTime?: Maybe<Scalars['TimeSpan']['output']>;
   /** The Base64-encoded image which will be supplied to the LLM with the conversation message, optional. */
   data?: Maybe<Scalars['String']['output']>;
-  /** The conversation message identifier. */
-  id?: Maybe<Scalars['ID']['output']>;
   /** The conversation message. */
   message?: Maybe<Scalars['String']['output']>;
   /** The MIME type of the Base64-encoded image, optional. */
@@ -3837,8 +3835,6 @@ export type ConversationMessageInput = {
   completionTime?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** The Base64-encoded image which will be supplied to the LLM with the conversation message, optional. */
   data?: InputMaybe<Scalars['String']['input']>;
-  /** The conversation message identifier, optional. */
-  id?: InputMaybe<Scalars['ID']['input']>;
   /** The conversation message. */
   message?: InputMaybe<Scalars['String']['input']>;
   /** The MIME type of the Base64-encoded image, optional. */
@@ -14045,7 +14041,7 @@ export type MutationCloseConversationArgs = {
 
 
 export type MutationCompleteConversationArgs = {
-  artifacts?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
+  artifacts?: InputMaybe<Array<EntityReferenceInput>>;
   completion: Scalars['String']['input'];
   completionTime?: InputMaybe<Scalars['TimeSpan']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;

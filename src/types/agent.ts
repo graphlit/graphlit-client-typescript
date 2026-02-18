@@ -4,8 +4,19 @@ import {
   ConversationToolCall,
 } from "../generated/graphql-types.js";
 
+// Collects artifact promises from tool handlers for association with the completed message.
+// Handlers register async ingestion work via addPending(); the SDK awaits all promises
+// before calling completeConversation so content IDs are available at completion time.
+export interface ArtifactCollector {
+  addPending(promise: Promise<{ id: string } | undefined>): void;
+  resolve(): Promise<{ id: string }[]>;
+}
+
 // Tool handler function type
-export type ToolHandler = (args: any) => Promise<any>;
+export type ToolHandler = (
+  args: any,
+  artifacts?: ArtifactCollector,
+) => Promise<any>;
 
 // Agent options for non-streaming calls
 export interface AgentOptions {
