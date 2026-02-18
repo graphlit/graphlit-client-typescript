@@ -264,6 +264,10 @@ class Graphlit {
   private deepseekClient?: any;
   private xaiClient?: any;
 
+  // Serializes streamAgent calls per conversation to prevent race conditions
+  // when a user sends a second message before the first response completes.
+  private readonly conversationQueues = new Map<string, Promise<void>>();
+
   constructor(
     organizationIdOrOptions?: string | GraphlitClientOptions,
     environmentId?: string,
@@ -7847,6 +7851,34 @@ class Graphlit {
   }
 
   /**
+   * Serializes async work per conversation ID to prevent concurrent formatConversation /
+   * completeConversation calls from racing each other. Each call chains after the previous
+   * one for the same conversation, so messages are always processed in order.
+   */
+  private enqueueForConversation(
+    conversationId: string,
+    work: () => Promise<void>,
+    abortSignal?: AbortSignal,
+  ): Promise<void> {
+    const previous =
+      this.conversationQueues.get(conversationId) ?? Promise.resolve();
+    // Swallow errors from the previous call so a failed message doesn't
+    // permanently block the queue for this conversation.
+    // Check the abort signal before starting work so ESC while queued is instant.
+    const next = previous.catch(() => {}).then(() => {
+      if (abortSignal?.aborted) throw new Error("Operation aborted");
+      return work();
+    });
+    this.conversationQueues.set(conversationId, next);
+    next.finally(() => {
+      if (this.conversationQueues.get(conversationId) === next) {
+        this.conversationQueues.delete(conversationId);
+      }
+    });
+    return next;
+  }
+
+  /**
    * Execute an agent with streaming response
    * @param prompt - The user prompt
    * @param onEvent - Event handler for streaming events
@@ -7925,147 +7957,170 @@ class Graphlit {
         }
       }
 
-      // Check streaming support - fallback to promptAgent if not supported
-      if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
-          );
-        }
-
-        // Fallback to promptAgent using the same conversation and parameters
-        const promptResult = await this.promptAgent(
-          prompt,
-          actualConversationId, // Preserve conversation
-          specification,
-          tools,
-          toolHandlers,
-          {
-            maxToolRounds: maxRounds,
-          },
-          mimeType,
-          data,
-          contentFilter,
-          augmentedFilter,
-          correlationId,
-          persona,
-        );
-
-        // Convert promptAgent result to streaming events
-        onEvent({
-          type: "conversation_started",
+      // Serialize execution per-conversation: if the user sends a second message
+      // before the first response completes, queue it so formatConversation /
+      // completeConversation calls never interleave on the same conversation.
+      if (this.conversationQueues.has(actualConversationId)) {
+        (onEvent as (event: AgentStreamEvent) => void)({
+          type: "conversation_queued",
           conversationId: actualConversationId,
           timestamp: new Date(),
         });
+      }
+      await this.enqueueForConversation(actualConversationId, async () => {
+        // Check streaming support - fallback to promptAgent if not supported
+        if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
+            );
+          }
 
-        // Debug logging for fallback
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(`📊 [streamAgent fallback] promptAgent result:`, {
-            hasMessage: !!promptResult.message,
-            messageLength: promptResult.message?.length,
-            toolCallsCount: promptResult.toolCalls?.length || 0,
-            toolResultsCount: promptResult.toolResults?.length || 0,
-            toolCalls: promptResult.toolCalls,
-            toolResults: promptResult.toolResults?.map((tr) => ({
-              name: tr.name,
-              hasResult: !!tr.result,
-              hasError: !!tr.error,
-            })),
+          // Fallback to promptAgent using the same conversation and parameters
+          const promptResult = await this.promptAgent(
+            prompt,
+            actualConversationId, // Preserve conversation
+            specification,
+            tools,
+            toolHandlers,
+            {
+              maxToolRounds: maxRounds,
+            },
+            mimeType,
+            data,
+            contentFilter,
+            augmentedFilter,
+            correlationId,
+            persona,
+          );
+
+          // Convert promptAgent result to streaming events
+          onEvent({
+            type: "conversation_started",
+            conversationId: actualConversationId,
+            timestamp: new Date(),
           });
-        }
 
-        // Emit tool events if there were tool calls
-        if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
-          for (const toolCall of promptResult.toolCalls) {
-            onEvent({
-              type: "tool_update",
-              toolCall: toolCall,
-              status: "completed" as const,
+          // Debug logging for fallback
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(`📊 [streamAgent fallback] promptAgent result:`, {
+              hasMessage: !!promptResult.message,
+              messageLength: promptResult.message?.length,
+              toolCallsCount: promptResult.toolCalls?.length || 0,
+              toolResultsCount: promptResult.toolResults?.length || 0,
+              toolCalls: promptResult.toolCalls,
+              toolResults: promptResult.toolResults?.map((tr) => ({
+                name: tr.name,
+                hasResult: !!tr.result,
+                hasError: !!tr.error,
+              })),
             });
           }
+
+          // Emit tool events if there were tool calls
+          if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
+            for (const toolCall of promptResult.toolCalls) {
+              onEvent({
+                type: "tool_update",
+                toolCall: toolCall,
+                status: "completed" as const,
+              });
+            }
+          }
+
+          // Emit the final message as a single update (simulating streaming)
+          onEvent({
+            type: "message_update",
+            message: {
+              __typename: "ConversationMessage" as const,
+              message: promptResult.message,
+              role: Types.ConversationRoleTypes.Assistant,
+              timestamp: new Date().toISOString(),
+              toolCalls: promptResult.toolCalls || [],
+            },
+            isStreaming: false,
+          });
+
+          // Emit completion event
+          onEvent({
+            type: "conversation_completed",
+            message: {
+              __typename: "ConversationMessage" as const,
+              message: promptResult.message,
+              role: Types.ConversationRoleTypes.Assistant,
+              timestamp: new Date().toISOString(),
+              toolCalls: promptResult.toolCalls || [],
+            },
+          });
+
+          return; // Exit early after successful fallback
         }
 
-        // Emit the final message as a single update (simulating streaming)
-        onEvent({
-          type: "message_update",
-          message: {
-            __typename: "ConversationMessage" as const,
-            message: promptResult.message,
-            role: Types.ConversationRoleTypes.Assistant,
-            timestamp: new Date().toISOString(),
-            toolCalls: promptResult.toolCalls || [],
+        // Create UI event adapter with model information
+        const modelName = fullSpec ? getModelName(fullSpec) : undefined;
+        const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
+        const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
+
+        uiAdapter = new UIEventAdapter(
+          onEvent as (event: AgentStreamEvent) => void,
+          actualConversationId,
+          {
+            smoothingEnabled: options?.smoothingEnabled ?? true,
+            chunkingStrategy: options?.chunkingStrategy ?? "word",
+            smoothingDelay: options?.smoothingDelay ?? 30,
+            model: modelEnum,
+            modelName: modelName,
+            modelService: serviceType,
           },
-          isStreaming: false,
-        });
+        );
 
-        // Emit completion event
-        onEvent({
-          type: "conversation_completed",
-          message: {
-            __typename: "ConversationMessage" as const,
-            message: promptResult.message,
-            role: Types.ConversationRoleTypes.Assistant,
-            timestamp: new Date().toISOString(),
-            toolCalls: promptResult.toolCalls || [],
-          },
-        });
-
-        return; // Exit early after successful fallback
-      }
-
-      // Create UI event adapter with model information
-      const modelName = fullSpec ? getModelName(fullSpec) : undefined;
-      const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
-      const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
-
-      uiAdapter = new UIEventAdapter(
-        onEvent as (event: AgentStreamEvent) => void,
-        actualConversationId,
-        {
-          smoothingEnabled: options?.smoothingEnabled ?? true,
-          chunkingStrategy: options?.chunkingStrategy ?? "word",
-          smoothingDelay: options?.smoothingDelay ?? 30,
-          model: modelEnum,
-          modelName: modelName,
-          modelService: serviceType,
-        },
-      );
-
-      // Start the streaming conversation
-      await this.executeStreamingAgent(
-        prompt,
-        actualConversationId,
-        fullSpec!,
-        tools,
-        toolHandlers,
-        uiAdapter,
-        maxRounds,
-        abortSignal,
-        mimeType,
-        data,
-        correlationId,
-        persona,
-      );
+        // Start the streaming conversation
+        await this.executeStreamingAgent(
+          prompt,
+          actualConversationId,
+          fullSpec!,
+          tools,
+          toolHandlers,
+          uiAdapter,
+          maxRounds,
+          abortSignal,
+          mimeType,
+          data,
+          correlationId,
+          persona,
+        );
+      }, abortSignal);
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Streaming failed";
-
-      if (uiAdapter) {
-        uiAdapter.handleEvent({
-          type: "error",
-          error: errorMessage,
-        });
-      } else {
-        // Fallback error event
+      const isAbortError =
+        (error instanceof Error && error.message === "Operation aborted") ||
+        (error instanceof DOMException && error.name === "AbortError");
+      if (isAbortError) {
         (onEvent as (event: AgentStreamEvent) => void)({
-          type: "error",
-          error: {
-            message: errorMessage,
-            recoverable: false,
-          },
+          type: "conversation_cancelled",
           conversationId: conversationId || "",
           timestamp: new Date(),
         });
+      } else {
+        const errorMessage =
+          error instanceof Error ? error.message : "Streaming failed";
+
+        if (uiAdapter) {
+          uiAdapter.handleEvent({
+            type: "error",
+            error: errorMessage,
+          });
+        } else {
+          // Fallback error event
+          (onEvent as (event: AgentStreamEvent) => void)({
+            type: "error",
+            error: {
+              message: errorMessage,
+              recoverable: false,
+            },
+            conversationId: conversationId || "",
+            timestamp: new Date(),
+          });
+        }
       }
 
       throw error;

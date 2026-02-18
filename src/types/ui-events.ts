@@ -50,6 +50,21 @@ export type AgentStreamEvent =
       timestamp: Date;
       model?: string;
     }
+  | {
+      // Emitted when a message is sent while a previous response is still
+      // in-flight. The call will be processed in order once the current
+      // response completes.
+      type: "conversation_queued";
+      conversationId: string;
+      timestamp: Date;
+    }
+  | {
+      // Emitted when a queued or in-flight streamAgent call is cancelled via
+      // AbortSignal (e.g. user hits ESC). No error event is emitted.
+      type: "conversation_cancelled";
+      conversationId: string;
+      timestamp: Date;
+    }
   | ContextWindowEvent
   | {
       type: "message_update";
