@@ -1,8 +1,0 @@
-mutation DistributeText($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String!, $textType: TextTypes, $name: String, $correlationId: String) {
-  distributeText(connector: $connector, authentication: $authentication, text: $text, textType: $textType, name: $name, correlationId: $correlationId) {
-    uri
-    identifier
-    serviceType
-    error
-  }
-}

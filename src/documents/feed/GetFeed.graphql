@@ -177,6 +177,9 @@ query GetFeed($id: ID!, $correlationId: String) {
         clientId
         clientSecret
         refreshToken
+        connector {
+          id
+        }
       }
       github {
         authenticationType

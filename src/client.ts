@@ -2023,6 +2023,9 @@ class Graphlit {
    * @param connector - The distribution connector to use.
    * @param authentication - The authentication reference for distribution.
    * @param filter - The filter criteria for selecting contents, optional.
+   * @param text - The text to distribute, optional.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param name - The name of the distributed content, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The distribution results.
    */
@@ -2030,6 +2033,9 @@ class Graphlit {
     connector: Types.DistributionConnectorInput,
     authentication: Types.EntityReferenceInput,
     filter?: Types.ContentFilter,
+    text?: string,
+    textType?: Types.TextTypes,
+    name?: string,
     correlationId?: string,
   ): Promise<Types.DistributeContentsMutation> {
     return this.mutateAndCheckError<
@@ -2039,34 +2045,6 @@ class Graphlit {
       connector: connector,
       authentication: authentication,
       filter: filter,
-      correlationId: correlationId,
-    });
-  }
-
-  /**
-   * Distributes text to an external connector.
-   * @param connector - The distribution connector to use.
-   * @param authentication - The authentication reference for distribution.
-   * @param text - The text to distribute.
-   * @param textType - The type of text (plain, markdown, HTML), optional.
-   * @param name - The name of the distributed content, optional.
-   * @param correlationId - The tenant correlation identifier, optional.
-   * @returns The distribution result.
-   */
-  public async distributeText(
-    connector: Types.DistributionConnectorInput,
-    authentication: Types.EntityReferenceInput,
-    text: string,
-    textType?: Types.TextTypes,
-    name?: string,
-    correlationId?: string,
-  ): Promise<Types.DistributeTextMutation> {
-    return this.mutateAndCheckError<
-      Types.DistributeTextMutation,
-      Types.DistributeTextMutationVariables
-    >(Documents.DistributeText, {
-      connector: connector,
-      authentication: authentication,
       text: text,
       textType: textType,
       name: name,

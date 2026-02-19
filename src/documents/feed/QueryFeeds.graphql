@@ -179,6 +179,9 @@ query QueryFeeds($filter: FeedFilter, $correlationId: String) {
           clientId
           clientSecret
           refreshToken
+          connector {
+            id
+          }
         }
         github {
           authenticationType

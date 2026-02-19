@@ -1215,28 +1215,14 @@ export const DescribeImage = gql`
 }
     `;
 export const DistributeContents = gql`
-    mutation DistributeContents($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $filter: ContentFilter, $correlationId: String) {
+    mutation DistributeContents($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String, $textType: TextTypes, $name: String, $filter: ContentFilter, $correlationId: String) {
   distributeContents(
-    connector: $connector
-    authentication: $authentication
-    filter: $filter
-    correlationId: $correlationId
-  ) {
-    uri
-    identifier
-    serviceType
-    error
-  }
-}
-    `;
-export const DistributeText = gql`
-    mutation DistributeText($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String!, $textType: TextTypes, $name: String, $correlationId: String) {
-  distributeText(
     connector: $connector
     authentication: $authentication
     text: $text
     textType: $textType
     name: $name
+    filter: $filter
     correlationId: $correlationId
   ) {
     uri
@@ -8803,6 +8789,9 @@ export const GetFeed = gql`
         clientId
         clientSecret
         refreshToken
+        connector {
+          id
+        }
       }
       github {
         authenticationType
@@ -9596,6 +9585,9 @@ export const QueryFeeds = gql`
           clientId
           clientSecret
           refreshToken
+          connector {
+            id
+          }
         }
         github {
           authenticationType
@@ -16498,6 +16490,8 @@ export const QueryModels = gql`
         rerankingCostPerMillion
         contextWindowTokens
         maxOutputTokens
+        deprecated
+        deprecationDate
       }
     }
   }
