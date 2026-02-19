@@ -1214,6 +1214,38 @@ export const DescribeImage = gql`
   }
 }
     `;
+export const DistributeContents = gql`
+    mutation DistributeContents($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $filter: ContentFilter, $correlationId: String) {
+  distributeContents(
+    connector: $connector
+    authentication: $authentication
+    filter: $filter
+    correlationId: $correlationId
+  ) {
+    uri
+    identifier
+    serviceType
+    error
+  }
+}
+    `;
+export const DistributeText = gql`
+    mutation DistributeText($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String!, $textType: TextTypes, $name: String, $correlationId: String) {
+  distributeText(
+    connector: $connector
+    authentication: $authentication
+    text: $text
+    textType: $textType
+    name: $name
+    correlationId: $correlationId
+  ) {
+    uri
+    identifier
+    serviceType
+    error
+  }
+}
+    `;
 export const ExtractContents = gql`
     mutation ExtractContents($prompt: String!, $filter: ContentFilter, $specification: EntityReferenceInput, $tools: [ToolDefinitionInput!]!, $correlationId: String) {
   extractContents(
@@ -8765,8 +8797,12 @@ export const GetFeed = gql`
         cloudId
       }
       linear {
+        authenticationType
         key
         project
+        clientId
+        clientSecret
+        refreshToken
       }
       github {
         authenticationType
@@ -9554,8 +9590,12 @@ export const QueryFeeds = gql`
           cloudId
         }
         linear {
+          authenticationType
           key
           project
+          clientId
+          clientSecret
+          refreshToken
         }
         github {
           authenticationType

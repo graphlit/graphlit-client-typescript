@@ -2019,6 +2019,62 @@ class Graphlit {
   }
 
   /**
+   * Distributes contents to an external connector.
+   * @param connector - The distribution connector to use.
+   * @param authentication - The authentication reference for distribution.
+   * @param filter - The filter criteria for selecting contents, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The distribution results.
+   */
+  public async distributeContents(
+    connector: Types.DistributionConnectorInput,
+    authentication: Types.EntityReferenceInput,
+    filter?: Types.ContentFilter,
+    correlationId?: string,
+  ): Promise<Types.DistributeContentsMutation> {
+    return this.mutateAndCheckError<
+      Types.DistributeContentsMutation,
+      Types.DistributeContentsMutationVariables
+    >(Documents.DistributeContents, {
+      connector: connector,
+      authentication: authentication,
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Distributes text to an external connector.
+   * @param connector - The distribution connector to use.
+   * @param authentication - The authentication reference for distribution.
+   * @param text - The text to distribute.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param name - The name of the distributed content, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The distribution result.
+   */
+  public async distributeText(
+    connector: Types.DistributionConnectorInput,
+    authentication: Types.EntityReferenceInput,
+    text: string,
+    textType?: Types.TextTypes,
+    name?: string,
+    correlationId?: string,
+  ): Promise<Types.DistributeTextMutation> {
+    return this.mutateAndCheckError<
+      Types.DistributeTextMutation,
+      Types.DistributeTextMutationVariables
+    >(Documents.DistributeText, {
+      connector: connector,
+      authentication: authentication,
+      text: text,
+      textType: textType,
+      name: name,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Researches contents and publishes the results.
    * @param connector - The publishing connector to use.
    * @param filter - The filter criteria for selecting contents, optional.
