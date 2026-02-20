@@ -503,6 +503,14 @@ export class UIEventAdapter {
       }
     }
 
+    // Emit a final message_update with the complete text so that consumers
+    // relying on message_update events (e.g. SSE forwarding) receive the
+    // fully-flushed content before the stream closes. Without this, the
+    // last message_update still contains the pre-flush truncated text.
+    if (this.currentMessage.length > 0) {
+      this.emitMessageUpdate(false);
+    }
+
     this.isStreaming = false;
 
     // Create final message with metadata

@@ -15,3 +15,6 @@ console.log(
 console.log(
   `🔑 OpenAI API: ${process.env.OPENAI_API_KEY ? "Available" : "Not set"}`,
 );
+console.log(
+  `🔑 Anthropic API: ${process.env.ANTHROPIC_API_KEY ? "Available" : "Not set"}`,
+);

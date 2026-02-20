@@ -751,6 +751,8 @@ export const GetConnector = gql`
     type
     authentication {
       type
+      token
+      apiKey
       microsoft {
         tenantId
         clientId
@@ -816,6 +818,8 @@ export const QueryConnectors = gql`
       type
       authentication {
         type
+        token
+        apiKey
         microsoft {
           tenantId
           clientId
@@ -9152,7 +9156,14 @@ export const GetFeed = gql`
     }
     twitter {
       readLimit
+      authenticationType
       token
+      clientId
+      clientSecret
+      refreshToken
+      connector {
+        id
+      }
       type
       userName
       query
@@ -9948,7 +9959,14 @@ export const QueryFeeds = gql`
       }
       twitter {
         readLimit
+        authenticationType
         token
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
         type
         userName
         query
@@ -15397,6 +15415,9 @@ export const GetProject = gql`
       imageSpecification {
         id
       }
+      multimodalSpecification {
+        id
+      }
     }
     quota {
       storage
@@ -16311,6 +16332,13 @@ export const GetSpecification = gql`
       modelName
       chunkTokenLimit
     }
+    twelveLabs {
+      model
+      embeddingOptions
+      embeddingScopes
+      segmentationMethod
+      segmentationDuration
+    }
   }
 }
     `;
@@ -16710,6 +16738,13 @@ export const QuerySpecifications = gql`
         modelName
         chunkTokenLimit
       }
+      twelveLabs {
+        model
+        embeddingOptions
+        embeddingScopes
+        segmentationMethod
+        segmentationDuration
+      }
     }
   }
 }
@@ -16808,6 +16843,8 @@ export const GetUser = gql`
       type
       authentication {
         type
+        token
+        apiKey
         microsoft {
           tenantId
           clientId
@@ -16891,6 +16928,8 @@ export const GetUserByIdentifier = gql`
       type
       authentication {
         type
+        token
+        apiKey
         microsoft {
           tenantId
           clientId
@@ -16975,6 +17014,8 @@ export const QueryUsers = gql`
         type
         authentication {
           type
+          token
+          apiKey
           microsoft {
             tenantId
             clientId

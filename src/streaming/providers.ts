@@ -520,6 +520,13 @@ export async function streamWithOpenAI(
       );
     }
 
+    // Emit completion event so UIEventAdapter flushes the chunk buffer
+    // before the SSE stream closes
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
+
     // Pass usage data if available
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
@@ -1246,6 +1253,13 @@ export async function streamWithAnthropic(
       );
     }
 
+    // Emit completion event so UIEventAdapter flushes the chunk buffer
+    // before the SSE stream closes
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
+
     onComplete(messageWithThinking, validToolCalls, usageData);
   } catch (error: any) {
     // Handle Anthropic-specific errors
@@ -1837,6 +1851,13 @@ export async function streamWithGoogle(
     } catch (e) {
       // Ignore errors capturing usage data
     }
+
+    // Emit completion event so UIEventAdapter flushes the chunk buffer
+    // before the SSE stream closes
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
 
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error) {
@@ -3430,6 +3451,13 @@ export async function streamWithMistral(
 
     // Check if we captured usage data during streaming
     // Note: Mistral SDK may provide usage data differently than other providers
+
+    // Emit completion event so UIEventAdapter flushes the chunk buffer
+    // before the SSE stream closes
+    onEvent({
+      type: "complete",
+      tokens: tokenCount,
+    });
 
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {

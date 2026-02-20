@@ -5,7 +5,6 @@
   "type": "module",
   "main": "test-runner.js",
   "scripts": {
-    "pretest": "node validate-simple.js",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",

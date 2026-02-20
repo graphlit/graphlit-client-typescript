@@ -165,6 +165,7 @@ const GOOGLE_MODEL_MAP: Record<string, string> = {
   // Gemini 3 models
   [Types.GoogleModels.Gemini_3FlashPreview]: "gemini-3-flash-preview",
   [Types.GoogleModels.Gemini_3ProPreview]: "gemini-3-pro-preview",
+  [Types.GoogleModels.Gemini_3_1ProPreview]: "gemini-3.1-pro-preview",
 
   // Gemini Latest models
   [Types.GoogleModels.GeminiFlashLatest]: "gemini-flash-latest",
