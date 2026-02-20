@@ -210,6 +210,7 @@ query GetSpecification($id: ID!, $correlationId: String) {
     }
     twelveLabs {
       model
+      key
       embeddingOptions
       embeddingScopes
       segmentationMethod

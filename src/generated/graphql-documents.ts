@@ -16334,6 +16334,7 @@ export const GetSpecification = gql`
     }
     twelveLabs {
       model
+      key
       embeddingOptions
       embeddingScopes
       segmentationMethod
@@ -16740,6 +16741,7 @@ export const QuerySpecifications = gql`
       }
       twelveLabs {
         model
+        key
         embeddingOptions
         embeddingScopes
         segmentationMethod

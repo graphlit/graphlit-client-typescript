@@ -212,6 +212,7 @@ query QuerySpecifications($filter: SpecificationFilter, $correlationId: String) 
       }
       twelveLabs {
         model
+        key
         embeddingOptions
         embeddingScopes
         segmentationMethod
