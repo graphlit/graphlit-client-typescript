@@ -1823,6 +1823,7 @@ export const GetContent = gql`
       index
       text
       relevance
+      embeddingType
       images {
         id
         mimeType
@@ -1842,6 +1843,7 @@ export const GetContent = gql`
         role
         language
         relevance
+        embeddingType
       }
     }
     segments {
@@ -1849,12 +1851,14 @@ export const GetContent = gql`
       endTime
       text
       relevance
+      embeddingType
     }
     frames {
       index
       description
       text
       relevance
+      embeddingType
     }
     error
   }
@@ -2689,6 +2693,7 @@ export const LookupContents = gql`
         index
         text
         relevance
+        embeddingType
         images {
           id
           mimeType
@@ -2708,6 +2713,7 @@ export const LookupContents = gql`
           role
           language
           relevance
+          embeddingType
         }
       }
       segments {
@@ -2715,12 +2721,14 @@ export const LookupContents = gql`
         endTime
         text
         relevance
+        embeddingType
       }
       frames {
         index
         description
         text
         relevance
+        embeddingType
       }
       error
     }
@@ -3362,6 +3370,7 @@ export const QueryContents = gql`
         index
         text
         relevance
+        embeddingType
         images {
           id
           mimeType
@@ -3381,6 +3390,7 @@ export const QueryContents = gql`
           role
           language
           relevance
+          embeddingType
         }
       }
       segments {
@@ -3388,12 +3398,14 @@ export const QueryContents = gql`
         endTime
         text
         relevance
+        embeddingType
       }
       frames {
         index
         description
         text
         relevance
+        embeddingType
       }
       error
     }
@@ -3790,6 +3802,7 @@ export const QueryContentsObservations = gql`
         index
         text
         relevance
+        embeddingType
         images {
           id
           mimeType
@@ -3809,6 +3822,7 @@ export const QueryContentsObservations = gql`
           role
           language
           relevance
+          embeddingType
         }
       }
       segments {
@@ -3816,12 +3830,14 @@ export const QueryContentsObservations = gql`
         endTime
         text
         relevance
+        embeddingType
       }
       frames {
         index
         description
         text
         relevance
+        embeddingType
       }
       error
       markdown
