@@ -21,6 +21,7 @@ import type {
 } from "@apollo/client/core/index.js";
 
 import { DocumentNode, GraphQLFormattedError } from "graphql";
+import { attachPartialErrors } from "./partial-errors.js";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
 import { getServiceType, getModelName, getModelEnum } from "./model-mapping.js";
@@ -10150,6 +10151,7 @@ class Graphlit {
             .map((err: any) => this.prettyPrintGraphQLError(err))
             .join("\n"),
         );
+        attachPartialErrors(result.data, result.errors);
       }
 
       if (!result.data) {
@@ -10172,6 +10174,7 @@ class Graphlit {
                 )
                 .join("\n"),
             );
+            attachPartialErrors(networkResult.data, error.graphQLErrors);
             return networkResult.data as TData;
           }
         }
@@ -10226,6 +10229,7 @@ class Graphlit {
             .map((err: any) => this.prettyPrintGraphQLError(err))
             .join("\n"),
         );
+        attachPartialErrors(result.data, result.errors);
       }
 
       if (!result.data) {
@@ -10246,6 +10250,7 @@ class Graphlit {
                 .map((err: any) => this.prettyPrintGraphQLError(err))
                 .join("\n"),
             );
+            attachPartialErrors(networkResult.data, error.graphQLErrors);
             return networkResult.data as TData;
           }
         }
@@ -10268,3 +10273,5 @@ class Graphlit {
 
 export { Graphlit };
 export * as Types from "./generated/graphql-types.js";
+export { getPartialErrors, PARTIAL_ERRORS_KEY } from "./partial-errors.js";
+export type { PartialGraphQLError } from "./partial-errors.js";
