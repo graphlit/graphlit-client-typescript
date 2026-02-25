@@ -8088,10 +8088,11 @@ class Graphlit {
         actualConversationId,
         async () => {
           // Check streaming support - fallback to promptAgent if not supported
-          if (fullSpec && !this.supportsStreaming(fullSpec, tools)) {
+          // Also fall back when no specification is provided (can't route to provider locally)
+          if (!fullSpec || !this.supportsStreaming(fullSpec, tools)) {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                "\n⚠️ [streamAgent] Streaming not supported, falling back to promptAgent with same conversation",
+                `\n⚠️ [streamAgent] ${!fullSpec ? "No specification provided" : "Streaming not supported"}, falling back to promptAgent with same conversation`,
               );
             }
 
@@ -8194,6 +8195,7 @@ class Graphlit {
           );
 
           // Start the streaming conversation
+          // fullSpec is guaranteed non-null here — the !fullSpec check above returns early
           await this.executeStreamingAgent(
             prompt,
             actualConversationId,
