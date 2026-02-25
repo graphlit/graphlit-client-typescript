@@ -372,7 +372,7 @@ class Graphlit {
       if (!isValidGuid(this.organizationId)) {
         throw new Error(
           `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -383,7 +383,7 @@ class Graphlit {
       if (!isValidGuid(this.environmentId)) {
         throw new Error(
           `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -396,7 +396,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -2763,6 +2763,7 @@ class Graphlit {
    * @param ttft - Time to first token, optional.
    * @param throughput - Tokens per second throughput, optional.
    * @param artifacts - The artifacts produced during the completion, optional.
+   * @param messages - The conversation messages, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The completed conversation.
    */
@@ -2773,6 +2774,7 @@ class Graphlit {
     ttft?: Types.Scalars["TimeSpan"]["input"],
     throughput?: Types.Scalars["Float"]["input"],
     artifacts?: Types.EntityReferenceInput[],
+    messages?: Types.ConversationMessageInput[],
     correlationId?: string,
   ): Promise<Types.CompleteConversationMutation> {
     return this.mutateAndCheckError<
@@ -2785,6 +2787,7 @@ class Graphlit {
       ttft: ttft,
       throughput: throughput,
       artifacts: artifacts,
+      messages: messages,
       correlationId: correlationId,
     });
   }
@@ -7917,11 +7920,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-              promptTokens: 0, // We don't have this breakdown from the API
-              completionTokens: totalTokens,
-              totalTokens: totalTokens,
-              model: currentMessage?.model || undefined,
-            }
+            promptTokens: 0, // We don't have this breakdown from the API
+            completionTokens: totalTokens,
+            totalTokens: totalTokens,
+            model: currentMessage?.model || undefined,
+          }
           : undefined;
 
       return {
@@ -7981,7 +7984,7 @@ class Graphlit {
     // permanently block the queue for this conversation.
     // Check the abort signal before starting work so ESC while queued is instant.
     const next = previous
-      .catch(() => {})
+      .catch(() => { })
       .then(() => {
         if (abortSignal?.aborted) throw new Error("Operation aborted");
         return work();
@@ -8040,7 +8043,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = specification?.id
         ? ((await this.getSpecification(specification.id))
-            .specification as Types.Specification)
+          .specification as Types.Specification)
         : undefined;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && fullSpec) {
@@ -8390,9 +8393,9 @@ class Graphlit {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
         `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
-          `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
-          `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
-          `rebudgetThreshold=${rebudgetThreshold}`,
+        `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
+        `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
+        `rebudgetThreshold=${rebudgetThreshold}`,
       );
     }
 
@@ -8473,6 +8476,9 @@ class Graphlit {
 
     const serviceType = getServiceType(specification);
 
+    // Track where tool-round messages begin so we can extract them for completeConversation
+    const toolMessagesStartIndex = messages.length;
+
     // Handle tool calling loop locally
     while (currentRound < maxRounds) {
       if (abortSignal?.aborted) {
@@ -8513,7 +8519,7 @@ class Graphlit {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `📊 [Context Management] Windowed tool rounds: dropped ${droppedRounds} round(s), ` +
-                  `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
+                `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
               );
             }
           }
@@ -9165,7 +9171,7 @@ class Graphlit {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                  `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
                 );
               }
             }
@@ -9253,6 +9259,33 @@ class Graphlit {
       // Await any pending artifact ingestions so content IDs are available
       const collectedArtifacts = await artifactCollector.resolve();
 
+      // Extract intermediate tool-round messages (assistant+tool_calls and tool responses)
+      // so the server can persist them alongside the final completion
+      const intermediateMessages = messages.slice(toolMessagesStartIndex);
+      const messageInputs: Types.ConversationMessageInput[] | undefined =
+        intermediateMessages.length > 0
+          ? intermediateMessages.map((msg) => {
+            const input: Types.ConversationMessageInput = {
+              role: msg.role,
+              message: msg.message,
+              timestamp: msg.timestamp,
+            };
+            if (msg.toolCalls) {
+              input.toolCalls = msg.toolCalls
+                .filter(
+                  (tc): tc is Types.ConversationToolCall => tc !== null,
+                )
+                .map((tc) => ({
+                  id: tc.id,
+                  name: tc.name,
+                  arguments: tc.arguments,
+                }));
+            }
+            if (msg.toolCallId) input.toolCallId = msg.toolCallId;
+            return input;
+          })
+          : undefined;
+
       const completeResponse = await this.completeConversation(
         trimmedMessage,
         conversationId,
@@ -9260,6 +9293,7 @@ class Graphlit {
         millisecondsToTimeSpan(ttft),
         throughput,
         collectedArtifacts.length > 0 ? collectedArtifacts : undefined,
+        messageInputs,
         correlationId,
       );
 
@@ -9468,13 +9502,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.OPENAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("OpenAI module not available");
-          })());
+          throw new Error("OpenAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9529,13 +9563,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.ANTHROPIC_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Anthropic module not available");
-          })());
+          throw new Error("Anthropic module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9623,8 +9657,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-            throw new Error("Google GenerativeAI module not available");
-          })());
+          throw new Error("Google GenerativeAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9680,8 +9714,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-            throw new Error("Groq module not available");
-          })());
+          throw new Error("Groq module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9725,13 +9759,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-            apiKey: process.env.CEREBRAS_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.CEREBRAS_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Cerebras module not available");
-          })());
+          throw new Error("Cerebras module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9778,8 +9812,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-              throw new Error("Cohere module not available");
-            })());
+            throw new Error("Cohere module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9823,29 +9857,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-            const apiKey = process.env.MISTRAL_API_KEY;
-            if (!apiKey) {
-              throw new Error(
-                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-              );
-            }
-            return new Mistral({
-              apiKey,
-              retryConfig: {
-                strategy: "backoff",
-                backoff: {
-                  initialInterval: 1000,
-                  maxInterval: 60000,
-                  exponent: 2,
-                  maxElapsedTime: 300000, // 5 minutes
-                },
-                retryConnectionErrors: true,
+          const apiKey = process.env.MISTRAL_API_KEY;
+          if (!apiKey) {
+            throw new Error(
+              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+            );
+          }
+          return new Mistral({
+            apiKey,
+            retryConfig: {
+              strategy: "backoff",
+              backoff: {
+                initialInterval: 1000,
+                maxInterval: 60000,
+                exponent: 2,
+                maxElapsedTime: 300000, // 5 minutes
               },
-            });
-          })()
+              retryConnectionErrors: true,
+            },
+          });
+        })()
         : (() => {
-            throw new Error("Mistral module not available");
-          })());
+          throw new Error("Mistral module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9890,11 +9924,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-            region: process.env.AWS_REGION || "us-east-2",
-          })
+          region: process.env.AWS_REGION || "us-east-2",
+        })
         : (() => {
-            throw new Error("Bedrock module not available");
-          })());
+          throw new Error("Bedrock module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -9939,11 +9973,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.deepseek.com",
-            apiKey: process.env.DEEPSEEK_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.deepseek.com",
+          apiKey: process.env.DEEPSEEK_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!deepseekClient) {
@@ -9989,11 +10023,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.x.ai/v1",
-            apiKey: process.env.XAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.x.ai/v1",
+          apiKey: process.env.XAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!xaiClient) {
@@ -10081,7 +10115,7 @@ class Graphlit {
       ) {
         console.log(
           `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-            `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
+          `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
         );
       }
 

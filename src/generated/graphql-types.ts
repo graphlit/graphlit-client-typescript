@@ -3241,6 +3241,8 @@ export type ContentFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Whether to disable inheritance from project to tenant, upon content retrieval. Defaults to False. */
   disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The embedding types to use for vector search. Defaults to all configured embedding types. */
+  embeddingTypes?: InputMaybe<Array<EmbeddingTypes>>;
   /** Filter by feeds. */
   feeds?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by file extensions. */
@@ -14444,6 +14446,7 @@ export type MutationCompleteConversationArgs = {
   completionTime?: InputMaybe<Scalars['TimeSpan']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  messages?: InputMaybe<Array<ConversationMessageInput>>;
   throughput?: InputMaybe<Scalars['Float']['input']>;
   ttft?: InputMaybe<Scalars['TimeSpan']['input']>;
 };
@@ -24431,6 +24434,7 @@ export type CompleteConversationMutationVariables = Exact<{
   ttft?: InputMaybe<Scalars['TimeSpan']['input']>;
   throughput?: InputMaybe<Scalars['Float']['input']>;
   artifacts?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  messages?: InputMaybe<Array<ConversationMessageInput> | ConversationMessageInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
