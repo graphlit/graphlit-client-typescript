@@ -208,6 +208,7 @@ export const GetAlert = gql`
         seed {
           id
         }
+        size
       }
       googleImage {
         model
@@ -215,6 +216,7 @@ export const GetAlert = gql`
         seed {
           id
         }
+        resolution
       }
       quiverImage {
         model
@@ -409,6 +411,7 @@ export const QueryAlerts = gql`
           seed {
             id
           }
+          size
         }
         googleImage {
           model
@@ -416,6 +419,7 @@ export const QueryAlerts = gql`
           seed {
             id
           }
+          resolution
         }
         quiverImage {
           model
