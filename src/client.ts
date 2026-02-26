@@ -2030,7 +2030,7 @@ class Graphlit {
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The distribution results.
    */
-  public async distributeContents(
+  public async distribute(
     connector: Types.DistributionConnectorInput,
     authentication: Types.EntityReferenceInput,
     filter?: Types.ContentFilter,
@@ -2038,11 +2038,11 @@ class Graphlit {
     textType?: Types.TextTypes,
     name?: string,
     correlationId?: string,
-  ): Promise<Types.DistributeContentsMutation> {
+  ): Promise<Types.DistributeMutation> {
     return this.mutateAndCheckError<
-      Types.DistributeContentsMutation,
-      Types.DistributeContentsMutationVariables
-    >(Documents.DistributeContents, {
+      Types.DistributeMutation,
+      Types.DistributeMutationVariables
+    >(Documents.Distribute, {
       connector: connector,
       authentication: authentication,
       filter: filter,

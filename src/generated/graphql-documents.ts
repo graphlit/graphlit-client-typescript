@@ -85,6 +85,7 @@ export const GetAlert = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -215,6 +216,14 @@ export const GetAlert = gql`
           id
         }
       }
+      quiverImage {
+        model
+        count
+        seed {
+          id
+        }
+        instructions
+      }
       openAIVideo {
         model
         seconds
@@ -277,6 +286,7 @@ export const QueryAlerts = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -406,6 +416,14 @@ export const QueryAlerts = gql`
           seed {
             id
           }
+        }
+        quiverImage {
+          model
+          count
+          seed {
+            id
+          }
+          instructions
         }
         openAIVideo {
           model
@@ -1218,9 +1236,9 @@ export const DescribeImage = gql`
   }
 }
     `;
-export const DistributeContents = gql`
-    mutation DistributeContents($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String, $textType: TextTypes, $name: String, $filter: ContentFilter, $correlationId: String) {
-  distributeContents(
+export const Distribute = gql`
+    mutation Distribute($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!, $text: String, $textType: TextTypes, $name: String, $filter: ContentFilter, $correlationId: String) {
+  distribute(
     connector: $connector
     authentication: $authentication
     text: $text
@@ -5535,6 +5553,7 @@ export const GetConversation = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -5628,6 +5647,7 @@ export const GetConversation = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -6580,6 +6600,7 @@ export const QueryConversations = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -6673,6 +6694,7 @@ export const QueryConversations = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -6955,6 +6977,7 @@ export const QueryConversationsClusters = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -7048,6 +7071,7 @@ export const QueryConversationsClusters = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -17129,6 +17153,7 @@ export const CreateView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17222,6 +17247,7 @@ export const CreateView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17358,6 +17384,7 @@ export const GetView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17451,6 +17478,7 @@ export const GetView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17561,6 +17589,7 @@ export const QueryViews = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -17654,6 +17683,7 @@ export const QueryViews = gql`
           to
         }
         inLast
+        inNext
         creationDateRange {
           from
           to
@@ -17758,6 +17788,7 @@ export const UpdateView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17851,6 +17882,7 @@ export const UpdateView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -17954,6 +17986,7 @@ export const UpsertView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
@@ -18047,6 +18080,7 @@ export const UpsertView = gql`
         to
       }
       inLast
+      inNext
       creationDateRange {
         from
         to
