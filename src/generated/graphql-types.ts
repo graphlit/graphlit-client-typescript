@@ -3035,6 +3035,8 @@ export type ContentCriteria = {
   hasWorkflows?: Maybe<Scalars['Boolean']['output']>;
   /** Filter by original date recent timespan. For example, a timespan of one day will return content authored in the last 24 hours. */
   inLast?: Maybe<Scalars['TimeSpan']['output']>;
+  /** Filter by original date future timespan. For example, a timespan of three days will return content with original date in the next 72 hours. */
+  inNext?: Maybe<Scalars['TimeSpan']['output']>;
   /** Filter mode for observations. Any: match if any observation matches. All: must have all listed observations. Only: must have only the listed observations. Defaults to All. */
   observationMode?: Maybe<FilterMode>;
   /** Filter by observations. */
@@ -3087,6 +3089,8 @@ export type ContentCriteriaInput = {
   hasWorkflows?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by original date recent timespan. For example, a timespan of one day will return content authored in the last 24 hours. */
   inLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter by original date future timespan. For example, a timespan of three days will return content with original date in the next 72 hours. */
+  inNext?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter mode for observations. Any: match if any observation matches. All: must have all listed observations. Only: must have only the listed observations. Defaults to All. */
   observationMode?: InputMaybe<FilterMode>;
   /** Filter by observations. */
@@ -3273,6 +3277,8 @@ export type ContentFilter = {
   imageMimeType?: InputMaybe<Scalars['String']['input']>;
   /** Filter by original date recent timespan. For example, a timespan of one day will return content authored in the last 24 hours. */
   inLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter by original date future timespan. For example, a timespan of three days will return content with original date in the next 72 hours. */
+  inNext?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Limit the number of content(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter by geo-location. */
@@ -3408,6 +3414,8 @@ export type ContentPublishingConnector = {
   openAIVideo?: Maybe<OpenAiVideoPublishingProperties>;
   /** The specific properties for Parallel research publishing. */
   parallel?: Maybe<ParallelPublishingProperties>;
+  /** The specific properties for Quiver Image publishing. */
+  quiverImage?: Maybe<QuiverImagePublishingProperties>;
   /** The content publishing service type. */
   type: ContentPublishingServiceTypes;
 };
@@ -3428,6 +3436,8 @@ export type ContentPublishingConnectorInput = {
   openAIVideo?: InputMaybe<OpenAiVideoPublishingPropertiesInput>;
   /** The specific properties for Parallel research publishing. */
   parallel?: InputMaybe<ParallelPublishingPropertiesInput>;
+  /** The specific properties for Quiver Image publishing. */
+  quiverImage?: InputMaybe<QuiverImagePublishingPropertiesInput>;
   /** The content publishing service type. */
   type: ContentPublishingServiceTypes;
 };
@@ -3448,6 +3458,8 @@ export type ContentPublishingConnectorUpdateInput = {
   openAIVideo?: InputMaybe<OpenAiVideoPublishingPropertiesInput>;
   /** The specific properties for Parallel research publishing. */
   parallel?: InputMaybe<ParallelPublishingPropertiesInput>;
+  /** The specific properties for Quiver Image publishing. */
+  quiverImage?: InputMaybe<QuiverImagePublishingPropertiesInput>;
   /** The content publishing service type. */
   type: ContentPublishingServiceTypes;
 };
@@ -3465,6 +3477,8 @@ export enum ContentPublishingFormats {
   Mp4 = 'MP4',
   /** PNG */
   Png = 'PNG',
+  /** SVG */
+  Svg = 'SVG',
   /** Plain Text */
   Text = 'TEXT',
   /** WEBP */
@@ -3485,6 +3499,8 @@ export enum ContentPublishingServiceTypes {
   OpenAiVideo = 'OPEN_AI_VIDEO',
   /** Parallel research publishing */
   ParallelResearch = 'PARALLEL_RESEARCH',
+  /** Quiver Image publishing */
+  QuiverImage = 'QUIVER_IMAGE',
   /** Text publishing */
   Text = 'TEXT'
 }
@@ -13777,6 +13793,8 @@ export enum ModelServiceTypes {
   Mistral = 'MISTRAL',
   /** OpenAI */
   OpenAi = 'OPEN_AI',
+  /** Quiver */
+  Quiver = 'QUIVER',
   /** Replicate */
   Replicate = 'REPLICATE',
   /** TwelveLabs */
@@ -20300,6 +20318,39 @@ export type QueryResults = {
   __typename?: 'QueryResults';
   /** The list of view query results. */
   results?: Maybe<Array<View>>;
+};
+
+/** Quiver Image model type */
+export enum QuiverImageModels {
+  /** Arrow Preview */
+  ArrowPreview = 'ARROW_PREVIEW',
+  /** Developer-specified model */
+  Custom = 'CUSTOM'
+}
+
+/** Represents the Quiver Image publishing properties. */
+export type QuiverImagePublishingProperties = {
+  __typename?: 'QuiverImagePublishingProperties';
+  /** The number of SVG images to generate, optional. Defaults to 1. */
+  count?: Maybe<Scalars['Int']['output']>;
+  /** The style instructions for SVG generation, optional. */
+  instructions?: Maybe<Scalars['String']['output']>;
+  /** The Quiver Image model. */
+  model?: Maybe<QuiverImageModels>;
+  /** The seed image reference to use when generating SVG image(s), optional. */
+  seed?: Maybe<EntityReference>;
+};
+
+/** Represents the Quiver Image publishing properties. */
+export type QuiverImagePublishingPropertiesInput = {
+  /** The number of SVG images to generate, optional. Defaults to 1. */
+  count?: InputMaybe<Scalars['Int']['input']>;
+  /** The style instructions for SVG generation, optional. Provides system-level guidance for SVG output style. */
+  instructions?: InputMaybe<Scalars['String']['input']>;
+  /** The Quiver Image model. */
+  model?: InputMaybe<QuiverImageModels>;
+  /** The seed image reference to use when generating SVG image(s), optional. */
+  seed?: InputMaybe<EntityReferenceInput>;
 };
 
 /** Represents RSS feed properties. */
