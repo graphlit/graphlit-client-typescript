@@ -8969,6 +8969,11 @@ class Graphlit {
       // Update the full message
       fullMessage = roundMessage;
 
+      // Check abort after streaming completes, before starting tool execution
+      if (abortSignal?.aborted) {
+        throw new Error("Operation aborted");
+      }
+
       // If no tool calls, we're done
       if (!toolCalls || toolCalls.length === 0) {
         break;
@@ -9010,6 +9015,11 @@ class Graphlit {
 
         // Execute tools and add responses
         for (const toolCall of toolCalls) {
+          // Check abort between tool calls so we don't run the entire round
+          if (abortSignal?.aborted) {
+            throw new Error("Operation aborted");
+          }
+
           const handler = toolHandlers[toolCall.name];
           if (!handler) {
             console.warn(`No handler for tool: ${toolCall.name}`);
@@ -9127,7 +9137,7 @@ class Graphlit {
             }
 
             // Execute tool
-            const result = await handler(args, artifactCollector);
+            const result = await handler(args, artifactCollector, abortSignal);
 
             // Update UI with complete event including result
             uiAdapter.handleEvent({
@@ -9390,7 +9400,7 @@ class Graphlit {
 
       try {
         const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
-        const result = await handler(args);
+        const result = await handler(args, undefined, abortSignal);
         uiAdapter.handleEvent({
           type: "tool_call_complete",
           toolCall: {
@@ -10083,7 +10093,7 @@ class Graphlit {
           setTimeout(() => reject(new Error("Tool execution timeout")), 30000),
         );
 
-        result = await Promise.race([handler(args), toolTimeout]);
+        result = await Promise.race([handler(args, undefined, signal), toolTimeout]);
       } catch (e: any) {
         error = e.message || "Tool execution failed";
         console.error(`Tool ${toolCall.name} failed:`, e);

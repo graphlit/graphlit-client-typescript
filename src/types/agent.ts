@@ -16,6 +16,7 @@ export interface ArtifactCollector {
 export type ToolHandler = (
   args: any,
   artifacts?: ArtifactCollector,
+  abortSignal?: AbortSignal,
 ) => Promise<any>;
 
 // Context strategy for managing token budgets during agentic tool loops.
