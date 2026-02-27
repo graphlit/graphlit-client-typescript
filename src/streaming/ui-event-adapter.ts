@@ -51,7 +51,6 @@ export class UIEventAdapter {
     streamingThroughput?: number;
     [key: string]: any;
   };
-  private roundThinkingContent?: string; // Store thinking content for conversation history
   private reasoningContent: string = "";
   private reasoningFormat?: ReasoningFormat;
   private reasoningSignature?: string;
@@ -1021,15 +1020,4 @@ export class UIEventAdapter {
     }
   }
 
-  /**
-   * Set thinking content for this round (for conversation history formatting)
-   */
-  public setRoundThinkingContent(thinkingContent: string): void {
-    this.roundThinkingContent = thinkingContent;
-    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(
-        `🧠 [UIEventAdapter] Thinking content set for conversation history (${thinkingContent.length} chars)`,
-      );
-    }
-  }
 }

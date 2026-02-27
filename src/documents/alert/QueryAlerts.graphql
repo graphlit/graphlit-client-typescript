@@ -155,6 +155,7 @@ query QueryAlerts($filter: AlertFilter, $correlationId: String) {
             id
           }
           resolution
+          aspectRatio
         }
         quiverImage {
           model

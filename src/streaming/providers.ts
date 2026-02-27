@@ -16,6 +16,7 @@ import {
 } from "./llm-formatters.js";
 import { getModelName } from "../model-mapping.js";
 import { StreamEvent } from "../types/internal.js";
+import { ReasoningMetadata } from "../types/ui-events.js";
 
 // Import Cohere SDK types for proper typing
 import type { Cohere } from "cohere-ai";
@@ -116,6 +117,7 @@ export async function streamWithOpenAI(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
   reasoningEffort?: string, // OpenAI reasoning effort level (low, medium, high)
@@ -585,6 +587,7 @@ export async function streamWithAnthropic(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
@@ -1220,8 +1223,8 @@ export async function streamWithAnthropic(
       );
     }
 
-    // Include thinking content in message when there are tool calls (required by Anthropic API)
-    let messageWithThinking = fullMessage;
+    // Build structured reasoning metadata (replaces XML-in-message approach)
+    let reasoningMetadata: ReasoningMetadata | undefined;
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -1229,28 +1232,19 @@ export async function streamWithAnthropic(
       );
     }
 
-    if (validToolCalls.length > 0 && completeThinkingContent.trim()) {
-      // Include thinking content with signature for API compatibility
-      const thinkingXml = completeThinkingSignature
-        ? `<thinking signature="${completeThinkingSignature}">${completeThinkingContent}</thinking>`
-        : `<thinking>${completeThinkingContent}</thinking>`;
-
-      messageWithThinking = `${thinkingXml}\n${fullMessage}`.trim();
+    if (completeThinkingContent.trim()) {
+      reasoningMetadata = {
+        content: completeThinkingContent,
+        format: "thinking_tag",
+      };
+      if (completeThinkingSignature) {
+        reasoningMetadata.signature = completeThinkingSignature;
+      }
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `🧠 [Anthropic] Including thinking content with message due to tool calls (${completeThinkingContent.length} chars, signature: ${completeThinkingSignature?.length || 0})`,
-        );
-        console.log(
-          `🧠 [Anthropic] Final stored message: "${messageWithThinking}"`,
+          `🧠 [Anthropic] Structured reasoning metadata: ${completeThinkingContent.length} chars, signature: ${completeThinkingSignature?.length || 0}`,
         );
       }
-    } else if (
-      process.env.DEBUG_GRAPHLIT_SDK_STREAMING &&
-      completeThinkingContent.trim()
-    ) {
-      console.log(
-        `🧠 [Anthropic] Thinking content captured (${completeThinkingContent.length} chars) - not including (no tool calls)`,
-      );
     }
 
     // Emit completion event so UIEventAdapter flushes the chunk buffer
@@ -1260,7 +1254,7 @@ export async function streamWithAnthropic(
       tokens: tokenCount,
     });
 
-    onComplete(messageWithThinking, validToolCalls, usageData);
+    onComplete(fullMessage, validToolCalls, usageData, reasoningMetadata);
   } catch (error: any) {
     // Handle Anthropic-specific errors
     const errorMessage = error.message || error.toString();
@@ -1312,6 +1306,7 @@ export async function streamWithGoogle(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
@@ -1852,6 +1847,15 @@ export async function streamWithGoogle(
       // Ignore errors capturing usage data
     }
 
+    // Build structured reasoning metadata for Google thinking content
+    let reasoningMetadata: ReasoningMetadata | undefined;
+    if (allThinkingContent.trim()) {
+      reasoningMetadata = {
+        content: allThinkingContent.trim(),
+        format: "thinking_tag",
+      };
+    }
+
     // Emit completion event so UIEventAdapter flushes the chunk buffer
     // before the SSE stream closes
     onEvent({
@@ -1859,7 +1863,7 @@ export async function streamWithGoogle(
       tokens: tokenCount,
     });
 
-    onComplete(fullMessage, toolCalls, usageData);
+    onComplete(fullMessage, toolCalls, usageData, reasoningMetadata);
   } catch (error) {
     // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
@@ -1879,6 +1883,7 @@ export async function streamWithGroq(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -1985,6 +1990,7 @@ export async function streamWithCerebras(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -2318,6 +2324,7 @@ export async function streamWithDeepseek(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -2674,6 +2681,15 @@ export async function streamWithDeepseek(
       );
     }
 
+    // Build structured reasoning metadata for Deepseek reasoning content
+    let reasoningMetadata: ReasoningMetadata | undefined;
+    if (reasoningLines.length > 0) {
+      reasoningMetadata = {
+        content: reasoningLines.join("\n"),
+        format: "markdown",
+      };
+    }
+
     // Send completion event
     onEvent({
       type: "complete",
@@ -2686,7 +2702,7 @@ export async function streamWithDeepseek(
       );
     }
 
-    onComplete(fullMessage, validToolCalls, usageData);
+    onComplete(fullMessage, validToolCalls, usageData, reasoningMetadata);
   } catch (error) {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Deepseek] Stream error:`, error);
@@ -2712,6 +2728,7 @@ export async function streamWithCohere(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -3093,6 +3110,7 @@ export async function streamWithMistral(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -3523,6 +3541,7 @@ export async function streamWithBedrock(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {
@@ -3898,6 +3917,7 @@ export async function streamWithXai(
     message: string,
     toolCalls: ConversationToolCall[],
     usage?: any,
+    reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
 ): Promise<void> {

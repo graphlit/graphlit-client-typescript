@@ -226,6 +226,9 @@ export type {
   ReasoningMetadata,
 } from "./types/ui-events.js";
 
+// Import ReasoningMetadata for local use (export type doesn't create a local binding)
+import type { ReasoningMetadata } from "./types/ui-events.js";
+
 // Retry configuration interface
 export interface RetryConfig {
   /** Maximum number of retry attempts (default: 5) */
@@ -8285,6 +8288,11 @@ class Graphlit {
     let fullMessage = "";
     const contextActions: ContextManagementAction[] = [];
 
+    // Sidecar map: stores reasoning metadata keyed by message index in the
+    // messages array. This lets us associate structured thinking content with
+    // the assistant message that produced it, for later persistence.
+    const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
+
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
     // completeConversation so the IDs are available without blocking the LLM.
@@ -8446,6 +8454,14 @@ class Graphlit {
           if (historyMessage.toolCallResponse)
             messageToAdd.toolCallResponse = historyMessage.toolCallResponse;
 
+          // Forward structured thinking fields from API responses
+          if (historyMessage.thinkingContent) {
+            messageToAdd.thinkingContent = historyMessage.thinkingContent;
+          }
+          if (historyMessage.thinkingSignature) {
+            messageToAdd.thinkingSignature = historyMessage.thinkingSignature;
+          }
+
           messages.push(messageToAdd);
         }
       }
@@ -8482,6 +8498,9 @@ class Graphlit {
 
     // Track where tool-round messages begin so we can extract them for completeConversation
     const toolMessagesStartIndex = messages.length;
+
+    // Tracks the final round's reasoning so it can be persisted after the loop
+    let lastRoundReasoning: ReasoningMetadata | undefined;
 
     // Handle tool calling loop locally
     while (currentRound < maxRounds) {
@@ -8538,6 +8557,7 @@ class Graphlit {
 
       let toolCalls: Types.ConversationToolCall[] = [];
       let roundMessage = "";
+      let roundReasoning: ReasoningMetadata | undefined;
 
       // Stream with appropriate provider
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -8573,9 +8593,10 @@ class Graphlit {
           openaiMessages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8609,9 +8630,10 @@ class Graphlit {
           system,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8645,9 +8667,10 @@ class Graphlit {
           undefined, // systemPrompt - Google handles this differently
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8679,9 +8702,10 @@ class Graphlit {
           groqMessages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8713,9 +8737,10 @@ class Graphlit {
           cerebrasMessages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8745,9 +8770,10 @@ class Graphlit {
           messages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8824,9 +8850,10 @@ class Graphlit {
           mistralMessages,
           shouldPassTools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8860,9 +8887,10 @@ class Graphlit {
           system,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8894,9 +8922,10 @@ class Graphlit {
           deepseekMessages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8928,9 +8957,10 @@ class Graphlit {
           xaiMessages,
           tools,
           uiAdapter,
-          (message, calls, usage) => {
+          (message, calls, usage, reasoning) => {
             roundMessage = message;
             toolCalls = calls;
+            roundReasoning = reasoning;
             if (usage) {
               uiAdapter.setUsageData(usage);
             }
@@ -8970,8 +9000,9 @@ class Graphlit {
         break;
       }
 
-      // Update the full message
+      // Update the full message and capture reasoning for persistence
       fullMessage = roundMessage;
+      lastRoundReasoning = roundReasoning;
 
       // Check abort after streaming completes, before starting tool execution
       if (abortSignal?.aborted) {
@@ -8997,13 +9028,26 @@ class Graphlit {
         }
 
         // Add assistant message with tool calls to conversation
-        const assistantMessage = {
+        const assistantMessage: Types.ConversationMessage = {
           __typename: "ConversationMessage" as const,
           role: Types.ConversationRoleTypes.Assistant,
           message: roundMessage,
           toolCalls: toolCalls,
           timestamp: new Date().toISOString(),
         };
+
+        // Attach structured thinking fields to in-memory message so
+        // formatMessagesForAnthropic can reconstruct thinking blocks
+        // without XML parsing on subsequent rounds.
+        if (roundReasoning) {
+          assistantMessage.thinkingContent = roundReasoning.content;
+          if (roundReasoning.signature) {
+            assistantMessage.thinkingSignature = roundReasoning.signature;
+          }
+          // Store in sidecar map keyed by absolute message index
+          reasoningByMessageIndex.set(messages.length, roundReasoning);
+        }
+
         messages.push(assistantMessage);
 
         // Track assistant message in budget (includes tool call arguments)
@@ -9278,7 +9322,7 @@ class Graphlit {
       const intermediateMessages = messages.slice(toolMessagesStartIndex);
       const messageInputs: Types.ConversationMessageInput[] | undefined =
         intermediateMessages.length > 0
-          ? intermediateMessages.map((msg) => {
+          ? intermediateMessages.map((msg, idx) => {
             const input: Types.ConversationMessageInput = {
               role: msg.role,
               message: msg.message,
@@ -9296,9 +9340,40 @@ class Graphlit {
                 }));
             }
             if (msg.toolCallId) input.toolCallId = msg.toolCallId;
+
+            // Populate structured thinking fields on assistant messages
+            const absoluteIndex = toolMessagesStartIndex + idx;
+            const reasoning = reasoningByMessageIndex.get(absoluteIndex);
+            if (reasoning) {
+              input.thinkingContent = reasoning.content;
+              if (reasoning.signature) {
+                input.thinkingSignature = reasoning.signature;
+              }
+            }
+
             return input;
           })
           : undefined;
+
+      // If the final round had reasoning, append it as the completion's
+      // assistant message in messageInputs (the mutation has no top-level
+      // thinking params — reasoning rides on ConversationMessageInput).
+      let finalMessageInputs = messageInputs;
+      if (lastRoundReasoning) {
+        const completionInput: Types.ConversationMessageInput = {
+          role: Types.ConversationRoleTypes.Assistant,
+          message: trimmedMessage,
+          timestamp: new Date().toISOString(),
+          thinkingContent: lastRoundReasoning.content,
+        };
+        if (lastRoundReasoning.signature) {
+          completionInput.thinkingSignature = lastRoundReasoning.signature;
+        }
+        finalMessageInputs = [
+          ...(messageInputs || []),
+          completionInput,
+        ];
+      }
 
       const completeResponse = await this.completeConversation(
         trimmedMessage,
@@ -9307,7 +9382,7 @@ class Graphlit {
         millisecondsToTimeSpan(ttft),
         throughput,
         collectedArtifacts.length > 0 ? collectedArtifacts : undefined,
-        messageInputs,
+        finalMessageInputs,
         correlationId,
       );
 
@@ -9503,6 +9578,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9564,6 +9640,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9657,6 +9734,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9714,6 +9792,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9760,6 +9839,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9810,6 +9890,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9858,6 +9939,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9925,6 +10007,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -9974,6 +10057,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -10024,6 +10108,7 @@ class Graphlit {
       message: string,
       toolCalls: Types.ConversationToolCall[],
       usage?: any,
+      reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {

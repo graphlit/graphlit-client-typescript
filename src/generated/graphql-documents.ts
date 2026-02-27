@@ -217,6 +217,7 @@ export const GetAlert = gql`
           id
         }
         resolution
+        aspectRatio
       }
       quiverImage {
         model
@@ -420,6 +421,7 @@ export const QueryAlerts = gql`
             id
           }
           resolution
+          aspectRatio
         }
         quiverImage {
           model
@@ -1090,6 +1092,8 @@ export const DescribeEncodedImage = gql`
       mimeType
       uri
     }
+    thinkingContent
+    thinkingSignature
   }
 }
     `;
@@ -1237,6 +1241,8 @@ export const DescribeImage = gql`
       mimeType
       uri
     }
+    thinkingContent
+    thinkingSignature
   }
 }
     `;
@@ -4254,6 +4260,8 @@ export const AskGraphlit = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
   }
@@ -4441,6 +4449,8 @@ export const CompleteConversation = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
     facets {
@@ -4632,6 +4642,8 @@ export const CompleteConversation = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
     }
   }
@@ -4784,6 +4796,8 @@ export const ContinueConversation = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
     facets {
@@ -4975,6 +4989,8 @@ export const ContinueConversation = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
     }
   }
@@ -5177,6 +5193,8 @@ export const FormatConversation = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
     facets {
@@ -5368,6 +5386,8 @@ export const FormatConversation = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
     }
   }
@@ -5523,6 +5543,8 @@ export const GetConversation = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     transcriptUri
     turns {
@@ -5933,6 +5955,8 @@ export const Prompt = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     error
   }
@@ -6093,6 +6117,8 @@ export const PromptConversation = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
     facets {
@@ -6284,6 +6310,8 @@ export const PromptConversation = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
     }
   }
@@ -6570,6 +6598,8 @@ export const QueryConversations = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
       transcriptUri
       turns {
@@ -6947,6 +6977,8 @@ export const QueryConversationsClusters = gql`
           mimeType
           uri
         }
+        thinkingContent
+        thinkingSignature
       }
       transcriptUri
       turns {
@@ -7477,6 +7509,8 @@ export const ReviseContent = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
   }
@@ -7632,6 +7666,8 @@ export const ReviseEncodedImage = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
   }
@@ -7786,6 +7822,8 @@ export const ReviseImage = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
   }
@@ -7940,6 +7978,8 @@ export const ReviseText = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     messageCount
   }
@@ -14789,6 +14829,10 @@ export const CreatePersona = gql`
     id
     name
     state
+    identifier
+    platform
+    displayName
+    timezone
     role
   }
 }
@@ -14832,6 +14876,10 @@ export const GetPersona = gql`
       id
     }
     state
+    identifier
+    platform
+    displayName
+    timezone
     role
     instructions
     facts {
@@ -14854,6 +14902,10 @@ export const QueryPersonas = gql`
         id
       }
       state
+      identifier
+      platform
+      displayName
+      timezone
       role
       instructions
       facts {
@@ -14870,6 +14922,10 @@ export const UpdatePersona = gql`
     id
     name
     state
+    identifier
+    platform
+    displayName
+    timezone
     role
   }
 }
@@ -16531,6 +16587,8 @@ export const PromptSpecifications = gql`
         mimeType
         uri
       }
+      thinkingContent
+      thinkingSignature
     }
     error
   }
@@ -16943,6 +17001,10 @@ export const GetUser = gql`
       id
       name
       state
+      identifier
+      platform
+      displayName
+      timezone
       role
       instructions
       facts {
@@ -17028,6 +17090,10 @@ export const GetUserByIdentifier = gql`
       id
       name
       state
+      identifier
+      platform
+      displayName
+      timezone
       role
       instructions
       facts {
@@ -17114,6 +17180,10 @@ export const QueryUsers = gql`
         id
         name
         state
+        identifier
+        platform
+        displayName
+        timezone
         role
         instructions
         facts {

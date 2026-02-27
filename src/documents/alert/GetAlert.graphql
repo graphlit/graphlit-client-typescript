@@ -153,6 +153,7 @@ query GetAlert($id: ID!, $correlationId: String) {
           id
         }
         resolution
+        aspectRatio
       }
       quiverImage {
         model

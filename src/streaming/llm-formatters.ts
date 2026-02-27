@@ -376,11 +376,40 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
           );
         }
 
-        // Check if message contains thinking content (for Anthropic compatibility)
-        const hasThinking = trimmedMessage.includes("<thinking");
+        // Prefer structured thinking fields (from new schema or in-memory messages)
+        // Fall back to XML parsing for old conversations stored with <thinking> tags
+        const structuredThinking = message.thinkingContent;
+        const structuredSignature = message.thinkingSignature;
+        const hasStructuredThinking = !!structuredThinking?.trim();
+        const hasXmlThinking =
+          !hasStructuredThinking && trimmedMessage.includes("<thinking");
 
-        if (hasThinking) {
-          // Parse thinking and text content separately for proper Anthropic format
+        if (hasStructuredThinking && structuredThinking) {
+          // Use structured fields directly (clean separation, no XML parsing needed)
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `🔍 [formatMessagesForAnthropic] Using structured thinking: ${structuredThinking.length} chars, signature: ${structuredSignature?.length || 0}`,
+            );
+          }
+
+          const thinkingBlock: any = {
+            type: "thinking",
+            thinking: structuredThinking.trim(),
+          };
+          if (structuredSignature) {
+            thinkingBlock.signature = structuredSignature;
+          }
+          content.push(thinkingBlock);
+
+          // Add text content after thinking block
+          if (trimmedMessage) {
+            content.push({
+              type: "text",
+              text: trimmedMessage,
+            });
+          }
+        } else if (hasXmlThinking) {
+          // Fallback: parse <thinking> XML from old conversations
           const thinkingMatch = trimmedMessage.match(
             /<thinking(?:\s+signature="([^"]*)")?\s*>(.*?)<\/thinking>/s,
           );
@@ -395,13 +424,7 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
 
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `🔍 [formatMessagesForAnthropic] Found thinking content: ${thinkingContent.length} chars`,
-            );
-            console.log(
-              `🔍 [formatMessagesForAnthropic] Text content after thinking: "${textContent}"`,
-            );
-            console.log(
-              `🔍 [formatMessagesForAnthropic] Signature: "${thinkingSignature}"`,
+              `🔍 [formatMessagesForAnthropic] XML fallback - thinking: ${thinkingContent.length} chars, signature: "${thinkingSignature}"`,
             );
           }
 
@@ -428,7 +451,7 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
             });
           }
         } else if (trimmedMessage) {
-          // Regular text content
+          // Regular text content — no thinking detected
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `🔍 [formatMessagesForAnthropic] No thinking found, adding text content`,
