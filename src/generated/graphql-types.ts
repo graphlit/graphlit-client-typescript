@@ -8043,6 +8043,38 @@ export type GoogleFeedPropertiesUpdateInput = {
   prefix?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Google image aspect ratio type */
+export enum GoogleImageAspectRatioTypes {
+  /** Landscape (3:2) */
+  Landscape_3X2 = 'LANDSCAPE_3X2',
+  /** Ultra wide landscape (4:1) */
+  Landscape_4X1 = 'LANDSCAPE_4X1',
+  /** Landscape (4:3) */
+  Landscape_4X3 = 'LANDSCAPE_4X3',
+  /** Landscape (5:4) */
+  Landscape_5X4 = 'LANDSCAPE_5X4',
+  /** Ultra wide landscape (8:1) */
+  Landscape_8X1 = 'LANDSCAPE_8X1',
+  /** Widescreen (16:9) */
+  Landscape_16X9 = 'LANDSCAPE_16X9',
+  /** Ultrawide cinematic (21:9) */
+  Landscape_21X9 = 'LANDSCAPE_21X9',
+  /** Tall portrait (1:4) */
+  Portrait_1X4 = 'PORTRAIT_1X4',
+  /** Ultra tall portrait (1:8) */
+  Portrait_1X8 = 'PORTRAIT_1X8',
+  /** Portrait (2:3) */
+  Portrait_2X3 = 'PORTRAIT_2X3',
+  /** Portrait (3:4) */
+  Portrait_3X4 = 'PORTRAIT_3X4',
+  /** Portrait (4:5) */
+  Portrait_4X5 = 'PORTRAIT_4X5',
+  /** Vertical video (9:16) */
+  Portrait_9X16 = 'PORTRAIT_9X16',
+  /** Square (1:1) */
+  Square_1X1 = 'SQUARE_1X1'
+}
+
 /** Google Image model type */
 export enum GoogleImageModels {
   /** Developer-specified model */
@@ -8058,6 +8090,8 @@ export enum GoogleImageModels {
 /** Represents the Google Image publishing properties. */
 export type GoogleImagePublishingProperties = {
   __typename?: 'GoogleImagePublishingProperties';
+  /** The image aspect ratio, optional. Defaults to 1:1 square. */
+  aspectRatio?: Maybe<GoogleImageAspectRatioTypes>;
   /** The number of images to generate, optional. Defaults to 1. */
   count?: Maybe<Scalars['Int']['output']>;
   /** The Google Image model. */
@@ -8070,6 +8104,8 @@ export type GoogleImagePublishingProperties = {
 
 /** Represents the Google Image publishing properties. */
 export type GoogleImagePublishingPropertiesInput = {
+  /** The image aspect ratio, optional. Defaults to 1:1 square. */
+  aspectRatio?: InputMaybe<GoogleImageAspectRatioTypes>;
   /** The number of images to generate, optional. Defaults to 1. */
   count?: InputMaybe<Scalars['Int']['input']>;
   /** The Google Image model. */
@@ -17764,10 +17800,14 @@ export type Persona = {
   __typename?: 'Persona';
   /** The creation date of the persona. */
   creationDate: Scalars['DateTime']['output'];
+  /** The display name of the persona. */
+  displayName?: Maybe<Scalars['String']['output']>;
   /** The persona memories as fact references. */
   facts?: Maybe<Array<FactReference>>;
   /** The ID of the persona. */
   id: Scalars['ID']['output'];
+  /** The external unique identifier of the persona. */
+  identifier?: Maybe<Scalars['String']['output']>;
   /** The behavioral/communication instructions for this persona context. */
   instructions?: Maybe<Scalars['String']['output']>;
   /** The modified date of the persona. */
@@ -17776,12 +17816,16 @@ export type Persona = {
   name: Scalars['String']['output'];
   /** The owner of the persona. */
   owner: Owner;
+  /** The origin platform of the persona. */
+  platform?: Maybe<Scalars['String']['output']>;
   /** The relevance score of the persona. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The contextual role of the persona. */
   role?: Maybe<Scalars['String']['output']>;
   /** The state of the persona (i.e. created, finished). */
   state: EntityState;
+  /** The IANA timezone of the persona. */
+  timezone?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents a filter for personas. */
@@ -17794,6 +17838,8 @@ export type PersonaFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Filter persona(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
+  /** Filter persona(s) by their external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** Limit the number of persona(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter persona(s) by their modified date range. */
@@ -17816,12 +17862,20 @@ export type PersonaFilter = {
 
 /** Represents a persona. */
 export type PersonaInput = {
+  /** The display name of the persona. */
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  /** The external unique identifier of the persona. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** The behavioral/communication instructions for this persona context. */
   instructions?: InputMaybe<Scalars['String']['input']>;
   /** The name of the persona. */
   name: Scalars['String']['input'];
+  /** The origin platform of the persona. */
+  platform?: InputMaybe<Scalars['String']['input']>;
   /** The contextual role of the persona. */
   role?: InputMaybe<Scalars['String']['input']>;
+  /** The IANA timezone of the persona. */
+  timezone?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents persona query results. */
@@ -17833,14 +17887,22 @@ export type PersonaResults = {
 
 /** Represents a persona. */
 export type PersonaUpdateInput = {
+  /** The display name of the persona. */
+  displayName?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the persona to update. */
   id: Scalars['ID']['input'];
+  /** The external unique identifier of the persona. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** The behavioral/communication instructions for this persona context. */
   instructions?: InputMaybe<Scalars['String']['input']>;
   /** The name of the persona. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The origin platform of the persona. */
+  platform?: InputMaybe<Scalars['String']['input']>;
   /** The contextual role of the persona. */
   role?: InputMaybe<Scalars['String']['input']>;
+  /** The IANA timezone of the persona. */
+  timezone?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a place. */
