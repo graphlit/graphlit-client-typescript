@@ -7,6 +7,7 @@ import {
   AgentStreamEvent,
   ToolExecutionStatus,
   ReasoningFormat,
+  ReasoningMetadata,
   StreamingConversationMessage,
 } from "../types/ui-events.js";
 import { StreamEvent } from "../types/internal.js";
@@ -163,6 +164,12 @@ export class UIEventAdapter {
     this.lastTokenTime = 0;
     this.tokenCount = 0;
     this.tokenDelays = [];
+
+    // Reset reasoning state so stale thinking from a prior round doesn't leak
+    this.reasoningContent = "";
+    this.reasoningFormat = undefined;
+    this.reasoningSignature = undefined;
+    this.isInReasoning = false;
 
     // Reset tool call tracking flags
     this.hasToolCallsInProgress = false;
@@ -614,12 +621,23 @@ export class UIEventAdapter {
       return; // Exit without emitting conversation_completed
     }
 
+    // Attach reasoning metadata to the final message
+    const reasoning = this.buildReasoningMetadata();
+    if (reasoning) {
+      finalMessage.isThinking = true;
+      finalMessage.thinkingContent = reasoning.content;
+    }
+
     // Include context window usage if available
     const event: AgentStreamEvent = {
       type: "conversation_completed",
       message: finalMessage,
       metrics: finalMetrics,
     };
+
+    if (reasoning) {
+      event.reasoning = reasoning;
+    }
 
     if (this.contextWindowUsage) {
       event.contextWindow = this.contextWindowUsage;
@@ -815,12 +833,25 @@ export class UIEventAdapter {
       }
     }
 
-    this.emitUIEvent({
+    // Attach reasoning metadata to the message and event
+    const reasoning = this.buildReasoningMetadata();
+    if (reasoning) {
+      message.isThinking = true;
+      message.thinkingContent = reasoning.content;
+    }
+
+    const event: AgentStreamEvent = {
       type: "message_update",
       message,
       isStreaming,
       metrics,
-    });
+    };
+
+    if (reasoning) {
+      event.reasoning = reasoning;
+    }
+
+    this.emitUIEvent(event);
   }
 
   private emitUIEvent(event: AgentStreamEvent): void {
@@ -925,6 +956,27 @@ export class UIEventAdapter {
         isComplete: true,
       });
     }
+  }
+
+  /**
+   * Build a ReasoningMetadata object from accumulated reasoning state.
+   * Returns undefined when no reasoning content has been captured.
+   */
+  private buildReasoningMetadata(): ReasoningMetadata | undefined {
+    if (!this.reasoningContent || !this.reasoningFormat) {
+      return undefined;
+    }
+
+    const metadata: ReasoningMetadata = {
+      content: this.reasoningContent,
+      format: this.reasoningFormat,
+    };
+
+    if (this.reasoningSignature) {
+      metadata.signature = this.reasoningSignature;
+    }
+
+    return metadata;
   }
 
   /**

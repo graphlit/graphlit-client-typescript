@@ -220,7 +220,11 @@ export {
 } from "./helpers/context-management.js";
 
 // Re-export UI event types
-export type { AgentStreamEvent } from "./types/ui-events.js";
+export type {
+  AgentStreamEvent,
+  ReasoningFormat,
+  ReasoningMetadata,
+} from "./types/ui-events.js";
 
 // Retry configuration interface
 export interface RetryConfig {

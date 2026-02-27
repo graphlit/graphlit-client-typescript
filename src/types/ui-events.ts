@@ -34,11 +34,24 @@ export type ContextWindowEvent = {
 };
 
 /**
+ * Structured reasoning/thinking metadata.
+ * Provides a canonical representation across all providers so the UI
+ * can decide whether and how to render model reasoning.
+ */
+export type ReasoningMetadata = {
+  content: string; // Clean thinking text (no XML tags or markdown fencing)
+  format: ReasoningFormat; // How the provider originally expressed reasoning
+  signature?: string; // Anthropic extended-thinking signature (needed for API round-tripping)
+};
+
+/**
  * Extended conversation message with additional streaming metadata
  */
 export type StreamingConversationMessage = Partial<ConversationMessage> & {
   message: string; // Ensure message text is always present
   modelName?: string; // Raw model name from API (e.g., "claude-sonnet-4-0")
+  isThinking?: boolean; // True when the message includes model reasoning/thinking content
+  thinkingContent?: string; // Clean thinking text (no XML tags or markdown fencing)
 };
 
 /**
@@ -84,6 +97,7 @@ export type AgentStreamEvent =
       type: "message_update";
       message: StreamingConversationMessage;
       isStreaming: boolean;
+      reasoning?: ReasoningMetadata; // Present when model reasoning has been detected so far
       metrics?: {
         ttft?: number; // Time to first token (ms)
         elapsedTime: number; // Streaming elapsed time (ms)
@@ -109,6 +123,7 @@ export type AgentStreamEvent =
   | {
       type: "conversation_completed";
       message: StreamingConversationMessage;
+      reasoning?: ReasoningMetadata; // Present when the response included model reasoning/thinking
       metrics?: {
         ttft?: number; // Time to first token (ms)
         totalTime: number; // Total streaming time (ms)
