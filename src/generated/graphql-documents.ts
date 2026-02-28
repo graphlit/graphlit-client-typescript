@@ -1,5 +1,315 @@
 import gql from 'graphql-tag';
 
+export const CountAgents = gql`
+    query CountAgents($filter: AgentFilter, $correlationId: String) {
+  countAgents(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateAgent = gql`
+    mutation CreateAgent($agent: AgentInput!, $correlationId: String) {
+  createAgent(agent: $agent, correlationId: $correlationId) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
+export const DeleteAgent = gql`
+    mutation DeleteAgent($id: ID!) {
+  deleteAgent(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteAgents = gql`
+    mutation DeleteAgents($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteAgents(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteAllAgents = gql`
+    mutation DeleteAllAgents($filter: AgentFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllAgents(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DisableAgent = gql`
+    mutation DisableAgent($id: ID!) {
+  disableAgent(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const EnableAgent = gql`
+    mutation EnableAgent($id: ID!) {
+  enableAgent(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetAgent = gql`
+    query GetAgent($id: ID!, $correlationId: String) {
+  agent(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
+    correlationId
+    type
+    specification {
+      id
+    }
+    filter {
+      dateRange {
+        from
+        to
+      }
+      inLast
+      inNext
+      creationDateRange {
+        from
+        to
+      }
+      createdInLast
+      types
+      fileTypes
+      formats
+      fileExtensions
+      fileSizeRange {
+        from
+        to
+      }
+      similarContents {
+        id
+      }
+      contents {
+        id
+      }
+      feeds {
+        id
+      }
+      workflows {
+        id
+      }
+      collections {
+        id
+      }
+      users {
+        id
+      }
+      observations {
+        type
+        observable {
+          id
+        }
+        states
+      }
+      or {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      and {
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+      }
+      hasObservations
+      hasFeeds
+      hasCollections
+      hasWorkflows
+      collectionMode
+      observationMode
+    }
+  }
+}
+    `;
+export const QueryAgents = gql`
+    query QueryAgents($filter: AgentFilter, $correlationId: String) {
+  agents(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      correlationId
+      type
+      specification {
+        id
+      }
+      filter {
+        dateRange {
+          from
+          to
+        }
+        inLast
+        inNext
+        creationDateRange {
+          from
+          to
+        }
+        createdInLast
+        types
+        fileTypes
+        formats
+        fileExtensions
+        fileSizeRange {
+          from
+          to
+        }
+        similarContents {
+          id
+        }
+        contents {
+          id
+        }
+        feeds {
+          id
+        }
+        workflows {
+          id
+        }
+        collections {
+          id
+        }
+        users {
+          id
+        }
+        observations {
+          type
+          observable {
+            id
+          }
+          states
+        }
+        or {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        and {
+          feeds {
+            id
+          }
+          workflows {
+            id
+          }
+          collections {
+            id
+          }
+          users {
+            id
+          }
+          observations {
+            type
+            observable {
+              id
+            }
+            states
+          }
+        }
+        hasObservations
+        hasFeeds
+        hasCollections
+        hasWorkflows
+        collectionMode
+        observationMode
+      }
+    }
+  }
+}
+    `;
+export const UpdateAgent = gql`
+    mutation UpdateAgent($agent: AgentUpdateInput!) {
+  updateAgent(agent: $agent) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
+export const UpsertAgent = gql`
+    mutation UpsertAgent($agent: AgentInput!) {
+  upsertAgent(agent: $agent) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
 export const CountAlerts = gql`
     query CountAlerts($filter: AlertFilter, $correlationId: String) {
   countAlerts(filter: $filter, correlationId: $correlationId) {
@@ -9172,10 +9482,35 @@ export const GetFeed = gql`
       exa {
         searchType
       }
+      crustdata {
+        signalType
+        companyDomain
+        companyLinkedInUrl
+        companyId
+        personLinkedInUrls
+        jobTitle
+        jobRegion
+        jobDescription
+      }
     }
     reddit {
       readLimit
       subredditName
+    }
+    linkedIn {
+      readLimit
+      listingType
+      companyDomain
+      companyLinkedInUrl
+      companyName
+      personLinkedInUrl
+      postTypes
+      keyword
+      datePosted
+      exactKeywordMatch
+      contentTypes
+      includeComments
+      maxComments
     }
     notion {
       readLimit
@@ -9352,6 +9687,45 @@ export const GetFeed = gql`
       parallel {
         generator
         processor
+      }
+      crustdata {
+        personFilters {
+          titles
+          seniorityLevels
+          functionCategories
+          companyNames
+          companyDomains
+          companyLinkedInUrls
+          industries
+          regions
+          countries
+          skills
+          schools
+          minYearsExperience
+          maxYearsExperience
+          minConnections
+          recentlyChangedJobs
+        }
+        companyFilters {
+          names
+          domains
+          industries
+          categories
+          countries
+          locations
+          companyTypes
+          minEmployeeCount
+          maxEmployeeCount
+          minGrowth6mPercent
+          minGrowth12mPercent
+          fundingRoundTypes
+          minFundingDate
+          minTotalFundingUsd
+          minRevenueLowerBoundUsd
+          maxRevenueUpperBoundUsd
+          minYearFounded
+          maxYearFounded
+        }
       }
     }
     error
@@ -9975,10 +10349,35 @@ export const QueryFeeds = gql`
         exa {
           searchType
         }
+        crustdata {
+          signalType
+          companyDomain
+          companyLinkedInUrl
+          companyId
+          personLinkedInUrls
+          jobTitle
+          jobRegion
+          jobDescription
+        }
       }
       reddit {
         readLimit
         subredditName
+      }
+      linkedIn {
+        readLimit
+        listingType
+        companyDomain
+        companyLinkedInUrl
+        companyName
+        personLinkedInUrl
+        postTypes
+        keyword
+        datePosted
+        exactKeywordMatch
+        contentTypes
+        includeComments
+        maxComments
       }
       notion {
         readLimit
@@ -10155,6 +10554,45 @@ export const QueryFeeds = gql`
         parallel {
           generator
           processor
+        }
+        crustdata {
+          personFilters {
+            titles
+            seniorityLevels
+            functionCategories
+            companyNames
+            companyDomains
+            companyLinkedInUrls
+            industries
+            regions
+            countries
+            skills
+            schools
+            minYearsExperience
+            maxYearsExperience
+            minConnections
+            recentlyChangedJobs
+          }
+          companyFilters {
+            names
+            domains
+            industries
+            categories
+            countries
+            locations
+            companyTypes
+            minEmployeeCount
+            maxEmployeeCount
+            minGrowth6mPercent
+            minGrowth12mPercent
+            fundingRoundTypes
+            minFundingDate
+            minTotalFundingUsd
+            minRevenueLowerBoundUsd
+            maxRevenueUpperBoundUsd
+            minYearFounded
+            maxYearFounded
+          }
         }
       }
       error
@@ -18464,6 +18902,9 @@ export const CreateWorkflow = gql`
             processor
             isSynchronous
           }
+          crustdata {
+            isRealtime
+          }
         }
       }
       entityResolution {
@@ -18760,6 +19201,9 @@ export const GetWorkflow = gql`
             processor
             isSynchronous
           }
+          crustdata {
+            isRealtime
+          }
         }
       }
       entityResolution {
@@ -19030,6 +19474,9 @@ export const QueryWorkflows = gql`
               processor
               isSynchronous
             }
+            crustdata {
+              isRealtime
+            }
           }
         }
         entityResolution {
@@ -19294,6 +19741,9 @@ export const UpdateWorkflow = gql`
             processor
             isSynchronous
           }
+          crustdata {
+            isRealtime
+          }
         }
       }
       entityResolution {
@@ -19556,6 +20006,9 @@ export const UpsertWorkflow = gql`
           parallel {
             processor
             isSynchronous
+          }
+          crustdata {
+            isRealtime
           }
         }
       }

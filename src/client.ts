@@ -955,41 +955,215 @@ class Graphlit {
   /**
    * Lookup an alert given its ID.
    * @param id - ID of the alert.
+   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The alert.
    */
-  public async getAlert(id: string): Promise<Types.GetAlertQuery> {
+  public async getAlert(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetAlertQuery> {
     return this.queryAndCheckError<
       Types.GetAlertQuery,
       Types.GetAlertQueryVariables
-    >(Documents.GetAlert, { id: id });
+    >(Documents.GetAlert, { id: id, correlationId: correlationId });
   }
 
   /**
    * Retrieves alerts based on the provided filter criteria.
    * @param filter - The filter criteria to apply when retrieving alerts.
+   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The alerts.
    */
   public async queryAlerts(
     filter?: Types.AlertFilter,
+    correlationId?: string,
   ): Promise<Types.QueryAlertsQuery> {
     return this.queryAndCheckError<
       Types.QueryAlertsQuery,
       Types.QueryAlertsQueryVariables
-    >(Documents.QueryAlerts, { filter: filter });
+    >(Documents.QueryAlerts, { filter: filter, correlationId: correlationId });
   }
 
   /**
    * Counts alerts based on the provided filter criteria.
    * @param filter - The filter criteria to apply when counting alerts.
+   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The count of alerts.
    */
   public async countAlerts(
     filter?: Types.AlertFilter,
+    correlationId?: string,
   ): Promise<Types.CountAlertsQuery> {
     return this.queryAndCheckError<
       Types.CountAlertsQuery,
       Types.CountAlertsQueryVariables
-    >(Documents.CountAlerts, { filter: filter });
+    >(Documents.CountAlerts, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Creates an agent.
+   * @param agent - The agent to create.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The created agent.
+   */
+  public async createAgent(
+    agent: Types.AgentInput,
+    correlationId?: string,
+  ): Promise<Types.CreateAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateAgentMutation,
+      Types.CreateAgentMutationVariables
+    >(Documents.CreateAgent, { agent: agent, correlationId: correlationId });
+  }
+
+  /**
+   * Updates an agent.
+   * @param agent - The agent to update.
+   * @returns The updated agent.
+   */
+  public async updateAgent(
+    agent: Types.AgentUpdateInput,
+  ): Promise<Types.UpdateAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateAgentMutation,
+      Types.UpdateAgentMutationVariables
+    >(Documents.UpdateAgent, { agent: agent });
+  }
+
+  /**
+   * Creates or updates an agent.
+   * @param agent - The agent to create or update.
+   * @returns The created or updated agent.
+   */
+  public async upsertAgent(
+    agent: Types.AgentInput,
+  ): Promise<Types.UpsertAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertAgentMutation,
+      Types.UpsertAgentMutationVariables
+    >(Documents.UpsertAgent, { agent: agent });
+  }
+
+  /**
+   * Deletes an agent.
+   * @param id - The ID of the agent to delete.
+   * @returns The deleted agent.
+   */
+  public async deleteAgent(id: string): Promise<Types.DeleteAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAgentMutation,
+      Types.DeleteAgentMutationVariables
+    >(Documents.DeleteAgent, { id: id });
+  }
+
+  /**
+   * Deletes multiple agents.
+   * @param ids - The IDs of the agents to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted agents.
+   */
+  public async deleteAgents(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteAgentsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAgentsMutation,
+      Types.DeleteAgentsMutationVariables
+    >(Documents.DeleteAgents, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all agents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting agents.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllAgents(
+    filter?: Types.AgentFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllAgentsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllAgentsMutation,
+      Types.DeleteAllAgentsMutationVariables
+    >(Documents.DeleteAllAgents, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Enables an agent.
+   * @param id - The ID of the agent to enable.
+   * @returns The enabled agent.
+   */
+  public async enableAgent(id: string): Promise<Types.EnableAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.EnableAgentMutation,
+      Types.EnableAgentMutationVariables
+    >(Documents.EnableAgent, { id: id });
+  }
+
+  /**
+   * Disables an agent.
+   * @param id - The ID of the agent to disable.
+   * @returns The disabled agent.
+   */
+  public async disableAgent(id: string): Promise<Types.DisableAgentMutation> {
+    return this.mutateAndCheckError<
+      Types.DisableAgentMutation,
+      Types.DisableAgentMutationVariables
+    >(Documents.DisableAgent, { id: id });
+  }
+
+  /**
+   * Lookup an agent given its ID.
+   * @param id - ID of the agent.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The agent.
+   */
+  public async getAgent(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetAgentQuery> {
+    return this.queryAndCheckError<
+      Types.GetAgentQuery,
+      Types.GetAgentQueryVariables
+    >(Documents.GetAgent, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves agents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving agents.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The agents.
+   */
+  public async queryAgents(
+    filter?: Types.AgentFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryAgentsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryAgentsQuery,
+      Types.QueryAgentsQueryVariables
+    >(Documents.QueryAgents, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Counts agents based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting agents.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of agents.
+   */
+  public async countAgents(
+    filter?: Types.AgentFilter,
+    correlationId?: string,
+  ): Promise<Types.CountAgentsQuery> {
+    return this.queryAndCheckError<
+      Types.CountAgentsQuery,
+      Types.CountAgentsQueryVariables
+    >(Documents.CountAgents, { filter: filter, correlationId: correlationId });
   }
 
   /**
