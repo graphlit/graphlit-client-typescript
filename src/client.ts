@@ -3788,6 +3788,47 @@ class Graphlit {
   }
 
   /**
+   * Lookup companies by name, domain, or LinkedIn URL.
+   * @param name - The company name, optional.
+   * @param domain - The company domain, optional.
+   * @param linkedInUrl - The company LinkedIn URL, optional.
+   * @returns The matching companies.
+   */
+  public async lookupCompanies(
+    name?: string,
+    domain?: string,
+    linkedInUrl?: string,
+  ): Promise<Types.LookupCompaniesQuery> {
+    return this.queryAndCheckError<
+      Types.LookupCompaniesQuery,
+      Types.LookupCompaniesQueryVariables
+    >(Documents.LookupCompanies, {
+      name: name,
+      domain: domain,
+      linkedInUrl: linkedInUrl,
+    });
+  }
+
+  /**
+   * Lookup persons by LinkedIn URL or email.
+   * @param linkedInUrl - The person's LinkedIn URL, optional.
+   * @param email - The person's email address, optional.
+   * @returns The matching persons.
+   */
+  public async lookupPersons(
+    linkedInUrl?: string,
+    email?: string,
+  ): Promise<Types.LookupPersonsQuery> {
+    return this.queryAndCheckError<
+      Types.LookupPersonsQuery,
+      Types.LookupPersonsQueryVariables
+    >(Documents.LookupPersons, {
+      linkedInUrl: linkedInUrl,
+      email: email,
+    });
+  }
+
+  /**
    * Prompts multiple specifications and returns the best response.
    * @param prompt - The prompt to send to each specification.
    * @param ids - The IDs of the specifications to prompt.

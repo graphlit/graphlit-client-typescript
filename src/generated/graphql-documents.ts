@@ -5871,6 +5871,9 @@ export const GetConversation = gql`
       text
       relevance
     }
+    agent {
+      id
+    }
     persona {
       id
       name
@@ -6926,6 +6929,9 @@ export const QueryConversations = gql`
         text
         relevance
       }
+      agent {
+        id
+      }
       persona {
         id
         name
@@ -7304,6 +7310,9 @@ export const QueryConversationsClusters = gql`
         timestamp
         text
         relevance
+      }
+      agent {
+        id
       }
       persona {
         id
@@ -9754,6 +9763,45 @@ export const IsFeedDone = gql`
     query IsFeedDone($id: ID!) {
   isFeedDone(id: $id) {
     result
+  }
+}
+    `;
+export const LookupCompanies = gql`
+    query LookupCompanies($name: String, $domain: String, $linkedInUrl: URL) {
+  lookupCompanies(name: $name, domain: $domain, linkedInUrl: $linkedInUrl) {
+    results {
+      companyId
+      companyName
+      companyDomain
+      companyLinkedInUrl
+      headquarters
+      hqCountry
+      headcount
+      employeeCountRange
+      industries
+      estimatedRevenueLowerBound
+      estimatedRevenueUpperBound
+      logoUrl
+    }
+  }
+}
+    `;
+export const LookupPersons = gql`
+    query LookupPersons($linkedInUrl: URL, $email: String) {
+  lookupPersons(linkedInUrl: $linkedInUrl, email: $email) {
+    results {
+      name
+      title
+      headline
+      location
+      linkedInUrl
+      email
+      profilePictureUrl
+      currentCompany
+      currentTitle
+      skills
+      yearsOfExperience
+    }
   }
 }
     `;
