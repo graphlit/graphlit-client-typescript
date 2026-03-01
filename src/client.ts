@@ -9865,13 +9865,20 @@ class Graphlit {
           throw new Error("Failed to create conversation");
         }
       } else {
-        // Resume: load existing turns to initialize stuck detector
+        // Resume: reconstruct TurnResults from conversation history so the
+        // stuck detector has full context from prior turns.
         const convResponse = await this.getConversation(conversationId);
         const existingMessages = convResponse.conversation?.messages;
         if (existingMessages && existingMessages.length > 0) {
-          // Reconstruct turn results from conversation history for stuck detector
-          // This is a simplified reconstruction — we only need tool names and errors
-          stuckDetector.initializeFromHistory(turnResults);
+          const resumedTurns = this.reconstructTurnResults(
+            existingMessages as Types.ConversationMessage[],
+          );
+          stuckDetector.initializeFromHistory(resumedTurns);
+          // Carry forward the turn count and tool call total
+          for (const rt of resumedTurns) {
+            turnResults.push(rt);
+            totalToolCalls += rt.toolCallCount;
+          }
         }
       }
 
@@ -10412,6 +10419,71 @@ class Graphlit {
     });
 
     return messages;
+  }
+
+  /**
+   * Reconstruct TurnResult objects from persisted conversation messages.
+   * Used when resuming a conversation so the stuck detector and turn counter
+   * have full context from prior turns.
+   *
+   * Walks the message list identifying user→assistant pairs as logical turns.
+   * Tool calls on assistant messages are extracted for stuck-pattern tracking.
+   */
+  private reconstructTurnResults(
+    messages: Types.ConversationMessage[],
+  ): TurnResult[] {
+    const results: TurnResult[] = [];
+    let turnNumber = 0;
+
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      if (msg.role !== Types.ConversationRoleTypes.User) continue;
+
+      // Find the next assistant message after this user message
+      let assistantMsg: Types.ConversationMessage | undefined;
+      for (let j = i + 1; j < messages.length; j++) {
+        if (messages[j].role === Types.ConversationRoleTypes.Assistant) {
+          assistantMsg = messages[j];
+          break;
+        }
+      }
+
+      if (!assistantMsg) continue;
+
+      // Collect tool names from the assistant's tool calls
+      const toolNames: string[] = [];
+      if (assistantMsg.toolCalls) {
+        for (const tc of assistantMsg.toolCalls) {
+          if (tc?.name) toolNames.push(tc.name);
+        }
+      }
+
+      // Check tool response messages for errors
+      const toolErrors: string[] = [];
+      for (let j = i + 1; j < messages.length; j++) {
+        const respMsg = messages[j];
+        if (respMsg.role === Types.ConversationRoleTypes.Tool) {
+          if (respMsg.message?.startsWith("Error:")) {
+            toolErrors.push(respMsg.message);
+          }
+        } else if (respMsg.role === Types.ConversationRoleTypes.User) {
+          break; // Next turn
+        }
+      }
+
+      results.push({
+        turnNumber: turnNumber++,
+        prompt: msg.message || "",
+        responseText: assistantMsg.message || "",
+        toolCalls: [...new Set(toolNames)].sort(),
+        toolCallCount: toolNames.length,
+        durationMs: 0, // Not available from persisted messages
+        taskComplete: toolNames.includes("task_complete"),
+        errors: toolErrors.length > 0 ? toolErrors : undefined,
+      });
+    }
+
+    return results;
   }
 
   /**
