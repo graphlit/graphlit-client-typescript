@@ -1,8 +1,13 @@
-import { SmoothStreamOptions } from "./streaming.js";
 import {
   ConversationMessage,
+  ConversationMessageInput,
   ConversationToolCall,
+  EntityReferenceInput,
+  ContentCriteriaInput,
+  ToolDefinitionInput,
+  Specification,
 } from "../generated/graphql-types.js";
+import type { AgentStreamEvent } from "./ui-events.js";
 
 // Collects artifact promises from tool handlers for association with the completed message.
 // Handlers register async ingestion work via addPending(); the SDK awaits all promises
@@ -107,6 +112,8 @@ export interface StreamAgentOptions {
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
   contextStrategy?: ContextStrategy;
+  /** Harness-injected instructions appended to the formatted conversation (e.g. wind-down, stuck intervention). */
+  instructions?: string;
 }
 
 // Tool call result
@@ -133,5 +140,162 @@ export interface AgentError {
   message: string;
   code?: string;
   recoverable: boolean;
-  details?: any;
+  details?: Record<string, unknown>;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// runAgent types — multi-turn agent harness
+// ────────────────────────────────────────────────────────────────────────────
+
+/** Terminal status of a runAgent execution. */
+export type HarnessStatus =
+  | "completed"
+  | "budget_exhausted"
+  | "stuck"
+  | "error"
+  | "cancelled";
+
+/** Per-turn data captured by the harness. */
+export interface TurnResult {
+  turnNumber: number;
+  prompt: string;
+  responseText: string;
+  toolCalls: string[]; // sorted tool names called this turn
+  toolCallCount: number;
+  durationMs: number;
+  taskComplete?: boolean;
+  contextWindowUsage?: ContextWindowUsage;
+  contextActions?: ContextManagementAction[];
+  errors?: string[];
+}
+
+/** Budget snapshot passed to the onBudgetWarning callback. */
+export interface BudgetSnapshot {
+  turnsUsed: number;
+  turnsRemaining: number;
+  toolCallsUsed: number;
+  toolCallsRemaining: number;
+  wallClockMs: number;
+  wallClockMsRemaining: number;
+  contextWindowPercent?: number;
+}
+
+/** Result of stuck-pattern evaluation for a single turn. */
+export interface StuckEvaluation {
+  stuck: boolean;
+  pattern?: string;
+  firstOccurrence?: boolean;
+}
+
+/** Options for the runAgent multi-turn harness. */
+export interface RunAgentOptions {
+  // Conversation
+  conversationId?: string;
+
+  // Tools
+  tools?: ToolDefinitionInput[];
+  toolHandlers?: Record<string, ToolHandler>;
+
+  // Agent configuration
+  persona?: EntityReferenceInput;
+  augmentedFilter?: ContentCriteriaInput;
+  fallbacks?: EntityReferenceInput[];
+
+  // Budget overrides
+  maxTurns?: number; // default: 25
+  maxWallClockMs?: number; // default: 300000 (5 minutes)
+  maxToolCalls?: number; // default: 100
+  windDownTurns?: number; // default: 2
+
+  // Callbacks
+  onTurnComplete?: (turn: TurnResult) => void;
+  onBudgetWarning?: (snapshot: BudgetSnapshot) => void;
+  onStreamEvent?: (event: AgentStreamEvent) => void;
+
+  // Cancellation
+  abortSignal?: AbortSignal;
+
+  // Context management
+  contextStrategy?: ContextStrategy;
+
+  // Tracking
+  correlationId?: string;
+
+  // Quality assessment
+  qualityAssessment?: boolean;
+  qualityAssessmentSpecification?: EntityReferenceInput;
+
+  // Streaming smoothing
+  smoothingEnabled?: boolean;
+  chunkingStrategy?: "character" | "word" | "sentence";
+  smoothingDelay?: number;
+}
+
+/** Quality assessment scores from LLM-as-judge post-run evaluation. */
+export interface QualityAssessment {
+  completeness: number;
+  quality: number;
+  efficiency: number;
+  overall: number;
+  issues: string[];
+}
+
+/** Full result returned by runAgent. */
+export interface RunAgentResult {
+  agentId: string;
+  conversationId: string;
+  status: HarnessStatus;
+  finalMessage: string;
+  taskCompleteSummary?: string;
+  turns: number;
+  totalToolCalls: number;
+  wallClockMs: number;
+  contextWindowAtEnd?: ContextWindowUsage;
+  turnResults: TurnResult[];
+  error?: string;
+  stuckPattern?: string;
+  qualityAssessment?: QualityAssessment;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Internal types for executeStreamingLoop extraction
+// ────────────────────────────────────────────────────────────────────────────
+
+import type { ReasoningMetadata } from "./ui-events.js";
+import type { TokenBudgetTracker } from "../helpers/context-management.js";
+import type { UIEventAdapter } from "../streaming/ui-event-adapter.js";
+
+/** Configuration passed to the extracted executeStreamingLoop. */
+export interface StreamingLoopConfig {
+  conversationId: string;
+  specification: Specification;
+  messages: ConversationMessage[];
+  tools: ToolDefinitionInput[] | undefined;
+  toolHandlers: Record<string, ToolHandler> | undefined;
+  uiAdapter: UIEventAdapter;
+  budgetTracker: TokenBudgetTracker | undefined;
+  contextStrategy: {
+    toolResultTokenLimit: number;
+    toolRoundLimit: number;
+    rebudgetThreshold: number;
+  };
+  maxRounds: number;
+  abortSignal: AbortSignal | undefined;
+  correlationId?: string;
+  persona?: EntityReferenceInput;
+  mimeType?: string;
+  data?: string;
+}
+
+/** Result returned from executeStreamingLoop. */
+export interface StreamingLoopResult {
+  fullMessage: string;
+  toolCallCount: number;
+  toolCallNames: string[];
+  errors: string[];
+  contextWindow?: ContextWindowUsage;
+  contextActions: ContextManagementAction[];
+  reasoning?: ReasoningMetadata;
+  intermediateMessages: ConversationMessageInput[];
+  lastRoundReasoning?: ReasoningMetadata;
 }

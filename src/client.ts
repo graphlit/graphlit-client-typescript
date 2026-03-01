@@ -36,7 +36,17 @@ import {
   ToolHandler,
   AgentMetrics,
   UsageInfo,
+  RunAgentOptions,
+  RunAgentResult,
+  TurnResult,
+  BudgetSnapshot,
+  QualityAssessment,
+  StreamingLoopConfig,
+  StreamingLoopResult,
+  ContextWindowUsage,
 } from "./types/agent.js";
+import { StuckDetector } from "./helpers/stuck-detector.js";
+import { TurnEvaluator } from "./helpers/turn-evaluator.js";
 import {
   TokenBudgetTracker,
   truncateToolResult,
@@ -209,6 +219,12 @@ export type {
   ToolCallResult,
   UsageInfo,
   AgentError,
+  RunAgentOptions,
+  RunAgentResult,
+  TurnResult,
+  BudgetSnapshot,
+  HarnessStatus,
+  QualityAssessment,
 } from "./types/agent.js";
 
 // Re-export context management utilities
@@ -8439,6 +8455,7 @@ class Graphlit {
             correlationId,
             persona,
             options?.contextStrategy,
+            options?.instructions,
           );
         },
         abortSignal,
@@ -8502,16 +8519,8 @@ class Graphlit {
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
     contextStrategy?: ContextStrategy,
+    instructions?: string,
   ): Promise<void> {
-    let currentRound = 0;
-    let fullMessage = "";
-    const contextActions: ContextManagementAction[] = [];
-
-    // Sidecar map: stores reasoning metadata keyed by message index in the
-    // messages array. This lets us associate structured thinking content with
-    // the assistant message that produced it, for later persistence.
-    const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
-
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
     // completeConversation so the IDs are available without blocking the LLM.
@@ -8542,6 +8551,7 @@ class Graphlit {
       true,
       correlationId,
       persona,
+      instructions,
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
@@ -8604,31 +8614,6 @@ class Graphlit {
     const budgetTracker = details
       ? TokenBudgetTracker.fromDetails(details)
       : undefined;
-
-    // Merge: caller overrides > server-side specification strategy > defaults
-    const callerStrategy = contextStrategy ?? {};
-    const serverStrategy = specification.strategy;
-    const toolResultTokenLimit =
-      callerStrategy.toolResultTokenLimit ??
-      serverStrategy?.toolResultTokenLimit ??
-      DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit;
-    const toolRoundLimit =
-      callerStrategy.toolRoundLimit ??
-      serverStrategy?.toolRoundLimit ??
-      DEFAULT_CONTEXT_STRATEGY.toolRoundLimit;
-    const rebudgetThreshold =
-      callerStrategy.rebudgetThreshold ??
-      serverStrategy?.toolBudgetThreshold ??
-      DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold;
-
-    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
-      console.log(
-        `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
-        `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
-        `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
-        `rebudgetThreshold=${rebudgetThreshold}`,
-      );
-    }
 
     // Build message array with conversation history
     let messages: Types.ConversationMessage[] = [];
@@ -8715,13 +8700,173 @@ class Graphlit {
 
     const serviceType = getServiceType(specification);
 
-    // Track where tool-round messages begin so we can extract them for completeConversation
-    const toolMessagesStartIndex = messages.length;
+    // Resolve merged context strategy values
+    const callerStrategy = contextStrategy ?? {};
+    const serverStrategy = specification.strategy;
+    const mergedStrategy = {
+      toolResultTokenLimit:
+        callerStrategy.toolResultTokenLimit ??
+        serverStrategy?.toolResultTokenLimit ??
+        DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit,
+      toolRoundLimit:
+        callerStrategy.toolRoundLimit ??
+        serverStrategy?.toolRoundLimit ??
+        DEFAULT_CONTEXT_STRATEGY.toolRoundLimit,
+      rebudgetThreshold:
+        callerStrategy.rebudgetThreshold ??
+        serverStrategy?.toolBudgetThreshold ??
+        DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold,
+    };
 
-    // Tracks the final round's reasoning so it can be persisted after the loop
+    // Run the streaming loop
+    const loopResult = await this.executeStreamingLoop({
+      conversationId,
+      specification,
+      messages,
+      tools,
+      toolHandlers,
+      uiAdapter,
+      budgetTracker,
+      contextStrategy: mergedStrategy,
+      maxRounds,
+      abortSignal,
+      correlationId,
+      persona,
+      mimeType,
+      data,
+    });
+
+    // Complete the conversation and get token count
+    let finalTokens: number | undefined;
+    const trimmedMessage = loopResult.fullMessage?.trim();
+    if (trimmedMessage) {
+      // Calculate metrics for completeConversation
+      const completionTime = uiAdapter.getCompletionTime();
+      const ttft = uiAdapter.getTTFT();
+      const throughput = uiAdapter.getThroughput();
+
+      const millisecondsToTimeSpan = (
+        ms: number | undefined,
+      ): string | undefined => {
+        if (ms === undefined) return undefined;
+        const seconds = ms / 1000;
+        return `PT${seconds}S`;
+      };
+
+      const collectedArtifacts = await artifactCollector.resolve();
+
+      // If the final round had reasoning, append it as the completion's
+      // assistant message in intermediateMessages
+      let finalMessageInputs: Types.ConversationMessageInput[] | undefined =
+        loopResult.intermediateMessages.length > 0
+          ? loopResult.intermediateMessages
+          : undefined;
+
+      if (loopResult.lastRoundReasoning) {
+        const completionInput: Types.ConversationMessageInput = {
+          role: Types.ConversationRoleTypes.Assistant,
+          message: trimmedMessage,
+          timestamp: new Date().toISOString(),
+          thinkingContent: loopResult.lastRoundReasoning.content,
+        };
+        if (loopResult.lastRoundReasoning.signature) {
+          completionInput.thinkingSignature =
+            loopResult.lastRoundReasoning.signature;
+        }
+        finalMessageInputs = [
+          ...(finalMessageInputs || []),
+          completionInput,
+        ];
+      }
+
+      const completeResponse = await this.completeConversation(
+        trimmedMessage,
+        conversationId,
+        millisecondsToTimeSpan(completionTime),
+        millisecondsToTimeSpan(ttft),
+        throughput,
+        collectedArtifacts.length > 0 ? collectedArtifacts : undefined,
+        finalMessageInputs,
+        correlationId,
+      );
+
+      finalTokens =
+        completeResponse.completeConversation?.message?.tokens ?? undefined;
+
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `📊 [completeConversation] Tokens used: ${finalTokens || "unknown"}`,
+        );
+      }
+    }
+
+    // Emit completion event with token count
+    uiAdapter.handleEvent({
+      type: "complete",
+      conversationId,
+      tokens: finalTokens,
+    });
+  }
+
+  /**
+   * Core streaming loop: provider routing, tool execution, context management.
+   * Shared between streamAgent (single turn) and runAgent (multi-turn harness).
+   */
+  private async executeStreamingLoop(
+    config: StreamingLoopConfig,
+  ): Promise<StreamingLoopResult> {
+    const {
+      conversationId,
+      specification,
+      tools,
+      toolHandlers,
+      uiAdapter,
+      budgetTracker,
+      contextStrategy: { toolResultTokenLimit, toolRoundLimit, rebudgetThreshold },
+      maxRounds,
+      abortSignal,
+      mimeType,
+      data,
+      correlationId,
+      persona,
+    } = config;
+
+    let messages = config.messages;
+    let currentRound = 0;
+    let fullMessage = "";
+    const contextActions: ContextManagementAction[] = [];
+    const toolCallNames: string[] = [];
+    const errors: string[] = [];
+    let totalToolCallCount = 0;
+
+    // Sidecar map for reasoning metadata
+    const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
+
+    // Artifact collector for tool handlers
+    const pendingArtifacts: Promise<{ id: string } | undefined>[] = [];
+    const artifactCollector: ArtifactCollector = {
+      addPending(p) {
+        pendingArtifacts.push(p);
+      },
+      async resolve() {
+        const results = await Promise.all(pendingArtifacts);
+        return results.filter((r): r is { id: string } => r != null);
+      },
+    };
+
+    const serviceType = getServiceType(specification);
+    const toolMessagesStartIndex = messages.length;
     let lastRoundReasoning: ReasoningMetadata | undefined;
 
-    // Handle tool calling loop locally
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
+      console.log(
+        `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
+        `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
+        `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
+        `rebudgetThreshold=${rebudgetThreshold}`,
+      );
+    }
+
     while (currentRound < maxRounds) {
       if (abortSignal?.aborted) {
         throw new Error("Operation aborted");
@@ -8750,7 +8895,6 @@ class Graphlit {
             };
             contextActions.push(action);
 
-            // Notify the UI
             uiAdapter.handleEvent({
               type: "context_management",
               action,
@@ -8766,7 +8910,6 @@ class Graphlit {
             }
           }
 
-          // Emit updated context window
           uiAdapter.handleEvent({
             type: "context_window",
             usage: budgetTracker.getUsageSnapshot(),
@@ -8778,7 +8921,6 @@ class Graphlit {
       let roundMessage = "";
       let roundReasoning: ReasoningMetadata | undefined;
 
-      // Stream with appropriate provider
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
           `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}`,
@@ -8879,11 +9021,10 @@ class Graphlit {
             `🔍 [Google] Sending ${googleMessages.length} messages to LLM: ${JSON.stringify(googleMessages)}`,
           );
         }
-        // Google doesn't use system prompts separately, they're incorporated into messages
         await this.streamWithGoogle(
           specification,
           googleMessages,
-          undefined, // systemPrompt - Google handles this differently
+          undefined,
           tools,
           uiAdapter,
           (message, calls, usage, reasoning) => {
@@ -8910,7 +9051,7 @@ class Graphlit {
             `\n✅ [Streaming] Using Groq native streaming (Round ${currentRound})`,
           );
         }
-        const groqMessages = formatMessagesForOpenAI(messages); // Groq uses OpenAI format
+        const groqMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
             `🔍 [Groq] Sending ${groqMessages.length} messages to LLM: ${JSON.stringify(groqMessages)}`,
@@ -8945,7 +9086,7 @@ class Graphlit {
             `\n✅ [Streaming] Using Cerebras native streaming (Round ${currentRound})`,
           );
         }
-        const cerebrasMessages = formatMessagesForOpenAI(messages); // Cerebras uses OpenAI format
+        const cerebrasMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
             `🔍 [Cerebras] Sending ${cerebrasMessages.length} messages to LLM: ${JSON.stringify(cerebrasMessages)}`,
@@ -8980,7 +9121,6 @@ class Graphlit {
             `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`,
           );
         }
-        // V2 API uses raw messages, not formatted
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(`🔍 [Cohere] Sending ${messages.length} messages to LLM`);
         }
@@ -9017,15 +9157,15 @@ class Graphlit {
 
         // ALWAYS log when there's a tool-related issue for debugging
         const hasToolCalls = mistralMessages.some(
-          (m: any) => m.tool_calls?.length > 0,
+          (m) => "tool_calls" in m && Array.isArray((m as unknown as Record<string, unknown>).tool_calls) && ((m as unknown as Record<string, unknown>).tool_calls as unknown[]).length > 0,
         );
         const hasToolResponses = mistralMessages.some(
-          (m: any) => m.role === "tool",
+          (m) => m.role === "tool",
         );
 
         // Count tool responses to determine if we should pass tools
         const toolResponseCount = mistralMessages.filter(
-          (m: any) => m.role === "tool",
+          (m) => m.role === "tool",
         ).length;
 
         if (
@@ -9040,7 +9180,10 @@ class Graphlit {
 
           // Count tool calls and responses
           const toolCallCount = mistralMessages.reduce(
-            (count: number, m: any) => count + (m.tool_calls?.length || 0),
+            (count: number, m) => {
+              const calls = (m as unknown as Record<string, unknown>).tool_calls;
+              return count + (Array.isArray(calls) ? calls.length : 0);
+            },
             0,
           );
 
@@ -9055,7 +9198,6 @@ class Graphlit {
           }
         }
 
-        // Mistral API requires that we don't pass tools when sending tool results
         const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -9130,7 +9272,7 @@ class Graphlit {
             `\n✅ [Streaming] Using Deepseek native streaming (Round ${currentRound})`,
           );
         }
-        const deepseekMessages = formatMessagesForOpenAI(messages); // Deepseek uses OpenAI format
+        const deepseekMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
             `🔍 [Deepseek] Sending ${deepseekMessages.length} messages to LLM: ${JSON.stringify(deepseekMessages)}`,
@@ -9165,7 +9307,7 @@ class Graphlit {
             `\n✅ [Streaming] Using xAI native streaming (Round ${currentRound})`,
           );
         }
-        const xaiMessages = formatMessagesForOpenAI(messages); // xAI uses OpenAI format
+        const xaiMessages = formatMessagesForOpenAI(messages);
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
           console.log(
             `🔍 [xAI] Sending ${xaiMessages.length} messages to LLM: ${JSON.stringify(xaiMessages)}`,
@@ -9201,7 +9343,7 @@ class Graphlit {
           console.log(`   This should NOT happen if clients are properly set!`);
         }
         await this.fallbackToNonStreaming(
-          prompt,
+          config.messages[config.messages.length - 1]?.message || "",
           conversationId,
           specification,
           tools,
@@ -9237,7 +9379,7 @@ class Graphlit {
       if (toolHandlers && toolCalls.length > 0) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🔧 [executeStreamingAgent] Round ${currentRound}: Processing ${toolCalls.length} tool calls`,
+            `\n🔧 [executeStreamingLoop] Round ${currentRound}: Processing ${toolCalls.length} tool calls`,
           );
           toolCalls.forEach((tc, idx) => {
             console.log(
@@ -9255,21 +9397,23 @@ class Graphlit {
           timestamp: new Date().toISOString(),
         };
 
-        // Attach structured thinking fields to in-memory message so
-        // formatMessagesForAnthropic can reconstruct thinking blocks
-        // without XML parsing on subsequent rounds.
         if (roundReasoning) {
           assistantMessage.thinkingContent = roundReasoning.content;
           if (roundReasoning.signature) {
             assistantMessage.thinkingSignature = roundReasoning.signature;
           }
-          // Store in sidecar map keyed by absolute message index
           reasoningByMessageIndex.set(messages.length, roundReasoning);
         }
 
         messages.push(assistantMessage);
 
-        // Track assistant message in budget (includes tool call arguments)
+        // Track tool names for stuck detection
+        for (const tc of toolCalls) {
+          toolCallNames.push(tc.name);
+        }
+        totalToolCallCount += toolCalls.length;
+
+        // Track assistant message in budget
         if (budgetTracker) {
           const assistantTokens =
             estimateTokens(roundMessage) +
@@ -9282,7 +9426,6 @@ class Graphlit {
 
         // Execute tools and add responses
         for (const toolCall of toolCalls) {
-          // Check abort between tool calls so we don't run the entire round
           if (abortSignal?.aborted) {
             throw new Error("Operation aborted");
           }
@@ -9294,9 +9437,9 @@ class Graphlit {
           }
 
           try {
-            let args: any;
+            let args: Record<string, unknown> | undefined;
             try {
-              args = JSON.parse(toolCall.arguments);
+              args = JSON.parse(toolCall.arguments) as Record<string, unknown>;
             } catch (parseError) {
               console.error(
                 `Failed to parse tool arguments for ${toolCall.name}:`,
@@ -9307,7 +9450,6 @@ class Graphlit {
               );
               console.error(`Parse error:`, parseError);
 
-              // Check for common truncation patterns
               const lastChars = toolCall.arguments.slice(-20);
               let isTruncated = false;
               if (
@@ -9320,31 +9462,22 @@ class Graphlit {
                 isTruncated = true;
               }
 
-              // Try to fix truncated JSON by adding missing closing braces
               if (isTruncated) {
                 let fixedJson = toolCall.arguments.trim();
 
-                // Count open braces vs close braces to determine how many we need
                 const openBraces = (fixedJson.match(/\{/g) || []).length;
                 const closeBraces = (fixedJson.match(/\}/g) || []).length;
                 const missingBraces = openBraces - closeBraces;
 
                 if (missingBraces > 0) {
-                  // Check if we're mid-value (ends with number or boolean)
                   if (
                     fixedJson.match(/:\s*\d+$/) ||
                     fixedJson.match(/:\s*(true|false)$/)
                   ) {
-                    // Complete the current property and close
-                    fixedJson += ', "content": ""'; // Add empty content field
-                  }
-                  // Check if we're after a value but missing comma
-                  else if (fixedJson.match(/"\s*:\s*[^,}\s]+$/)) {
-                    // We have a complete value but no comma, add empty content
                     fixedJson += ', "content": ""';
-                  }
-                  // Add missing closing quote if the string ends with an unfinished string
-                  else if (
+                  } else if (fixedJson.match(/"\s*:\s*[^,}\s]+$/)) {
+                    fixedJson += ', "content": ""';
+                  } else if (
                     fixedJson.endsWith('"') === false &&
                     fixedJson.includes('"')
                   ) {
@@ -9355,7 +9488,6 @@ class Graphlit {
                     }
                   }
 
-                  // Add missing closing braces
                   fixedJson += "}".repeat(missingBraces);
 
                   console.log(
@@ -9364,22 +9496,19 @@ class Graphlit {
                   console.log(fixedJson);
 
                   try {
-                    args = JSON.parse(fixedJson);
+                    args = JSON.parse(fixedJson) as Record<string, unknown>;
                     console.log(
-                      `✅ Successfully fixed truncated JSON for ${toolCall.name}`,
+                      `Successfully fixed truncated JSON for ${toolCall.name}`,
                     );
                   } catch (fixError) {
                     console.error(
-                      `❌ Failed to fix truncated JSON: ${fixError}`,
+                      `Failed to fix truncated JSON: ${fixError}`,
                     );
-                    // Fall through to error handling below
                   }
                 }
               }
 
-              // If we couldn't parse or fix the JSON, log details and continue
               if (!args) {
-                // Log position mentioned in error if available
                 const errorMsg =
                   parseError instanceof Error ? parseError.message : "";
                 const posMatch = errorMsg.match(/position (\d+)/);
@@ -9394,19 +9523,18 @@ class Graphlit {
                   );
                 }
 
-                // Update UI with error - use StreamEvent error type
+                const parseErrorText = `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : "Unknown error"}`;
                 uiAdapter.handleEvent({
                   type: "error",
-                  error: `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : "Unknown error"}`,
+                  error: parseErrorText,
                 });
+                errors.push(parseErrorText);
                 continue;
               }
             }
 
-            // Execute tool
             const result = await handler(args, artifactCollector, abortSignal);
 
-            // Update UI with complete event including result
             uiAdapter.handleEvent({
               type: "tool_call_complete",
               toolCall: {
@@ -9417,7 +9545,6 @@ class Graphlit {
               result: result,
             });
 
-            // Add tool response to messages (with truncation)
             const rawResult =
               typeof result === "string" ? result : JSON.stringify(result);
             const truncatedResult = truncateToolResult(
@@ -9426,7 +9553,6 @@ class Graphlit {
               toolCall.name,
             );
 
-            // Track truncation for observability
             if (truncatedResult.length < rawResult.length) {
               const action: ContextManagementAction = {
                 type: "truncated_tool_result",
@@ -9453,18 +9579,16 @@ class Graphlit {
               }
             }
 
-            const toolMessage: any = {
+            const toolMessage: Types.ConversationMessage = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
               message: truncatedResult,
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
+              toolCallResponse: toolCall.name,
             };
-            // Add tool name for Mistral compatibility
-            toolMessage.toolName = toolCall.name;
             messages.push(toolMessage);
 
-            // Track budget
             if (budgetTracker) {
               budgetTracker.addMessage(truncatedResult);
             }
@@ -9472,8 +9596,8 @@ class Graphlit {
             const errorMessage =
               error instanceof Error ? error.message : "Unknown error";
             console.error(`Tool execution error for ${toolCall.name}:`, error);
+            errors.push(`${toolCall.name}: ${errorMessage}`);
 
-            // Update UI with complete event including error
             uiAdapter.handleEvent({
               type: "tool_call_complete",
               toolCall: {
@@ -9484,17 +9608,15 @@ class Graphlit {
               error: errorMessage,
             });
 
-            // Add error response
             const errorText = `Error: ${errorMessage}`;
-            const errorToolMessage: any = {
+            const errorToolMessage: Types.ConversationMessage = {
               __typename: "ConversationMessage" as const,
               role: Types.ConversationRoleTypes.Tool,
               message: errorText,
               toolCallId: toolCall.id,
               timestamp: new Date().toISOString(),
+              toolCallResponse: toolCall.name,
             };
-            // Add tool name for Mistral compatibility
-            errorToolMessage.toolName = toolCall.name;
             messages.push(errorToolMessage);
 
             if (budgetTracker) {
@@ -9515,113 +9637,930 @@ class Graphlit {
       currentRound++;
     }
 
-    // Complete the conversation and get token count
-    let finalTokens: number | undefined;
-    const trimmedMessage = fullMessage?.trim();
-    if (trimmedMessage) {
-      // Calculate metrics for completeConversation
-      const completionTime = uiAdapter.getCompletionTime(); // Total time in milliseconds
-      const ttft = uiAdapter.getTTFT(); // Time to first token in milliseconds
-      const throughput = uiAdapter.getThroughput(); // Tokens per second
-
-      // Convert milliseconds to ISO 8601 duration format (e.g., "PT1.5S")
-      const millisecondsToTimeSpan = (
-        ms: number | undefined,
-      ): string | undefined => {
-        if (ms === undefined) return undefined;
-        const seconds = ms / 1000;
-        return `PT${seconds}S`;
-      };
-
-      // Await any pending artifact ingestions so content IDs are available
-      const collectedArtifacts = await artifactCollector.resolve();
-
-      // Extract intermediate tool-round messages (assistant+tool_calls and tool responses)
-      // so the server can persist them alongside the final completion
-      const intermediateMessages = messages.slice(toolMessagesStartIndex);
-      const messageInputs: Types.ConversationMessageInput[] | undefined =
-        intermediateMessages.length > 0
-          ? intermediateMessages.map((msg, idx) => {
-            const input: Types.ConversationMessageInput = {
-              role: msg.role,
-              message: msg.message,
-              timestamp: msg.timestamp,
-            };
-            if (msg.toolCalls) {
-              input.toolCalls = msg.toolCalls
-                .filter(
-                  (tc): tc is Types.ConversationToolCall => tc !== null,
-                )
-                .map((tc) => ({
-                  id: tc.id,
-                  name: tc.name,
-                  arguments: tc.arguments,
-                }));
-            }
-            if (msg.toolCallId) input.toolCallId = msg.toolCallId;
-
-            // Populate structured thinking fields on assistant messages
-            const absoluteIndex = toolMessagesStartIndex + idx;
-            const reasoning = reasoningByMessageIndex.get(absoluteIndex);
-            if (reasoning) {
-              input.thinkingContent = reasoning.content;
-              if (reasoning.signature) {
-                input.thinkingSignature = reasoning.signature;
-              }
-            }
-
-            return input;
-          })
-          : undefined;
-
-      // If the final round had reasoning, append it as the completion's
-      // assistant message in messageInputs (the mutation has no top-level
-      // thinking params — reasoning rides on ConversationMessageInput).
-      let finalMessageInputs = messageInputs;
-      if (lastRoundReasoning) {
-        const completionInput: Types.ConversationMessageInput = {
-          role: Types.ConversationRoleTypes.Assistant,
-          message: trimmedMessage,
-          timestamp: new Date().toISOString(),
-          thinkingContent: lastRoundReasoning.content,
+    // Build intermediate messages for completeConversation
+    const intermediateMessages = messages.slice(toolMessagesStartIndex);
+    const messageInputs: Types.ConversationMessageInput[] =
+      intermediateMessages.map((msg, idx) => {
+        const input: Types.ConversationMessageInput = {
+          role: msg.role,
+          message: msg.message,
+          timestamp: msg.timestamp,
         };
-        if (lastRoundReasoning.signature) {
-          completionInput.thinkingSignature = lastRoundReasoning.signature;
+        if (msg.toolCalls) {
+          input.toolCalls = msg.toolCalls
+            .filter(
+              (tc): tc is Types.ConversationToolCall => tc !== null,
+            )
+            .map((tc) => ({
+              id: tc.id,
+              name: tc.name,
+              arguments: tc.arguments,
+            }));
         }
-        finalMessageInputs = [
-          ...(messageInputs || []),
-          completionInput,
-        ];
+        if (msg.toolCallId) input.toolCallId = msg.toolCallId;
+
+        const absoluteIndex = toolMessagesStartIndex + idx;
+        const reasoning = reasoningByMessageIndex.get(absoluteIndex);
+        if (reasoning) {
+          input.thinkingContent = reasoning.content;
+          if (reasoning.signature) {
+            input.thinkingSignature = reasoning.signature;
+          }
+        }
+
+        return input;
+      });
+
+    return {
+      fullMessage,
+      toolCallCount: totalToolCallCount,
+      toolCallNames,
+      errors,
+      contextWindow: budgetTracker?.getUsageSnapshot(),
+      contextActions,
+      reasoning: lastRoundReasoning,
+      intermediateMessages: messageInputs,
+      lastRoundReasoning,
+    };
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // runAgent — multi-turn agent harness
+  // ────────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Execute a multi-turn autonomous agent run. Drives `streamAgent`'s inner
+   * mechanisms through multiple turns until the task is complete, a budget
+   * is exhausted, or a failure condition is met.
+   *
+   * @param prompt - The initial task prompt
+   * @param onEvent - Event handler for streaming events
+   * @param agentId - Optional agent entity ID. If omitted, an ephemeral agent is created.
+   * @param specification - Optional LLM specification override
+   * @param options - RunAgentOptions with budget, callback, and tool configuration
+   * @returns RunAgentResult with full execution metrics and turn history
+   */
+  public async runAgent(
+    prompt: string,
+    onEvent: (event: AgentStreamEvent) => void,
+    agentId?: string,
+    specification?: Types.EntityReferenceInput,
+    options?: RunAgentOptions,
+  ): Promise<RunAgentResult> {
+    const runStart = Date.now();
+    const abortSignal = options?.abortSignal;
+
+    // Budget defaults
+    const maxTurns = options?.maxTurns ?? 25;
+    const maxWallClockMs = options?.maxWallClockMs ?? 300_000;
+    const maxToolCalls = options?.maxToolCalls ?? 100;
+    const windDownTurns = options?.windDownTurns ?? 2;
+
+    const turnResults: TurnResult[] = [];
+    let totalToolCalls = 0;
+    let status: RunAgentResult["status"] = "completed";
+    let finalMessage = "";
+    let taskCompleteSummary: string | undefined;
+    let stuckPattern: string | undefined;
+    let errorMessage: string | undefined;
+    let lastContextWindow: ContextWindowUsage | undefined;
+    let conversationId = options?.conversationId ?? "";
+    let resolvedAgentId = agentId ?? "";
+
+    try {
+      // ── Phase 1: Setup ─────────────────────────────────────────────────
+
+      // Check abort early
+      if (abortSignal?.aborted) {
+        return this.buildRunAgentResult({
+          agentId: resolvedAgentId,
+          conversationId,
+          status: "cancelled",
+          finalMessage: "",
+          turnResults,
+          totalToolCalls,
+          wallClockMs: Date.now() - runStart,
+        });
       }
 
-      const completeResponse = await this.completeConversation(
-        trimmedMessage,
+      // Resolve or create Agent entity
+      let agentSpec = specification;
+      let agentFilter: Types.ContentCriteriaInput | undefined;
+
+      if (agentId) {
+        const agentResponse = await this.getAgent(agentId, options?.correlationId);
+        const agent = agentResponse.agent;
+        if (!agent) {
+          throw new Error(`Agent not found: ${agentId}`);
+        }
+        if (agent.state !== Types.EntityState.Enabled) {
+          throw new Error(
+            `Agent ${agentId} is not enabled (state: ${agent.state})`,
+          );
+        }
+        resolvedAgentId = agent.id;
+        if (agent.specification?.id && !specification) {
+          agentSpec = { id: agent.specification.id };
+        }
+        if (agent.filter) {
+          agentFilter = agent.filter as Types.ContentCriteriaInput;
+        }
+      } else {
+        // Create ephemeral agent
+        const createResponse = await this.createAgent(
+          {
+            name: `Agent run: ${prompt.slice(0, 50)}`,
+            type: Types.AgentTypes.Agent,
+            specification: specification,
+          },
+          options?.correlationId,
+        );
+        resolvedAgentId = createResponse.createAgent?.id ?? "";
+        if (!resolvedAgentId) {
+          throw new Error("Failed to create ephemeral agent");
+        }
+      }
+
+      // Get full specification for streaming support check and complexity classification
+      const fullSpec = agentSpec?.id
+        ? ((await this.getSpecification(agentSpec.id)).specification as Types.Specification)
+        : undefined;
+
+      // Initialize evaluator and stuck detector
+      const evaluator = new TurnEvaluator({
+        maxTurns,
+        maxWallClockMs,
+        maxToolCalls,
+        windDownTurns,
+        initialPrompt: prompt,
+      });
+
+      const stuckDetector = new StuckDetector();
+
+      // Adaptive budget: classify task complexity via LLM
+      if (fullSpec) {
+        const { multiplier } = await evaluator.classifyComplexity(
+          prompt,
+          (classPrompt, text, classTools) =>
+            this.extractText(classPrompt, text, classTools, agentSpec, undefined, options?.correlationId)
+              .then((r) => r.extractText as Array<Types.ExtractCompletion | null> | null),
+        );
+        if (multiplier > 1.0) {
+          evaluator.adjustBudget(multiplier);
+        }
+      }
+
+      // Build tools list with task_complete prepended
+      const taskCompleteTool: Types.ToolDefinitionInput = {
+        name: "task_complete",
+        description:
+          "Call this tool when you have completed the assigned task. Provide a summary of what was accomplished and any recommendations.",
+        schema: JSON.stringify({
+          type: "object",
+          properties: {
+            summary: {
+              type: "string",
+              description: "Summary of what was accomplished.",
+            },
+            recommendations: {
+              type: "string",
+              description: "Optional recommendations or next steps.",
+            },
+          },
+          required: ["summary"],
+        }),
+      };
+
+      const allTools: Types.ToolDefinitionInput[] = [
+        taskCompleteTool,
+        ...(options?.tools ?? []),
+      ];
+
+      // Build tool handlers with task_complete
+      const allToolHandlers: Record<string, ToolHandler> = {
+        task_complete: async (args: Record<string, unknown>) => {
+          return "Task completion acknowledged.";
+        },
+        ...(options?.toolHandlers ?? {}),
+      };
+
+      // Create or resume conversation
+      if (!conversationId) {
+        const createResponse = await this.createConversation(
+          {
+            name: `Agent run: ${prompt.slice(0, 50)}`,
+            type: Types.ConversationTypes.Agent,
+            agent: { id: resolvedAgentId },
+            specification: agentSpec,
+            tools: allTools,
+            filter: agentFilter,
+            persona: options?.persona,
+            augmentedFilter: options?.augmentedFilter,
+            fallbacks: options?.fallbacks,
+          },
+          options?.correlationId,
+        );
+        conversationId = createResponse.createConversation?.id ?? "";
+        if (!conversationId) {
+          throw new Error("Failed to create conversation");
+        }
+      } else {
+        // Resume: load existing turns to initialize stuck detector
+        const convResponse = await this.getConversation(conversationId);
+        const existingMessages = convResponse.conversation?.messages;
+        if (existingMessages && existingMessages.length > 0) {
+          // Reconstruct turn results from conversation history for stuck detector
+          // This is a simplified reconstruction — we only need tool names and errors
+          stuckDetector.initializeFromHistory(turnResults);
+        }
+      }
+
+      // ── Phase 2: The Loop ──────────────────────────────────────────────
+
+      let pendingStuckIntervention: string | undefined;
+      let currentPrompt = prompt;
+      let consecutiveErrorTurns = 0;
+
+      // Cache token limits from first formatConversation for bare continuation
+      let cachedTokenLimit: number | undefined;
+      let cachedCompletionTokenLimit: number | undefined;
+
+      for (
+        let turn = 0;
+        turn < evaluator.adjustedMaxTurns;
+        turn++
+      ) {
+        // 1. Check abort
+        if (abortSignal?.aborted) {
+          status = "cancelled";
+          break;
+        }
+
+        // 2. Check hard budget limits
+        const elapsedMs = Date.now() - runStart;
+        if (evaluator.isBudgetExhausted(turn, elapsedMs, totalToolCalls)) {
+          status = "budget_exhausted";
+          break;
+        }
+
+        // 3. Build instructions for this turn
+        const turnsRemaining = evaluator.adjustedMaxTurns - turn;
+        const contextWindowPercent = lastContextWindow?.percentage;
+        const turnsUsed = turn;
+        const turnsUsedPercent = evaluator.adjustedMaxTurns > 0
+          ? turnsUsed / evaluator.adjustedMaxTurns
+          : 0;
+        const needsSummarization =
+          contextWindowPercent !== undefined &&
+          contextWindowPercent > 70 &&
+          turnsUsedPercent < 0.5;
+
+        const turnInstructions = evaluator.buildTurnInstructions({
+          turnNumber: turn,
+          turnsRemaining,
+          isWindingDown: evaluator.shouldWindDown(
+            turn,
+            elapsedMs,
+            totalToolCalls,
+            lastContextWindow,
+          ),
+          isStuckIntervention: pendingStuckIntervention,
+          contextWindowPercent,
+          originalTaskSummary:
+            turn > 0 && turn % 5 === 0 ? prompt.slice(0, 200) : undefined,
+          needsSummarization,
+        });
+
+        // Clear stuck intervention after it's been included
+        pendingStuckIntervention = undefined;
+
+        // 4. Budget warning callback
+        if (options?.onBudgetWarning && turnsRemaining <= windDownTurns * 2) {
+          const snapshot: BudgetSnapshot = {
+            turnsUsed: turn,
+            turnsRemaining,
+            toolCallsUsed: totalToolCalls,
+            toolCallsRemaining: evaluator.adjustedMaxToolCalls - totalToolCalls,
+            wallClockMs: elapsedMs,
+            wallClockMsRemaining: evaluator.adjustedMaxWallClockMs - elapsedMs,
+            contextWindowPercent,
+          };
+          options.onBudgetWarning(snapshot);
+        }
+
+        // 5. Decide execution path: bare continuation vs formatted
+        const useBareContinuation = turn > 0 && !turnInstructions;
+
+        let loopMessages: Types.ConversationMessage[];
+        let budgetTracker: TokenBudgetTracker | undefined;
+
+        if (useBareContinuation && cachedTokenLimit) {
+          // Bare fast-path: skip formatConversation, reuse cached token limits
+          // Build message from last turn's context
+          // The messages array is rebuilt from the conversation state
+          const bareMessages = this.buildBareMessages(
+            fullSpec,
+            turnResults,
+            currentPrompt,
+          );
+          loopMessages = bareMessages;
+
+          // Estimate tokens from the messages
+          const usedTokens = loopMessages.reduce(
+            (sum, msg) => sum + estimateTokens(msg.message || ""),
+            0,
+          );
+          budgetTracker = new TokenBudgetTracker(
+            cachedTokenLimit,
+            cachedCompletionTokenLimit ?? 4096,
+            usedTokens,
+          );
+        } else {
+          // Formatted path: call formatConversation
+          const formatResponse = await this.formatConversation(
+            turn === 0 ? prompt : "Continue.",
+            conversationId,
+            agentSpec,
+            allTools,
+            undefined,
+            true,
+            options?.correlationId,
+            options?.persona,
+            turnInstructions,
+          );
+
+          const formattedMessage = formatResponse.formatConversation?.message;
+          const conversationHistory =
+            formatResponse.formatConversation?.details?.messages;
+          const formatDetails = formatResponse.formatConversation?.details;
+
+          if (!formattedMessage?.message) {
+            throw new Error("Failed to format conversation");
+          }
+
+          // Cache token limits for future bare continuations
+          if (formatDetails?.tokenLimit) {
+            cachedTokenLimit = formatDetails.tokenLimit;
+            cachedCompletionTokenLimit =
+              formatDetails.completionTokenLimit ?? 4096;
+          }
+
+          // Build messages from format response
+          loopMessages = [];
+
+          if (fullSpec?.systemPrompt) {
+            loopMessages.push({
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.System,
+              message: fullSpec.systemPrompt,
+              timestamp: new Date().toISOString(),
+            });
+          }
+
+          if (conversationHistory && conversationHistory.length > 0) {
+            for (const historyMessage of conversationHistory) {
+              if (historyMessage) {
+                const messageToAdd: Types.ConversationMessage = {
+                  __typename: "ConversationMessage" as const,
+                  role: historyMessage.role || Types.ConversationRoleTypes.User,
+                  message: historyMessage.message || "",
+                  timestamp:
+                    historyMessage.timestamp || new Date().toISOString(),
+                };
+                if (historyMessage.author)
+                  messageToAdd.author = historyMessage.author;
+                if (historyMessage.data)
+                  messageToAdd.data = historyMessage.data;
+                if (historyMessage.mimeType)
+                  messageToAdd.mimeType = historyMessage.mimeType;
+                if (historyMessage.toolCalls)
+                  messageToAdd.toolCalls = historyMessage.toolCalls;
+                if (historyMessage.toolCallId)
+                  messageToAdd.toolCallId = historyMessage.toolCallId;
+                if (historyMessage.toolCallResponse)
+                  messageToAdd.toolCallResponse =
+                    historyMessage.toolCallResponse;
+                if (historyMessage.thinkingContent)
+                  messageToAdd.thinkingContent =
+                    historyMessage.thinkingContent;
+                if (historyMessage.thinkingSignature)
+                  messageToAdd.thinkingSignature =
+                    historyMessage.thinkingSignature;
+                loopMessages.push(messageToAdd);
+              }
+            }
+          } else {
+            loopMessages.push({
+              __typename: "ConversationMessage" as const,
+              role: formattedMessage.role || Types.ConversationRoleTypes.User,
+              message: formattedMessage.message,
+              timestamp:
+                formattedMessage.timestamp || new Date().toISOString(),
+            });
+          }
+
+          budgetTracker = formatDetails
+            ? TokenBudgetTracker.fromDetails(formatDetails)
+            : undefined;
+
+          // Emit context window event
+          if (formatDetails?.tokenLimit && formatDetails?.messages) {
+            const usedTokens = formatDetails.messages.reduce(
+              (sum, msg) => sum + (msg?.tokens || 0),
+              0,
+            );
+            onEvent({
+              type: "context_window",
+              usage: {
+                usedTokens,
+                maxTokens: formatDetails.tokenLimit,
+                percentage: Math.round(
+                  (usedTokens / formatDetails.tokenLimit) * 100,
+                ),
+                remainingTokens: Math.max(
+                  0,
+                  formatDetails.tokenLimit - usedTokens,
+                ),
+              },
+              timestamp: new Date(),
+            });
+          }
+        }
+
+        // 6. Create UI adapter for this turn
+        const modelName = fullSpec ? getModelName(fullSpec) : undefined;
+        const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
+        const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
+
+        const uiAdapter = new UIEventAdapter(
+          (event: AgentStreamEvent) => {
+            onEvent(event);
+            options?.onStreamEvent?.(event);
+          },
+          conversationId,
+          {
+            smoothingEnabled: options?.smoothingEnabled ?? true,
+            chunkingStrategy: options?.chunkingStrategy ?? "word",
+            smoothingDelay: options?.smoothingDelay ?? 30,
+            model: modelEnum,
+            modelName: modelName,
+            modelService: serviceType,
+          },
+        );
+
+        // Emit start event
+        uiAdapter.handleEvent({
+          type: "start",
+          conversationId,
+        });
+
+        // Resolve context strategy
+        const callerStrategy = options?.contextStrategy ?? {};
+        const serverStrategy = fullSpec?.strategy;
+        const mergedStrategy = {
+          toolResultTokenLimit:
+            callerStrategy.toolResultTokenLimit ??
+            serverStrategy?.toolResultTokenLimit ??
+            DEFAULT_CONTEXT_STRATEGY.toolResultTokenLimit,
+          toolRoundLimit:
+            callerStrategy.toolRoundLimit ??
+            serverStrategy?.toolRoundLimit ??
+            DEFAULT_CONTEXT_STRATEGY.toolRoundLimit,
+          rebudgetThreshold:
+            callerStrategy.rebudgetThreshold ??
+            serverStrategy?.toolBudgetThreshold ??
+            DEFAULT_CONTEXT_STRATEGY.rebudgetThreshold,
+        };
+
+        // 7. Execute streaming loop for this turn
+        const turnStart = Date.now();
+        let loopResult: StreamingLoopResult;
+        try {
+          loopResult = await this.executeStreamingLoop({
+            conversationId,
+            specification: fullSpec!,
+            messages: loopMessages,
+            tools: allTools,
+            toolHandlers: allToolHandlers,
+            uiAdapter,
+            budgetTracker,
+            contextStrategy: mergedStrategy,
+            maxRounds: DEFAULT_MAX_TOOL_ROUNDS,
+            abortSignal,
+            correlationId: options?.correlationId,
+            persona: options?.persona,
+          });
+        } finally {
+          uiAdapter.dispose();
+        }
+
+        // 8. Complete conversation (persist turn)
+        const trimmedMessage = loopResult.fullMessage?.trim();
+        if (trimmedMessage) {
+          const completionTime = uiAdapter.getCompletionTime();
+          const ttft = uiAdapter.getTTFT();
+          const throughput = uiAdapter.getThroughput();
+
+          const millisecondsToTimeSpan = (
+            ms: number | undefined,
+          ): string | undefined => {
+            if (ms === undefined) return undefined;
+            return `PT${ms / 1000}S`;
+          };
+
+          let turnMessageInputs: Types.ConversationMessageInput[] | undefined =
+            loopResult.intermediateMessages.length > 0
+              ? loopResult.intermediateMessages
+              : undefined;
+
+          if (loopResult.lastRoundReasoning) {
+            const completionInput: Types.ConversationMessageInput = {
+              role: Types.ConversationRoleTypes.Assistant,
+              message: trimmedMessage,
+              timestamp: new Date().toISOString(),
+              thinkingContent: loopResult.lastRoundReasoning.content,
+            };
+            if (loopResult.lastRoundReasoning.signature) {
+              completionInput.thinkingSignature =
+                loopResult.lastRoundReasoning.signature;
+            }
+            turnMessageInputs = [
+              ...(turnMessageInputs || []),
+              completionInput,
+            ];
+          }
+
+          await this.completeConversation(
+            trimmedMessage,
+            conversationId,
+            millisecondsToTimeSpan(completionTime),
+            millisecondsToTimeSpan(ttft),
+            throughput,
+            undefined,
+            turnMessageInputs,
+            options?.correlationId,
+          );
+
+          // Emit completion event
+          uiAdapter.handleEvent({
+            type: "complete",
+            conversationId,
+          });
+        }
+
+        // 9. Build TurnResult
+        const turnDuration = Date.now() - turnStart;
+        const taskCompleteThisTurn = loopResult.toolCallNames.includes("task_complete");
+        const turnToolNames = [...new Set(loopResult.toolCallNames)].sort();
+
+        const turnResult: TurnResult = {
+          turnNumber: turn,
+          prompt: currentPrompt,
+          responseText: loopResult.fullMessage,
+          toolCalls: turnToolNames,
+          toolCallCount: loopResult.toolCallCount,
+          durationMs: turnDuration,
+          taskComplete: taskCompleteThisTurn,
+          contextWindowUsage: loopResult.contextWindow,
+          contextActions:
+            loopResult.contextActions.length > 0
+              ? loopResult.contextActions
+              : undefined,
+          errors:
+            loopResult.errors.length > 0 ? loopResult.errors : undefined,
+        };
+        turnResults.push(turnResult);
+        totalToolCalls += loopResult.toolCallCount;
+        finalMessage = loopResult.fullMessage;
+        lastContextWindow = loopResult.contextWindow;
+
+        // 10. Notify callback
+        options?.onTurnComplete?.(turnResult);
+
+        // 11. Evaluate turn
+
+        // a. task_complete called?
+        if (taskCompleteThisTurn) {
+          // Extract summary from task_complete arguments
+          taskCompleteSummary = this.extractTaskCompleteSummary(
+            loopResult.intermediateMessages,
+          );
+          status = "completed";
+          break;
+        }
+
+        // b/c. Error handling
+        const allErrorsThisTurn =
+          loopResult.toolCallCount > 0 &&
+          loopResult.errors.length >= loopResult.toolCallCount;
+        if (allErrorsThisTurn) {
+          consecutiveErrorTurns++;
+        } else {
+          consecutiveErrorTurns = 0;
+        }
+
+        if (consecutiveErrorTurns >= 3) {
+          status = "error";
+          errorMessage = `${consecutiveErrorTurns} consecutive turns with all tool calls failing`;
+          break;
+        }
+
+        // d. Stuck detection
+        const stuckEval = stuckDetector.evaluate(turnResult);
+        if (stuckEval.pattern) {
+          if (stuckEval.stuck) {
+            // Second strike — give up
+            status = "stuck";
+            stuckPattern = stuckEval.pattern;
+            break;
+          } else if (stuckEval.firstOccurrence) {
+            // First strike — inject intervention next turn
+            pendingStuckIntervention = stuckEval.pattern;
+          }
+        }
+
+        // e. Budget extension
+        if (
+          evaluator.shouldWindDown(
+            turn + 1,
+            Date.now() - runStart,
+            totalToolCalls,
+            lastContextWindow,
+          )
+        ) {
+          evaluator.shouldGrantExtension(
+            turnResults,
+            lastContextWindow?.percentage,
+          );
+        }
+
+        // f. Set next prompt
+        currentPrompt = "Continue.";
+      }
+
+      // If we exited the loop without an explicit status change, check budget
+      if (
+        status === "completed" &&
+        !taskCompleteSummary &&
+        turnResults.length >= evaluator.adjustedMaxTurns
+      ) {
+        status = "budget_exhausted";
+      }
+
+      // ── Phase 3: Result ────────────────────────────────────────────────
+
+      const wallClockMs = Date.now() - runStart;
+      let qualityAssessment: QualityAssessment | undefined;
+
+      // Optional quality assessment
+      if (options?.qualityAssessment && finalMessage) {
+        qualityAssessment = await this.runQualityAssessment(
+          prompt,
+          status,
+          finalMessage,
+          turnResults.length,
+          totalToolCalls,
+          options.qualityAssessmentSpecification ?? agentSpec,
+          options.correlationId,
+        );
+      }
+
+      return this.buildRunAgentResult({
+        agentId: resolvedAgentId,
         conversationId,
-        millisecondsToTimeSpan(completionTime),
-        millisecondsToTimeSpan(ttft),
-        throughput,
-        collectedArtifacts.length > 0 ? collectedArtifacts : undefined,
-        finalMessageInputs,
+        status,
+        finalMessage,
+        taskCompleteSummary,
+        turnResults,
+        totalToolCalls,
+        wallClockMs,
+        contextWindowAtEnd: lastContextWindow,
+        error: errorMessage,
+        stuckPattern,
+        qualityAssessment,
+      });
+    } catch (error: unknown) {
+      const isAbort =
+        (error instanceof Error && error.message === "Operation aborted") ||
+        (error instanceof DOMException && error.name === "AbortError");
+
+      if (isAbort) {
+        status = "cancelled";
+      } else {
+        status = "error";
+        errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+      }
+
+      return this.buildRunAgentResult({
+        agentId: resolvedAgentId,
+        conversationId,
+        status,
+        finalMessage,
+        taskCompleteSummary,
+        turnResults,
+        totalToolCalls,
+        wallClockMs: Date.now() - runStart,
+        contextWindowAtEnd: lastContextWindow,
+        error: errorMessage,
+        stuckPattern,
+      });
+    }
+  }
+
+  /**
+   * Build bare continuation messages from turn history (skip formatConversation).
+   */
+  private buildBareMessages(
+    specification: Types.Specification | undefined,
+    turnResults: TurnResult[],
+    currentPrompt: string,
+  ): Types.ConversationMessage[] {
+    const messages: Types.ConversationMessage[] = [];
+
+    if (specification?.systemPrompt) {
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.System,
+        message: specification.systemPrompt,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Add turn history as user/assistant pairs
+    for (const turn of turnResults) {
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.User,
+        message: turn.prompt,
+        timestamp: new Date().toISOString(),
+      });
+      messages.push({
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.Assistant,
+        message: turn.responseText,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Add current continuation prompt
+    messages.push({
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.User,
+      message: currentPrompt,
+      timestamp: new Date().toISOString(),
+    });
+
+    return messages;
+  }
+
+  /**
+   * Extract task_complete summary from intermediate messages.
+   */
+  private extractTaskCompleteSummary(
+    messages: Types.ConversationMessageInput[],
+  ): string | undefined {
+    for (const msg of messages) {
+      if (msg.toolCalls) {
+        for (const tc of msg.toolCalls) {
+          if (tc && tc.name === "task_complete" && tc.arguments) {
+            try {
+              const args = JSON.parse(tc.arguments) as Record<string, unknown>;
+              return (args.summary as string) ?? undefined;
+            } catch {
+              return undefined;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Run LLM-as-judge quality assessment on a completed agent run.
+   */
+  private async runQualityAssessment(
+    originalPrompt: string,
+    agentStatus: string,
+    finalMessage: string,
+    turns: number,
+    totalToolCalls: number,
+    specification?: Types.EntityReferenceInput,
+    correlationId?: string,
+  ): Promise<QualityAssessment | undefined> {
+    try {
+      const assessTool: Types.ToolDefinitionInput = {
+        name: "assess_quality",
+        description: "Assess the quality of an agent run.",
+        schema: JSON.stringify({
+          type: "object",
+          properties: {
+            completeness: {
+              type: "number",
+              description: "How completely the task was accomplished (0-10).",
+              minimum: 0,
+              maximum: 10,
+            },
+            quality: {
+              type: "number",
+              description: "Quality of the output produced (0-10).",
+              minimum: 0,
+              maximum: 10,
+            },
+            efficiency: {
+              type: "number",
+              description:
+                "How efficiently resources were used (0-10). Lower turns/tool calls for a given quality = higher efficiency.",
+              minimum: 0,
+              maximum: 10,
+            },
+            overall: {
+              type: "number",
+              description: "Overall assessment score (0-10).",
+              minimum: 0,
+              maximum: 10,
+            },
+            issues: {
+              type: "array",
+              items: { type: "string" },
+              description: "List of issues or areas for improvement.",
+            },
+          },
+          required: [
+            "completeness",
+            "quality",
+            "efficiency",
+            "overall",
+            "issues",
+          ],
+        }),
+      };
+
+      const assessmentText =
+        `Original task: ${originalPrompt}\n\n` +
+        `Agent status: ${agentStatus}\n` +
+        `Final output: ${finalMessage.slice(0, 2000)}\n\n` +
+        `Turns used: ${turns}\n` +
+        `Tool calls made: ${totalToolCalls}`;
+
+      const assessmentPrompt =
+        "You are evaluating the quality of an autonomous agent run. " +
+        "Assess how well the agent completed the task based on the provided information. " +
+        "Call the assess_quality tool with your evaluation.";
+
+      const results = await this.extractText(
+        assessmentPrompt,
+        assessmentText,
+        [assessTool],
+        specification,
+        undefined,
         correlationId,
       );
 
-      // Extract token count from the response
-      finalTokens =
-        completeResponse.completeConversation?.message?.tokens ?? undefined;
-
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(
-          `📊 [completeConversation] Tokens used: ${finalTokens || "unknown"}`,
-        );
+      const extractResults = results.extractText;
+      if (extractResults && extractResults.length > 0) {
+        const result = extractResults[0];
+        if (result?.value) {
+          return JSON.parse(result.value) as QualityAssessment;
+        }
       }
+    } catch {
+      // Quality assessment failure is non-fatal
     }
+    return undefined;
+  }
 
-    // Emit completion event with token count
-    uiAdapter.handleEvent({
-      type: "complete",
-      conversationId,
-      tokens: finalTokens,
-    });
+  /** Build a RunAgentResult from partial data. */
+  private buildRunAgentResult(params: {
+    agentId: string;
+    conversationId: string;
+    status: RunAgentResult["status"];
+    finalMessage: string;
+    taskCompleteSummary?: string;
+    turnResults: TurnResult[];
+    totalToolCalls: number;
+    wallClockMs: number;
+    contextWindowAtEnd?: ContextWindowUsage;
+    error?: string;
+    stuckPattern?: string;
+    qualityAssessment?: QualityAssessment;
+  }): RunAgentResult {
+    return {
+      agentId: params.agentId,
+      conversationId: params.conversationId,
+      status: params.status,
+      finalMessage: params.finalMessage,
+      taskCompleteSummary: params.taskCompleteSummary,
+      turns: params.turnResults.length,
+      totalToolCalls: params.totalToolCalls,
+      wallClockMs: params.wallClockMs,
+      contextWindowAtEnd: params.contextWindowAtEnd,
+      turnResults: params.turnResults,
+      error: params.error,
+      stuckPattern: params.stuckPattern,
+      qualityAssessment: params.qualityAssessment,
+    };
   }
 
   /**
