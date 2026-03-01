@@ -5366,7 +5366,7 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String) {
   formatConversation(
     prompt: $prompt
     id: $id
@@ -5376,6 +5376,7 @@ export const FormatConversation = gql`
     systemPrompt: $systemPrompt
     includeDetails: $includeDetails
     correlationId: $correlationId
+    instructions: $instructions
   ) {
     conversation {
       id
@@ -6290,7 +6291,7 @@ export const Prompt = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String) {
+    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String, $instructions: String) {
   promptConversation(
     prompt: $prompt
     id: $id
@@ -6303,6 +6304,7 @@ export const PromptConversation = gql`
     requireTool: $requireTool
     includeDetails: $includeDetails
     correlationId: $correlationId
+    instructions: $instructions
   ) {
     conversation {
       id

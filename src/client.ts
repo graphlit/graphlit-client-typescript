@@ -2920,6 +2920,7 @@ class Graphlit {
     includeDetails?: boolean,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    instructions?: string,
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
@@ -2933,6 +2934,7 @@ class Graphlit {
       systemPrompt: systemPrompt,
       includeDetails: includeDetails,
       correlationId: correlationId,
+      instructions: instructions,
     });
   }
 
@@ -3044,6 +3046,7 @@ class Graphlit {
     includeDetails?: boolean,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    instructions?: string,
   ): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<
       Types.PromptConversationMutation,
@@ -3060,6 +3063,7 @@ class Graphlit {
       systemPrompt: systemPrompt,
       includeDetails: includeDetails,
       correlationId: correlationId,
+      instructions: instructions,
     });
   }
 

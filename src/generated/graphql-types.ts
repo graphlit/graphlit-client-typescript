@@ -25494,6 +25494,7 @@ export type FormatConversationMutationVariables = Exact<{
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
   includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  instructions?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -25533,6 +25534,7 @@ export type PromptConversationMutationVariables = Exact<{
   requireTool?: InputMaybe<Scalars['Boolean']['input']>;
   includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  instructions?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
