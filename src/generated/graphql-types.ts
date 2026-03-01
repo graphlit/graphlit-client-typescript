@@ -86,10 +86,14 @@ export type Agent = {
   owner: Owner;
   /** The relevance score of the agent. */
   relevance?: Maybe<Scalars['Float']['output']>;
+  /** The agent schedule policy. */
+  schedulePolicy?: Maybe<AgentSchedulePolicy>;
   /** The specification associated with this agent. */
   specification?: Maybe<EntityReference>;
   /** The state of the agent (i.e. created, finished). */
   state: EntityState;
+  /** The agent timeout. */
+  timeout?: Maybe<Scalars['TimeSpan']['output']>;
   /** The agent type. */
   type: AgentTypes;
 };
@@ -136,8 +140,12 @@ export type AgentInput = {
   filter?: InputMaybe<ContentCriteriaInput>;
   /** The name of the agent. */
   name: Scalars['String']['input'];
+  /** The agent schedule policy. */
+  schedulePolicy?: InputMaybe<AgentSchedulePolicyInput>;
   /** The specification associated with this agent. */
   specification?: InputMaybe<EntityReferenceInput>;
+  /** The agent timeout. */
+  timeout?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** The agent type. */
   type: AgentTypes;
 };
@@ -149,10 +157,35 @@ export type AgentResults = {
   results?: Maybe<Array<Agent>>;
 };
 
+/** Represents an agent scheduling policy. */
+export type AgentSchedulePolicy = {
+  __typename?: 'AgentSchedulePolicy';
+  /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
+  cron?: Maybe<Scalars['String']['output']>;
+  /** The agent recurrence type. */
+  recurrenceType?: Maybe<TimedPolicyRecurrenceTypes>;
+  /** If a repeated agent, the interval between repetitions. Defaults to 15 minutes. */
+  repeatInterval?: Maybe<Scalars['TimeSpan']['output']>;
+  /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
+  timeZoneId?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents an agent scheduling policy. */
+export type AgentSchedulePolicyInput = {
+  /** 6-field NCRONTAB expression (with seconds), e.g. '0 *\/5 * * * *'. If set, this takes precedence for scheduling. */
+  cron?: InputMaybe<Scalars['String']['input']>;
+  /** The agent recurrence type. */
+  recurrenceType?: InputMaybe<TimedPolicyRecurrenceTypes>;
+  /** If a repeated agent, the interval between repetitions. */
+  repeatInterval?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Time zone for interpreting Cron. Accepts IANA ('America/Los_Angeles') or Windows ('Pacific Standard Time') format. If null, Cron is interpreted as UTC. */
+  timeZoneId?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Agent type */
 export enum AgentTypes {
-  /** Automation */
-  Automation = 'AUTOMATION'
+  /** Agent */
+  Agent = 'AGENT'
 }
 
 /** Represents an agent. */
@@ -165,8 +198,12 @@ export type AgentUpdateInput = {
   id: Scalars['ID']['input'];
   /** The name of the agent. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The agent schedule policy. */
+  schedulePolicy?: InputMaybe<AgentSchedulePolicyInput>;
   /** The specification associated with this agent. */
   specification?: InputMaybe<EntityReferenceInput>;
+  /** The agent timeout. */
+  timeout?: InputMaybe<Scalars['TimeSpan']['input']>;
 };
 
 /** Represents an alert. */
@@ -16066,6 +16103,7 @@ export type MutationFormatConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
+  instructions?: InputMaybe<Scalars['String']['input']>;
   persona?: InputMaybe<EntityReferenceInput>;
   prompt: Scalars['String']['input'];
   specification?: InputMaybe<EntityReferenceInput>;
@@ -16218,6 +16256,7 @@ export type MutationPromptConversationArgs = {
   data?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   includeDetails?: InputMaybe<Scalars['Boolean']['input']>;
+  instructions?: InputMaybe<Scalars['String']['input']>;
   mimeType?: InputMaybe<Scalars['String']['input']>;
   persona?: InputMaybe<EntityReferenceInput>;
   prompt: Scalars['String']['input'];
@@ -24649,7 +24688,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -24657,7 +24696,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;

@@ -109,6 +109,13 @@ query QueryAgents($filter: AgentFilter, $correlationId: String) {
         collectionMode
         observationMode
       }
+      schedulePolicy {
+        recurrenceType
+        repeatInterval
+        cron
+        timeZoneId
+      }
+      timeout
     }
   }
 }

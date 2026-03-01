@@ -171,6 +171,13 @@ export const GetAgent = gql`
       collectionMode
       observationMode
     }
+    schedulePolicy {
+      recurrenceType
+      repeatInterval
+      cron
+      timeZoneId
+    }
+    timeout
   }
 }
     `;
@@ -286,6 +293,13 @@ export const QueryAgents = gql`
         collectionMode
         observationMode
       }
+      schedulePolicy {
+        recurrenceType
+        repeatInterval
+        cron
+        timeZoneId
+      }
+      timeout
     }
   }
 }
