@@ -178,6 +178,7 @@ export const GetAgent = gql`
       timeZoneId
     }
     timeout
+    scratchpad
   }
 }
     `;
@@ -300,6 +301,7 @@ export const QueryAgents = gql`
         timeZoneId
       }
       timeout
+      scratchpad
     }
   }
 }
