@@ -2925,6 +2925,8 @@ class Graphlit {
    * @param includeDetails - Whether to include details, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @param persona - The persona to use, optional.
+   * @param instructions - Per-turn instructions to inject into guidance, optional.
+   * @param scratchpad - Per-turn scratchpad text to inject, optional. Merged with conversation scratchpad.
    * @returns The formatted conversation.
    */
   public async formatConversation(
@@ -2937,6 +2939,7 @@ class Graphlit {
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
     instructions?: string,
+    scratchpad?: string,
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
@@ -2951,6 +2954,7 @@ class Graphlit {
       includeDetails: includeDetails,
       correlationId: correlationId,
       instructions: instructions,
+      scratchpad: scratchpad,
     });
   }
 
@@ -3048,6 +3052,8 @@ class Graphlit {
    * @param includeDetails - Whether to include details, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @param persona - The persona to use, optional.
+   * @param instructions - Per-turn instructions to inject into guidance, optional.
+   * @param scratchpad - Per-turn scratchpad text to inject, optional. Merged with conversation scratchpad.
    * @returns The conversation response.
    */
   public async promptConversation(
@@ -3063,6 +3069,7 @@ class Graphlit {
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
     instructions?: string,
+    scratchpad?: string,
   ): Promise<Types.PromptConversationMutation> {
     return this.mutateAndCheckError<
       Types.PromptConversationMutation,
@@ -3080,6 +3087,7 @@ class Graphlit {
       includeDetails: includeDetails,
       correlationId: correlationId,
       instructions: instructions,
+      scratchpad: scratchpad,
     });
   }
 
@@ -8456,6 +8464,7 @@ class Graphlit {
             persona,
             options?.contextStrategy,
             options?.instructions,
+            options?.scratchpad,
           );
         },
         abortSignal,
@@ -8520,6 +8529,7 @@ class Graphlit {
     persona?: Types.EntityReferenceInput,
     contextStrategy?: ContextStrategy,
     instructions?: string,
+    scratchpad?: string,
   ): Promise<void> {
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
@@ -8552,6 +8562,7 @@ class Graphlit {
       correlationId,
       persona,
       instructions,
+      scratchpad,
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
@@ -9746,6 +9757,7 @@ class Graphlit {
       // Resolve or create Agent entity
       let agentSpec = specification;
       let agentFilter: Types.ContentCriteriaInput | undefined;
+      let agentScratchpad: string | undefined;
 
       if (agentId) {
         const agentResponse = await this.getAgent(agentId, options?.correlationId);
@@ -9764,6 +9776,9 @@ class Graphlit {
         }
         if (agent.filter) {
           agentFilter = agent.filter as Types.ContentCriteriaInput;
+        }
+        if (agent.scratchpad) {
+          agentScratchpad = agent.scratchpad;
         }
       } else {
         // Create ephemeral agent
@@ -9994,6 +10009,7 @@ class Graphlit {
             options?.correlationId,
             options?.persona,
             turnInstructions,
+            agentScratchpad,
           );
 
           const formattedMessage = formatResponse.formatConversation?.message;

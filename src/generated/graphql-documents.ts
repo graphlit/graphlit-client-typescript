@@ -4828,6 +4828,7 @@ export const CompleteConversation = gql`
       formattedSources
       formattedObservables
       formattedInstructions
+      formattedScratchpad
       formattedTools
       formattedPersona
       specification
@@ -5175,6 +5176,7 @@ export const ContinueConversation = gql`
       formattedSources
       formattedObservables
       formattedInstructions
+      formattedScratchpad
       formattedTools
       formattedPersona
       specification
@@ -5368,7 +5370,7 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String) {
   formatConversation(
     prompt: $prompt
     id: $id
@@ -5379,6 +5381,7 @@ export const FormatConversation = gql`
     includeDetails: $includeDetails
     correlationId: $correlationId
     instructions: $instructions
+    scratchpad: $scratchpad
   ) {
     conversation {
       id
@@ -5573,6 +5576,7 @@ export const FormatConversation = gql`
       formattedSources
       formattedObservables
       formattedInstructions
+      formattedScratchpad
       formattedTools
       formattedPersona
       specification
@@ -6293,7 +6297,7 @@ export const Prompt = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String, $instructions: String) {
+    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String) {
   promptConversation(
     prompt: $prompt
     id: $id
@@ -6307,6 +6311,7 @@ export const PromptConversation = gql`
     includeDetails: $includeDetails
     correlationId: $correlationId
     instructions: $instructions
+    scratchpad: $scratchpad
   ) {
     conversation {
       id
@@ -6501,6 +6506,7 @@ export const PromptConversation = gql`
       formattedSources
       formattedObservables
       formattedInstructions
+      formattedScratchpad
       formattedTools
       formattedPersona
       specification

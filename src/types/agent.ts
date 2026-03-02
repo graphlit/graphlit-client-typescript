@@ -114,6 +114,8 @@ export interface StreamAgentOptions {
   contextStrategy?: ContextStrategy;
   /** Harness-injected instructions appended to the formatted conversation (e.g. wind-down, stuck intervention). */
   instructions?: string;
+  /** Harness-injected scratchpad text, merged with conversation scratchpad. Placed right before user-prompt. */
+  scratchpad?: string;
 }
 
 // Tool call result
