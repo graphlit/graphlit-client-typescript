@@ -8365,6 +8365,36 @@ export type GoogleDriveDistributionPropertiesInput = {
   folderId?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Google Drive shared drive. */
+export type GoogleDriveDriveResult = {
+  __typename?: 'GoogleDriveDriveResult';
+  /** The Google Drive shared drive identifier. */
+  driveId?: Maybe<Scalars['ID']['output']>;
+  /** The Google Drive shared drive name. */
+  driveName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Google Drive shared drives. */
+export type GoogleDriveDriveResults = {
+  __typename?: 'GoogleDriveDriveResults';
+  /** The Google Drive shared drives. */
+  results?: Maybe<Array<Maybe<GoogleDriveDriveResult>>>;
+};
+
+/** Represents Google Drive shared drives properties. */
+export type GoogleDriveDrivesInput = {
+  /** Google Drive authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleDriveAuthenticationTypes>;
+  /** Google OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Google OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents Google Drive properties. */
 export type GoogleDriveFeedProperties = {
   __typename?: 'GoogleDriveFeedProperties';
@@ -20073,6 +20103,8 @@ export type Query = {
   gitHubRepositories?: Maybe<GitHubRepositoryResults>;
   /** Retrieves available Google calendars. */
   googleCalendars?: Maybe<CalendarResults>;
+  /** Retrieves available Google Drive shared drives. */
+  googleDriveDrives?: Maybe<GoogleDriveDriveResults>;
   /** Retrieves available Google Drive folders. */
   googleDriveFolders?: Maybe<GoogleDriveFolderResults>;
   /** Retrieves entity knowledge graph based on filter criteria. */
@@ -20709,7 +20741,13 @@ export type QueryGoogleCalendarsArgs = {
 };
 
 
+export type QueryGoogleDriveDrivesArgs = {
+  properties: GoogleDriveDrivesInput;
+};
+
+
 export type QueryGoogleDriveFoldersArgs = {
+  driveId?: InputMaybe<Scalars['ID']['input']>;
   folderId?: InputMaybe<Scalars['ID']['input']>;
   properties: GoogleDriveFoldersInput;
 };
@@ -26358,9 +26396,17 @@ export type QueryGoogleCalendarsQueryVariables = Exact<{
 
 export type QueryGoogleCalendarsQuery = { __typename?: 'Query', googleCalendars?: { __typename?: 'CalendarResults', results?: Array<{ __typename?: 'CalendarResult', calendarName?: string | null, calendarId?: string | null } | null> | null } | null };
 
+export type QueryGoogleDriveDrivesQueryVariables = Exact<{
+  properties: GoogleDriveDrivesInput;
+}>;
+
+
+export type QueryGoogleDriveDrivesQuery = { __typename?: 'Query', googleDriveDrives?: { __typename?: 'GoogleDriveDriveResults', results?: Array<{ __typename?: 'GoogleDriveDriveResult', driveId?: string | null, driveName?: string | null } | null> | null } | null };
+
 export type QueryGoogleDriveFoldersQueryVariables = Exact<{
   properties: GoogleDriveFoldersInput;
   folderId?: InputMaybe<Scalars['ID']['input']>;
+  driveId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 

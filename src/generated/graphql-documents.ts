@@ -10742,9 +10742,23 @@ export const QueryGoogleCalendars = gql`
   }
 }
     `;
+export const QueryGoogleDriveDrives = gql`
+    query QueryGoogleDriveDrives($properties: GoogleDriveDrivesInput!) {
+  googleDriveDrives(properties: $properties) {
+    results {
+      driveId
+      driveName
+    }
+  }
+}
+    `;
 export const QueryGoogleDriveFolders = gql`
-    query QueryGoogleDriveFolders($properties: GoogleDriveFoldersInput!, $folderId: ID) {
-  googleDriveFolders(properties: $properties, folderId: $folderId) {
+    query QueryGoogleDriveFolders($properties: GoogleDriveFoldersInput!, $folderId: ID, $driveId: ID) {
+  googleDriveFolders(
+    properties: $properties
+    folderId: $folderId
+    driveId: $driveId
+  ) {
     results {
       folderName
       folderId
