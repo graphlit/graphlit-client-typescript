@@ -2515,6 +2515,10 @@ export type Collection = {
   owner: Owner;
   /** The relevance score of the collection. */
   relevance?: Maybe<Scalars['Float']['output']>;
+  /** The count of the skills contained by the collection. */
+  skillCount?: Maybe<Scalars['Int']['output']>;
+  /** The skills contained by the collection. */
+  skills?: Maybe<Array<Maybe<Skill>>>;
   /** The state of the collection (i.e. created, finished). */
   state: EntityState;
   /** The collection type. */
@@ -3921,6 +3925,8 @@ export type ConversationDetails = {
   formattedPersona?: Maybe<Scalars['String']['output']>;
   /** The formatted scratchpad. */
   formattedScratchpad?: Maybe<Scalars['String']['output']>;
+  /** The formatted skills content. */
+  formattedSkills?: Maybe<Scalars['String']['output']>;
   /** The formatted sources. */
   formattedSources?: Maybe<Scalars['String']['output']>;
   /** The formatted LLM tools. */
@@ -5993,6 +5999,14 @@ export type EntityFeedPropertiesUpdateInput = {
   readLimit?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Entity owner */
+export enum EntityOwners {
+  /** Owned by project */
+  Project = 'PROJECT',
+  /** Owned by system */
+  System = 'SYSTEM'
+}
+
 /** Represents an entity reference. */
 export type EntityReference = {
   __typename?: 'EntityReference';
@@ -6213,6 +6227,8 @@ export enum EntityTypes {
   Repo = 'REPO',
   /** Cloud storage site */
   Site = 'SITE',
+  /** Skill */
+  Skill = 'SKILL',
   /** Software */
   Software = 'SOFTWARE',
   /** Model specification */
@@ -14582,6 +14598,8 @@ export type Mutation = {
   addContentsToCollections?: Maybe<Array<Maybe<Collection>>>;
   /** Adds conversations to one or more collections. */
   addConversationsToCollections?: Maybe<Array<Maybe<Collection>>>;
+  /** Adds skills to one or more collections. */
+  addSkillsToCollections?: Maybe<Array<Maybe<Collection>>>;
   /** Approves content, and resumes workflow from the prepared stage (without re-ingesting or re-running the storage gate). */
   approveContent?: Maybe<Content>;
   /** Ask questions about the Graphlit API or SDKs. Can create code samples for any API call. */
@@ -14660,6 +14678,8 @@ export type Mutation = {
   createProduct?: Maybe<Product>;
   /** Creates a new repo. */
   createRepo?: Maybe<Repo>;
+  /** Creates a new skill. */
+  createSkill?: Maybe<Skill>;
   /** Creates a new software. */
   createSoftware?: Maybe<Software>;
   /** Creates a new LLM specification. */
@@ -14738,6 +14758,8 @@ export type Mutation = {
   deleteAllProducts?: Maybe<Array<Maybe<Product>>>;
   /** Bulk deletes repos based on the provided filter criteria. */
   deleteAllRepos?: Maybe<Array<Maybe<Repo>>>;
+  /** Bulk deletes skills based on the provided filter criteria. */
+  deleteAllSkills?: Maybe<Array<Maybe<Skill>>>;
   /** Bulk deletes software based on the provided filter criteria. */
   deleteAllSoftwares?: Maybe<Array<Maybe<Software>>>;
   /** Bulk deletes specifications based on the provided filter criteria. */
@@ -14862,6 +14884,10 @@ export type Mutation = {
   deleteRepo?: Maybe<Repo>;
   /** Bulk deletes repos. */
   deleteRepos?: Maybe<Array<Maybe<Repo>>>;
+  /** Deletes a skill. */
+  deleteSkill?: Maybe<Skill>;
+  /** Bulk deletes skills. */
+  deleteSkills?: Maybe<Array<Maybe<Skill>>>;
   /** Deletes a software. */
   deleteSoftware?: Maybe<Software>;
   /** Bulk deletes software. */
@@ -14890,6 +14916,8 @@ export type Mutation = {
   disableAlert?: Maybe<Alert>;
   /** Disables a feed. */
   disableFeed?: Maybe<Feed>;
+  /** Disables a skill. */
+  disableSkill?: Maybe<Skill>;
   /** Disables a user. */
   disableUser?: Maybe<User>;
   /** Distribute to an external service. */
@@ -14900,6 +14928,8 @@ export type Mutation = {
   enableAlert?: Maybe<Alert>;
   /** Enables a feed. */
   enableFeed?: Maybe<Feed>;
+  /** Enables a skill. */
+  enableSkill?: Maybe<Skill>;
   /** Enables a user. */
   enableUser?: Maybe<User>;
   /** Enriches organizations matching the filter criteria using the specified enrichment connector. */
@@ -14970,6 +15000,8 @@ export type Mutation = {
   removeContentsFromCollection?: Maybe<Collection>;
   /** Removes conversations from a collection. */
   removeConversationsFromCollection?: Maybe<Collection>;
+  /** Removes skills from a collection. */
+  removeSkillsFromCollection?: Maybe<Collection>;
   /** Research contents via web research based on provided filter criteria. */
   researchContents?: Maybe<StringResult>;
   /** Resolves duplicate entities into a single primary entity using LLM reasoning. Returns clusters of suggested groupings if resolution is not executed. */
@@ -15076,6 +15108,8 @@ export type Mutation = {
   updateProject?: Maybe<Project>;
   /** Updates a repo. */
   updateRepo?: Maybe<Repo>;
+  /** Updates an existing skill. */
+  updateSkill?: Maybe<Skill>;
   /** Updates a software. */
   updateSoftware?: Maybe<Software>;
   /** Updates an existing LLM specification. */
@@ -15096,6 +15130,8 @@ export type Mutation = {
   upsertEmotion?: Maybe<Emotion>;
   /** Upserts a label. */
   upsertLabel?: Maybe<Label>;
+  /** Upserts a skill. */
+  upsertSkill?: Maybe<Skill>;
   /** Upserts an LLM specification. */
   upsertSpecification?: Maybe<Specification>;
   /** Upserts a view. */
@@ -15120,6 +15156,12 @@ export type MutationAddContentsToCollectionsArgs = {
 export type MutationAddConversationsToCollectionsArgs = {
   collections: Array<EntityReferenceInput>;
   conversations: Array<EntityReferenceInput>;
+};
+
+
+export type MutationAddSkillsToCollectionsArgs = {
+  collections: Array<EntityReferenceInput>;
+  skills: Array<EntityReferenceInput>;
 };
 
 
@@ -15334,6 +15376,12 @@ export type MutationCreateProductArgs = {
 
 export type MutationCreateRepoArgs = {
   repo: RepoInput;
+};
+
+
+export type MutationCreateSkillArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  skill: SkillInput;
 };
 
 
@@ -15590,6 +15638,13 @@ export type MutationDeleteAllProductsArgs = {
 export type MutationDeleteAllReposArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<RepoFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllSkillsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SkillFilter>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -15940,6 +15995,17 @@ export type MutationDeleteReposArgs = {
 };
 
 
+export type MutationDeleteSkillArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteSkillsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationDeleteSoftwareArgs = {
   id: Scalars['ID']['input'];
 };
@@ -16021,6 +16087,11 @@ export type MutationDisableFeedArgs = {
 };
 
 
+export type MutationDisableSkillArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDisableUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -16048,6 +16119,11 @@ export type MutationEnableAlertArgs = {
 
 
 export type MutationEnableFeedArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationEnableSkillArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -16121,6 +16197,7 @@ export type MutationFormatConversationArgs = {
   persona?: InputMaybe<EntityReferenceInput>;
   prompt: Scalars['String']['input'];
   scratchpad?: InputMaybe<Scalars['String']['input']>;
+  skills?: InputMaybe<Array<EntityReferenceInput>>;
   specification?: InputMaybe<EntityReferenceInput>;
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
   tools?: InputMaybe<Array<ToolDefinitionInput>>;
@@ -16277,6 +16354,7 @@ export type MutationPromptConversationArgs = {
   prompt: Scalars['String']['input'];
   requireTool?: InputMaybe<Scalars['Boolean']['input']>;
   scratchpad?: InputMaybe<Scalars['String']['input']>;
+  skills?: InputMaybe<Array<EntityReferenceInput>>;
   specification?: InputMaybe<EntityReferenceInput>;
   systemPrompt?: InputMaybe<Scalars['String']['input']>;
   tools?: InputMaybe<Array<ToolDefinitionInput>>;
@@ -16354,6 +16432,12 @@ export type MutationRemoveContentsFromCollectionArgs = {
 export type MutationRemoveConversationsFromCollectionArgs = {
   collection: EntityReferenceInput;
   conversations: Array<EntityReferenceInput>;
+};
+
+
+export type MutationRemoveSkillsFromCollectionArgs = {
+  collection: EntityReferenceInput;
+  skills: Array<EntityReferenceInput>;
 };
 
 
@@ -16684,6 +16768,11 @@ export type MutationUpdateRepoArgs = {
 };
 
 
+export type MutationUpdateSkillArgs = {
+  skill: SkillUpdateInput;
+};
+
+
 export type MutationUpdateSoftwareArgs = {
   software: SoftwareUpdateInput;
 };
@@ -16734,6 +16823,11 @@ export type MutationUpsertEmotionArgs = {
 export type MutationUpsertLabelArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   label: LabelInput;
+};
+
+
+export type MutationUpsertSkillArgs = {
+  skill: SkillInput;
 };
 
 
@@ -19937,6 +20031,8 @@ export type Query = {
   countProducts?: Maybe<CountResult>;
   /** Counts repos based on the provided filter criteria. */
   countRepos?: Maybe<CountResult>;
+  /** Counts skills based on the provided filter criteria. */
+  countSkills?: Maybe<CountResult>;
   /** Counts software based on the provided filter criteria. */
   countSoftwares?: Maybe<CountResult>;
   /** Counts specifications based on the provided filter criteria. */
@@ -20123,6 +20219,10 @@ export type Query = {
   sharePointFolders?: Maybe<SharePointFolderResults>;
   /** Retrieves available SharePoint document libraries. */
   sharePointLibraries?: Maybe<SharePointLibraryResults>;
+  /** Lookup a skill given its ID. */
+  skill?: Maybe<Skill>;
+  /** Retrieves skills based on the provided filter criteria. */
+  skills?: Maybe<SkillResults>;
   /** Retrieves available Slack channels. */
   slackChannels?: Maybe<StringResults>;
   /** Lookup software given its ID. */
@@ -20478,6 +20578,12 @@ export type QueryCountProductsArgs = {
 export type QueryCountReposArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<RepoFilter>;
+};
+
+
+export type QueryCountSkillsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SkillFilter>;
 };
 
 
@@ -21072,6 +21178,18 @@ export type QuerySharePointFoldersArgs = {
 
 export type QuerySharePointLibrariesArgs = {
   properties: SharePointLibrariesInput;
+};
+
+
+export type QuerySkillArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySkillsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SkillFilter>;
 };
 
 
@@ -22532,6 +22650,104 @@ export enum SiteTypes {
   /** Watch cloud storage site */
   Watch = 'WATCH'
 }
+
+/** Represents a skill. */
+export type Skill = {
+  __typename?: 'Skill';
+  /** The collections this skill belongs to. */
+  collections?: Maybe<Array<Maybe<Collection>>>;
+  /** The tenant correlation identifier. */
+  correlationId?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the skill. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The description of the skill. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The ID of the skill. */
+  id: Scalars['ID']['output'];
+  /** The modified date of the skill. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the skill. */
+  name: Scalars['String']['output'];
+  /** The owner of the skill. */
+  owner: Owner;
+  /** The relevance score of the skill. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The skill owner. */
+  skillOwner?: Maybe<EntityOwners>;
+  /** The state of the skill (i.e. created, finished). */
+  state: EntityState;
+  /** The Markdown text body of the skill. */
+  text: Scalars['String']['output'];
+};
+
+/** Represents a filter for skills. */
+export type SkillFilter = {
+  /** Filter by collections. */
+  collections?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter by creation date recent timespan. For example, a timespan of one day will return skill(s) created in the last 24 hours. */
+  createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter skill(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter by whether the skill belongs to any collections. */
+  hasCollections?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter skill(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of skill(s) to be returned. Defaults to 100. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter skill(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return skill(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter skill(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Skip the specified number of skill(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** Filter skill(s) by searching for similar text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by skill owners. */
+  skillOwners?: InputMaybe<Array<EntityOwners>>;
+  /** Filter skill(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a skill. */
+export type SkillInput = {
+  /** The collections to add this skill to. */
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The description of the skill. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the skill. */
+  name: Scalars['String']['input'];
+  /** The skill owner. */
+  skillOwner?: InputMaybe<EntityOwners>;
+  /** The Markdown text body of the skill. */
+  text: Scalars['String']['input'];
+};
+
+/** Represents skill query results. */
+export type SkillResults = {
+  __typename?: 'SkillResults';
+  /** The list of skill query results. */
+  results?: Maybe<Array<Skill>>;
+};
+
+/** Represents a skill. */
+export type SkillUpdateInput = {
+  /** The description of the skill. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the skill to update. */
+  id: Scalars['ID']['input'];
+  /** The name of the skill. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The Markdown text body of the skill. */
+  text?: InputMaybe<Scalars['String']['input']>;
+};
 
 export enum SlackAuthenticationTypes {
   Connector = 'CONNECTOR',
@@ -24897,6 +25113,14 @@ export type AddConversationsToCollectionsMutationVariables = Exact<{
 
 export type AddConversationsToCollectionsMutation = { __typename?: 'Mutation', addConversationsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null> | null };
 
+export type AddSkillsToCollectionsMutationVariables = Exact<{
+  skills: Array<EntityReferenceInput> | EntityReferenceInput;
+  collections: Array<EntityReferenceInput> | EntityReferenceInput;
+}>;
+
+
+export type AddSkillsToCollectionsMutation = { __typename?: 'Mutation', addSkillsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, skills?: Array<{ __typename?: 'Skill', id: string, name: string } | null> | null } | null> | null };
+
 export type CountCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -24967,6 +25191,14 @@ export type RemoveConversationsFromCollectionMutationVariables = Exact<{
 
 
 export type RemoveConversationsFromCollectionMutation = { __typename?: 'Mutation', removeConversationsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
+
+export type RemoveSkillsFromCollectionMutationVariables = Exact<{
+  skills: Array<EntityReferenceInput> | EntityReferenceInput;
+  collection: EntityReferenceInput;
+}>;
+
+
+export type RemoveSkillsFromCollectionMutation = { __typename?: 'Mutation', removeSkillsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, skills?: Array<{ __typename?: 'Skill', id: string, name: string } | null> | null } | null };
 
 export type UpdateCollectionMutationVariables = Exact<{
   collection: CollectionUpdateInput;
@@ -25512,6 +25744,7 @@ export type FormatConversationMutationVariables = Exact<{
   correlationId?: InputMaybe<Scalars['String']['input']>;
   instructions?: InputMaybe<Scalars['String']['input']>;
   scratchpad?: InputMaybe<Scalars['String']['input']>;
+  skills?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
 }>;
 
 
@@ -25553,6 +25786,7 @@ export type PromptConversationMutationVariables = Exact<{
   correlationId?: InputMaybe<Scalars['String']['input']>;
   instructions?: InputMaybe<Scalars['String']['input']>;
   scratchpad?: InputMaybe<Scalars['String']['input']>;
+  skills?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
 }>;
 
 
@@ -27872,6 +28106,90 @@ export type SearchWebQueryVariables = Exact<{
 
 
 export type SearchWebQuery = { __typename?: 'Query', searchWeb?: { __typename?: 'WebSearchResults', results?: Array<{ __typename?: 'WebSearchResult', uri?: any | null, text?: string | null, title?: string | null, score?: number | null }> | null } | null };
+
+export type CountSkillsQueryVariables = Exact<{
+  filter?: InputMaybe<SkillFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountSkillsQuery = { __typename?: 'Query', countSkills?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateSkillMutationVariables = Exact<{
+  skill: SkillInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateSkillMutation = { __typename?: 'Mutation', createSkill?: { __typename?: 'Skill', id: string, name: string, state: EntityState, skillOwner?: EntityOwners | null } | null };
+
+export type DeleteAllSkillsMutationVariables = Exact<{
+  filter?: InputMaybe<SkillFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllSkillsMutation = { __typename?: 'Mutation', deleteAllSkills?: Array<{ __typename?: 'Skill', id: string, state: EntityState } | null> | null };
+
+export type DeleteSkillMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteSkillMutation = { __typename?: 'Mutation', deleteSkill?: { __typename?: 'Skill', id: string, state: EntityState } | null };
+
+export type DeleteSkillsMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteSkillsMutation = { __typename?: 'Mutation', deleteSkills?: Array<{ __typename?: 'Skill', id: string, state: EntityState } | null> | null };
+
+export type DisableSkillMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DisableSkillMutation = { __typename?: 'Mutation', disableSkill?: { __typename?: 'Skill', id: string, state: EntityState } | null };
+
+export type EnableSkillMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type EnableSkillMutation = { __typename?: 'Mutation', enableSkill?: { __typename?: 'Skill', id: string, state: EntityState } | null };
+
+export type GetSkillQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetSkillQuery = { __typename?: 'Query', skill?: { __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+
+export type QuerySkillsQueryVariables = Exact<{
+  filter?: InputMaybe<SkillFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QuerySkillsQuery = { __typename?: 'Query', skills?: { __typename?: 'SkillResults', results?: Array<{ __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null }> | null } | null };
+
+export type UpdateSkillMutationVariables = Exact<{
+  skill: SkillUpdateInput;
+}>;
+
+
+export type UpdateSkillMutation = { __typename?: 'Mutation', updateSkill?: { __typename?: 'Skill', id: string, name: string, state: EntityState, skillOwner?: EntityOwners | null } | null };
+
+export type UpsertSkillMutationVariables = Exact<{
+  skill: SkillInput;
+}>;
+
+
+export type UpsertSkillMutation = { __typename?: 'Mutation', upsertSkill?: { __typename?: 'Skill', id: string, name: string, state: EntityState, skillOwner?: EntityOwners | null } | null };
 
 export type CountSoftwaresQueryVariables = Exact<{
   filter?: InputMaybe<SoftwareFilter>;

@@ -116,6 +116,8 @@ export interface StreamAgentOptions {
   instructions?: string;
   /** Harness-injected scratchpad text, merged with conversation scratchpad. Placed right before user-prompt. */
   scratchpad?: string;
+  /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
+  skills?: EntityReferenceInput[];
 }
 
 // Tool call result
@@ -231,6 +233,9 @@ export interface RunAgentOptions {
   smoothingEnabled?: boolean;
   chunkingStrategy?: "character" | "word" | "sentence";
   smoothingDelay?: number;
+
+  /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
+  skills?: EntityReferenceInput[];
 }
 
 /** Quality assessment scores from LLM-as-judge post-run evaluation. */

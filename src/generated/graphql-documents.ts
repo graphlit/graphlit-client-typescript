@@ -935,6 +935,20 @@ export const AddConversationsToCollections = gql`
   }
 }
     `;
+export const AddSkillsToCollections = gql`
+    mutation AddSkillsToCollections($skills: [EntityReferenceInput!]!, $collections: [EntityReferenceInput!]!) {
+  addSkillsToCollections(skills: $skills, collections: $collections) {
+    id
+    name
+    state
+    type
+    skills {
+      id
+      name
+    }
+  }
+}
+    `;
 export const CountCollections = gql`
     query CountCollections($filter: CollectionFilter, $correlationId: String) {
   countCollections(filter: $filter, correlationId: $correlationId) {
@@ -1046,6 +1060,20 @@ export const RemoveConversationsFromCollection = gql`
     state
     type
     contents {
+      id
+      name
+    }
+  }
+}
+    `;
+export const RemoveSkillsFromCollection = gql`
+    mutation RemoveSkillsFromCollection($skills: [EntityReferenceInput!]!, $collection: EntityReferenceInput!) {
+  removeSkillsFromCollection(skills: $skills, collection: $collection) {
+    id
+    name
+    state
+    type
+    skills {
       id
       name
     }
@@ -5370,7 +5398,7 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String, $skills: [EntityReferenceInput!]) {
   formatConversation(
     prompt: $prompt
     id: $id
@@ -5382,6 +5410,7 @@ export const FormatConversation = gql`
     correlationId: $correlationId
     instructions: $instructions
     scratchpad: $scratchpad
+    skills: $skills
   ) {
     conversation {
       id
@@ -6297,7 +6326,7 @@ export const Prompt = gql`
 }
     `;
 export const PromptConversation = gql`
-    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String) {
+    mutation PromptConversation($prompt: String!, $mimeType: String, $data: String, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $systemPrompt: String, $tools: [ToolDefinitionInput!], $requireTool: Boolean, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String, $skills: [EntityReferenceInput!]) {
   promptConversation(
     prompt: $prompt
     id: $id
@@ -6312,6 +6341,7 @@ export const PromptConversation = gql`
     correlationId: $correlationId
     instructions: $instructions
     scratchpad: $scratchpad
+    skills: $skills
   ) {
     conversation {
       id
@@ -16449,6 +16479,132 @@ export const SearchWeb = gql`
       title
       score
     }
+  }
+}
+    `;
+export const CountSkills = gql`
+    query CountSkills($filter: SkillFilter, $correlationId: String) {
+  countSkills(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateSkill = gql`
+    mutation CreateSkill($skill: SkillInput!, $correlationId: String) {
+  createSkill(skill: $skill, correlationId: $correlationId) {
+    id
+    name
+    state
+    skillOwner
+  }
+}
+    `;
+export const DeleteAllSkills = gql`
+    mutation DeleteAllSkills($filter: SkillFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllSkills(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteSkill = gql`
+    mutation DeleteSkill($id: ID!) {
+  deleteSkill(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteSkills = gql`
+    mutation DeleteSkills($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteSkills(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const DisableSkill = gql`
+    mutation DisableSkill($id: ID!) {
+  disableSkill(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const EnableSkill = gql`
+    mutation EnableSkill($id: ID!) {
+  enableSkill(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const GetSkill = gql`
+    query GetSkill($id: ID!, $correlationId: String) {
+  skill(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
+    correlationId
+    text
+    skillOwner
+    collections {
+      id
+      name
+    }
+  }
+}
+    `;
+export const QuerySkills = gql`
+    query QuerySkills($filter: SkillFilter, $correlationId: String) {
+  skills(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      correlationId
+      text
+      skillOwner
+      collections {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+export const UpdateSkill = gql`
+    mutation UpdateSkill($skill: SkillUpdateInput!) {
+  updateSkill(skill: $skill) {
+    id
+    name
+    state
+    skillOwner
+  }
+}
+    `;
+export const UpsertSkill = gql`
+    mutation UpsertSkill($skill: SkillInput!) {
+  upsertSkill(skill: $skill) {
+    id
+    name
+    state
+    skillOwner
   }
 }
     `;
