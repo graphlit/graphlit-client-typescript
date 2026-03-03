@@ -3243,14 +3243,32 @@ class Graphlit {
   }
 
   /**
+   * Queries Google Drive shared drives.
+   * @param properties - The Google Drive drives query properties.
+   * @returns The Google Drive shared drives.
+   */
+  public async queryGoogleDriveDrives(
+    properties: Types.GoogleDriveDrivesInput,
+  ): Promise<Types.QueryGoogleDriveDrivesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGoogleDriveDrivesQuery,
+      Types.QueryGoogleDriveDrivesQueryVariables
+    >(Documents.QueryGoogleDriveDrives, {
+      properties: properties,
+    });
+  }
+
+  /**
    * Queries Google Drive folders.
    * @param properties - The Google Drive folder query properties.
    * @param folderId - The parent folder ID, optional.
+   * @param driveId - The shared drive ID, optional.
    * @returns The Google Drive folders.
    */
   public async queryGoogleDriveFolders(
     properties: Types.GoogleDriveFoldersInput,
     folderId?: string,
+    driveId?: string,
   ): Promise<Types.QueryGoogleDriveFoldersQuery> {
     return this.queryAndCheckError<
       Types.QueryGoogleDriveFoldersQuery,
@@ -3258,6 +3276,7 @@ class Graphlit {
     >(Documents.QueryGoogleDriveFolders, {
       properties: properties,
       folderId: folderId,
+      driveId: driveId,
     });
   }
 
