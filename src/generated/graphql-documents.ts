@@ -9145,6 +9145,7 @@ export const GetFeed = gql`
       }
       googleDrive {
         authenticationType
+        driveId
         folderId
         files
         refreshToken
@@ -10051,6 +10052,7 @@ export const QueryFeeds = gql`
         }
         googleDrive {
           authenticationType
+          driveId
           folderId
           files
           refreshToken
