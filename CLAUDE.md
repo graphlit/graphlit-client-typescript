@@ -12,6 +12,59 @@ Take your time... don't be so quick to return a solution to the user. We want qu
 
 The user enjoys your banter and high quality feedback on his development process and coding efforts.
 
+## File Map — TypeScript API Client (`src/`)
+
+**Core**
+- `client.ts` — Main `Graphlit` class (11K lines). SDK entry point, Apollo client init, auth, agent/streaming. Re-exports all types via `Types` namespace.
+- `model-mapping.ts` — Maps model names/enums across LLM providers.
+- `partial-errors.ts` — Handles partial GraphQL error responses gracefully.
+
+**Generated Code (DO NOT manually edit — regenerate with `npm run generate`)**
+- `generated/graphql-types.ts` — All GraphQL type definitions (28K lines). Generated from production schema via graphql-codegen.
+- `generated/graphql-documents.ts` — TypeScript document node constants for all operations (20K lines).
+
+**Streaming — multi-provider LLM streaming**
+- `streaming/providers.ts` — Core provider implementations (130KB): OpenAI, Anthropic, Google, Groq, Cerebras, Cohere, Mistral, Bedrock, Deepseek, XAI.
+- `streaming/llm-formatters.ts` — Message format conversion per provider.
+- `streaming/ui-event-adapter.ts` — Converts provider events to unified SDK event format.
+- `streaming/chunk-buffer.ts` — Buffers streaming chunks for efficient processing.
+
+**Types (hand-written)**
+- `types/agent.ts` — AgentOptions, AgentResult, ToolHandler, ContextStrategy, AgentMetrics.
+- `types/streaming.ts` — Streaming-related type definitions.
+- `types/token-usage.ts` — Token usage tracking.
+- `types/ui-events.ts` — AgentStreamEvent and variants.
+- `types/internal.ts` — Internal types and utilities.
+
+**Helpers — agent orchestration**
+- `helpers/context-management.ts` — Token budget tracking, context windowing, tool round management.
+- `helpers/turn-evaluator.ts` — Evaluates conversation turns and context quality.
+- `helpers/stuck-detector.ts` — Detects infinite loops or stuck agent states.
+
+**GraphQL Documents — 455 .graphql files organized by entity type**
+- `documents/` — One file per operation (createFeed.graphql, queryContents.graphql, etc.)
+- Grouped into subdirectories by entity: content (37), feed (47), conversation (29), agent (11), specification (12), collection (14), etc.
+
+**Config & Build**
+- `codegen.yml` — graphql-codegen config. Reads schema from `GRAPHQL_SCHEMA_URL` env var.
+- `tsconfig.json` — ES2022 target, strict mode, ESM output.
+- `package.json` — Package `graphlit-client`, peer deps for all LLM SDKs.
+
+**Tests (Vitest)**
+- `test/` — Integration tests per provider, performance tests, pre-release gate, context management tests.
+- `test/test-models.ts` — Test LLM configurations.
+
+### Cross-Repo References
+
+**Platform Repo** (`/mnt/c/projects/Graphlit/Graphlit Platform/`)
+- `src/Graphlit.Frameworks.Knowledge.Models/Enums.cs` — Source of truth for ALL enums (model types, feed types, etc.)
+- `src/Graphlit.Frameworks.Knowledge/` — GraphQL types/mutations/queries. The schema this client consumes.
+
+**Data Plane Functions** (`/mnt/c/projects/Graphlit/Graphlit Data Plane Functions/`)
+- `src/KnowledgeFactory/Program.cs` — Codegen that produces the GraphQL schema this client introspects.
+- `src/Graphlit.Functions.Entities/GraphQL/GraphQLEndpoint.cs` — The GraphQL endpoint this client talks to.
+- `src/Graphlit.Frameworks.Knowledge.Clients/` — C# equivalent of this SDK (same operations, different language).
+
 # Consolidated Learnings & Project Preferences
 
 ## Strong Typing Patterns

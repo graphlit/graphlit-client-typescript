@@ -98,6 +98,8 @@ export type Agent = {
   timeout?: Maybe<Scalars['TimeSpan']['output']>;
   /** The agent type. */
   type: AgentTypes;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for agents. */
@@ -251,6 +253,8 @@ export type Alert = {
   summarySpecification?: Maybe<EntityReference>;
   /** The alert type. */
   type: AlertTypes;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The saved view, optional. */
   view?: Maybe<EntityReference>;
 };
@@ -2203,6 +2207,8 @@ export type Category = {
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the category (i.e. created, enabled). */
   state: EntityState;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a category facet. */
@@ -2523,6 +2529,8 @@ export type Collection = {
   state: EntityState;
   /** The collection type. */
   type?: Maybe<CollectionTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for collections. */
@@ -2894,6 +2902,8 @@ export type Connector = {
   state: EntityState;
   /** The connector type. */
   type?: Maybe<ConnectorTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for connectors. */
@@ -3143,6 +3153,8 @@ export type Content = {
   type?: Maybe<ContentTypes>;
   /** The content URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The content video metadata. */
   video?: Maybe<VideoMetadata>;
   workflow?: Maybe<Workflow>;
@@ -3891,6 +3903,8 @@ export type Conversation = {
   turns?: Maybe<Array<Maybe<ConversationTurn>>>;
   /** The conversation type. */
   type?: Maybe<ConversationTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a conversation citation. */
@@ -6125,6 +6139,8 @@ export enum EntityState {
   Ingested = 'INGESTED',
   /** Initialized */
   Initialized = 'INITIALIZED',
+  /** Limited */
+  Limited = 'LIMITED',
   /** Opened */
   Opened = 'OPENED',
   /** Paused */
@@ -6320,6 +6336,8 @@ export type Event = {
   typicalAgeRange?: Maybe<Scalars['String']['output']>;
   /** The event URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this event. */
   workflow?: Maybe<Workflow>;
 };
@@ -7087,6 +7105,8 @@ export type Feed = {
   twitter?: Maybe<TwitterFeedProperties>;
   /** The feed type. */
   type: FeedTypes;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The web feed properties. */
   web?: Maybe<WebFeedProperties>;
   workflow?: Maybe<Workflow>;
@@ -8411,7 +8431,7 @@ export type GoogleDriveFeedProperties = {
   clientSecret?: Maybe<Scalars['String']['output']>;
   /** Authentication connector reference. */
   connector?: Maybe<EntityReference>;
-  /** Google Drive shared drive identifier. */
+  /** Google Drive shared drive identifier. If not provided, defaults to the user's My Drive. */
   driveId?: Maybe<Scalars['ID']['output']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -8433,7 +8453,7 @@ export type GoogleDriveFeedPropertiesInput = {
   clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** The authentication connector reference. */
   connector?: InputMaybe<EntityReferenceInput>;
-  /** Google Drive shared drive identifier. */
+  /** Google Drive shared drive identifier. If not provided, defaults to the user's My Drive. */
   driveId?: InputMaybe<Scalars['ID']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -8455,7 +8475,7 @@ export type GoogleDriveFeedPropertiesUpdateInput = {
   clientSecret?: InputMaybe<Scalars['String']['input']>;
   /** The authentication connector reference. */
   connector?: InputMaybe<EntityReferenceInput>;
-  /** Google Drive shared drive identifier. */
+  /** Google Drive shared drive identifier. If not provided, defaults to the user's My Drive. */
   driveId?: InputMaybe<Scalars['ID']['input']>;
   /** Google Drive file identifiers. Takes precedence over folder identifier. */
   files?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -10301,6 +10321,8 @@ export type Investment = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The investment URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The investment vehicle type. */
   vehicle?: Maybe<Scalars['String']['output']>;
   /** The workflow associated with this investment. */
@@ -10451,6 +10473,8 @@ export type InvestmentFund = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The investmentfund URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The fund vintage year. */
   vintage?: Maybe<Scalars['Int']['output']>;
   /** The workflow associated with this investment fund. */
@@ -11026,6 +11050,8 @@ export type Label = {
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the label (i.e. created, enabled). */
   state: EntityState;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a label facet. */
@@ -11637,6 +11663,8 @@ export type MedicalCondition = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalcondition URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical condition. */
   workflow?: Maybe<Workflow>;
 };
@@ -11814,6 +11842,8 @@ export type MedicalContraindication = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalcontraindication URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical contraindication. */
   workflow?: Maybe<Workflow>;
 };
@@ -11991,6 +12021,8 @@ export type MedicalDevice = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldevice URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical device. */
   workflow?: Maybe<Workflow>;
 };
@@ -12168,6 +12200,8 @@ export type MedicalDrug = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldrug URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical drug. */
   workflow?: Maybe<Workflow>;
 };
@@ -12213,6 +12247,8 @@ export type MedicalDrugClass = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaldrugclass URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical drug class. */
   workflow?: Maybe<Workflow>;
 };
@@ -12522,6 +12558,8 @@ export type MedicalGuideline = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalguideline URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical guideline. */
   workflow?: Maybe<Workflow>;
 };
@@ -12699,6 +12737,8 @@ export type MedicalIndication = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalindication URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical indication. */
   workflow?: Maybe<Workflow>;
 };
@@ -12876,6 +12916,8 @@ export type MedicalProcedure = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalprocedure URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical procedure. */
   workflow?: Maybe<Workflow>;
 };
@@ -13055,6 +13097,8 @@ export type MedicalStudy = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicalstudy URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical study. */
   workflow?: Maybe<Workflow>;
 };
@@ -13236,6 +13280,8 @@ export type MedicalTest = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaltest URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical test. */
   workflow?: Maybe<Workflow>;
 };
@@ -13413,6 +13459,8 @@ export type MedicalTherapy = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The medicaltherapy URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this medical therapy. */
   workflow?: Maybe<Workflow>;
 };
@@ -13748,6 +13796,8 @@ export type Metadata = {
   state: EntityState;
   /** The metadata type. */
   type?: Maybe<MetadataTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The metadata value. */
   value?: Maybe<Scalars['String']['output']>;
   /** The metadata value type. */
@@ -15040,6 +15090,10 @@ export type Mutation = {
   removeSkillsFromCollection?: Maybe<Collection>;
   /** Research contents via web research based on provided filter criteria. */
   researchContents?: Maybe<StringResult>;
+  /** Resets project credits and re-enables limited entities. */
+  resetProjectCredits?: Maybe<Project>;
+  /** Resets user credits and re-enables limited entities for the user. */
+  resetUserCredits?: Maybe<User>;
   /** Resolves duplicate entities into a single primary entity using LLM reasoning. Returns clusters of suggested groupings if resolution is not executed. */
   resolveEntities?: Maybe<ResolveEntitiesResult>;
   /** Resolves a source entity into a target entity using LLM-driven metadata merging. The target is always the primary/canonical entity. */
@@ -16485,6 +16539,11 @@ export type MutationResearchContentsArgs = {
   publishSpecification?: InputMaybe<EntityReferenceInput>;
   summarySpecification?: InputMaybe<EntityReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationResetUserCreditsArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -17973,6 +18032,8 @@ export type Organization = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The organization URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this organization. */
   workflow?: Maybe<Workflow>;
 };
@@ -18411,6 +18472,8 @@ export type Person = {
   title?: Maybe<Scalars['String']['output']>;
   /** The person URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The place(s) where the person works. */
   workLocation?: Maybe<Array<Maybe<Place>>>;
   /** The workflow associated with this person. */
@@ -18687,6 +18750,8 @@ export type Persona = {
   state: EntityState;
   /** The IANA timezone of the persona. */
   timezone?: Maybe<Scalars['String']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for personas. */
@@ -18815,6 +18880,8 @@ export type Place = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The place URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this place. */
   workflow?: Maybe<Workflow>;
 };
@@ -19169,6 +19236,8 @@ export type Product = {
   upc?: Maybe<Scalars['String']['output']>;
   /** The product URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this product. */
   workflow?: Maybe<Workflow>;
 };
@@ -19502,6 +19571,8 @@ export type ProjectQuota = {
   posts?: Maybe<Scalars['Int']['output']>;
   /** The storage quota, in bytes. */
   storage?: Maybe<Scalars['Long']['output']>;
+  /** The maximum number of credits which can be accrued per user. */
+  userCredits?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Represents the project quota. */
@@ -19516,6 +19587,8 @@ export type ProjectQuotaInput = {
   posts?: InputMaybe<Scalars['Int']['input']>;
   /** The storage quota, in bytes. */
   storage?: InputMaybe<Scalars['Long']['input']>;
+  /** The maximum number of credits which can be accrued per user. */
+  userCredits?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents project query results. */
@@ -20109,7 +20182,7 @@ export type Query = {
   gitHubRepositories?: Maybe<GitHubRepositoryResults>;
   /** Retrieves available Google calendars. */
   googleCalendars?: Maybe<CalendarResults>;
-  /** Retrieves available Google Drive shared drives. */
+  /** Retrieves available Google Drive shared drives. Does not include the user's My Drive, which is the default when no drive identifier is specified. */
   googleDriveDrives?: Maybe<GoogleDriveDriveResults>;
   /** Retrieves available Google Drive folders. */
   googleDriveFolders?: Maybe<GoogleDriveFolderResults>;
@@ -21599,6 +21672,8 @@ export type Rendition = {
   type?: Maybe<RenditionTypes>;
   /** The rendition URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Rendition type */
@@ -21727,6 +21802,8 @@ export type Repo = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The repo URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this repo. */
   workflow?: Maybe<Workflow>;
 };
@@ -22722,6 +22799,8 @@ export type Skill = {
   state: EntityState;
   /** The Markdown text body of the skill. */
   text: Scalars['String']['output'];
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for skills. */
@@ -22963,6 +23042,8 @@ export type Software = {
   thing?: Maybe<Scalars['String']['output']>;
   /** The software URI. */
   uri?: Maybe<Scalars['URL']['output']>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The workflow associated with this software. */
   workflow?: Maybe<Workflow>;
 };
@@ -23190,6 +23271,8 @@ export type Specification = {
   twelveLabs?: Maybe<TwelveLabsModelProperties>;
   /** The specification type. */
   type?: Maybe<SpecificationTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The Voyage model properties. */
   voyage?: Maybe<VoyageModelProperties>;
   /** The xAI model properties. */
@@ -24131,16 +24214,22 @@ export type UriResults = {
 /** Represents a user. */
 export type User = {
   __typename?: 'User';
+  /** The accumulated credits cost for the user. */
+  accumulatedCredits?: Maybe<Scalars['Decimal']['output']>;
   /** The reference to the connectors that the user has created. */
   connectors?: Maybe<Array<Maybe<Connector>>>;
   /** The creation date of the user. */
   creationDate: Scalars['DateTime']['output'];
+  /** The accumulated credits for the user. */
+  credits?: Maybe<Scalars['Long']['output']>;
   /** The description of the user. */
   description?: Maybe<Scalars['String']['output']>;
   /** The ID of the user. */
   id: Scalars['ID']['output'];
   /** The external identifier of the user. */
   identifier: Scalars['String']['output'];
+  /** The date of the last credits sync. */
+  lastCreditsDate?: Maybe<Scalars['DateTime']['output']>;
   /** The modified date of the user. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the user. */
@@ -24149,12 +24238,16 @@ export type User = {
   owner: Owner;
   /** The personas assigned to this user. */
   personas?: Maybe<Array<Maybe<Persona>>>;
+  /** The user quota. */
+  quota?: Maybe<UserQuota>;
   /** The relevance score of the user. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the user (i.e. created, finished). */
   state: EntityState;
   /** The user type, i.e. human or agent. */
   type?: Maybe<UserTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for users. */
@@ -24201,6 +24294,19 @@ export type UserInput = {
   type?: InputMaybe<UserTypes>;
 };
 
+/** Represents the user quota. */
+export type UserQuota = {
+  __typename?: 'UserQuota';
+  /** The maximum number of credits which can be accrued by the user. */
+  credits?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Represents the user quota. */
+export type UserQuotaInput = {
+  /** The maximum number of credits which can be accrued by the user. */
+  credits?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** Represents user query results. */
 export type UserResults = {
   __typename?: 'UserResults';
@@ -24226,6 +24332,8 @@ export type UserUpdateInput = {
   identifier?: InputMaybe<Scalars['String']['input']>;
   /** The name of the user. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The user quota. */
+  quota?: InputMaybe<UserQuotaInput>;
   /** The user type, i.e. human or agent. */
   type?: InputMaybe<UserTypes>;
 };
@@ -24320,6 +24428,8 @@ export type View = {
   state: EntityState;
   /** Type of view. */
   type?: Maybe<ViewTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents a filter for views. */
@@ -24547,6 +24657,8 @@ export type Workflow = {
   state: EntityState;
   /** The storage stage of the content workflow. */
   storage?: Maybe<StorageWorkflowStage>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents the workflow action. */
@@ -28013,7 +28125,7 @@ export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: {
 export type GetProjectQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, environmentType?: EnvironmentTypes | null, platform?: ResourceConnectorTypes | null, region?: string | null, credits?: any | null, lastCreditsDate?: any | null, callbackUri?: any | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, embeddings?: { __typename?: 'EmbeddingsStrategy', textSpecification?: { __typename?: 'EntityReference', id: string } | null, imageSpecification?: { __typename?: 'EntityReference', id: string } | null, multimodalSpecification?: { __typename?: 'EntityReference', id: string } | null } | null, quota?: { __typename?: 'ProjectQuota', storage?: any | null, contents?: number | null, credits?: number | null, feeds?: number | null, posts?: number | null, conversations?: number | null } | null } | null };
+export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, environmentType?: EnvironmentTypes | null, platform?: ResourceConnectorTypes | null, region?: string | null, credits?: any | null, lastCreditsDate?: any | null, callbackUri?: any | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, embeddings?: { __typename?: 'EmbeddingsStrategy', textSpecification?: { __typename?: 'EntityReference', id: string } | null, imageSpecification?: { __typename?: 'EntityReference', id: string } | null, multimodalSpecification?: { __typename?: 'EntityReference', id: string } | null } | null, quota?: { __typename?: 'ProjectQuota', storage?: any | null, contents?: number | null, credits?: number | null, feeds?: number | null, posts?: number | null, conversations?: number | null, userCredits?: number | null } | null } | null };
 
 export type LookupCreditsQueryVariables = Exact<{
   correlationId: Scalars['String']['input'];
@@ -28445,14 +28557,14 @@ export type EnableUserMutation = { __typename?: 'Mutation', enableUser?: { __typ
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
 
 export type GetUserByIdentifierQueryVariables = Exact<{
   identifier: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null } | null };
+export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
 
 export type QueryUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
@@ -28460,7 +28572,7 @@ export type QueryUsersQueryVariables = Exact<{
 }>;
 
 
-export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null }> | null } | null };
+export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null }> | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   user: UserUpdateInput;

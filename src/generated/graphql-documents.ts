@@ -16083,6 +16083,7 @@ export const GetProject = gql`
       feeds
       posts
       conversations
+      userCredits
     }
     callbackUri
   }
@@ -17694,6 +17695,12 @@ export const GetUser = gql`
         text
       }
     }
+    quota {
+      credits
+    }
+    credits
+    lastCreditsDate
+    accumulatedCredits
   }
 }
     `;
@@ -17783,6 +17790,12 @@ export const GetUserByIdentifier = gql`
         text
       }
     }
+    quota {
+      credits
+    }
+    credits
+    lastCreditsDate
+    accumulatedCredits
   }
 }
     `;
@@ -17873,6 +17886,12 @@ export const QueryUsers = gql`
           text
         }
       }
+      quota {
+        credits
+      }
+      credits
+      lastCreditsDate
+      accumulatedCredits
     }
   }
 }
