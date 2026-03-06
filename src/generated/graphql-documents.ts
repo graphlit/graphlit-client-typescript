@@ -9202,6 +9202,8 @@ export const GetFeed = gql`
         excludeSentItems
         includeDeletedItems
         inboxOnly
+        beforeDate
+        afterDate
         authenticationType
         refreshToken
         clientId
@@ -9217,6 +9219,8 @@ export const GetFeed = gql`
         excludeSentItems
         includeDeletedItems
         inboxOnly
+        beforeDate
+        afterDate
         authenticationType
         refreshToken
         clientId
@@ -9337,6 +9341,8 @@ export const GetFeed = gql`
         apiToken
         boardId
       }
+      beforeDate
+      afterDate
       readLimit
     }
     commit {
@@ -9354,6 +9360,8 @@ export const GetFeed = gql`
           id
         }
       }
+      beforeDate
+      afterDate
       readLimit
     }
     pullRequest {
@@ -9371,6 +9379,8 @@ export const GetFeed = gql`
           id
         }
       }
+      beforeDate
+      afterDate
       readLimit
     }
     crm {
@@ -9665,6 +9675,8 @@ export const GetFeed = gql`
         id
       }
       channel
+      beforeDate
+      afterDate
       includeAttachments
     }
     microsoftTeams {
@@ -9677,6 +9689,8 @@ export const GetFeed = gql`
       connector {
         id
       }
+      beforeDate
+      afterDate
       teamId
       channelId
       includeAttachments
@@ -9866,7 +9880,6 @@ export const PreviewFeed = gql`
     isComplete
     itemCount
     estimatedBytes
-    estimatedTokens
     contentTypeSummary {
       contentType
       fileType
@@ -10126,6 +10139,8 @@ export const QueryFeeds = gql`
           excludeSentItems
           includeDeletedItems
           inboxOnly
+          beforeDate
+          afterDate
           authenticationType
           refreshToken
           clientId
@@ -10141,6 +10156,8 @@ export const QueryFeeds = gql`
           excludeSentItems
           includeDeletedItems
           inboxOnly
+          beforeDate
+          afterDate
           authenticationType
           refreshToken
           clientId
@@ -10261,6 +10278,8 @@ export const QueryFeeds = gql`
           apiToken
           boardId
         }
+        beforeDate
+        afterDate
         readLimit
       }
       commit {
@@ -10278,6 +10297,8 @@ export const QueryFeeds = gql`
             id
           }
         }
+        beforeDate
+        afterDate
         readLimit
       }
       pullRequest {
@@ -10295,6 +10316,8 @@ export const QueryFeeds = gql`
             id
           }
         }
+        beforeDate
+        afterDate
         readLimit
       }
       crm {
@@ -10589,6 +10612,8 @@ export const QueryFeeds = gql`
           id
         }
         channel
+        beforeDate
+        afterDate
         includeAttachments
       }
       microsoftTeams {
@@ -10601,6 +10626,8 @@ export const QueryFeeds = gql`
         connector {
           id
         }
+        beforeDate
+        afterDate
         teamId
         channelId
         includeAttachments
