@@ -3756,6 +3756,19 @@ export enum ContentSourceTypes {
   Transcript = 'TRANSCRIPT'
 }
 
+/** Represents a content type summary. */
+export type ContentTypeSummary = {
+  __typename?: 'ContentTypeSummary';
+  /** The content type. */
+  contentType: ContentTypes;
+  /** The file type. */
+  fileType?: Maybe<FileTypes>;
+  /** The item count. */
+  itemCount: Scalars['Long']['output'];
+  /** The total size in bytes. */
+  totalBytes?: Maybe<Scalars['Long']['output']>;
+};
+
 /** Content type */
 export enum ContentTypes {
   /** Commit (i.e. GitHub, GitLab, Bitbucket) */
@@ -7301,6 +7314,91 @@ export enum FeedListingTypes {
   /** Read past items */
   Past = 'PAST'
 }
+
+/** Represents a feed to preview. */
+export type FeedPreviewInput = {
+  /** The Attio feed properties. */
+  attio?: InputMaybe<AttioFeedPropertiesInput>;
+  /** The calendar feed properties. */
+  calendar?: InputMaybe<CalendarFeedPropertiesInput>;
+  /** The commit feed properties. */
+  commit?: InputMaybe<CommitFeedPropertiesInput>;
+  /** The Confluence feed properties. */
+  confluence?: InputMaybe<ConfluenceFeedPropertiesInput>;
+  /** The CRM feed properties. */
+  crm?: InputMaybe<CrmFeedPropertiesInput>;
+  /** The Discord feed properties. */
+  discord?: InputMaybe<DiscordFeedPropertiesInput>;
+  /** The email feed properties. */
+  email?: InputMaybe<EmailFeedPropertiesInput>;
+  /** The Entity discovery feed properties. */
+  entity?: InputMaybe<EntityFeedPropertiesInput>;
+  /** The HRIS feed properties. */
+  hris?: InputMaybe<HrisFeedPropertiesInput>;
+  /** The HubSpot Conversations feed properties. */
+  hubSpotConversations?: InputMaybe<HubSpotConversationsFeedPropertiesInput>;
+  /** The Intercom feed properties. */
+  intercom?: InputMaybe<IntercomFeedPropertiesInput>;
+  /** The Intercom Conversations feed properties. */
+  intercomConversations?: InputMaybe<IntercomConversationsFeedPropertiesInput>;
+  /** The issue feed properties. */
+  issue?: InputMaybe<IssueFeedPropertiesInput>;
+  /** The LinkedIn feed properties. */
+  linkedIn?: InputMaybe<LinkedInFeedPropertiesInput>;
+  /** The Meeting transcript feed properties. */
+  meeting?: InputMaybe<MeetingFeedPropertiesInput>;
+  /** The Microsoft Teams feed properties. */
+  microsoftTeams?: InputMaybe<MicrosoftTeamsFeedPropertiesInput>;
+  /** The name of the feed. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The Notion feed properties. */
+  notion?: InputMaybe<NotionFeedPropertiesInput>;
+  /** The pull request feed properties. */
+  pullRequest?: InputMaybe<PullRequestFeedPropertiesInput>;
+  /** The Reddit feed properties. */
+  reddit?: InputMaybe<RedditFeedPropertiesInput>;
+  /** The Research feed properties. */
+  research?: InputMaybe<ResearchFeedPropertiesInput>;
+  /** The RSS feed properties. */
+  rss?: InputMaybe<RssFeedPropertiesInput>;
+  /** The Salesforce feed properties. */
+  salesforce?: InputMaybe<SalesforceFeedPropertiesInput>;
+  /** The web search feed properties. */
+  search?: InputMaybe<SearchFeedPropertiesInput>;
+  /** The site feed properties. */
+  site?: InputMaybe<SiteFeedPropertiesInput>;
+  /** The Slack feed properties. */
+  slack?: InputMaybe<SlackFeedPropertiesInput>;
+  /** The Twitter feed properties. */
+  twitter?: InputMaybe<TwitterFeedPropertiesInput>;
+  /** The feed type. */
+  type: FeedTypes;
+  /** The web feed properties. */
+  web?: InputMaybe<WebFeedPropertiesInput>;
+  /** The content workflow applied to the feed. */
+  workflow?: InputMaybe<EntityReferenceInput>;
+  /** The YouTube feed properties. */
+  youtube?: InputMaybe<YouTubeFeedPropertiesInput>;
+  /** The Zendesk feed properties. */
+  zendesk?: InputMaybe<ZendeskFeedPropertiesInput>;
+};
+
+/** Represents a feed preview result. */
+export type FeedPreviewResult = {
+  __typename?: 'FeedPreviewResult';
+  /** The content type histogram. */
+  contentTypeSummary?: Maybe<Array<ContentTypeSummary>>;
+  /** The estimated total size in bytes. */
+  estimatedBytes?: Maybe<Scalars['Long']['output']>;
+  /** The estimated total token count. */
+  estimatedTokens?: Maybe<Scalars['Long']['output']>;
+  /** Whether the preview scan completed within the limit. */
+  isComplete: Scalars['Boolean']['output'];
+  /** The total number of items found. */
+  itemCount: Scalars['Long']['output'];
+  /** Any warnings generated during the preview scan. */
+  warnings?: Maybe<Array<Scalars['String']['output']>>;
+};
 
 /** Represents feed query results. */
 export type FeedResults = {
@@ -15063,6 +15161,8 @@ export type Mutation = {
   openCollection?: Maybe<Collection>;
   /** Opens an existing conversation. */
   openConversation?: Maybe<Conversation>;
+  /** Previews a feed to estimate item counts and content types before ingestion. */
+  previewFeed?: Maybe<FeedPreviewResult>;
   /** Prompts LLM without content retrieval. You can provide a list of conversation messages to be completed, an LLM user prompt and optional Base64-encoded image, or both. If both are provided, the LLM prompt (and optional image) will be appended as an additional User message to the conversation. */
   prompt?: Maybe<PromptCompletion>;
   /** Prompts a conversation. */
@@ -16418,6 +16518,11 @@ export type MutationOpenCollectionArgs = {
 
 export type MutationOpenConversationArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationPreviewFeedArgs = {
+  feed: FeedPreviewInput;
 };
 
 
@@ -17839,6 +17944,10 @@ export enum OpenAiModels {
   Gpt52_400K = 'GPT52_400K',
   /** GPT 5.2 400k (2025-12-11 version) */
   Gpt52_400K_20251211 = 'GPT52_400K_20251211',
+  /** GPT 5.4 1024k (Latest) */
+  Gpt54_1024K = 'GPT54_1024K',
+  /** GPT 5.4 1024k (2026-03-05 version) */
+  Gpt54_1024K_20260305 = 'GPT54_1024K_20260305',
   /** o1 200k (Latest) */
   O1_200K = 'O1_200K',
   /** o1 200k (2024-12-17 version) */
@@ -26404,6 +26513,13 @@ export type LookupPersonsQueryVariables = Exact<{
 
 
 export type LookupPersonsQuery = { __typename?: 'Query', lookupPersons?: { __typename?: 'PersonLookupResults', results?: Array<{ __typename?: 'PersonLookupResult', name?: string | null, title?: string | null, headline?: string | null, location?: string | null, linkedInUrl?: any | null, email?: string | null, profilePictureUrl?: any | null, currentCompany?: string | null, currentTitle?: string | null, skills?: Array<string | null> | null, yearsOfExperience?: number | null } | null> | null } | null };
+
+export type PreviewFeedMutationVariables = Exact<{
+  feed: FeedPreviewInput;
+}>;
+
+
+export type PreviewFeedMutation = { __typename?: 'Mutation', previewFeed?: { __typename?: 'FeedPreviewResult', isComplete: boolean, itemCount: any, estimatedBytes?: any | null, estimatedTokens?: any | null, warnings?: Array<string> | null, contentTypeSummary?: Array<{ __typename?: 'ContentTypeSummary', contentType: ContentTypes, fileType?: FileTypes | null, itemCount: any, totalBytes?: any | null }> | null } | null };
 
 export type QueryAsanaProjectsQueryVariables = Exact<{
   properties: AsanaProjectsInput;

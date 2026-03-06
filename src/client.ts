@@ -3775,6 +3775,20 @@ class Graphlit {
   }
 
   /**
+   * Previews a feed, estimating item count, bytes, and tokens without ingesting.
+   * @param feed - The feed preview input.
+   * @returns The feed preview result.
+   */
+  public async previewFeed(
+    feed: Types.FeedPreviewInput,
+  ): Promise<Types.PreviewFeedMutation> {
+    return this.mutateAndCheckError<
+      Types.PreviewFeedMutation,
+      Types.PreviewFeedMutationVariables
+    >(Documents.PreviewFeed, { feed: feed });
+  }
+
+  /**
    * Lookup a feed given its ID.
    * @param id - ID of the feed.
    * @returns The feed.

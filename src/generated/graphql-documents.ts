@@ -9860,6 +9860,23 @@ export const LookupPersons = gql`
   }
 }
     `;
+export const PreviewFeed = gql`
+    mutation PreviewFeed($feed: FeedPreviewInput!) {
+  previewFeed(feed: $feed) {
+    isComplete
+    itemCount
+    estimatedBytes
+    estimatedTokens
+    contentTypeSummary {
+      contentType
+      fileType
+      itemCount
+      totalBytes
+    }
+    warnings
+  }
+}
+    `;
 export const QueryAsanaProjects = gql`
     query QueryAsanaProjects($properties: AsanaProjectsInput!) {
   asanaProjects(properties: $properties) {
