@@ -55,6 +55,10 @@ export class UIEventAdapter {
   private reasoningFormat?: ReasoningFormat;
   private reasoningSignature?: string;
   private isInReasoning: boolean = false;
+  private reasoningBuffer?: ChunkBuffer;
+  private reasoningEmitTimer?: ReturnType<typeof globalThis.setTimeout>;
+  private lastReasoningEmitTime: number = 0;
+  private static readonly REASONING_THROTTLE_MS = 150;
   private usageData?: any;
   private hasToolCallsInProgress: boolean = false;
   private hadToolCallsBeforeResume: boolean = false;
@@ -80,6 +84,10 @@ export class UIEventAdapter {
 
     if (options.smoothingEnabled) {
       this.chunkBuffer = new ChunkBuffer(options.chunkingStrategy || "word");
+      // Reasoning always uses sentence-level chunking regardless of the
+      // developer's choice — thinking content is secondary UI and benefits
+      // from fewer, larger updates rather than token-by-token emission.
+      this.reasoningBuffer = new ChunkBuffer("sentence");
     }
   }
 
@@ -169,6 +177,14 @@ export class UIEventAdapter {
     this.reasoningFormat = undefined;
     this.reasoningSignature = undefined;
     this.isInReasoning = false;
+    this.lastReasoningEmitTime = 0;
+    if (this.reasoningEmitTimer) {
+      globalThis.clearTimeout(this.reasoningEmitTimer);
+      this.reasoningEmitTimer = undefined;
+    }
+    if (this.reasoningBuffer) {
+      this.reasoningBuffer.flush();
+    }
 
     // Reset tool call tracking flags
     this.hasToolCallsInProgress = false;
@@ -911,6 +927,16 @@ export class UIEventAdapter {
     this.isInReasoning = true;
     this.reasoningFormat = format;
     this.reasoningContent = "";
+    this.lastReasoningEmitTime = 0;
+
+    // Reset the reasoning buffer for a fresh thinking block
+    if (this.reasoningBuffer) {
+      this.reasoningBuffer.flush();
+    }
+    if (this.reasoningEmitTimer) {
+      globalThis.clearTimeout(this.reasoningEmitTimer);
+      this.reasoningEmitTimer = undefined;
+    }
   }
 
   private handleReasoningDelta(content: string, format: ReasoningFormat): void {
@@ -923,13 +949,56 @@ export class UIEventAdapter {
     this.reasoningContent += content;
     this.reasoningFormat = format;
 
-    // Emit reasoning update
-    this.emitUIEvent({
-      type: "reasoning_update",
-      content: this.reasoningContent,
-      format: format,
-      isComplete: false,
-    });
+    if (this.reasoningBuffer) {
+      // Feed through sentence-level buffer — only emit when we have
+      // complete sentences AND the throttle interval has elapsed.
+      const sentences = this.reasoningBuffer.addToken(content);
+      if (sentences.length > 0) {
+        this.scheduleReasoningEmission();
+      } else if (!this.reasoningEmitTimer) {
+        // No complete sentence yet — schedule a throttled emit so the UI
+        // still gets periodic updates for long partial sentences.
+        this.scheduleReasoningEmission();
+      }
+    } else {
+      // No smoothing — emit every delta immediately (original behavior)
+      this.emitUIEvent({
+        type: "reasoning_update",
+        content: this.reasoningContent,
+        format: format,
+        isComplete: false,
+      });
+    }
+  }
+
+  private scheduleReasoningEmission(): void {
+    if (this.reasoningEmitTimer) return;
+
+    const now = Date.now();
+    const elapsed = now - this.lastReasoningEmitTime;
+
+    if (elapsed >= UIEventAdapter.REASONING_THROTTLE_MS) {
+      this.emitReasoningUpdate();
+    } else {
+      const delay = UIEventAdapter.REASONING_THROTTLE_MS - elapsed;
+      this.reasoningEmitTimer = globalThis.setTimeout(() => {
+        this.emitReasoningUpdate();
+      }, delay);
+    }
+  }
+
+  private emitReasoningUpdate(): void {
+    this.reasoningEmitTimer = undefined;
+    this.lastReasoningEmitTime = Date.now();
+
+    if (this.reasoningFormat) {
+      this.emitUIEvent({
+        type: "reasoning_update",
+        content: this.reasoningContent,
+        format: this.reasoningFormat,
+        isComplete: false,
+      });
+    }
   }
 
   private handleReasoningEnd(fullContent: string, signature?: string): void {
@@ -940,6 +1009,17 @@ export class UIEventAdapter {
       if (signature) {
         console.log(`🤔 [UIEventAdapter] Reasoning signature: ${signature}`);
       }
+    }
+
+    // Cancel any pending throttled emission
+    if (this.reasoningEmitTimer) {
+      globalThis.clearTimeout(this.reasoningEmitTimer);
+      this.reasoningEmitTimer = undefined;
+    }
+
+    // Flush the reasoning buffer — any remaining partial sentence
+    if (this.reasoningBuffer) {
+      this.reasoningBuffer.flush();
     }
 
     this.isInReasoning = false;
@@ -985,6 +1065,10 @@ export class UIEventAdapter {
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);
       this.updateTimer = undefined;
+    }
+    if (this.reasoningEmitTimer) {
+      globalThis.clearTimeout(this.reasoningEmitTimer);
+      this.reasoningEmitTimer = undefined;
     }
     this.activeToolCalls.clear();
   }
