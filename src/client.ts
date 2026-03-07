@@ -8878,6 +8878,26 @@ class Graphlit {
           messages.push(messageToAdd);
         }
       }
+
+      // Inject multimodal image data onto the last user message if provided.
+      // formatConversation doesn't support mimeType/data, so we attach it here
+      // so the LLM formatter (Anthropic, OpenAI, etc.) can build the proper
+      // multimodal content block.
+      if (mimeType && data) {
+        // Find the last user message (the current prompt)
+        for (let i = messages.length - 1; i >= 0; i--) {
+          if (messages[i].role === Types.ConversationRoleTypes.User) {
+            messages[i].mimeType = mimeType;
+            messages[i].data = data;
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🖼️ [Streaming] Injected image data onto last user message: ${mimeType}, ${data.length} chars`,
+              );
+            }
+            break;
+          }
+        }
+      }
     } else {
       // Fallback to single formatted message (for backward compatibility)
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {

@@ -58,6 +58,7 @@ export class UIEventAdapter {
   private reasoningBuffer?: ChunkBuffer;
   private reasoningEmitTimer?: ReturnType<typeof globalThis.setTimeout>;
   private lastReasoningEmitTime: number = 0;
+  private hasEmittedFirstReasoning: boolean = false;
   private static readonly REASONING_THROTTLE_MS = 250;
   private usageData?: any;
   private hasToolCallsInProgress: boolean = false;
@@ -178,6 +179,7 @@ export class UIEventAdapter {
     this.reasoningSignature = undefined;
     this.isInReasoning = false;
     this.lastReasoningEmitTime = 0;
+    this.hasEmittedFirstReasoning = false;
     if (this.reasoningEmitTimer) {
       globalThis.clearTimeout(this.reasoningEmitTimer);
       this.reasoningEmitTimer = undefined;
@@ -928,6 +930,7 @@ export class UIEventAdapter {
     this.reasoningFormat = format;
     this.reasoningContent = "";
     this.lastReasoningEmitTime = 0;
+    this.hasEmittedFirstReasoning = false;
 
     // Reset the reasoning buffer for a fresh thinking block
     if (this.reasoningBuffer) {
@@ -950,9 +953,18 @@ export class UIEventAdapter {
     this.reasoningFormat = format;
 
     if (this.reasoningBuffer) {
-      // Feed through sentence-level buffer — only emit when a complete
-      // sentence is available. No partial-sentence heartbeat: reasoning
-      // is secondary UI and handleReasoningEnd flushes the remainder.
+      // Emit the first delta immediately so the UI can show a "thinking"
+      // indicator without waiting for a sentence boundary.
+      if (!this.hasEmittedFirstReasoning) {
+        this.hasEmittedFirstReasoning = true;
+        this.reasoningBuffer.addToken(content);
+        this.emitReasoningUpdate();
+        return;
+      }
+
+      // Subsequent deltas: only emit when a complete sentence is available.
+      // No partial-sentence heartbeat — reasoning is secondary UI and
+      // handleReasoningEnd flushes the remainder.
       const sentences = this.reasoningBuffer.addToken(content);
       if (sentences.length > 0) {
         this.scheduleReasoningEmission();
