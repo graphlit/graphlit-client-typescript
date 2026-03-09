@@ -2089,6 +2089,11 @@ export const GetContent = gql`
         givenName
         familyName
       }
+      reactions {
+        emoji
+        count
+        isUnicode
+      }
     }
     post {
       identifier
@@ -2967,6 +2972,11 @@ export const LookupContents = gql`
           givenName
           familyName
         }
+        reactions {
+          emoji
+          count
+          isUnicode
+        }
       }
       post {
         identifier
@@ -3691,6 +3701,11 @@ export const QueryContents = gql`
           givenName
           familyName
         }
+        reactions {
+          emoji
+          count
+          isUnicode
+        }
       }
       post {
         identifier
@@ -4122,6 +4137,11 @@ export const QueryContentsObservations = gql`
           email
           givenName
           familyName
+        }
+        reactions {
+          emoji
+          count
+          isUnicode
         }
       }
       post {
@@ -9341,6 +9361,55 @@ export const GetFeed = gql`
         apiToken
         boardId
       }
+      productlane {
+        apiKey
+        workspaceId
+      }
+      beforeDate
+      afterDate
+      readLimit
+    }
+    initiative {
+      type
+      jira {
+        authenticationType
+        uri
+        project
+        email
+        token
+        offset
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        cloudId
+      }
+      github {
+        authenticationType
+        uri
+        repositoryOwner
+        repositoryName
+        personalAccessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        authorizationId
+      }
+      linear {
+        authenticationType
+        key
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+      }
       beforeDate
       afterDate
       readLimit
@@ -9438,6 +9507,10 @@ export const GetFeed = gql`
         connector {
           id
         }
+        type
+      }
+      productlane {
+        apiKey
         type
       }
       readLimit
@@ -9749,6 +9822,12 @@ export const GetFeed = gql`
       state
       includeNotes
       includeAttachments
+    }
+    productlane {
+      type
+      readLimit
+      apiKey
+      workspaceId
     }
     research {
       readLimit
@@ -10278,6 +10357,55 @@ export const QueryFeeds = gql`
           apiToken
           boardId
         }
+        productlane {
+          apiKey
+          workspaceId
+        }
+        beforeDate
+        afterDate
+        readLimit
+      }
+      initiative {
+        type
+        jira {
+          authenticationType
+          uri
+          project
+          email
+          token
+          offset
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+          cloudId
+        }
+        github {
+          authenticationType
+          uri
+          repositoryOwner
+          repositoryName
+          personalAccessToken
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+          authorizationId
+        }
+        linear {
+          authenticationType
+          key
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+        }
         beforeDate
         afterDate
         readLimit
@@ -10375,6 +10503,10 @@ export const QueryFeeds = gql`
           connector {
             id
           }
+          type
+        }
+        productlane {
+          apiKey
           type
         }
         readLimit
@@ -10686,6 +10818,12 @@ export const QueryFeeds = gql`
         state
         includeNotes
         includeAttachments
+      }
+      productlane {
+        type
+        readLimit
+        apiKey
+        workspaceId
       }
       research {
         readLimit
