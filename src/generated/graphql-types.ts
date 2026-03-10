@@ -7432,6 +7432,8 @@ export type FeedPreviewResult = {
   isComplete: Scalars['Boolean']['output'];
   /** The total number of items found. */
   itemCount: Scalars['Long']['output'];
+  /** The observable type histogram. */
+  observableTypeSummary?: Maybe<Array<ObservableTypeSummary>>;
   /** Any warnings generated during the preview scan. */
   warnings?: Maybe<Array<Scalars['String']['output']>>;
 };
@@ -17763,6 +17765,15 @@ export type ObservableResults = {
   __typename?: 'ObservableResults';
   /** The retrieved observables. */
   results?: Maybe<Array<Maybe<ObservationReference>>>;
+};
+
+/** Represents an observable type summary. */
+export type ObservableTypeSummary = {
+  __typename?: 'ObservableTypeSummary';
+  /** The item count. */
+  itemCount: Scalars['Long']['output'];
+  /** The observable type. */
+  observableType: ObservableTypes;
 };
 
 /** Observable type */
