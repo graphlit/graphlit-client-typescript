@@ -10009,6 +10009,10 @@ export const PreviewFeed = gql`
       itemCount
       totalBytes
     }
+    observableTypeSummary {
+      observableType
+      itemCount
+    }
     warnings
   }
 }

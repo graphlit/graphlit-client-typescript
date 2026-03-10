@@ -27097,7 +27097,7 @@ export type PreviewFeedMutationVariables = Exact<{
 }>;
 
 
-export type PreviewFeedMutation = { __typename?: 'Mutation', previewFeed?: { __typename?: 'FeedPreviewResult', isComplete: boolean, itemCount: any, estimatedBytes?: any | null, warnings?: Array<string> | null, contentTypeSummary?: Array<{ __typename?: 'ContentTypeSummary', contentType: ContentTypes, fileType?: FileTypes | null, itemCount: any, totalBytes?: any | null }> | null } | null };
+export type PreviewFeedMutation = { __typename?: 'Mutation', previewFeed?: { __typename?: 'FeedPreviewResult', isComplete: boolean, itemCount: any, estimatedBytes?: any | null, warnings?: Array<string> | null, contentTypeSummary?: Array<{ __typename?: 'ContentTypeSummary', contentType: ContentTypes, fileType?: FileTypes | null, itemCount: any, totalBytes?: any | null }> | null, observableTypeSummary?: Array<{ __typename?: 'ObservableTypeSummary', observableType: ObservableTypes, itemCount: any }> | null } | null };
 
 export type QueryAsanaProjectsQueryVariables = Exact<{
   properties: AsanaProjectsInput;
