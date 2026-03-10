@@ -2010,6 +2010,17 @@ export const GetContent = gql`
       type
       labels
     }
+    initiative {
+      identifier
+      title
+      project
+      team
+      status
+      priority
+      type
+      dueDate
+      labels
+    }
     commit {
       sha
       message
@@ -2893,6 +2904,17 @@ export const LookupContents = gql`
         type
         labels
       }
+      initiative {
+        identifier
+        title
+        project
+        team
+        status
+        priority
+        type
+        dueDate
+        labels
+      }
       commit {
         sha
         message
@@ -3622,6 +3644,17 @@ export const QueryContents = gql`
         type
         labels
       }
+      initiative {
+        identifier
+        title
+        project
+        team
+        status
+        priority
+        type
+        dueDate
+        labels
+      }
       commit {
         sha
         message
@@ -4057,6 +4090,17 @@ export const QueryContentsObservations = gql`
         status
         priority
         type
+        labels
+      }
+      initiative {
+        identifier
+        title
+        project
+        team
+        status
+        priority
+        type
+        dueDate
         labels
       }
       commit {
@@ -9824,8 +9868,8 @@ export const GetFeed = gql`
       includeAttachments
     }
     productlane {
-      type
       readLimit
+      type
       apiKey
       workspaceId
     }
@@ -10820,8 +10864,8 @@ export const QueryFeeds = gql`
         includeAttachments
       }
       productlane {
-        type
         readLimit
+        type
         apiKey
         workspaceId
       }
