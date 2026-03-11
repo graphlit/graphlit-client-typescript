@@ -177,6 +177,12 @@ export const GetAgent = gql`
       cron
       timeZoneId
     }
+    channels {
+      type
+      identifier
+      instructions
+      label
+    }
     timeout
     scratchpad
   }
@@ -299,6 +305,12 @@ export const QueryAgents = gql`
         repeatInterval
         cron
         timeZoneId
+      }
+      channels {
+        type
+        identifier
+        instructions
+        label
       }
       timeout
       scratchpad
