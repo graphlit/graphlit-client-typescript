@@ -78,98 +78,11 @@ export const GetAgent = gql`
       id
     }
     filter {
-      dateRange {
-        from
-        to
-      }
-      inLast
-      inNext
-      creationDateRange {
-        from
-        to
-      }
-      createdInLast
       types
       fileTypes
-      formats
-      fileExtensions
-      fileSizeRange {
-        from
-        to
-      }
-      similarContents {
-        id
-      }
-      contents {
-        id
-      }
       feeds {
         id
       }
-      workflows {
-        id
-      }
-      collections {
-        id
-      }
-      users {
-        id
-      }
-      observations {
-        type
-        observable {
-          id
-        }
-        states
-      }
-      or {
-        feeds {
-          id
-        }
-        workflows {
-          id
-        }
-        collections {
-          id
-        }
-        users {
-          id
-        }
-        observations {
-          type
-          observable {
-            id
-          }
-          states
-        }
-      }
-      and {
-        feeds {
-          id
-        }
-        workflows {
-          id
-        }
-        collections {
-          id
-        }
-        users {
-          id
-        }
-        observations {
-          type
-          observable {
-            id
-          }
-          states
-        }
-      }
-      hasObservations
-      hasFeeds
-      hasCollections
-      hasWorkflows
-      collectionMode
-      observationMode
     }
     schedulePolicy {
       recurrenceType
@@ -184,6 +97,7 @@ export const GetAgent = gql`
       label
     }
     timeout
+    prompt
     scratchpad
   }
 }
@@ -207,98 +121,11 @@ export const QueryAgents = gql`
         id
       }
       filter {
-        dateRange {
-          from
-          to
-        }
-        inLast
-        inNext
-        creationDateRange {
-          from
-          to
-        }
-        createdInLast
         types
         fileTypes
-        formats
-        fileExtensions
-        fileSizeRange {
-          from
-          to
-        }
-        similarContents {
-          id
-        }
-        contents {
-          id
-        }
         feeds {
           id
         }
-        workflows {
-          id
-        }
-        collections {
-          id
-        }
-        users {
-          id
-        }
-        observations {
-          type
-          observable {
-            id
-          }
-          states
-        }
-        or {
-          feeds {
-            id
-          }
-          workflows {
-            id
-          }
-          collections {
-            id
-          }
-          users {
-            id
-          }
-          observations {
-            type
-            observable {
-              id
-            }
-            states
-          }
-        }
-        and {
-          feeds {
-            id
-          }
-          workflows {
-            id
-          }
-          collections {
-            id
-          }
-          users {
-            id
-          }
-          observations {
-            type
-            observable {
-              id
-            }
-            states
-          }
-        }
-        hasObservations
-        hasFeeds
-        hasCollections
-        hasWorkflows
-        collectionMode
-        observationMode
       }
       schedulePolicy {
         recurrenceType
@@ -313,6 +140,7 @@ export const QueryAgents = gql`
         label
       }
       timeout
+      prompt
       scratchpad
     }
   }
@@ -954,7 +782,7 @@ export const AddSkillsToCollections = gql`
     name
     state
     type
-    skills {
+    contents {
       id
       name
     }
@@ -1085,7 +913,7 @@ export const RemoveSkillsFromCollection = gql`
     name
     state
     type
-    skills {
+    contents {
       id
       name
     }
@@ -5997,6 +5825,8 @@ export const GetConversation = gql`
       text
       relevance
     }
+    messageCount
+    turnCount
     agent {
       id
     }
@@ -6904,161 +6734,9 @@ export const QueryConversations = gql`
       state
       correlationId
       type
-      messages {
-        role
-        author
-        message
-        citations {
-          content {
-            id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
-          }
-          index
-          text
-          startTime
-          endTime
-          pageNumber
-          frameNumber
-        }
-        toolCalls {
-          id
-          name
-          arguments
-        }
-        tokens
-        throughput
-        ttft
-        completionTime
-        timestamp
-        modelService
-        model
-        data
-        mimeType
-        toolCallId
-        toolCallResponse
-        artifacts {
-          id
-          name
-          mimeType
-          uri
-        }
-        thinkingContent
-        thinkingSignature
-      }
       transcriptUri
-      turns {
-        index
-        messages {
-          role
-          author
-          message
-          tokens
-          timestamp
-        }
-        tokens
-        timestamp
-        text
-        relevance
-      }
+      messageCount
+      turnCount
       agent {
         id
       }
@@ -7286,161 +6964,9 @@ export const QueryConversationsClusters = gql`
       state
       correlationId
       type
-      messages {
-        role
-        author
-        message
-        citations {
-          content {
-            id
-            name
-            state
-            originalDate
-            identifier
-            uri
-            type
-            fileType
-            mimeType
-            format
-            formatName
-            fileExtension
-            fileName
-            fileSize
-            fileMetadata
-            relativeFolderPath
-            masterUri
-            imageUri
-            textUri
-            audioUri
-            transcriptUri
-            snapshotsUri
-            snapshotCount
-            summary
-            customSummary
-            keywords
-            bullets
-            headlines
-            posts
-            chapters
-            questions
-            quotes
-            video {
-              width
-              height
-              duration
-              make
-              model
-              software
-              title
-              description
-              keywords
-              author
-            }
-            audio {
-              keywords
-              author
-              series
-              episode
-              episodeType
-              season
-              publisher
-              copyright
-              genre
-              title
-              description
-              bitrate
-              channels
-              sampleRate
-              bitsPerSample
-              duration
-            }
-            image {
-              width
-              height
-              resolutionX
-              resolutionY
-              bitsPerComponent
-              components
-              projectionType
-              orientation
-              description
-              make
-              model
-              software
-              lens
-              focalLength
-              exposureTime
-              fNumber
-              iso
-              heading
-              pitch
-            }
-            document {
-              title
-              subject
-              summary
-              author
-              lastModifiedBy
-              publisher
-              description
-              keywords
-              pageCount
-              worksheetCount
-              slideCount
-              wordCount
-              lineCount
-              paragraphCount
-              isEncrypted
-              hasDigitalSignature
-            }
-          }
-          index
-          text
-          startTime
-          endTime
-          pageNumber
-          frameNumber
-        }
-        toolCalls {
-          id
-          name
-          arguments
-        }
-        tokens
-        throughput
-        ttft
-        completionTime
-        timestamp
-        modelService
-        model
-        data
-        mimeType
-        toolCallId
-        toolCallResponse
-        artifacts {
-          id
-          name
-          mimeType
-          uri
-        }
-        thinkingContent
-        thinkingSignature
-      }
       transcriptUri
-      turns {
-        index
-        messages {
-          role
-          author
-          message
-          tokens
-          timestamp
-        }
-        tokens
-        timestamp
-        text
-        relevance
-      }
+      messageCount
+      turnCount
       agent {
         id
       }
@@ -9122,6 +8648,16 @@ export const DeleteFeeds = gql`
     id
     state
   }
+}
+    `;
+export const DeleteGoogleCalendarEvent = gql`
+    mutation DeleteGoogleCalendarEvent($properties: GoogleCalendarEventsInput!, $eventId: String!) {
+  deleteGoogleCalendarEvent(properties: $properties, eventId: $eventId)
+}
+    `;
+export const DeleteMicrosoftCalendarEvent = gql`
+    mutation DeleteMicrosoftCalendarEvent($properties: MicrosoftCalendarEventsInput!, $eventId: String!) {
+  deleteMicrosoftCalendarEvent(properties: $properties, eventId: $eventId)
 }
     `;
 export const DisableFeed = gql`
@@ -11169,11 +10705,32 @@ export const QuerySlackChannels = gql`
   }
 }
     `;
+export const QuerySlackUsers = gql`
+    query QuerySlackUsers($properties: SlackChannelsInput!) {
+  slackUsers(properties: $properties) {
+    results {
+      userId
+      displayName
+      realName
+      email
+    }
+  }
+}
+    `;
 export const TriggerFeed = gql`
     mutation TriggerFeed($id: ID!) {
   triggerFeed(id: $id) {
     id
     state
+  }
+}
+    `;
+export const UpdateConfluencePage = gql`
+    mutation UpdateConfluencePage($properties: ConfluenceSpacesInput!, $pageId: String!, $input: ConfluencePageUpdateInput!) {
+  updateConfluencePage(properties: $properties, pageId: $pageId, input: $input) {
+    identifier
+    uri
+    serviceType
   }
 }
     `;
@@ -11185,6 +10742,79 @@ export const UpdateFeed = gql`
     state
     identifier
     type
+  }
+}
+    `;
+export const UpdateGoogleCalendarEvent = gql`
+    mutation UpdateGoogleCalendarEvent($properties: GoogleCalendarEventsInput!, $eventId: String!, $input: CalendarEventUpdateInput!) {
+  updateGoogleCalendarEvent(
+    properties: $properties
+    eventId: $eventId
+    input: $input
+  ) {
+    eventId
+    summary
+    startDateTime
+    endDateTime
+    location
+    attendees
+    isOnlineMeeting
+    meetingLink
+    description
+    status
+    organizer
+  }
+}
+    `;
+export const UpdateJiraIssue = gql`
+    mutation UpdateJiraIssue($properties: JiraProjectsInput!, $issueIdOrKey: String!, $input: JiraIssueUpdateInput!) {
+  updateJiraIssue(
+    properties: $properties
+    issueIdOrKey: $issueIdOrKey
+    input: $input
+  ) {
+    identifier
+    uri
+    serviceType
+  }
+}
+    `;
+export const UpdateLinearIssue = gql`
+    mutation UpdateLinearIssue($properties: LinearProjectsInput!, $issueId: String!, $input: LinearIssueUpdateInput!) {
+  updateLinearIssue(properties: $properties, issueId: $issueId, input: $input) {
+    identifier
+    uri
+    serviceType
+  }
+}
+    `;
+export const UpdateMicrosoftCalendarEvent = gql`
+    mutation UpdateMicrosoftCalendarEvent($properties: MicrosoftCalendarEventsInput!, $eventId: String!, $input: CalendarEventUpdateInput!) {
+  updateMicrosoftCalendarEvent(
+    properties: $properties
+    eventId: $eventId
+    input: $input
+  ) {
+    eventId
+    summary
+    startDateTime
+    endDateTime
+    location
+    attendees
+    isOnlineMeeting
+    meetingLink
+    description
+    status
+    organizer
+  }
+}
+    `;
+export const UpdateNotionPage = gql`
+    mutation UpdateNotionPage($properties: NotionDatabasesInput!, $pageId: String!, $input: NotionPageUpdateInput!) {
+  updateNotionPage(properties: $properties, pageId: $pageId, input: $input) {
+    identifier
+    uri
+    serviceType
   }
 }
     `;

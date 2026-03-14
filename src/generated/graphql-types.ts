@@ -76,8 +76,8 @@ export type Agent = {
   creationDate: Scalars['DateTime']['output'];
   /** The description of the agent. */
   description?: Maybe<Scalars['String']['output']>;
-  /** The content filter for this agent. */
-  filter?: Maybe<ContentCriteria>;
+  /** The trigger filter for event-driven activation. */
+  filter?: Maybe<AgentTriggerFilter>;
   /** The ID of the agent. */
   id: Scalars['ID']['output'];
   /** The modified date of the agent. */
@@ -86,6 +86,8 @@ export type Agent = {
   name: Scalars['String']['output'];
   /** The owner of the agent. */
   owner: Owner;
+  /** The execution prompt run on each triggered activation (schedule, webhook, event, manual). */
+  prompt?: Maybe<Scalars['String']['output']>;
   /** The relevance score of the agent. */
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The agent schedule policy. */
@@ -183,10 +185,12 @@ export type AgentInput = {
   channels?: InputMaybe<Array<AgentChannelInput>>;
   /** The description of the agent. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** The content filter for this agent. */
-  filter?: InputMaybe<ContentCriteriaInput>;
+  /** The trigger filter for event-driven activation. */
+  filter?: InputMaybe<AgentTriggerFilterInput>;
   /** The name of the agent. */
   name: Scalars['String']['input'];
+  /** The execution prompt run on each triggered activation. */
+  prompt?: InputMaybe<Scalars['String']['input']>;
   /** The agent schedule policy. */
   schedulePolicy?: InputMaybe<AgentSchedulePolicyInput>;
   /** The agent scratchpad, for storing harness working memory. */
@@ -231,6 +235,27 @@ export type AgentSchedulePolicyInput = {
   timeZoneId?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a lightweight trigger filter for event-driven agent activation. */
+export type AgentTriggerFilter = {
+  __typename?: 'AgentTriggerFilter';
+  /** Only trigger on content from these feeds. */
+  feeds?: Maybe<Array<EntityReference>>;
+  /** File types to match. */
+  fileTypes?: Maybe<Array<FileTypes>>;
+  /** Content types to match. */
+  types?: Maybe<Array<ContentTypes>>;
+};
+
+/** Represents a lightweight trigger filter for event-driven agent activation. */
+export type AgentTriggerFilterInput = {
+  /** Only trigger on content from these feeds. */
+  feeds?: InputMaybe<Array<EntityReferenceInput>>;
+  /** File types to match. */
+  fileTypes?: InputMaybe<Array<FileTypes>>;
+  /** Content types to match. */
+  types?: InputMaybe<Array<ContentTypes>>;
+};
+
 /** Agent type */
 export enum AgentTypes {
   /** Agent */
@@ -243,12 +268,14 @@ export type AgentUpdateInput = {
   channels?: InputMaybe<Array<AgentChannelInput>>;
   /** The description of the agent. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** The content filter for this agent. */
-  filter?: InputMaybe<ContentCriteriaInput>;
+  /** The trigger filter for event-driven activation. */
+  filter?: InputMaybe<AgentTriggerFilterInput>;
   /** The ID of the agent to update. */
   id: Scalars['ID']['input'];
   /** The name of the agent. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The execution prompt run on each triggered activation. */
+  prompt?: InputMaybe<Scalars['String']['input']>;
   /** The agent schedule policy. */
   schedulePolicy?: InputMaybe<AgentSchedulePolicyInput>;
   /** The agent scratchpad, for storing harness working memory. */
@@ -2060,6 +2087,33 @@ export enum CalendarAttendeeResponseStatus {
   Tentative = 'TENTATIVE'
 }
 
+/** Represents a calendar event. */
+export type CalendarEventResult = {
+  __typename?: 'CalendarEventResult';
+  /** The event attendee email addresses. */
+  attendees?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The event description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The event end date and time. */
+  endDateTime: Scalars['DateTime']['output'];
+  /** The event identifier. */
+  eventId: Scalars['String']['output'];
+  /** Whether the event is an online meeting. */
+  isOnlineMeeting?: Maybe<Scalars['Boolean']['output']>;
+  /** The event location. */
+  location?: Maybe<Scalars['String']['output']>;
+  /** The online meeting URL (Teams/Meet). */
+  meetingLink?: Maybe<Scalars['String']['output']>;
+  /** The event organizer email address. */
+  organizer?: Maybe<Scalars['String']['output']>;
+  /** The event start date and time. */
+  startDateTime: Scalars['DateTime']['output'];
+  /** The event status (confirmed, tentative, cancelled). */
+  status?: Maybe<Scalars['String']['output']>;
+  /** The event title/summary. */
+  summary?: Maybe<Scalars['String']['output']>;
+};
+
 /** Calendar event status */
 export enum CalendarEventStatus {
   /** Cancelled event */
@@ -2069,6 +2123,24 @@ export enum CalendarEventStatus {
   /** Tentative event */
   Tentative = 'TENTATIVE'
 }
+
+/** Represents calendar event fields to update. */
+export type CalendarEventUpdateInput = {
+  /** The event attendee email addresses (replaces existing). */
+  attendees?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** The event description. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The event end date and time. */
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Whether the event is an online meeting. */
+  isOnlineMeeting?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The event location. */
+  location?: InputMaybe<Scalars['String']['input']>;
+  /** The event start date and time. */
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The event title/summary. */
+  summary?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** Calendar event visibility */
 export enum CalendarEventVisibility {
@@ -2901,6 +2973,16 @@ export type ConfluenceFeedPropertiesUpdateInput = {
   type?: InputMaybe<ConfluenceTypes>;
   /** The Confluence base URI. */
   uri?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Confluence page fields to update. */
+export type ConfluencePageUpdateInput = {
+  /** If true, append to existing content; if false, replace. */
+  appendContent?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The page content (Markdown). */
+  content?: InputMaybe<Scalars['String']['input']>;
+  /** The new page title. */
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Confluence space. */
@@ -3957,6 +4039,8 @@ export type Conversation = {
   filter?: Maybe<ContentCriteria>;
   /** The ID of the conversation. */
   id: Scalars['ID']['output'];
+  /** The count of conversation messages. */
+  messageCount?: Maybe<Scalars['Int']['output']>;
   /** The conversation messages. */
   messages?: Maybe<Array<Maybe<ConversationMessage>>>;
   /** The modified date of the conversation. */
@@ -3981,7 +4065,9 @@ export type Conversation = {
   summary?: Maybe<Scalars['String']['output']>;
   /** The URI to the conversation transcript stored in blob storage. */
   transcriptUri?: Maybe<Scalars['URL']['output']>;
-  /** The conversation turns, populated when transcript is stored in blob storage. */
+  /** The count of conversation turns. */
+  turnCount?: Maybe<Scalars['Int']['output']>;
+  /** The conversation turns, populated from blob storage transcript. */
   turns?: Maybe<Array<Maybe<ConversationTurn>>>;
   /** The conversation type. */
   type?: Maybe<ConversationTypes>;
@@ -8445,6 +8531,12 @@ export type GmailDistributionPropertiesInput = {
   bcc?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The CC recipients. */
   cc?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Gmail message ID to forward. Creates a forward draft by default. */
+  forwardFromMessageId?: InputMaybe<Scalars['String']['input']>;
+  /** Gmail message ID to create a reply to. Creates a threaded reply draft by default. */
+  inReplyToMessageId?: InputMaybe<Scalars['String']['input']>;
+  /** If true, saves to Drafts instead of sending. Defaults to true when inReplyToMessageId or forwardFromMessageId is set; defaults to false for new emails. */
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
   /** The recipient email addresses. */
@@ -8489,6 +8581,26 @@ export type GoogleCalendarDistributionPropertiesInput = {
   summary?: InputMaybe<Scalars['String']['input']>;
   /** The IANA time zone. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Google Calendar events query properties. */
+export type GoogleCalendarEventsInput = {
+  /** Filter events starting after this date. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Google Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
+  /** Filter events starting before this date. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The calendar identifier, defaults to primary. */
+  calendarId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client identifier, for User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Google OAuth2 client secret, for User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Google OAuth2 refresh token, for User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Calendar feed properties. */
@@ -11473,6 +11585,22 @@ export type JiraEpicsFeedPropertiesUpdateInput = {
   uri?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents Jira issue fields to update. */
+export type JiraIssueUpdateInput = {
+  /** The assignee account ID. */
+  assigneeId?: InputMaybe<Scalars['String']['input']>;
+  /** The issue description (Markdown). */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The issue labels. */
+  labels?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The issue priority name. */
+  priority?: InputMaybe<Scalars['String']['input']>;
+  /** The target status name (triggers workflow transition). */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** The issue summary. */
+  summary?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents a Jira project. */
 export type JiraProjectResult = {
   __typename?: 'JiraProjectResult';
@@ -11790,6 +11918,22 @@ export type LinearInitiativesFeedPropertiesUpdateInput = {
   key?: InputMaybe<Scalars['String']['input']>;
   /** OAuth refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Linear issue fields to update. */
+export type LinearIssueUpdateInput = {
+  /** The assignee identifier. */
+  assigneeId?: InputMaybe<Scalars['String']['input']>;
+  /** The issue description (Markdown). */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The label identifiers. */
+  labelIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The issue priority (0-4). */
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  /** The workflow state identifier. */
+  stateId?: InputMaybe<Scalars['String']['input']>;
+  /** The issue title. */
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Linear projects properties. */
@@ -14476,6 +14620,26 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   timeZone?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents Microsoft Calendar events query properties. */
+export type MicrosoftCalendarEventsInput = {
+  /** Filter events starting after this date. */
+  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Microsoft Calendar authentication type, defaults to User. */
+  authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
+  /** Filter events starting before this date. */
+  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The calendar identifier, defaults to primary. */
+  calendarId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client identifier, for User authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Microsoft Entra ID client secret, for User authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** The authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Microsoft Entra ID refresh token, for User authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents Microsoft Calendar feed properties. */
 export type MicrosoftCalendarFeedProperties = {
   __typename?: 'MicrosoftCalendarFeedProperties';
@@ -14734,8 +14898,14 @@ export type MicrosoftOutlookDistributionPropertiesInput = {
   bcc?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The CC recipients. */
   cc?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Outlook message ID to forward. Creates a forward draft by default. */
+  forwardFromMessageId?: InputMaybe<Scalars['String']['input']>;
   /** The email importance level. */
   importance?: InputMaybe<Scalars['String']['input']>;
+  /** Outlook message ID to create a reply to. Creates a threaded reply draft by default. */
+  inReplyToMessageId?: InputMaybe<Scalars['String']['input']>;
+  /** If true, saves to Drafts instead of sending. Defaults to true when inReplyToMessageId or forwardFromMessageId is set; defaults to false for new emails. */
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
   /** The recipient email addresses. */
@@ -15470,6 +15640,8 @@ export type Mutation = {
   deleteFeed?: Maybe<Feed>;
   /** Bulk deletes feeds. */
   deleteFeeds?: Maybe<Array<Maybe<Feed>>>;
+  /** Deletes an existing Google Calendar event. */
+  deleteGoogleCalendarEvent?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a investment. */
   deleteInvestment?: Maybe<Investment>;
   /** Deletes a investment fund. */
@@ -15526,6 +15698,8 @@ export type Mutation = {
   deleteMedicalTherapies?: Maybe<Array<Maybe<MedicalTherapy>>>;
   /** Deletes a medical therapy. */
   deleteMedicalTherapy?: Maybe<MedicalTherapy>;
+  /** Deletes an existing Microsoft Calendar event. */
+  deleteMicrosoftCalendarEvent?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an observation. */
   deleteObservation?: Maybe<Observation>;
   /** Deletes an organization. */
@@ -15724,6 +15898,8 @@ export type Mutation = {
   updateCategory?: Maybe<Category>;
   /** Updates an existing collection. */
   updateCollection?: Maybe<Collection>;
+  /** Updates an existing Confluence page. */
+  updateConfluencePage?: Maybe<DistributionResult>;
   /** Updates an existing connector. */
   updateConnector?: Maybe<Connector>;
   /** Updates existing content. */
@@ -15738,12 +15914,18 @@ export type Mutation = {
   updateFact?: Maybe<Fact>;
   /** Updates an existing feed. */
   updateFeed?: Maybe<Feed>;
+  /** Updates an existing Google Calendar event. */
+  updateGoogleCalendarEvent?: Maybe<CalendarEventResult>;
   /** Updates a investment. */
   updateInvestment?: Maybe<Investment>;
   /** Updates a investment fund. */
   updateInvestmentFund?: Maybe<InvestmentFund>;
+  /** Updates an existing Jira issue. */
+  updateJiraIssue?: Maybe<DistributionResult>;
   /** Updates a label. */
   updateLabel?: Maybe<Label>;
+  /** Updates an existing Linear issue. */
+  updateLinearIssue?: Maybe<DistributionResult>;
   /** Updates a medical condition. */
   updateMedicalCondition?: Maybe<MedicalCondition>;
   /** Updates a medical contraindication. */
@@ -15766,6 +15948,10 @@ export type Mutation = {
   updateMedicalTest?: Maybe<MedicalTest>;
   /** Updates a medical therapy. */
   updateMedicalTherapy?: Maybe<MedicalTherapy>;
+  /** Updates an existing Microsoft Calendar event. */
+  updateMicrosoftCalendarEvent?: Maybe<CalendarEventResult>;
+  /** Updates an existing Notion page. */
+  updateNotionPage?: Maybe<DistributionResult>;
   /** Updates an observation. */
   updateObservation?: Maybe<Observation>;
   /** Updates an organization. */
@@ -16444,6 +16630,12 @@ export type MutationDeleteFeedsArgs = {
 };
 
 
+export type MutationDeleteGoogleCalendarEventArgs = {
+  eventId: Scalars['String']['input'];
+  properties: GoogleCalendarEventsInput;
+};
+
+
 export type MutationDeleteInvestmentArgs = {
   id: Scalars['ID']['input'];
 };
@@ -16595,6 +16787,12 @@ export type MutationDeleteMedicalTherapiesArgs = {
 
 export type MutationDeleteMedicalTherapyArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteMicrosoftCalendarEventArgs = {
+  eventId: Scalars['String']['input'];
+  properties: MicrosoftCalendarEventsInput;
 };
 
 
@@ -17307,6 +17505,13 @@ export type MutationUpdateCollectionArgs = {
 };
 
 
+export type MutationUpdateConfluencePageArgs = {
+  input: ConfluencePageUpdateInput;
+  pageId: Scalars['String']['input'];
+  properties: ConfluenceSpacesInput;
+};
+
+
 export type MutationUpdateConnectorArgs = {
   connector: ConnectorUpdateInput;
 };
@@ -17342,6 +17547,13 @@ export type MutationUpdateFeedArgs = {
 };
 
 
+export type MutationUpdateGoogleCalendarEventArgs = {
+  eventId: Scalars['String']['input'];
+  input: CalendarEventUpdateInput;
+  properties: GoogleCalendarEventsInput;
+};
+
+
 export type MutationUpdateInvestmentArgs = {
   investment: InvestmentUpdateInput;
 };
@@ -17352,8 +17564,22 @@ export type MutationUpdateInvestmentFundArgs = {
 };
 
 
+export type MutationUpdateJiraIssueArgs = {
+  input: JiraIssueUpdateInput;
+  issueIdOrKey: Scalars['String']['input'];
+  properties: JiraProjectsInput;
+};
+
+
 export type MutationUpdateLabelArgs = {
   label: LabelUpdateInput;
+};
+
+
+export type MutationUpdateLinearIssueArgs = {
+  input: LinearIssueUpdateInput;
+  issueId: Scalars['String']['input'];
+  properties: LinearProjectsInput;
 };
 
 
@@ -17409,6 +17635,20 @@ export type MutationUpdateMedicalTestArgs = {
 
 export type MutationUpdateMedicalTherapyArgs = {
   medicalTherapy: MedicalTherapyUpdateInput;
+};
+
+
+export type MutationUpdateMicrosoftCalendarEventArgs = {
+  eventId: Scalars['String']['input'];
+  input: CalendarEventUpdateInput;
+  properties: MicrosoftCalendarEventsInput;
+};
+
+
+export type MutationUpdateNotionPageArgs = {
+  input: NotionPageUpdateInput;
+  pageId: Scalars['String']['input'];
+  properties: NotionDatabasesInput;
 };
 
 
@@ -17674,6 +17914,16 @@ export type NotionPageResults = {
   __typename?: 'NotionPageResults';
   /** The Notion pages. */
   results?: Maybe<Array<Maybe<NotionPageResult>>>;
+};
+
+/** Represents Notion page fields to update. */
+export type NotionPageUpdateInput = {
+  /** If true, append to existing content; if false, replace. */
+  appendContent?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The page content (Markdown). */
+  content?: InputMaybe<Scalars['String']['input']>;
+  /** The new page title. */
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Notion pages properties. */
@@ -21037,6 +21287,8 @@ export type Query = {
   skills?: Maybe<SkillResults>;
   /** Retrieves available Slack channels. */
   slackChannels?: Maybe<StringResults>;
+  /** Retrieves Slack workspace users. */
+  slackUsers?: Maybe<SlackUserResults>;
   /** Lookup software given its ID. */
   software?: Maybe<Software>;
   /** Retrieves software based on the provided filter criteria. */
@@ -22012,6 +22264,11 @@ export type QuerySkillsArgs = {
 
 
 export type QuerySlackChannelsArgs = {
+  properties: SlackChannelsInput;
+};
+
+
+export type QuerySlackUsersArgs = {
   properties: SlackChannelsInput;
 };
 
@@ -23727,6 +23984,26 @@ export type SlackIntegrationPropertiesInput = {
   channel: Scalars['String']['input'];
   /** Slack authentication token. */
   token: Scalars['String']['input'];
+};
+
+/** Represents a Slack workspace user. */
+export type SlackUser = {
+  __typename?: 'SlackUser';
+  /** The user's display name. */
+  displayName: Scalars['String']['output'];
+  /** The user's email address. */
+  email?: Maybe<Scalars['String']['output']>;
+  /** The user's real name. */
+  realName?: Maybe<Scalars['String']['output']>;
+  /** The Slack user identifier (e.g. U01ABC123). */
+  userId: Scalars['String']['output'];
+};
+
+/** Represents Slack user query results. */
+export type SlackUserResults = {
+  __typename?: 'SlackUserResults';
+  /** The Slack users. */
+  results?: Maybe<Array<Maybe<SlackUser>>>;
 };
 
 /** Represents software. */
@@ -25810,7 +26087,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -25818,7 +26095,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
@@ -26009,7 +26286,7 @@ export type AddSkillsToCollectionsMutationVariables = Exact<{
 }>;
 
 
-export type AddSkillsToCollectionsMutation = { __typename?: 'Mutation', addSkillsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, skills?: Array<{ __typename?: 'Skill', id: string, name: string } | null> | null } | null> | null };
+export type AddSkillsToCollectionsMutation = { __typename?: 'Mutation', addSkillsToCollections?: Array<{ __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null> | null };
 
 export type CountCollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -26088,7 +26365,7 @@ export type RemoveSkillsFromCollectionMutationVariables = Exact<{
 }>;
 
 
-export type RemoveSkillsFromCollectionMutation = { __typename?: 'Mutation', removeSkillsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, skills?: Array<{ __typename?: 'Skill', id: string, name: string } | null> | null } | null };
+export type RemoveSkillsFromCollectionMutation = { __typename?: 'Mutation', removeSkillsFromCollection?: { __typename?: 'Collection', id: string, name: string, state: EntityState, type?: CollectionTypes | null, contents?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null } | null };
 
 export type UpdateCollectionMutationVariables = Exact<{
   collection: CollectionUpdateInput;
@@ -26646,7 +26923,7 @@ export type GetConversationQueryVariables = Exact<{
 }>;
 
 
-export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, thinkingContent?: string | null, thinkingSignature?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null, artifacts?: Array<{ __typename?: 'Content', id: string, name: string, mimeType?: string | null, uri?: any | null } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null } | null };
+export type GetConversationQuery = { __typename?: 'Query', conversation?: { __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, messageCount?: number | null, turnCount?: number | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, thinkingContent?: string | null, thinkingSignature?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null, artifacts?: Array<{ __typename?: 'Content', id: string, name: string, mimeType?: string | null, uri?: any | null } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null } | null };
 
 export type PromptMutationVariables = Exact<{
   prompt?: InputMaybe<Scalars['String']['input']>;
@@ -26700,7 +26977,7 @@ export type QueryConversationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, thinkingContent?: string | null, thinkingSignature?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null, artifacts?: Array<{ __typename?: 'Content', id: string, name: string, mimeType?: string | null, uri?: any | null } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
+export type QueryConversationsQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, messageCount?: number | null, turnCount?: number | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
 
 export type QueryConversationsClustersQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
@@ -26709,7 +26986,7 @@ export type QueryConversationsClustersQueryVariables = Exact<{
 }>;
 
 
-export type QueryConversationsClustersQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, messages?: Array<{ __typename?: 'ConversationMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, throughput?: number | null, ttft?: any | null, completionTime?: any | null, timestamp?: any | null, modelService?: ModelServiceTypes | null, model?: string | null, data?: string | null, mimeType?: string | null, toolCallId?: string | null, toolCallResponse?: string | null, thinkingContent?: string | null, thinkingSignature?: string | null, citations?: Array<{ __typename?: 'ConversationCitation', index?: number | null, text: string, startTime?: any | null, endTime?: any | null, pageNumber?: number | null, frameNumber?: number | null, content?: { __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null } | null> | null, toolCalls?: Array<{ __typename?: 'ConversationToolCall', id: string, name: string, arguments: string } | null> | null, artifacts?: Array<{ __typename?: 'Content', id: string, name: string, mimeType?: string | null, uri?: any | null } | null> | null } | null> | null, turns?: Array<{ __typename?: 'ConversationTurn', index?: number | null, tokens?: number | null, timestamp?: any | null, text?: string | null, relevance?: number | null, messages?: Array<{ __typename?: 'ConversationTurnMessage', role: ConversationRoleTypes, author?: string | null, message?: string | null, tokens?: number | null, timestamp?: any | null } | null> | null } | null> | null, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null, clusters?: Array<{ __typename?: 'EntityCluster', similarity?: number | null, entities: Array<{ __typename?: 'NamedEntityReference', id: string, name?: string | null }> } | null> | null } | null };
+export type QueryConversationsClustersQuery = { __typename?: 'Query', conversations?: { __typename?: 'ConversationResults', results?: Array<{ __typename?: 'Conversation', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type?: ConversationTypes | null, transcriptUri?: any | null, messageCount?: number | null, turnCount?: number | null, summary?: string | null, owner: { __typename?: 'Owner', id: string }, agent?: { __typename?: 'EntityReference', id: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, fallbacks?: Array<{ __typename?: 'Specification', id: string, name: string } | null> | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null, clusters?: Array<{ __typename?: 'EntityCluster', similarity?: number | null, entities: Array<{ __typename?: 'NamedEntityReference', id: string, name?: string | null }> } | null> | null } | null };
 
 export type QueryConversationsGraphQueryVariables = Exact<{
   filter?: InputMaybe<ConversationFilter>;
@@ -27078,6 +27355,22 @@ export type DeleteFeedsMutationVariables = Exact<{
 
 export type DeleteFeedsMutation = { __typename?: 'Mutation', deleteFeeds?: Array<{ __typename?: 'Feed', id: string, state: EntityState } | null> | null };
 
+export type DeleteGoogleCalendarEventMutationVariables = Exact<{
+  properties: GoogleCalendarEventsInput;
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteGoogleCalendarEventMutation = { __typename?: 'Mutation', deleteGoogleCalendarEvent?: boolean | null };
+
+export type DeleteMicrosoftCalendarEventMutationVariables = Exact<{
+  properties: MicrosoftCalendarEventsInput;
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteMicrosoftCalendarEventMutation = { __typename?: 'Mutation', deleteMicrosoftCalendarEvent?: boolean | null };
+
 export type DisableFeedMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -27381,6 +27674,13 @@ export type QuerySlackChannelsQueryVariables = Exact<{
 
 export type QuerySlackChannelsQuery = { __typename?: 'Query', slackChannels?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
 
+export type QuerySlackUsersQueryVariables = Exact<{
+  properties: SlackChannelsInput;
+}>;
+
+
+export type QuerySlackUsersQuery = { __typename?: 'Query', slackUsers?: { __typename?: 'SlackUserResults', results?: Array<{ __typename?: 'SlackUser', userId: string, displayName: string, realName?: string | null, email?: string | null } | null> | null } | null };
+
 export type TriggerFeedMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -27388,12 +27688,66 @@ export type TriggerFeedMutationVariables = Exact<{
 
 export type TriggerFeedMutation = { __typename?: 'Mutation', triggerFeed?: { __typename?: 'Feed', id: string, state: EntityState } | null };
 
+export type UpdateConfluencePageMutationVariables = Exact<{
+  properties: ConfluenceSpacesInput;
+  pageId: Scalars['String']['input'];
+  input: ConfluencePageUpdateInput;
+}>;
+
+
+export type UpdateConfluencePageMutation = { __typename?: 'Mutation', updateConfluencePage?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
+
 export type UpdateFeedMutationVariables = Exact<{
   feed: FeedUpdateInput;
 }>;
 
 
 export type UpdateFeedMutation = { __typename?: 'Mutation', updateFeed?: { __typename?: 'Feed', id: string, name: string, state: EntityState, identifier?: string | null, type: FeedTypes } | null };
+
+export type UpdateGoogleCalendarEventMutationVariables = Exact<{
+  properties: GoogleCalendarEventsInput;
+  eventId: Scalars['String']['input'];
+  input: CalendarEventUpdateInput;
+}>;
+
+
+export type UpdateGoogleCalendarEventMutation = { __typename?: 'Mutation', updateGoogleCalendarEvent?: { __typename?: 'CalendarEventResult', eventId: string, summary?: string | null, startDateTime: any, endDateTime: any, location?: string | null, attendees?: Array<string | null> | null, isOnlineMeeting?: boolean | null, meetingLink?: string | null, description?: string | null, status?: string | null, organizer?: string | null } | null };
+
+export type UpdateJiraIssueMutationVariables = Exact<{
+  properties: JiraProjectsInput;
+  issueIdOrKey: Scalars['String']['input'];
+  input: JiraIssueUpdateInput;
+}>;
+
+
+export type UpdateJiraIssueMutation = { __typename?: 'Mutation', updateJiraIssue?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
+
+export type UpdateLinearIssueMutationVariables = Exact<{
+  properties: LinearProjectsInput;
+  issueId: Scalars['String']['input'];
+  input: LinearIssueUpdateInput;
+}>;
+
+
+export type UpdateLinearIssueMutation = { __typename?: 'Mutation', updateLinearIssue?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
+
+export type UpdateMicrosoftCalendarEventMutationVariables = Exact<{
+  properties: MicrosoftCalendarEventsInput;
+  eventId: Scalars['String']['input'];
+  input: CalendarEventUpdateInput;
+}>;
+
+
+export type UpdateMicrosoftCalendarEventMutation = { __typename?: 'Mutation', updateMicrosoftCalendarEvent?: { __typename?: 'CalendarEventResult', eventId: string, summary?: string | null, startDateTime: any, endDateTime: any, location?: string | null, attendees?: Array<string | null> | null, isOnlineMeeting?: boolean | null, meetingLink?: string | null, description?: string | null, status?: string | null, organizer?: string | null } | null };
+
+export type UpdateNotionPageMutationVariables = Exact<{
+  properties: NotionDatabasesInput;
+  pageId: Scalars['String']['input'];
+  input: NotionPageUpdateInput;
+}>;
+
+
+export type UpdateNotionPageMutation = { __typename?: 'Mutation', updateNotionPage?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
 
 export type CountInvestmentsQueryVariables = Exact<{
   filter?: InputMaybe<InvestmentFilter>;

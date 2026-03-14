@@ -4,7 +4,7 @@ mutation RemoveSkillsFromCollection($skills: [EntityReferenceInput!]!, $collecti
     name
     state
     type
-    skills {
+    contents {
       id
       name
     }

@@ -4,7 +4,7 @@ mutation AddSkillsToCollections($skills: [EntityReferenceInput!]!, $collections:
     name
     state
     type
-    skills {
+    contents {
       id
       name
     }
