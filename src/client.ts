@@ -3411,6 +3411,160 @@ class Graphlit {
   }
 
   /**
+   * Queries Slack users.
+   * @param properties - The Slack authentication properties.
+   * @returns The Slack users with userId, displayName, realName, and email.
+   */
+  public async querySlackUsers(
+    properties: Types.SlackChannelsInput,
+  ): Promise<Types.QuerySlackUsersQuery> {
+    return this.queryAndCheckError<
+      Types.QuerySlackUsersQuery,
+      Types.QuerySlackUsersQueryVariables
+    >(Documents.QuerySlackUsers, { properties: properties });
+  }
+
+  /**
+   * Updates a Google Calendar event.
+   * @param properties - The Google Calendar authentication properties.
+   * @param eventId - The event identifier.
+   * @param input - The event fields to update.
+   * @returns The updated calendar event.
+   */
+  public async updateGoogleCalendarEvent(
+    properties: Types.GoogleCalendarEventsInput,
+    eventId: string,
+    input: Types.CalendarEventUpdateInput,
+  ): Promise<Types.UpdateGoogleCalendarEventMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateGoogleCalendarEventMutation,
+      Types.UpdateGoogleCalendarEventMutationVariables
+    >(Documents.UpdateGoogleCalendarEvent, { properties, eventId, input });
+  }
+
+  /**
+   * Updates a Microsoft Calendar event.
+   * @param properties - The Microsoft Calendar authentication properties.
+   * @param eventId - The event identifier.
+   * @param input - The event fields to update.
+   * @returns The updated calendar event.
+   */
+  public async updateMicrosoftCalendarEvent(
+    properties: Types.MicrosoftCalendarEventsInput,
+    eventId: string,
+    input: Types.CalendarEventUpdateInput,
+  ): Promise<Types.UpdateMicrosoftCalendarEventMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateMicrosoftCalendarEventMutation,
+      Types.UpdateMicrosoftCalendarEventMutationVariables
+    >(Documents.UpdateMicrosoftCalendarEvent, { properties, eventId, input });
+  }
+
+  /**
+   * Deletes a Google Calendar event.
+   * @param properties - The Google Calendar authentication properties.
+   * @param eventId - The event identifier.
+   * @returns True if the event was deleted.
+   */
+  public async deleteGoogleCalendarEvent(
+    properties: Types.GoogleCalendarEventsInput,
+    eventId: string,
+  ): Promise<Types.DeleteGoogleCalendarEventMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteGoogleCalendarEventMutation,
+      Types.DeleteGoogleCalendarEventMutationVariables
+    >(Documents.DeleteGoogleCalendarEvent, { properties, eventId });
+  }
+
+  /**
+   * Deletes a Microsoft Calendar event.
+   * @param properties - The Microsoft Calendar authentication properties.
+   * @param eventId - The event identifier.
+   * @returns True if the event was deleted.
+   */
+  public async deleteMicrosoftCalendarEvent(
+    properties: Types.MicrosoftCalendarEventsInput,
+    eventId: string,
+  ): Promise<Types.DeleteMicrosoftCalendarEventMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteMicrosoftCalendarEventMutation,
+      Types.DeleteMicrosoftCalendarEventMutationVariables
+    >(Documents.DeleteMicrosoftCalendarEvent, { properties, eventId });
+  }
+
+  /**
+   * Updates a Notion page.
+   * @param properties - The Notion authentication properties.
+   * @param pageId - The Notion page identifier.
+   * @param input - The page fields to update (title, content, appendContent).
+   * @returns The distribution result.
+   */
+  public async updateNotionPage(
+    properties: Types.NotionDatabasesInput,
+    pageId: string,
+    input: Types.NotionPageUpdateInput,
+  ): Promise<Types.UpdateNotionPageMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateNotionPageMutation,
+      Types.UpdateNotionPageMutationVariables
+    >(Documents.UpdateNotionPage, { properties, pageId, input });
+  }
+
+  /**
+   * Updates a Confluence page.
+   * @param properties - The Confluence authentication properties.
+   * @param pageId - The Confluence page identifier.
+   * @param input - The page fields to update (title, content, appendContent).
+   * @returns The distribution result.
+   */
+  public async updateConfluencePage(
+    properties: Types.ConfluenceSpacesInput,
+    pageId: string,
+    input: Types.ConfluencePageUpdateInput,
+  ): Promise<Types.UpdateConfluencePageMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateConfluencePageMutation,
+      Types.UpdateConfluencePageMutationVariables
+    >(Documents.UpdateConfluencePage, { properties, pageId, input });
+  }
+
+  /**
+   * Updates a Jira issue.
+   * @param properties - The Jira authentication properties.
+   * @param issueIdOrKey - The Jira issue ID or key (e.g., "CS-123").
+   * @param input - The issue fields to update (summary, description, priority, status, assigneeId, labels).
+   * @returns The distribution result.
+   */
+  public async updateJiraIssue(
+    properties: Types.JiraProjectsInput,
+    issueIdOrKey: string,
+    input: Types.JiraIssueUpdateInput,
+  ): Promise<Types.UpdateJiraIssueMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateJiraIssueMutation,
+      Types.UpdateJiraIssueMutationVariables
+    >(Documents.UpdateJiraIssue, { properties, issueIdOrKey, input });
+  }
+
+  /**
+   * Updates a Linear issue.
+   * @param properties - The Linear authentication properties.
+   * @param issueId - The Linear issue identifier.
+   * @param input - The issue fields to update (title, description, priority, stateId, assigneeId, labelIds).
+   * @returns The distribution result.
+   */
+  public async updateLinearIssue(
+    properties: Types.LinearProjectsInput,
+    issueId: string,
+    input: Types.LinearIssueUpdateInput,
+  ): Promise<Types.UpdateLinearIssueMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateLinearIssueMutation,
+      Types.UpdateLinearIssueMutationVariables
+    >(Documents.UpdateLinearIssue, { properties, issueId, input });
+  }
+
+  /**
    * Queries Linear projects.
    * @param properties - The Linear project query properties.
    * @returns The Linear projects.
