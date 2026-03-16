@@ -5824,6 +5824,7 @@ export const GetConversation = gql`
       timestamp
       text
       relevance
+      summary
     }
     messageCount
     turnCount
@@ -6069,6 +6070,14 @@ export const GetConversation = gql`
       confidence
     }
     summary
+    parent {
+      id
+      name
+    }
+    children {
+      id
+      name
+    }
   }
 }
     `;
@@ -16385,6 +16394,11 @@ export const CreateSkill = gql`
     name
     state
     skillOwner
+    arguments {
+      name
+      description
+      required
+    }
   }
 }
     `;
@@ -16446,6 +16460,11 @@ export const GetSkill = gql`
     correlationId
     text
     skillOwner
+    arguments {
+      name
+      description
+      required
+    }
     collections {
       id
       name
@@ -16469,6 +16488,11 @@ export const QuerySkills = gql`
       correlationId
       text
       skillOwner
+      arguments {
+        name
+        description
+        required
+      }
       collections {
         id
         name
@@ -16484,6 +16508,11 @@ export const UpdateSkill = gql`
     name
     state
     skillOwner
+    arguments {
+      name
+      description
+      required
+    }
   }
 }
     `;
@@ -16494,6 +16523,11 @@ export const UpsertSkill = gql`
     name
     state
     skillOwner
+    arguments {
+      name
+      description
+      required
+    }
   }
 }
     `;
