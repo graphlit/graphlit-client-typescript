@@ -23776,6 +23776,8 @@ export type Skill = {
   description?: Maybe<Scalars['String']['output']>;
   /** The ID of the skill. */
   id: Scalars['ID']['output'];
+  /** The skill external identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
   /** The modified date of the skill. */
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   /** The name of the skill. */
@@ -23829,6 +23831,8 @@ export type SkillFilter = {
   hasCollections?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter skill(s) by their unique ID. */
   id?: InputMaybe<Scalars['ID']['input']>;
+  /** Filter by external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** Limit the number of skill(s) to be returned. Defaults to 100. */
   limit?: InputMaybe<Scalars['Int']['input']>;
   /** Filter skill(s) by their modified date range. */
@@ -23859,6 +23863,8 @@ export type SkillInput = {
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   /** The description of the skill. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** The skill external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** The name of the skill. */
   name: Scalars['String']['input'];
   /** The skill owner. */
@@ -23882,6 +23888,8 @@ export type SkillUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the skill to update. */
   id: Scalars['ID']['input'];
+  /** The skill external identifier. */
+  identifier?: InputMaybe<Scalars['String']['input']>;
   /** The name of the skill. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** The Markdown text body of the skill. */
