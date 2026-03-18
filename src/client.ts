@@ -1951,6 +1951,38 @@ class Graphlit {
   }
 
   /**
+   * Adds a label to content.
+   * @param id - The ID of the content.
+   * @param label - The label to add.
+   * @returns The added label.
+   */
+  public async addContentLabel(
+    id: string,
+    label: string,
+  ): Promise<Types.AddContentLabelMutation> {
+    return this.mutateAndCheckError<
+      Types.AddContentLabelMutation,
+      Types.AddContentLabelMutationVariables
+    >(Documents.AddContentLabel, { id: id, label: label });
+  }
+
+  /**
+   * Removes a label from content.
+   * @param id - The ID of the content.
+   * @param label - The label to remove.
+   * @returns The removed label.
+   */
+  public async removeContentLabel(
+    id: string,
+    label: string,
+  ): Promise<Types.RemoveContentLabelMutation> {
+    return this.mutateAndCheckError<
+      Types.RemoveContentLabelMutation,
+      Types.RemoveContentLabelMutationVariables
+    >(Documents.RemoveContentLabel, { id: id, label: label });
+  }
+
+  /**
    * Restarts content processing.
    * @param id - The ID of the content to restart.
    * @returns The restarted content.

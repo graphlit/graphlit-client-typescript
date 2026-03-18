@@ -96,6 +96,9 @@ export const GetAgent = gql`
       instructions
       label
     }
+    connectors {
+      id
+    }
     timeout
     prompt
     scratchpad
@@ -138,6 +141,9 @@ export const QueryAgents = gql`
         identifier
         instructions
         label
+      }
+      connectors {
+        id
       }
       timeout
       prompt
@@ -1095,6 +1101,14 @@ export const UpdateConnector = gql`
     name
     state
     type
+  }
+}
+    `;
+export const AddContentLabel = gql`
+    mutation AddContentLabel($id: ID!, $label: String!) {
+  addContentLabel(id: $id, label: $label) {
+    id
+    name
   }
 }
     `;
@@ -4195,6 +4209,14 @@ export const RejectContent = gql`
   rejectContent(id: $id, reason: $reason) {
     id
     state
+  }
+}
+    `;
+export const RemoveContentLabel = gql`
+    mutation RemoveContentLabel($id: ID!, $label: String!) {
+  removeContentLabel(id: $id, label: $label) {
+    id
+    name
   }
 }
     `;
