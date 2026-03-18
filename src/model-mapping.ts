@@ -57,6 +57,10 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   // GPT-5.4 models
   [Types.OpenAiModels.Gpt54_1024K]: "gpt-5.4",
   [Types.OpenAiModels.Gpt54_1024K_20260305]: "gpt-5.4-2026-03-05",
+  [Types.OpenAiModels.Gpt54Mini_400K]: "gpt-5.4-mini",
+  [Types.OpenAiModels.Gpt54Mini_400K_20260317]: "gpt-5.4-mini-2026-03-17",
+  [Types.OpenAiModels.Gpt54Nano_400K]: "gpt-5.4-nano",
+  [Types.OpenAiModels.Gpt54Nano_400K_20260317]: "gpt-5.4-nano-2026-03-17",
 
   // O1 models
   [Types.OpenAiModels.O1_200K]: "o1",

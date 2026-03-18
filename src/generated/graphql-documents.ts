@@ -16393,6 +16393,7 @@ export const CreateSkill = gql`
     id
     name
     state
+    identifier
     skillOwner
     arguments {
       name
@@ -16457,6 +16458,7 @@ export const GetSkill = gql`
       id
     }
     state
+    identifier
     correlationId
     text
     skillOwner
@@ -16485,6 +16487,7 @@ export const QuerySkills = gql`
         id
       }
       state
+      identifier
       correlationId
       text
       skillOwner
@@ -16507,6 +16510,7 @@ export const UpdateSkill = gql`
     id
     name
     state
+    identifier
     skillOwner
     arguments {
       name
@@ -16522,6 +16526,7 @@ export const UpsertSkill = gql`
     id
     name
     state
+    identifier
     skillOwner
     arguments {
       name
@@ -19074,6 +19079,9 @@ export const CreateWorkflow = gql`
           crustdata {
             isRealtime
           }
+          waterfall {
+            depth
+          }
         }
       }
       entityResolution {
@@ -19373,6 +19381,9 @@ export const GetWorkflow = gql`
           crustdata {
             isRealtime
           }
+          waterfall {
+            depth
+          }
         }
       }
       entityResolution {
@@ -19646,6 +19657,9 @@ export const QueryWorkflows = gql`
             crustdata {
               isRealtime
             }
+            waterfall {
+              depth
+            }
           }
         }
         entityResolution {
@@ -19913,6 +19927,9 @@ export const UpdateWorkflow = gql`
           crustdata {
             isRealtime
           }
+          waterfall {
+            depth
+          }
         }
       }
       entityResolution {
@@ -20178,6 +20195,9 @@ export const UpsertWorkflow = gql`
           }
           crustdata {
             isRealtime
+          }
+          waterfall {
+            depth
           }
         }
       }
