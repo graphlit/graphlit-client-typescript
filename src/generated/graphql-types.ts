@@ -18059,7 +18059,9 @@ export enum OAuthProviders {
   /** Twitter authentication provider */
   Twitter = 'TWITTER',
   /** Zendesk authentication provider */
-  Zendesk = 'ZENDESK'
+  Zendesk = 'ZENDESK',
+  /** Zoom authentication provider */
+  Zoom = 'ZOOM'
 }
 
 /** Represents an extracted observable entity. */
