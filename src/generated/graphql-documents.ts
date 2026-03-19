@@ -9216,6 +9216,18 @@ export const GetFeed = gql`
         beforeDate
         type
       }
+      zoom {
+        authenticationType
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        afterDate
+        beforeDate
+        type
+      }
       hubSpot {
         authenticationType
         clientId
@@ -10212,6 +10224,18 @@ export const QueryFeeds = gql`
         }
         fathom {
           apiKey
+          afterDate
+          beforeDate
+          type
+        }
+        zoom {
+          authenticationType
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
           afterDate
           beforeDate
           type
@@ -19158,6 +19182,7 @@ export const CreateWorkflow = gql`
           type
         }
       }
+      observableTypes
     }
   }
 }
@@ -19460,6 +19485,7 @@ export const GetWorkflow = gql`
           type
         }
       }
+      observableTypes
     }
   }
 }
@@ -19736,6 +19762,7 @@ export const QueryWorkflows = gql`
             type
           }
         }
+        observableTypes
       }
     }
   }
@@ -20006,6 +20033,7 @@ export const UpdateWorkflow = gql`
           type
         }
       }
+      observableTypes
     }
   }
 }
@@ -20275,6 +20303,7 @@ export const UpsertWorkflow = gql`
           type
         }
       }
+      observableTypes
     }
   }
 }
