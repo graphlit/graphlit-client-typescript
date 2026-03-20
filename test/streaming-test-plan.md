@@ -319,7 +319,7 @@ describe("Production Scenarios", () => {
 
 ### Testing Environment
 
-- Node.js 18+ for consistency with Next.js
+- Node.js 20+ for consistency with Next.js
 - Real Graphlit API endpoints
 - Multiple LLM providers (OpenAI, Anthropic, Google)
 - Vitest for test execution

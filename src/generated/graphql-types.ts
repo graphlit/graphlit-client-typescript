@@ -78,6 +78,8 @@ export type Agent = {
   creationDate: Scalars['DateTime']['output'];
   /** The description of the agent. */
   description?: Maybe<Scalars['String']['output']>;
+  /** The desks this agent is assigned to. */
+  desks?: Maybe<Array<Maybe<Desk>>>;
   /** The trigger filter for event-driven activation. */
   filter?: Maybe<AgentTriggerFilter>;
   /** The ID of the agent. */
@@ -1985,6 +1987,104 @@ export type BoxFoldersInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a bureau. */
+export type Bureau = {
+  __typename?: 'Bureau';
+  /** The creation date of the bureau. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The description of the bureau. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The number of desks in this bureau. */
+  deskCount?: Maybe<Scalars['Int']['output']>;
+  /** The desks in this bureau. */
+  desks?: Maybe<Array<Maybe<Desk>>>;
+  /** The bureau directives. */
+  directives?: Maybe<Scalars['String']['output']>;
+  /** The ID of the bureau. */
+  id: Scalars['ID']['output'];
+  /** The bureau mission. */
+  mission?: Maybe<Scalars['String']['output']>;
+  /** The modified date of the bureau. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the bureau. */
+  name: Scalars['String']['output'];
+  /** The owner of the bureau. */
+  owner: Owner;
+  /** The relevance score of the bureau. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the bureau (i.e. created, finished). */
+  state: EntityState;
+};
+
+/** Represents a filter for bureaus. */
+export type BureauFilter = {
+  /** Filter by creation date recent timespan. For example, a timespan of one day will return bureau(s) created in the last 24 hours. */
+  createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter bureau(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by desks. */
+  desks?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter bureau(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of bureau(s) to be returned. Defaults to 100. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter bureau(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return bureau(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter bureau(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Skip the specified number of bureau(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** Filter bureau(s) by searching for similar text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Filter bureau(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a bureau. */
+export type BureauInput = {
+  /** The description of the bureau. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The desks contained by the bureau. */
+  desks?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The bureau directives. */
+  directives?: InputMaybe<Scalars['String']['input']>;
+  /** The bureau mission. */
+  mission?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the bureau. */
+  name: Scalars['String']['input'];
+};
+
+/** Represents bureau query results. */
+export type BureauResults = {
+  __typename?: 'BureauResults';
+  /** The list of bureau query results. */
+  results?: Maybe<Array<Bureau>>;
+};
+
+/** Represents a bureau. */
+export type BureauUpdateInput = {
+  /** The description of the bureau. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The desks contained by the bureau. */
+  desks?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The bureau directives. */
+  directives?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the bureau to update. */
+  id: Scalars['ID']['input'];
+  /** The bureau mission. */
+  mission?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the bureau. */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents CRM feed properties. */
 export type CrmFeedProperties = {
   __typename?: 'CRMFeedProperties';
@@ -3131,6 +3231,8 @@ export type Content = {
   __typename?: 'Content';
   /** The content physical address */
   address?: Maybe<Address>;
+  /** The agent that produced this content. */
+  agent?: Maybe<Agent>;
   /** The content audio metadata. */
   audio?: Maybe<AudioMetadata>;
   /** The audio mezzanine rendition URI of the content. For audio and video files, this will reference an intermediate MP3 rendition of the content. */
@@ -3579,6 +3681,8 @@ export enum ContentFacetTypes {
 
 /** Represents a filter for contents. */
 export type ContentFilter = {
+  /** Filter by producing agent. */
+  agents?: InputMaybe<Array<EntityReferenceFilter>>;
   /** List of additional content filters using conjunctive conditions, i.e. 'and' semantics between each filter in list. */
   and?: InputMaybe<Array<InputMaybe<ContentFilterLevel>>>;
   /** Filter by geo-boundaries, as GeoJSON Feature with Polygon geometry. */
@@ -4159,6 +4263,8 @@ export type ConversationDetails = {
 
 /** Represents a filter for conversations. */
 export type ConversationFilter = {
+  /** Filter by producing agent. */
+  agents?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter mode for collections. Any: match if in any listed collection. All: must be in all listed collections. Only: must be in listed collections and no others. Defaults to Any. */
   collectionMode?: InputMaybe<FilterMode>;
   /** Filter by collections. */
@@ -5030,6 +5136,112 @@ export enum DeepseekModels {
   /** Deepseek Reasoner */
   Reasoner = 'REASONER'
 }
+
+/** Represents a desk. */
+export type Desk = {
+  __typename?: 'Desk';
+  /** The number of agents assigned to this desk. */
+  agentCount?: Maybe<Scalars['Int']['output']>;
+  /** The agents assigned to this desk. */
+  agents?: Maybe<Array<Maybe<Agent>>>;
+  /** The bureau this desk belongs to. */
+  bureau?: Maybe<Bureau>;
+  /** The creation date of the desk. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The description of the desk. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The ID of the desk. */
+  id: Scalars['ID']['output'];
+  /** The desk instructions. */
+  instructions?: Maybe<Scalars['String']['output']>;
+  /** The modified date of the desk. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the desk. */
+  name: Scalars['String']['output'];
+  /** The desk objectives. */
+  objectives?: Maybe<Scalars['String']['output']>;
+  /** The owner of the desk. */
+  owner: Owner;
+  /** The relevance score of the desk. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The state of the desk (i.e. created, finished). */
+  state: EntityState;
+};
+
+/** Represents a filter for desks. */
+export type DeskFilter = {
+  /** Filter by agents. */
+  agents?: InputMaybe<Array<EntityReferenceFilter>>;
+  /** Filter by bureau. */
+  bureau?: InputMaybe<EntityReferenceFilter>;
+  /** Filter by creation date recent timespan. For example, a timespan of one day will return desk(s) created in the last 24 hours. */
+  createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter desk(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter desk(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of desk(s) to be returned. Defaults to 100. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter desk(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return desk(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter desk(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Skip the specified number of desk(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** Filter desk(s) by searching for similar text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Filter desk(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+};
+
+/** Represents a desk. */
+export type DeskInput = {
+  /** The agents assigned to the desk. */
+  agents?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The parent bureau. */
+  bureau?: InputMaybe<EntityReferenceInput>;
+  /** The description of the desk. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The desk instructions. */
+  instructions?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the desk. */
+  name: Scalars['String']['input'];
+  /** The desk objectives. */
+  objectives?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents desk query results. */
+export type DeskResults = {
+  __typename?: 'DeskResults';
+  /** The list of desk query results. */
+  results?: Maybe<Array<Desk>>;
+};
+
+/** Represents a desk. */
+export type DeskUpdateInput = {
+  /** The agents assigned to the desk. */
+  agents?: InputMaybe<Array<EntityReferenceInput>>;
+  /** The parent bureau. */
+  bureau?: InputMaybe<EntityReferenceInput>;
+  /** The description of the desk. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the desk to update. */
+  id: Scalars['ID']['input'];
+  /** The desk instructions. */
+  instructions?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the desk. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The desk objectives. */
+  objectives?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** Capture device type */
 export enum DeviceTypes {
@@ -6365,6 +6577,8 @@ export enum EntityTypes {
   Agent = 'AGENT',
   /** Alert */
   Alert = 'ALERT',
+  /** Bureau */
+  Bureau = 'BUREAU',
   /** Category */
   Category = 'CATEGORY',
   /** Collection */
@@ -6375,6 +6589,8 @@ export enum EntityTypes {
   Content = 'CONTENT',
   /** Chatbot conversation */
   Conversation = 'CONVERSATION',
+  /** Desk */
+  Desk = 'DESK',
   /** Emotion */
   Emotion = 'EMOTION',
   /** Event */
@@ -6975,6 +7191,8 @@ export type Fact = {
   state: EntityState;
   /** The fact assertion text. */
   text: Scalars['String']['output'];
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
   /** The date/time when this fact became valid. */
   validAt?: Maybe<Scalars['DateTime']['output']>;
 };
@@ -7012,6 +7230,8 @@ export enum FactCategory {
   Decision = 'DECISION',
   /** An assignment of responsibility. */
   Delegation = 'DELEGATION',
+  /** An endorsement from user feedback. */
+  Endorsement = 'ENDORSEMENT',
   /** Moving a decision up the authority chain. */
   Escalation = 'ESCALATION',
   /** An event that occurred. */
@@ -7032,6 +7252,8 @@ export enum FactCategory {
   Quantitative = 'QUANTITATIVE',
   /** Explicit reasoning behind a decision. */
   Rationale = 'RATIONALE',
+  /** A rejection from user feedback. */
+  Rejection = 'REJECTION',
   /** A relationship between entities. */
   Relationship = 'RELATIONSHIP'
 }
@@ -7042,6 +7264,8 @@ export type FactFilter = {
   categories?: InputMaybe<Array<InputMaybe<FactCategory>>>;
   /** Filter by parent content. */
   content?: InputMaybe<EntityReferenceFilter>;
+  /** Filter by parent conversation. */
+  conversation?: InputMaybe<EntityReferenceFilter>;
   /** Filter by creation date recent timespan. For example, a timespan of one day will return fact(s) created in the last 24 hours. */
   createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter fact(s) by their creation date range. */
@@ -15463,6 +15687,8 @@ export type MondayFeedPropertiesUpdateInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Adds agents to a desk. */
+  addAgentsToDesk?: Maybe<Desk>;
   /**
    * Adds contents to a collection.
    * @deprecated Use addContentsToCollections instead.
@@ -15474,6 +15700,8 @@ export type Mutation = {
   addContentsToCollections?: Maybe<Array<Maybe<Collection>>>;
   /** Adds conversations to one or more collections. */
   addConversationsToCollections?: Maybe<Array<Maybe<Collection>>>;
+  /** Adds desks to a bureau. */
+  addDesksToBureau?: Maybe<Bureau>;
   /** Adds skills to one or more collections. */
   addSkillsToCollections?: Maybe<Array<Maybe<Collection>>>;
   /** Approves content, and resumes workflow from the prepared stage (without re-ingesting or re-running the storage gate). */
@@ -15496,6 +15724,8 @@ export type Mutation = {
   createAgent?: Maybe<Agent>;
   /** Creates a new alert. */
   createAlert?: Maybe<Alert>;
+  /** Creates a new bureau. */
+  createBureau?: Maybe<Bureau>;
   /** Creates a new category. */
   createCategory?: Maybe<Category>;
   /** Creates a new collection. */
@@ -15504,6 +15734,8 @@ export type Mutation = {
   createConnector?: Maybe<Connector>;
   /** Creates a new conversation. */
   createConversation?: Maybe<Conversation>;
+  /** Creates a new desk. */
+  createDesk?: Maybe<Desk>;
   /** Creates a new emotion. */
   createEmotion?: Maybe<Emotion>;
   /** Creates a new event. */
@@ -15578,6 +15810,8 @@ export type Mutation = {
   deleteAllAgents?: Maybe<Array<Maybe<Agent>>>;
   /** Bulk deletes alerts based on the provided filter criteria. */
   deleteAllAlerts?: Maybe<Array<Maybe<Alert>>>;
+  /** Bulk deletes bureaus based on the provided filter criteria. */
+  deleteAllBureaus?: Maybe<Array<Maybe<Bureau>>>;
   /** Bulk deletes categories based on the provided filter criteria. */
   deleteAllCategories?: Maybe<Array<Maybe<Category>>>;
   /** Bulk deletes collections based on the provided filter criteria. */
@@ -15586,6 +15820,8 @@ export type Mutation = {
   deleteAllContents?: Maybe<Array<Maybe<Content>>>;
   /** Bulk deletes conversations based on the provided filter criteria. */
   deleteAllConversations?: Maybe<Array<Maybe<Conversation>>>;
+  /** Bulk deletes desks based on the provided filter criteria. */
+  deleteAllDesks?: Maybe<Array<Maybe<Desk>>>;
   /** Bulk deletes emotions based on the provided filter criteria. */
   deleteAllEmotions?: Maybe<Array<Maybe<Emotion>>>;
   /** Bulk deletes events based on the provided filter criteria. */
@@ -15644,6 +15880,10 @@ export type Mutation = {
   deleteAllViews?: Maybe<Array<Maybe<View>>>;
   /** Bulk deletes workflows based on the provided filter criteria. */
   deleteAllWorkflows?: Maybe<Array<Maybe<Workflow>>>;
+  /** Deletes a bureau. */
+  deleteBureau?: Maybe<Bureau>;
+  /** Bulk deletes bureaus. */
+  deleteBureaus?: Maybe<Array<Maybe<Bureau>>>;
   /** Bulk deletes categories. */
   deleteCategories?: Maybe<Array<Maybe<Category>>>;
   /** Deletes a category. */
@@ -15662,6 +15902,10 @@ export type Mutation = {
   deleteConversation?: Maybe<Conversation>;
   /** Bulk deletes conversations. */
   deleteConversations?: Maybe<Array<Maybe<Conversation>>>;
+  /** Deletes a desk. */
+  deleteDesk?: Maybe<Desk>;
+  /** Bulk deletes desks. */
+  deleteDesks?: Maybe<Array<Maybe<Desk>>>;
   /** Deletes an emotion. */
   deleteEmotion?: Maybe<Emotion>;
   /** Bulk deletes emotions. */
@@ -15873,6 +16117,8 @@ export type Mutation = {
   publishText?: Maybe<PublishContents>;
   /** Rejects content. */
   rejectContent?: Maybe<Content>;
+  /** Removes agents from a desk. */
+  removeAgentsFromDesk?: Maybe<Desk>;
   /**
    * Removes contents from a collection.
    * @deprecated Use removeContentsFromCollection instead.
@@ -15884,6 +16130,8 @@ export type Mutation = {
   removeContentsFromCollection?: Maybe<Collection>;
   /** Removes conversations from a collection. */
   removeConversationsFromCollection?: Maybe<Collection>;
+  /** Removes desks from a bureau. */
+  removeDesksFromBureau?: Maybe<Bureau>;
   /** Removes skills from a collection. */
   removeSkillsFromCollection?: Maybe<Collection>;
   /** Research contents via web research based on provided filter criteria. */
@@ -15934,6 +16182,8 @@ export type Mutation = {
   updateAgent?: Maybe<Agent>;
   /** Updates an existing alert. */
   updateAlert?: Maybe<Alert>;
+  /** Updates an existing bureau. */
+  updateBureau?: Maybe<Bureau>;
   /** Updates a category. */
   updateCategory?: Maybe<Category>;
   /** Updates an existing collection. */
@@ -15946,6 +16196,8 @@ export type Mutation = {
   updateContent?: Maybe<Content>;
   /** Updates an existing conversation. */
   updateConversation?: Maybe<Conversation>;
+  /** Updates an existing desk. */
+  updateDesk?: Maybe<Desk>;
   /** Updates an emotion. */
   updateEmotion?: Maybe<Emotion>;
   /** Updates an event. */
@@ -16041,6 +16293,12 @@ export type Mutation = {
 };
 
 
+export type MutationAddAgentsToDeskArgs = {
+  agents: Array<EntityReferenceInput>;
+  desk: EntityReferenceInput;
+};
+
+
 export type MutationAddCollectionContentsArgs = {
   contents: Array<EntityReferenceInput>;
   id: Scalars['ID']['input'];
@@ -16062,6 +16320,12 @@ export type MutationAddContentsToCollectionsArgs = {
 export type MutationAddConversationsToCollectionsArgs = {
   collections: Array<EntityReferenceInput>;
   conversations: Array<EntityReferenceInput>;
+};
+
+
+export type MutationAddDesksToBureauArgs = {
+  bureau: EntityReferenceInput;
+  desks: Array<EntityReferenceInput>;
 };
 
 
@@ -16138,6 +16402,11 @@ export type MutationCreateAlertArgs = {
 };
 
 
+export type MutationCreateBureauArgs = {
+  bureau: BureauInput;
+};
+
+
 export type MutationCreateCategoryArgs = {
   category: CategoryInput;
 };
@@ -16156,6 +16425,11 @@ export type MutationCreateConnectorArgs = {
 export type MutationCreateConversationArgs = {
   conversation: ConversationInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateDeskArgs = {
+  desk: DeskInput;
 };
 
 
@@ -16352,6 +16626,13 @@ export type MutationDeleteAllAlertsArgs = {
 };
 
 
+export type MutationDeleteAllBureausArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BureauFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationDeleteAllCategoriesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CategoryFilter>;
@@ -16376,6 +16657,13 @@ export type MutationDeleteAllContentsArgs = {
 export type MutationDeleteAllConversationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ConversationFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllDesksArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DeskFilter>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -16583,6 +16871,17 @@ export type MutationDeleteAllWorkflowsArgs = {
 };
 
 
+export type MutationDeleteBureauArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteBureausArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationDeleteCategoriesArgs = {
   ids: Array<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
@@ -16627,6 +16926,17 @@ export type MutationDeleteConversationArgs = {
 
 
 export type MutationDeleteConversationsArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteDeskArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteDesksArgs = {
   ids: Array<Scalars['ID']['input']>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -17340,6 +17650,12 @@ export type MutationRejectContentArgs = {
 };
 
 
+export type MutationRemoveAgentsFromDeskArgs = {
+  agents: Array<EntityReferenceInput>;
+  desk: EntityReferenceInput;
+};
+
+
 export type MutationRemoveCollectionContentsArgs = {
   contents: Array<EntityReferenceInput>;
   id: Scalars['ID']['input'];
@@ -17361,6 +17677,12 @@ export type MutationRemoveContentsFromCollectionArgs = {
 export type MutationRemoveConversationsFromCollectionArgs = {
   collection: EntityReferenceInput;
   conversations: Array<EntityReferenceInput>;
+};
+
+
+export type MutationRemoveDesksFromBureauArgs = {
+  bureau: EntityReferenceInput;
+  desks: Array<EntityReferenceInput>;
 };
 
 
@@ -17547,6 +17869,11 @@ export type MutationUpdateAlertArgs = {
 };
 
 
+export type MutationUpdateBureauArgs = {
+  bureau: BureauUpdateInput;
+};
+
+
 export type MutationUpdateCategoryArgs = {
   category: CategoryUpdateInput;
 };
@@ -17576,6 +17903,11 @@ export type MutationUpdateContentArgs = {
 
 export type MutationUpdateConversationArgs = {
   conversation: ConversationUpdateInput;
+};
+
+
+export type MutationUpdateDeskArgs = {
+  desk: DeskUpdateInput;
 };
 
 
@@ -21069,6 +21401,10 @@ export type Query = {
   bambooHRLocations?: Maybe<HrisOptionResults>;
   /** Retrieves available Box folders. */
   boxFolders?: Maybe<BoxFolderResults>;
+  /** Lookup a bureau given its ID. */
+  bureau?: Maybe<Bureau>;
+  /** Retrieves bureaus based on the provided filter criteria. */
+  bureaus?: Maybe<BureauResults>;
   /** Retrieves categories based on the provided filter criteria. */
   categories?: Maybe<CategoryResults>;
   /** Lookup a category given its ID. */
@@ -21095,6 +21431,8 @@ export type Query = {
   countAgents?: Maybe<CountResult>;
   /** Counts alerts based on the provided filter criteria. */
   countAlerts?: Maybe<CountResult>;
+  /** Counts bureaus based on the provided filter criteria. */
+  countBureaus?: Maybe<CountResult>;
   /** Counts categories based on the provided filter criteria. */
   countCategories?: Maybe<CountResult>;
   /** Counts collections based on the provided filter criteria. */
@@ -21105,6 +21443,8 @@ export type Query = {
   countContents?: Maybe<CountResult>;
   /** Counts conversations based on the provided filter criteria. */
   countConversations?: Maybe<CountResult>;
+  /** Counts desks based on the provided filter criteria. */
+  countDesks?: Maybe<CountResult>;
   /** Counts emotions based on the provided filter criteria. */
   countEmotions?: Maybe<CountResult>;
   /** Counts events based on the provided filter criteria. */
@@ -21167,6 +21507,10 @@ export type Query = {
   countWorkflows?: Maybe<CountResult>;
   /** Retrieves project credits. */
   credits?: Maybe<ProjectCredits>;
+  /** Lookup a desk given its ID. */
+  desk?: Maybe<Desk>;
+  /** Retrieves desks based on the provided filter criteria. */
+  desks?: Maybe<DeskResults>;
   /** Retrieves available Discord channels for a guild. */
   discordChannels?: Maybe<DiscordChannelResults>;
   /** Retrieves available Discord guilds. */
@@ -21451,6 +21795,18 @@ export type QueryBoxFoldersArgs = {
 };
 
 
+export type QueryBureauArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryBureausArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BureauFilter>;
+};
+
+
 export type QueryCategoriesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   facets?: InputMaybe<Array<InputMaybe<CategoryFacetInput>>>;
@@ -21533,6 +21889,12 @@ export type QueryCountAlertsArgs = {
 };
 
 
+export type QueryCountBureausArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BureauFilter>;
+};
+
+
 export type QueryCountCategoriesArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<CategoryFilter>;
@@ -21560,6 +21922,12 @@ export type QueryCountContentsArgs = {
 export type QueryCountConversationsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ConversationFilter>;
+};
+
+
+export type QueryCountDesksArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DeskFilter>;
 };
 
 
@@ -21746,6 +22114,18 @@ export type QueryCountWorkflowsArgs = {
 export type QueryCreditsArgs = {
   duration: Scalars['TimeSpan']['input'];
   startDate: Scalars['DateTime']['input'];
+};
+
+
+export type QueryDeskArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryDesksArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DeskFilter>;
 };
 
 
@@ -26280,7 +26660,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -26288,7 +26668,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
@@ -26387,6 +26767,84 @@ export type UpsertAlertMutationVariables = Exact<{
 
 
 export type UpsertAlertMutation = { __typename?: 'Mutation', upsertAlert?: { __typename?: 'Alert', id: string, name: string, state: EntityState, type: AlertTypes } | null };
+
+export type AddDesksToBureauMutationVariables = Exact<{
+  desks: Array<EntityReferenceInput> | EntityReferenceInput;
+  bureau: EntityReferenceInput;
+}>;
+
+
+export type AddDesksToBureauMutation = { __typename?: 'Mutation', addDesksToBureau?: { __typename?: 'Bureau', id: string, name: string, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null, deskCount?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name: string } | null> | null } | null };
+
+export type CountBureausQueryVariables = Exact<{
+  filter?: InputMaybe<BureauFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountBureausQuery = { __typename?: 'Query', countBureaus?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateBureauMutationVariables = Exact<{
+  bureau: BureauInput;
+}>;
+
+
+export type CreateBureauMutation = { __typename?: 'Mutation', createBureau?: { __typename?: 'Bureau', id: string, name: string, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null } | null };
+
+export type DeleteAllBureausMutationVariables = Exact<{
+  filter?: InputMaybe<BureauFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllBureausMutation = { __typename?: 'Mutation', deleteAllBureaus?: Array<{ __typename?: 'Bureau', id: string, state: EntityState } | null> | null };
+
+export type DeleteBureauMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBureauMutation = { __typename?: 'Mutation', deleteBureau?: { __typename?: 'Bureau', id: string, state: EntityState } | null };
+
+export type DeleteBureausMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteBureausMutation = { __typename?: 'Mutation', deleteBureaus?: Array<{ __typename?: 'Bureau', id: string, state: EntityState } | null> | null };
+
+export type GetBureauQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetBureauQuery = { __typename?: 'Query', bureau?: { __typename?: 'Bureau', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null, deskCount?: number | null, owner: { __typename?: 'Owner', id: string }, desks?: Array<{ __typename?: 'Desk', id: string, name: string } | null> | null } | null };
+
+export type QueryBureausQueryVariables = Exact<{
+  filter?: InputMaybe<BureauFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryBureausQuery = { __typename?: 'Query', bureaus?: { __typename?: 'BureauResults', results?: Array<{ __typename?: 'Bureau', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null, deskCount?: number | null, owner: { __typename?: 'Owner', id: string } }> | null } | null };
+
+export type RemoveDesksFromBureauMutationVariables = Exact<{
+  desks: Array<EntityReferenceInput> | EntityReferenceInput;
+  bureau: EntityReferenceInput;
+}>;
+
+
+export type RemoveDesksFromBureauMutation = { __typename?: 'Mutation', removeDesksFromBureau?: { __typename?: 'Bureau', id: string, name: string, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null, deskCount?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name: string } | null> | null } | null };
+
+export type UpdateBureauMutationVariables = Exact<{
+  bureau: BureauUpdateInput;
+}>;
+
+
+export type UpdateBureauMutation = { __typename?: 'Mutation', updateBureau?: { __typename?: 'Bureau', id: string, name: string, state: EntityState, description?: string | null, mission?: string | null, directives?: string | null } | null };
 
 export type CountCategoriesQueryVariables = Exact<{
   filter?: InputMaybe<CategoryFilter>;
@@ -26733,7 +27191,7 @@ export type GetContentQueryVariables = Exact<{
 }>;
 
 
-export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null };
+export type GetContentQuery = { __typename?: 'Query', content?: { __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, parent?: { __typename?: 'Content', id: string, name: string } | null, children?: Array<{ __typename?: 'Content', id: string, name: string } | null> | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, agent?: { __typename?: 'Agent', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null };
 
 export type IngestBatchMutationVariables = Exact<{
   uris: Array<Scalars['URL']['input']> | Scalars['URL']['input'];
@@ -26849,7 +27307,7 @@ export type LookupContentsQueryVariables = Exact<{
 }>;
 
 
-export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null> | null } | null };
+export type LookupContentsQuery = { __typename?: 'Query', lookupContents?: { __typename?: 'LookupContentsResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, fileCreationDate?: any | null, fileModifiedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, markdown?: string | null, html?: string | null, boundary?: string | null, epsgCode?: number | null, path?: string | null, features?: string | null, c4id?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, h3?: { __typename?: 'H3', h3r0?: string | null, h3r1?: string | null, h3r2?: string | null, h3r3?: string | null, h3r4?: string | null, h3r5?: string | null, h3r6?: string | null, h3r7?: string | null, h3r8?: string | null, h3r9?: string | null, h3r10?: string | null, h3r11?: string | null, h3r12?: string | null, h3r13?: string | null, h3r14?: string | null, h3r15?: string | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, agent?: { __typename?: 'Agent', id: string, name: string } | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, links?: Array<{ __typename?: 'LinkReference', uri?: any | null, linkType?: LinkTypes | null, excerpts?: string | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null, facts?: Array<{ __typename?: 'Fact', id: string, text: string, validAt?: any | null, invalidAt?: any | null, state: EntityState, category?: FactCategory | null, confidence?: number | null } | null> | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null> | null } | null };
 
 export type LookupEntityQueryVariables = Exact<{
   filter: EntityRelationshipsFilter;
@@ -26895,7 +27353,7 @@ export type QueryContentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null> | null } | null };
+export type QueryContentsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, quotes?: Array<string> | null, error?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, agent?: { __typename?: 'Agent', id: string, name: string } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null } | null> | null } | null };
 
 export type QueryContentsFacetsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
@@ -26921,7 +27379,7 @@ export type QueryContentsObservationsQueryVariables = Exact<{
 }>;
 
 
-export type QueryContentsObservationsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, quotes?: Array<string> | null, error?: string | null, markdown?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null } | null };
+export type QueryContentsObservationsQuery = { __typename?: 'Query', contents?: { __typename?: 'ContentResults', results?: Array<{ __typename?: 'Content', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, originalDate?: any | null, finishedDate?: any | null, workflowDuration?: any | null, uri?: any | null, description?: string | null, identifier?: string | null, features?: string | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, quotes?: Array<string> | null, error?: string | null, markdown?: string | null, owner: { __typename?: 'Owner', id: string }, address?: { __typename?: 'Address', streetAddress?: string | null, city?: string | null, region?: string | null, country?: string | null, postalCode?: string | null } | null, location?: { __typename?: 'Point', latitude?: number | null, longitude?: number | null } | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null, email?: { __typename?: 'EmailMetadata', identifier?: string | null, threadIdentifier?: string | null, subject?: string | null, labels?: Array<string | null> | null, sensitivity?: MailSensitivity | null, priority?: MailPriority | null, importance?: MailImportance | null, unsubscribeUrl?: string | null, publicationName?: string | null, publicationUrl?: string | null, attachmentCount?: number | null, from?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, to?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, cc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, bcc?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, event?: { __typename?: 'EventMetadata', eventIdentifier?: string | null, calendarIdentifier?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, isAllDay?: boolean | null, timezone?: string | null, status?: CalendarEventStatus | null, visibility?: CalendarEventVisibility | null, meetingLink?: string | null, categories?: Array<string | null> | null, recurringEventIdentifier?: string | null, isRecurring?: boolean | null, organizer?: { __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null, attendees?: Array<{ __typename?: 'CalendarAttendee', name?: string | null, email?: string | null, isOptional?: boolean | null, isOrganizer?: boolean | null, responseStatus?: CalendarAttendeeResponseStatus | null } | null> | null, reminders?: Array<{ __typename?: 'CalendarReminder', minutesBefore?: number | null, method?: CalendarReminderMethod | null } | null> | null, recurrence?: { __typename?: 'CalendarRecurrence', pattern?: CalendarRecurrencePattern | null, interval?: number | null, count?: number | null, until?: any | null, daysOfWeek?: Array<string | null> | null, dayOfMonth?: number | null, monthOfYear?: number | null } | null } | null, issue?: { __typename?: 'IssueMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, labels?: Array<string | null> | null } | null, initiative?: { __typename?: 'InitiativeMetadata', identifier?: string | null, title?: string | null, project?: string | null, team?: string | null, status?: string | null, priority?: string | null, type?: string | null, dueDate?: any | null, labels?: Array<string | null> | null } | null, commit?: { __typename?: 'CommitMetadata', sha?: string | null, message?: string | null, project?: string | null, team?: string | null, branch?: string | null, parentShas?: Array<string | null> | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, pullRequestNumber?: string | null, authorDate?: any | null, committerDate?: any | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, committers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, pullRequest?: { __typename?: 'PullRequestMetadata', identifier?: string | null, title?: string | null, description?: string | null, project?: string | null, team?: string | null, status?: string | null, type?: string | null, baseBranch?: string | null, headBranch?: string | null, isDraft?: boolean | null, isMergeable?: boolean | null, mergeCommitSha?: string | null, mergedAt?: any | null, filesChanged?: number | null, additions?: number | null, deletions?: number | null, labels?: Array<string | null> | null, links?: Array<any | null> | null, authors?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reviewers?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, message?: { __typename?: 'MessageMetadata', identifier?: string | null, conversationIdentifier?: string | null, channelIdentifier?: string | null, channelName?: string | null, attachmentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null, mentions?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, reactions?: Array<{ __typename?: 'ReactionReference', emoji: string, count: number, isUnicode?: boolean | null } | null> | null } | null, post?: { __typename?: 'PostMetadata', identifier?: string | null, title?: string | null, upvotes?: number | null, downvotes?: number | null, commentCount?: number | null, links?: Array<any | null> | null, author?: { __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null } | null, package?: { __typename?: 'PackageMetadata', fileCount?: number | null, folderCount?: number | null, isEncrypted?: boolean | null } | null, meeting?: { __typename?: 'MeetingMetadata', title?: string | null, duration?: any | null, summary?: string | null, actionItems?: Array<string | null> | null, keywords?: Array<string | null> | null, source?: string | null, externalId?: string | null, organizer?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null, participants?: Array<{ __typename?: 'PersonReference', name?: string | null, email?: string | null, givenName?: string | null, familyName?: string | null } | null> | null } | null, transcript?: { __typename?: 'TranscriptMetadata', duration?: any | null, segmentCount?: number | null, speakerCount?: number | null } | null, language?: { __typename?: 'LanguageMetadata', languages?: Array<string | null> | null } | null, feed?: { __typename?: 'Feed', id: string, name: string } | null, agent?: { __typename?: 'Agent', id: string, name: string } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, pages?: Array<{ __typename?: 'TextPage', index?: number | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null, images?: Array<{ __typename?: 'ImageChunk', id?: string | null, mimeType?: string | null, data?: string | null, left?: number | null, right?: number | null, top?: number | null, bottom?: number | null } | null> | null, chunks?: Array<{ __typename?: 'TextChunk', index?: number | null, pageIndex?: number | null, rowIndex?: number | null, columnIndex?: number | null, confidence?: number | null, text?: string | null, role?: TextRoles | null, language?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null } | null> | null }> | null, segments?: Array<{ __typename?: 'TextSegment', startTime?: any | null, endTime?: any | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, frames?: Array<{ __typename?: 'TextFrame', index?: number | null, description?: string | null, text?: string | null, relevance?: number | null, embeddingType?: EmbeddingTypes | null }> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null> | null } | null };
 
 export type QueryGraphQueryVariables = Exact<{
   filter?: InputMaybe<GraphFilter>;
@@ -27310,6 +27768,84 @@ export type UpdateConversationMutationVariables = Exact<{
 
 
 export type UpdateConversationMutation = { __typename?: 'Mutation', updateConversation?: { __typename?: 'Conversation', id: string, name: string, state: EntityState, type?: ConversationTypes | null } | null };
+
+export type AddAgentsToDeskMutationVariables = Exact<{
+  agents: Array<EntityReferenceInput> | EntityReferenceInput;
+  desk: EntityReferenceInput;
+}>;
+
+
+export type AddAgentsToDeskMutation = { __typename?: 'Mutation', addAgentsToDesk?: { __typename?: 'Desk', id: string, name: string, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, agentCount?: number | null, bureau?: { __typename?: 'Bureau', id: string } | null, agents?: Array<{ __typename?: 'Agent', id: string, name: string } | null> | null } | null };
+
+export type CountDesksQueryVariables = Exact<{
+  filter?: InputMaybe<DeskFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountDesksQuery = { __typename?: 'Query', countDesks?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateDeskMutationVariables = Exact<{
+  desk: DeskInput;
+}>;
+
+
+export type CreateDeskMutation = { __typename?: 'Mutation', createDesk?: { __typename?: 'Desk', id: string, name: string, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, bureau?: { __typename?: 'Bureau', id: string } | null } | null };
+
+export type DeleteAllDesksMutationVariables = Exact<{
+  filter?: InputMaybe<DeskFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllDesksMutation = { __typename?: 'Mutation', deleteAllDesks?: Array<{ __typename?: 'Desk', id: string, state: EntityState } | null> | null };
+
+export type DeleteDeskMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteDeskMutation = { __typename?: 'Mutation', deleteDesk?: { __typename?: 'Desk', id: string, state: EntityState } | null };
+
+export type DeleteDesksMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteDesksMutation = { __typename?: 'Mutation', deleteDesks?: Array<{ __typename?: 'Desk', id: string, state: EntityState } | null> | null };
+
+export type GetDeskQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetDeskQuery = { __typename?: 'Query', desk?: { __typename?: 'Desk', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, agentCount?: number | null, owner: { __typename?: 'Owner', id: string }, bureau?: { __typename?: 'Bureau', id: string } | null, agents?: Array<{ __typename?: 'Agent', id: string } | null> | null } | null };
+
+export type QueryDesksQueryVariables = Exact<{
+  filter?: InputMaybe<DeskFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryDesksQuery = { __typename?: 'Query', desks?: { __typename?: 'DeskResults', results?: Array<{ __typename?: 'Desk', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, agentCount?: number | null, owner: { __typename?: 'Owner', id: string }, bureau?: { __typename?: 'Bureau', id: string } | null }> | null } | null };
+
+export type RemoveAgentsFromDeskMutationVariables = Exact<{
+  agents: Array<EntityReferenceInput> | EntityReferenceInput;
+  desk: EntityReferenceInput;
+}>;
+
+
+export type RemoveAgentsFromDeskMutation = { __typename?: 'Mutation', removeAgentsFromDesk?: { __typename?: 'Desk', id: string, name: string, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, agentCount?: number | null, bureau?: { __typename?: 'Bureau', id: string } | null, agents?: Array<{ __typename?: 'Agent', id: string, name: string } | null> | null } | null };
+
+export type UpdateDeskMutationVariables = Exact<{
+  desk: DeskUpdateInput;
+}>;
+
+
+export type UpdateDeskMutation = { __typename?: 'Mutation', updateDesk?: { __typename?: 'Desk', id: string, name: string, state: EntityState, description?: string | null, objectives?: string | null, instructions?: string | null, bureau?: { __typename?: 'Bureau', id: string } | null } | null };
 
 export type CountEmotionsQueryVariables = Exact<{
   filter?: InputMaybe<EmotionFilter>;

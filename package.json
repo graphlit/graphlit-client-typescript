@@ -21,7 +21,7 @@
     "Kirk Marple (https://github.com/kirk-marple)"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "generate": "GRAPHQL_SCHEMA_URL=https://data-scus.graphlit.io/api/v1/graphql graphql-codegen --config codegen.yml",

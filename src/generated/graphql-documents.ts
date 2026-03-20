@@ -74,6 +74,7 @@ export const GetAgent = gql`
     state
     correlationId
     type
+    description
     specification {
       id
     }
@@ -120,6 +121,7 @@ export const QueryAgents = gql`
       state
       correlationId
       type
+      description
       specification {
         id
       }
@@ -657,6 +659,142 @@ export const UpsertAlert = gql`
     name
     state
     type
+  }
+}
+    `;
+export const AddDesksToBureau = gql`
+    mutation AddDesksToBureau($desks: [EntityReferenceInput!]!, $bureau: EntityReferenceInput!) {
+  addDesksToBureau(desks: $desks, bureau: $bureau) {
+    id
+    name
+    state
+    description
+    mission
+    directives
+    desks {
+      id
+      name
+    }
+    deskCount
+  }
+}
+    `;
+export const CountBureaus = gql`
+    query CountBureaus($filter: BureauFilter, $correlationId: String) {
+  countBureaus(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateBureau = gql`
+    mutation CreateBureau($bureau: BureauInput!) {
+  createBureau(bureau: $bureau) {
+    id
+    name
+    state
+    description
+    mission
+    directives
+  }
+}
+    `;
+export const DeleteAllBureaus = gql`
+    mutation DeleteAllBureaus($filter: BureauFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllBureaus(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteBureau = gql`
+    mutation DeleteBureau($id: ID!) {
+  deleteBureau(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteBureaus = gql`
+    mutation DeleteBureaus($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteBureaus(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetBureau = gql`
+    query GetBureau($id: ID!, $correlationId: String) {
+  bureau(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
+    description
+    mission
+    directives
+    desks {
+      id
+      name
+    }
+    deskCount
+  }
+}
+    `;
+export const QueryBureaus = gql`
+    query QueryBureaus($filter: BureauFilter, $correlationId: String) {
+  bureaus(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      description
+      mission
+      directives
+      deskCount
+    }
+  }
+}
+    `;
+export const RemoveDesksFromBureau = gql`
+    mutation RemoveDesksFromBureau($desks: [EntityReferenceInput!]!, $bureau: EntityReferenceInput!) {
+  removeDesksFromBureau(desks: $desks, bureau: $bureau) {
+    id
+    name
+    state
+    description
+    mission
+    directives
+    desks {
+      id
+      name
+    }
+    deskCount
+  }
+}
+    `;
+export const UpdateBureau = gql`
+    mutation UpdateBureau($bureau: BureauUpdateInput!) {
+  updateBureau(bureau: $bureau) {
+    id
+    name
+    state
+    description
+    mission
+    directives
   }
 }
     `;
@@ -2020,6 +2158,10 @@ export const GetContent = gql`
       id
       name
     }
+    agent {
+      id
+      name
+    }
     collections {
       id
       name
@@ -2906,6 +3048,10 @@ export const LookupContents = gql`
         id
         name
       }
+      agent {
+        id
+        name
+      }
       collections {
         id
         name
@@ -3646,6 +3792,10 @@ export const QueryContents = gql`
         id
         name
       }
+      agent {
+        id
+        name
+      }
       workflow {
         id
         name
@@ -4091,6 +4241,10 @@ export const QueryContentsObservations = gql`
         languages
       }
       feed {
+        id
+        name
+      }
+      agent {
         id
         name
       }
@@ -8010,6 +8164,159 @@ export const UpdateConversation = gql`
     name
     state
     type
+  }
+}
+    `;
+export const AddAgentsToDesk = gql`
+    mutation AddAgentsToDesk($agents: [EntityReferenceInput!]!, $desk: EntityReferenceInput!) {
+  addAgentsToDesk(agents: $agents, desk: $desk) {
+    id
+    name
+    state
+    description
+    objectives
+    instructions
+    bureau {
+      id
+    }
+    agents {
+      id
+      name
+    }
+    agentCount
+  }
+}
+    `;
+export const CountDesks = gql`
+    query CountDesks($filter: DeskFilter, $correlationId: String) {
+  countDesks(filter: $filter, correlationId: $correlationId) {
+    count
+  }
+}
+    `;
+export const CreateDesk = gql`
+    mutation CreateDesk($desk: DeskInput!) {
+  createDesk(desk: $desk) {
+    id
+    name
+    state
+    description
+    objectives
+    instructions
+    bureau {
+      id
+    }
+  }
+}
+    `;
+export const DeleteAllDesks = gql`
+    mutation DeleteAllDesks($filter: DeskFilter, $isSynchronous: Boolean, $correlationId: String) {
+  deleteAllDesks(
+    filter: $filter
+    isSynchronous: $isSynchronous
+    correlationId: $correlationId
+  ) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteDesk = gql`
+    mutation DeleteDesk($id: ID!) {
+  deleteDesk(id: $id) {
+    id
+    state
+  }
+}
+    `;
+export const DeleteDesks = gql`
+    mutation DeleteDesks($ids: [ID!]!, $isSynchronous: Boolean) {
+  deleteDesks(ids: $ids, isSynchronous: $isSynchronous) {
+    id
+    state
+  }
+}
+    `;
+export const GetDesk = gql`
+    query GetDesk($id: ID!, $correlationId: String) {
+  desk(id: $id, correlationId: $correlationId) {
+    id
+    name
+    creationDate
+    modifiedDate
+    owner {
+      id
+    }
+    state
+    description
+    objectives
+    instructions
+    bureau {
+      id
+    }
+    agents {
+      id
+    }
+    agentCount
+  }
+}
+    `;
+export const QueryDesks = gql`
+    query QueryDesks($filter: DeskFilter, $correlationId: String) {
+  desks(filter: $filter, correlationId: $correlationId) {
+    results {
+      id
+      name
+      creationDate
+      modifiedDate
+      relevance
+      owner {
+        id
+      }
+      state
+      description
+      objectives
+      instructions
+      bureau {
+        id
+      }
+      agentCount
+    }
+  }
+}
+    `;
+export const RemoveAgentsFromDesk = gql`
+    mutation RemoveAgentsFromDesk($agents: [EntityReferenceInput!]!, $desk: EntityReferenceInput!) {
+  removeAgentsFromDesk(agents: $agents, desk: $desk) {
+    id
+    name
+    state
+    description
+    objectives
+    instructions
+    bureau {
+      id
+    }
+    agents {
+      id
+      name
+    }
+    agentCount
+  }
+}
+    `;
+export const UpdateDesk = gql`
+    mutation UpdateDesk($desk: DeskUpdateInput!) {
+  updateDesk(desk: $desk) {
+    id
+    name
+    state
+    description
+    objectives
+    instructions
+    bureau {
+      id
+    }
   }
 }
     `;

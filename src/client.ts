@@ -1183,6 +1183,334 @@ class Graphlit {
   }
 
   /**
+   * Creates a bureau.
+   * @param bureau - The bureau to create.
+   * @returns The created bureau.
+   */
+  public async createBureau(
+    bureau: Types.BureauInput,
+  ): Promise<Types.CreateBureauMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateBureauMutation,
+      Types.CreateBureauMutationVariables
+    >(Documents.CreateBureau, { bureau: bureau });
+  }
+
+  /**
+   * Updates a bureau.
+   * @param bureau - The bureau to update.
+   * @returns The updated bureau.
+   */
+  public async updateBureau(
+    bureau: Types.BureauUpdateInput,
+  ): Promise<Types.UpdateBureauMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateBureauMutation,
+      Types.UpdateBureauMutationVariables
+    >(Documents.UpdateBureau, { bureau: bureau });
+  }
+
+  /**
+   * Deletes a bureau.
+   * @param id - The ID of the bureau to delete.
+   * @returns The deleted bureau.
+   */
+  public async deleteBureau(id: string): Promise<Types.DeleteBureauMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteBureauMutation,
+      Types.DeleteBureauMutationVariables
+    >(Documents.DeleteBureau, { id: id });
+  }
+
+  /**
+   * Deletes multiple bureaus.
+   * @param ids - The IDs of the bureaus to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted bureaus.
+   */
+  public async deleteBureaus(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteBureausMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteBureausMutation,
+      Types.DeleteBureausMutationVariables
+    >(Documents.DeleteBureaus, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all bureaus based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting bureaus.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllBureaus(
+    filter?: Types.BureauFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllBureausMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllBureausMutation,
+      Types.DeleteAllBureausMutationVariables
+    >(Documents.DeleteAllBureaus, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Adds desks to a bureau.
+   * @param desks - The desks to add.
+   * @param bureau - The bureau to add the desks to.
+   * @returns The updated bureau.
+   */
+  public async addDesksToBureau(
+    desks: Types.EntityReferenceInput[],
+    bureau: Types.EntityReferenceInput,
+  ): Promise<Types.AddDesksToBureauMutation> {
+    return this.mutateAndCheckError<
+      Types.AddDesksToBureauMutation,
+      Types.AddDesksToBureauMutationVariables
+    >(Documents.AddDesksToBureau, {
+      desks: desks,
+      bureau: bureau,
+    });
+  }
+
+  /**
+   * Removes desks from a bureau.
+   * @param desks - The desks to remove.
+   * @param bureau - The bureau to remove the desks from.
+   * @returns The updated bureau.
+   */
+  public async removeDesksFromBureau(
+    desks: Types.EntityReferenceInput[],
+    bureau: Types.EntityReferenceInput,
+  ): Promise<Types.RemoveDesksFromBureauMutation> {
+    return this.mutateAndCheckError<
+      Types.RemoveDesksFromBureauMutation,
+      Types.RemoveDesksFromBureauMutationVariables
+    >(Documents.RemoveDesksFromBureau, {
+      desks: desks,
+      bureau: bureau,
+    });
+  }
+
+  /**
+   * Lookup a bureau given its ID.
+   * @param id - ID of the bureau.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The bureau.
+   */
+  public async getBureau(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetBureauQuery> {
+    return this.queryAndCheckError<
+      Types.GetBureauQuery,
+      Types.GetBureauQueryVariables
+    >(Documents.GetBureau, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves bureaus based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving bureaus.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The bureaus.
+   */
+  public async queryBureaus(
+    filter?: Types.BureauFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryBureausQuery> {
+    return this.queryAndCheckError<
+      Types.QueryBureausQuery,
+      Types.QueryBureausQueryVariables
+    >(Documents.QueryBureaus, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Counts bureaus based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting bureaus.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of bureaus.
+   */
+  public async countBureaus(
+    filter?: Types.BureauFilter,
+    correlationId?: string,
+  ): Promise<Types.CountBureausQuery> {
+    return this.queryAndCheckError<
+      Types.CountBureausQuery,
+      Types.CountBureausQueryVariables
+    >(Documents.CountBureaus, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Creates a desk.
+   * @param desk - The desk to create.
+   * @returns The created desk.
+   */
+  public async createDesk(
+    desk: Types.DeskInput,
+  ): Promise<Types.CreateDeskMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateDeskMutation,
+      Types.CreateDeskMutationVariables
+    >(Documents.CreateDesk, { desk: desk });
+  }
+
+  /**
+   * Updates a desk.
+   * @param desk - The desk to update.
+   * @returns The updated desk.
+   */
+  public async updateDesk(
+    desk: Types.DeskUpdateInput,
+  ): Promise<Types.UpdateDeskMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateDeskMutation,
+      Types.UpdateDeskMutationVariables
+    >(Documents.UpdateDesk, { desk: desk });
+  }
+
+  /**
+   * Deletes a desk.
+   * @param id - The ID of the desk to delete.
+   * @returns The deleted desk.
+   */
+  public async deleteDesk(id: string): Promise<Types.DeleteDeskMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteDeskMutation,
+      Types.DeleteDeskMutationVariables
+    >(Documents.DeleteDesk, { id: id });
+  }
+
+  /**
+   * Deletes multiple desks.
+   * @param ids - The IDs of the desks to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted desks.
+   */
+  public async deleteDesks(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteDesksMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteDesksMutation,
+      Types.DeleteDesksMutationVariables
+    >(Documents.DeleteDesks, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all desks based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting desks.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllDesks(
+    filter?: Types.DeskFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllDesksMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllDesksMutation,
+      Types.DeleteAllDesksMutationVariables
+    >(Documents.DeleteAllDesks, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Adds agents to a desk.
+   * @param agents - The agents to add.
+   * @param desk - The desk to add the agents to.
+   * @returns The updated desk.
+   */
+  public async addAgentsToDesk(
+    agents: Types.EntityReferenceInput[],
+    desk: Types.EntityReferenceInput,
+  ): Promise<Types.AddAgentsToDeskMutation> {
+    return this.mutateAndCheckError<
+      Types.AddAgentsToDeskMutation,
+      Types.AddAgentsToDeskMutationVariables
+    >(Documents.AddAgentsToDesk, {
+      agents: agents,
+      desk: desk,
+    });
+  }
+
+  /**
+   * Removes agents from a desk.
+   * @param agents - The agents to remove.
+   * @param desk - The desk to remove the agents from.
+   * @returns The updated desk.
+   */
+  public async removeAgentsFromDesk(
+    agents: Types.EntityReferenceInput[],
+    desk: Types.EntityReferenceInput,
+  ): Promise<Types.RemoveAgentsFromDeskMutation> {
+    return this.mutateAndCheckError<
+      Types.RemoveAgentsFromDeskMutation,
+      Types.RemoveAgentsFromDeskMutationVariables
+    >(Documents.RemoveAgentsFromDesk, {
+      agents: agents,
+      desk: desk,
+    });
+  }
+
+  /**
+   * Lookup a desk given its ID.
+   * @param id - ID of the desk.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The desk.
+   */
+  public async getDesk(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetDeskQuery> {
+    return this.queryAndCheckError<
+      Types.GetDeskQuery,
+      Types.GetDeskQueryVariables
+    >(Documents.GetDesk, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves desks based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving desks.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The desks.
+   */
+  public async queryDesks(
+    filter?: Types.DeskFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryDesksQuery> {
+    return this.queryAndCheckError<
+      Types.QueryDesksQuery,
+      Types.QueryDesksQueryVariables
+    >(Documents.QueryDesks, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
+   * Counts desks based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting desks.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of desks.
+   */
+  public async countDesks(
+    filter?: Types.DeskFilter,
+    correlationId?: string,
+  ): Promise<Types.CountDesksQuery> {
+    return this.queryAndCheckError<
+      Types.CountDesksQuery,
+      Types.CountDesksQueryVariables
+    >(Documents.CountDesks, { filter: filter, correlationId: correlationId });
+  }
+
+  /**
    * Creates a fact.
    * @param fact - The fact to create.
    * @returns The created fact.

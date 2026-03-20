@@ -16,6 +16,34 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 
 ## ✨ What's New
 
+### v1.6.0 - Agent Framework 🤖
+
+- **Agent Entity** - First-class agent lifecycle management
+- **`runAgent()` Method** - Autonomous agent harness with built-in stuck detection and turn evaluation
+- **Skills API** - Define and manage reusable agent skills
+- **Agent Scratchpad** - Persistent scratchpad for agents and conversations
+- **Optimized Reasoning Streaming** - More efficient streaming of reasoning/thinking updates
+- **Node.js 20+ Required** - Minimum Node.js version bumped from 18 to 20
+
+### v1.5.0 - Streaming & Context Management 🎛️
+
+- **Context Management** - Token windowing for `streamAgent` and `promptAgent` to handle large conversations
+- **Artifact Collection** - Collect and track artifacts generated during agent streaming
+- **Conversation Queueing** - Queue multiple prompts in `streamAgent` for sequential processing
+- **Thinking Storage** - LLM thinking/reasoning responses now tracked and stored across turns
+- **Better Abort Handling** - Improved cancellation cleanup in `streamAgent`
+- **Partial Error Responses** - Graceful degradation when API returns partial data with errors
+- **BREAKING**: Renamed `distributeContents()` to `distribute()`
+
+### v1.4.0 - Knowledge Graph & Platform Enhancements 🔍
+
+- **Knowledge Graph Queries** - New `queryGraph` and `queryFactsGraph` methods for graph traversal
+- **Expanded Entity Queries** - Richer entity detail retrieval with `lookupEntity` and expanded query variants
+- **Conversation Clusters** - Group and query related conversations
+- **Optional dotenv** - `dotenv` is no longer a required dependency
+- **Partial Error Handling** - SDK now surfaces partial data instead of throwing on mixed responses
+- **JSDoc Documentation** - Client methods now include inline documentation
+
 ### v1.3.0 - Google SDK Migration 🔄
 
 - **BREAKING CHANGE**: Migrated from deprecated `@google/generative-ai` to new `@google/genai` SDK
