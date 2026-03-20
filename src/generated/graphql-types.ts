@@ -3831,6 +3831,8 @@ export enum ContentIndexingServiceTypes {
 
 /** Represents content. */
 export type ContentInput = {
+  /** The agent that produced this content. */
+  agent?: InputMaybe<EntityReferenceInput>;
   /** The date when the content was created. */
   creationDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** The content description. */
@@ -4058,6 +4060,8 @@ export enum ContentTypes {
 
 /** Represents content. */
 export type ContentUpdateInput = {
+  /** The agent that produced this content. */
+  agent?: InputMaybe<EntityReferenceInput>;
   /** The content audio metadata. */
   audio?: InputMaybe<AudioMetadataInput>;
   /** The summarized content bullet points. */
@@ -7330,6 +7334,8 @@ export type FactInput = {
   confidence?: InputMaybe<Scalars['Float']['input']>;
   /** The content from which the fact was extracted. */
   content?: InputMaybe<EntityReferenceInput>;
+  /** The conversation to which this fact belongs. */
+  conversation?: InputMaybe<EntityReferenceInput>;
   /** The feeds that discovered this fact. */
   feeds?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
   /** The date/time when this fact became invalid. */
@@ -17481,6 +17487,7 @@ export type MutationIngestFileArgs = {
 
 
 export type MutationIngestMemoryArgs = {
+  agent?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -17503,6 +17510,7 @@ export type MutationIngestPageArgs = {
 
 
 export type MutationIngestTextArgs = {
+  agent?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -17528,6 +17536,7 @@ export type MutationIngestTextBatchArgs = {
 
 
 export type MutationIngestUriArgs = {
+  agent?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -27243,6 +27252,7 @@ export type IngestMemoryMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
   identifier?: InputMaybe<Scalars['String']['input']>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
+  agent?: InputMaybe<EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -27260,6 +27270,7 @@ export type IngestTextMutationVariables = Exact<{
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
+  agent?: InputMaybe<EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -27288,6 +27299,7 @@ export type IngestUriMutationVariables = Exact<{
   workflow?: InputMaybe<EntityReferenceInput>;
   collections?: InputMaybe<Array<EntityReferenceInput> | EntityReferenceInput>;
   observations?: InputMaybe<Array<ObservationReferenceInput> | ObservationReferenceInput>;
+  agent?: InputMaybe<EntityReferenceInput>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
 }>;
 

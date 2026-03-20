@@ -2027,6 +2027,7 @@ class Graphlit {
    * @param collections - The collections to add the content to, optional.
    * @param observations - The observations to assign to the content, optional.
    * @param correlationId - The tenant correlation identifier, optional.
+   * @param agent - The agent to use for processing, optional.
    * @returns The ingested content.
    */
   public async ingestUri(
@@ -2039,6 +2040,7 @@ class Graphlit {
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
     correlationId?: string,
+    agent?: Types.EntityReferenceInput,
   ): Promise<Types.IngestUriMutation> {
     return this.mutateAndCheckError<
       Types.IngestUriMutation,
@@ -2053,6 +2055,7 @@ class Graphlit {
       collections: collections,
       observations: observations,
       correlationId: correlationId,
+      agent: agent,
     });
   }
 
@@ -2069,6 +2072,7 @@ class Graphlit {
    * @param collections - The collections to add the content to, optional.
    * @param observations - The observations to assign to the content, optional.
    * @param correlationId - The tenant correlation identifier, optional.
+   * @param agent - The agent to use for processing, optional.
    * @returns The ingested content.
    */
   public async ingestText(
@@ -2083,6 +2087,7 @@ class Graphlit {
     collections?: Types.EntityReferenceInput[],
     observations?: Types.ObservationReferenceInput[],
     correlationId?: string,
+    agent?: Types.EntityReferenceInput,
   ): Promise<Types.IngestTextMutation> {
     return this.mutateAndCheckError<
       Types.IngestTextMutation,
@@ -2099,6 +2104,7 @@ class Graphlit {
       collections: collections,
       observations: observations,
       correlationId: correlationId,
+      agent: agent,
     });
   }
 
@@ -2111,6 +2117,7 @@ class Graphlit {
    * @param identifier - The external identifier for the memory, optional.
    * @param collections - The collections to add the memory to, optional.
    * @param correlationId - The tenant correlation identifier, optional.
+   * @param agent - The agent to use for processing, optional.
    * @returns The ingested memory.
    */
   public async ingestMemory(
@@ -2121,6 +2128,7 @@ class Graphlit {
     identifier?: string,
     collections?: Types.EntityReferenceInput[],
     correlationId?: string,
+    agent?: Types.EntityReferenceInput,
   ): Promise<Types.IngestMemoryMutation> {
     return this.mutateAndCheckError<
       Types.IngestMemoryMutation,
@@ -2133,6 +2141,7 @@ class Graphlit {
       identifier: identifier,
       collections: collections,
       correlationId: correlationId,
+      agent: agent,
     });
   }
 

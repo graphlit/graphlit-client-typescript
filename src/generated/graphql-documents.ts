@@ -2428,7 +2428,7 @@ export const IngestEvent = gql`
 }
     `;
 export const IngestMemory = gql`
-    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $id: ID, $identifier: String, $collections: [EntityReferenceInput!], $correlationId: String) {
+    mutation IngestMemory($text: String!, $name: String, $textType: TextTypes, $id: ID, $identifier: String, $collections: [EntityReferenceInput!], $agent: EntityReferenceInput, $correlationId: String) {
   ingestMemory(
     name: $name
     text: $text
@@ -2436,6 +2436,7 @@ export const IngestMemory = gql`
     id: $id
     identifier: $identifier
     collections: $collections
+    agent: $agent
     correlationId: $correlationId
   ) {
     id
@@ -2483,7 +2484,7 @@ export const IngestMemory = gql`
 }
     `;
 export const IngestText = gql`
-    mutation IngestText($text: String!, $name: String, $textType: TextTypes, $uri: URL, $id: ID, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
+    mutation IngestText($text: String!, $name: String, $textType: TextTypes, $uri: URL, $id: ID, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $agent: EntityReferenceInput, $correlationId: String) {
   ingestText(
     name: $name
     text: $text
@@ -2495,6 +2496,7 @@ export const IngestText = gql`
     identifier: $identifier
     collections: $collections
     observations: $observations
+    agent: $agent
     correlationId: $correlationId
   ) {
     id
@@ -2596,7 +2598,7 @@ export const IngestTextBatch = gql`
 }
     `;
 export const IngestUri = gql`
-    mutation IngestUri($name: String, $uri: URL!, $id: ID, $mimeType: String, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $correlationId: String) {
+    mutation IngestUri($name: String, $uri: URL!, $id: ID, $mimeType: String, $identifier: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $collections: [EntityReferenceInput!], $observations: [ObservationReferenceInput!], $agent: EntityReferenceInput, $correlationId: String) {
   ingestUri(
     name: $name
     uri: $uri
@@ -2605,6 +2607,7 @@ export const IngestUri = gql`
     workflow: $workflow
     collections: $collections
     observations: $observations
+    agent: $agent
     identifier: $identifier
     isSynchronous: $isSynchronous
     correlationId: $correlationId
