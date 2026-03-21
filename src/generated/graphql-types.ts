@@ -16119,6 +16119,8 @@ export type Mutation = {
   publishContents?: Maybe<PublishContents>;
   /** Publish conversation. */
   publishConversation?: Maybe<PublishContents>;
+  /** Publish skills from content using a map/reduce pipeline. Summarizes content matching the filter, then extracts one or more reusable skills. */
+  publishSkills?: Maybe<PublishSkills>;
   /** Publish text into different content format. */
   publishText?: Maybe<PublishContents>;
   /** Rejects content. */
@@ -17637,6 +17639,12 @@ export type MutationPublishConversationArgs = {
   publishPrompt?: InputMaybe<Scalars['String']['input']>;
   publishSpecification?: InputMaybe<EntityReferenceInput>;
   workflow?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationPublishSkillsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ContentFilter>;
 };
 
 
@@ -20951,6 +20959,8 @@ export type ProjectStorage = {
   event?: Maybe<ProjectStorageContentFacet>;
   /** The file content type storage facet. */
   file?: Maybe<ProjectStorageFileContentFacet>;
+  /** The initiative content type storage facet. */
+  initiative?: Maybe<ProjectStorageContentFacet>;
   /** The issue content type storage facet. */
   issue?: Maybe<ProjectStorageContentFacet>;
   /** The memory content type storage facet. */
@@ -21273,6 +21283,13 @@ export type PublishContents = {
   contents?: Maybe<Array<Maybe<Content>>>;
   /** The publishing details for debugging purposes. */
   details?: Maybe<PublishingDetails>;
+};
+
+/** Represents a publish skills result. */
+export type PublishSkills = {
+  __typename?: 'PublishSkills';
+  /** The published skills. */
+  skills?: Maybe<Array<Skill>>;
 };
 
 /** Represents the publishing details. */
@@ -27345,6 +27362,14 @@ export type PublishContentsMutationVariables = Exact<{
 
 
 export type PublishContentsMutation = { __typename?: 'Mutation', publishContents?: { __typename?: 'PublishContents', contents?: Array<{ __typename?: 'Content', id: string, name: string, state: EntityState, originalDate?: any | null, identifier?: string | null, markdown?: string | null, uri?: any | null, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, format?: string | null, formatName?: string | null, fileExtension?: string | null, fileName?: string | null, fileSize?: any | null, fileMetadata?: string | null, relativeFolderPath?: string | null, masterUri?: any | null, imageUri?: any | null, textUri?: any | null, audioUri?: any | null, transcriptUri?: any | null, snapshotsUri?: any | null, snapshotCount?: number | null, summary?: string | null, customSummary?: string | null, keywords?: Array<string> | null, bullets?: Array<string> | null, headlines?: Array<string> | null, posts?: Array<string> | null, chapters?: Array<string> | null, questions?: Array<string> | null, quotes?: Array<string> | null, video?: { __typename?: 'VideoMetadata', width?: number | null, height?: number | null, duration?: any | null, make?: string | null, model?: string | null, software?: string | null, title?: string | null, description?: string | null, keywords?: Array<string | null> | null, author?: string | null } | null, audio?: { __typename?: 'AudioMetadata', keywords?: Array<string | null> | null, author?: string | null, series?: string | null, episode?: string | null, episodeType?: string | null, season?: string | null, publisher?: string | null, copyright?: string | null, genre?: string | null, title?: string | null, description?: string | null, bitrate?: number | null, channels?: number | null, sampleRate?: number | null, bitsPerSample?: number | null, duration?: any | null } | null, image?: { __typename?: 'ImageMetadata', width?: number | null, height?: number | null, resolutionX?: number | null, resolutionY?: number | null, bitsPerComponent?: number | null, components?: number | null, projectionType?: ImageProjectionTypes | null, orientation?: OrientationTypes | null, description?: string | null, make?: string | null, model?: string | null, software?: string | null, lens?: string | null, focalLength?: number | null, exposureTime?: string | null, fNumber?: string | null, iso?: string | null, heading?: number | null, pitch?: number | null } | null, document?: { __typename?: 'DocumentMetadata', title?: string | null, subject?: string | null, summary?: string | null, author?: string | null, lastModifiedBy?: string | null, publisher?: string | null, description?: string | null, keywords?: Array<string | null> | null, pageCount?: number | null, worksheetCount?: number | null, slideCount?: number | null, wordCount?: number | null, lineCount?: number | null, paragraphCount?: number | null, isEncrypted?: boolean | null, hasDigitalSignature?: boolean | null } | null } | null> | null, details?: { __typename?: 'PublishingDetails', summaries?: Array<string> | null, text?: string | null, textType?: TextTypes | null, summarySpecification?: string | null, publishSpecification?: string | null, summaryTime?: any | null, publishTime?: any | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null } | null };
+
+export type PublishSkillsMutationVariables = Exact<{
+  filter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PublishSkillsMutation = { __typename?: 'Mutation', publishSkills?: { __typename?: 'PublishSkills', skills?: Array<{ __typename?: 'Skill', id: string, name: string, state: EntityState, identifier?: string | null, skillOwner?: EntityOwners | null, text: string, arguments?: Array<{ __typename?: 'SkillArgument', name: string, description?: string | null, required?: boolean | null }> | null }> | null } | null };
 
 export type PublishTextMutationVariables = Exact<{
   text: Scalars['String']['input'];

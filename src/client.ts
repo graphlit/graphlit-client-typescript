@@ -2552,6 +2552,25 @@ class Graphlit {
   }
 
   /**
+   * Publishes skills from contents matching the provided filter.
+   * @param filter - The content filter criteria, optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The published skills.
+   */
+  public async publishSkills(
+    filter?: Types.ContentFilter,
+    correlationId?: string,
+  ): Promise<Types.PublishSkillsMutation> {
+    return this.mutateAndCheckError<
+      Types.PublishSkillsMutation,
+      Types.PublishSkillsMutationVariables
+    >(Documents.PublishSkills, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Publishes text to an external connector.
    * @param text - The text to publish.
    * @param textType - The type of text (plain, markdown, HTML).

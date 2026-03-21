@@ -3309,6 +3309,25 @@ export const PublishContents = gql`
   }
 }
     `;
+export const PublishSkills = gql`
+    mutation PublishSkills($filter: ContentFilter, $correlationId: String) {
+  publishSkills(filter: $filter, correlationId: $correlationId) {
+    skills {
+      id
+      name
+      state
+      identifier
+      skillOwner
+      arguments {
+        name
+        description
+        required
+      }
+      text
+    }
+  }
+}
+    `;
 export const PublishText = gql`
     mutation PublishText($text: String!, $textType: TextTypes, $connector: ContentPublishingConnectorInput!, $isSynchronous: Boolean, $correlationId: String, $name: String, $workflow: EntityReferenceInput) {
   publishText(
