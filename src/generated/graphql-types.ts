@@ -30208,7 +30208,7 @@ export type GetSkillQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillQuery = { __typename?: 'Query', skill?: { __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, identifier?: string | null, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, arguments?: Array<{ __typename?: 'SkillArgument', name: string, description?: string | null, required?: boolean | null }> | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
+export type GetSkillQuery = { __typename?: 'Query', skill?: { __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, description?: string | null, identifier?: string | null, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, arguments?: Array<{ __typename?: 'SkillArgument', name: string, description?: string | null, required?: boolean | null }> | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null } | null };
 
 export type QuerySkillsQueryVariables = Exact<{
   filter?: InputMaybe<SkillFilter>;
@@ -30216,7 +30216,7 @@ export type QuerySkillsQueryVariables = Exact<{
 }>;
 
 
-export type QuerySkillsQuery = { __typename?: 'Query', skills?: { __typename?: 'SkillResults', results?: Array<{ __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, identifier?: string | null, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, arguments?: Array<{ __typename?: 'SkillArgument', name: string, description?: string | null, required?: boolean | null }> | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null }> | null } | null };
+export type QuerySkillsQuery = { __typename?: 'Query', skills?: { __typename?: 'SkillResults', results?: Array<{ __typename?: 'Skill', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, description?: string | null, identifier?: string | null, correlationId?: string | null, text: string, skillOwner?: EntityOwners | null, owner: { __typename?: 'Owner', id: string }, arguments?: Array<{ __typename?: 'SkillArgument', name: string, description?: string | null, required?: boolean | null }> | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null }> | null } | null };
 
 export type UpdateSkillMutationVariables = Exact<{
   skill: SkillUpdateInput;

@@ -16833,6 +16833,7 @@ export const GetSkill = gql`
       id
     }
     state
+    description
     identifier
     correlationId
     text
@@ -16862,6 +16863,7 @@ export const QuerySkills = gql`
         id
       }
       state
+      description
       identifier
       correlationId
       text
