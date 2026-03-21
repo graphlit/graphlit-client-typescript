@@ -1161,6 +1161,24 @@ export const GetConnector = gql`
         type
       }
     }
+    channel {
+      type
+      slack {
+        botToken
+        signingSecret
+        appId
+      }
+      teams {
+        botId
+        botPassword
+        tenantId
+      }
+      discord {
+        botToken
+        applicationId
+        publicKey
+      }
+    }
   }
 }
     `;
@@ -1226,6 +1244,24 @@ export const QueryConnectors = gql`
         mcp {
           token
           type
+        }
+      }
+      channel {
+        type
+        slack {
+          botToken
+          signingSecret
+          appId
+        }
+        teams {
+          botId
+          botPassword
+          tenantId
+        }
+        discord {
+          botToken
+          applicationId
+          publicKey
         }
       }
     }
@@ -17967,6 +18003,24 @@ export const GetUser = gql`
           type
         }
       }
+      channel {
+        type
+        slack {
+          botToken
+          signingSecret
+          appId
+        }
+        teams {
+          botId
+          botPassword
+          tenantId
+        }
+        discord {
+          botToken
+          applicationId
+          publicKey
+        }
+      }
     }
     personas {
       id
@@ -18060,6 +18114,24 @@ export const GetUserByIdentifier = gql`
         mcp {
           token
           type
+        }
+      }
+      channel {
+        type
+        slack {
+          botToken
+          signingSecret
+          appId
+        }
+        teams {
+          botId
+          botPassword
+          tenantId
+        }
+        discord {
+          botToken
+          applicationId
+          publicKey
         }
       }
     }
@@ -18156,6 +18228,24 @@ export const QueryUsers = gql`
           mcp {
             token
             type
+          }
+        }
+        channel {
+          type
+          slack {
+            botToken
+            signingSecret
+            appId
+          }
+          teams {
+            botId
+            botPassword
+            tenantId
+          }
+          discord {
+            botToken
+            applicationId
+            publicKey
           }
         }
       }

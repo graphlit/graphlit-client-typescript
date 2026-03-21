@@ -2610,6 +2610,51 @@ export enum CerebrasModels {
   Qwen_3_32B = 'QWEN_3_32B'
 }
 
+/** Represents a channel connector. */
+export type ChannelConnector = {
+  __typename?: 'ChannelConnector';
+  /** Discord channel properties. */
+  discord?: Maybe<DiscordChannelProperties>;
+  /** Slack channel properties. */
+  slack?: Maybe<SlackChannelProperties>;
+  /** Microsoft Teams channel properties. */
+  teams?: Maybe<TeamsChannelProperties>;
+  /** Channel service type. */
+  type: ChannelServiceTypes;
+};
+
+/** Represents a channel connector. */
+export type ChannelConnectorInput = {
+  /** Discord channel properties. */
+  discord?: InputMaybe<DiscordChannelPropertiesInput>;
+  /** Slack channel properties. */
+  slack?: InputMaybe<SlackChannelPropertiesInput>;
+  /** Microsoft Teams channel properties. */
+  teams?: InputMaybe<TeamsChannelPropertiesInput>;
+  /** Channel service type. */
+  type: ChannelServiceTypes;
+};
+
+/** Represents a channel connector. */
+export type ChannelConnectorUpdateInput = {
+  /** Discord channel properties. */
+  discord?: InputMaybe<DiscordChannelPropertiesInput>;
+  /** Slack channel properties. */
+  slack?: InputMaybe<SlackChannelPropertiesInput>;
+  /** Microsoft Teams channel properties. */
+  teams?: InputMaybe<TeamsChannelPropertiesInput>;
+};
+
+/** Channel service type */
+export enum ChannelServiceTypes {
+  /** Discord */
+  Discord = 'DISCORD',
+  /** Slack */
+  Slack = 'SLACK',
+  /** Microsoft Teams */
+  Teams = 'TEAMS'
+}
+
 /** Represents a classification workflow job. */
 export type ClassificationWorkflowJob = {
   __typename?: 'ClassificationWorkflowJob';
@@ -3136,6 +3181,7 @@ export enum ConfluenceTypes {
 export type Connector = {
   __typename?: 'Connector';
   authentication?: Maybe<AuthenticationConnector>;
+  channel?: Maybe<ChannelConnector>;
   /** The creation date of the connector. */
   creationDate: Scalars['DateTime']['output'];
   /** The ID of the connector. */
@@ -3192,6 +3238,7 @@ export type ConnectorFilter = {
 /** Represents a connector. */
 export type ConnectorInput = {
   authentication?: InputMaybe<AuthenticationConnectorInput>;
+  channel?: InputMaybe<ChannelConnectorInput>;
   integration?: InputMaybe<IntegrationConnectorInput>;
   /** The name of the connector. */
   name: Scalars['String']['input'];
@@ -3210,6 +3257,8 @@ export type ConnectorResults = {
 export enum ConnectorTypes {
   /** Authentication connector */
   Authentication = 'AUTHENTICATION',
+  /** Channel connector */
+  Channel = 'CHANNEL',
   /** Integration connector */
   Integration = 'INTEGRATION',
   /** Site connector */
@@ -3219,6 +3268,7 @@ export enum ConnectorTypes {
 /** Represents a connector. */
 export type ConnectorUpdateInput = {
   authentication?: InputMaybe<AuthenticationConnectorInput>;
+  channel?: InputMaybe<ChannelConnectorUpdateInput>;
   /** The ID of the connector to update. */
   id: Scalars['ID']['input'];
   integration?: InputMaybe<IntegrationConnectorInput>;
@@ -5278,6 +5328,27 @@ export type DiffbotEnrichmentProperties = {
 export type DiffbotEnrichmentPropertiesInput = {
   /** The Diffbot API key. */
   key?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents Discord channel properties. */
+export type DiscordChannelProperties = {
+  __typename?: 'DiscordChannelProperties';
+  /** Discord application identifier. */
+  applicationId?: Maybe<Scalars['String']['output']>;
+  /** Discord bot token. */
+  botToken: Scalars['String']['output'];
+  /** Discord public key. */
+  publicKey?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Discord channel properties. */
+export type DiscordChannelPropertiesInput = {
+  /** Discord application identifier. */
+  applicationId?: InputMaybe<Scalars['String']['input']>;
+  /** Discord bot token. */
+  botToken: Scalars['String']['input'];
+  /** Discord public key. */
+  publicKey?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Discord channel. */
@@ -24359,6 +24430,27 @@ export enum SlackAuthenticationTypes {
   Token = 'TOKEN'
 }
 
+/** Represents Slack channel properties. */
+export type SlackChannelProperties = {
+  __typename?: 'SlackChannelProperties';
+  /** Slack app identifier. */
+  appId?: Maybe<Scalars['String']['output']>;
+  /** Slack bot token. */
+  botToken: Scalars['String']['output'];
+  /** Slack signing secret. */
+  signingSecret?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Slack channel properties. */
+export type SlackChannelPropertiesInput = {
+  /** Slack app identifier. */
+  appId?: InputMaybe<Scalars['String']['input']>;
+  /** Slack bot token. */
+  botToken: Scalars['String']['input'];
+  /** Slack signing secret. */
+  signingSecret?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents Slack channels properties. */
 export type SlackChannelsInput = {
   /** Slack authentication type, defaults to Token. */
@@ -25187,6 +25279,27 @@ export type Summarized = {
   text?: Maybe<Scalars['String']['output']>;
   /** The summarization token usage. */
   tokens: Scalars['Int']['output'];
+};
+
+/** Represents Microsoft Teams channel properties. */
+export type TeamsChannelProperties = {
+  __typename?: 'TeamsChannelProperties';
+  /** Teams bot identifier. */
+  botId: Scalars['String']['output'];
+  /** Teams bot password. */
+  botPassword: Scalars['String']['output'];
+  /** Teams tenant identifier. */
+  tenantId?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Microsoft Teams channel properties. */
+export type TeamsChannelPropertiesInput = {
+  /** Teams bot identifier. */
+  botId: Scalars['String']['input'];
+  /** Teams bot password. */
+  botPassword: Scalars['String']['input'];
+  /** Teams tenant identifier. */
+  tenantId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a chunk of text. */
@@ -27079,7 +27192,7 @@ export type GetConnectorQueryVariables = Exact<{
 }>;
 
 
-export type GetConnectorQuery = { __typename?: 'Query', connector?: { __typename?: 'Connector', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null };
+export type GetConnectorQuery = { __typename?: 'Query', connector?: { __typename?: 'Connector', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null } | null } | null };
 
 export type QueryConnectorsQueryVariables = Exact<{
   filter?: InputMaybe<ConnectorFilter>;
@@ -27087,7 +27200,7 @@ export type QueryConnectorsQueryVariables = Exact<{
 }>;
 
 
-export type QueryConnectorsQuery = { __typename?: 'Query', connectors?: { __typename?: 'ConnectorResults', results?: Array<{ __typename?: 'Connector', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null }> | null } | null };
+export type QueryConnectorsQuery = { __typename?: 'Query', connectors?: { __typename?: 'ConnectorResults', results?: Array<{ __typename?: 'Connector', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: ConnectorTypes | null, owner: { __typename?: 'Owner', id: string }, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null } | null }> | null } | null };
 
 export type UpdateConnectorMutationVariables = Exact<{
   connector: ConnectorUpdateInput;
@@ -30434,14 +30547,14 @@ export type EnableUserMutation = { __typename?: 'Mutation', enableUser?: { __typ
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
 
 export type GetUserByIdentifierQueryVariables = Exact<{
   identifier: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
+export type GetUserByIdentifierQuery = { __typename?: 'Query', userByIdentifier?: { __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null } | null };
 
 export type QueryUsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilter>;
@@ -30449,7 +30562,7 @@ export type QueryUsersQueryVariables = Exact<{
 }>;
 
 
-export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null }> | null } | null };
+export type QueryUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResults', results?: Array<{ __typename?: 'User', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: UserTypes | null, identifier: string, description?: string | null, credits?: any | null, lastCreditsDate?: any | null, accumulatedCredits?: any | null, owner: { __typename?: 'Owner', id: string }, connectors?: Array<{ __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null } | null } | null> | null, personas?: Array<{ __typename?: 'Persona', id: string, name: string, state: EntityState, identifier?: string | null, platform?: string | null, displayName?: string | null, timezone?: string | null, role?: string | null, instructions?: string | null, facts?: Array<{ __typename?: 'FactReference', id?: string | null, text?: string | null }> | null } | null> | null, quota?: { __typename?: 'UserQuota', credits?: number | null } | null }> | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   user: UserUpdateInput;

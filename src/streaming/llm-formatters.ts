@@ -392,14 +392,17 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
             );
           }
 
-          const thinkingBlock: any = {
-            type: "thinking",
-            thinking: structuredThinking.trim(),
-          };
+          // Only include thinking block if we have a signature — Anthropic API
+          // requires signature on all thinking blocks in conversation history.
+          // Thinking from other providers (Google, Deepseek) won't have a signature,
+          // so we skip the thinking block entirely to avoid a 400 error.
           if (structuredSignature) {
-            thinkingBlock.signature = structuredSignature;
+            content.push({
+              type: "thinking",
+              thinking: structuredThinking.trim(),
+              signature: structuredSignature,
+            });
           }
-          content.push(thinkingBlock);
 
           // Add text content after thinking block
           if (trimmedMessage) {
@@ -428,19 +431,14 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
             );
           }
 
-          // CRITICAL: When thinking is enabled, thinking block must come first
-          if (thinkingContent) {
-            const thinkingBlock: any = {
+          // CRITICAL: When thinking is enabled, thinking block must come first.
+          // Only include if we have a signature — Anthropic API requires it.
+          if (thinkingContent && thinkingSignature) {
+            content.push({
               type: "thinking",
               thinking: thinkingContent,
-            };
-
-            // Include signature if present
-            if (thinkingSignature) {
-              thinkingBlock.signature = thinkingSignature;
-            }
-
-            content.push(thinkingBlock);
+              signature: thinkingSignature,
+            });
           }
 
           // Add text content after thinking block
