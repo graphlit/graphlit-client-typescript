@@ -16347,6 +16347,7 @@ export const GetProject = gql`
     environmentType
     platform
     region
+    jwtSecret
     credits
     lastCreditsDate
     workflow {
