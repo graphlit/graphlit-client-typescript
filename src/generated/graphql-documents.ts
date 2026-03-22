@@ -103,6 +103,7 @@ export const GetAgent = gql`
     timeout
     prompt
     scratchpad
+    callbackUri
   }
 }
     `;
@@ -150,6 +151,7 @@ export const QueryAgents = gql`
       timeout
       prompt
       scratchpad
+      callbackUri
     }
   }
 }

@@ -66,6 +66,8 @@ export type AddressInput = {
 /** Represents an agent. */
 export type Agent = {
   __typename?: 'Agent';
+  /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
+  callbackUri?: Maybe<Scalars['URL']['output']>;
   /** The agent channels. */
   channels?: Maybe<Array<AgentChannel>>;
   /** The agent connectors. */
@@ -185,6 +187,8 @@ export type AgentFilter = {
 
 /** Represents an agent. */
 export type AgentInput = {
+  /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
+  callbackUri?: InputMaybe<Scalars['URL']['input']>;
   /** The agent channels. */
   channels?: InputMaybe<Array<AgentChannelInput>>;
   /** The agent connectors. */
@@ -270,6 +274,8 @@ export enum AgentTypes {
 
 /** Represents an agent. */
 export type AgentUpdateInput = {
+  /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
+  callbackUri?: InputMaybe<Scalars['URL']['input']>;
   /** The agent channels. */
   channels?: InputMaybe<Array<AgentChannelInput>>;
   /** The agent connectors. */
@@ -26799,7 +26805,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -26807,7 +26813,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
