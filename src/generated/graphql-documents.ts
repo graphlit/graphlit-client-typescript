@@ -8452,6 +8452,9 @@ export const GetEmotion = gql`
   emotion(id: $id, correlationId: $correlationId) {
     id
     name
+    user {
+      id
+    }
     description
     creationDate
     feeds {

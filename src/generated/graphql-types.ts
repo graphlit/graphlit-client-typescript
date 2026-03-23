@@ -6123,6 +6123,8 @@ export type Emotion = {
   relevance?: Maybe<Scalars['Float']['output']>;
   /** The state of the emotion (i.e. created, enabled). */
   state: EntityState;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
 };
 
 /** Represents an emotion facet. */
@@ -28048,7 +28050,7 @@ export type GetEmotionQueryVariables = Exact<{
 }>;
 
 
-export type GetEmotionQuery = { __typename?: 'Query', emotion?: { __typename?: 'Emotion', id: string, name: string, description?: string | null, creationDate: any, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
+export type GetEmotionQuery = { __typename?: 'Query', emotion?: { __typename?: 'Emotion', id: string, name: string, description?: string | null, creationDate: any, user?: { __typename?: 'EntityReference', id: string } | null, feeds?: Array<{ __typename?: 'Feed', id: string, name: string } | null> | null } | null };
 
 export type QueryEmotionsQueryVariables = Exact<{
   filter?: InputMaybe<EmotionFilter>;
