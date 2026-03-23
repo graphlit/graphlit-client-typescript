@@ -72,6 +72,9 @@ export const GetAgent = gql`
       id
     }
     state
+    user {
+      id
+    }
     correlationId
     type
     description
@@ -248,6 +251,9 @@ export const GetAlert = gql`
       id
     }
     state
+    user {
+      id
+    }
     correlationId
     type
     summaryPrompt
@@ -848,6 +854,9 @@ export const GetCategory = gql`
   category(id: $id, correlationId: $correlationId) {
     id
     name
+    user {
+      id
+    }
     description
     creationDate
     feeds {
@@ -991,6 +1000,9 @@ export const GetCollection = gql`
       id
     }
     state
+    user {
+      id
+    }
     type
     contents {
       id
@@ -1112,6 +1124,9 @@ export const GetConnector = gql`
       id
     }
     state
+    user {
+      id
+    }
     type
     authentication {
       type
@@ -1812,6 +1827,9 @@ export const GetContent = gql`
       id
     }
     state
+    user {
+      id
+    }
     originalDate
     finishedDate
     fileCreationDate
@@ -2713,6 +2731,9 @@ export const LookupContents = gql`
         id
       }
       state
+      user {
+        id
+      }
       originalDate
       finishedDate
       fileCreationDate
@@ -5904,6 +5925,9 @@ export const GetConversation = gql`
       id
     }
     state
+    user {
+      id
+    }
     correlationId
     type
     messages {
@@ -8516,6 +8540,9 @@ export const GetEvent = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -8800,6 +8827,9 @@ export const GetFact = gql`
     query GetFact($id: ID!, $correlationId: String) {
   fact(id: $id, correlationId: $correlationId) {
     id
+    user {
+      id
+    }
     creationDate
     owner {
       id
@@ -9092,6 +9122,9 @@ export const GetFeed = gql`
       id
     }
     state
+    user {
+      id
+    }
     identifier
     description
     correlationId
@@ -11294,6 +11327,9 @@ export const GetInvestment = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -11663,6 +11699,9 @@ export const GetInvestmentFund = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -12018,6 +12057,9 @@ export const GetLabel = gql`
   label(id: $id, correlationId: $correlationId) {
     id
     name
+    user {
+      id
+    }
     description
     creationDate
     feeds {
@@ -12114,6 +12156,9 @@ export const GetMedicalCondition = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -12346,6 +12391,9 @@ export const GetMedicalContraindication = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -12578,6 +12626,9 @@ export const GetMedicalDevice = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -12810,6 +12861,9 @@ export const GetMedicalDrug = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -13042,6 +13096,9 @@ export const GetMedicalDrugClass = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -13274,6 +13331,9 @@ export const GetMedicalGuideline = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -13506,6 +13566,9 @@ export const GetMedicalIndication = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -13738,6 +13801,9 @@ export const GetMedicalProcedure = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -13970,6 +14036,9 @@ export const GetMedicalStudy = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -14223,6 +14292,9 @@ export const GetMedicalTest = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -14455,6 +14527,9 @@ export const GetMedicalTherapy = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -14806,6 +14881,9 @@ export const GetOrganization = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -15279,6 +15357,9 @@ export const GetPerson = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -15726,6 +15807,9 @@ export const GetPersona = gql`
       id
     }
     state
+    user {
+      id
+    }
     identifier
     platform
     displayName
@@ -15846,6 +15930,9 @@ export const GetPlace = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -16116,6 +16203,9 @@ export const GetProduct = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -16591,6 +16681,9 @@ export const GetRepo = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -16872,6 +16965,9 @@ export const GetSkill = gql`
       id
     }
     state
+    user {
+      id
+    }
     description
     identifier
     correlationId
@@ -17006,6 +17102,9 @@ export const GetSoftware = gql`
       id
     }
     state
+    user {
+      id
+    }
     alternateNames
     uri
     description
@@ -17243,6 +17342,9 @@ export const GetSpecification = gql`
       id
     }
     state
+    user {
+      id
+    }
     type
     serviceType
     systemPrompt
@@ -18533,6 +18635,9 @@ export const GetView = gql`
       id
     }
     state
+    user {
+      id
+    }
     type
     filter {
       dateRange {
@@ -19650,6 +19755,9 @@ export const GetWorkflow = gql`
       id
     }
     state
+    user {
+      id
+    }
     ingestion {
       if {
         types
