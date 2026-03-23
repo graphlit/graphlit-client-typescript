@@ -10577,7 +10577,7 @@ class Graphlit {
         const { multiplier } = await evaluator.classifyComplexity(
           prompt,
           (classPrompt, text, classTools) =>
-            this.extractText(classPrompt, text, classTools, agentSpec, undefined, options?.correlationId)
+            this.extractText(classPrompt, text, classTools, undefined, undefined, options?.correlationId)
               .then((r) => r.extractText as Array<Types.ExtractCompletion | null> | null),
         );
         if (multiplier > 1.0) {
@@ -11362,7 +11362,7 @@ class Graphlit {
         assessmentPrompt,
         assessmentText,
         [assessTool],
-        specification,
+        undefined,
         undefined,
         correlationId,
       );
