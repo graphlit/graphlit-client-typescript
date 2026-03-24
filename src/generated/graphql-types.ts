@@ -143,6 +143,8 @@ export enum AgentChannelTypes {
   Discord = 'DISCORD',
   /** Email */
   Email = 'EMAIL',
+  /** Messaging */
+  Messaging = 'MESSAGING',
   /** Slack */
   Slack = 'SLACK',
   /** Microsoft Teams */
