@@ -9033,6 +9033,13 @@ class Graphlit {
           .specification as Types.Specification)
         : undefined;
 
+      // Fail fast if a specification was requested but not found
+      if (specification?.id && !fullSpec) {
+        throw new Error(
+          `Specification [${specification.id}] not found. Cannot fall back to promptAgent.`,
+        );
+      }
+
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && fullSpec) {
         console.log(`🔍 [streamAgent] Retrieved full specification:`, {
           id: fullSpec.id,
