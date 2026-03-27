@@ -55,6 +55,7 @@ import {
   DEFAULT_CONTEXT_STRATEGY,
 } from "./helpers/context-management.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
+import { ProviderError } from "./types/internal.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
   formatMessagesForOpenAI,
@@ -203,6 +204,15 @@ try {
 }
 
 const DEFAULT_MAX_TOOL_ROUNDS: number = 100;
+
+/** Maximum number of retries for transient provider errors (5xx, network, overloaded). */
+const DEFAULT_PROVIDER_RETRIES = 3;
+
+/** Base delay in ms for exponential backoff between provider retries. */
+const PROVIDER_RETRY_BASE_DELAY_MS = 1000;
+
+/** Cap on the backoff delay in ms. */
+const PROVIDER_RETRY_MAX_DELAY_MS = 30_000;
 
 // Smooth streaming buffer implementation
 
@@ -8938,7 +8948,10 @@ class Graphlit {
         error: {
           message: error.message || "Unknown error",
           code: error.code || (isTimeout ? "TIMEOUT" : "UNKNOWN"),
-          recoverable: isTimeout || error.code === "RATE_LIMIT",
+          recoverable:
+            isTimeout ||
+            error.code === "RATE_LIMIT" ||
+            (error instanceof ProviderError && error.retryable),
           details: error.response?.data,
         },
         // Include partial metrics if available
@@ -9227,19 +9240,20 @@ class Graphlit {
       } else {
         const errorMessage =
           error instanceof Error ? error.message : "Streaming failed";
+        // ProviderError.retryable means the error is transient (5xx, network)
+        // even though our built-in retries were exhausted, the caller may retry.
+        const recoverable =
+          error instanceof ProviderError && error.retryable;
 
         if (uiAdapter) {
-          uiAdapter.handleEvent({
-            type: "error",
-            error: errorMessage,
-          });
+          uiAdapter.emitError(errorMessage, recoverable);
         } else {
-          // Fallback error event
+          // Fallback error event (no adapter available)
           (onEvent as (event: AgentStreamEvent) => void)({
             type: "error",
             error: {
               message: errorMessage,
-              recoverable: false,
+              recoverable,
             },
             conversationId: conversationId || "",
             timestamp: new Date(),
@@ -9699,9 +9713,25 @@ class Graphlit {
       let roundMessage = "";
       let roundReasoning: ReasoningMetadata | undefined;
 
+      // Snapshot the adapter's message before this round so we can restore on retry
+      const preRoundMessage = uiAdapter.snapshotMessage();
+      let usedFallback = false;
+
+      // Retry loop for transient provider errors (5xx, network, overloaded)
+      for (
+        let providerAttempt = 0;
+        providerAttempt <= DEFAULT_PROVIDER_RETRIES;
+        providerAttempt++
+      ) {
+        // Reset round variables for each attempt
+        toolCalls = [];
+        roundMessage = "";
+        roundReasoning = undefined;
+
+        try {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(
-          `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}`,
+          `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}${providerAttempt > 0 ? `, Retry: ${providerAttempt}` : ""}`,
         );
         console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
         console.log(
@@ -10136,6 +10166,49 @@ class Graphlit {
             `\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`,
           );
         }
+        usedFallback = true;
+      }
+
+      // Provider call succeeded - exit retry loop
+      break;
+        } catch (retryError) {
+          if (abortSignal?.aborted) throw retryError;
+
+          const isRetryable =
+            retryError instanceof ProviderError && retryError.retryable;
+          if (
+            !isRetryable ||
+            providerAttempt >= DEFAULT_PROVIDER_RETRIES
+          ) {
+            throw retryError;
+          }
+
+          // Exponential backoff with jitter
+          const delay = Math.min(
+            PROVIDER_RETRY_BASE_DELAY_MS *
+              Math.pow(2, providerAttempt),
+            PROVIDER_RETRY_MAX_DELAY_MS,
+          );
+          const jitter = Math.random() * delay * 0.1;
+          const totalDelay = Math.round(delay + jitter);
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `\n🔄 [Retry] ${(retryError as ProviderError).provider} error (attempt ${providerAttempt + 1}/${DEFAULT_PROVIDER_RETRIES}): ${retryError.message}. Retrying in ${totalDelay}ms...`,
+            );
+          }
+
+          // Reset adapter to pre-round state so partial tokens are cleared
+          uiAdapter.resetForRetry(preRoundMessage);
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, totalDelay),
+          );
+        }
+      } // end retry for-loop
+
+      // If the fallback path was used, break out of the main while loop
+      if (usedFallback) {
         break;
       }
 
@@ -12422,5 +12495,6 @@ class Graphlit {
 
 export { Graphlit };
 export * as Types from "./generated/graphql-types.js";
+export { ProviderError } from "./types/internal.js";
 export { getPartialErrors, PARTIAL_ERRORS_KEY } from "./partial-errors.js";
 export type { PartialGraphQLError } from "./partial-errors.js";

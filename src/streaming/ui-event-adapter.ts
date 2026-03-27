@@ -688,13 +688,21 @@ export class UIEventAdapter {
   }
 
   private handleError(error: string): void {
+    this.emitError(error, false);
+  }
+
+  /**
+   * Emit a structured error event. Public so the client can pass through
+   * the `recoverable` flag from ProviderError after retries are exhausted.
+   */
+  public emitError(message: string, recoverable: boolean): void {
     this.isStreaming = false;
 
     this.emitUIEvent({
       type: "error",
       error: {
-        message: error,
-        recoverable: false,
+        message,
+        recoverable,
       },
       conversationId: this.conversationId,
       timestamp: new Date(),
@@ -1070,6 +1078,57 @@ export class UIEventAdapter {
   /**
    * Clean up any pending timers
    */
+  /**
+   * Snapshot the current accumulated message so it can be restored on retry.
+   * Call this before each provider round begins.
+   */
+  public snapshotMessage(): string {
+    return this.currentMessage;
+  }
+
+  /**
+   * Reset streaming state to prepare for a provider retry.
+   * Restores the message to the given snapshot and clears partial buffers.
+   */
+  public resetForRetry(messageSnapshot: string): void {
+    // Cancel pending timers
+    if (this.updateTimer) {
+      globalThis.clearTimeout(this.updateTimer);
+      this.updateTimer = undefined;
+    }
+
+    // Restore message to pre-round state
+    this.currentMessage = messageSnapshot;
+
+    // Clear chunk buffers
+    this.chunkQueue.length = 0;
+    if (this.chunkBuffer) {
+      this.chunkBuffer.flush();
+    }
+
+    // Reset per-round token tracking
+    this.firstTokenTime = 0;
+    this.lastTokenTime = 0;
+
+    // Reset reasoning state for the failed round
+    this.reasoningContent = "";
+    this.reasoningFormat = undefined;
+    this.reasoningSignature = undefined;
+    this.isInReasoning = false;
+    this.lastReasoningEmitTime = 0;
+    this.hasEmittedFirstReasoning = false;
+    if (this.reasoningEmitTimer) {
+      globalThis.clearTimeout(this.reasoningEmitTimer);
+      this.reasoningEmitTimer = undefined;
+    }
+    if (this.reasoningBuffer) {
+      this.reasoningBuffer.flush();
+    }
+
+    // Emit the restored message so the UI clears any partial content
+    this.emitMessageUpdate(false);
+  }
+
   public dispose(): void {
     if (this.updateTimer) {
       globalThis.clearTimeout(this.updateTimer);

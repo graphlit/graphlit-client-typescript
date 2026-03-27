@@ -14,9 +14,16 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - **Extract insights** - Summaries, entities, and metadata
 - **Build knowledge graphs** - Automatically connect related information
 
-## ✨ What's New
+## What's New
 
-### v1.6.0 - Agent Framework 🤖
+### Streaming Provider Resilience
+
+- **Automatic Retry for Provider Errors** - `streamAgent` and `runAgent` now retry transient LLM provider errors (HTTP 500, 503, 429, network failures) with exponential backoff (up to 3 retries)
+- **`ProviderError` Class** - Normalized, typed error class across all 10 streaming providers with `provider`, `statusCode`, `retryable`, and `requestId` fields
+- **Structured `recoverable` Flag** - Error events now accurately indicate whether an error is transient, enabling smarter application-level retry logic
+- **No More Duplicate Error Events** - Fixed providers that were emitting both an error event and throwing, causing duplicate error handling
+
+### v1.6.0 - Agent Framework
 
 - **Agent Entity** - First-class agent lifecycle management
 - **`runAgent()` Method** - Autonomous agent harness with built-in stuck detection and turn evaluation
@@ -74,6 +81,7 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - [Reasoning Support (New!)](#reasoning-support-new) 🧠
 - [Stream Cancellation (New!)](#stream-cancellation-new) 🛑
 - [Network Resilience](#network-resilience)
+- [Streaming Error Handling](#streaming-error-handling)
 - [Streaming Provider Support](#streaming-provider-support)
 - [Basic Examples](#basic-examples)
 - [Common Use Cases](#common-use-cases)
@@ -456,6 +464,78 @@ const client = new Graphlit({
     maxAttempts: 1, // No retries
   },
 });
+```
+
+## Streaming Error Handling
+
+When using `streamAgent` or `runAgent`, LLM provider calls (Anthropic, OpenAI, Google, etc.) can fail with transient errors such as HTTP 500, 503, rate limits, or network issues. The SDK handles these automatically and exposes structured error information to your application.
+
+### Automatic Retry for Provider Errors
+
+The SDK automatically retries transient provider errors with exponential backoff:
+
+- **HTTP 5xx** (Internal Server Error, Bad Gateway, Service Unavailable, Gateway Timeout)
+- **HTTP 429** (Rate Limit / Overloaded)
+- **Network errors** (connection reset, timeout, DNS failures)
+
+By default, each provider call is retried up to **3 times** with exponential backoff (1s, 2s, 4s) plus jitter. If a retry succeeds, the stream continues transparently. If all retries are exhausted, the error is surfaced to your application.
+
+### Handling Errors in streamAgent
+
+The `error` event includes a `recoverable` flag that tells you whether the failure is transient:
+
+```typescript
+await client.streamAgent(prompt, (event) => {
+  if (event.type === "error") {
+    const { message, recoverable } = event.error;
+
+    if (recoverable) {
+      // Transient provider error (5xx, rate limit, network) -
+      // the SDK already retried 3 times. You may retry the whole
+      // streamAgent call after a longer delay, or inform the user.
+      console.warn(`Transient error: ${message}. Consider retrying.`);
+    } else {
+      // Non-transient error (auth failure, invalid request, etc.)
+      console.error(`Permanent error: ${message}`);
+    }
+  }
+});
+```
+
+### Using ProviderError for Advanced Handling
+
+For more granular control, catch the thrown error and inspect `ProviderError`:
+
+```typescript
+import { Graphlit, ProviderError } from "graphlit-client";
+
+try {
+  await client.streamAgent(prompt, onEvent, conversationId, spec);
+} catch (error) {
+  if (error instanceof ProviderError) {
+    console.log(error.provider);   // "anthropic", "openai", "google", etc.
+    console.log(error.statusCode); // 500, 429, 503, etc.
+    console.log(error.retryable);  // true for transient errors
+    console.log(error.requestId);  // provider request ID (if available)
+  }
+}
+```
+
+### Error Handling in promptAgent
+
+The `promptAgent` method returns errors in the result object instead of throwing:
+
+```typescript
+const result = await client.promptAgent(prompt, conversationId, spec);
+
+if (result.error) {
+  if (result.error.recoverable) {
+    // Transient error - safe to retry
+    console.warn(`Transient: ${result.error.message}`);
+  } else {
+    console.error(`Error: ${result.error.message}`);
+  }
+}
 ```
 
 ## Streaming Provider Support

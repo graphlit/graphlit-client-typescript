@@ -15,7 +15,14 @@ import {
   BedrockMessage,
 } from "./llm-formatters.js";
 import { getModelName } from "../model-mapping.js";
-import { StreamEvent } from "../types/internal.js";
+import {
+  StreamEvent,
+  ProviderError,
+  isRetryableServerError,
+  isRateLimitError,
+  isNetworkError,
+  extractRequestId,
+} from "../types/internal.js";
 import { ReasoningMetadata } from "../types/ui-events.js";
 
 // Import Cohere SDK types for proper typing
@@ -532,37 +539,46 @@ export async function streamWithOpenAI(
     // Pass usage data if available
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
-    // Handle OpenAI-specific errors
+    // Normalize OpenAI errors into ProviderError
     const errorMessage = error.message || error.toString();
 
-    // Check for rate limit errors
-    if (
-      error.status === 429 ||
-      error.statusCode === 429 ||
-      error.code === "rate_limit_exceeded"
-    ) {
+    if (isRateLimitError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`⚠️ [OpenAI] Rate limit hit`);
       }
-      const rateLimitError: any = new Error("OpenAI rate limit exceeded");
-      rateLimitError.statusCode = 429;
-      throw rateLimitError;
+      throw new ProviderError(`OpenAI rate limit exceeded: ${errorMessage}`, {
+        provider: "openai",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
-    // Check for network errors
-    if (
-      errorMessage.includes("fetch failed") ||
-      error.code === "ECONNRESET" ||
-      error.code === "ETIMEDOUT"
-    ) {
+    if (isNetworkError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`⚠️ [OpenAI] Network error: ${errorMessage}`);
       }
-      const networkError: any = new Error(
-        `OpenAI network error: ${errorMessage}`,
-      );
-      networkError.statusCode = 503; // Service unavailable
-      throw networkError;
+      throw new ProviderError(`OpenAI network error: ${errorMessage}`, {
+        provider: "openai",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isRetryableServerError(error)) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [OpenAI] Server error: ${errorMessage}`);
+      }
+      throw new ProviderError(`OpenAI server error: ${errorMessage}`, {
+        provider: "openai",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
     // Don't emit error event here - let the client handle it to avoid duplicates
@@ -1256,35 +1272,49 @@ export async function streamWithAnthropic(
 
     onComplete(fullMessage, validToolCalls, usageData, reasoningMetadata);
   } catch (error: any) {
-    // Handle Anthropic-specific errors
+    // Normalize Anthropic errors into ProviderError
     const errorMessage = error.message || error.toString();
 
-    // Check for overloaded errors
-    if (
-      error.type === "overloaded_error" ||
-      errorMessage.includes("Overloaded")
-    ) {
+    if (isRateLimitError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`⚠️ [Anthropic] Service overloaded`);
+        console.log(`⚠️ [Anthropic] Rate limit / overloaded`);
       }
-      // Treat overloaded as a rate limit error for retry logic
-      const overloadError: any = new Error("Anthropic service overloaded");
-      overloadError.statusCode = 503; // Service unavailable
-      throw overloadError;
+      throw new ProviderError(
+        `Anthropic rate limit exceeded: ${errorMessage}`,
+        {
+          provider: "anthropic",
+          statusCode: error.status || error.statusCode || 429,
+          retryable: true,
+          requestId: extractRequestId(error),
+          cause: error,
+        },
+      );
     }
 
-    // Check for rate limit errors
-    if (
-      error.status === 429 ||
-      error.statusCode === 429 ||
-      error.type === "rate_limit_error"
-    ) {
+    if (isRetryableServerError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`⚠️ [Anthropic] Rate limit hit`);
+        console.log(`⚠️ [Anthropic] Server error: ${errorMessage}`);
       }
-      const rateLimitError: any = new Error("Anthropic rate limit exceeded");
-      rateLimitError.statusCode = 429;
-      throw rateLimitError;
+      throw new ProviderError(`Anthropic server error: ${errorMessage}`, {
+        provider: "anthropic",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(`⚠️ [Anthropic] Network error: ${errorMessage}`);
+      }
+      throw new ProviderError(`Anthropic network error: ${errorMessage}`, {
+        provider: "anthropic",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
     // Don't emit error event here - let the client handle it to avoid duplicates
@@ -1864,7 +1894,40 @@ export async function streamWithGoogle(
     });
 
     onComplete(fullMessage, toolCalls, usageData, reasoningMetadata);
-  } catch (error) {
+  } catch (error: any) {
+    // Normalize Google errors into ProviderError
+    const errorMessage = error.message || error.toString();
+
+    if (isRateLimitError(error)) {
+      throw new ProviderError(`Google rate limit exceeded: ${errorMessage}`, {
+        provider: "google",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Google server error: ${errorMessage}`, {
+        provider: "google",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Google network error: ${errorMessage}`, {
+        provider: "google",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
     // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
@@ -1945,10 +2008,10 @@ export async function streamWithGroq(
       abortSignal,
     );
   } catch (error: any) {
-    // Handle Groq-specific errors
+    // Normalize Groq errors into ProviderError
     const errorMessage = error.message || error.toString();
 
-    // Check for tool calling errors
+    // Tool calling errors are non-retryable (HTTP 400)
     if (
       error.status === 400 &&
       errorMessage.includes("Failed to call a function")
@@ -1956,21 +2019,42 @@ export async function streamWithGroq(
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
         console.log(`⚠️ [Groq] Tool calling error: ${errorMessage}`);
       }
-      // Groq may have limitations with certain tool schemas
-      // Re-throw with a more descriptive error
       throw new Error(
         `Groq tool calling error: ${errorMessage}. The model may not support the provided tool schema format.`,
       );
     }
 
-    // Handle rate limits
-    if (error.status === 429 || error.statusCode === 429) {
+    if (isRateLimitError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`⚠️ [Groq] Rate limit hit (429)`);
+        console.log(`⚠️ [Groq] Rate limit hit`);
       }
-      const rateLimitError: any = new Error("Groq rate limit exceeded");
-      rateLimitError.statusCode = 429;
-      throw rateLimitError;
+      throw new ProviderError(`Groq rate limit exceeded: ${errorMessage}`, {
+        provider: "groq",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Groq server error: ${errorMessage}`, {
+        provider: "groq",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Groq network error: ${errorMessage}`, {
+        provider: "groq",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
     throw error;
@@ -2297,16 +2381,45 @@ export async function streamWithCerebras(
 
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
-    // Handle Cerebras-specific 429 errors
-    if (error.status === 429 || error.statusCode === 429) {
+    // Normalize Cerebras errors into ProviderError
+    const errorMessage = error.message || error.toString();
+
+    if (isRateLimitError(error)) {
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`⚠️ [Cerebras] Rate limit hit (429)`);
+        console.log(`⚠️ [Cerebras] Rate limit hit`);
       }
-      // Re-throw with proper status code for retry logic
-      const rateLimitError: any = new Error("Cerebras rate limit exceeded");
-      rateLimitError.statusCode = 429;
-      throw rateLimitError;
+      throw new ProviderError(
+        `Cerebras rate limit exceeded: ${errorMessage}`,
+        {
+          provider: "cerebras",
+          statusCode: 429,
+          retryable: true,
+          requestId: extractRequestId(error),
+          cause: error,
+        },
+      );
     }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Cerebras server error: ${errorMessage}`, {
+        provider: "cerebras",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Cerebras network error: ${errorMessage}`, {
+        provider: "cerebras",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
     throw error;
   }
 }
@@ -2703,14 +2816,48 @@ export async function streamWithDeepseek(
     }
 
     onComplete(fullMessage, validToolCalls, usageData, reasoningMetadata);
-  } catch (error) {
+  } catch (error: any) {
+    // Normalize Deepseek errors into ProviderError
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Deepseek] Stream error:`, error);
     }
-    onEvent({
-      type: "error",
-      error: `Deepseek streaming error: ${error}`,
-    });
+
+    const errorMessage = error.message || error.toString();
+
+    if (isRateLimitError(error)) {
+      throw new ProviderError(
+        `Deepseek rate limit exceeded: ${errorMessage}`,
+        {
+          provider: "deepseek",
+          statusCode: 429,
+          retryable: true,
+          requestId: extractRequestId(error),
+          cause: error,
+        },
+      );
+    }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Deepseek server error: ${errorMessage}`, {
+        provider: "deepseek",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Deepseek network error: ${errorMessage}`, {
+        provider: "deepseek",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
@@ -3075,24 +3222,55 @@ export async function streamWithCohere(
     });
 
     onComplete(fullMessage, toolCalls, usageData);
-  } catch (error) {
+  } catch (error: any) {
+    // Normalize Cohere errors into ProviderError
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Cohere] Stream error:`, error);
       if (error instanceof Error) {
         console.error(`❌ [Cohere] Error message: ${error.message}`);
         console.error(`❌ [Cohere] Error stack: ${error.stack}`);
       }
-      // Log additional error details if available
-      if ((error as any).response) {
+      if (error.response) {
         console.error(
-          `❌ [Cohere] Response status: ${(error as any).response.status}`,
+          `❌ [Cohere] Response status: ${error.response.status}`,
         );
-        console.error(
-          `❌ [Cohere] Response data:`,
-          (error as any).response.data,
-        );
+        console.error(`❌ [Cohere] Response data:`, error.response.data);
       }
     }
+
+    const errorMessage = error.message || error.toString();
+
+    if (isRateLimitError(error)) {
+      throw new ProviderError(`Cohere rate limit exceeded: ${errorMessage}`, {
+        provider: "cohere",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Cohere server error: ${errorMessage}`, {
+        provider: "cohere",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Cohere network error: ${errorMessage}`, {
+        provider: "cohere",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
@@ -3479,6 +3657,7 @@ export async function streamWithMistral(
 
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
+    // Normalize Mistral errors into ProviderError
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(
         `❌ [Mistral] Streaming error:`,
@@ -3487,42 +3666,54 @@ export async function streamWithMistral(
       );
     }
 
-    // Check for common Mistral errors
+    const errorMessage = error.message || error.toString();
+
+    // Auth errors are non-retryable
     if (
-      error.message?.includes("401") ||
-      error.message?.includes("Unauthorized")
+      errorMessage.includes("401") ||
+      errorMessage.includes("Unauthorized")
     ) {
       throw new Error(
         "Mistral API authentication failed. Please check your MISTRAL_API_KEY.",
       );
     }
 
-    if (
-      error.message?.includes("429") ||
-      error.message?.includes("rate limit")
-    ) {
-      const rateLimitError = new Error(
-        "Mistral API rate limit exceeded. Please try again later.",
+    if (isRateLimitError(error)) {
+      throw new ProviderError(
+        `Mistral rate limit exceeded: ${errorMessage}`,
+        {
+          provider: "mistral",
+          statusCode: 429,
+          retryable: true,
+          requestId: extractRequestId(error),
+          cause: error,
+        },
       );
-      (rateLimitError as any).statusCode = 429;
-      throw rateLimitError;
     }
 
-    if (
-      error.message?.includes("500") ||
-      error.message?.includes("Service unavailable") ||
-      error.message?.includes("INTERNAL_SERVER_ERROR")
-    ) {
-      const serviceError = new Error(
-        "Mistral API service is temporarily unavailable (500). This is a temporary issue with Mistral's servers. Please try again later.",
-      );
-      (serviceError as any).statusCode = 500;
-      throw serviceError;
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Mistral server error: ${errorMessage}`, {
+        provider: "mistral",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Mistral network error: ${errorMessage}`, {
+        provider: "mistral",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
     // Re-throw with more context
     throw new Error(
-      `Mistral streaming failed: ${error.message || "Unknown error"}`,
+      `Mistral streaming failed: ${errorMessage || "Unknown error"}`,
     );
   }
 }
@@ -3875,34 +4066,51 @@ export async function streamWithBedrock(
 
     onComplete(fullMessage, toolCalls, usageData);
   } catch (error: any) {
+    // Normalize Bedrock errors into ProviderError
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.error(`❌ [Bedrock] Stream error:`, error);
     }
 
-    // Handle specific Bedrock errors
     const errorMessage = error.message || error.toString();
     const errorName = error.name || "";
 
-    // Check for throttling errors
+    // Bedrock throttling uses a named exception
     if (
       errorName === "ThrottlingException" ||
+      isRateLimitError(error) ||
       errorMessage.includes("Too many tokens") ||
       errorMessage.includes("Too many requests")
     ) {
-      onEvent({
-        type: "error",
-        error: `Bedrock rate limit: ${errorMessage}`,
+      throw new ProviderError(`Bedrock rate limit: ${errorMessage}`, {
+        provider: "bedrock",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
       });
-      // Re-throw with a specific error type that the retry logic can handle
-      const rateLimitError: any = new Error(errorMessage);
-      rateLimitError.statusCode = 429; // Treat as rate limit
-      throw rateLimitError;
     }
 
-    onEvent({
-      type: "error",
-      error: `Bedrock streaming error: ${errorMessage}`,
-    });
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`Bedrock server error: ${errorMessage}`, {
+        provider: "bedrock",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isNetworkError(error)) {
+      throw new ProviderError(`Bedrock network error: ${errorMessage}`, {
+        provider: "bedrock",
+        statusCode: 503,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    // Don't emit error event here - let the client handle it to avoid duplicates
     throw error;
   }
 }
@@ -3939,22 +4147,44 @@ export async function streamWithXai(
       abortSignal,
     );
   } catch (error: any) {
-    // Handle xAI-specific errors if any
+    // Normalize xAI errors into ProviderError
+    // Note: streamWithOpenAI already normalizes most errors, but xAI-specific
+    // errors that bypass the OpenAI path need handling here.
     const errorMessage = error.message || error.toString();
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(`⚠️ [xAI] Error: ${errorMessage}`);
     }
 
-    // Check for rate limit errors
-    if (error.status === 429 || error.statusCode === 429) {
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(`⚠️ [xAI] Rate limit hit (429)`);
-      }
-      // Re-throw with proper status code for retry logic
-      const rateLimitError: any = new Error("xAI rate limit exceeded");
-      rateLimitError.statusCode = 429;
-      throw rateLimitError;
+    // If already a ProviderError from streamWithOpenAI, re-tag as xAI
+    if (error instanceof ProviderError) {
+      throw new ProviderError(error.message.replace("OpenAI", "xAI"), {
+        provider: "xai",
+        statusCode: error.statusCode,
+        retryable: error.retryable,
+        requestId: error.requestId,
+        cause: error.cause instanceof Error ? error.cause : undefined,
+      });
+    }
+
+    if (isRateLimitError(error)) {
+      throw new ProviderError(`xAI rate limit exceeded: ${errorMessage}`, {
+        provider: "xai",
+        statusCode: 429,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
+    }
+
+    if (isRetryableServerError(error)) {
+      throw new ProviderError(`xAI server error: ${errorMessage}`, {
+        provider: "xai",
+        statusCode: error.status || error.statusCode || 500,
+        retryable: true,
+        requestId: extractRequestId(error),
+        cause: error,
+      });
     }
 
     throw error;
