@@ -2753,24 +2753,34 @@ class Graphlit {
   /**
    * Retrieves content facets based on the provided filter criteria.
    * @param filter - The filter criteria to apply when retrieving facets.
+   * @param facets - Optional facet configurations used to group or time-bucket results.
+   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The content facets.
    */
   public async queryContentsFacets(
     filter?: Types.ContentFilter,
+    facets?: Types.ContentFacetInput[],
+    correlationId?: string,
   ): Promise<Types.QueryContentsFacetsQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsFacetsQuery,
       Types.QueryContentsFacetsQueryVariables
-    >(Documents.QueryContentsFacets, { filter: filter });
+    >(Documents.QueryContentsFacets, {
+      filter: filter,
+      facets: facets,
+      correlationId: correlationId,
+    });
   }
 
   /**
    * Retrieves the content knowledge graph based on the provided filter criteria.
    * @param filter - The filter criteria to apply when retrieving the graph.
+   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The content knowledge graph.
    */
   public async queryContentsGraph(
     filter?: Types.ContentFilter,
+    correlationId?: string,
   ): Promise<Types.QueryContentsGraphQuery> {
     return this.queryAndCheckError<
       Types.QueryContentsGraphQuery,
@@ -2780,6 +2790,7 @@ class Graphlit {
       graph: {
         /* return everything */
       },
+      correlationId: correlationId,
     });
   }
 

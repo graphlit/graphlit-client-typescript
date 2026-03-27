@@ -956,7 +956,11 @@ await graphlit.queryContentsObservations(filter?: Types.ContentFilter): Promise<
 Retrieves content facets based on the provided filter criteria.
 
 ```typescript
-await graphlit.queryContentsFacets(filter?: Types.ContentFilter): Promise<Types.QueryContentsFacetsQuery>
+await graphlit.queryContentsFacets(
+  filter?: Types.ContentFilter,
+  facets?: Types.ContentFacetInput[],
+  correlationId?: string
+): Promise<Types.QueryContentsFacetsQuery>
 ```
 
 **Response:** `response.queryContentsFacets`
@@ -966,7 +970,10 @@ await graphlit.queryContentsFacets(filter?: Types.ContentFilter): Promise<Types.
 Retrieves the content knowledge graph based on the provided filter criteria.
 
 ```typescript
-await graphlit.queryContentsGraph(filter?: Types.ContentFilter): Promise<Types.QueryContentsGraphQuery>
+await graphlit.queryContentsGraph(
+  filter?: Types.ContentFilter,
+  correlationId?: string
+): Promise<Types.QueryContentsGraphQuery>
 ```
 
 **Response:** `response.queryContentsGraph`
