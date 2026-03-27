@@ -9586,6 +9586,8 @@ export enum GoogleModels {
   Gemini_2_5ProExperimental = 'GEMINI_2_5_PRO_EXPERIMENTAL',
   /** Gemini 2.5 Pro (Preview) */
   Gemini_2_5ProPreview = 'GEMINI_2_5_PRO_PREVIEW',
+  /** Gemini 3.1 Flash Lite (Preview) */
+  Gemini_3_1FlashLitePreview = 'GEMINI_3_1_FLASH_LITE_PREVIEW',
   /** Gemini 3.1 Pro (Preview) */
   Gemini_3_1ProPreview = 'GEMINI_3_1_PRO_PREVIEW',
   /** Gemini 3 Flash (Preview) */
