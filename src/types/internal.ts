@@ -5,6 +5,17 @@
 
 import { ContextManagementAction } from "./agent.js";
 
+type ToolCallStreamData = {
+  id: string;
+  name: string;
+  arguments?: string;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  durationMs?: number | null;
+  failedAt?: string | null;
+  firstStatusAt?: string | null;
+};
+
 /**
  * Low-level streaming events used internally by providers
  * These get transformed into AgentStreamEvent by UIEventAdapter
@@ -13,15 +24,19 @@ export type StreamEvent =
   | { type: "start"; conversationId: string }
   | { type: "token"; token: string }
   | { type: "message"; message: string }
-  | { type: "tool_call_start"; toolCall: { id: string; name: string } }
+  | { type: "tool_call_start"; toolCall: ToolCallStreamData }
   | { type: "tool_call_delta"; toolCallId: string; argumentDelta: string }
   | {
       type: "tool_call_parsed"; // Tool arguments have been fully parsed from LLM stream
-      toolCall: { id: string; name: string; arguments: string };
+      toolCall: ToolCallStreamData & { arguments: string };
+    }
+  | {
+      type: "tool_call_executing"; // Tool handler execution has started
+      toolCall: ToolCallStreamData & { arguments: string };
     }
   | {
       type: "tool_call_complete"; // Tool has been executed with result
-      toolCall: { id: string; name: string; arguments: string };
+      toolCall: ToolCallStreamData & { arguments: string };
       result?: unknown;
       error?: string;
     }

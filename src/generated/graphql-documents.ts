@@ -1473,6 +1473,12 @@ export const DescribeEncodedImage = gql`
       id
       name
       arguments
+      startedAt
+      completedAt
+      durationMs
+      status
+      failedAt
+      firstStatusAt
     }
     tokens
     throughput
@@ -1622,6 +1628,12 @@ export const DescribeImage = gql`
       id
       name
       arguments
+      startedAt
+      completedAt
+      durationMs
+      status
+      failedAt
+      firstStatusAt
     }
     tokens
     throughput
@@ -4757,6 +4769,12 @@ export const AskGraphlit = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -4946,6 +4964,12 @@ export const CompleteConversation = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -5140,6 +5164,12 @@ export const CompleteConversation = gql`
           id
           name
           arguments
+          startedAt
+          completedAt
+          durationMs
+          status
+          failedAt
+          firstStatusAt
         }
         tokens
         throughput
@@ -5294,6 +5324,12 @@ export const ContinueConversation = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -5488,6 +5524,12 @@ export const ContinueConversation = gql`
           id
           name
           arguments
+          startedAt
+          completedAt
+          durationMs
+          status
+          failedAt
+          firstStatusAt
         }
         tokens
         throughput
@@ -5695,6 +5737,12 @@ export const FormatConversation = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -5889,6 +5937,12 @@ export const FormatConversation = gql`
           id
           name
           arguments
+          startedAt
+          completedAt
+          durationMs
+          status
+          failedAt
+          firstStatusAt
         }
         tokens
         throughput
@@ -6049,6 +6103,12 @@ export const GetConversation = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -6192,6 +6252,12 @@ export const GetConversation = gql`
           id
           name
           arguments
+          startedAt
+          completedAt
+          durationMs
+          status
+          failedAt
+          firstStatusAt
         }
         tokens
         throughput
@@ -6608,6 +6674,12 @@ export const Prompt = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -6773,6 +6845,12 @@ export const PromptConversation = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -6967,6 +7045,12 @@ export const PromptConversation = gql`
           id
           name
           arguments
+          startedAt
+          completedAt
+          durationMs
+          status
+          failedAt
+          firstStatusAt
         }
         tokens
         throughput
@@ -7868,6 +7952,12 @@ export const ReviseContent = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -8025,6 +8115,12 @@ export const ReviseEncodedImage = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -8181,6 +8277,12 @@ export const ReviseImage = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -8337,6 +8439,12 @@ export const ReviseText = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput
@@ -9369,6 +9477,18 @@ export const GetFeed = gql`
           id
         }
       }
+      gitlab {
+        authenticationType
+        projectPath
+        branch
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
       readLimit
     }
     email {
@@ -9444,6 +9564,17 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
+      gitlab {
+        authenticationType
+        projectPath
         clientId
         clientSecret
         refreshToken
@@ -9559,6 +9690,19 @@ export const GetFeed = gql`
         }
         authorizationId
       }
+      gitlab {
+        authenticationType
+        uri
+        projectPath
+        personalAccessToken
+        clientId
+        clientSecret
+        refreshToken
+        connector {
+          id
+        }
+        authorizationId
+      }
       linear {
         authenticationType
         key
@@ -9580,6 +9724,19 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        branch
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
+      gitlab {
+        authenticationType
+        projectPath
+        branch
         clientId
         clientSecret
         refreshToken
@@ -9599,6 +9756,18 @@ export const GetFeed = gql`
         uri
         repositoryOwner
         repositoryName
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
+      gitlab {
+        authenticationType
+        projectPath
+        branch
         clientId
         clientSecret
         refreshToken
@@ -10381,6 +10550,18 @@ export const QueryFeeds = gql`
             id
           }
         }
+        gitlab {
+          authenticationType
+          projectPath
+          branch
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
         readLimit
       }
       email {
@@ -10456,6 +10637,17 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
+        gitlab {
+          authenticationType
+          projectPath
           clientId
           clientSecret
           refreshToken
@@ -10571,6 +10763,19 @@ export const QueryFeeds = gql`
           }
           authorizationId
         }
+        gitlab {
+          authenticationType
+          uri
+          projectPath
+          personalAccessToken
+          clientId
+          clientSecret
+          refreshToken
+          connector {
+            id
+          }
+          authorizationId
+        }
         linear {
           authenticationType
           key
@@ -10592,6 +10797,19 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          branch
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
+        gitlab {
+          authenticationType
+          projectPath
+          branch
           clientId
           clientSecret
           refreshToken
@@ -10611,6 +10829,18 @@ export const QueryFeeds = gql`
           uri
           repositoryOwner
           repositoryName
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
+        gitlab {
+          authenticationType
+          projectPath
+          branch
           clientId
           clientSecret
           refreshToken
@@ -17817,6 +18047,12 @@ export const PromptSpecifications = gql`
         id
         name
         arguments
+        startedAt
+        completedAt
+        durationMs
+        status
+        failedAt
+        firstStatusAt
       }
       tokens
       throughput

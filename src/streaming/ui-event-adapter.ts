@@ -2,6 +2,7 @@ import {
   ConversationMessage,
   ConversationToolCall,
   ConversationRoleTypes,
+  ToolExecutionStatus as PersistedToolExecutionStatus,
 } from "../generated/graphql-types.js";
 import {
   AgentStreamEvent,
@@ -119,6 +120,10 @@ export class UIEventAdapter {
 
       case "tool_call_parsed":
         this.handleToolCallParsed(event.toolCall);
+        break;
+
+      case "tool_call_executing":
+        this.handleToolCallExecuting(event.toolCall);
         break;
 
       case "tool_call_complete":
@@ -304,6 +309,7 @@ export class UIEventAdapter {
       id: toolCall.id,
       name: toolCall.name,
       arguments: "",
+      firstStatusAt: new Date().toISOString(),
     };
 
     this.activeToolCalls.set(toolCall.id, {
@@ -321,11 +327,7 @@ export class UIEventAdapter {
       );
     }
 
-    this.emitUIEvent({
-      type: "tool_update",
-      toolCall: conversationToolCall,
-      status: "preparing",
-    });
+    this.emitToolUpdate(conversationToolCall, "preparing");
   }
 
   private handleToolCallDelta(toolCallId: string, argumentDelta: string): void {
@@ -349,14 +351,10 @@ export class UIEventAdapter {
       }
 
       if (toolData.status === "preparing") {
-        toolData.status = "executing";
+        toolData.status = "preparing";
       }
 
-      this.emitUIEvent({
-        type: "tool_update",
-        toolCall: toolData.toolCall,
-        status: "executing",
-      });
+      this.emitToolUpdate(toolData.toolCall, toolData.status);
     } else {
       console.warn(
         `🔧 [UIEventAdapter] WARNING: Tool call delta for unknown tool ID: ${toolCallId}`,
@@ -388,11 +386,7 @@ export class UIEventAdapter {
       // Mark as ready for execution, not completed
       toolData.status = "ready";
 
-      this.emitUIEvent({
-        type: "tool_update",
-        toolCall: toolData.toolCall,
-        status: "ready",
-      });
+      this.emitToolUpdate(toolData.toolCall, "ready");
     } else {
       // If we don't have this tool call tracked, create it now
       console.warn(
@@ -404,6 +398,7 @@ export class UIEventAdapter {
         id: toolCall.id,
         name: toolCall.name,
         arguments: toolCall.arguments,
+        firstStatusAt: new Date().toISOString(),
       };
 
       this.activeToolCalls.set(toolCall.id, {
@@ -415,12 +410,32 @@ export class UIEventAdapter {
       this.hasToolCallsInProgress = true;
       this.hadToolCallsBeforeResume = true;
 
-      this.emitUIEvent({
-        type: "tool_update",
-        toolCall: conversationToolCall,
-        status: "ready",
-      });
+      this.emitToolUpdate(conversationToolCall, "ready");
     }
+  }
+
+  private handleToolCallExecuting(toolCall: {
+    id: string;
+    name: string;
+    arguments: string;
+    startedAt?: string | null;
+    firstStatusAt?: string | null;
+  }): void {
+    const toolData = this.activeToolCalls.get(toolCall.id);
+    if (!toolData) {
+      return;
+    }
+
+    toolData.toolCall.arguments = toolCall.arguments;
+    toolData.toolCall.startedAt =
+      toolCall.startedAt ?? toolData.toolCall.startedAt ?? new Date().toISOString();
+    toolData.toolCall.firstStatusAt =
+      toolData.toolCall.firstStatusAt ??
+      toolCall.firstStatusAt ??
+      toolData.toolCall.startedAt;
+    toolData.status = "executing";
+
+    this.emitToolUpdate(toolData.toolCall, "executing");
   }
 
   private handleToolCallComplete(
@@ -428,6 +443,11 @@ export class UIEventAdapter {
       id: string;
       name: string;
       arguments: string;
+      startedAt?: string | null;
+      completedAt?: string | null;
+      durationMs?: number | null;
+      failedAt?: string | null;
+      firstStatusAt?: string | null;
     },
     result?: unknown,
     error?: string,
@@ -443,16 +463,33 @@ export class UIEventAdapter {
 
     const toolData = this.activeToolCalls.get(toolCall.id);
     if (toolData) {
-      // Update with execution result
+      toolData.toolCall.arguments = toolCall.arguments;
+      toolData.toolCall.startedAt =
+        toolCall.startedAt ?? toolData.toolCall.startedAt;
+      toolData.toolCall.completedAt =
+        toolCall.completedAt ?? new Date().toISOString();
+      toolData.toolCall.firstStatusAt =
+        toolData.toolCall.firstStatusAt ??
+        toolCall.firstStatusAt ??
+        toolData.toolCall.startedAt ??
+        toolData.toolCall.completedAt;
+      toolData.toolCall.durationMs =
+        toolCall.durationMs ??
+        (toolData.toolCall.startedAt
+          ? new Date(toolData.toolCall.completedAt).getTime() -
+            new Date(toolData.toolCall.startedAt).getTime()
+          : toolData.toolCall.durationMs);
+      toolData.toolCall.failedAt =
+        error
+          ? (toolCall.failedAt ?? toolData.toolCall.completedAt)
+          : undefined;
+      toolData.toolCall.status = error
+        ? PersistedToolExecutionStatus.Failed
+        : PersistedToolExecutionStatus.Completed;
+
       toolData.status = error ? "failed" : "completed";
 
-      this.emitUIEvent({
-        type: "tool_update",
-        toolCall: toolData.toolCall,
-        status: toolData.status,
-        result: result,
-        error: error,
-      });
+      this.emitToolUpdate(toolData.toolCall, toolData.status, result, error);
     } else {
       console.warn(
         `🔧 [UIEventAdapter] Tool call complete for unknown tool ID: ${toolCall.id}`,
@@ -881,6 +918,37 @@ export class UIEventAdapter {
 
   private emitUIEvent(event: AgentStreamEvent): void {
     this.onEvent(event);
+  }
+
+  private emitToolUpdate(
+    toolCall: ConversationToolCall,
+    status: ToolExecutionStatus,
+    result?: unknown,
+    error?: string,
+  ): void {
+    const event: AgentStreamEvent = {
+      type: "tool_update",
+      toolCall,
+      status,
+      timestamp: new Date(),
+      result,
+      error,
+    };
+
+    if (toolCall.startedAt) {
+      event.startedAt = toolCall.startedAt;
+    }
+    if (toolCall.completedAt) {
+      event.completedAt = toolCall.completedAt;
+    }
+    if (toolCall.durationMs !== null && toolCall.durationMs !== undefined) {
+      event.durationMs = toolCall.durationMs;
+    }
+    if (toolCall.failedAt) {
+      event.failedAt = toolCall.failedAt;
+    }
+
+    this.emitUIEvent(event);
   }
 
   private handleContextWindow(usage: {

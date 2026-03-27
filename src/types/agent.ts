@@ -6,6 +6,7 @@ import {
   ContentCriteriaInput,
   ToolDefinitionInput,
   Specification,
+  ToolExecutionStatus,
 } from "../generated/graphql-types.js";
 import type { AgentStreamEvent } from "./ui-events.js";
 
@@ -127,6 +128,12 @@ export interface ToolCallResult {
   arguments: any;
   result?: any;
   error?: string;
+  startedAt?: string;
+  completedAt?: string;
+  durationMs?: number;
+  failedAt?: string;
+  status?: ToolExecutionStatus;
+  /** @deprecated Use durationMs instead. */
   duration?: number; // milliseconds
 }
 

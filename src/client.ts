@@ -100,6 +100,98 @@ let BedrockRuntimeClient:
   | undefined;
 let Cerebras: typeof import("@cerebras/cerebras_cloud_sdk").default | undefined;
 
+function nowIsoString(): string {
+  return new Date().toISOString();
+}
+
+function toTerminalToolStatus(
+  error?: string,
+): Types.ToolExecutionStatus {
+  return error
+    ? Types.ToolExecutionStatus.Failed
+    : Types.ToolExecutionStatus.Completed;
+}
+
+function normalizeToolCallForExecution(
+  toolCall: Types.ConversationToolCall,
+): Types.ConversationToolCall {
+  return {
+    __typename: "ConversationToolCall",
+    id: toolCall.id,
+    name: toolCall.name,
+    arguments: toolCall.arguments,
+    startedAt: toolCall.startedAt ?? undefined,
+    completedAt: toolCall.completedAt ?? undefined,
+    durationMs: toolCall.durationMs ?? undefined,
+    status: toolCall.status ?? undefined,
+    failedAt: toolCall.failedAt ?? undefined,
+    firstStatusAt: toolCall.firstStatusAt ?? undefined,
+  };
+}
+
+function buildConversationToolCallFromResult(
+  toolResult: ToolCallResult,
+): Types.ConversationToolCall {
+  return {
+    __typename: "ConversationToolCall",
+    id: toolResult.id,
+    name: toolResult.name,
+    arguments:
+      typeof toolResult.arguments === "string"
+        ? toolResult.arguments
+        : JSON.stringify(toolResult.arguments ?? {}),
+    startedAt: toolResult.startedAt,
+    completedAt: toolResult.completedAt,
+    durationMs: toolResult.durationMs ?? toolResult.duration,
+    status: toolResult.status,
+    failedAt: toolResult.failedAt,
+    firstStatusAt: toolResult.startedAt,
+  };
+}
+
+function computePersistedToolRoundDurationMs(
+  toolCalls?: Array<Types.ConversationToolCall | null> | null,
+): number | undefined {
+  if (!toolCalls || toolCalls.length === 0) {
+    return undefined;
+  }
+
+  const startedTimes: number[] = [];
+  const completedTimes: number[] = [];
+  const durations: number[] = [];
+
+  for (const toolCall of toolCalls) {
+    if (!toolCall) continue;
+
+    if (toolCall.startedAt && toolCall.completedAt) {
+      const started = new Date(toolCall.startedAt).getTime();
+      const completed = new Date(toolCall.completedAt).getTime();
+      if (Number.isFinite(started) && Number.isFinite(completed)) {
+        startedTimes.push(started);
+        completedTimes.push(completed);
+      }
+    }
+
+    if (
+      toolCall.durationMs !== null &&
+      toolCall.durationMs !== undefined &&
+      Number.isFinite(toolCall.durationMs)
+    ) {
+      durations.push(toolCall.durationMs);
+    }
+  }
+
+  if (startedTimes.length > 0 && completedTimes.length > 0) {
+    return Math.max(0, Math.max(...completedTimes) - Math.min(...startedTimes));
+  }
+
+  if (durations.length > 0) {
+    return Math.max(...durations);
+  }
+
+  return undefined;
+}
+
 try {
   OpenAI = optionalRequire("openai").default || optionalRequire("openai");
   if (process.env.DEBUG_GRAPHLIT_SDK_INITIALIZATION) {
@@ -9159,12 +9251,18 @@ class Graphlit {
             }
 
             // Emit tool events if there were tool calls
-            if (promptResult.toolCalls && promptResult.toolCalls.length > 0) {
-              for (const toolCall of promptResult.toolCalls) {
+            if (promptResult.toolResults && promptResult.toolResults.length > 0) {
+              for (const toolResult of promptResult.toolResults) {
+                const toolCall = buildConversationToolCallFromResult(toolResult);
                 onEvent({
                   type: "tool_update",
-                  toolCall: toolCall,
-                  status: "completed" as const,
+                  toolCall,
+                  status: toolResult.error ? "failed" : "completed",
+                  timestamp: new Date(),
+                  startedAt: toolCall.startedAt ?? undefined,
+                  completedAt: toolCall.completedAt ?? undefined,
+                  durationMs: toolCall.durationMs ?? undefined,
+                  failedAt: toolCall.failedAt ?? undefined,
                 });
               }
             }
@@ -10251,11 +10349,13 @@ class Graphlit {
         }
 
         // Add assistant message with tool calls to conversation
+        const roundToolCalls = toolCalls.map(normalizeToolCallForExecution);
+
         const assistantMessage: Types.ConversationMessage = {
           __typename: "ConversationMessage" as const,
           role: Types.ConversationRoleTypes.Assistant,
           message: roundMessage,
-          toolCalls: toolCalls,
+          toolCalls: roundToolCalls,
           timestamp: new Date().toISOString(),
         };
 
@@ -10270,16 +10370,16 @@ class Graphlit {
         messages.push(assistantMessage);
 
         // Track tool names for stuck detection
-        for (const tc of toolCalls) {
+        for (const tc of roundToolCalls) {
           toolCallNames.push(tc.name);
         }
-        totalToolCallCount += toolCalls.length;
+        totalToolCallCount += roundToolCalls.length;
 
         // Track assistant message in budget
         if (budgetTracker) {
           const assistantTokens =
             estimateTokens(roundMessage) +
-            toolCalls.reduce(
+            roundToolCalls.reduce(
               (sum, tc) => sum + estimateTokens(tc.arguments),
               0,
             );
@@ -10287,14 +10387,50 @@ class Graphlit {
         }
 
         // Execute tools and add responses
-        for (const toolCall of toolCalls) {
+        for (const toolCall of roundToolCalls) {
           if (abortSignal?.aborted) {
             throw new Error("Operation aborted");
           }
 
           const handler = toolHandlers[toolCall.name];
           if (!handler) {
-            console.warn(`No handler for tool: ${toolCall.name}`);
+            const errorMessage = `No handler for tool: ${toolCall.name}`;
+            const terminalAt = nowIsoString();
+            toolCall.startedAt = toolCall.startedAt ?? terminalAt;
+            toolCall.completedAt = terminalAt;
+            toolCall.durationMs = 0;
+            toolCall.failedAt = terminalAt;
+            toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+            toolCall.status = Types.ToolExecutionStatus.Failed;
+
+            uiAdapter.handleEvent({
+              type: "tool_call_complete",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+                arguments: toolCall.arguments,
+                startedAt: toolCall.startedAt,
+                completedAt: toolCall.completedAt,
+                durationMs: toolCall.durationMs,
+                failedAt: toolCall.failedAt,
+                firstStatusAt: toolCall.firstStatusAt,
+              },
+              error: errorMessage,
+            });
+
+            const errorToolMessage: Types.ConversationMessage = {
+              __typename: "ConversationMessage" as const,
+              role: Types.ConversationRoleTypes.Tool,
+              message: `Error: ${errorMessage}`,
+              toolCallId: toolCall.id,
+              timestamp: terminalAt,
+              toolCallResponse: toolCall.name,
+            };
+            messages.push(errorToolMessage);
+            errors.push(`${toolCall.name}: ${errorMessage}`);
+            if (budgetTracker) {
+              budgetTracker.addMessage(errorToolMessage.message || "");
+            }
             continue;
           }
 
@@ -10386,16 +10522,68 @@ class Graphlit {
                 }
 
                 const parseErrorText = `Tool ${toolCall.name} failed: Invalid JSON arguments: ${parseError instanceof Error ? parseError.message : "Unknown error"}`;
+                const terminalAt = nowIsoString();
+                toolCall.startedAt = toolCall.startedAt ?? terminalAt;
+                toolCall.completedAt = terminalAt;
+                toolCall.durationMs = 0;
+                toolCall.failedAt = terminalAt;
+                toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+                toolCall.status = Types.ToolExecutionStatus.Failed;
+
                 uiAdapter.handleEvent({
-                  type: "error",
+                  type: "tool_call_complete",
+                  toolCall: {
+                    id: toolCall.id,
+                    name: toolCall.name,
+                    arguments: toolCall.arguments,
+                    startedAt: toolCall.startedAt,
+                    completedAt: toolCall.completedAt,
+                    durationMs: toolCall.durationMs,
+                    failedAt: toolCall.failedAt,
+                    firstStatusAt: toolCall.firstStatusAt,
+                  },
                   error: parseErrorText,
                 });
+
+                const errorToolMessage: Types.ConversationMessage = {
+                  __typename: "ConversationMessage" as const,
+                  role: Types.ConversationRoleTypes.Tool,
+                  message: `Error: ${parseErrorText}`,
+                  toolCallId: toolCall.id,
+                  timestamp: terminalAt,
+                  toolCallResponse: toolCall.name,
+                };
+                messages.push(errorToolMessage);
                 errors.push(parseErrorText);
+                if (budgetTracker) {
+                  budgetTracker.addMessage(errorToolMessage.message || "");
+                }
                 continue;
               }
             }
 
+            const executionStartMs = Date.now();
+            const executionStartedAt = new Date(executionStartMs).toISOString();
+            toolCall.startedAt = executionStartedAt;
+            toolCall.firstStatusAt = toolCall.firstStatusAt ?? executionStartedAt;
+
+            uiAdapter.handleEvent({
+              type: "tool_call_executing",
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+                arguments: toolCall.arguments,
+                startedAt: toolCall.startedAt,
+                firstStatusAt: toolCall.firstStatusAt,
+              },
+            });
+
             const result = await handler(args, artifactCollector, abortSignal);
+            const completedAt = nowIsoString();
+            toolCall.completedAt = completedAt;
+            toolCall.durationMs = Date.now() - executionStartMs;
+            toolCall.failedAt = undefined;
+            toolCall.status = Types.ToolExecutionStatus.Completed;
 
             uiAdapter.handleEvent({
               type: "tool_call_complete",
@@ -10403,6 +10591,10 @@ class Graphlit {
                 id: toolCall.id,
                 name: toolCall.name,
                 arguments: toolCall.arguments,
+                startedAt: toolCall.startedAt,
+                completedAt: toolCall.completedAt,
+                durationMs: toolCall.durationMs,
+                firstStatusAt: toolCall.firstStatusAt,
               },
               result: result,
             });
@@ -10460,12 +10652,31 @@ class Graphlit {
             console.error(`Tool execution error for ${toolCall.name}:`, error);
             errors.push(`${toolCall.name}: ${errorMessage}`);
 
+            const completedAt = nowIsoString();
+            if (!toolCall.startedAt) {
+              toolCall.startedAt = completedAt;
+            }
+            toolCall.completedAt = completedAt;
+            toolCall.durationMs = Math.max(
+              0,
+              new Date(completedAt).getTime() -
+                new Date(toolCall.startedAt).getTime(),
+            );
+            toolCall.failedAt = completedAt;
+            toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+            toolCall.status = Types.ToolExecutionStatus.Failed;
+
             uiAdapter.handleEvent({
               type: "tool_call_complete",
               toolCall: {
                 id: toolCall.id,
                 name: toolCall.name,
                 arguments: toolCall.arguments,
+                startedAt: toolCall.startedAt,
+                completedAt: toolCall.completedAt,
+                durationMs: toolCall.durationMs,
+                failedAt: toolCall.failedAt,
+                firstStatusAt: toolCall.firstStatusAt,
               },
               error: errorMessage,
             });
@@ -10508,6 +10719,7 @@ class Graphlit {
           message: msg.message,
           timestamp: msg.timestamp,
         };
+        if (msg.toolCallId) input.toolCallId = msg.toolCallId;
         if (msg.toolCalls) {
           input.toolCalls = msg.toolCalls
             .filter(
@@ -10517,9 +10729,14 @@ class Graphlit {
               id: tc.id,
               name: tc.name,
               arguments: tc.arguments,
+              startedAt: tc.startedAt,
+              completedAt: tc.completedAt,
+              durationMs: tc.durationMs,
+              status: tc.status,
+              failedAt: tc.failedAt,
+              firstStatusAt: tc.firstStatusAt,
             }));
         }
-        if (msg.toolCallId) input.toolCallId = msg.toolCallId;
 
         const absoluteIndex = toolMessagesStartIndex + idx;
         const reasoning = reasoningByMessageIndex.get(absoluteIndex);
@@ -11345,7 +11562,8 @@ class Graphlit {
         responseText: assistantMsg.message || "",
         toolCalls: [...new Set(toolNames)].sort(),
         toolCallCount: toolNames.length,
-        durationMs: 0, // Not available from persisted messages
+        durationMs:
+          computePersistedToolRoundDurationMs(assistantMsg.toolCalls) ?? 0,
         taskComplete: toolNames.includes("task_complete"),
         errors: toolErrors.length > 0 ? toolErrors : undefined,
       });
@@ -12263,7 +12481,9 @@ class Graphlit {
       if (!toolCall || signal.aborted) return null;
 
       const startTime = Date.now();
+      const startedAt = new Date(startTime).toISOString();
       const handler = toolHandlers[toolCall.name || ""];
+      let parsedArguments: any = {};
 
       let result: any;
       let error: string | undefined;
@@ -12273,27 +12493,38 @@ class Graphlit {
           throw new Error(`No handler found for tool: ${toolCall.name}`);
         }
 
-        const args = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
+        parsedArguments = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
 
         // Add timeout for individual tool calls (30 seconds)
         const toolTimeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error("Tool execution timeout")), 30000),
         );
 
-        result = await Promise.race([handler(args, undefined, signal), toolTimeout]);
+        result = await Promise.race([
+          handler(parsedArguments, undefined, signal),
+          toolTimeout,
+        ]);
       } catch (e: any) {
         error = e.message || "Tool execution failed";
         console.error(`Tool ${toolCall.name} failed:`, e);
       }
 
+      const completedAt = nowIsoString();
+      const durationMs = Date.now() - startTime;
+
       // Record for result
       const toolResult: ToolCallResult = {
         id: toolCall.id,
         name: toolCall.name || "",
-        arguments: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
+        arguments: parsedArguments,
         result,
         error,
-        duration: Date.now() - startTime,
+        startedAt,
+        completedAt,
+        durationMs,
+        failedAt: error ? completedAt : undefined,
+        status: toTerminalToolStatus(error),
+        duration: durationMs,
       };
 
       allToolCalls.push(toolResult);

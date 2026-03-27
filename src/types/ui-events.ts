@@ -111,6 +111,11 @@ export type AgentStreamEvent =
       type: "tool_update";
       toolCall: ConversationToolCall;
       status: ToolExecutionStatus;
+      timestamp?: Date;
+      startedAt?: string;
+      completedAt?: string;
+      durationMs?: number;
+      failedAt?: string;
       result?: unknown;
       error?: string;
     }
