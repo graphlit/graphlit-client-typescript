@@ -4099,6 +4099,20 @@ class Graphlit {
   }
 
   /**
+   * Queries GitLab projects.
+   * @param properties - The GitLab project query properties.
+   * @returns The GitLab projects.
+   */
+  public async queryGitLabProjects(
+    properties: Types.GitLabProjectsInput,
+  ): Promise<Types.QueryGitLabProjectsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryGitLabProjectsQuery,
+      Types.QueryGitLabProjectsQueryVariables
+    >(Documents.QueryGitLabProjects, { properties: properties });
+  }
+
+  /**
    * Queries Notion databases.
    * @param properties - The Notion database query properties.
    * @returns The Notion databases.

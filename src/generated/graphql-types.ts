@@ -9190,6 +9190,54 @@ export type GitLabMilestonesFeedPropertiesUpdateInput = {
   uri?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a GitLab project. */
+export type GitLabProjectResult = {
+  __typename?: 'GitLabProjectResult';
+  /** The date the project was created. */
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The GitLab project description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The number of GitLab forks for the project. */
+  forksCount?: Maybe<Scalars['Int']['output']>;
+  /** Whether the GitLab project is private. */
+  isPrivate?: Maybe<Scalars['Boolean']['output']>;
+  /** The last time the project had activity. */
+  lastActivityAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The GitLab project identifier. */
+  projectId?: Maybe<Scalars['Long']['output']>;
+  /** The GitLab project name. */
+  projectName?: Maybe<Scalars['String']['output']>;
+  /** The GitLab project path with namespace. */
+  projectPath?: Maybe<Scalars['String']['output']>;
+  /** The number of GitLab stars for the project. */
+  starCount?: Maybe<Scalars['Int']['output']>;
+  /** The GitLab project web URL. */
+  webUrl?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents GitLab projects. */
+export type GitLabProjectResults = {
+  __typename?: 'GitLabProjectResults';
+  /** The GitLab projects. */
+  results?: Maybe<Array<Maybe<GitLabProjectResult>>>;
+};
+
+/** Represents GitLab projects properties. */
+export type GitLabProjectsInput = {
+  /** GitLab authentication type. */
+  authenticationType: GitLabAuthenticationTypes;
+  /** GitLab OAuth refresh token client identifier, requires OAuth authentication type. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** GitLab OAuth refresh token client secret, requires OAuth authentication type. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication connector reference. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** GitLab personal access token, requires PersonalAccessToken authentication type. */
+  personalAccessToken?: InputMaybe<Scalars['String']['input']>;
+  /** GitLab OAuth refresh token, requires OAuth authentication type. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents GitLab Merge Requests feed properties. */
 export type GitLabPullRequestsFeedProperties = {
   __typename?: 'GitLabPullRequestsFeedProperties';
@@ -22056,6 +22104,8 @@ export type Query = {
   feeds?: Maybe<FeedResults>;
   /** Retrieves available GitHub repositories for the authenticated user. */
   gitHubRepositories?: Maybe<GitHubRepositoryResults>;
+  /** Retrieves available GitLab projects for the authenticated user. */
+  gitLabProjects?: Maybe<GitLabProjectResults>;
   /** Retrieves available Google calendars. */
   googleCalendars?: Maybe<CalendarResults>;
   /** Retrieves available Google Drive shared drives. Does not include the user's My Drive, which is the default when no drive identifier is specified. */
@@ -22726,6 +22776,11 @@ export type QueryFeedsArgs = {
 export type QueryGitHubRepositoriesArgs = {
   properties: GitHubRepositoriesInput;
   sortBy?: InputMaybe<GitHubRepositorySortTypes>;
+};
+
+
+export type QueryGitLabProjectsArgs = {
+  properties: GitLabProjectsInput;
 };
 
 
@@ -28871,6 +28926,13 @@ export type QueryGitHubRepositoriesQueryVariables = Exact<{
 
 
 export type QueryGitHubRepositoriesQuery = { __typename?: 'Query', gitHubRepositories?: { __typename?: 'GitHubRepositoryResults', results?: Array<{ __typename?: 'GitHubRepositoryResult', repositoryOwner?: string | null, repositoryName?: string | null, repositoryFullName?: string | null, description?: string | null, isPrivate?: boolean | null, stargazersCount?: number | null, forksCount?: number | null, pushedAt?: any | null, createdAt?: any | null, isOwner?: boolean | null, language?: string | null } | null> | null } | null };
+
+export type QueryGitLabProjectsQueryVariables = Exact<{
+  properties: GitLabProjectsInput;
+}>;
+
+
+export type QueryGitLabProjectsQuery = { __typename?: 'Query', gitLabProjects?: { __typename?: 'GitLabProjectResults', results?: Array<{ __typename?: 'GitLabProjectResult', projectId?: any | null, projectName?: string | null, projectPath?: string | null, description?: string | null, isPrivate?: boolean | null, starCount?: number | null, forksCount?: number | null, lastActivityAt?: any | null, createdAt?: any | null, webUrl?: string | null } | null> | null } | null };
 
 export type QueryGoogleCalendarsQueryVariables = Exact<{
   properties: GoogleCalendarsInput;

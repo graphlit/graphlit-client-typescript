@@ -11333,6 +11333,24 @@ export const QueryGitHubRepositories = gql`
   }
 }
     `;
+export const QueryGitLabProjects = gql`
+    query QueryGitLabProjects($properties: GitLabProjectsInput!) {
+  gitLabProjects(properties: $properties) {
+    results {
+      projectId
+      projectName
+      projectPath
+      description
+      isPrivate
+      starCount
+      forksCount
+      lastActivityAt
+      createdAt
+      webUrl
+    }
+  }
+}
+    `;
 export const QueryGoogleCalendars = gql`
     query QueryGoogleCalendars($properties: GoogleCalendarsInput!) {
   googleCalendars(properties: $properties) {
