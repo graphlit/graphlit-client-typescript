@@ -143,14 +143,20 @@ export enum AgentChannelTypes {
   Discord = 'DISCORD',
   /** Email */
   Email = 'EMAIL',
+  /** Google Chat */
+  GoogleChat = 'GOOGLE_CHAT',
   /** Messaging */
   Messaging = 'MESSAGING',
   /** Slack */
   Slack = 'SLACK',
   /** Microsoft Teams */
   Teams = 'TEAMS',
+  /** Telegram */
+  Telegram = 'TELEGRAM',
   /** Voice */
-  Voice = 'VOICE'
+  Voice = 'VOICE',
+  /** WhatsApp */
+  WhatsApp = 'WHATS_APP'
 }
 
 /** Represents a filter for agents. */
