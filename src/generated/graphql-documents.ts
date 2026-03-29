@@ -1195,6 +1195,21 @@ export const GetConnector = gql`
         applicationId
         publicKey
       }
+      telegram {
+        botToken
+        secretToken
+        botUsername
+      }
+      whatsApp {
+        accessToken
+        appSecret
+        phoneNumberId
+        verifyToken
+      }
+      googleChat {
+        credentials
+        projectId
+      }
     }
   }
 }
@@ -1279,6 +1294,21 @@ export const QueryConnectors = gql`
           botToken
           applicationId
           publicKey
+        }
+        telegram {
+          botToken
+          secretToken
+          botUsername
+        }
+        whatsApp {
+          accessToken
+          appSecret
+          phoneNumberId
+          verifyToken
+        }
+        googleChat {
+          credentials
+          projectId
         }
       }
     }
@@ -18515,6 +18545,21 @@ export const GetUser = gql`
           applicationId
           publicKey
         }
+        telegram {
+          botToken
+          secretToken
+          botUsername
+        }
+        whatsApp {
+          accessToken
+          appSecret
+          phoneNumberId
+          verifyToken
+        }
+        googleChat {
+          credentials
+          projectId
+        }
       }
     }
     personas {
@@ -18627,6 +18672,21 @@ export const GetUserByIdentifier = gql`
           botToken
           applicationId
           publicKey
+        }
+        telegram {
+          botToken
+          secretToken
+          botUsername
+        }
+        whatsApp {
+          accessToken
+          appSecret
+          phoneNumberId
+          verifyToken
+        }
+        googleChat {
+          credentials
+          projectId
         }
       }
     }
@@ -18741,6 +18801,21 @@ export const QueryUsers = gql`
             botToken
             applicationId
             publicKey
+          }
+          telegram {
+            botToken
+            secretToken
+            botUsername
+          }
+          whatsApp {
+            accessToken
+            appSecret
+            phoneNumberId
+            verifyToken
+          }
+          googleChat {
+            credentials
+            projectId
           }
         }
       }
