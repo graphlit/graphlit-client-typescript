@@ -66,6 +66,8 @@ export type AddressInput = {
 /** Represents an agent. */
 export type Agent = {
   __typename?: 'Agent';
+  /** The pinned content scope for this agent. */
+  augmentedFilter?: Maybe<ContentCriteria>;
   /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
   callbackUri?: Maybe<Scalars['URL']['output']>;
   /** The agent channels. */
@@ -82,8 +84,8 @@ export type Agent = {
   description?: Maybe<Scalars['String']['output']>;
   /** The desks this agent is assigned to. */
   desks?: Maybe<Array<Maybe<Desk>>>;
-  /** The trigger filter for event-driven activation. */
-  filter?: Maybe<AgentTriggerFilter>;
+  /** The content retrieval scope for this agent. */
+  filter?: Maybe<ContentCriteria>;
   /** The ID of the agent. */
   id: Scalars['ID']['output'];
   /** The modified date of the agent. */
@@ -106,6 +108,8 @@ export type Agent = {
   state: EntityState;
   /** The agent timeout. */
   timeout?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The trigger filter for event-driven activation. */
+  trigger?: Maybe<AgentTriggerFilter>;
   /** The agent type. */
   type: AgentTypes;
   /** The user that created the entity. */
@@ -195,6 +199,8 @@ export type AgentFilter = {
 
 /** Represents an agent. */
 export type AgentInput = {
+  /** The pinned content scope for this agent. */
+  augmentedFilter?: InputMaybe<ContentCriteriaInput>;
   /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
   callbackUri?: InputMaybe<Scalars['URL']['input']>;
   /** The agent channels. */
@@ -203,8 +209,8 @@ export type AgentInput = {
   connectors?: InputMaybe<Array<EntityReferenceInput>>;
   /** The description of the agent. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** The trigger filter for event-driven activation. */
-  filter?: InputMaybe<AgentTriggerFilterInput>;
+  /** The content retrieval scope for this agent. */
+  filter?: InputMaybe<ContentCriteriaInput>;
   /** The name of the agent. */
   name: Scalars['String']['input'];
   /** The execution prompt run on each triggered activation. */
@@ -217,6 +223,8 @@ export type AgentInput = {
   specification?: InputMaybe<EntityReferenceInput>;
   /** The agent timeout. */
   timeout?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** The trigger filter for event-driven activation. */
+  trigger?: InputMaybe<AgentTriggerFilterInput>;
   /** The agent type. */
   type: AgentTypes;
 };
@@ -282,6 +290,8 @@ export enum AgentTypes {
 
 /** Represents an agent. */
 export type AgentUpdateInput = {
+  /** The pinned content scope for this agent. */
+  augmentedFilter?: InputMaybe<ContentCriteriaInput>;
   /** The agent callback URI, optional. The platform will callback to this webhook upon agent run completion. */
   callbackUri?: InputMaybe<Scalars['URL']['input']>;
   /** The agent channels. */
@@ -290,8 +300,8 @@ export type AgentUpdateInput = {
   connectors?: InputMaybe<Array<EntityReferenceInput>>;
   /** The description of the agent. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** The trigger filter for event-driven activation. */
-  filter?: InputMaybe<AgentTriggerFilterInput>;
+  /** The content retrieval scope for this agent. */
+  filter?: InputMaybe<ContentCriteriaInput>;
   /** The ID of the agent to update. */
   id: Scalars['ID']['input'];
   /** The name of the agent. */
@@ -306,6 +316,8 @@ export type AgentUpdateInput = {
   specification?: InputMaybe<EntityReferenceInput>;
   /** The agent timeout. */
   timeout?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** The trigger filter for event-driven activation. */
+  trigger?: InputMaybe<AgentTriggerFilterInput>;
 };
 
 /** Represents an alert. */
@@ -27383,7 +27395,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'EntityReference', id: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -27391,7 +27403,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, filter?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'EntityReference', id: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, connectors?: Array<{ __typename?: 'EntityReference', id: string }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
