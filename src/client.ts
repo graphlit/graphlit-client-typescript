@@ -297,6 +297,9 @@ try {
 
 const DEFAULT_MAX_TOOL_ROUNDS: number = 100;
 
+/** Maximum number of tool calls to execute concurrently within a single streaming round. */
+const DEFAULT_MAX_PARALLEL_TOOL_CALLS = 4;
+
 /** Maximum number of retries for transient provider errors (5xx, network, overloaded). */
 const DEFAULT_PROVIDER_RETRIES = 3;
 
@@ -10400,8 +10403,22 @@ class Graphlit {
           budgetTracker.addMessage("", assistantTokens);
         }
 
-        // Execute tools and add responses
-        for (const toolCall of roundToolCalls) {
+        type StreamingToolExecutionResult = {
+          index: number;
+          toolMessage: Types.ConversationMessage;
+          budgetText: string;
+          errorEntry?: string;
+          contextAction?: ContextManagementAction;
+        };
+
+        const toolExecutionResults = new Array<StreamingToolExecutionResult>(
+          roundToolCalls.length,
+        );
+
+        const executeStreamingToolCall = async (
+          toolCall: Types.ConversationToolCall,
+          index: number,
+        ): Promise<void> => {
           if (abortSignal?.aborted) {
             throw new Error("Operation aborted");
           }
@@ -10432,20 +10449,21 @@ class Graphlit {
               error: errorMessage,
             });
 
-            const errorToolMessage: Types.ConversationMessage = {
-              __typename: "ConversationMessage" as const,
-              role: Types.ConversationRoleTypes.Tool,
-              message: `Error: ${errorMessage}`,
-              toolCallId: toolCall.id,
-              timestamp: terminalAt,
-              toolCallResponse: toolCall.name,
+            const errorText = `Error: ${errorMessage}`;
+            toolExecutionResults[index] = {
+              index,
+              toolMessage: {
+                __typename: "ConversationMessage" as const,
+                role: Types.ConversationRoleTypes.Tool,
+                message: errorText,
+                toolCallId: toolCall.id,
+                timestamp: terminalAt,
+                toolCallResponse: toolCall.name,
+              },
+              budgetText: errorText,
+              errorEntry: `${toolCall.name}: ${errorMessage}`,
             };
-            messages.push(errorToolMessage);
-            errors.push(`${toolCall.name}: ${errorMessage}`);
-            if (budgetTracker) {
-              budgetTracker.addMessage(errorToolMessage.message || "");
-            }
-            continue;
+            return;
           }
 
           try {
@@ -10559,20 +10577,21 @@ class Graphlit {
                   error: parseErrorText,
                 });
 
-                const errorToolMessage: Types.ConversationMessage = {
-                  __typename: "ConversationMessage" as const,
-                  role: Types.ConversationRoleTypes.Tool,
-                  message: `Error: ${parseErrorText}`,
-                  toolCallId: toolCall.id,
-                  timestamp: terminalAt,
-                  toolCallResponse: toolCall.name,
+                const errorText = `Error: ${parseErrorText}`;
+                toolExecutionResults[index] = {
+                  index,
+                  toolMessage: {
+                    __typename: "ConversationMessage" as const,
+                    role: Types.ConversationRoleTypes.Tool,
+                    message: errorText,
+                    toolCallId: toolCall.id,
+                    timestamp: terminalAt,
+                    toolCallResponse: toolCall.name,
+                  },
+                  budgetText: errorText,
+                  errorEntry: parseErrorText,
                 };
-                messages.push(errorToolMessage);
-                errors.push(parseErrorText);
-                if (budgetTracker) {
-                  budgetTracker.addMessage(errorToolMessage.message || "");
-                }
-                continue;
+                return;
               }
             }
 
@@ -10621,50 +10640,40 @@ class Graphlit {
               toolCall.name,
             );
 
+            let contextAction: ContextManagementAction | undefined;
             if (truncatedResult.length < rawResult.length) {
-              const action: ContextManagementAction = {
+              contextAction = {
                 type: "truncated_tool_result",
                 toolName: toolCall.name,
                 originalTokens: estimateTokens(rawResult),
                 truncatedTokens: estimateTokens(truncatedResult),
               };
-              contextActions.push(action);
-
-              if (budgetTracker) {
-                uiAdapter.handleEvent({
-                  type: "context_management",
-                  action,
-                  usage: budgetTracker.getUsageSnapshot(),
-                  timestamp: new Date(),
-                });
-              }
 
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-                  `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
                 );
               }
             }
 
-            const toolMessage: Types.ConversationMessage = {
-              __typename: "ConversationMessage" as const,
-              role: Types.ConversationRoleTypes.Tool,
-              message: truncatedResult,
-              toolCallId: toolCall.id,
-              timestamp: new Date().toISOString(),
-              toolCallResponse: toolCall.name,
+            toolExecutionResults[index] = {
+              index,
+              toolMessage: {
+                __typename: "ConversationMessage" as const,
+                role: Types.ConversationRoleTypes.Tool,
+                message: truncatedResult,
+                toolCallId: toolCall.id,
+                timestamp: new Date().toISOString(),
+                toolCallResponse: toolCall.name,
+              },
+              budgetText: truncatedResult,
+              contextAction,
             };
-            messages.push(toolMessage);
-
-            if (budgetTracker) {
-              budgetTracker.addMessage(truncatedResult);
-            }
           } catch (error) {
             const errorMessage =
               error instanceof Error ? error.message : "Unknown error";
             console.error(`Tool execution error for ${toolCall.name}:`, error);
-            errors.push(`${toolCall.name}: ${errorMessage}`);
 
             const completedAt = nowIsoString();
             if (!toolCall.startedAt) {
@@ -10696,19 +10705,76 @@ class Graphlit {
             });
 
             const errorText = `Error: ${errorMessage}`;
-            const errorToolMessage: Types.ConversationMessage = {
-              __typename: "ConversationMessage" as const,
-              role: Types.ConversationRoleTypes.Tool,
-              message: errorText,
-              toolCallId: toolCall.id,
-              timestamp: new Date().toISOString(),
-              toolCallResponse: toolCall.name,
+            toolExecutionResults[index] = {
+              index,
+              toolMessage: {
+                __typename: "ConversationMessage" as const,
+                role: Types.ConversationRoleTypes.Tool,
+                message: errorText,
+                toolCallId: toolCall.id,
+                timestamp: new Date().toISOString(),
+                toolCallResponse: toolCall.name,
+              },
+              budgetText: errorText,
+              errorEntry: `${toolCall.name}: ${errorMessage}`,
             };
-            messages.push(errorToolMessage);
+          }
+        };
+
+        const workerCount = Math.min(
+          DEFAULT_MAX_PARALLEL_TOOL_CALLS,
+          roundToolCalls.length,
+        );
+        let nextToolIndex = 0;
+
+        await Promise.all(
+          Array.from({ length: workerCount }, async () => {
+            while (true) {
+              if (abortSignal?.aborted) {
+                throw new Error("Operation aborted");
+              }
+
+              const currentIndex = nextToolIndex;
+              nextToolIndex += 1;
+
+              if (currentIndex >= roundToolCalls.length) {
+                break;
+              }
+
+              await executeStreamingToolCall(
+                roundToolCalls[currentIndex],
+                currentIndex,
+              );
+            }
+          }),
+        );
+
+        for (const executionResult of toolExecutionResults) {
+          if (!executionResult) {
+            continue;
+          }
+
+          if (executionResult.contextAction) {
+            contextActions.push(executionResult.contextAction);
 
             if (budgetTracker) {
-              budgetTracker.addMessage(errorText);
+              uiAdapter.handleEvent({
+                type: "context_management",
+                action: executionResult.contextAction,
+                usage: budgetTracker.getUsageSnapshot(),
+                timestamp: new Date(),
+              });
             }
+          }
+
+          messages.push(executionResult.toolMessage);
+
+          if (executionResult.errorEntry) {
+            errors.push(executionResult.errorEntry);
+          }
+
+          if (budgetTracker) {
+            budgetTracker.addMessage(executionResult.budgetText);
           }
         }
       }
