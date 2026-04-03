@@ -304,6 +304,7 @@ export interface StreamingLoopConfig {
 /** Result returned from executeStreamingLoop. */
 export interface StreamingLoopResult {
   fullMessage: string;
+  finalAssistantMessage: string;
   toolCallCount: number;
   toolCallNames: string[];
   errors: string[];

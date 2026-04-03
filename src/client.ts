@@ -9656,7 +9656,7 @@ class Graphlit {
 
     // Complete the conversation and get token count
     let finalTokens: number | undefined;
-    const trimmedMessage = loopResult.fullMessage?.trim();
+    const trimmedMessage = loopResult.finalAssistantMessage;
     if (trimmedMessage) {
       // Calculate metrics for completeConversation
       const completionTime = uiAdapter.getCompletionTime();
@@ -9752,6 +9752,7 @@ class Graphlit {
     let messages = config.messages;
     let currentRound = 0;
     let fullMessage = "";
+    let finalAssistantMessage = "";
     const contextActions: ContextManagementAction[] = [];
     const toolCallNames: string[] = [];
     const errors: string[] = [];
@@ -10340,6 +10341,9 @@ class Graphlit {
 
       // Update the full message and capture reasoning for persistence
       fullMessage = roundMessage;
+      if (roundMessage.trim()) {
+        finalAssistantMessage = roundMessage.trim();
+      }
       lastRoundReasoning = roundReasoning;
 
       // Check abort after streaming completes, before starting tool execution
@@ -10832,6 +10836,7 @@ class Graphlit {
 
     return {
       fullMessage,
+      finalAssistantMessage,
       toolCallCount: totalToolCallCount,
       toolCallNames,
       errors,
@@ -11327,7 +11332,7 @@ class Graphlit {
         }
 
         // 8. Complete conversation (persist turn)
-        const trimmedMessage = loopResult.fullMessage?.trim();
+        const trimmedMessage = loopResult.finalAssistantMessage;
         if (trimmedMessage) {
           const completionTime = uiAdapter.getCompletionTime();
           const ttft = uiAdapter.getTTFT();
@@ -11403,7 +11408,7 @@ class Graphlit {
         };
         turnResults.push(turnResult);
         totalToolCalls += loopResult.toolCallCount;
-        finalMessage = loopResult.fullMessage;
+        finalMessage = loopResult.finalAssistantMessage || loopResult.fullMessage;
         lastContextWindow = loopResult.contextWindow;
 
         // 10. Notify callback
