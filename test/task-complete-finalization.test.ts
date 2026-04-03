@@ -80,7 +80,7 @@ describe("Task Complete Finalization", () => {
     expect(completeConversationSpy).toHaveBeenCalledWith(
       "Hello! How can I help you today?",
       "conv-1",
-      expect.any(String),
+      undefined,
       undefined,
       undefined,
       undefined,
@@ -133,7 +133,7 @@ describe("Task Complete Finalization", () => {
     expect(completeConversationSpy).toHaveBeenCalledWith(
       "Hello! How can I help you today?",
       "conv-1",
-      expect.any(String),
+      undefined,
       undefined,
       undefined,
       undefined,

@@ -57,7 +57,7 @@ export function estimateTokens(text: string): number {
  * Values can be provided by the server (via ConversationStrategy) or set client-side.
  */
 export interface ContextStrategyConfig {
-  /** Max tokens for any single tool result. Results exceeding this are truncated. Default: 8192 */
+  /** Max tokens for any single tool result. Results exceeding this are truncated. Default: 128000 */
   toolResultTokenLimit: number;
   /** Max tool call/response rounds to keep in context. Older rounds are dropped FIFO. Default: 10 */
   toolRoundLimit: number;
@@ -66,7 +66,7 @@ export interface ContextStrategyConfig {
 }
 
 export const DEFAULT_CONTEXT_STRATEGY: ContextStrategyConfig = {
-  toolResultTokenLimit: 8192,
+  toolResultTokenLimit: 128_000,
   toolRoundLimit: 10,
   rebudgetThreshold: 0.75,
 };
