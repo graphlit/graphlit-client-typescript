@@ -294,6 +294,7 @@ export const GetAgent = gql`
     timeout
     prompt
     scratchpad
+    researchDepth
     callbackUri
   }
 }
@@ -530,6 +531,7 @@ export const QueryAgents = gql`
       timeout
       prompt
       scratchpad
+      researchDepth
       callbackUri
     }
   }
