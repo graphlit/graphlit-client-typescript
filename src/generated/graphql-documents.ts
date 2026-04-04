@@ -288,6 +288,14 @@ export const GetAgent = gql`
       instructions
       label
     }
+    commands {
+      keyword
+      name
+      description
+      type
+      template
+      enabled
+    }
     connectors {
       id
     }
@@ -524,6 +532,14 @@ export const QueryAgents = gql`
         identifier
         instructions
         label
+      }
+      commands {
+        keyword
+        name
+        description
+        type
+        template
+        enabled
       }
       connectors {
         id
@@ -2311,6 +2327,7 @@ export const GetContent = gql`
     transcriptUri
     snapshotsUri
     snapshotCount
+    snippet
     summary
     customSummary
     keywords
@@ -3215,6 +3232,7 @@ export const LookupContents = gql`
       transcriptUri
       snapshotsUri
       snapshotCount
+      snippet
       summary
       customSummary
       keywords
@@ -3984,6 +4002,7 @@ export const QueryContents = gql`
       transcriptUri
       snapshotsUri
       snapshotCount
+      snippet
       summary
       customSummary
       quotes
@@ -4436,6 +4455,7 @@ export const QueryContentsObservations = gql`
       transcriptUri
       snapshotsUri
       snapshotCount
+      snippet
       summary
       customSummary
       quotes
