@@ -229,6 +229,9 @@ export interface RunAgentOptions {
   // Context management
   contextStrategy?: ContextStrategy;
 
+  // Per-turn instructions (injected into guidance, not persisted in conversation history)
+  instructions?: string;
+
   // Tracking
   correlationId?: string;
 

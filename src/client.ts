@@ -11109,6 +11109,11 @@ class Graphlit {
         // Clear stuck intervention after it's been included
         pendingStuckIntervention = undefined;
 
+        // Merge caller-provided instructions with harness instructions
+        const mergedInstructions = [options?.instructions, turnInstructions]
+          .filter(Boolean)
+          .join("\n\n") || undefined;
+
         // 4. Budget warning callback
         if (options?.onBudgetWarning && turnsRemaining <= windDownTurns * 2) {
           const snapshot: BudgetSnapshot = {
@@ -11124,7 +11129,7 @@ class Graphlit {
         }
 
         // 5. Decide execution path: bare continuation vs formatted
-        const useBareContinuation = turn > 0 && !turnInstructions;
+        const useBareContinuation = turn > 0 && !mergedInstructions;
 
         let loopMessages: Types.ConversationMessage[];
         let budgetTracker: TokenBudgetTracker | undefined;
@@ -11161,7 +11166,7 @@ class Graphlit {
             true,
             options?.correlationId,
             options?.persona,
-            turnInstructions,
+            mergedInstructions,
             agentScratchpad,
             options?.skills,
           );
