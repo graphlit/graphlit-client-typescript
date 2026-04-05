@@ -80,6 +80,7 @@ export const GetAgent = gql`
     description
     specification {
       id
+      name
     }
     trigger {
       types
@@ -325,6 +326,7 @@ export const QueryAgents = gql`
       description
       specification {
         id
+        name
       }
       trigger {
         types
