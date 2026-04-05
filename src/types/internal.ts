@@ -157,14 +157,28 @@ export function isRateLimitError(error: any): boolean {
 
 /**
  * Detect transient network errors.
+ *
+ * Node's undici (built-in fetch) wraps TCP resets as:
+ *   TypeError: terminated
+ *     [cause]: Error: read ECONNRESET { code: 'ECONNRESET' }
+ *
+ * The ECONNRESET code lives on the nested `cause`, not the top-level error,
+ * so we check both levels.
  */
 export function isNetworkError(error: any): boolean {
   const msg: string = error.message || "";
+  const code: string = error.code || "";
+  const causeCode: string = error.cause?.code || "";
+
   return (
     msg.includes("fetch failed") ||
-    error.code === "ECONNRESET" ||
-    error.code === "ETIMEDOUT" ||
-    error.code === "ECONNREFUSED"
+    msg === "terminated" ||
+    code === "ECONNRESET" ||
+    code === "ETIMEDOUT" ||
+    code === "ECONNREFUSED" ||
+    causeCode === "ECONNRESET" ||
+    causeCode === "ETIMEDOUT" ||
+    causeCode === "ECONNREFUSED"
   );
 }
 
