@@ -7857,6 +7857,14 @@ export const QueryConversations = gql`
         observationMode
       }
       summary
+      parent {
+        id
+        name
+      }
+      children {
+        id
+        name
+      }
     }
   }
 }
@@ -8087,6 +8095,14 @@ export const QueryConversationsClusters = gql`
         observationMode
       }
       summary
+      parent {
+        id
+        name
+      }
+      children {
+        id
+        name
+      }
     }
     clusters {
       entities {
