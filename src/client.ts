@@ -10891,6 +10891,32 @@ class Graphlit {
     let conversationId = options?.conversationId ?? "";
     let resolvedAgentId = agentId ?? "";
 
+    // Accumulate token usage across all turns from conversation_completed events
+    let accumulatedUsage: { promptTokens: number; completionTokens: number; totalTokens: number; model?: string } = {
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+    };
+    let lastTurnUsage: UsageInfo | undefined;
+
+    // Wrap onEvent to capture per-turn usage from conversation_completed events
+    const wrappedOnEvent = (event: AgentStreamEvent) => {
+      if (event.type === 'conversation_completed' && event.usage) {
+        const u = event.usage;
+        lastTurnUsage = {
+          promptTokens: u.promptTokens || 0,
+          completionTokens: u.completionTokens || 0,
+          totalTokens: u.totalTokens || 0,
+          model: u.model,
+        };
+        accumulatedUsage.promptTokens += lastTurnUsage.promptTokens;
+        accumulatedUsage.completionTokens += lastTurnUsage.completionTokens;
+        accumulatedUsage.totalTokens += lastTurnUsage.totalTokens;
+        if (lastTurnUsage.model) accumulatedUsage.model = lastTurnUsage.model;
+      }
+      onEvent(event);
+    };
+
     try {
       // ── Phase 1: Setup ─────────────────────────────────────────────────
 
@@ -10904,6 +10930,7 @@ class Graphlit {
           turnResults,
           totalToolCalls,
           wallClockMs: Date.now() - runStart,
+          usage: accumulatedUsage.totalTokens > 0 ? accumulatedUsage : undefined,
         });
       }
 
@@ -11251,7 +11278,7 @@ class Graphlit {
               (sum, msg) => sum + (msg?.tokens || 0),
               0,
             );
-            onEvent({
+            wrappedOnEvent({
               type: "context_window",
               usage: {
                 usedTokens,
@@ -11276,7 +11303,7 @@ class Graphlit {
 
         const uiAdapter = new UIEventAdapter(
           (event: AgentStreamEvent) => {
-            onEvent(event);
+            wrappedOnEvent(event);
             options?.onStreamEvent?.(event);
           },
           conversationId,
@@ -11410,7 +11437,10 @@ class Graphlit {
               : undefined,
           errors:
             loopResult.errors.length > 0 ? loopResult.errors : undefined,
+          usage: lastTurnUsage,
         };
+        // Reset per-turn usage for next turn
+        lastTurnUsage = undefined;
         turnResults.push(turnResult);
         totalToolCalls += loopResult.toolCallCount;
         finalMessage = loopResult.finalAssistantMessage || loopResult.fullMessage;
@@ -11520,6 +11550,7 @@ class Graphlit {
         error: errorMessage,
         stuckPattern,
         qualityAssessment,
+        usage: accumulatedUsage.totalTokens > 0 ? accumulatedUsage : undefined,
       });
     } catch (error: unknown) {
       const isAbort =
@@ -11546,6 +11577,7 @@ class Graphlit {
         contextWindowAtEnd: lastContextWindow,
         error: errorMessage,
         stuckPattern,
+        usage: accumulatedUsage.totalTokens > 0 ? accumulatedUsage : undefined,
       });
     }
   }
@@ -11793,6 +11825,7 @@ class Graphlit {
     error?: string;
     stuckPattern?: string;
     qualityAssessment?: QualityAssessment;
+    usage?: UsageInfo;
   }): RunAgentResult {
     return {
       agentId: params.agentId,
@@ -11808,6 +11841,7 @@ class Graphlit {
       error: params.error,
       stuckPattern: params.stuckPattern,
       qualityAssessment: params.qualityAssessment,
+      usage: params.usage,
     };
   }
 

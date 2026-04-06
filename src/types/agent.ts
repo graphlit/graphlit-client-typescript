@@ -178,6 +178,8 @@ export interface TurnResult {
   contextWindowUsage?: ContextWindowUsage;
   contextActions?: ContextManagementAction[];
   errors?: string[];
+  /** Token usage for this turn (from native LLM provider). */
+  usage?: UsageInfo;
 }
 
 /** Budget snapshot passed to the onBudgetWarning callback. */
@@ -272,6 +274,8 @@ export interface RunAgentResult {
   error?: string;
   stuckPattern?: string;
   qualityAssessment?: QualityAssessment;
+  /** Accumulated token usage across all turns (from native LLM provider). */
+  usage?: UsageInfo;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
