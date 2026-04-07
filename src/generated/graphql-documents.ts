@@ -82,6 +82,10 @@ export const GetAgent = gql`
       id
       name
     }
+    persona {
+      id
+      name
+    }
     trigger {
       types
       fileTypes
@@ -325,6 +329,10 @@ export const QueryAgents = gql`
       type
       description
       specification {
+        id
+        name
+      }
+      persona {
         id
         name
       }
