@@ -16598,6 +16598,7 @@ export const CreatePersona = gql`
     id
     name
     state
+    type
     identifier
     platform
     displayName
@@ -16645,6 +16646,7 @@ export const GetPersona = gql`
       id
     }
     state
+    type
     user {
       id
     }
@@ -16674,6 +16676,7 @@ export const QueryPersonas = gql`
         id
       }
       state
+      type
       identifier
       platform
       displayName
@@ -16694,6 +16697,7 @@ export const UpdatePersona = gql`
     id
     name
     state
+    type
     identifier
     platform
     displayName
@@ -18990,6 +18994,7 @@ export const GetUser = gql`
       id
       name
       state
+      type
       identifier
       platform
       displayName
@@ -19118,6 +19123,7 @@ export const GetUserByIdentifier = gql`
       id
       name
       state
+      type
       identifier
       platform
       displayName
@@ -19247,6 +19253,7 @@ export const QueryUsers = gql`
         id
         name
         state
+        type
         identifier
         platform
         displayName
