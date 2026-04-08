@@ -9372,6 +9372,7 @@ class Graphlit {
             persona,
             options?.contextStrategy,
             options?.useResponsesApi,
+            options?.toolChoice,
             options?.instructions,
             options?.scratchpad,
             options?.skills,
@@ -9440,6 +9441,7 @@ class Graphlit {
     persona?: Types.EntityReferenceInput,
     contextStrategy?: ContextStrategy,
     useResponsesApi?: boolean,
+    toolChoice?: "auto" | "required" | "none",
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
@@ -9676,6 +9678,7 @@ class Graphlit {
       maxRounds,
       abortSignal,
       useResponsesApi,
+      toolChoice,
       correlationId,
       persona,
       mimeType,
@@ -9772,6 +9775,7 @@ class Graphlit {
       maxRounds,
       abortSignal,
       useResponsesApi,
+      toolChoice,
       mimeType,
       data,
       correlationId,
@@ -9942,6 +9946,7 @@ class Graphlit {
             uiAdapter,
             abortSignal,
             openAIResponsesState,
+            toolChoice,
           );
           roundMessage = responsesResult.message;
           toolCalls = responsesResult.toolCalls;
@@ -9971,6 +9976,7 @@ class Graphlit {
               }
             },
             abortSignal,
+            toolChoice,
           );
         }
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -10009,6 +10015,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10045,6 +10052,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10080,6 +10088,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10115,6 +10124,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10147,6 +10157,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10229,6 +10240,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10266,6 +10278,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10301,6 +10314,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10336,6 +10350,7 @@ class Graphlit {
             }
           },
           abortSignal,
+          toolChoice,
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -11440,6 +11455,7 @@ class Graphlit {
             maxRounds: DEFAULT_MAX_TOOL_ROUNDS,
             abortSignal,
             useResponsesApi: options?.useResponsesApi,
+            toolChoice: options?.toolChoice,
             correlationId: options?.correlationId,
             persona: options?.persona,
           });
@@ -12101,6 +12117,7 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     abortSignal?: AbortSignal,
     state?: OpenAIResponsesInvocationState,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<{
     message: string;
     toolCalls: Types.ConversationToolCall[];
@@ -12151,6 +12168,7 @@ class Graphlit {
         (event) => uiAdapter.handleEvent(event),
         abortSignal,
         reasoningEffort,
+        toolChoice,
       );
 
     return {
@@ -12184,6 +12202,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -12227,6 +12246,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       reasoningEffort,
+      toolChoice,
     );
   }
 
@@ -12246,6 +12266,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Anthropic module or a provided client
     if (!Anthropic && !this.anthropicClient) {
@@ -12290,6 +12311,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
+      toolChoice,
     );
   }
 
@@ -12340,6 +12362,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
     if (!GoogleGenAI && !this.googleClient) {
@@ -12380,6 +12403,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
+      toolChoice,
     );
   }
 
@@ -12398,6 +12422,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Groq module or a provided client
     if (!Groq && !this.groqClient) {
@@ -12427,6 +12452,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12445,6 +12471,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Cerebras module or a provided client
     if (!Cerebras && !this.cerebrasClient) {
@@ -12478,6 +12505,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12496,6 +12524,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Cohere module or a provided client
     if (!CohereClient && !CohereClientV2 && !this.cohereClient) {
@@ -12527,6 +12556,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12545,6 +12575,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Mistral module or a provided client
     if (!Mistral && !this.mistralClient) {
@@ -12594,6 +12625,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12613,6 +12645,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Bedrock module or a provided client
     if (!BedrockRuntimeClient && !this.bedrockClient) {
@@ -12645,6 +12678,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12663,6 +12697,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided Deepseek client
     if (!OpenAI && !this.deepseekClient) {
@@ -12699,6 +12734,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 
@@ -12714,6 +12750,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided xAI client
     if (!OpenAI && !this.xaiClient) {
@@ -12750,6 +12787,7 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
+      toolChoice,
     );
   }
 

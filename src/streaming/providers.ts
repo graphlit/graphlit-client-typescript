@@ -128,6 +128,7 @@ export async function streamWithOpenAI(
   ) => void,
   abortSignal?: AbortSignal,
   reasoningEffort?: string, // OpenAI reasoning effort level (low, medium, high)
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -203,6 +204,9 @@ export async function streamWithOpenAI(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     // Add reasoning effort for o1 models
@@ -607,6 +611,7 @@ export async function streamWithAnthropic(
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -701,6 +706,18 @@ export async function streamWithAnthropic(
         description: tool.description,
         input_schema: tool.schema ? JSON.parse(tool.schema) : {},
       }));
+      if (toolChoice) {
+        // Anthropic uses { type: "auto" }, { type: "any" } (for required), or { type: "none" } (tool_choice not supported for none - omit tools instead)
+        const anthropicToolChoice =
+          toolChoice === "required"
+            ? { type: "any" as const }
+            : toolChoice === "none"
+              ? undefined // Anthropic doesn't support { type: "none" } - handled by not passing tools
+              : { type: "auto" as const };
+        if (anthropicToolChoice) {
+          streamConfig.tool_choice = anthropicToolChoice;
+        }
+      }
     }
 
     // Check if this is a 1M context model (beta flag, same underlying model ID)
@@ -1340,6 +1357,7 @@ export async function streamWithGoogle(
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -1503,6 +1521,20 @@ export async function streamWithGoogle(
     // Add tools to config if provided
     if (googleTools) {
       config.tools = googleTools;
+      if (toolChoice) {
+        // Google uses functionCallingConfig.mode with values AUTO, ANY (for required), NONE
+        const googleMode =
+          toolChoice === "required"
+            ? "ANY"
+            : toolChoice === "none"
+              ? "NONE"
+              : "AUTO";
+        config.toolConfig = {
+          functionCallingConfig: {
+            mode: googleMode,
+          },
+        };
+      }
     }
 
     // Call generateContentStream with conversation history
@@ -1949,6 +1981,7 @@ export async function streamWithGroq(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   try {
     const modelName = getModelName(specification);
@@ -2006,6 +2039,8 @@ export async function streamWithGroq(
       onEvent,
       onComplete,
       abortSignal,
+      undefined, // reasoningEffort
+      toolChoice,
     );
   } catch (error: any) {
     // Normalize Groq errors into ProviderError
@@ -2077,6 +2112,7 @@ export async function streamWithCerebras(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -2202,6 +2238,9 @@ export async function streamWithCerebras(
     // Add tools if available
     if (cerebrasTools) {
       streamConfig.tools = cerebrasTools;
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -2440,6 +2479,7 @@ export async function streamWithDeepseek(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -2543,6 +2583,9 @@ export async function streamWithDeepseek(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -2878,6 +2921,7 @@ export async function streamWithCohere(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -3012,6 +3056,9 @@ export async function streamWithCohere(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -3291,6 +3338,7 @@ export async function streamWithMistral(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -3355,6 +3403,12 @@ export async function streamWithMistral(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+      if (toolChoice) {
+        // Mistral uses tool_choice with values "auto", "any" (for required), "none"
+        const mistralToolChoice =
+          toolChoice === "required" ? "any" : toolChoice;
+        streamConfig.tool_choice = mistralToolChoice;
+      }
     } else {
       console.log(
         `[Mistral] No tools provided - tools parameter is ${tools === undefined ? "undefined" : "empty array"}`,
@@ -3735,6 +3789,7 @@ export async function streamWithBedrock(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -3835,6 +3890,18 @@ export async function streamWithBedrock(
           },
         })),
       };
+      if (toolChoice) {
+        // Bedrock uses toolChoice with format { auto: {} }, { any: {} }, or { none: {} } (not supported - omit)
+        const bedrockToolChoice =
+          toolChoice === "required"
+            ? { any: {} }
+            : toolChoice === "auto"
+              ? { auto: {} }
+              : undefined; // Bedrock doesn't support "none" for toolChoice
+        if (bedrockToolChoice) {
+          request.toolConfig.toolChoice = bedrockToolChoice;
+        }
+      }
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -4128,6 +4195,7 @@ export async function streamWithXai(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<void> {
   try {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -4145,6 +4213,8 @@ export async function streamWithXai(
       onEvent,
       onComplete,
       abortSignal,
+      undefined, // reasoningEffort
+      toolChoice,
     );
   } catch (error: any) {
     // Normalize xAI errors into ProviderError

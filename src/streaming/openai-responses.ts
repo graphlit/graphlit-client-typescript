@@ -55,6 +55,7 @@ export async function streamWithOpenAIResponses(
   onEvent: (event: StreamEvent) => void,
   abortSignal?: AbortSignal,
   reasoningEffort?: string,
+  toolChoice?: "auto" | "required" | "none",
 ): Promise<OpenAIResponsesRoundResult> {
   let fullMessage = "";
   let tokenCount = 0;
@@ -163,7 +164,9 @@ export async function streamWithOpenAIResponses(
 
     if (tools?.length) {
       request.tools = tools;
-      request.tool_choice = "required";
+      request.tool_choice = toolChoice || "auto";
+    } else if (toolChoice === "none") {
+      request.tool_choice = "none";
     }
 
     if (effectiveEffort && effectiveEffort !== "none") {
@@ -172,7 +175,7 @@ export async function streamWithOpenAIResponses(
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
-        `🤖 [OpenAI Responses] Model Config: Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | ReasoningEffort=${reasoningEffort || "none"} | Spec="${specification.name}"`,
+        `🤖 [OpenAI Responses] Model Config: Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | ToolChoice=${toolChoice || "auto"} | ReasoningEffort=${reasoningEffort || "none"} | Spec="${specification.name}"`,
       );
       if (tools?.length) {
         console.log(
@@ -284,6 +287,14 @@ export async function streamWithOpenAIResponses(
           if (!fullMessage && typeof event.response?.output_text === "string") {
             fullMessage = event.response.output_text;
           }
+          break;
+
+        // Known lifecycle events — no action needed
+        case "response.created":
+        case "response.in_progress":
+        case "response.content_part.added":
+        case "response.content_part.done":
+        case "response.output_text.done":
           break;
 
         case "error":
