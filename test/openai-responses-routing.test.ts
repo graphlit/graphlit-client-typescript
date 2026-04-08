@@ -66,7 +66,7 @@ describe("OpenAI Responses routing", () => {
     expect(shouldUseOpenAIResponsesModel(gpt5Spec)).toBe(false);
   });
 
-  it("keeps default routing on legacy OpenAI unless explicitly opted in", async () => {
+  it("routes eligible OpenAI models to Responses by default", async () => {
     const client = new Graphlit({ token: "test-token" });
     client.setOpenAIClient({});
     const uiAdapter = new UIEventAdapter(() => {}, "conv_test");
@@ -133,9 +133,9 @@ describe("OpenAI Responses routing", () => {
         abortSignal: undefined,
       });
 
-      expect(responsesSpy).not.toHaveBeenCalled();
-      expect(openAISpy).toHaveBeenCalledTimes(1);
-      expect(result.finalAssistantMessage).toBe("chat path");
+      expect(responsesSpy).toHaveBeenCalledTimes(1);
+      expect(openAISpy).not.toHaveBeenCalled();
+      expect(result.finalAssistantMessage).toBe("responses path");
     } finally {
       uiAdapter.dispose();
     }

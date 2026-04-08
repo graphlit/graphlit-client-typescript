@@ -3884,6 +3884,8 @@ export type ContentFilter = {
   disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
   /** The embedding types to use for vector search. Defaults to all configured embedding types. */
   embeddingTypes?: InputMaybe<Array<EmbeddingTypes>>;
+  /** Exclude contents. */
+  excludeContents?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by feeds. */
   feeds?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by file extensions. */
@@ -4460,6 +4462,8 @@ export type ConversationFilter = {
   creationDateRange?: InputMaybe<DateRangeFilter>;
   /** The sort direction for query results. */
   direction?: InputMaybe<OrderDirectionTypes>;
+  /** Exclude conversations. */
+  excludeConversations?: InputMaybe<Array<EntityReferenceFilter>>;
   /** Filter by presence or absence of associated collections. */
   hasCollections?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by presence or absence of observations. */

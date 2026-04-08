@@ -113,7 +113,7 @@ export interface StreamAgentOptions {
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
   contextStrategy?: ContextStrategy;
-  /** Explicitly route eligible OpenAI GPT-5.4+ models through Responses; false forces legacy Chat Completions. */
+  /** Default eligible OpenAI GPT-5.4+ models to Responses; false forces legacy Chat Completions. */
   useResponsesApi?: boolean;
   /** Harness-injected instructions appended to the formatted conversation (e.g. wind-down, stuck intervention). */
   instructions?: string;

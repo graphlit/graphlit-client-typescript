@@ -150,9 +150,9 @@ type OpenAIResponsesInvocationState = {
   continuationItems: OpenAIResponsesInputItem[];
 };
 
-// Temporary rollout guard: keep default OpenAI Responses routing off until we
-// intentionally flip the switch. Explicit `useResponsesApi: true` still forces it.
-const OPENAI_RESPONSES_AUTO_ROUTING_ENABLED = false;
+// Default eligible OpenAI GPT-5.4+ models to Responses. Explicit
+// `useResponsesApi: false` still forces legacy Chat Completions.
+const OPENAI_RESPONSES_AUTO_ROUTING_ENABLED = true;
 
 function buildConversationToolCallFromResult(
   toolResult: ToolCallResult,
