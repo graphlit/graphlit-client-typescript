@@ -31,6 +31,14 @@ type FunctionCallEventItem = {
   type?: string;
 };
 
+function isFunctionCallOutputItem(item: unknown): item is FunctionCallEventItem {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    (item as { type?: string }).type === "function_call"
+  );
+}
+
 function toToolCallId(
   item: FunctionCallEventItem,
   outputIndex: number,
@@ -232,6 +240,21 @@ export async function streamWithOpenAIResponses(
         case "response.completed":
           usageData = event.response?.usage;
           outputItems = (event.response?.output || []) as OpenAIResponsesInputItem[];
+          if (Array.isArray(event.response?.output)) {
+            event.response.output.forEach((item, outputIndex) => {
+              if (!isFunctionCallOutputItem(item)) {
+                return;
+              }
+
+              const toolCall = getOrCreateToolCall(outputIndex, item);
+              if (item.id) {
+                toolCallIdsByItemId.set(item.id, toolCall.id);
+              }
+              if (typeof item.arguments === "string") {
+                toolCall.arguments = item.arguments;
+              }
+            });
+          }
           if (!fullMessage && typeof event.response?.output_text === "string") {
             fullMessage = event.response.output_text;
           }

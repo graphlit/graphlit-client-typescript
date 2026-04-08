@@ -257,4 +257,161 @@ describe("OpenAI Responses provider", () => {
       { signal: undefined },
     );
   });
+
+  it("passes reasoning effort through to Responses requests", async () => {
+    const openaiClient = {
+      responses: {
+        create: vi.fn().mockResolvedValue(
+          makeStream([
+            {
+              type: "response.completed",
+              sequence_number: 1,
+              response: {
+                id: "resp_3",
+                output_text: "Done",
+                output: [],
+                usage: {
+                  input_tokens: 3,
+                  output_tokens: 1,
+                  total_tokens: 4,
+                },
+              },
+            },
+          ]),
+        ),
+      },
+    };
+
+    await streamWithOpenAIResponses(
+      {
+        ...TEST_SPEC,
+        openAI: {
+          ...TEST_SPEC.openAI,
+          reasoningEffort: Types.ReasoningEffortTypes.Medium,
+        },
+      } as Types.Specification,
+      undefined,
+      [
+        {
+          type: "message",
+          role: "user",
+          content: "Think carefully",
+        },
+      ],
+      formatToolsForOpenAIResponses([
+        {
+          name: "search_docs",
+          description: "Search docs",
+          schema: JSON.stringify({
+            type: "object",
+            properties: { query: { type: "string" } },
+            required: ["query"],
+          }),
+        },
+      ] as Types.ToolDefinitionInput[]),
+      openaiClient,
+      () => {},
+      undefined,
+      Types.ReasoningEffortTypes.Medium,
+    );
+
+    expect(openaiClient.responses.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reasoning: { effort: "medium" },
+        tools: [
+          {
+            type: "function",
+            name: "search_docs",
+            description: "Search docs",
+            parameters: {
+              type: "object",
+              properties: {
+                query: { type: "string" },
+              },
+              required: ["query"],
+            },
+            strict: false,
+          },
+        ],
+      }),
+      { signal: undefined },
+    );
+  });
+
+  it("reconstructs tool calls from completed output when streaming events omit them", async () => {
+    const events: StreamEvent[] = [];
+    const openaiClient = {
+      responses: {
+        create: vi.fn().mockResolvedValue(
+          makeStream([
+            {
+              type: "response.completed",
+              sequence_number: 1,
+              response: {
+                id: "resp_4",
+                output_text: "",
+                output: [
+                  {
+                    type: "function_call",
+                    id: "item_2",
+                    call_id: "call_2",
+                    name: "search_docs",
+                    arguments: '{"query":"pricing"}',
+                    status: "completed",
+                  },
+                ],
+                usage: {
+                  input_tokens: 5,
+                  output_tokens: 2,
+                  total_tokens: 7,
+                },
+              },
+            },
+          ]),
+        ),
+      },
+    };
+
+    const result = await streamWithOpenAIResponses(
+      TEST_SPEC,
+      undefined,
+      [
+        {
+          type: "message",
+          role: "user",
+          content: "Use the docs tool",
+        },
+      ],
+      formatToolsForOpenAIResponses([
+        {
+          name: "search_docs",
+          description: "Search docs",
+          schema: JSON.stringify({
+            type: "object",
+            properties: { query: { type: "string" } },
+            required: ["query"],
+          }),
+        },
+      ] as Types.ToolDefinitionInput[]),
+      openaiClient,
+      (event) => events.push(event),
+    );
+
+    expect(result.toolCalls).toEqual([
+      {
+        __typename: "ConversationToolCall",
+        id: "call_2",
+        name: "search_docs",
+        arguments: '{"query":"pricing"}',
+      },
+    ]);
+    expect(events).toContainEqual({
+      type: "tool_call_parsed",
+      toolCall: {
+        id: "call_2",
+        name: "search_docs",
+        arguments: '{"query":"pricing"}',
+      },
+    });
+  });
 });
