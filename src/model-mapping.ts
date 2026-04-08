@@ -81,6 +81,15 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   [Types.OpenAiModels.O4Mini_200K_20250416]: "o4-mini-2025-04-16",
 };
 
+const OPENAI_RESPONSES_MODEL_ENUMS = new Set<string>([
+  Types.OpenAiModels.Gpt54_1024K,
+  Types.OpenAiModels.Gpt54_1024K_20260305,
+  Types.OpenAiModels.Gpt54Mini_400K,
+  Types.OpenAiModels.Gpt54Mini_400K_20260317,
+  Types.OpenAiModels.Gpt54Nano_400K,
+  Types.OpenAiModels.Gpt54Nano_400K_20260317,
+]);
+
 // Anthropic model mappings
 const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   // Claude 3 models
@@ -409,3 +418,39 @@ export function getModelEnum(specification: any): string | undefined {
       return undefined;
   }
 }
+
+/**
+ * Check whether an OpenAI specification should use the Responses API path.
+ * Eligible models are GPT-5.4 and newer.
+ */
+export function isOpenAIResponsesEligibleModel(specification: any): boolean {
+  if (specification?.serviceType !== Types.ModelServiceTypes.OpenAi) {
+    return false;
+  }
+
+  const modelEnum = getModelEnum(specification);
+  if (modelEnum && OPENAI_RESPONSES_MODEL_ENUMS.has(modelEnum)) {
+    return true;
+  }
+
+  const modelName = getModelName(specification);
+  if (!modelName) {
+    return false;
+  }
+
+  const match = modelName.match(/^gpt-(\d+)(?:\.(\d+))?(?:-[a-z0-9]+)?(?:-\d{4}-\d{2}-\d{2})?$/);
+  if (!match) {
+    return false;
+  }
+
+  const major = Number(match[1]);
+  const minor = match[2] ? Number(match[2]) : 0;
+
+  if (!Number.isFinite(major) || !Number.isFinite(minor)) {
+    return false;
+  }
+
+  return major > 5 || (major === 5 && minor >= 4);
+}
+
+export const shouldUseOpenAIResponsesModel = isOpenAIResponsesEligibleModel;

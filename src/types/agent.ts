@@ -113,6 +113,8 @@ export interface StreamAgentOptions {
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
   contextStrategy?: ContextStrategy;
+  /** Explicitly route eligible OpenAI GPT-5.4+ models through Responses; false forces legacy Chat Completions. */
+  useResponsesApi?: boolean;
   /** Harness-injected instructions appended to the formatted conversation (e.g. wind-down, stuck intervention). */
   instructions?: string;
   /** Harness-injected scratchpad text, merged with conversation scratchpad. Placed right before user-prompt. */
@@ -245,6 +247,7 @@ export interface RunAgentOptions {
   smoothingEnabled?: boolean;
   chunkingStrategy?: "character" | "word" | "sentence";
   smoothingDelay?: number;
+  useResponsesApi?: boolean;
 
   /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
   skills?: EntityReferenceInput[];
@@ -302,6 +305,7 @@ export interface StreamingLoopConfig {
   };
   maxRounds: number;
   abortSignal: AbortSignal | undefined;
+  useResponsesApi?: boolean;
   correlationId?: string;
   persona?: EntityReferenceInput;
   mimeType?: string;

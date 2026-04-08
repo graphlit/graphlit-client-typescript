@@ -24,7 +24,12 @@ import { DocumentNode, GraphQLFormattedError } from "graphql";
 import { attachPartialErrors } from "./partial-errors.js";
 import * as Types from "./generated/graphql-types.js";
 import * as Documents from "./generated/graphql-documents.js";
-import { getServiceType, getModelName, getModelEnum } from "./model-mapping.js";
+import {
+  getServiceType,
+  getModelName,
+  getModelEnum,
+  isOpenAIResponsesEligibleModel,
+} from "./model-mapping.js";
 import {
   AgentOptions,
   AgentResult,
@@ -59,17 +64,27 @@ import { ProviderError } from "./types/internal.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
   formatMessagesForOpenAI,
+  formatMessagesForOpenAIResponsesInitialRound,
+  extractInstructionsForOpenAIResponses,
+  buildResponsesFunctionCallOutputItems,
+  formatToolsForOpenAIResponses,
   formatMessagesForAnthropic,
   formatMessagesForGoogle,
   formatMessagesForMistral,
   formatMessagesForBedrock,
   OpenAIMessage,
+  OpenAIResponsesInputItem,
+  OpenAIResponsesToolDefinition,
   AnthropicMessage,
   GoogleMessage,
   CohereMessage,
   MistralMessage,
   BedrockMessage,
 } from "./streaming/llm-formatters.js";
+import {
+  OpenAIResponsesRoundResult,
+  streamWithOpenAIResponses,
+} from "./streaming/openai-responses.js";
 import {
   streamWithOpenAI,
   streamWithAnthropic,
@@ -128,6 +143,16 @@ function normalizeToolCallForExecution(
     firstStatusAt: toolCall.firstStatusAt ?? undefined,
   };
 }
+
+type OpenAIResponsesInvocationState = {
+  instructions?: string;
+  initialInput: OpenAIResponsesInputItem[];
+  continuationItems: OpenAIResponsesInputItem[];
+};
+
+// Temporary rollout guard: keep default OpenAI Responses routing off until we
+// intentionally flip the switch. Explicit `useResponsesApi: true` still forces it.
+const OPENAI_RESPONSES_AUTO_ROUTING_ENABLED = false;
 
 function buildConversationToolCallFromResult(
   toolResult: ToolCallResult,
@@ -9346,6 +9371,7 @@ class Graphlit {
             correlationId,
             persona,
             options?.contextStrategy,
+            options?.useResponsesApi,
             options?.instructions,
             options?.scratchpad,
             options?.skills,
@@ -9413,6 +9439,7 @@ class Graphlit {
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
     contextStrategy?: ContextStrategy,
+    useResponsesApi?: boolean,
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
@@ -9648,6 +9675,7 @@ class Graphlit {
       contextStrategy: mergedStrategy,
       maxRounds,
       abortSignal,
+      useResponsesApi,
       correlationId,
       persona,
       mimeType,
@@ -9743,6 +9771,7 @@ class Graphlit {
       contextStrategy: { toolResultTokenLimit, toolRoundLimit, rebudgetThreshold },
       maxRounds,
       abortSignal,
+      useResponsesApi,
       mimeType,
       data,
       correlationId,
@@ -9774,8 +9803,15 @@ class Graphlit {
     };
 
     const serviceType = getServiceType(specification);
+    const useOpenAIResponses =
+      (useResponsesApi === true ||
+        (OPENAI_RESPONSES_AUTO_ROUTING_ENABLED && useResponsesApi !== false)) &&
+      serviceType === Types.ModelServiceTypes.OpenAi &&
+      isOpenAIResponsesEligibleModel(specification);
     const toolMessagesStartIndex = messages.length;
     let lastRoundReasoning: ReasoningMetadata | undefined;
+    let openAIResponsesState: OpenAIResponsesInvocationState | undefined;
+    let openAIResponsesPendingToolMessages: Types.ConversationMessage[] = [];
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
@@ -9799,6 +9835,11 @@ class Graphlit {
 
           messages = windowToolRounds(messages, toolRoundLimit);
           budgetTracker.resetFromMessages(messages);
+
+          if (useOpenAIResponses) {
+            openAIResponsesState = undefined;
+            openAIResponsesPendingToolMessages = [];
+          }
 
           const afterUsage = budgetTracker.usagePercent;
           const droppedRounds = Math.max(
@@ -9875,33 +9916,66 @@ class Graphlit {
       ) {
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n✅ [Streaming] Using OpenAI native streaming (Round ${currentRound})`,
+            `\n✅ [Streaming] Using OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming (Round ${currentRound})`,
           );
         }
-        const openaiMessages = formatMessagesForOpenAI(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`,
+        if (useOpenAIResponses) {
+          if (!openAIResponsesState) {
+            openAIResponsesState = {
+              instructions: extractInstructionsForOpenAIResponses(messages),
+              initialInput: formatMessagesForOpenAIResponsesInitialRound(messages),
+              continuationItems: [],
+            };
+          }
+
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+            console.log(
+              `🔍 [OpenAI Responses] Sending ${openAIResponsesState.initialInput.length} initial items and ${openAIResponsesState.continuationItems.length} continuation items`,
+            );
+          }
+
+          const responsesResult = await this.streamWithOpenAIResponses(
+            specification,
+            messages,
+            openAIResponsesPendingToolMessages,
+            tools,
+            uiAdapter,
+            abortSignal,
+            openAIResponsesState,
+          );
+          roundMessage = responsesResult.message;
+          toolCalls = responsesResult.toolCalls;
+          openAIResponsesState = responsesResult.state;
+          if (responsesResult.usage) {
+            uiAdapter.setUsageData(responsesResult.usage);
+          }
+          openAIResponsesPendingToolMessages = [];
+        } else {
+          const openaiMessages = formatMessagesForOpenAI(messages);
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+            console.log(
+              `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`,
+            );
+          }
+          await this.streamWithOpenAI(
+            specification,
+            openaiMessages,
+            tools,
+            uiAdapter,
+            (message, calls, usage, reasoning) => {
+              roundMessage = message;
+              toolCalls = calls;
+              roundReasoning = reasoning;
+              if (usage) {
+                uiAdapter.setUsageData(usage);
+              }
+            },
+            abortSignal,
           );
         }
-        await this.streamWithOpenAI(
-          specification,
-          openaiMessages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
-            `\n🏁 [Streaming] OpenAI native streaming completed (Round ${currentRound})`,
+            `\n🏁 [Streaming] OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming completed (Round ${currentRound})`,
           );
         }
       } else if (
@@ -10781,6 +10855,15 @@ class Graphlit {
             budgetTracker.addMessage(executionResult.budgetText);
           }
         }
+
+        if (useOpenAIResponses) {
+          openAIResponsesPendingToolMessages = toolExecutionResults
+            .map((executionResult) => executionResult?.toolMessage)
+            .filter(
+              (message): message is Types.ConversationMessage => message != null,
+            );
+        }
+
       }
 
       // Emit context window usage after each tool round
@@ -11356,6 +11439,7 @@ class Graphlit {
             contextStrategy: mergedStrategy,
             maxRounds: DEFAULT_MAX_TOOL_ROUNDS,
             abortSignal,
+            useResponsesApi: options?.useResponsesApi,
             correlationId: options?.correlationId,
             persona: options?.persona,
           });
@@ -12004,6 +12088,85 @@ class Graphlit {
         );
       }
     }
+  }
+
+  /**
+   * Stream with OpenAI client
+   */
+  private async streamWithOpenAIResponses(
+    specification: Types.Specification,
+    messages: Types.ConversationMessage[],
+    toolMessages: Types.ConversationMessage[],
+    tools: Types.ToolDefinitionInput[] | undefined,
+    uiAdapter: UIEventAdapter,
+    abortSignal?: AbortSignal,
+    state?: OpenAIResponsesInvocationState,
+  ): Promise<{
+    message: string;
+    toolCalls: Types.ConversationToolCall[];
+    usage?: any;
+    state: OpenAIResponsesInvocationState;
+  }> {
+    if (!OpenAI && !this.openaiClient) {
+      throw new Error("OpenAI client not available");
+    }
+
+    const openaiClient =
+      this.openaiClient ||
+      (OpenAI
+        ? new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000,
+        })
+        : (() => {
+          throw new Error("OpenAI module not available");
+        })());
+
+    const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
+    const toolDefinitions: OpenAIResponsesToolDefinition[] | undefined =
+      formatToolsForOpenAIResponses(tools);
+
+    const baseState: OpenAIResponsesInvocationState = state || {
+      instructions: extractInstructionsForOpenAIResponses(messages),
+      initialInput: formatMessagesForOpenAIResponsesInitialRound(messages),
+      continuationItems: [],
+    };
+
+    const functionCallOutputs = buildResponsesFunctionCallOutputItems(toolMessages);
+
+    const input: OpenAIResponsesInputItem[] = [
+      ...baseState.initialInput,
+      ...baseState.continuationItems,
+      ...functionCallOutputs,
+    ];
+
+    const response: OpenAIResponsesRoundResult =
+      await streamWithOpenAIResponses(
+        specification,
+        baseState.instructions,
+        input,
+        toolDefinitions,
+        openaiClient,
+        (event) => uiAdapter.handleEvent(event),
+        abortSignal,
+        reasoningEffort,
+      );
+
+    return {
+      message: response.message,
+      toolCalls: response.toolCalls,
+      usage: response.usage,
+      state: {
+        instructions: baseState.instructions,
+        initialInput: baseState.initialInput,
+        continuationItems: [
+          ...baseState.continuationItems,
+          ...functionCallOutputs,
+          ...response.outputItems,
+        ],
+      },
+    };
   }
 
   /**

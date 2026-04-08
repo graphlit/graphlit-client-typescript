@@ -29,6 +29,56 @@ export interface OpenAIMessage {
   tool_call_id?: string;
 }
 
+export interface OpenAIResponsesTextContentPart {
+  type: "input_text";
+  text: string;
+}
+
+export interface OpenAIResponsesImageContentPart {
+  type: "input_image";
+  image_url: string;
+  detail: "low" | "high" | "auto";
+}
+
+export type OpenAIResponsesContentPart =
+  | OpenAIResponsesTextContentPart
+  | OpenAIResponsesImageContentPart;
+
+export interface OpenAIResponsesMessageItem {
+  type: "message";
+  role: "user" | "assistant";
+  content: string | OpenAIResponsesContentPart[];
+}
+
+export interface OpenAIResponsesFunctionCallItem {
+  type: "function_call";
+  call_id: string;
+  name: string;
+  arguments: string;
+  id?: string;
+}
+
+export interface OpenAIResponsesFunctionCallOutputItem {
+  type: "function_call_output";
+  call_id: string;
+  output: string;
+  id?: string;
+}
+
+export type OpenAIResponsesInputItem =
+  | OpenAIResponsesMessageItem
+  | OpenAIResponsesFunctionCallItem
+  | OpenAIResponsesFunctionCallOutputItem
+  | Record<string, unknown>;
+
+export interface OpenAIResponsesToolDefinition {
+  type: "function";
+  name: string;
+  description?: string;
+  parameters: Record<string, unknown>;
+  strict: false;
+}
+
 /**
  * Anthropic message format
  */
@@ -336,6 +386,162 @@ export function formatMessagesForOpenAI(
   }
 
   return formattedMessages;
+}
+
+export function extractInstructionsForOpenAIResponses(
+  messages: ConversationMessage[],
+): string | undefined {
+  const systemMessages = messages
+    .filter((message) => message.role === ConversationRoleTypes.System)
+    .map((message) => message.message?.trim() || "")
+    .filter((message) => message.length > 0);
+
+  return systemMessages.length > 0
+    ? systemMessages.join("\n\n")
+    : undefined;
+}
+
+export function formatMessagesForOpenAIResponsesInitialRound(
+  messages: ConversationMessage[],
+): OpenAIResponsesInputItem[] {
+  const formattedMessages: OpenAIResponsesInputItem[] = [];
+
+  for (const message of messages) {
+    if (!message.role || message.role === ConversationRoleTypes.System) {
+      continue;
+    }
+
+    const trimmedMessage = message.message?.trim() || "";
+    const hasToolCalls = !!message.toolCalls?.length;
+
+    if (!trimmedMessage && !hasToolCalls) {
+      continue;
+    }
+
+    switch (message.role) {
+      case ConversationRoleTypes.Assistant: {
+        if (trimmedMessage) {
+          formattedMessages.push({
+            type: "message",
+            role: "assistant",
+            content: trimmedMessage,
+          });
+        }
+
+        if (message.toolCalls?.length) {
+          for (const toolCall of message.toolCalls) {
+            if (!toolCall) {
+              continue;
+            }
+
+            formattedMessages.push({
+              type: "function_call",
+              id: toolCall.id,
+              call_id: toolCall.id,
+              name: toolCall.name,
+              arguments: toolCall.arguments,
+            });
+          }
+        }
+        break;
+      }
+
+      case ConversationRoleTypes.Tool: {
+        if (!message.toolCallId) {
+          continue;
+        }
+
+        formattedMessages.push({
+          type: "function_call_output",
+          call_id: message.toolCallId,
+          output: stripImagesToText(trimmedMessage),
+        });
+        break;
+      }
+
+      default: {
+        if (message.mimeType && message.data) {
+          const contentParts: OpenAIResponsesContentPart[] = [];
+
+          if (trimmedMessage) {
+            contentParts.push({
+              type: "input_text",
+              text: trimmedMessage,
+            });
+          }
+
+          contentParts.push({
+            type: "input_image",
+            image_url: `data:${message.mimeType};base64,${message.data}`,
+            detail: "auto",
+          });
+
+          formattedMessages.push({
+            type: "message",
+            role: "user",
+            content: contentParts,
+          });
+        } else {
+          formattedMessages.push({
+            type: "message",
+            role: "user",
+            content: trimmedMessage,
+          });
+        }
+        break;
+      }
+    }
+  }
+
+  return formattedMessages;
+}
+
+export function buildResponsesFunctionCallOutputItems(
+  toolMessages: ConversationMessage[],
+): OpenAIResponsesFunctionCallOutputItem[] {
+  return toolMessages
+    .filter(
+      (message) =>
+        message.role === ConversationRoleTypes.Tool &&
+        typeof message.toolCallId === "string" &&
+        message.toolCallId.length > 0,
+    )
+    .map((message) => ({
+      type: "function_call_output" as const,
+      call_id: message.toolCallId!,
+      output: stripImagesToText(message.message?.trim() || ""),
+    }));
+}
+
+export const buildOpenAIResponsesFunctionCallOutputItems =
+  buildResponsesFunctionCallOutputItems;
+
+export function formatToolsForOpenAIResponses(
+  tools: Array<{ name: string; description?: string | null; schema?: string | null }> | undefined,
+): OpenAIResponsesToolDefinition[] | undefined {
+  if (!tools?.length) {
+    return undefined;
+  }
+
+  return tools.map((tool) => {
+    let parameters: Record<string, unknown> = {};
+
+    if (tool.schema) {
+      try {
+        parameters = JSON.parse(tool.schema) as Record<string, unknown>;
+      } catch {
+        parameters = {};
+      }
+    }
+
+    return {
+      type: "function" as const,
+      name: tool.name,
+      description: tool.description || undefined,
+      parameters,
+      strict: false as const,
+    };
+  });
 }
 
 /**
