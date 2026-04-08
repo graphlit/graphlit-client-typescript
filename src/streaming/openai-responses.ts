@@ -163,6 +163,7 @@ export async function streamWithOpenAIResponses(
 
     if (tools?.length) {
       request.tools = tools;
+      request.tool_choice = "required";
     }
 
     if (effectiveEffort && effectiveEffort !== "none") {
