@@ -147,7 +147,13 @@ export async function streamWithOpenAIResponses(
       request.instructions = instructions.trim();
     }
 
-    if (specification.openAI?.temperature !== undefined) {
+    // GPT-5.4+: temperature/top_p are only supported with reasoning effort "none".
+    // Sending temperature with any other reasoning effort raises an error.
+    const effectiveEffort = reasoningEffort?.toLowerCase();
+    if (
+      specification.openAI?.temperature !== undefined &&
+      (!effectiveEffort || effectiveEffort === "none")
+    ) {
       request.temperature = specification.openAI.temperature;
     }
 
@@ -159,14 +165,19 @@ export async function streamWithOpenAIResponses(
       request.tools = tools;
     }
 
-    if (reasoningEffort) {
-      request.reasoning = { effort: reasoningEffort.toLowerCase() };
+    if (effectiveEffort && effectiveEffort !== "none") {
+      request.reasoning = { effort: effectiveEffort };
     }
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🤖 [OpenAI Responses] Model Config: Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | ReasoningEffort=${reasoningEffort || "none"} | Spec="${specification.name}"`,
       );
+      if (tools?.length) {
+        console.log(
+          `🔧 [OpenAI Responses] Tools: ${tools.map((t) => t.name).join(", ")}`,
+        );
+      }
     }
 
     const stream = await openaiClient.responses.create(request, {

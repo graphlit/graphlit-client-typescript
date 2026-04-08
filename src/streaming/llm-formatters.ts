@@ -48,6 +48,7 @@ export interface OpenAIResponsesMessageItem {
   type: "message";
   role: "user" | "assistant";
   content: string | OpenAIResponsesContentPart[];
+  phase?: "commentary" | "final_answer";
 }
 
 export interface OpenAIResponsesFunctionCallItem {
@@ -420,11 +421,16 @@ export function formatMessagesForOpenAIResponsesInitialRound(
 
     switch (message.role) {
       case ConversationRoleTypes.Assistant: {
+        // GPT-5.4: set phase on assistant messages to avoid early stopping.
+        // "commentary" for preambles before tool calls, "final_answer" for completed answers.
+        const phase = hasToolCalls ? "commentary" : "final_answer";
+
         if (trimmedMessage) {
           formattedMessages.push({
             type: "message",
             role: "assistant",
             content: trimmedMessage,
+            phase,
           });
         }
 
