@@ -196,6 +196,11 @@ export async function streamWithOpenAIResponses(
 
         case "response.output_item.added": {
           const item = event.item as FunctionCallEventItem;
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `📦 [OpenAI Responses] Output item added: type=${item?.type} index=${event.output_index}`,
+            );
+          }
           if (item?.type !== "function_call") {
             break;
           }
@@ -290,6 +295,15 @@ export async function streamWithOpenAIResponses(
           throw new Error(
             event.response?.error?.message || "OpenAI Responses request failed",
           );
+
+        default:
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `⚠️ [OpenAI Responses] Unhandled event type: ${event.type}`,
+              JSON.stringify(event, null, 2),
+            );
+          }
+          break;
       }
     }
 
