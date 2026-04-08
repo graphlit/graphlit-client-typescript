@@ -241,7 +241,10 @@ export async function streamWithOpenAIResponses(
           usageData = event.response?.usage;
           outputItems = (event.response?.output || []) as OpenAIResponsesInputItem[];
           if (Array.isArray(event.response?.output)) {
-            event.response.output.forEach((item, outputIndex) => {
+            (event.response.output as OpenAIResponsesInputItem[]).forEach((
+              item: OpenAIResponsesInputItem,
+              outputIndex: number,
+            ) => {
               if (!isFunctionCallOutputItem(item)) {
                 return;
               }
