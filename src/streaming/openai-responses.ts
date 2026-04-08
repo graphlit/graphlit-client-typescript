@@ -163,6 +163,12 @@ export async function streamWithOpenAIResponses(
       request.reasoning = { effort: reasoningEffort.toLowerCase() };
     }
 
+    if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      console.log(
+        `🤖 [OpenAI Responses] Model Config: Model=${modelName} | Temperature=${specification.openAI?.temperature} | MaxTokens=${specification.openAI?.completionTokenLimit || "null"} | Tools=${tools?.length || 0} | ReasoningEffort=${reasoningEffort || "none"} | Spec="${specification.name}"`,
+      );
+    }
+
     const stream = await openaiClient.responses.create(request, {
       signal: abortSignal,
     });
