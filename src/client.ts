@@ -9795,6 +9795,10 @@ class Graphlit {
     const errors: string[] = [];
     let totalToolCallCount = 0;
 
+    // toolChoice only applies to the first request; subsequent rounds use "auto"
+    // to allow the model to finish with text after tool results come back.
+    const getToolChoice = () => currentRound === 0 ? toolChoice : undefined;
+
     // Sidecar map for reasoning metadata
     const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
 
@@ -9950,7 +9954,7 @@ class Graphlit {
             uiAdapter,
             abortSignal,
             openAIResponsesState,
-            toolChoice,
+            getToolChoice(),
             toolStrict,
           );
           roundMessage = responsesResult.message;
@@ -9981,7 +9985,7 @@ class Graphlit {
               }
             },
             abortSignal,
-            toolChoice,
+            getToolChoice(),
             toolStrict,
           );
         }
@@ -10021,7 +10025,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10058,7 +10062,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10094,7 +10098,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10130,7 +10134,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10163,7 +10167,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10246,7 +10250,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10284,7 +10288,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10320,7 +10324,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10356,7 +10360,7 @@ class Graphlit {
             }
           },
           abortSignal,
-          toolChoice,
+          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
