@@ -43,7 +43,7 @@ function toToolCallId(
   item: FunctionCallEventItem,
   outputIndex: number,
 ): string {
-  return item.call_id || item.id || `tool_${Date.now()}_${outputIndex}`;
+  return item.call_id || item.id || `fc_${Date.now()}_${outputIndex}`;
 }
 
 export async function streamWithOpenAIResponses(

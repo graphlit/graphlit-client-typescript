@@ -9372,8 +9372,6 @@ class Graphlit {
             persona,
             options?.contextStrategy,
             options?.useResponsesApi,
-            options?.toolChoice,
-            options?.toolStrict,
             options?.instructions,
             options?.scratchpad,
             options?.skills,
@@ -9442,8 +9440,6 @@ class Graphlit {
     persona?: Types.EntityReferenceInput,
     contextStrategy?: ContextStrategy,
     useResponsesApi?: boolean,
-    toolChoice?: "auto" | "required" | "none",
-    toolStrict?: boolean,
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
@@ -9680,8 +9676,6 @@ class Graphlit {
       maxRounds,
       abortSignal,
       useResponsesApi,
-      toolChoice,
-      toolStrict,
       correlationId,
       persona,
       mimeType,
@@ -9778,8 +9772,6 @@ class Graphlit {
       maxRounds,
       abortSignal,
       useResponsesApi,
-      toolChoice,
-      toolStrict,
       mimeType,
       data,
       correlationId,
@@ -9794,10 +9786,6 @@ class Graphlit {
     const toolCallNames: string[] = [];
     const errors: string[] = [];
     let totalToolCallCount = 0;
-
-    // toolChoice only applies to the first request; subsequent rounds use "auto"
-    // to allow the model to finish with text after tool results come back.
-    const getToolChoice = () => currentRound === 0 ? toolChoice : undefined;
 
     // Sidecar map for reasoning metadata
     const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
@@ -9954,8 +9942,7 @@ class Graphlit {
             uiAdapter,
             abortSignal,
             openAIResponsesState,
-            getToolChoice(),
-            toolStrict,
+            (currentRound === 0 && tools?.length) ? "required" : undefined,
           );
           roundMessage = responsesResult.message;
           toolCalls = responsesResult.toolCalls;
@@ -9985,8 +9972,6 @@ class Graphlit {
               }
             },
             abortSignal,
-            getToolChoice(),
-            toolStrict,
           );
         }
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -10025,7 +10010,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10062,7 +10046,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10098,7 +10081,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10134,7 +10116,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10167,7 +10148,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10250,7 +10230,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10288,7 +10267,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10324,7 +10302,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -10360,7 +10337,6 @@ class Graphlit {
             }
           },
           abortSignal,
-          getToolChoice(),
         );
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(
@@ -11465,8 +11441,6 @@ class Graphlit {
             maxRounds: DEFAULT_MAX_TOOL_ROUNDS,
             abortSignal,
             useResponsesApi: options?.useResponsesApi,
-            toolChoice: options?.toolChoice,
-            toolStrict: options?.toolStrict,
             correlationId: options?.correlationId,
             persona: options?.persona,
           });
@@ -12129,7 +12103,6 @@ class Graphlit {
     abortSignal?: AbortSignal,
     state?: OpenAIResponsesInvocationState,
     toolChoice?: "auto" | "required" | "none",
-    toolStrict?: boolean,
   ): Promise<{
     message: string;
     toolCalls: Types.ConversationToolCall[];
@@ -12154,7 +12127,7 @@ class Graphlit {
 
     const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
     const toolDefinitions: OpenAIResponsesToolDefinition[] | undefined =
-      formatToolsForOpenAIResponses(tools, toolStrict);
+      formatToolsForOpenAIResponses(tools);
 
     const baseState: OpenAIResponsesInvocationState = state || {
       instructions: extractInstructionsForOpenAIResponses(messages),
@@ -12214,8 +12187,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
-    toolStrict?: boolean,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -12259,8 +12230,6 @@ class Graphlit {
       onComplete,
       abortSignal,
       reasoningEffort,
-      toolChoice,
-      toolStrict,
     );
   }
 
@@ -12280,7 +12249,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Anthropic module or a provided client
     if (!Anthropic && !this.anthropicClient) {
@@ -12325,7 +12293,6 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
-      toolChoice,
     );
   }
 
@@ -12376,7 +12343,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
     if (!GoogleGenAI && !this.googleClient) {
@@ -12417,7 +12383,6 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
-      toolChoice,
     );
   }
 
@@ -12436,7 +12401,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Groq module or a provided client
     if (!Groq && !this.groqClient) {
@@ -12466,7 +12430,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12485,7 +12448,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Cerebras module or a provided client
     if (!Cerebras && !this.cerebrasClient) {
@@ -12519,7 +12481,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12538,7 +12499,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Cohere module or a provided client
     if (!CohereClient && !CohereClientV2 && !this.cohereClient) {
@@ -12570,7 +12530,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12589,7 +12548,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Mistral module or a provided client
     if (!Mistral && !this.mistralClient) {
@@ -12639,7 +12597,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12659,7 +12616,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the Bedrock module or a provided client
     if (!BedrockRuntimeClient && !this.bedrockClient) {
@@ -12692,7 +12648,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12711,7 +12666,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided Deepseek client
     if (!OpenAI && !this.deepseekClient) {
@@ -12748,7 +12702,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 
@@ -12764,7 +12717,6 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
-    toolChoice?: "auto" | "required" | "none",
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided xAI client
     if (!OpenAI && !this.xaiClient) {
@@ -12801,7 +12753,6 @@ class Graphlit {
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,
-      toolChoice,
     );
   }
 

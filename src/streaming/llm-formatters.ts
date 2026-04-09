@@ -77,7 +77,7 @@ export interface OpenAIResponsesToolDefinition {
   name: string;
   description?: string;
   parameters: Record<string, unknown>;
-  strict: boolean;
+  strict: false;
 }
 
 /**
@@ -325,7 +325,7 @@ export function formatMessagesForOpenAI(
           assistantMessage.tool_calls = message.toolCalls
             .filter((tc): tc is ConversationToolCall => tc !== null)
             .map((toolCall) => ({
-              id: toolCall.id,
+              id: toChatCompletionsCallId(toolCall.id),
               type: "function" as const,
               function: {
                 name: toolCall.name,
@@ -341,7 +341,7 @@ export function formatMessagesForOpenAI(
         formattedMessages.push({
           role: "tool",
           content: stripImagesToText(trimmedMessage),
-          tool_call_id: message.toolCallId || "",
+          tool_call_id: toChatCompletionsCallId(message.toolCallId || ""),
         });
         break;
 
@@ -402,6 +402,20 @@ export function extractInstructionsForOpenAIResponses(
     : undefined;
 }
 
+// Remap tool call IDs to Responses API format (must start with 'fc_')
+function toResponsesCallId(id: string): string {
+  if (id.startsWith("fc_")) return id;
+  if (id.startsWith("call_")) return "fc_" + id.slice(5);
+  return "fc_" + id;
+}
+
+// Remap tool call IDs to Chat Completions format (must start with 'call_')
+function toChatCompletionsCallId(id: string): string {
+  if (id.startsWith("call_")) return id;
+  if (id.startsWith("fc_")) return "call_" + id.slice(3);
+  return "call_" + id;
+}
+
 export function formatMessagesForOpenAIResponsesInitialRound(
   messages: ConversationMessage[],
 ): OpenAIResponsesInputItem[] {
@@ -440,10 +454,11 @@ export function formatMessagesForOpenAIResponsesInitialRound(
               continue;
             }
 
+            const callId = toResponsesCallId(toolCall.id);
             formattedMessages.push({
               type: "function_call",
-              id: toolCall.id,
-              call_id: toolCall.id,
+              id: callId,
+              call_id: callId,
               name: toolCall.name,
               arguments: toolCall.arguments,
             });
@@ -459,7 +474,7 @@ export function formatMessagesForOpenAIResponsesInitialRound(
 
         formattedMessages.push({
           type: "function_call_output",
-          call_id: message.toolCallId,
+          call_id: toResponsesCallId(message.toolCallId),
           output: stripImagesToText(trimmedMessage),
         });
         break;
@@ -514,7 +529,7 @@ export function buildResponsesFunctionCallOutputItems(
     )
     .map((message) => ({
       type: "function_call_output" as const,
-      call_id: message.toolCallId!,
+      call_id: toResponsesCallId(message.toolCallId!),
       output: stripImagesToText(message.message?.trim() || ""),
     }));
 }
@@ -524,7 +539,6 @@ export const buildOpenAIResponsesFunctionCallOutputItems =
 
 export function formatToolsForOpenAIResponses(
   tools: Array<{ name: string; description?: string | null; schema?: string | null }> | undefined,
-  strict?: boolean,
 ): OpenAIResponsesToolDefinition[] | undefined {
   if (!tools?.length) {
     return undefined;
@@ -546,7 +560,7 @@ export function formatToolsForOpenAIResponses(
       name: tool.name,
       description: tool.description || undefined,
       parameters,
-      strict: strict ?? false,
+      strict: false as const,
     };
   });
 }

@@ -16,6 +16,15 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 
 ## What's New
 
+### OpenAI Responses API Support
+
+- **Automatic Responses API Routing** - GPT-5.4 and eligible OpenAI models are automatically routed through the [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) for improved intelligence, fewer reasoning tokens, higher cache hit rates, and lower latency. Disable with `useResponsesApi: false` in `StreamAgentOptions`.
+- **Reasoning Effort** - Reasoning effort (e.g. `medium`, `high`) is read from the specification's `openAI.reasoningEffort` field and passed through to the Responses API.
+- **GPT-5.4 Temperature Handling** - Temperature is only sent when reasoning effort is `none` (the GPT-5.4 default). Other reasoning levels don't support temperature per the OpenAI docs.
+- **`phase` on Assistant Messages** - Conversation history replayed to the Responses API includes `phase: "commentary"` on assistant messages that preceded tool calls, and `phase: "final_answer"` on terminal messages, per GPT-5.4 best practices.
+- **Tool Call ID Remapping** - Tool call IDs are automatically remapped between `call_` (Chat Completions) and `fc_` (Responses API) formats, enabling mid-conversation model switches without errors.
+- **First-Round Tool Engagement** - When tools are provided, the SDK sends `tool_choice: "required"` on the first API request to ensure the model engages with available tools, then reverts to `auto` for subsequent rounds. This addresses GPT-5.4's tendency to skip tool use under the default `auto` setting. This behavior is internal to the Responses API path and not exposed as a caller option.
+
 ### Streaming Provider Resilience
 
 - **Automatic Retry for Provider Errors** - `streamAgent` and `runAgent` now retry transient LLM provider errors (HTTP 500, 503, 429, network failures) with exponential backoff (up to 3 retries)
@@ -77,6 +86,7 @@ Graphlit is a cloud platform that handles the complex parts of building AI appli
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Setting Up](#setting-up)
+- [OpenAI Responses API Support](#openai-responses-api-support)
 - [Migrating from @google/generative-ai](#migrating-from-google-generative-ai) 🔄
 - [Reasoning Support (New!)](#reasoning-support-new) 🧠
 - [Stream Cancellation (New!)](#stream-cancellation-new) 🛑
@@ -546,7 +556,7 @@ The Graphlit SDK supports real-time streaming responses from 9 different LLM pro
 
 | Provider        | Models                                        | SDK Required                      | API Key             |
 | --------------- | --------------------------------------------- | --------------------------------- | ------------------- |
-| **OpenAI**      | GPT-4, GPT-4o, GPT-4.1, O1, O3, O4            | `openai`                          | `OPENAI_API_KEY`    |
+| **OpenAI**      | GPT-5.4, GPT-4.1, GPT-4o, O1, O3, O4          | `openai`                          | `OPENAI_API_KEY`    |
 | **Anthropic**   | Claude 3, Claude 3.5, Claude 3.7, Claude 4    | `@anthropic-ai/sdk`               | `ANTHROPIC_API_KEY` |
 | **Google**      | Gemini 1.5, Gemini 2.0, Gemini 2.5            | `@google/genai`                   | `GOOGLE_API_KEY`    |
 | **Groq**        | Llama 4, Llama 3.3, Mixtral, Deepseek R1      | `groq-sdk`                        | `GROQ_API_KEY`      |
@@ -597,7 +607,8 @@ const spec = await client.createSpecification({
 
 ### Provider-Specific Notes
 
-- **OpenAI-Compatible**: Groq, Cerebras, and Deepseek use OpenAI-compatible APIs
+- **OpenAI GPT-5.4**: Automatically uses the Responses API for chain-of-thought passback, 1M context, and improved tool calling. The SDK sends `tool_choice: "required"` on the first round when tools are provided, then `auto` on subsequent rounds. Set `useResponsesApi: false` in options to force legacy Chat Completions.
+- **OpenAI-Compatible**: Groq, Cerebras, Deepseek, and xAI use OpenAI-compatible APIs
 - **AWS Bedrock**: Requires AWS credentials and uses the Converse API for streaming
 - **Cohere**: Supports both chat and tool calling with Command models
 - **Google**: Includes advanced multimodal capabilities with Gemini models

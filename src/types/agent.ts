@@ -41,10 +41,6 @@ export interface AgentOptions {
   maxToolRounds?: number; // default: 100
   timeout?: number; // milliseconds
   contextStrategy?: ContextStrategy;
-  /** Controls whether the model must call a tool. Default: "auto". */
-  toolChoice?: "auto" | "required" | "none";
-  /** Enforce strict schema adherence for tool call arguments (OpenAI only). Default: false. */
-  toolStrict?: boolean;
 }
 
 // Performance metrics for agent execution
@@ -119,10 +115,6 @@ export interface StreamAgentOptions {
   contextStrategy?: ContextStrategy;
   /** Default eligible OpenAI GPT-5.4+ models to Responses; false forces legacy Chat Completions. */
   useResponsesApi?: boolean;
-  /** Controls whether the model must call a tool. Default: "auto". */
-  toolChoice?: "auto" | "required" | "none";
-  /** Enforce strict schema adherence for tool call arguments (OpenAI only). Default: false. */
-  toolStrict?: boolean;
   /** Harness-injected instructions appended to the formatted conversation (e.g. wind-down, stuck intervention). */
   instructions?: string;
   /** Harness-injected scratchpad text, merged with conversation scratchpad. Placed right before user-prompt. */
@@ -257,11 +249,6 @@ export interface RunAgentOptions {
   smoothingDelay?: number;
   useResponsesApi?: boolean;
 
-  /** Controls whether the model must call a tool. Default: "auto". */
-  toolChoice?: "auto" | "required" | "none";
-  /** Enforce strict schema adherence for tool call arguments (OpenAI only). Default: false. */
-  toolStrict?: boolean;
-
   /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
   skills?: EntityReferenceInput[];
 }
@@ -319,8 +306,6 @@ export interface StreamingLoopConfig {
   maxRounds: number;
   abortSignal: AbortSignal | undefined;
   useResponsesApi?: boolean;
-  toolChoice?: "auto" | "required" | "none";
-  toolStrict?: boolean;
   correlationId?: string;
   persona?: EntityReferenceInput;
   mimeType?: string;
