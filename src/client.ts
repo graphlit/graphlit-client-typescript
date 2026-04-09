@@ -9373,6 +9373,7 @@ class Graphlit {
             options?.contextStrategy,
             options?.useResponsesApi,
             options?.toolChoice,
+            options?.toolStrict,
             options?.instructions,
             options?.scratchpad,
             options?.skills,
@@ -9442,6 +9443,7 @@ class Graphlit {
     contextStrategy?: ContextStrategy,
     useResponsesApi?: boolean,
     toolChoice?: "auto" | "required" | "none",
+    toolStrict?: boolean,
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
@@ -9679,6 +9681,7 @@ class Graphlit {
       abortSignal,
       useResponsesApi,
       toolChoice,
+      toolStrict,
       correlationId,
       persona,
       mimeType,
@@ -9776,6 +9779,7 @@ class Graphlit {
       abortSignal,
       useResponsesApi,
       toolChoice,
+      toolStrict,
       mimeType,
       data,
       correlationId,
@@ -9947,6 +9951,7 @@ class Graphlit {
             abortSignal,
             openAIResponsesState,
             toolChoice,
+            toolStrict,
           );
           roundMessage = responsesResult.message;
           toolCalls = responsesResult.toolCalls;
@@ -9977,6 +9982,7 @@ class Graphlit {
             },
             abortSignal,
             toolChoice,
+            toolStrict,
           );
         }
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -11456,6 +11462,7 @@ class Graphlit {
             abortSignal,
             useResponsesApi: options?.useResponsesApi,
             toolChoice: options?.toolChoice,
+            toolStrict: options?.toolStrict,
             correlationId: options?.correlationId,
             persona: options?.persona,
           });
@@ -12118,6 +12125,7 @@ class Graphlit {
     abortSignal?: AbortSignal,
     state?: OpenAIResponsesInvocationState,
     toolChoice?: "auto" | "required" | "none",
+    toolStrict?: boolean,
   ): Promise<{
     message: string;
     toolCalls: Types.ConversationToolCall[];
@@ -12142,7 +12150,7 @@ class Graphlit {
 
     const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
     const toolDefinitions: OpenAIResponsesToolDefinition[] | undefined =
-      formatToolsForOpenAIResponses(tools);
+      formatToolsForOpenAIResponses(tools, toolStrict);
 
     const baseState: OpenAIResponsesInvocationState = state || {
       instructions: extractInstructionsForOpenAIResponses(messages),
@@ -12203,6 +12211,7 @@ class Graphlit {
     ) => void,
     abortSignal?: AbortSignal,
     toolChoice?: "auto" | "required" | "none",
+    toolStrict?: boolean,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -12247,6 +12256,7 @@ class Graphlit {
       abortSignal,
       reasoningEffort,
       toolChoice,
+      toolStrict,
     );
   }
 

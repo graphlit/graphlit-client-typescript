@@ -77,7 +77,7 @@ export interface OpenAIResponsesToolDefinition {
   name: string;
   description?: string;
   parameters: Record<string, unknown>;
-  strict: false;
+  strict: boolean;
 }
 
 /**
@@ -524,6 +524,7 @@ export const buildOpenAIResponsesFunctionCallOutputItems =
 
 export function formatToolsForOpenAIResponses(
   tools: Array<{ name: string; description?: string | null; schema?: string | null }> | undefined,
+  strict?: boolean,
 ): OpenAIResponsesToolDefinition[] | undefined {
   if (!tools?.length) {
     return undefined;
@@ -545,7 +546,7 @@ export function formatToolsForOpenAIResponses(
       name: tool.name,
       description: tool.description || undefined,
       parameters,
-      strict: false as const,
+      strict: strict ?? false,
     };
   });
 }

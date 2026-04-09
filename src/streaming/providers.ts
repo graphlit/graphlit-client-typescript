@@ -129,6 +129,7 @@ export async function streamWithOpenAI(
   abortSignal?: AbortSignal,
   reasoningEffort?: string, // OpenAI reasoning effort level (low, medium, high)
   toolChoice?: "auto" | "required" | "none",
+  toolStrict?: boolean,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -202,6 +203,7 @@ export async function streamWithOpenAI(
           name: tool.name,
           description: tool.description,
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
+          ...(toolStrict !== undefined && { strict: toolStrict }),
         },
       }));
       if (toolChoice) {
