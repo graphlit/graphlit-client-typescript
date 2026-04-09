@@ -529,7 +529,7 @@ export function buildResponsesFunctionCallOutputItems(
     )
     .map((message) => ({
       type: "function_call_output" as const,
-      call_id: toResponsesCallId(message.toolCallId!),
+      call_id: message.toolCallId!,
       output: stripImagesToText(message.message?.trim() || ""),
     }));
 }
