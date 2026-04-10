@@ -10433,6 +10433,9 @@ export const GetFeed = gql`
         jobRegion
         jobDescription
       }
+      linkedin {
+        dateRange
+      }
     }
     reddit {
       readLimit
@@ -11505,6 +11508,9 @@ export const QueryFeeds = gql`
           jobTitle
           jobRegion
           jobDescription
+        }
+        linkedin {
+          dateRange
         }
       }
       reddit {
