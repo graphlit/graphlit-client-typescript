@@ -24630,7 +24630,9 @@ export enum SearchServiceTypes {
   /** Podscan search feed service */
   Podscan = 'PODSCAN',
   /** Tavily search feed service */
-  Tavily = 'TAVILY'
+  Tavily = 'TAVILY',
+  /** Twitter/X search service */
+  Twitter = 'TWITTER'
 }
 
 /** Search type */
