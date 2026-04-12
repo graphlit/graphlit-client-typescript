@@ -2105,6 +2105,9 @@ export const Distribute = gql`
     uri
     identifier
     serviceType
+    operation
+    resolvedTargetIdentifier
+    resolvedTargetUri
     error
   }
 }
@@ -9776,16 +9779,6 @@ export const DeleteFeeds = gql`
   }
 }
     `;
-export const DeleteGoogleCalendarEvent = gql`
-    mutation DeleteGoogleCalendarEvent($properties: GoogleCalendarEventsInput!, $eventId: String!) {
-  deleteGoogleCalendarEvent(properties: $properties, eventId: $eventId)
-}
-    `;
-export const DeleteMicrosoftCalendarEvent = gql`
-    mutation DeleteMicrosoftCalendarEvent($properties: MicrosoftCalendarEventsInput!, $eventId: String!) {
-  deleteMicrosoftCalendarEvent(properties: $properties, eventId: $eventId)
-}
-    `;
 export const DisableFeed = gql`
     mutation DisableFeed($id: ID!) {
   disableFeed(id: $id) {
@@ -10432,6 +10425,22 @@ export const GetFeed = gql`
         jobTitle
         jobRegion
         jobDescription
+        fieldsToTrack
+        headcountGrowthMin
+        headcountGrowthMax
+        headcountGrowthTimeframe
+        baselineHeadcount
+        headcountGrowthFromBaseline
+        annualRevenueMin
+        annualRevenueMax
+        postCategories
+        keyword
+        industry
+        fundingRoundTypes
+        companyDepartment
+        companyHeadcountRanges
+        frequency
+        expirationDate
       }
       linkedin {
         dateRange
@@ -11508,6 +11517,22 @@ export const QueryFeeds = gql`
           jobTitle
           jobRegion
           jobDescription
+          fieldsToTrack
+          headcountGrowthMin
+          headcountGrowthMax
+          headcountGrowthTimeframe
+          baselineHeadcount
+          headcountGrowthFromBaseline
+          annualRevenueMin
+          annualRevenueMax
+          postCategories
+          keyword
+          industry
+          fundingRoundTypes
+          companyDepartment
+          companyHeadcountRanges
+          frequency
+          expirationDate
         }
         linkedin {
           dateRange
@@ -12024,15 +12049,6 @@ export const TriggerFeed = gql`
   }
 }
     `;
-export const UpdateConfluencePage = gql`
-    mutation UpdateConfluencePage($properties: ConfluenceSpacesInput!, $pageId: String!, $input: ConfluencePageUpdateInput!) {
-  updateConfluencePage(properties: $properties, pageId: $pageId, input: $input) {
-    identifier
-    uri
-    serviceType
-  }
-}
-    `;
 export const UpdateFeed = gql`
     mutation UpdateFeed($feed: FeedUpdateInput!) {
   updateFeed(feed: $feed) {
@@ -12041,79 +12057,6 @@ export const UpdateFeed = gql`
     state
     identifier
     type
-  }
-}
-    `;
-export const UpdateGoogleCalendarEvent = gql`
-    mutation UpdateGoogleCalendarEvent($properties: GoogleCalendarEventsInput!, $eventId: String!, $input: CalendarEventUpdateInput!) {
-  updateGoogleCalendarEvent(
-    properties: $properties
-    eventId: $eventId
-    input: $input
-  ) {
-    eventId
-    summary
-    startDateTime
-    endDateTime
-    location
-    attendees
-    isOnlineMeeting
-    meetingLink
-    description
-    status
-    organizer
-  }
-}
-    `;
-export const UpdateJiraIssue = gql`
-    mutation UpdateJiraIssue($properties: JiraProjectsInput!, $issueIdOrKey: String!, $input: JiraIssueUpdateInput!) {
-  updateJiraIssue(
-    properties: $properties
-    issueIdOrKey: $issueIdOrKey
-    input: $input
-  ) {
-    identifier
-    uri
-    serviceType
-  }
-}
-    `;
-export const UpdateLinearIssue = gql`
-    mutation UpdateLinearIssue($properties: LinearProjectsInput!, $issueId: String!, $input: LinearIssueUpdateInput!) {
-  updateLinearIssue(properties: $properties, issueId: $issueId, input: $input) {
-    identifier
-    uri
-    serviceType
-  }
-}
-    `;
-export const UpdateMicrosoftCalendarEvent = gql`
-    mutation UpdateMicrosoftCalendarEvent($properties: MicrosoftCalendarEventsInput!, $eventId: String!, $input: CalendarEventUpdateInput!) {
-  updateMicrosoftCalendarEvent(
-    properties: $properties
-    eventId: $eventId
-    input: $input
-  ) {
-    eventId
-    summary
-    startDateTime
-    endDateTime
-    location
-    attendees
-    isOnlineMeeting
-    meetingLink
-    description
-    status
-    organizer
-  }
-}
-    `;
-export const UpdateNotionPage = gql`
-    mutation UpdateNotionPage($properties: NotionDatabasesInput!, $pageId: String!, $input: NotionPageUpdateInput!) {
-  updateNotionPage(properties: $properties, pageId: $pageId, input: $input) {
-    identifier
-    uri
-    serviceType
   }
 }
     `;

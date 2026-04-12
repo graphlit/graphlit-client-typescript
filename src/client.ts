@@ -3953,145 +3953,6 @@ class Graphlit {
     >(Documents.QuerySlackUsers, { properties: properties });
   }
 
-  /**
-   * Updates a Google Calendar event.
-   * @param properties - The Google Calendar authentication properties.
-   * @param eventId - The event identifier.
-   * @param input - The event fields to update.
-   * @returns The updated calendar event.
-   */
-  public async updateGoogleCalendarEvent(
-    properties: Types.GoogleCalendarEventsInput,
-    eventId: string,
-    input: Types.CalendarEventUpdateInput,
-  ): Promise<Types.UpdateGoogleCalendarEventMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateGoogleCalendarEventMutation,
-      Types.UpdateGoogleCalendarEventMutationVariables
-    >(Documents.UpdateGoogleCalendarEvent, { properties, eventId, input });
-  }
-
-  /**
-   * Updates a Microsoft Calendar event.
-   * @param properties - The Microsoft Calendar authentication properties.
-   * @param eventId - The event identifier.
-   * @param input - The event fields to update.
-   * @returns The updated calendar event.
-   */
-  public async updateMicrosoftCalendarEvent(
-    properties: Types.MicrosoftCalendarEventsInput,
-    eventId: string,
-    input: Types.CalendarEventUpdateInput,
-  ): Promise<Types.UpdateMicrosoftCalendarEventMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateMicrosoftCalendarEventMutation,
-      Types.UpdateMicrosoftCalendarEventMutationVariables
-    >(Documents.UpdateMicrosoftCalendarEvent, { properties, eventId, input });
-  }
-
-  /**
-   * Deletes a Google Calendar event.
-   * @param properties - The Google Calendar authentication properties.
-   * @param eventId - The event identifier.
-   * @returns True if the event was deleted.
-   */
-  public async deleteGoogleCalendarEvent(
-    properties: Types.GoogleCalendarEventsInput,
-    eventId: string,
-  ): Promise<Types.DeleteGoogleCalendarEventMutation> {
-    return this.mutateAndCheckError<
-      Types.DeleteGoogleCalendarEventMutation,
-      Types.DeleteGoogleCalendarEventMutationVariables
-    >(Documents.DeleteGoogleCalendarEvent, { properties, eventId });
-  }
-
-  /**
-   * Deletes a Microsoft Calendar event.
-   * @param properties - The Microsoft Calendar authentication properties.
-   * @param eventId - The event identifier.
-   * @returns True if the event was deleted.
-   */
-  public async deleteMicrosoftCalendarEvent(
-    properties: Types.MicrosoftCalendarEventsInput,
-    eventId: string,
-  ): Promise<Types.DeleteMicrosoftCalendarEventMutation> {
-    return this.mutateAndCheckError<
-      Types.DeleteMicrosoftCalendarEventMutation,
-      Types.DeleteMicrosoftCalendarEventMutationVariables
-    >(Documents.DeleteMicrosoftCalendarEvent, { properties, eventId });
-  }
-
-  /**
-   * Updates a Notion page.
-   * @param properties - The Notion authentication properties.
-   * @param pageId - The Notion page identifier.
-   * @param input - The page fields to update (title, content, appendContent).
-   * @returns The distribution result.
-   */
-  public async updateNotionPage(
-    properties: Types.NotionDatabasesInput,
-    pageId: string,
-    input: Types.NotionPageUpdateInput,
-  ): Promise<Types.UpdateNotionPageMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateNotionPageMutation,
-      Types.UpdateNotionPageMutationVariables
-    >(Documents.UpdateNotionPage, { properties, pageId, input });
-  }
-
-  /**
-   * Updates a Confluence page.
-   * @param properties - The Confluence authentication properties.
-   * @param pageId - The Confluence page identifier.
-   * @param input - The page fields to update (title, content, appendContent).
-   * @returns The distribution result.
-   */
-  public async updateConfluencePage(
-    properties: Types.ConfluenceSpacesInput,
-    pageId: string,
-    input: Types.ConfluencePageUpdateInput,
-  ): Promise<Types.UpdateConfluencePageMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateConfluencePageMutation,
-      Types.UpdateConfluencePageMutationVariables
-    >(Documents.UpdateConfluencePage, { properties, pageId, input });
-  }
-
-  /**
-   * Updates a Jira issue.
-   * @param properties - The Jira authentication properties.
-   * @param issueIdOrKey - The Jira issue ID or key (e.g., "CS-123").
-   * @param input - The issue fields to update (summary, description, priority, status, assigneeId, labels).
-   * @returns The distribution result.
-   */
-  public async updateJiraIssue(
-    properties: Types.JiraProjectsInput,
-    issueIdOrKey: string,
-    input: Types.JiraIssueUpdateInput,
-  ): Promise<Types.UpdateJiraIssueMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateJiraIssueMutation,
-      Types.UpdateJiraIssueMutationVariables
-    >(Documents.UpdateJiraIssue, { properties, issueIdOrKey, input });
-  }
-
-  /**
-   * Updates a Linear issue.
-   * @param properties - The Linear authentication properties.
-   * @param issueId - The Linear issue identifier.
-   * @param input - The issue fields to update (title, description, priority, stateId, assigneeId, labelIds).
-   * @returns The distribution result.
-   */
-  public async updateLinearIssue(
-    properties: Types.LinearProjectsInput,
-    issueId: string,
-    input: Types.LinearIssueUpdateInput,
-  ): Promise<Types.UpdateLinearIssueMutation> {
-    return this.mutateAndCheckError<
-      Types.UpdateLinearIssueMutation,
-      Types.UpdateLinearIssueMutationVariables
-    >(Documents.UpdateLinearIssue, { properties, issueId, input });
-  }
 
   /**
    * Queries Linear projects.
@@ -9897,482 +9758,482 @@ class Graphlit {
         roundReasoning = undefined;
 
         try {
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(
-          `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}${providerAttempt > 0 ? `, Retry: ${providerAttempt}` : ""}`,
-        );
-        console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
-        console.log(
-          `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`,
-        );
-        console.log(
-          `   Google available: ${!!(GoogleGenAI || this.googleClient)}`,
-        );
-      }
-
-      if (
-        serviceType === Types.ModelServiceTypes.OpenAi &&
-        (OpenAI || this.openaiClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming (Round ${currentRound})`,
-          );
-        }
-        if (useOpenAIResponses) {
-          if (!openAIResponsesState) {
-            openAIResponsesState = {
-              instructions: extractInstructionsForOpenAIResponses(messages),
-              initialInput: formatMessagesForOpenAIResponsesInitialRound(messages),
-              continuationItems: [],
-            };
-          }
-
-          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `🔍 [OpenAI Responses] Sending ${openAIResponsesState.initialInput.length} initial items and ${openAIResponsesState.continuationItems.length} continuation items`,
+              `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}${providerAttempt > 0 ? `, Retry: ${providerAttempt}` : ""}`,
+            );
+            console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
+            console.log(
+              `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`,
+            );
+            console.log(
+              `   Google available: ${!!(GoogleGenAI || this.googleClient)}`,
             );
           }
 
-          const responsesResult = await this.streamWithOpenAIResponses(
-            specification,
-            messages,
-            openAIResponsesPendingToolMessages,
-            tools,
-            uiAdapter,
-            abortSignal,
-            openAIResponsesState,
-            (currentRound === 0 && tools?.length) ? "required" : undefined,
-          );
-          roundMessage = responsesResult.message;
-          toolCalls = responsesResult.toolCalls;
-          openAIResponsesState = responsesResult.state;
-          if (responsesResult.usage) {
-            uiAdapter.setUsageData(responsesResult.usage);
-          }
-          openAIResponsesPendingToolMessages = [];
-        } else {
-          const openaiMessages = formatMessagesForOpenAI(messages);
-          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-            console.log(
-              `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`,
-            );
-          }
-          await this.streamWithOpenAI(
-            specification,
-            openaiMessages,
-            tools,
-            uiAdapter,
-            (message, calls, usage, reasoning) => {
-              roundMessage = message;
-              toolCalls = calls;
-              roundReasoning = reasoning;
-              if (usage) {
-                uiAdapter.setUsageData(usage);
+          if (
+            serviceType === Types.ModelServiceTypes.OpenAi &&
+            (OpenAI || this.openaiClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming (Round ${currentRound})`,
+              );
+            }
+            if (useOpenAIResponses) {
+              if (!openAIResponsesState) {
+                openAIResponsesState = {
+                  instructions: extractInstructionsForOpenAIResponses(messages),
+                  initialInput: formatMessagesForOpenAIResponsesInitialRound(messages),
+                  continuationItems: [],
+                };
               }
-            },
-            abortSignal,
-          );
-        }
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Anthropic &&
-        (Anthropic || this.anthropicClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Anthropic native streaming (Round ${currentRound})`,
-          );
-        }
-        const { system, messages: anthropicMessages } =
-          formatMessagesForAnthropic(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Anthropic] Sending ${anthropicMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(anthropicMessages)}`,
-          );
-        }
-        await this.streamWithAnthropic(
-          specification,
-          anthropicMessages,
-          system,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
+
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+                console.log(
+                  `🔍 [OpenAI Responses] Sending ${openAIResponsesState.initialInput.length} initial items and ${openAIResponsesState.continuationItems.length} continuation items`,
+                );
+              }
+
+              const responsesResult = await this.streamWithOpenAIResponses(
+                specification,
+                messages,
+                openAIResponsesPendingToolMessages,
+                tools,
+                uiAdapter,
+                abortSignal,
+                openAIResponsesState,
+                (currentRound === 0 && tools?.length) ? "required" : undefined,
+              );
+              roundMessage = responsesResult.message;
+              toolCalls = responsesResult.toolCalls;
+              openAIResponsesState = responsesResult.state;
+              if (responsesResult.usage) {
+                uiAdapter.setUsageData(responsesResult.usage);
+              }
+              openAIResponsesPendingToolMessages = [];
+            } else {
+              const openaiMessages = formatMessagesForOpenAI(messages);
+              if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+                console.log(
+                  `🔍 [OpenAI] Sending ${openaiMessages.length} messages to LLM: ${JSON.stringify(openaiMessages)}`,
+                );
+              }
+              await this.streamWithOpenAI(
+                specification,
+                openaiMessages,
+                tools,
+                uiAdapter,
+                (message, calls, usage, reasoning) => {
+                  roundMessage = message;
+                  toolCalls = calls;
+                  roundReasoning = reasoning;
+                  if (usage) {
+                    uiAdapter.setUsageData(usage);
+                  }
+                },
+                abortSignal,
+              );
             }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Anthropic native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Google &&
-        (GoogleGenAI || this.googleClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Google native streaming (Round ${currentRound})`,
-          );
-        }
-        const googleMessages = formatMessagesForGoogle(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Google] Sending ${googleMessages.length} messages to LLM: ${JSON.stringify(googleMessages)}`,
-          );
-        }
-        await this.streamWithGoogle(
-          specification,
-          googleMessages,
-          undefined,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] OpenAI ${useOpenAIResponses ? "Responses" : "native"} streaming completed (Round ${currentRound})`,
+              );
             }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Google native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Groq &&
-        (Groq || this.groqClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Groq native streaming (Round ${currentRound})`,
-          );
-        }
-        const groqMessages = formatMessagesForOpenAI(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Groq] Sending ${groqMessages.length} messages to LLM: ${JSON.stringify(groqMessages)}`,
-          );
-        }
-        await this.streamWithGroq(
-          specification,
-          groqMessages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
+          } else if (
+            serviceType === Types.ModelServiceTypes.Anthropic &&
+            (Anthropic || this.anthropicClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Anthropic native streaming (Round ${currentRound})`,
+              );
             }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Groq native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Cerebras &&
-        (Cerebras || this.cerebrasClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Cerebras native streaming (Round ${currentRound})`,
-          );
-        }
-        const cerebrasMessages = formatMessagesForOpenAI(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Cerebras] Sending ${cerebrasMessages.length} messages to LLM: ${JSON.stringify(cerebrasMessages)}`,
-          );
-        }
-        await this.streamWithCerebras(
-          specification,
-          cerebrasMessages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
+            const { system, messages: anthropicMessages } =
+              formatMessagesForAnthropic(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Anthropic] Sending ${anthropicMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(anthropicMessages)}`,
+              );
             }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Cerebras native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Cohere &&
-        (CohereClient || CohereClientV2 || this.cohereClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`,
-          );
-        }
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(`🔍 [Cohere] Sending ${messages.length} messages to LLM`);
-        }
-        await this.streamWithCohere(
-          specification,
-          messages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Cohere native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Mistral &&
-        (Mistral || this.mistralClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Mistral native streaming (Round ${currentRound})`,
-          );
-        }
-        const mistralMessages = formatMessagesForMistral(messages);
-
-        // ALWAYS log when there's a tool-related issue for debugging
-        const hasToolCalls = mistralMessages.some(
-          (m) => "tool_calls" in m && Array.isArray((m as unknown as Record<string, unknown>).tool_calls) && ((m as unknown as Record<string, unknown>).tool_calls as unknown[]).length > 0,
-        );
-        const hasToolResponses = mistralMessages.some(
-          (m) => m.role === "tool",
-        );
-
-        // Count tool responses to determine if we should pass tools
-        const toolResponseCount = mistralMessages.filter(
-          (m) => m.role === "tool",
-        ).length;
-
-        if (
-          hasToolCalls ||
-          hasToolResponses ||
-          process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES
-        ) {
-          console.log(
-            `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM:`,
-          );
-          console.log(JSON.stringify(mistralMessages, null, 2));
-
-          // Count tool calls and responses
-          const toolCallCount = mistralMessages.reduce(
-            (count: number, m) => {
-              const calls = (m as unknown as Record<string, unknown>).tool_calls;
-              return count + (Array.isArray(calls) ? calls.length : 0);
-            },
-            0,
-          );
-
-          console.log(
-            `🔍 [Mistral] Tool calls: ${toolCallCount}, Tool responses: ${toolResponseCount}`,
-          );
-
-          if (toolResponseCount > 0) {
-            console.log(
-              `🔍 [Mistral] IMPORTANT: We have tool responses, should we still pass tools?`,
+            await this.streamWithAnthropic(
+              specification,
+              anthropicMessages,
+              system,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
             );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Anthropic native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Google &&
+            (GoogleGenAI || this.googleClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Google native streaming (Round ${currentRound})`,
+              );
+            }
+            const googleMessages = formatMessagesForGoogle(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Google] Sending ${googleMessages.length} messages to LLM: ${JSON.stringify(googleMessages)}`,
+              );
+            }
+            await this.streamWithGoogle(
+              specification,
+              googleMessages,
+              undefined,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Google native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Groq &&
+            (Groq || this.groqClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Groq native streaming (Round ${currentRound})`,
+              );
+            }
+            const groqMessages = formatMessagesForOpenAI(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Groq] Sending ${groqMessages.length} messages to LLM: ${JSON.stringify(groqMessages)}`,
+              );
+            }
+            await this.streamWithGroq(
+              specification,
+              groqMessages,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Groq native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Cerebras &&
+            (Cerebras || this.cerebrasClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Cerebras native streaming (Round ${currentRound})`,
+              );
+            }
+            const cerebrasMessages = formatMessagesForOpenAI(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Cerebras] Sending ${cerebrasMessages.length} messages to LLM: ${JSON.stringify(cerebrasMessages)}`,
+              );
+            }
+            await this.streamWithCerebras(
+              specification,
+              cerebrasMessages,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Cerebras native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Cohere &&
+            (CohereClient || CohereClientV2 || this.cohereClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Cohere native streaming (Round ${currentRound})`,
+              );
+            }
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(`🔍 [Cohere] Sending ${messages.length} messages to LLM`);
+            }
+            await this.streamWithCohere(
+              specification,
+              messages,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Cohere native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Mistral &&
+            (Mistral || this.mistralClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Mistral native streaming (Round ${currentRound})`,
+              );
+            }
+            const mistralMessages = formatMessagesForMistral(messages);
+
+            // ALWAYS log when there's a tool-related issue for debugging
+            const hasToolCalls = mistralMessages.some(
+              (m) => "tool_calls" in m && Array.isArray((m as unknown as Record<string, unknown>).tool_calls) && ((m as unknown as Record<string, unknown>).tool_calls as unknown[]).length > 0,
+            );
+            const hasToolResponses = mistralMessages.some(
+              (m) => m.role === "tool",
+            );
+
+            // Count tool responses to determine if we should pass tools
+            const toolResponseCount = mistralMessages.filter(
+              (m) => m.role === "tool",
+            ).length;
+
+            if (
+              hasToolCalls ||
+              hasToolResponses ||
+              process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES
+            ) {
+              console.log(
+                `🔍 [Mistral] Sending ${mistralMessages.length} messages to LLM:`,
+              );
+              console.log(JSON.stringify(mistralMessages, null, 2));
+
+              // Count tool calls and responses
+              const toolCallCount = mistralMessages.reduce(
+                (count: number, m) => {
+                  const calls = (m as unknown as Record<string, unknown>).tool_calls;
+                  return count + (Array.isArray(calls) ? calls.length : 0);
+                },
+                0,
+              );
+
+              console.log(
+                `🔍 [Mistral] Tool calls: ${toolCallCount}, Tool responses: ${toolResponseCount}`,
+              );
+
+              if (toolResponseCount > 0) {
+                console.log(
+                  `🔍 [Mistral] IMPORTANT: We have tool responses, should we still pass tools?`,
+                );
+              }
+            }
+
+            const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
+
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `🔍 [Mistral] Passing tools: ${shouldPassTools ? "YES" : "NO"} (tool responses in messages: ${toolResponseCount})`,
+              );
+            }
+
+            await this.streamWithMistral(
+              specification,
+              mistralMessages,
+              shouldPassTools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Mistral native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Bedrock &&
+            (BedrockRuntimeClient || this.bedrockClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Bedrock native streaming (Round ${currentRound})`,
+              );
+            }
+            const { system, messages: bedrockMessages } =
+              formatMessagesForBedrock(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Bedrock] Sending ${bedrockMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(bedrockMessages)}`,
+              );
+            }
+            await this.streamWithBedrock(
+              specification,
+              bedrockMessages,
+              system,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Bedrock native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Deepseek &&
+            (OpenAI || this.deepseekClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using Deepseek native streaming (Round ${currentRound})`,
+              );
+            }
+            const deepseekMessages = formatMessagesForOpenAI(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [Deepseek] Sending ${deepseekMessages.length} messages to LLM: ${JSON.stringify(deepseekMessages)}`,
+              );
+            }
+            await this.streamWithDeepseek(
+              specification,
+              deepseekMessages,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] Deepseek native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else if (
+            serviceType === Types.ModelServiceTypes.Xai &&
+            (OpenAI || this.xaiClient)
+          ) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n✅ [Streaming] Using xAI native streaming (Round ${currentRound})`,
+              );
+            }
+            const xaiMessages = formatMessagesForOpenAI(messages);
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
+              console.log(
+                `🔍 [xAI] Sending ${xaiMessages.length} messages to LLM: ${JSON.stringify(xaiMessages)}`,
+              );
+            }
+            await this.streamWithXai(
+              specification,
+              xaiMessages,
+              tools,
+              uiAdapter,
+              (message, calls, usage, reasoning) => {
+                roundMessage = message;
+                toolCalls = calls;
+                roundReasoning = reasoning;
+                if (usage) {
+                  uiAdapter.setUsageData(usage);
+                }
+              },
+              abortSignal,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Streaming] xAI native streaming completed (Round ${currentRound})`,
+              );
+            }
+          } else {
+            // Fallback to non-streaming
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`,
+              );
+              console.log(`   Falling back to non-streaming promptConversation`);
+              console.log(`   This should NOT happen if clients are properly set!`);
+            }
+            await this.fallbackToNonStreaming(
+              config.messages[config.messages.length - 1]?.message || "",
+              conversationId,
+              specification,
+              tools,
+              mimeType,
+              data,
+              uiAdapter,
+              correlationId,
+              persona,
+            );
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`,
+              );
+            }
+            usedFallback = true;
           }
-        }
 
-        const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
-
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `🔍 [Mistral] Passing tools: ${shouldPassTools ? "YES" : "NO"} (tool responses in messages: ${toolResponseCount})`,
-          );
-        }
-
-        await this.streamWithMistral(
-          specification,
-          mistralMessages,
-          shouldPassTools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Mistral native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Bedrock &&
-        (BedrockRuntimeClient || this.bedrockClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Bedrock native streaming (Round ${currentRound})`,
-          );
-        }
-        const { system, messages: bedrockMessages } =
-          formatMessagesForBedrock(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Bedrock] Sending ${bedrockMessages.length} messages to LLM (system: ${system ? "yes" : "no"}): ${JSON.stringify(bedrockMessages)}`,
-          );
-        }
-        await this.streamWithBedrock(
-          specification,
-          bedrockMessages,
-          system,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Bedrock native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Deepseek &&
-        (OpenAI || this.deepseekClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using Deepseek native streaming (Round ${currentRound})`,
-          );
-        }
-        const deepseekMessages = formatMessagesForOpenAI(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [Deepseek] Sending ${deepseekMessages.length} messages to LLM: ${JSON.stringify(deepseekMessages)}`,
-          );
-        }
-        await this.streamWithDeepseek(
-          specification,
-          deepseekMessages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] Deepseek native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else if (
-        serviceType === Types.ModelServiceTypes.Xai &&
-        (OpenAI || this.xaiClient)
-      ) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n✅ [Streaming] Using xAI native streaming (Round ${currentRound})`,
-          );
-        }
-        const xaiMessages = formatMessagesForOpenAI(messages);
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-          console.log(
-            `🔍 [xAI] Sending ${xaiMessages.length} messages to LLM: ${JSON.stringify(xaiMessages)}`,
-          );
-        }
-        await this.streamWithXai(
-          specification,
-          xaiMessages,
-          tools,
-          uiAdapter,
-          (message, calls, usage, reasoning) => {
-            roundMessage = message;
-            toolCalls = calls;
-            roundReasoning = reasoning;
-            if (usage) {
-              uiAdapter.setUsageData(usage);
-            }
-          },
-          abortSignal,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Streaming] xAI native streaming completed (Round ${currentRound})`,
-          );
-        }
-      } else {
-        // Fallback to non-streaming
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`,
-          );
-          console.log(`   Falling back to non-streaming promptConversation`);
-          console.log(`   This should NOT happen if clients are properly set!`);
-        }
-        await this.fallbackToNonStreaming(
-          config.messages[config.messages.length - 1]?.message || "",
-          conversationId,
-          specification,
-          tools,
-          mimeType,
-          data,
-          uiAdapter,
-          correlationId,
-          persona,
-        );
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `\n🏁 [Fallback] Non-streaming fallback completed (Round ${currentRound})`,
-          );
-        }
-        usedFallback = true;
-      }
-
-      // Provider call succeeded - exit retry loop
-      break;
+          // Provider call succeeded - exit retry loop
+          break;
         } catch (retryError) {
           if (abortSignal?.aborted) throw retryError;
 
@@ -10388,7 +10249,7 @@ class Graphlit {
           // Exponential backoff with jitter
           const delay = Math.min(
             PROVIDER_RETRY_BASE_DELAY_MS *
-              Math.pow(2, providerAttempt),
+            Math.pow(2, providerAttempt),
             PROVIDER_RETRY_MAX_DELAY_MS,
           );
           const jitter = Math.random() * delay * 0.1;
@@ -10731,7 +10592,7 @@ class Graphlit {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                  `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
                 );
               }
             }
@@ -10762,7 +10623,7 @@ class Graphlit {
             toolCall.durationMs = Math.max(
               0,
               new Date(completedAt).getTime() -
-                new Date(toolCall.startedAt).getTime(),
+              new Date(toolCall.startedAt).getTime(),
             );
             toolCall.failedAt = completedAt;
             toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;

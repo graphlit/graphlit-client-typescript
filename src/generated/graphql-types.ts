@@ -1121,6 +1121,14 @@ export type AttioDistributionPropertiesInput = {
   parentObject: Scalars['String']['input'];
   /** The record ID the note belongs to. */
   parentRecordId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The note title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1281,6 +1289,14 @@ export type AttioTasksDistributionPropertiesInput = {
   linkedObjectType?: InputMaybe<Scalars['String']['input']>;
   /** The record ID to link the task to. */
   linkedRecordId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The task title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3146,6 +3162,14 @@ export type ConfluenceDistributionPropertiesInput = {
   parentPageId?: InputMaybe<Scalars['String']['input']>;
   /** The Confluence space ID. */
   spaceId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3251,16 +3275,6 @@ export type ConfluenceFeedPropertiesUpdateInput = {
   type?: InputMaybe<ConfluenceTypes>;
   /** The Confluence base URI. */
   uri?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents Confluence page fields to update. */
-export type ConfluencePageUpdateInput = {
-  /** If true, append to existing content; if false, replace. */
-  appendContent?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The page content (Markdown). */
-  content?: InputMaybe<Scalars['String']['input']>;
-  /** The new page title. */
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Confluence space. */
@@ -5067,60 +5081,156 @@ export type CrustdataPersonDiscoveryFilterInput = {
 /** Represents Crustdata watcher search properties. */
 export type CrustdataSearchFeedProperties = {
   __typename?: 'CrustdataSearchFeedProperties';
+  /** Maximum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMax?: Maybe<Scalars['Decimal']['output']>;
+  /** Minimum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMin?: Maybe<Scalars['Decimal']['output']>;
+  /** Baseline headcount for over-baseline headcount growth watchers. */
+  baselineHeadcount?: Maybe<Scalars['Int']['output']>;
+  /** Company department for department-based watcher signals. */
+  companyDepartment?: Maybe<Scalars['String']['output']>;
   /** Company domain for company-level signals. */
   companyDomain?: Maybe<Scalars['String']['output']>;
+  /** Company headcount ranges for watcher signals that support company size filters. */
+  companyHeadcountRanges?: Maybe<Array<Scalars['String']['output']>>;
   /** Crustdata company ID for company-level signals. */
   companyId?: Maybe<Scalars['String']['output']>;
   /** Company LinkedIn URL for company-level signals. */
   companyLinkedInUrl?: Maybe<Scalars['String']['output']>;
+  /** Watcher expiration date and time. */
+  expirationDate?: Maybe<Scalars['DateTime']['output']>;
+  /** Profile fields to track for person profile update signals. */
+  fieldsToTrack?: Maybe<Array<Scalars['String']['output']>>;
+  /** Watcher polling frequency in days, defaults to 1. */
+  frequency?: Maybe<Scalars['Int']['output']>;
+  /** Funding round types for funding announcement watchers. */
+  fundingRoundTypes?: Maybe<Array<Scalars['String']['output']>>;
+  /** Percent growth threshold from the baseline headcount. */
+  headcountGrowthFromBaseline?: Maybe<Scalars['Int']['output']>;
+  /** Maximum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMax?: Maybe<Scalars['Decimal']['output']>;
+  /** Minimum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMin?: Maybe<Scalars['Decimal']['output']>;
+  /** Headcount growth timeframe for over-baseline watchers, e.g. YoY. */
+  headcountGrowthTimeframe?: Maybe<Scalars['String']['output']>;
+  /** Industry filter for watcher signals that support industry scoping. */
+  industry?: Maybe<Scalars['String']['output']>;
   /** Job description keyword for job posting signals. */
   jobDescription?: Maybe<Scalars['String']['output']>;
   /** Job region filter for job posting signals. */
   jobRegion?: Maybe<Scalars['String']['output']>;
   /** Job title keyword for job posting signals. */
   jobTitle?: Maybe<Scalars['String']['output']>;
+  /** Keyword query for keyword-based watcher signals. */
+  keyword?: Maybe<Scalars['String']['output']>;
   /** Person LinkedIn URLs for person-level signals. */
   personLinkedInUrls?: Maybe<Array<Scalars['String']['output']>>;
+  /** Post categories for LinkedIn post watchers. */
+  postCategories?: Maybe<Array<Scalars['String']['output']>>;
   /** The Crustdata watcher signal type. */
   signalType?: Maybe<CrustdataWatcherSignalTypes>;
 };
 
 /** Represents Crustdata watcher search properties. */
 export type CrustdataSearchFeedPropertiesInput = {
+  /** Maximum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMax?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Minimum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMin?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Baseline headcount for over-baseline headcount growth watchers. */
+  baselineHeadcount?: InputMaybe<Scalars['Int']['input']>;
+  /** Company department for department-based watcher signals. */
+  companyDepartment?: InputMaybe<Scalars['String']['input']>;
   /** Company domain for company-level signals. */
   companyDomain?: InputMaybe<Scalars['String']['input']>;
+  /** Company headcount ranges for watcher signals that support company size filters. */
+  companyHeadcountRanges?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Crustdata company ID for company-level signals. */
   companyId?: InputMaybe<Scalars['String']['input']>;
   /** Company LinkedIn URL for company-level signals. */
   companyLinkedInUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Watcher expiration date and time. */
+  expirationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Profile fields to track for person profile update signals. */
+  fieldsToTrack?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Watcher polling frequency in days, defaults to 1. */
+  frequency?: InputMaybe<Scalars['Int']['input']>;
+  /** Funding round types for funding announcement watchers. */
+  fundingRoundTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Percent growth threshold from the baseline headcount. */
+  headcountGrowthFromBaseline?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMax?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Minimum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMin?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Headcount growth timeframe for over-baseline watchers, e.g. YoY. */
+  headcountGrowthTimeframe?: InputMaybe<Scalars['String']['input']>;
+  /** Industry filter for watcher signals that support industry scoping. */
+  industry?: InputMaybe<Scalars['String']['input']>;
   /** Job description keyword for job posting signals. */
   jobDescription?: InputMaybe<Scalars['String']['input']>;
   /** Job region filter for job posting signals. */
   jobRegion?: InputMaybe<Scalars['String']['input']>;
   /** Job title keyword for job posting signals. */
   jobTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Keyword query for keyword-based watcher signals. */
+  keyword?: InputMaybe<Scalars['String']['input']>;
   /** Person LinkedIn URLs for person-level signals. */
   personLinkedInUrls?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Post categories for LinkedIn post watchers. */
+  postCategories?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The Crustdata watcher signal type. */
   signalType: CrustdataWatcherSignalTypes;
 };
 
 /** Represents Crustdata watcher search properties. */
 export type CrustdataSearchFeedPropertiesUpdateInput = {
+  /** Maximum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMax?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Minimum annual revenue in USD for revenue-aware Crustdata watchers. */
+  annualRevenueMin?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Baseline headcount for over-baseline headcount growth watchers. */
+  baselineHeadcount?: InputMaybe<Scalars['Int']['input']>;
+  /** Company department for department-based watcher signals. */
+  companyDepartment?: InputMaybe<Scalars['String']['input']>;
   /** Company domain for company-level signals. */
   companyDomain?: InputMaybe<Scalars['String']['input']>;
+  /** Company headcount ranges for watcher signals that support company size filters. */
+  companyHeadcountRanges?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Crustdata company ID for company-level signals. */
   companyId?: InputMaybe<Scalars['String']['input']>;
   /** Company LinkedIn URL for company-level signals. */
   companyLinkedInUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Watcher expiration date and time. */
+  expirationDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Profile fields to track for person profile update signals. */
+  fieldsToTrack?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Watcher polling frequency in days, defaults to 1. */
+  frequency?: InputMaybe<Scalars['Int']['input']>;
+  /** Funding round types for funding announcement watchers. */
+  fundingRoundTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Percent growth threshold from the baseline headcount. */
+  headcountGrowthFromBaseline?: InputMaybe<Scalars['Int']['input']>;
+  /** Maximum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMax?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Minimum headcount growth percentage for headcount growth watchers. */
+  headcountGrowthMin?: InputMaybe<Scalars['Decimal']['input']>;
+  /** Headcount growth timeframe for over-baseline watchers, e.g. YoY. */
+  headcountGrowthTimeframe?: InputMaybe<Scalars['String']['input']>;
+  /** Industry filter for watcher signals that support industry scoping. */
+  industry?: InputMaybe<Scalars['String']['input']>;
   /** Job description keyword for job posting signals. */
   jobDescription?: InputMaybe<Scalars['String']['input']>;
   /** Job region filter for job posting signals. */
   jobRegion?: InputMaybe<Scalars['String']['input']>;
   /** Job title keyword for job posting signals. */
   jobTitle?: InputMaybe<Scalars['String']['input']>;
+  /** Keyword query for keyword-based watcher signals. */
+  keyword?: InputMaybe<Scalars['String']['input']>;
   /** Person LinkedIn URLs for person-level signals. */
   personLinkedInUrls?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Post categories for LinkedIn post watchers. */
+  postCategories?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The Crustdata watcher signal type. */
   signalType?: InputMaybe<CrustdataWatcherSignalTypes>;
 };
@@ -5521,6 +5631,14 @@ export type DiscordChannelsInput = {
 export type DiscordDistributionPropertiesInput = {
   /** The Discord channel or DM ID. */
   channelId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The thread ID to reply to. */
   threadId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5642,10 +5760,25 @@ export type DistributionConnectorInput = {
   type: DistributionServiceTypes;
 };
 
+/** Distribution operation result type */
+export enum DistributionOperationTypes {
+  /** Appended to an existing target resource. */
+  Appended = 'APPENDED',
+  /** Created or appended comment-style content. */
+  Commented = 'COMMENTED',
+  /** Created a new target resource. */
+  Created = 'CREATED',
+  /** Replaced an existing target resource. */
+  Replaced = 'REPLACED'
+}
+
 export type DistributionResult = {
   __typename?: 'DistributionResult';
   error?: Maybe<Scalars['String']['output']>;
   identifier?: Maybe<Scalars['String']['output']>;
+  operation?: Maybe<DistributionOperationTypes>;
+  resolvedTargetIdentifier?: Maybe<Scalars['String']['output']>;
+  resolvedTargetUri?: Maybe<Scalars['String']['output']>;
   serviceType?: Maybe<DistributionServiceTypes>;
   uri?: Maybe<Scalars['String']['output']>;
 };
@@ -5698,6 +5831,26 @@ export enum DistributionServiceTypes {
   Slack = 'SLACK',
   /** X/Twitter */
   Twitter = 'TWITTER'
+}
+
+/** Distribution target kind type */
+export enum DistributionTargetKindTypes {
+  /** Write to the primary body or content of the target resource. */
+  Body = 'BODY',
+  /** Write comment-style content associated with the target resource. */
+  Comment = 'COMMENT'
+}
+
+/** Distribution target operation type */
+export enum DistributionTargetOperationTypes {
+  /** Append to an existing target body. */
+  Append = 'APPEND',
+  /** Create a new target. */
+  Create = 'CREATE',
+  /** Replace an existing target body. */
+  Replace = 'REPLACE',
+  /** Replace an existing target when found, otherwise create a new target. */
+  Upsert = 'UPSERT'
 }
 
 /** Represents document metadata. */
@@ -8660,6 +8813,14 @@ export type GitHubDistributionPropertiesInput = {
   repositoryName: Scalars['String']['input'];
   /** The repository owner (org or user). */
   repositoryOwner: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9108,6 +9269,14 @@ export type GitLabDistributionPropertiesInput = {
   milestone?: InputMaybe<Scalars['Int']['input']>;
   /** The GitLab project path. */
   projectPath: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9437,6 +9606,14 @@ export type GmailDistributionPropertiesInput = {
   isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['input']>;
 };
@@ -9477,6 +9654,14 @@ export type GoogleCalendarDistributionPropertiesInput = {
   startDateTime: Scalars['DateTime']['input'];
   /** The event title. */
   summary?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The IANA time zone. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9667,6 +9852,14 @@ export type GoogleContactsCrmFeedPropertiesUpdateInput = {
 export type GoogleDocsDistributionPropertiesInput = {
   /** The Google Drive folder ID to create the doc in. */
   folderId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The document title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9687,6 +9880,14 @@ export type GoogleDriveDistributionPropertiesInput = {
   fileName?: InputMaybe<Scalars['String']['input']>;
   /** The target folder ID. */
   folderId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Google Drive shared drive. */
@@ -10898,6 +11099,14 @@ export type HubSpotDistributionPropertiesInput = {
   objectId: Scalars['String']['input'];
   /** The CRM object type. */
   objectType: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum HubSpotFeedAuthenticationTypes {
@@ -12433,6 +12642,14 @@ export type JiraDistributionPropertiesInput = {
   projectKey: Scalars['String']['input'];
   /** The issue title. */
   summary?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Jira Epics feed properties. */
@@ -12739,6 +12956,14 @@ export type LinearDistributionPropertiesInput = {
   projectId?: InputMaybe<Scalars['String']['input']>;
   /** The workflow state ID. */
   stateId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Linear team UUID. */
   teamId: Scalars['String']['input'];
   /** The issue title. */
@@ -15572,6 +15797,14 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   startDateTime: Scalars['DateTime']['input'];
   /** The event title. */
   subject?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Windows time zone name. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -15864,6 +16097,14 @@ export type MicrosoftOutlookDistributionPropertiesInput = {
   isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['input']>;
 };
@@ -15907,6 +16148,14 @@ export type MicrosoftTeamsChannelsInput = {
 export type MicrosoftTeamsDistributionPropertiesInput = {
   /** The channel ID within the team. */
   channelId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Teams team ID. */
   teamId: Scalars['String']['input'];
   /** The thread message ID to reply to. */
@@ -16034,6 +16283,14 @@ export type MicrosoftWordDistributionPropertiesInput = {
   fileName?: InputMaybe<Scalars['String']['input']>;
   /** The OneDrive/SharePoint folder ID to create the doc in. */
   folderId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents the Mistral document preparation properties. */
@@ -16886,8 +17143,6 @@ export type Mutation = {
   updateCategory?: Maybe<Category>;
   /** Updates an existing collection. */
   updateCollection?: Maybe<Collection>;
-  /** Updates an existing Confluence page. */
-  updateConfluencePage?: Maybe<DistributionResult>;
   /** Updates an existing connector. */
   updateConnector?: Maybe<Connector>;
   /** Updates existing content. */
@@ -16940,8 +17195,6 @@ export type Mutation = {
   updateMedicalTherapy?: Maybe<MedicalTherapy>;
   /** Updates an existing Microsoft Calendar event. */
   updateMicrosoftCalendarEvent?: Maybe<CalendarEventResult>;
-  /** Updates an existing Notion page. */
-  updateNotionPage?: Maybe<DistributionResult>;
   /** Updates an observation. */
   updateObservation?: Maybe<Observation>;
   /** Updates an organization. */
@@ -18591,13 +18844,6 @@ export type MutationUpdateCollectionArgs = {
 };
 
 
-export type MutationUpdateConfluencePageArgs = {
-  input: ConfluencePageUpdateInput;
-  pageId: Scalars['String']['input'];
-  properties: ConfluenceSpacesInput;
-};
-
-
 export type MutationUpdateConnectorArgs = {
   connector: ConnectorUpdateInput;
 };
@@ -18733,13 +18979,6 @@ export type MutationUpdateMicrosoftCalendarEventArgs = {
   eventId: Scalars['String']['input'];
   input: CalendarEventUpdateInput;
   properties: MicrosoftCalendarEventsInput;
-};
-
-
-export type MutationUpdateNotionPageArgs = {
-  input: NotionPageUpdateInput;
-  pageId: Scalars['String']['input'];
-  properties: NotionDatabasesInput;
 };
 
 
@@ -18914,6 +19153,14 @@ export type NotionDistributionPropertiesInput = {
   databaseId?: InputMaybe<Scalars['String']['input']>;
   /** The Notion page ID to create child page under. */
   parentPageId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -19005,16 +19252,6 @@ export type NotionPageResults = {
   __typename?: 'NotionPageResults';
   /** The Notion pages. */
   results?: Maybe<Array<Maybe<NotionPageResult>>>;
-};
-
-/** Represents Notion page fields to update. */
-export type NotionPageUpdateInput = {
-  /** If true, append to existing content; if false, replace. */
-  appendContent?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The page content (Markdown). */
-  content?: InputMaybe<Scalars['String']['input']>;
-  /** The new page title. */
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Notion pages properties. */
@@ -19410,6 +19647,14 @@ export type OneDriveDistributionPropertiesInput = {
   fileName?: InputMaybe<Scalars['String']['input']>;
   /** The target folder ID. */
   folderId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents OneDrive properties. */
@@ -24422,6 +24667,14 @@ export type SalesforceDistributionPropertiesInput = {
   objectId: Scalars['String']['input'];
   /** The Salesforce object type. */
   objectType: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The note title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -24686,6 +24939,14 @@ export enum SharePointAuthenticationTypes {
 export type SharePointDistributionPropertiesInput = {
   /** The SharePoint site ID. */
   siteId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -25138,6 +25399,14 @@ export type SlackChannelsInput = {
 export type SlackDistributionPropertiesInput = {
   /** The channel or DM ID. */
   channelId: Scalars['String']['input'];
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The thread timestamp for replying to a thread. */
   threadTs?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26360,6 +26629,14 @@ export enum TwitterAuthenticationTypes {
 export type TwitterDistributionPropertiesInput = {
   /** The tweet ID to reply to. */
   replyToTweetId?: InputMaybe<Scalars['String']['input']>;
+  /** The target resource identifier. */
+  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
+  /** The target write kind. */
+  targetKind?: InputMaybe<DistributionTargetKindTypes>;
+  /** The requested target write operation. */
+  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
+  /** The target resource URI. */
+  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Twitter feed properties. */
@@ -28009,7 +28286,7 @@ export type DistributeMutationVariables = Exact<{
 }>;
 
 
-export type DistributeMutation = { __typename?: 'Mutation', distribute?: Array<{ __typename?: 'DistributionResult', uri?: string | null, identifier?: string | null, serviceType?: DistributionServiceTypes | null, error?: string | null }> | null };
+export type DistributeMutation = { __typename?: 'Mutation', distribute?: Array<{ __typename?: 'DistributionResult', uri?: string | null, identifier?: string | null, serviceType?: DistributionServiceTypes | null, operation?: DistributionOperationTypes | null, resolvedTargetIdentifier?: string | null, resolvedTargetUri?: string | null, error?: string | null }> | null };
 
 export type ExtractContentsMutationVariables = Exact<{
   prompt: Scalars['String']['input'];
@@ -28971,22 +29248,6 @@ export type DeleteFeedsMutationVariables = Exact<{
 
 export type DeleteFeedsMutation = { __typename?: 'Mutation', deleteFeeds?: Array<{ __typename?: 'Feed', id: string, state: EntityState } | null> | null };
 
-export type DeleteGoogleCalendarEventMutationVariables = Exact<{
-  properties: GoogleCalendarEventsInput;
-  eventId: Scalars['String']['input'];
-}>;
-
-
-export type DeleteGoogleCalendarEventMutation = { __typename?: 'Mutation', deleteGoogleCalendarEvent?: boolean | null };
-
-export type DeleteMicrosoftCalendarEventMutationVariables = Exact<{
-  properties: MicrosoftCalendarEventsInput;
-  eventId: Scalars['String']['input'];
-}>;
-
-
-export type DeleteMicrosoftCalendarEventMutation = { __typename?: 'Mutation', deleteMicrosoftCalendarEvent?: boolean | null };
-
 export type DisableFeedMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -29015,7 +29276,7 @@ export type GetFeedQueryVariables = Exact<{
 }>;
 
 
-export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, driveId?: string | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: any | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, project: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabIssuesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', authenticationType?: IntercomIssueAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', authenticationType?: ZendeskIssueAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', authenticationType?: AttioIssueAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null, productlane?: { __typename?: 'ProductlaneThreadsFeedProperties', apiKey?: string | null, workspaceId?: string | null } | null } | null, initiative?: { __typename?: 'InitiativeFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'JiraEpicsFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: string | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubMilestonesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabMilestonesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, uri?: string | null, projectPath?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearInitiativesFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabCommitsFeedProperties', authenticationType?: GitLabCommitAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabPullRequestsFeedProperties', authenticationType?: GitLabMergeRequestAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneCRMFeedProperties', apiKey?: string | null, type?: FeedListingTypes | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, contentType?: MeetingContentTypes | null, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null, type?: FeedListingTypes | null } | null, attio?: { __typename?: 'AttioMeetingProperties', authenticationType?: AttioMeetingAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null } | null, zoom?: { __typename?: 'ZoomProperties', authenticationType?: ZoomAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, type?: FeedListingTypes | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text?: string | null, exa?: { __typename?: 'ExaSearchProperties', searchType?: ExaSearchTypes | null } | null, crustdata?: { __typename?: 'CrustdataSearchFeedProperties', signalType?: CrustdataWatcherSignalTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyId?: string | null, personLinkedInUrls?: Array<string> | null, jobTitle?: string | null, jobRegion?: string | null, jobDescription?: string | null } | null, linkedin?: { __typename?: 'LinkedInSearchProperties', dateRange?: LinkedInSearchDateTypes | null } | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, linkedIn?: { __typename?: 'LinkedInFeedProperties', readLimit?: number | null, listingType?: LinkedInPostListingTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyName?: string | null, personLinkedInUrl?: string | null, postTypes?: string | null, keyword?: string | null, datePosted?: string | null, exactKeywordMatch?: boolean | null, contentTypes?: Array<LinkedInPostContentTypes | null> | null, includeComments?: boolean | null, maxComments?: number | null } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, authenticationType?: NotionAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, identifiers: Array<string>, type: NotionTypes, connector?: { __typename?: 'EntityReference', id: string } | null } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, authenticationType?: ConfluenceAuthenticationTypes | null, uri?: string | null, email?: string | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, authenticationType?: IntercomAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, authenticationType?: ZendeskAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, authenticationType?: TwitterAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, beforeDate?: any | null, afterDate?: any | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, beforeDate?: any | null, afterDate?: any | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, authenticationType?: AttioFeedAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercomConversations?: { __typename?: 'IntercomConversationsFeedProperties', readLimit?: number | null, authenticationType?: IntercomConversationsAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, state?: string | null, includeNotes?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneFeedProperties', readLimit?: number | null, type: FeedServiceTypes, apiKey?: string | null, workspaceId?: string | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query?: string | null, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null, processor?: ParallelProcessors | null } | null, crustdata?: { __typename?: 'CrustdataEntityFeedProperties', personFilters?: { __typename?: 'CrustdataPersonDiscoveryFilter', titles?: Array<string> | null, seniorityLevels?: Array<string> | null, functionCategories?: Array<string> | null, companyNames?: Array<string> | null, companyDomains?: Array<string> | null, companyLinkedInUrls?: Array<string> | null, industries?: Array<string> | null, regions?: Array<string> | null, countries?: Array<string> | null, skills?: Array<string> | null, schools?: Array<string> | null, minYearsExperience?: number | null, maxYearsExperience?: number | null, minConnections?: number | null, recentlyChangedJobs?: boolean | null } | null, companyFilters?: { __typename?: 'CrustdataCompanyDiscoveryFilter', names?: Array<string> | null, domains?: Array<string> | null, industries?: Array<string> | null, categories?: Array<string> | null, countries?: Array<string> | null, locations?: Array<string> | null, companyTypes?: Array<string> | null, minEmployeeCount?: number | null, maxEmployeeCount?: number | null, minGrowth6mPercent?: any | null, minGrowth12mPercent?: any | null, fundingRoundTypes?: Array<string> | null, minFundingDate?: any | null, minTotalFundingUsd?: any | null, minRevenueLowerBoundUsd?: any | null, maxRevenueUpperBoundUsd?: any | null, minYearFounded?: number | null, maxYearFounded?: number | null } | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+export type GetFeedQuery = { __typename?: 'Query', feed?: { __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, driveId?: string | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: any | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, project: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabIssuesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', authenticationType?: IntercomIssueAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', authenticationType?: ZendeskIssueAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', authenticationType?: AttioIssueAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null, productlane?: { __typename?: 'ProductlaneThreadsFeedProperties', apiKey?: string | null, workspaceId?: string | null } | null } | null, initiative?: { __typename?: 'InitiativeFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'JiraEpicsFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: string | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubMilestonesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabMilestonesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, uri?: string | null, projectPath?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearInitiativesFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabCommitsFeedProperties', authenticationType?: GitLabCommitAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabPullRequestsFeedProperties', authenticationType?: GitLabMergeRequestAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneCRMFeedProperties', apiKey?: string | null, type?: FeedListingTypes | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, contentType?: MeetingContentTypes | null, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null, type?: FeedListingTypes | null } | null, attio?: { __typename?: 'AttioMeetingProperties', authenticationType?: AttioMeetingAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null } | null, zoom?: { __typename?: 'ZoomProperties', authenticationType?: ZoomAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, type?: FeedListingTypes | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text?: string | null, exa?: { __typename?: 'ExaSearchProperties', searchType?: ExaSearchTypes | null } | null, crustdata?: { __typename?: 'CrustdataSearchFeedProperties', signalType?: CrustdataWatcherSignalTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyId?: string | null, personLinkedInUrls?: Array<string> | null, jobTitle?: string | null, jobRegion?: string | null, jobDescription?: string | null, fieldsToTrack?: Array<string> | null, headcountGrowthMin?: any | null, headcountGrowthMax?: any | null, headcountGrowthTimeframe?: string | null, baselineHeadcount?: number | null, headcountGrowthFromBaseline?: number | null, annualRevenueMin?: any | null, annualRevenueMax?: any | null, postCategories?: Array<string> | null, keyword?: string | null, industry?: string | null, fundingRoundTypes?: Array<string> | null, companyDepartment?: string | null, companyHeadcountRanges?: Array<string> | null, frequency?: number | null, expirationDate?: any | null } | null, linkedin?: { __typename?: 'LinkedInSearchProperties', dateRange?: LinkedInSearchDateTypes | null } | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, linkedIn?: { __typename?: 'LinkedInFeedProperties', readLimit?: number | null, listingType?: LinkedInPostListingTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyName?: string | null, personLinkedInUrl?: string | null, postTypes?: string | null, keyword?: string | null, datePosted?: string | null, exactKeywordMatch?: boolean | null, contentTypes?: Array<LinkedInPostContentTypes | null> | null, includeComments?: boolean | null, maxComments?: number | null } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, authenticationType?: NotionAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, identifiers: Array<string>, type: NotionTypes, connector?: { __typename?: 'EntityReference', id: string } | null } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, authenticationType?: ConfluenceAuthenticationTypes | null, uri?: string | null, email?: string | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, authenticationType?: IntercomAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, authenticationType?: ZendeskAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, authenticationType?: TwitterAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, beforeDate?: any | null, afterDate?: any | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, beforeDate?: any | null, afterDate?: any | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, authenticationType?: AttioFeedAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercomConversations?: { __typename?: 'IntercomConversationsFeedProperties', readLimit?: number | null, authenticationType?: IntercomConversationsAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, state?: string | null, includeNotes?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneFeedProperties', readLimit?: number | null, type: FeedServiceTypes, apiKey?: string | null, workspaceId?: string | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query?: string | null, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null, processor?: ParallelProcessors | null } | null, crustdata?: { __typename?: 'CrustdataEntityFeedProperties', personFilters?: { __typename?: 'CrustdataPersonDiscoveryFilter', titles?: Array<string> | null, seniorityLevels?: Array<string> | null, functionCategories?: Array<string> | null, companyNames?: Array<string> | null, companyDomains?: Array<string> | null, companyLinkedInUrls?: Array<string> | null, industries?: Array<string> | null, regions?: Array<string> | null, countries?: Array<string> | null, skills?: Array<string> | null, schools?: Array<string> | null, minYearsExperience?: number | null, maxYearsExperience?: number | null, minConnections?: number | null, recentlyChangedJobs?: boolean | null } | null, companyFilters?: { __typename?: 'CrustdataCompanyDiscoveryFilter', names?: Array<string> | null, domains?: Array<string> | null, industries?: Array<string> | null, categories?: Array<string> | null, countries?: Array<string> | null, locations?: Array<string> | null, companyTypes?: Array<string> | null, minEmployeeCount?: number | null, maxEmployeeCount?: number | null, minGrowth6mPercent?: any | null, minGrowth12mPercent?: any | null, fundingRoundTypes?: Array<string> | null, minFundingDate?: any | null, minTotalFundingUsd?: any | null, minRevenueLowerBoundUsd?: any | null, maxRevenueUpperBoundUsd?: any | null, minYearFounded?: number | null, maxYearFounded?: number | null } | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
 
 export type GetSharePointConsentUriQueryVariables = Exact<{
   tenantId: Scalars['ID']['input'];
@@ -29147,7 +29408,7 @@ export type QueryFeedsQueryVariables = Exact<{
 }>;
 
 
-export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, driveId?: string | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: any | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, project: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabIssuesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', authenticationType?: IntercomIssueAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', authenticationType?: ZendeskIssueAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', authenticationType?: AttioIssueAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null, productlane?: { __typename?: 'ProductlaneThreadsFeedProperties', apiKey?: string | null, workspaceId?: string | null } | null } | null, initiative?: { __typename?: 'InitiativeFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'JiraEpicsFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: string | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubMilestonesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabMilestonesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, uri?: string | null, projectPath?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearInitiativesFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabCommitsFeedProperties', authenticationType?: GitLabCommitAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabPullRequestsFeedProperties', authenticationType?: GitLabMergeRequestAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneCRMFeedProperties', apiKey?: string | null, type?: FeedListingTypes | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, contentType?: MeetingContentTypes | null, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null, type?: FeedListingTypes | null } | null, attio?: { __typename?: 'AttioMeetingProperties', authenticationType?: AttioMeetingAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null } | null, zoom?: { __typename?: 'ZoomProperties', authenticationType?: ZoomAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, type?: FeedListingTypes | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text?: string | null, exa?: { __typename?: 'ExaSearchProperties', searchType?: ExaSearchTypes | null } | null, crustdata?: { __typename?: 'CrustdataSearchFeedProperties', signalType?: CrustdataWatcherSignalTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyId?: string | null, personLinkedInUrls?: Array<string> | null, jobTitle?: string | null, jobRegion?: string | null, jobDescription?: string | null } | null, linkedin?: { __typename?: 'LinkedInSearchProperties', dateRange?: LinkedInSearchDateTypes | null } | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, linkedIn?: { __typename?: 'LinkedInFeedProperties', readLimit?: number | null, listingType?: LinkedInPostListingTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyName?: string | null, personLinkedInUrl?: string | null, postTypes?: string | null, keyword?: string | null, datePosted?: string | null, exactKeywordMatch?: boolean | null, contentTypes?: Array<LinkedInPostContentTypes | null> | null, includeComments?: boolean | null, maxComments?: number | null } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, authenticationType?: NotionAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, identifiers: Array<string>, type: NotionTypes, connector?: { __typename?: 'EntityReference', id: string } | null } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, authenticationType?: ConfluenceAuthenticationTypes | null, uri?: string | null, email?: string | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, authenticationType?: IntercomAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, authenticationType?: ZendeskAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, authenticationType?: TwitterAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, beforeDate?: any | null, afterDate?: any | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, beforeDate?: any | null, afterDate?: any | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, authenticationType?: AttioFeedAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercomConversations?: { __typename?: 'IntercomConversationsFeedProperties', readLimit?: number | null, authenticationType?: IntercomConversationsAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, state?: string | null, includeNotes?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneFeedProperties', readLimit?: number | null, type: FeedServiceTypes, apiKey?: string | null, workspaceId?: string | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query?: string | null, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null, processor?: ParallelProcessors | null } | null, crustdata?: { __typename?: 'CrustdataEntityFeedProperties', personFilters?: { __typename?: 'CrustdataPersonDiscoveryFilter', titles?: Array<string> | null, seniorityLevels?: Array<string> | null, functionCategories?: Array<string> | null, companyNames?: Array<string> | null, companyDomains?: Array<string> | null, companyLinkedInUrls?: Array<string> | null, industries?: Array<string> | null, regions?: Array<string> | null, countries?: Array<string> | null, skills?: Array<string> | null, schools?: Array<string> | null, minYearsExperience?: number | null, maxYearsExperience?: number | null, minConnections?: number | null, recentlyChangedJobs?: boolean | null } | null, companyFilters?: { __typename?: 'CrustdataCompanyDiscoveryFilter', names?: Array<string> | null, domains?: Array<string> | null, industries?: Array<string> | null, categories?: Array<string> | null, countries?: Array<string> | null, locations?: Array<string> | null, companyTypes?: Array<string> | null, minEmployeeCount?: number | null, maxEmployeeCount?: number | null, minGrowth6mPercent?: any | null, minGrowth12mPercent?: any | null, fundingRoundTypes?: Array<string> | null, minFundingDate?: any | null, minTotalFundingUsd?: any | null, minRevenueLowerBoundUsd?: any | null, maxRevenueUpperBoundUsd?: any | null, minYearFounded?: number | null, maxYearFounded?: number | null } | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+export type QueryFeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'FeedResults', results?: Array<{ __typename?: 'Feed', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, identifier?: string | null, description?: string | null, correlationId?: string | null, type: FeedTypes, syncMode?: FeedSyncMode | null, error?: string | null, lastPostDate?: any | null, lastReadDate?: any | null, readCount?: number | null, owner: { __typename?: 'Owner', id: string }, site?: { __typename?: 'SiteFeedProperties', siteType: SiteTypes, type: FeedServiceTypes, isRecursive?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null, readLimit?: number | null, s3?: { __typename?: 'AmazonFeedProperties', accessKey?: string | null, secretAccessKey?: string | null, bucketName?: string | null, prefix?: string | null, region?: string | null, customEndpoint?: string | null } | null, azureBlob?: { __typename?: 'AzureBlobFeedProperties', storageAccessKey?: string | null, accountName?: string | null, containerName?: string | null, prefix?: string | null, listType?: BlobListingTypes | null } | null, azureFile?: { __typename?: 'AzureFileFeedProperties', storageAccessKey?: string | null, accountName?: string | null, shareName?: string | null, prefix?: string | null } | null, google?: { __typename?: 'GoogleFeedProperties', credentials?: string | null, containerName?: string | null, prefix?: string | null } | null, sharePoint?: { __typename?: 'SharePointFeedProperties', authenticationType?: SharePointAuthenticationTypes | null, accountName: string, libraryId: string, folderId?: string | null, tenantId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, oneDrive?: { __typename?: 'OneDriveFeedProperties', authenticationType?: OneDriveAuthenticationTypes | null, folderId?: string | null, files?: Array<string | null> | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleDrive?: { __typename?: 'GoogleDriveFeedProperties', authenticationType?: GoogleDriveAuthenticationTypes | null, driveId?: string | null, folderId?: string | null, files?: Array<string | null> | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, serviceAccountJson?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, dropbox?: { __typename?: 'DropboxFeedProperties', authenticationType?: DropboxAuthenticationTypes | null, path?: string | null, appKey?: string | null, appSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, box?: { __typename?: 'BoxFeedProperties', authenticationType?: BoxAuthenticationTypes | null, folderId?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, redirectUri?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, email?: { __typename?: 'EmailFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, readLimit?: number | null, google?: { __typename?: 'GoogleEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftEmailFeedProperties', type?: EmailListingTypes | null, filter?: string | null, includeSpam?: boolean | null, excludeSentItems?: boolean | null, includeDeletedItems?: boolean | null, inboxOnly?: boolean | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftEmailAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, issue?: { __typename?: 'IssueFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'AtlassianJiraFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: any | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, project: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubIssuesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabIssuesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, projectPath: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomTicketsFeedProperties', authenticationType?: IntercomIssueAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskTicketsFeedProperties', authenticationType?: ZendeskIssueAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, trello?: { __typename?: 'TrelloFeedProperties', key: string, token: string, identifiers: Array<string>, type: TrelloTypes } | null, attio?: { __typename?: 'AttioTasksFeedProperties', authenticationType?: AttioIssueAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceTasksFeedProperties', authenticationType?: SalesforceIssueAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotTasksFeedProperties', authenticationType?: HubSpotIssueAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, asana?: { __typename?: 'AsanaFeedProperties', authenticationType?: AsanaAuthenticationTypes | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, workspaceId?: string | null, projectId?: string | null } | null, monday?: { __typename?: 'MondayFeedProperties', apiToken: string, boardId: string } | null, productlane?: { __typename?: 'ProductlaneThreadsFeedProperties', apiKey?: string | null, workspaceId?: string | null } | null } | null, initiative?: { __typename?: 'InitiativeFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, jira?: { __typename?: 'JiraEpicsFeedProperties', authenticationType?: JiraAuthenticationTypes | null, uri?: string | null, project?: string | null, email?: string | null, token?: string | null, offset?: any | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, github?: { __typename?: 'GitHubMilestonesFeedProperties', authenticationType?: GitHubAuthenticationTypes | null, uri?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabMilestonesFeedProperties', authenticationType?: GitLabAuthenticationTypes | null, uri?: string | null, projectPath?: string | null, personalAccessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, authorizationId?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, linear?: { __typename?: 'LinearInitiativesFeedProperties', authenticationType?: LinearAuthenticationTypes | null, key?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, commit?: { __typename?: 'CommitFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubCommitsFeedProperties', authenticationType?: GitHubCommitAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabCommitsFeedProperties', authenticationType?: GitLabCommitAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, pullRequest?: { __typename?: 'PullRequestFeedProperties', type: FeedServiceTypes, beforeDate?: any | null, afterDate?: any | null, readLimit?: number | null, github?: { __typename?: 'GitHubPullRequestsFeedProperties', authenticationType?: GitHubPullRequestAuthenticationTypes | null, uri?: any | null, repositoryOwner: string, repositoryName: string, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, gitlab?: { __typename?: 'GitLabPullRequestsFeedProperties', authenticationType?: GitLabMergeRequestAuthenticationTypes | null, projectPath: string, branch?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, personalAccessToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, crm?: { __typename?: 'CRMFeedProperties', type: FeedServiceTypes, readLimit?: number | null, attio?: { __typename?: 'AttioCRMFeedProperties', authenticationType?: AttioAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, googleContacts?: { __typename?: 'GoogleContactsCRMFeedProperties', authenticationType?: GoogleContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftContacts?: { __typename?: 'MicrosoftContactsCRMFeedProperties', authenticationType?: MicrosoftContactsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, tenantId?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceCRMFeedProperties', authenticationType?: SalesforceAuthenticationTypes | null, instanceUrl?: string | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotCRMFeedProperties', authenticationType?: HubSpotAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, accessToken?: string | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneCRMFeedProperties', apiKey?: string | null, type?: FeedListingTypes | null } | null } | null, hris?: { __typename?: 'HRISFeedProperties', type: FeedServiceTypes, readLimit?: number | null, bambooHR?: { __typename?: 'BambooHRHRISFeedProperties', authenticationType?: BambooHrAuthenticationTypes | null, apiKey?: string | null, companyDomain?: string | null } | null, gusto?: { __typename?: 'GustoHRISFeedProperties', authenticationType?: GustoAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, companyId?: string | null } | null } | null, calendar?: { __typename?: 'CalendarFeedProperties', type: FeedServiceTypes, includeAttachments?: boolean | null, enableMeetingRecording?: boolean | null, meetingBotName?: string | null, readLimit?: number | null, google?: { __typename?: 'GoogleCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: GoogleCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoft?: { __typename?: 'MicrosoftCalendarFeedProperties', type?: CalendarListingTypes | null, calendarId?: string | null, beforeDate?: any | null, afterDate?: any | null, authenticationType?: MicrosoftCalendarAuthenticationTypes | null, refreshToken?: string | null, clientId?: string | null, clientSecret?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null } | null, meeting?: { __typename?: 'MeetingFeedProperties', type: FeedServiceTypes, contentType?: MeetingContentTypes | null, readLimit?: number | null, fireflies?: { __typename?: 'FirefliesFeedProperties', apiKey?: string | null, beforeDate?: any | null, afterDate?: any | null, type?: FeedListingTypes | null } | null, attio?: { __typename?: 'AttioMeetingProperties', authenticationType?: AttioMeetingAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, fathom?: { __typename?: 'FathomProperties', apiKey?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null } | null, zoom?: { __typename?: 'ZoomProperties', authenticationType?: ZoomAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, afterDate?: any | null, beforeDate?: any | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpot?: { __typename?: 'HubSpotMeetingProperties', authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, includeTranscripts?: boolean | null, afterDate?: any | null, beforeDate?: any | null, readLimit?: number | null, type?: FeedListingTypes | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, krisp?: { __typename?: 'KrispProperties', authToken?: string | null, type?: FeedListingTypes | null } | null } | null, rss?: { __typename?: 'RSSFeedProperties', readLimit?: number | null, uri: any } | null, web?: { __typename?: 'WebFeedProperties', readLimit?: number | null, uri: any, includeFiles?: boolean | null, allowedPaths?: Array<string> | null, excludedPaths?: Array<string> | null } | null, search?: { __typename?: 'SearchFeedProperties', readLimit?: number | null, type?: SearchServiceTypes | null, text?: string | null, exa?: { __typename?: 'ExaSearchProperties', searchType?: ExaSearchTypes | null } | null, crustdata?: { __typename?: 'CrustdataSearchFeedProperties', signalType?: CrustdataWatcherSignalTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyId?: string | null, personLinkedInUrls?: Array<string> | null, jobTitle?: string | null, jobRegion?: string | null, jobDescription?: string | null, fieldsToTrack?: Array<string> | null, headcountGrowthMin?: any | null, headcountGrowthMax?: any | null, headcountGrowthTimeframe?: string | null, baselineHeadcount?: number | null, headcountGrowthFromBaseline?: number | null, annualRevenueMin?: any | null, annualRevenueMax?: any | null, postCategories?: Array<string> | null, keyword?: string | null, industry?: string | null, fundingRoundTypes?: Array<string> | null, companyDepartment?: string | null, companyHeadcountRanges?: Array<string> | null, frequency?: number | null, expirationDate?: any | null } | null, linkedin?: { __typename?: 'LinkedInSearchProperties', dateRange?: LinkedInSearchDateTypes | null } | null } | null, reddit?: { __typename?: 'RedditFeedProperties', readLimit?: number | null, subredditName: string } | null, linkedIn?: { __typename?: 'LinkedInFeedProperties', readLimit?: number | null, listingType?: LinkedInPostListingTypes | null, companyDomain?: string | null, companyLinkedInUrl?: string | null, companyName?: string | null, personLinkedInUrl?: string | null, postTypes?: string | null, keyword?: string | null, datePosted?: string | null, exactKeywordMatch?: boolean | null, contentTypes?: Array<LinkedInPostContentTypes | null> | null, includeComments?: boolean | null, maxComments?: number | null } | null, notion?: { __typename?: 'NotionFeedProperties', readLimit?: number | null, authenticationType?: NotionAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, identifiers: Array<string>, type: NotionTypes, connector?: { __typename?: 'EntityReference', id: string } | null } | null, confluence?: { __typename?: 'ConfluenceFeedProperties', readLimit?: number | null, authenticationType?: ConfluenceAuthenticationTypes | null, uri?: string | null, email?: string | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, cloudId?: string | null, spaceKeys?: Array<string> | null, identifiers?: Array<string> | null, type: ConfluenceTypes, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercom?: { __typename?: 'IntercomFeedProperties', readLimit?: number | null, authenticationType?: IntercomAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, zendesk?: { __typename?: 'ZendeskFeedProperties', readLimit?: number | null, authenticationType?: ZendeskAuthenticationTypes | null, subdomain: string, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, youtube?: { __typename?: 'YouTubeFeedProperties', readLimit?: number | null, type: YouTubeTypes, videoName?: string | null, videoIdentifiers?: Array<string> | null, channelIdentifier?: string | null, playlistIdentifier?: string | null } | null, twitter?: { __typename?: 'TwitterFeedProperties', readLimit?: number | null, authenticationType?: TwitterAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, type?: TwitterListingTypes | null, userName?: string | null, query?: string | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, slack?: { __typename?: 'SlackFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: SlackAuthenticationTypes | null, token?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, channel: string, beforeDate?: any | null, afterDate?: any | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, authenticationType?: MicrosoftTeamsAuthenticationTypes | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, beforeDate?: any | null, afterDate?: any | null, teamId: string, channelId: string, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, discord?: { __typename?: 'DiscordFeedProperties', readLimit?: number | null, type?: FeedListingTypes | null, token: string, channel: string, includeAttachments?: boolean | null } | null, attio?: { __typename?: 'AttioFeedProperties', readLimit?: number | null, authenticationType?: AttioFeedAuthenticationTypes | null, apiKey?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, salesforce?: { __typename?: 'SalesforceFeedProperties', readLimit?: number | null, authenticationType?: SalesforceFeedAuthenticationTypes | null, isSandbox?: boolean | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, hubSpotConversations?: { __typename?: 'HubSpotConversationsFeedProperties', readLimit?: number | null, authenticationType?: HubSpotFeedAuthenticationTypes | null, clientId?: string | null, accessToken?: string | null, inboxId?: string | null, includeClosedThreads?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, intercomConversations?: { __typename?: 'IntercomConversationsFeedProperties', readLimit?: number | null, authenticationType?: IntercomConversationsAuthenticationTypes | null, accessToken?: string | null, clientId?: string | null, clientSecret?: string | null, refreshToken?: string | null, state?: string | null, includeNotes?: boolean | null, includeAttachments?: boolean | null, connector?: { __typename?: 'EntityReference', id: string } | null } | null, productlane?: { __typename?: 'ProductlaneFeedProperties', readLimit?: number | null, type: FeedServiceTypes, apiKey?: string | null, workspaceId?: string | null } | null, research?: { __typename?: 'ResearchFeedProperties', readLimit?: number | null, type?: FeedServiceTypes | null, query: string, parallel?: { __typename?: 'ParallelFeedProperties', processor?: ParallelProcessors | null } | null } | null, entity?: { __typename?: 'EntityFeedProperties', type: FeedServiceTypes, query?: string | null, readLimit?: number | null, parallel?: { __typename?: 'ParallelEntityFeedProperties', generator?: ParallelGenerators | null, processor?: ParallelProcessors | null } | null, crustdata?: { __typename?: 'CrustdataEntityFeedProperties', personFilters?: { __typename?: 'CrustdataPersonDiscoveryFilter', titles?: Array<string> | null, seniorityLevels?: Array<string> | null, functionCategories?: Array<string> | null, companyNames?: Array<string> | null, companyDomains?: Array<string> | null, companyLinkedInUrls?: Array<string> | null, industries?: Array<string> | null, regions?: Array<string> | null, countries?: Array<string> | null, skills?: Array<string> | null, schools?: Array<string> | null, minYearsExperience?: number | null, maxYearsExperience?: number | null, minConnections?: number | null, recentlyChangedJobs?: boolean | null } | null, companyFilters?: { __typename?: 'CrustdataCompanyDiscoveryFilter', names?: Array<string> | null, domains?: Array<string> | null, industries?: Array<string> | null, categories?: Array<string> | null, countries?: Array<string> | null, locations?: Array<string> | null, companyTypes?: Array<string> | null, minEmployeeCount?: number | null, maxEmployeeCount?: number | null, minGrowth6mPercent?: any | null, minGrowth12mPercent?: any | null, fundingRoundTypes?: Array<string> | null, minFundingDate?: any | null, minTotalFundingUsd?: any | null, minRevenueLowerBoundUsd?: any | null, maxRevenueUpperBoundUsd?: any | null, minYearFounded?: number | null, maxYearFounded?: number | null } | null } | null } | null, workflow?: { __typename?: 'Workflow', id: string, name: string } | null, schedulePolicy?: { __typename?: 'FeedSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
 
 export type QueryGitHubRepositoriesQueryVariables = Exact<{
   properties: GitHubRepositoriesInput;
@@ -29311,66 +29572,12 @@ export type TriggerFeedMutationVariables = Exact<{
 
 export type TriggerFeedMutation = { __typename?: 'Mutation', triggerFeed?: { __typename?: 'Feed', id: string, state: EntityState } | null };
 
-export type UpdateConfluencePageMutationVariables = Exact<{
-  properties: ConfluenceSpacesInput;
-  pageId: Scalars['String']['input'];
-  input: ConfluencePageUpdateInput;
-}>;
-
-
-export type UpdateConfluencePageMutation = { __typename?: 'Mutation', updateConfluencePage?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
-
 export type UpdateFeedMutationVariables = Exact<{
   feed: FeedUpdateInput;
 }>;
 
 
 export type UpdateFeedMutation = { __typename?: 'Mutation', updateFeed?: { __typename?: 'Feed', id: string, name: string, state: EntityState, identifier?: string | null, type: FeedTypes } | null };
-
-export type UpdateGoogleCalendarEventMutationVariables = Exact<{
-  properties: GoogleCalendarEventsInput;
-  eventId: Scalars['String']['input'];
-  input: CalendarEventUpdateInput;
-}>;
-
-
-export type UpdateGoogleCalendarEventMutation = { __typename?: 'Mutation', updateGoogleCalendarEvent?: { __typename?: 'CalendarEventResult', eventId: string, summary?: string | null, startDateTime: any, endDateTime: any, location?: string | null, attendees?: Array<string | null> | null, isOnlineMeeting?: boolean | null, meetingLink?: string | null, description?: string | null, status?: string | null, organizer?: string | null } | null };
-
-export type UpdateJiraIssueMutationVariables = Exact<{
-  properties: JiraProjectsInput;
-  issueIdOrKey: Scalars['String']['input'];
-  input: JiraIssueUpdateInput;
-}>;
-
-
-export type UpdateJiraIssueMutation = { __typename?: 'Mutation', updateJiraIssue?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
-
-export type UpdateLinearIssueMutationVariables = Exact<{
-  properties: LinearProjectsInput;
-  issueId: Scalars['String']['input'];
-  input: LinearIssueUpdateInput;
-}>;
-
-
-export type UpdateLinearIssueMutation = { __typename?: 'Mutation', updateLinearIssue?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
-
-export type UpdateMicrosoftCalendarEventMutationVariables = Exact<{
-  properties: MicrosoftCalendarEventsInput;
-  eventId: Scalars['String']['input'];
-  input: CalendarEventUpdateInput;
-}>;
-
-
-export type UpdateMicrosoftCalendarEventMutation = { __typename?: 'Mutation', updateMicrosoftCalendarEvent?: { __typename?: 'CalendarEventResult', eventId: string, summary?: string | null, startDateTime: any, endDateTime: any, location?: string | null, attendees?: Array<string | null> | null, isOnlineMeeting?: boolean | null, meetingLink?: string | null, description?: string | null, status?: string | null, organizer?: string | null } | null };
-
-export type UpdateNotionPageMutationVariables = Exact<{
-  properties: NotionDatabasesInput;
-  pageId: Scalars['String']['input'];
-  input: NotionPageUpdateInput;
-}>;
-
-
-export type UpdateNotionPageMutation = { __typename?: 'Mutation', updateNotionPage?: { __typename?: 'DistributionResult', identifier?: string | null, uri?: string | null, serviceType?: DistributionServiceTypes | null } | null };
 
 export type CountInvestmentsQueryVariables = Exact<{
   filter?: InputMaybe<InvestmentFilter>;
