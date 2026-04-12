@@ -2769,6 +2769,25 @@ class Graphlit {
   }
 
   /**
+   * Reads external content through a distribution connector.
+   * @param connector - The distribution connector to use.
+   * @param authentication - The authentication reference for reading.
+   * @returns The external content read result.
+   */
+  public async read(
+    connector: Types.DistributionConnectorInput,
+    authentication: Types.EntityReferenceInput,
+  ): Promise<Types.ReadQuery> {
+    return this.queryAndCheckError<Types.ReadQuery, Types.ReadQueryVariables>(
+      Documents.Read,
+      {
+        connector: connector,
+        authentication: authentication,
+      },
+    );
+  }
+
+  /**
    * Researches contents and publishes the results.
    * @param connector - The publishing connector to use.
    * @param filter - The filter criteria for selecting contents, optional.

@@ -4892,6 +4892,18 @@ export const QueryObservables = gql`
   }
 }
     `;
+export const Read = gql`
+    query Read($connector: DistributionConnectorInput!, $authentication: EntityReferenceInput!) {
+  read(connector: $connector, authentication: $authentication) {
+    identifier
+    name
+    markdown
+    uri
+    modifiedDate
+    serviceType
+  }
+}
+    `;
 export const RejectContent = gql`
     mutation RejectContent($id: ID!, $reason: String) {
   rejectContent(id: $id, reason: $reason) {

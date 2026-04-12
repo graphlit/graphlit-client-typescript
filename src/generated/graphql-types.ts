@@ -2306,33 +2306,6 @@ export enum CalendarAttendeeResponseStatus {
   Tentative = 'TENTATIVE'
 }
 
-/** Represents a calendar event. */
-export type CalendarEventResult = {
-  __typename?: 'CalendarEventResult';
-  /** The event attendee email addresses. */
-  attendees?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  /** The event description. */
-  description?: Maybe<Scalars['String']['output']>;
-  /** The event end date and time. */
-  endDateTime: Scalars['DateTime']['output'];
-  /** The event identifier. */
-  eventId: Scalars['String']['output'];
-  /** Whether the event is an online meeting. */
-  isOnlineMeeting?: Maybe<Scalars['Boolean']['output']>;
-  /** The event location. */
-  location?: Maybe<Scalars['String']['output']>;
-  /** The online meeting URL (Teams/Meet). */
-  meetingLink?: Maybe<Scalars['String']['output']>;
-  /** The event organizer email address. */
-  organizer?: Maybe<Scalars['String']['output']>;
-  /** The event start date and time. */
-  startDateTime: Scalars['DateTime']['output'];
-  /** The event status (confirmed, tentative, cancelled). */
-  status?: Maybe<Scalars['String']['output']>;
-  /** The event title/summary. */
-  summary?: Maybe<Scalars['String']['output']>;
-};
-
 /** Calendar event status */
 export enum CalendarEventStatus {
   /** Cancelled event */
@@ -2342,24 +2315,6 @@ export enum CalendarEventStatus {
   /** Tentative event */
   Tentative = 'TENTATIVE'
 }
-
-/** Represents calendar event fields to update. */
-export type CalendarEventUpdateInput = {
-  /** The event attendee email addresses (replaces existing). */
-  attendees?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** The event description. */
-  description?: InputMaybe<Scalars['String']['input']>;
-  /** The event end date and time. */
-  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Whether the event is an online meeting. */
-  isOnlineMeeting?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The event location. */
-  location?: InputMaybe<Scalars['String']['input']>;
-  /** The event start date and time. */
-  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The event title/summary. */
-  summary?: InputMaybe<Scalars['String']['input']>;
-};
 
 /** Calendar event visibility */
 export enum CalendarEventVisibility {
@@ -5768,6 +5723,8 @@ export enum DistributionOperationTypes {
   Commented = 'COMMENTED',
   /** Created a new target resource. */
   Created = 'CREATED',
+  /** Deleted an existing target resource. */
+  Deleted = 'DELETED',
   /** Replaced an existing target resource. */
   Replaced = 'REPLACED'
 }
@@ -5847,6 +5804,8 @@ export enum DistributionTargetOperationTypes {
   Append = 'APPEND',
   /** Create a new target. */
   Create = 'CREATE',
+  /** Delete an existing target. */
+  Delete = 'DELETE',
   /** Replace an existing target body. */
   Replace = 'REPLACE',
   /** Replace an existing target when found, otherwise create a new target. */
@@ -9647,11 +9606,11 @@ export type GoogleCalendarDistributionPropertiesInput = {
   /** The calendar ID. */
   calendarId?: InputMaybe<Scalars['String']['input']>;
   /** The event end date and time. */
-  endDateTime: Scalars['DateTime']['input'];
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event location. */
   location?: InputMaybe<Scalars['String']['input']>;
   /** The event start date and time. */
-  startDateTime: Scalars['DateTime']['input'];
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event title. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** The target resource identifier. */
@@ -9664,26 +9623,6 @@ export type GoogleCalendarDistributionPropertiesInput = {
   targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The IANA time zone. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents Google Calendar events query properties. */
-export type GoogleCalendarEventsInput = {
-  /** Filter events starting after this date. */
-  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Google Calendar authentication type, defaults to User. */
-  authenticationType?: InputMaybe<GoogleCalendarAuthenticationTypes>;
-  /** Filter events starting before this date. */
-  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The calendar identifier, defaults to primary. */
-  calendarId?: InputMaybe<Scalars['String']['input']>;
-  /** Google OAuth2 client identifier, for User authentication type. */
-  clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Google OAuth2 client secret, for User authentication type. */
-  clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** The authentication connector reference. */
-  connector?: InputMaybe<EntityReferenceInput>;
-  /** Google OAuth2 refresh token, for User authentication type. */
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Google Calendar feed properties. */
@@ -12633,13 +12572,15 @@ export type JiraDistributionPropertiesInput = {
   /** The assignee account ID. */
   assigneeId?: InputMaybe<Scalars['String']['input']>;
   /** The issue type name. */
-  issueType: Scalars['String']['input'];
+  issueType?: InputMaybe<Scalars['String']['input']>;
   /** The label strings. */
   labels?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The priority name. */
   priority?: InputMaybe<Scalars['String']['input']>;
   /** The Jira project key. */
-  projectKey: Scalars['String']['input'];
+  projectKey?: InputMaybe<Scalars['String']['input']>;
+  /** The workflow status or transition name. */
+  status?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** The target resource identifier. */
@@ -12729,22 +12670,6 @@ export type JiraEpicsFeedPropertiesUpdateInput = {
   token?: InputMaybe<Scalars['String']['input']>;
   /** Jira URI. */
   uri?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents Jira issue fields to update. */
-export type JiraIssueUpdateInput = {
-  /** The assignee account ID. */
-  assigneeId?: InputMaybe<Scalars['String']['input']>;
-  /** The issue description (Markdown). */
-  description?: InputMaybe<Scalars['String']['input']>;
-  /** The issue labels. */
-  labels?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The issue priority name. */
-  priority?: InputMaybe<Scalars['String']['input']>;
-  /** The target status name (triggers workflow transition). */
-  status?: InputMaybe<Scalars['String']['input']>;
-  /** The issue summary. */
-  summary?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Jira project. */
@@ -12965,7 +12890,7 @@ export type LinearDistributionPropertiesInput = {
   /** The target resource URI. */
   targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Linear team UUID. */
-  teamId: Scalars['String']['input'];
+  teamId?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -13072,22 +12997,6 @@ export type LinearInitiativesFeedPropertiesUpdateInput = {
   key?: InputMaybe<Scalars['String']['input']>;
   /** OAuth refresh token. */
   refreshToken?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents Linear issue fields to update. */
-export type LinearIssueUpdateInput = {
-  /** The assignee identifier. */
-  assigneeId?: InputMaybe<Scalars['String']['input']>;
-  /** The issue description (Markdown). */
-  description?: InputMaybe<Scalars['String']['input']>;
-  /** The label identifiers. */
-  labelIds?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The issue priority (0-4). */
-  priority?: InputMaybe<Scalars['Int']['input']>;
-  /** The workflow state identifier. */
-  stateId?: InputMaybe<Scalars['String']['input']>;
-  /** The issue title. */
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Linear projects properties. */
@@ -15788,13 +15697,13 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   /** The calendar ID. */
   calendarId?: InputMaybe<Scalars['String']['input']>;
   /** The event end date and time. */
-  endDateTime: Scalars['DateTime']['input'];
+  endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** Whether to create a Teams meeting link. */
   isOnlineMeeting?: InputMaybe<Scalars['Boolean']['input']>;
   /** The event location. */
   location?: InputMaybe<Scalars['String']['input']>;
   /** The event start date and time. */
-  startDateTime: Scalars['DateTime']['input'];
+  startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event title. */
   subject?: InputMaybe<Scalars['String']['input']>;
   /** The target resource identifier. */
@@ -15807,26 +15716,6 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Windows time zone name. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Represents Microsoft Calendar events query properties. */
-export type MicrosoftCalendarEventsInput = {
-  /** Filter events starting after this date. */
-  afterDate?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Microsoft Calendar authentication type, defaults to User. */
-  authenticationType?: InputMaybe<MicrosoftCalendarAuthenticationTypes>;
-  /** Filter events starting before this date. */
-  beforeDate?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The calendar identifier, defaults to primary. */
-  calendarId?: InputMaybe<Scalars['String']['input']>;
-  /** Microsoft Entra ID client identifier, for User authentication type. */
-  clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Microsoft Entra ID client secret, for User authentication type. */
-  clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** The authentication connector reference. */
-  connector?: InputMaybe<EntityReferenceInput>;
-  /** Microsoft Entra ID refresh token, for User authentication type. */
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Microsoft Calendar feed properties. */
@@ -16875,8 +16764,6 @@ export type Mutation = {
   deleteFeed?: Maybe<Feed>;
   /** Bulk deletes feeds. */
   deleteFeeds?: Maybe<Array<Maybe<Feed>>>;
-  /** Deletes an existing Google Calendar event. */
-  deleteGoogleCalendarEvent?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a investment. */
   deleteInvestment?: Maybe<Investment>;
   /** Deletes a investment fund. */
@@ -16933,8 +16820,6 @@ export type Mutation = {
   deleteMedicalTherapies?: Maybe<Array<Maybe<MedicalTherapy>>>;
   /** Deletes a medical therapy. */
   deleteMedicalTherapy?: Maybe<MedicalTherapy>;
-  /** Deletes an existing Microsoft Calendar event. */
-  deleteMicrosoftCalendarEvent?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an observation. */
   deleteObservation?: Maybe<Observation>;
   /** Deletes an organization. */
@@ -17159,18 +17044,12 @@ export type Mutation = {
   updateFact?: Maybe<Fact>;
   /** Updates an existing feed. */
   updateFeed?: Maybe<Feed>;
-  /** Updates an existing Google Calendar event. */
-  updateGoogleCalendarEvent?: Maybe<CalendarEventResult>;
   /** Updates a investment. */
   updateInvestment?: Maybe<Investment>;
   /** Updates a investment fund. */
   updateInvestmentFund?: Maybe<InvestmentFund>;
-  /** Updates an existing Jira issue. */
-  updateJiraIssue?: Maybe<DistributionResult>;
   /** Updates a label. */
   updateLabel?: Maybe<Label>;
-  /** Updates an existing Linear issue. */
-  updateLinearIssue?: Maybe<DistributionResult>;
   /** Updates a medical condition. */
   updateMedicalCondition?: Maybe<MedicalCondition>;
   /** Updates a medical contraindication. */
@@ -17193,8 +17072,6 @@ export type Mutation = {
   updateMedicalTest?: Maybe<MedicalTest>;
   /** Updates a medical therapy. */
   updateMedicalTherapy?: Maybe<MedicalTherapy>;
-  /** Updates an existing Microsoft Calendar event. */
-  updateMicrosoftCalendarEvent?: Maybe<CalendarEventResult>;
   /** Updates an observation. */
   updateObservation?: Maybe<Observation>;
   /** Updates an organization. */
@@ -17937,12 +17814,6 @@ export type MutationDeleteFeedsArgs = {
 };
 
 
-export type MutationDeleteGoogleCalendarEventArgs = {
-  eventId: Scalars['String']['input'];
-  properties: GoogleCalendarEventsInput;
-};
-
-
 export type MutationDeleteInvestmentArgs = {
   id: Scalars['ID']['input'];
 };
@@ -18094,12 +17965,6 @@ export type MutationDeleteMedicalTherapiesArgs = {
 
 export type MutationDeleteMedicalTherapyArgs = {
   id: Scalars['ID']['input'];
-};
-
-
-export type MutationDeleteMicrosoftCalendarEventArgs = {
-  eventId: Scalars['String']['input'];
-  properties: MicrosoftCalendarEventsInput;
 };
 
 
@@ -18884,13 +18749,6 @@ export type MutationUpdateFeedArgs = {
 };
 
 
-export type MutationUpdateGoogleCalendarEventArgs = {
-  eventId: Scalars['String']['input'];
-  input: CalendarEventUpdateInput;
-  properties: GoogleCalendarEventsInput;
-};
-
-
 export type MutationUpdateInvestmentArgs = {
   investment: InvestmentUpdateInput;
 };
@@ -18901,22 +18759,8 @@ export type MutationUpdateInvestmentFundArgs = {
 };
 
 
-export type MutationUpdateJiraIssueArgs = {
-  input: JiraIssueUpdateInput;
-  issueIdOrKey: Scalars['String']['input'];
-  properties: JiraProjectsInput;
-};
-
-
 export type MutationUpdateLabelArgs = {
   label: LabelUpdateInput;
-};
-
-
-export type MutationUpdateLinearIssueArgs = {
-  input: LinearIssueUpdateInput;
-  issueId: Scalars['String']['input'];
-  properties: LinearProjectsInput;
 };
 
 
@@ -18972,13 +18816,6 @@ export type MutationUpdateMedicalTestArgs = {
 
 export type MutationUpdateMedicalTherapyArgs = {
   medicalTherapy: MedicalTherapyUpdateInput;
-};
-
-
-export type MutationUpdateMicrosoftCalendarEventArgs = {
-  eventId: Scalars['String']['input'];
-  input: CalendarEventUpdateInput;
-  properties: MicrosoftCalendarEventsInput;
 };
 
 
@@ -22662,6 +22499,8 @@ export type Query = {
   project?: Maybe<Project>;
   /** Retrieves projects based on the provided filter criteria. */
   projects?: Maybe<ProjectResults>;
+  /** Reads external content through a distribution connector without ingesting it into Graphlit. */
+  read?: Maybe<ReadResult>;
   /** Lookup a code repository given its ID. */
   repo?: Maybe<Repo>;
   /** Retrieves code repositories based on the provided filter criteria. */
@@ -23645,6 +23484,12 @@ export type QueryProjectsArgs = {
 };
 
 
+export type QueryReadArgs = {
+  authentication: EntityReferenceInput;
+  connector: DistributionConnectorInput;
+};
+
+
 export type QueryRepoArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -23891,6 +23736,23 @@ export type ReactionReferenceInput = {
   emoji: Scalars['String']['input'];
   /** Whether the emoji is a Unicode character vs a platform-specific shortcode. */
   isUnicode?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Represents external content read through a distribution connector. */
+export type ReadResult = {
+  __typename?: 'ReadResult';
+  /** The service-specific target identifier. */
+  identifier?: Maybe<Scalars['String']['output']>;
+  /** The target body converted to markdown when readable. */
+  markdown?: Maybe<Scalars['String']['output']>;
+  /** The last modified date of the target, if available. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The target title or file name. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The distribution service that provided the content. */
+  serviceType?: Maybe<DistributionServiceTypes>;
+  /** The external target URI. */
+  uri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents Reddit feed properties. */
@@ -28545,6 +28407,14 @@ export type QueryObservablesQueryVariables = Exact<{
 
 
 export type QueryObservablesQuery = { __typename?: 'Query', observables?: { __typename?: 'ObservableResults', results?: Array<{ __typename?: 'ObservationReference', type: ObservableTypes, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null } | null };
+
+export type ReadQueryVariables = Exact<{
+  connector: DistributionConnectorInput;
+  authentication: EntityReferenceInput;
+}>;
+
+
+export type ReadQuery = { __typename?: 'Query', read?: { __typename?: 'ReadResult', identifier?: string | null, name?: string | null, markdown?: string | null, uri?: string | null, modifiedDate?: any | null, serviceType?: DistributionServiceTypes | null } | null };
 
 export type RejectContentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
