@@ -307,6 +307,7 @@ export const GetAgent = gql`
     timeout
     prompt
     scratchpad
+    focus
     researchDepth
     callbackUri
   }
@@ -557,6 +558,7 @@ export const QueryAgents = gql`
       timeout
       prompt
       scratchpad
+      focus
       researchDepth
       callbackUri
     }
@@ -566,6 +568,26 @@ export const QueryAgents = gql`
 export const UpdateAgent = gql`
     mutation UpdateAgent($agent: AgentUpdateInput!) {
   updateAgent(agent: $agent) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
+export const UpdateAgentFocus = gql`
+    mutation UpdateAgentFocus($id: ID!, $focus: String) {
+  updateAgentFocus(id: $id, focus: $focus) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
+export const UpdateAgentScratchpad = gql`
+    mutation UpdateAgentScratchpad($id: ID!, $scratchpad: String!) {
+  updateAgentScratchpad(id: $id, scratchpad: $scratchpad) {
     id
     name
     state

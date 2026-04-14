@@ -1265,6 +1265,38 @@ class Graphlit {
   }
 
   /**
+   * Updates the focus of an agent.
+   * @param id - The ID of the agent.
+   * @param focus - The focus text to set, or undefined to clear.
+   * @returns The updated agent.
+   */
+  public async updateAgentFocus(
+    id: string,
+    focus?: string,
+  ): Promise<Types.UpdateAgentFocusMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateAgentFocusMutation,
+      Types.UpdateAgentFocusMutationVariables
+    >(Documents.UpdateAgentFocus, { id: id, focus: focus });
+  }
+
+  /**
+   * Updates the scratchpad of an agent.
+   * @param id - The ID of the agent.
+   * @param scratchpad - The scratchpad text to set.
+   * @returns The updated agent.
+   */
+  public async updateAgentScratchpad(
+    id: string,
+    scratchpad: string,
+  ): Promise<Types.UpdateAgentScratchpadMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateAgentScratchpadMutation,
+      Types.UpdateAgentScratchpadMutationVariables
+    >(Documents.UpdateAgentScratchpad, { id: id, scratchpad: scratchpad });
+  }
+
+  /**
    * Lookup an agent given its ID.
    * @param id - ID of the agent.
    * @param correlationId - The tenant correlation identifier, optional.
