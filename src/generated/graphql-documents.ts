@@ -2053,6 +2053,34 @@ export const ApproveContent = gql`
   }
 }
     `;
+export const ClassifyContents = gql`
+    mutation ClassifyContents($classification: ContentClassificationConnectorInput!, $filter: ContentFilter, $correlationId: String) {
+  classifyContents(
+    classification: $classification
+    filter: $filter
+    correlationId: $correlationId
+  ) {
+    content {
+      id
+      name
+    }
+    labels
+    type
+    classificationTime
+    error
+  }
+}
+    `;
+export const ClassifyText = gql`
+    mutation ClassifyText($text: String!, $textType: TextTypes, $classification: ContentClassificationConnectorInput!, $correlationId: String) {
+  classifyText(
+    text: $text
+    textType: $textType
+    classification: $classification
+    correlationId: $correlationId
+  )
+}
+    `;
 export const CountContents = gql`
     query CountContents($filter: ContentFilter, $correlationId: String) {
   countContents(filter: $filter, correlationId: $correlationId) {

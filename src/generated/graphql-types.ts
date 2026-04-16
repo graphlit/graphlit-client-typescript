@@ -3667,6 +3667,21 @@ export type ContentClassificationConnectorInput = {
   type?: InputMaybe<ContentClassificationServiceTypes>;
 };
 
+/** Represents the applied result of content classification. */
+export type ContentClassificationResult = {
+  __typename?: 'ContentClassificationResult';
+  /** The total classification time. */
+  classificationTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The content that was classified. */
+  content: NamedEntityReference;
+  /** If classification failed for this content, the error message. */
+  error?: Maybe<Scalars['String']['output']>;
+  /** The labels that were applied or matched. */
+  labels: Array<Scalars['String']['output']>;
+  /** The content classification service type. */
+  type: ContentClassificationServiceTypes;
+};
+
 /** Content classification service type */
 export enum ContentClassificationServiceTypes {
   /** LLM-based Classification */
@@ -7563,6 +7578,10 @@ export enum ExaSearchTypes {
   Auto = 'AUTO',
   /** Exa deep search, comprehensive search with query expansion. */
   Deep = 'DEEP',
+  /** Exa deep-lite search, lightweight synthesized output. */
+  DeepLite = 'DEEP_LITE',
+  /** Exa deep-reasoning search, comprehensive search with deeper reasoning. */
+  DeepReasoning = 'DEEP_REASONING',
   /** Exa fast search, ~500ms latency with balanced speed and quality. */
   Fast = 'FAST',
   /** Exa instant search, sub-150ms latency optimized for real-time use. */
@@ -17013,6 +17032,10 @@ export type Mutation = {
   askGraphlit?: Maybe<AskGraphlit>;
   /** Branches an existing conversation. */
   branchConversation?: Maybe<Conversation>;
+  /** Classifies contents using the provided content classification connector. */
+  classifyContents?: Maybe<Array<Maybe<ContentClassificationResult>>>;
+  /** Classifies text using the provided content classification connector. */
+  classifyText?: Maybe<Array<Scalars['String']['output']>>;
   /** Clears an existing conversation. */
   clearConversation?: Maybe<Conversation>;
   /** Closes an existing collection. */
@@ -17645,6 +17668,21 @@ export type MutationAskGraphlitArgs = {
 export type MutationBranchConversationArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationClassifyContentsArgs = {
+  classification: ContentClassificationConnectorInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ContentFilter>;
+};
+
+
+export type MutationClassifyTextArgs = {
+  classification: ContentClassificationConnectorInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
 };
 
 
@@ -28680,6 +28718,25 @@ export type ApproveContentMutationVariables = Exact<{
 
 
 export type ApproveContentMutation = { __typename?: 'Mutation', approveContent?: { __typename?: 'Content', id: string, state: EntityState } | null };
+
+export type ClassifyContentsMutationVariables = Exact<{
+  classification: ContentClassificationConnectorInput;
+  filter?: InputMaybe<ContentFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ClassifyContentsMutation = { __typename?: 'Mutation', classifyContents?: Array<{ __typename?: 'ContentClassificationResult', labels: Array<string>, type: ContentClassificationServiceTypes, classificationTime?: any | null, error?: string | null, content: { __typename?: 'NamedEntityReference', id: string, name?: string | null } } | null> | null };
+
+export type ClassifyTextMutationVariables = Exact<{
+  text: Scalars['String']['input'];
+  textType?: InputMaybe<TextTypes>;
+  classification: ContentClassificationConnectorInput;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ClassifyTextMutation = { __typename?: 'Mutation', classifyText?: Array<string> | null };
 
 export type CountContentsQueryVariables = Exact<{
   filter?: InputMaybe<ContentFilter>;
