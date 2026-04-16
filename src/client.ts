@@ -414,6 +414,31 @@ function isValidGuid(guid: string | undefined): boolean {
   return guidRegex.test(guid);
 }
 
+/**
+ * Map Graphlit AnthropicEffortLevels to the string values accepted by the
+ * Anthropic Messages API `output_config.effort` parameter (adaptive thinking).
+ * Used for Claude 4.7 Opus, which replaces `thinking.budget_tokens` with
+ * `thinking.type = "adaptive"` + `output_config.effort`.
+ */
+function mapAnthropicEffort(
+  effort: Types.AnthropicEffortLevels | null | undefined,
+): "low" | "medium" | "high" | "xhigh" | undefined {
+  if (!effort) return undefined;
+  switch (effort) {
+    case Types.AnthropicEffortLevels.Low:
+      return "low";
+    case Types.AnthropicEffortLevels.Medium:
+      return "medium";
+    case Types.AnthropicEffortLevels.High:
+      return "high";
+    case Types.AnthropicEffortLevels.XHigh:
+    case Types.AnthropicEffortLevels.Max:
+      return "xhigh";
+    default:
+      return undefined;
+  }
+}
+
 // Define the Graphlit class
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
@@ -12237,9 +12262,15 @@ class Graphlit {
     const thinkingConfig = this.getThinkingConfig(specification);
 
     if (thinkingConfig && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-      console.log(
-        `🧠 [Graphlit SDK] Anthropic thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
-      );
+      if (thinkingConfig.type === "adaptive") {
+        console.log(
+          `🧠 [Graphlit SDK] Anthropic adaptive thinking enabled | Effort: ${thinkingConfig.effort ?? "default"}`,
+        );
+      } else {
+        console.log(
+          `🧠 [Graphlit SDK] Anthropic thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
+        );
+      }
     }
 
     await streamWithAnthropic(
@@ -12260,11 +12291,21 @@ class Graphlit {
    */
   private getThinkingConfig(
     specification: Types.Specification,
-  ): { type: "enabled"; budget_tokens: number } | undefined {
+  ):
+    | { type: "enabled"; budget_tokens: number }
+    | { type: "adaptive"; effort?: "low" | "medium" | "high" | "xhigh" }
+    | undefined {
     // Check Anthropic specifications
     if (specification.serviceType === Types.ModelServiceTypes.Anthropic) {
       const anthropic = specification.anthropic;
       if (anthropic?.enableThinking) {
+        // Claude 4.7 Opus only supports adaptive thinking with output_config.effort
+        if (anthropic.model === Types.AnthropicModels.Claude_4_7Opus) {
+          return {
+            type: "adaptive",
+            effort: mapAnthropicEffort(anthropic.effort),
+          };
+        }
         return {
           type: "enabled",
           budget_tokens: anthropic.thinkingTokenLimit || 10000,
@@ -12324,7 +12365,10 @@ class Graphlit {
     }
 
     // Get thinking configuration from specification
-    const thinkingConfig = this.getThinkingConfig(specification);
+    // Google only supports legacy budget-based thinking — adaptive is Anthropic-only.
+    const rawThinkingConfig = this.getThinkingConfig(specification);
+    const thinkingConfig =
+      rawThinkingConfig?.type === "enabled" ? rawThinkingConfig : undefined;
 
     if (thinkingConfig && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(

@@ -606,7 +606,9 @@ export async function streamWithAnthropic(
     reasoning?: ReasoningMetadata,
   ) => void,
   abortSignal?: AbortSignal,
-  thinkingConfig?: { type: "enabled"; budget_tokens: number },
+  thinkingConfig?:
+    | { type: "enabled"; budget_tokens: number }
+    | { type: "adaptive"; effort?: "low" | "medium" | "high" | "xhigh" },
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -669,9 +671,12 @@ export async function streamWithAnthropic(
         specification.anthropic?.completionTokenLimit || defaultMaxTokens,
     };
 
-    // Handle temperature based on thinking configuration
-    if (thinkingConfig) {
-      // When thinking is enabled, temperature must be 1
+    // Handle temperature based on thinking configuration and model
+    // Claude 4.7 Opus (adaptive thinking) does not accept sampling parameters at all.
+    const isAdaptiveThinking = thinkingConfig?.type === "adaptive";
+
+    if (thinkingConfig && !isAdaptiveThinking) {
+      // When legacy thinking budget is enabled, temperature must be 1
       streamConfig.temperature = 1;
 
       if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -679,7 +684,7 @@ export async function streamWithAnthropic(
           `🧠 [Anthropic] Setting temperature to 1 (required for extended thinking)`,
         );
       }
-    } else {
+    } else if (!isAdaptiveThinking) {
       // Only add temperature if it's defined and valid for non-thinking requests
       if (
         specification.anthropic?.temperature !== undefined &&
@@ -712,27 +717,41 @@ export async function streamWithAnthropic(
 
     // Add thinking config if provided
     if (thinkingConfig) {
-      streamConfig.thinking = thinkingConfig;
+      if (thinkingConfig.type === "adaptive") {
+        // Claude 4.7 Opus: adaptive thinking, effort controls depth via output_config
+        streamConfig.thinking = { type: "adaptive" };
+        if (thinkingConfig.effort) {
+          streamConfig.output_config = { effort: thinkingConfig.effort };
+        }
 
-      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-        console.log(
-          `🧠 [Anthropic] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
-        );
-      }
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `🧠 [Anthropic] Adaptive thinking enabled | Effort: ${thinkingConfig.effort ?? "default"}`,
+          );
+        }
+      } else {
+        streamConfig.thinking = thinkingConfig;
 
-      // Adjust max_tokens to account for thinking budget
-      // 1M context models have a 1,000,000 token window; standard models have 200,000
-      const contextWindowLimit = is1MContext ? 1000000 : 200000;
-      const totalTokens =
-        streamConfig.max_tokens + thinkingConfig.budget_tokens;
-      if (totalTokens > contextWindowLimit) {
-        console.warn(
-          `⚠️ [Anthropic] Total tokens (${totalTokens}) exceeds ${is1MContext ? "1M" : "200K"} context window, adjusting completion tokens...`,
-        );
-        streamConfig.max_tokens = Math.max(
-          1000,
-          contextWindowLimit - thinkingConfig.budget_tokens,
-        );
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `🧠 [Anthropic] Extended thinking enabled | Budget: ${thinkingConfig.budget_tokens} tokens`,
+          );
+        }
+
+        // Adjust max_tokens to account for thinking budget
+        // 1M context models have a 1,000,000 token window; standard models have 200,000
+        const contextWindowLimit = is1MContext ? 1000000 : 200000;
+        const totalTokens =
+          streamConfig.max_tokens + thinkingConfig.budget_tokens;
+        if (totalTokens > contextWindowLimit) {
+          console.warn(
+            `⚠️ [Anthropic] Total tokens (${totalTokens}) exceeds ${is1MContext ? "1M" : "200K"} context window, adjusting completion tokens...`,
+          );
+          streamConfig.max_tokens = Math.max(
+            1000,
+            contextWindowLimit - thinkingConfig.budget_tokens,
+          );
+        }
       }
     }
 
