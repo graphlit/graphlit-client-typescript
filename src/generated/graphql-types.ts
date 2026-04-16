@@ -712,7 +712,9 @@ export enum AnthropicEffortLevels {
   /** Maximum effort */
   Max = 'MAX',
   /** Medium effort */
-  Medium = 'MEDIUM'
+  Medium = 'MEDIUM',
+  /** Extra high effort */
+  XHigh = 'X_HIGH'
 }
 
 /** Represents Anthropic model properties. */
@@ -860,6 +862,8 @@ export enum AnthropicModels {
   Claude_4_6Sonnet_1M_20260217 = 'CLAUDE_4_6_SONNET_1_M_20260217',
   /** Claude 4.6 Sonnet (02-17-2026 version) */
   Claude_4_6Sonnet_20260217 = 'CLAUDE_4_6_SONNET_20260217',
+  /** Claude 4.7 Opus (Latest) */
+  Claude_4_7Opus = 'CLAUDE_4_7_OPUS',
   /** Claude 4 Opus (Latest) */
   Claude_4Opus = 'CLAUDE_4_OPUS',
   /** Claude 4 Opus (05-14-2025 version) */

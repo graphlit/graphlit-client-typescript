@@ -145,6 +145,9 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   [Types.AnthropicModels.Claude_4_6Sonnet_1M]: "claude-sonnet-4-6",
   [Types.AnthropicModels.Claude_4_6Sonnet_1M_20260217]:
     "claude-sonnet-4-6-20260217",
+
+  // Claude 4.7 models (1M context is native to the model, no beta header required)
+  [Types.AnthropicModels.Claude_4_7Opus]: "claude-opus-4-7",
 };
 
 // Google model mappings
