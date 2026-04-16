@@ -2581,6 +2581,53 @@ class Graphlit {
   }
 
   /**
+   * Classifies text using the specified classification connector.
+   * @param text - The text to classify.
+   * @param classification - The classification connector to use.
+   * @param textType - The type of text (plain, markdown, HTML), optional.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The classification labels.
+   */
+  public async classifyText(
+    text: string,
+    classification: Types.ContentClassificationConnectorInput,
+    textType?: Types.TextTypes,
+    correlationId?: string,
+  ): Promise<Types.ClassifyTextMutation> {
+    return this.mutateAndCheckError<
+      Types.ClassifyTextMutation,
+      Types.ClassifyTextMutationVariables
+    >(Documents.ClassifyText, {
+      text: text,
+      textType: textType,
+      classification: classification,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Classifies contents using the specified classification connector.
+   * @param classification - The classification connector to use.
+   * @param filter - The filter criteria to apply when retrieving contents.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The classification results.
+   */
+  public async classifyContents(
+    classification: Types.ContentClassificationConnectorInput,
+    filter?: Types.ContentFilter,
+    correlationId?: string,
+  ): Promise<Types.ClassifyContentsMutation> {
+    return this.mutateAndCheckError<
+      Types.ClassifyContentsMutation,
+      Types.ClassifyContentsMutationVariables
+    >(Documents.ClassifyContents, {
+      classification: classification,
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Extracts structured data from text using tool definitions.
    * @param prompt - The prompt to guide extraction.
    * @param text - The text to extract from.
