@@ -14,6 +14,7 @@ export const CreateAgent = gql`
     name
     state
     type
+    mode
   }
 }
     `;
@@ -77,6 +78,7 @@ export const GetAgent = gql`
     }
     correlationId
     type
+    mode
     description
     specification {
       id
@@ -287,11 +289,28 @@ export const GetAgent = gql`
       cron
       timeZoneId
     }
+    heartbeat {
+      enabled
+      frequencyMinutes
+      offHoursFrequencyMinutes
+      activeHoursStart
+      activeHoursEnd
+      activeDays
+      timezone
+      probeThresholds {
+        newContentMin
+        volumeSpikeMultiplier
+      }
+    }
     channels {
       type
       identifier
       instructions
       label
+    }
+    rules {
+      then
+      if
     }
     commands {
       keyword
@@ -471,6 +490,7 @@ export const QueryAgents = gql`
       state
       correlationId
       type
+      mode
       description
       specification {
         id
@@ -681,11 +701,28 @@ export const QueryAgents = gql`
         cron
         timeZoneId
       }
+      heartbeat {
+        enabled
+        frequencyMinutes
+        offHoursFrequencyMinutes
+        activeHoursStart
+        activeHoursEnd
+        activeDays
+        timezone
+        probeThresholds {
+          newContentMin
+          volumeSpikeMultiplier
+        }
+      }
       channels {
         type
         identifier
         instructions
         label
+      }
+      rules {
+        then
+        if
       }
       commands {
         keyword
@@ -858,6 +895,7 @@ export const UpdateAgent = gql`
     name
     state
     type
+    mode
   }
 }
     `;
@@ -868,6 +906,7 @@ export const UpdateAgentFocus = gql`
     name
     state
     type
+    mode
   }
 }
     `;
@@ -878,6 +917,7 @@ export const UpdateAgentScratchpad = gql`
     name
     state
     type
+    mode
   }
 }
     `;
@@ -888,6 +928,7 @@ export const UpsertAgent = gql`
     name
     state
     type
+    mode
   }
 }
     `;
