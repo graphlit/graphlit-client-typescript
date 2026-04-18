@@ -2188,6 +2188,7 @@ export const DescribeEncodedImage = gql`
         fileMetadata
         relativeFolderPath
         masterUri
+        markdownUri
         imageUri
         textUri
         audioUri
@@ -2343,6 +2344,7 @@ export const DescribeImage = gql`
         fileMetadata
         relativeFolderPath
         masterUri
+        markdownUri
         imageUri
         textUri
         audioUri
@@ -2711,6 +2713,7 @@ export const GetContent = gql`
     fileMetadata
     relativeFolderPath
     masterUri
+    markdownUri
     imageUri
     textUri
     audioUri
@@ -3616,6 +3619,7 @@ export const LookupContents = gql`
       fileMetadata
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -4096,6 +4100,7 @@ export const PublishContents = gql`
       fileMetadata
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -4245,6 +4250,7 @@ export const PublishText = gql`
       fileMetadata
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -4386,6 +4392,7 @@ export const QueryContents = gql`
       fileSize
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -4839,6 +4846,7 @@ export const QueryContentsObservations = gql`
       fileSize
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -5503,6 +5511,7 @@ export const AskGraphlit = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -5698,6 +5707,7 @@ export const CompleteConversation = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -5898,6 +5908,7 @@ export const CompleteConversation = gql`
             fileMetadata
             relativeFolderPath
             masterUri
+            markdownUri
             imageUri
             textUri
             audioUri
@@ -6058,6 +6069,7 @@ export const ContinueConversation = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -6258,6 +6270,7 @@ export const ContinueConversation = gql`
             fileMetadata
             relativeFolderPath
             masterUri
+            markdownUri
             imageUri
             textUri
             audioUri
@@ -6471,6 +6484,7 @@ export const FormatConversation = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -6671,6 +6685,7 @@ export const FormatConversation = gql`
             fileMetadata
             relativeFolderPath
             masterUri
+            markdownUri
             imageUri
             textUri
             audioUri
@@ -6837,6 +6852,7 @@ export const GetConversation = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -6986,6 +7002,7 @@ export const GetConversation = gql`
             fileMetadata
             relativeFolderPath
             masterUri
+            markdownUri
             imageUri
             textUri
             audioUri
@@ -7408,6 +7425,7 @@ export const Prompt = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -7579,6 +7597,7 @@ export const PromptConversation = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -7779,6 +7798,7 @@ export const PromptConversation = gql`
             fileMetadata
             relativeFolderPath
             masterUri
+            markdownUri
             imageUri
             textUri
             audioUri
@@ -7935,6 +7955,7 @@ export const PublishConversation = gql`
       fileMetadata
       relativeFolderPath
       masterUri
+      markdownUri
       imageUri
       textUri
       audioUri
@@ -8702,6 +8723,7 @@ export const ReviseContent = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -8865,6 +8887,7 @@ export const ReviseEncodedImage = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -9027,6 +9050,7 @@ export const ReviseImage = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -9189,6 +9213,7 @@ export const ReviseText = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
@@ -18765,6 +18790,7 @@ export const PromptSpecifications = gql`
           fileMetadata
           relativeFolderPath
           masterUri
+          markdownUri
           imageUri
           textUri
           audioUri
