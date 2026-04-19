@@ -4583,19 +4583,16 @@ class Graphlit {
   /**
    * Creates a replica.
    * @param replica - The replica to create.
-   * @param correlationId - The tenant correlation identifier, optional.
    * @returns The created replica.
    */
   public async createReplica(
     replica: Types.ReplicaInput,
-    correlationId?: string,
   ): Promise<Types.CreateReplicaMutation> {
     return this.mutateAndCheckError<
       Types.CreateReplicaMutation,
       Types.CreateReplicaMutationVariables
     >(Documents.CreateReplica, {
       replica: replica,
-      correlationId: correlationId,
     });
   }
 
@@ -11996,13 +11993,13 @@ class Graphlit {
   private detectTaskComplete(
     toolCalls:
       | ReadonlyArray<
-          | {
-              name?: string | null;
-              arguments?: string | null;
-            }
-          | null
-          | undefined
-        >
+        | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+        | null
+        | undefined
+      >
       | null
       | undefined,
   ): boolean {
