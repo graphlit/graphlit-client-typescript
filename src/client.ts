@@ -4577,11 +4577,225 @@ class Graphlit {
   }
 
   // ──────────────────────────────────────────────────────────────────────────
+  // Replicas
+  // ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Creates a replica.
+   * @param replica - The replica to create.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The created replica.
+   */
+  public async createReplica(
+    replica: Types.ReplicaInput,
+    correlationId?: string,
+  ): Promise<Types.CreateReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.CreateReplicaMutation,
+      Types.CreateReplicaMutationVariables
+    >(Documents.CreateReplica, {
+      replica: replica,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Updates a replica.
+   * @param replica - The replica to update.
+   * @returns The updated replica.
+   */
+  public async updateReplica(
+    replica: Types.ReplicaUpdateInput,
+  ): Promise<Types.UpdateReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateReplicaMutation,
+      Types.UpdateReplicaMutationVariables
+    >(Documents.UpdateReplica, { replica: replica });
+  }
+
+  /**
+   * Creates or updates a replica.
+   * @param replica - The replica to create or update.
+   * @returns The created or updated replica.
+   */
+  public async upsertReplica(
+    replica: Types.ReplicaInput,
+  ): Promise<Types.UpsertReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertReplicaMutation,
+      Types.UpsertReplicaMutationVariables
+    >(Documents.UpsertReplica, { replica: replica });
+  }
+
+  /**
+   * Deletes a replica.
+   * @param id - The ID of the replica to delete.
+   * @returns The deleted replica.
+   */
+  public async deleteReplica(
+    id: string,
+  ): Promise<Types.DeleteReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteReplicaMutation,
+      Types.DeleteReplicaMutationVariables
+    >(Documents.DeleteReplica, { id: id });
+  }
+
+  /**
+   * Deletes multiple replicas.
+   * @param ids - The IDs of the replicas to delete.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @returns The deleted replicas.
+   */
+  public async deleteReplicas(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteReplicasMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteReplicasMutation,
+      Types.DeleteReplicasMutationVariables
+    >(Documents.DeleteReplicas, { ids: ids, isSynchronous: isSynchronous });
+  }
+
+  /**
+   * Deletes all replicas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when deleting replicas.
+   * @param isSynchronous - Whether this mutation is synchronous.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The result of the deletion.
+   */
+  public async deleteAllReplicas(
+    filter?: Types.ReplicaFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
+  ): Promise<Types.DeleteAllReplicasMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteAllReplicasMutation,
+      Types.DeleteAllReplicasMutationVariables
+    >(Documents.DeleteAllReplicas, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Triggers a replica to run immediately.
+   * @param id - The ID of the replica to trigger.
+   * @returns The triggered replica.
+   */
+  public async triggerReplica(
+    id: string,
+  ): Promise<Types.TriggerReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.TriggerReplicaMutation,
+      Types.TriggerReplicaMutationVariables
+    >(Documents.TriggerReplica, { id: id });
+  }
+
+  /**
+   * Enables a replica.
+   * @param id - The ID of the replica to enable.
+   * @returns The enabled replica.
+   */
+  public async enableReplica(
+    id: string,
+  ): Promise<Types.EnableReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.EnableReplicaMutation,
+      Types.EnableReplicaMutationVariables
+    >(Documents.EnableReplica, { id: id });
+  }
+
+  /**
+   * Disables a replica.
+   * @param id - The ID of the replica to disable.
+   * @returns The disabled replica.
+   */
+  public async disableReplica(
+    id: string,
+  ): Promise<Types.DisableReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.DisableReplicaMutation,
+      Types.DisableReplicaMutationVariables
+    >(Documents.DisableReplica, { id: id });
+  }
+
+  /**
+   * Lookup a replica given its ID.
+   * @param id - ID of the replica.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The replica.
+   */
+  public async getReplica(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetReplicaQuery> {
+    return this.queryAndCheckError<
+      Types.GetReplicaQuery,
+      Types.GetReplicaQueryVariables
+    >(Documents.GetReplica, { id: id, correlationId: correlationId });
+  }
+
+  /**
+   * Retrieves replicas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when retrieving replicas.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The replicas.
+   */
+  public async queryReplicas(
+    filter?: Types.ReplicaFilter,
+    correlationId?: string,
+  ): Promise<Types.QueryReplicasQuery> {
+    return this.queryAndCheckError<
+      Types.QueryReplicasQuery,
+      Types.QueryReplicasQueryVariables
+    >(Documents.QueryReplicas, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Counts replicas based on the provided filter criteria.
+   * @param filter - The filter criteria to apply when counting replicas.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The count of replicas.
+   */
+  public async countReplicas(
+    filter?: Types.ReplicaFilter,
+    correlationId?: string,
+  ): Promise<Types.CountReplicasQuery> {
+    return this.queryAndCheckError<
+      Types.CountReplicasQuery,
+      Types.CountReplicasQueryVariables
+    >(Documents.CountReplicas, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
+   * Checks if a replica exists based on the provided filter criteria.
+   * @param filter - The filter criteria to apply.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns Whether the replica exists.
+   */
+  public async replicaExists(
+    filter?: Types.ReplicaFilter,
+    correlationId?: string,
+  ): Promise<Types.ReplicaExistsQuery> {
+    return this.queryAndCheckError<
+      Types.ReplicaExistsQuery,
+      Types.ReplicaExistsQueryVariables
+    >(Documents.ReplicaExists, {
+      filter: filter,
+      correlationId: correlationId,
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
   // Skills
-  // NOTE: Types (SkillInput, SkillUpdateInput, SkillFilter, etc.) and
-  // Documents (CreateSkill, UpdateSkill, etc.) will be generated by codegen
-  // once the API schema is published. Until then these methods will show
-  // TypeScript errors — that is expected.
   // ──────────────────────────────────────────────────────────────────────────
 
   /**
@@ -10952,7 +11166,6 @@ class Graphlit {
     let totalToolCalls = 0;
     let status: RunAgentResult["status"] = "completed";
     let finalMessage = "";
-    let taskCompleteSummary: string | undefined;
     let stuckPattern: string | undefined;
     let errorMessage: string | undefined;
     let lastContextWindow: ContextWindowUsage | undefined;
@@ -11073,24 +11286,25 @@ class Graphlit {
         }
       }
 
-      // Build tools list with task_complete prepended
+      // Build tools list with task_complete prepended.
+      //
+      // task_complete is a bare completion signal — it takes no arguments.
+      // The agent's user-facing answer MUST be in its final assistant message
+      // (the `fullMessage` / `finalAssistantMessage` on the turn result); this
+      // tool only marks the run as done.
+      //
+      // Earlier versions had a `summary` field. That consistently caused the
+      // model to stuff its answer into the tool argument and then write a
+      // useless prose message ("answer delivered above") — the user would see
+      // the empty prose, not the answer. Removing the field eliminates the
+      // hiding place.
       const taskCompleteTool: Types.ToolDefinitionInput = {
         name: "task_complete",
         description:
-          "Call this tool when you have completed the assigned task. Provide a summary of what was accomplished and any recommendations.",
+          "Signal that you have completed the assigned task. Your full answer must already be in your assistant message BEFORE calling this — that prose is what the user sees. This tool takes no arguments; it only ends the run.",
         schema: JSON.stringify({
           type: "object",
-          properties: {
-            summary: {
-              type: "string",
-              description: "Summary of what was accomplished.",
-            },
-            recommendations: {
-              type: "string",
-              description: "Optional recommendations or next steps.",
-            },
-          },
-          required: ["summary"],
+          properties: {},
         }),
       };
 
@@ -11488,10 +11702,9 @@ class Graphlit {
 
         // 9. Build TurnResult
         const turnDuration = Date.now() - turnStart;
-        const taskCompleteInfo = this.detectTaskCompleteInMessages(
+        const taskCompleteThisTurn = this.detectTaskCompleteInMessages(
           loopResult.intermediateMessages,
         );
-        const taskCompleteThisTurn = taskCompleteInfo.called;
         const turnToolNames = [...new Set(loopResult.toolCallNames)].sort();
 
         const turnResult: TurnResult = {
@@ -11525,7 +11738,6 @@ class Graphlit {
 
         // a. task_complete called?
         if (taskCompleteThisTurn) {
-          taskCompleteSummary = taskCompleteInfo.summary;
           status = "completed";
           break;
         }
@@ -11579,10 +11791,14 @@ class Graphlit {
         currentPrompt = "Continue.";
       }
 
-      // If we exited the loop without an explicit status change, check budget
+      // If we exited the loop without an explicit status change, check budget.
+      // status defaults to "completed", so we need a positive signal that
+      // task_complete was actually called — otherwise hitting the turn cap
+      // looks like success.
+      const taskCompleteWasCalled = turnResults.some((t) => t.taskComplete);
       if (
         status === "completed" &&
-        !taskCompleteSummary &&
+        !taskCompleteWasCalled &&
         turnResults.length >= evaluator.adjustedMaxTurns
       ) {
         status = "budget_exhausted";
@@ -11611,7 +11827,6 @@ class Graphlit {
         conversationId,
         status,
         finalMessage,
-        taskCompleteSummary,
         turnResults,
         totalToolCalls,
         wallClockMs,
@@ -11639,7 +11854,6 @@ class Graphlit {
         conversationId,
         status,
         finalMessage,
-        taskCompleteSummary,
         turnResults,
         totalToolCalls,
         wallClockMs: Date.now() - runStart,
@@ -11755,7 +11969,7 @@ class Graphlit {
         toolCallCount: toolNames.length,
         durationMs:
           computePersistedToolRoundDurationMs(assistantMsg.toolCalls) ?? 0,
-        taskComplete: this.detectTaskComplete(assistantMsg.toolCalls).called,
+        taskComplete: this.detectTaskComplete(assistantMsg.toolCalls),
         errors: toolErrors.length > 0 ? toolErrors : undefined,
       });
     }
@@ -11769,16 +11983,15 @@ class Graphlit {
    * Recognizes two invocation shapes:
    *   1. Direct — a tool call whose `name` is `"task_complete"`.
    *   2. Wrapped — a tool call whose arguments JSON has shape
-   *      `{ tool: "task_complete", parameters: { summary?, ... } }`. This is
-   *      the common pattern used by dynamic-toolset clients that expose a
-   *      single meta-executor (often named `execute_tool`) at the top level
-   *      and route every underlying tool through it.
+   *      `{ tool: "task_complete", parameters: { ... } }`. This is the common
+   *      pattern used by dynamic-toolset clients that expose a single
+   *      meta-executor (often named `execute_tool`) at the top level and
+   *      route every underlying tool through it.
    *
    * Detection is invocation-agnostic: whether the model called task_complete
-   * directly or via a meta-executor, the harness treats the turn as complete
-   * and surfaces the provided summary. Callers that only register a direct
-   * top-level task_complete still work — the wrapped path is simply inert
-   * when no meta-executor is in use.
+   * directly or via a meta-executor, the harness treats the turn as complete.
+   * Callers that only register a direct top-level task_complete still work —
+   * the wrapped path is simply inert when no meta-executor is in use.
    */
   private detectTaskComplete(
     toolCalls:
@@ -11792,63 +12005,41 @@ class Graphlit {
         >
       | null
       | undefined,
-  ): { called: boolean; summary?: string } {
-    if (!toolCalls) return { called: false };
+  ): boolean {
+    if (!toolCalls) return false;
 
     for (const tc of toolCalls) {
       if (!tc) continue;
 
       // Direct invocation
-      if (tc.name === "task_complete") {
-        if (!tc.arguments) return { called: true };
-        try {
-          const args = JSON.parse(tc.arguments) as Record<string, unknown>;
-          return {
-            called: true,
-            summary:
-              typeof args.summary === "string" ? args.summary : undefined,
-          };
-        } catch {
-          return { called: true };
-        }
-      }
+      if (tc.name === "task_complete") return true;
 
       // Meta-executor wrapping (e.g. execute_tool({ tool: "task_complete", parameters: {...} }))
       if (tc.arguments) {
         try {
           const args = JSON.parse(tc.arguments) as Record<string, unknown>;
-          if (args.tool === "task_complete") {
-            const params =
-              (args.parameters as Record<string, unknown> | undefined) ?? {};
-            return {
-              called: true,
-              summary:
-                typeof params.summary === "string" ? params.summary : undefined,
-            };
-          }
+          if (args.tool === "task_complete") return true;
         } catch {
           // Not JSON — skip
         }
       }
     }
 
-    return { called: false };
+    return false;
   }
 
   /**
-   * Scan a list of messages for a task_complete invocation. Returns the first
-   * match found across all tool calls in all messages. Convenience wrapper
-   * over `detectTaskComplete` for the streamAgent loop, which works with
-   * `intermediateMessages` rather than a single tool-call list.
+   * Scan a list of messages for a task_complete invocation. Convenience
+   * wrapper over `detectTaskComplete` for the streamAgent loop, which works
+   * with `intermediateMessages` rather than a single tool-call list.
    */
   private detectTaskCompleteInMessages(
     messages: Types.ConversationMessageInput[],
-  ): { called: boolean; summary?: string } {
+  ): boolean {
     for (const msg of messages) {
-      const result = this.detectTaskComplete(msg.toolCalls);
-      if (result.called) return result;
+      if (this.detectTaskComplete(msg.toolCalls)) return true;
     }
-    return { called: false };
+    return false;
   }
 
   /**
@@ -11951,7 +12142,6 @@ class Graphlit {
     conversationId: string;
     status: RunAgentResult["status"];
     finalMessage: string;
-    taskCompleteSummary?: string;
     turnResults: TurnResult[];
     totalToolCalls: number;
     wallClockMs: number;
@@ -11966,7 +12156,6 @@ class Graphlit {
       conversationId: params.conversationId,
       status: params.status,
       finalMessage: params.finalMessage,
-      taskCompleteSummary: params.taskCompleteSummary,
       turns: params.turnResults.length,
       totalToolCalls: params.totalToolCalls,
       wallClockMs: params.wallClockMs,

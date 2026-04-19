@@ -4546,6 +4546,55 @@ export type ConversationCitation = {
   text: Scalars['String']['output'];
 };
 
+/** Represents a conversation filter. */
+export type ConversationCriteria = {
+  __typename?: 'ConversationCriteria';
+  /** Filter by producing agents. */
+  agents?: Maybe<Array<EntityReference>>;
+  /** Filter mode for collections. */
+  collectionMode?: Maybe<FilterMode>;
+  /** Filter by collections. */
+  collections?: Maybe<Array<EntityReference>>;
+  /** Filter by conversations. */
+  conversations?: Maybe<Array<EntityReference>>;
+  /** Exclude conversations. */
+  excludeConversations?: Maybe<Array<EntityReference>>;
+  /** Filter by presence or absence of associated collections. */
+  hasCollections?: Maybe<Scalars['Boolean']['output']>;
+  /** Filter by presence or absence of observations. */
+  hasObservations?: Maybe<Scalars['Boolean']['output']>;
+  /** Filter mode for observations. */
+  observationMode?: Maybe<FilterMode>;
+  /** Filter by observations. */
+  observations?: Maybe<Array<ObservationCriteria>>;
+  /** Filter by conversation types. */
+  types?: Maybe<Array<ConversationTypes>>;
+};
+
+/** Represents a conversation filter. */
+export type ConversationCriteriaInput = {
+  /** Filter by producing agents. */
+  agents?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Filter mode for collections. */
+  collectionMode?: InputMaybe<FilterMode>;
+  /** Filter by collections. */
+  collections?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Filter by conversations. */
+  conversations?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Exclude conversations. */
+  excludeConversations?: InputMaybe<Array<EntityReferenceInput>>;
+  /** Filter by presence or absence of associated collections. */
+  hasCollections?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by presence or absence of observations. */
+  hasObservations?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter mode for observations. */
+  observationMode?: InputMaybe<FilterMode>;
+  /** Filter by observations. */
+  observations?: InputMaybe<Array<ObservationCriteriaInput>>;
+  /** Filter by conversation types. */
+  types?: InputMaybe<Array<ConversationTypes>>;
+};
+
 /** Represents the RAG pipeline details for a prompted conversation. */
 export type ConversationDetails = {
   __typename?: 'ConversationDetails';
@@ -7253,6 +7302,8 @@ export enum EntityTypes {
   Project = 'PROJECT',
   /** Rendition */
   Rendition = 'RENDITION',
+  /** Replica */
+  Replica = 'REPLICA',
   /** Code repository */
   Repo = 'REPO',
   /** Cloud storage site */
@@ -17206,6 +17257,8 @@ export type Mutation = {
   createPlace?: Maybe<Place>;
   /** Creates a new product. */
   createProduct?: Maybe<Product>;
+  /** Creates a new replica. */
+  createReplica?: Maybe<Replica>;
   /** Creates a new repo. */
   createRepo?: Maybe<Repo>;
   /** Creates a new skill. */
@@ -17290,6 +17343,8 @@ export type Mutation = {
   deleteAllPlaces?: Maybe<Array<Maybe<Place>>>;
   /** Bulk deletes products based on the provided filter criteria. */
   deleteAllProducts?: Maybe<Array<Maybe<Product>>>;
+  /** Bulk deletes replicas based on the provided filter criteria. */
+  deleteAllReplicas?: Maybe<Array<Maybe<Replica>>>;
   /** Bulk deletes repos based on the provided filter criteria. */
   deleteAllRepos?: Maybe<Array<Maybe<Repo>>>;
   /** Bulk deletes skills based on the provided filter criteria. */
@@ -17422,6 +17477,10 @@ export type Mutation = {
   deleteProduct?: Maybe<Product>;
   /** Bulk deletes products. */
   deleteProducts?: Maybe<Array<Maybe<Product>>>;
+  /** Deletes a replica. */
+  deleteReplica?: Maybe<Replica>;
+  /** Bulk deletes replicas. */
+  deleteReplicas?: Maybe<Array<Maybe<Replica>>>;
   /** Deletes a repo. */
   deleteRepo?: Maybe<Repo>;
   /** Bulk deletes repos. */
@@ -17458,6 +17517,8 @@ export type Mutation = {
   disableAlert?: Maybe<Alert>;
   /** Disables a feed. */
   disableFeed?: Maybe<Feed>;
+  /** Disables a replica. */
+  disableReplica?: Maybe<Replica>;
   /** Disables a skill. */
   disableSkill?: Maybe<Skill>;
   /** Disables a user. */
@@ -17470,6 +17531,8 @@ export type Mutation = {
   enableAlert?: Maybe<Alert>;
   /** Enables a feed. */
   enableFeed?: Maybe<Feed>;
+  /** Enables a replica. */
+  enableReplica?: Maybe<Replica>;
   /** Enables a skill. */
   enableSkill?: Maybe<Skill>;
   /** Enables a user. */
@@ -17596,6 +17659,8 @@ export type Mutation = {
   summarizeText?: Maybe<PromptSummarization>;
   /** Triggers immediate processing of a recurring feed. */
   triggerFeed?: Maybe<Feed>;
+  /** Triggers a replica. */
+  triggerReplica?: Maybe<Replica>;
   /** Undo an existing conversation. */
   undoConversation?: Maybe<Conversation>;
   /** Updates an existing agent. */
@@ -17670,6 +17735,8 @@ export type Mutation = {
   updateProduct?: Maybe<Product>;
   /** Updates project. */
   updateProject?: Maybe<Project>;
+  /** Updates an existing replica. */
+  updateReplica?: Maybe<Replica>;
   /** Updates a repo. */
   updateRepo?: Maybe<Repo>;
   /** Updates an existing skill. */
@@ -17694,6 +17761,8 @@ export type Mutation = {
   upsertEmotion?: Maybe<Emotion>;
   /** Upserts a label. */
   upsertLabel?: Maybe<Label>;
+  /** Upserts a replica. */
+  upsertReplica?: Maybe<Replica>;
   /** Upserts a skill. */
   upsertSkill?: Maybe<Skill>;
   /** Upserts an LLM specification. */
@@ -17981,6 +18050,11 @@ export type MutationCreateProductArgs = {
 };
 
 
+export type MutationCreateReplicaArgs = {
+  replica: ReplicaInput;
+};
+
+
 export type MutationCreateRepoArgs = {
   repo: RepoInput;
 };
@@ -18252,6 +18326,13 @@ export type MutationDeleteAllPlacesArgs = {
 export type MutationDeleteAllProductsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ProductFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDeleteAllReplicasArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ReplicaFilter>;
   isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -18627,6 +18708,17 @@ export type MutationDeleteProductsArgs = {
 };
 
 
+export type MutationDeleteReplicaArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteReplicasArgs = {
+  ids: Array<Scalars['ID']['input']>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationDeleteRepoArgs = {
   id: Scalars['ID']['input'];
 };
@@ -18730,6 +18822,11 @@ export type MutationDisableFeedArgs = {
 };
 
 
+export type MutationDisableReplicaArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDisableSkillArgs = {
   id: Scalars['ID']['input'];
 };
@@ -18762,6 +18859,11 @@ export type MutationEnableAlertArgs = {
 
 
 export type MutationEnableFeedArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationEnableReplicaArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -19278,6 +19380,12 @@ export type MutationTriggerFeedArgs = {
 };
 
 
+export type MutationTriggerReplicaArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationUndoConversationArgs = {
   id: Scalars['ID']['input'];
 };
@@ -19465,6 +19573,11 @@ export type MutationUpdateProjectArgs = {
 };
 
 
+export type MutationUpdateReplicaArgs = {
+  replica: ReplicaUpdateInput;
+};
+
+
 export type MutationUpdateRepoArgs = {
   repo: RepoUpdateInput;
 };
@@ -19525,6 +19638,11 @@ export type MutationUpsertEmotionArgs = {
 export type MutationUpsertLabelArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   label: LabelInput;
+};
+
+
+export type MutationUpsertReplicaArgs = {
+  replica: ReplicaInput;
 };
 
 
@@ -22960,6 +23078,8 @@ export type Query = {
   countPlaces?: Maybe<CountResult>;
   /** Counts products based on the provided filter criteria. */
   countProducts?: Maybe<CountResult>;
+  /** Counts replicas based on the provided filter criteria. */
+  countReplicas?: Maybe<CountResult>;
   /** Counts repos based on the provided filter criteria. */
   countRepos?: Maybe<CountResult>;
   /** Counts skills based on the provided filter criteria. */
@@ -23148,6 +23268,12 @@ export type Query = {
   projects?: Maybe<ProjectResults>;
   /** Reads external content through a distribution connector without ingesting it into Graphlit. */
   read?: Maybe<ReadResult>;
+  /** Lookup a replica given its ID. */
+  replica?: Maybe<Replica>;
+  /** Returns whether any replica exists based on the provided filter criteria. */
+  replicaExists?: Maybe<BooleanResult>;
+  /** Retrieves replicas based on the provided filter criteria. */
+  replicas?: Maybe<ReplicaResults>;
   /** Lookup a code repository given its ID. */
   repo?: Maybe<Repo>;
   /** Retrieves code repositories based on the provided filter criteria. */
@@ -23193,7 +23319,7 @@ export type Query = {
   /** Returns whether any view exists based on the provided filter criteria. */
   viewExists?: Maybe<BooleanResult>;
   /** Retrieves views based on the provided filter criteria. */
-  views?: Maybe<QueryResults>;
+  views?: Maybe<ViewResults>;
   /** Lookup a workflow given its ID. */
   workflow?: Maybe<Workflow>;
   /** Returns whether any workflow exists based on the provided filter criteria. */
@@ -23539,6 +23665,12 @@ export type QueryCountPlacesArgs = {
 export type QueryCountProductsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ProductFilter>;
+};
+
+
+export type QueryCountReplicasArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ReplicaFilter>;
 };
 
 
@@ -24137,6 +24269,24 @@ export type QueryReadArgs = {
 };
 
 
+export type QueryReplicaArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryReplicaExistsArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ReplicaFilter>;
+};
+
+
+export type QueryReplicasArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ReplicaFilter>;
+};
+
+
 export type QueryRepoArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -24300,12 +24450,6 @@ export type QueryWorkflowExistsArgs = {
 export type QueryWorkflowsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<WorkflowFilter>;
-};
-
-export type QueryResults = {
-  __typename?: 'QueryResults';
-  /** The list of view query results. */
-  results?: Maybe<Array<View>>;
 };
 
 /** Quiver Image model type */
@@ -24604,6 +24748,258 @@ export enum RenditionTypes {
   /** Content rendition */
   Content = 'CONTENT'
 }
+
+/** Represents an external entity artifact replica. */
+export type Replica = {
+  __typename?: 'Replica';
+  /** The external artifact formats to replicate. */
+  artifactTypes?: Maybe<Array<Maybe<ReplicaArtifactTypes>>>;
+  /** The default commit message for replica sync runs. */
+  commitMessage?: Maybe<Scalars['String']['output']>;
+  /** The outbound connector. */
+  connector: Connector;
+  /** The content-specific replica properties. */
+  content?: Maybe<ReplicaContentProperties>;
+  /** The conversation-specific replica properties. */
+  conversation?: Maybe<ReplicaConversationProperties>;
+  /** The creation date of the replica. */
+  creationDate: Scalars['DateTime']['output'];
+  /** The Git-specific replica properties. */
+  git?: Maybe<ReplicaGitProperties>;
+  /** The ID of the replica. */
+  id: Scalars['ID']['output'];
+  /** The last replica sync error code. */
+  lastErrorCode?: Maybe<Scalars['String']['output']>;
+  /** The last replica sync error message. */
+  lastErrorMessage?: Maybe<Scalars['String']['output']>;
+  /** The number of files deleted during the last reconciliation. */
+  lastFileDeleteCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of files skipped during the last reconciliation. */
+  lastFileSkipCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of unchanged files during the last reconciliation. */
+  lastFileUnchangedCount?: Maybe<Scalars['Int']['output']>;
+  /** The number of files upserted during the last reconciliation. */
+  lastFileUpsertCount?: Maybe<Scalars['Int']['output']>;
+  /** The last reconciliation date. */
+  lastReconcileDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The last replica sync date. */
+  lastReplicaDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The last destination revision identifier. */
+  lastRevisionId?: Maybe<Scalars['String']['output']>;
+  /** The last destination revision URI. */
+  lastRevisionUri?: Maybe<Scalars['String']['output']>;
+  /** The destination marker slug used for control paths and auto branch names. */
+  markerSlug?: Maybe<Scalars['String']['output']>;
+  /** The modified date of the replica. */
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The name of the replica. */
+  name: Scalars['String']['output'];
+  /** The next reconciliation due date. */
+  nextReconcileDate?: Maybe<Scalars['DateTime']['output']>;
+  /** The owner of the replica. */
+  owner: Owner;
+  /** The relevance score of the replica. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The replica schedule policy. */
+  schedulePolicy?: Maybe<ReplicaSchedulePolicy>;
+  /** The state of the replica (i.e. created, finished). */
+  state: EntityState;
+  /** Whether destination deletes should be synchronized when previously replicated artifacts no longer match the replica. */
+  synchronizeDeletes?: Maybe<Scalars['Boolean']['output']>;
+  /** The source entity type to replicate. */
+  type?: Maybe<EntityTypes>;
+  /** The user that created the entity. */
+  user?: Maybe<EntityReference>;
+};
+
+/** Replica artifact type */
+export enum ReplicaArtifactTypes {
+  /** Markdown artifact */
+  Markdown = 'MARKDOWN',
+  /** Master file artifact */
+  Master = 'MASTER',
+  /** WebVTT transcript artifact */
+  WebVtt = 'WEB_VTT'
+}
+
+/** Replica Git branch type */
+export enum ReplicaBranchTypes {
+  /** Use an automatically generated Git branch */
+  Auto = 'AUTO',
+  /** Use a configured Git branch */
+  Branch = 'BRANCH'
+}
+
+/** Represents content-specific replica properties. */
+export type ReplicaContentProperties = {
+  __typename?: 'ReplicaContentProperties';
+  /** The filter criteria to apply when selecting content. */
+  filter?: Maybe<ContentCriteria>;
+};
+
+/** Represents content-specific replica properties. */
+export type ReplicaContentPropertiesInput = {
+  /** The filter criteria to apply when selecting content. */
+  filter?: InputMaybe<ContentCriteriaInput>;
+};
+
+/** Represents conversation-specific replica properties. */
+export type ReplicaConversationProperties = {
+  __typename?: 'ReplicaConversationProperties';
+  /** The filter criteria to apply when selecting conversations. */
+  filter?: Maybe<ConversationCriteria>;
+};
+
+/** Represents conversation-specific replica properties. */
+export type ReplicaConversationPropertiesInput = {
+  /** The filter criteria to apply when selecting conversations. */
+  filter?: InputMaybe<ConversationCriteriaInput>;
+};
+
+/** Represents a filter for external entity artifact replicas. */
+export type ReplicaFilter = {
+  /** Filter by creation date recent timespan. For example, a timespan of one day will return replica(s) created in the last 24 hours. */
+  createdInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter replica(s) by their creation date range. */
+  creationDateRange?: InputMaybe<DateRangeFilter>;
+  /** The sort direction for query results. */
+  direction?: InputMaybe<OrderDirectionTypes>;
+  /** Filter replica(s) by their unique ID. */
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** Limit the number of replica(s) to be returned. Defaults to 100. */
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  /** Filter replica(s) by their modified date range. */
+  modifiedDateRange?: InputMaybe<DateRangeFilter>;
+  /** Filter by modified date recent timespan. For example, a timespan of one day will return replica(s) modified in the last 24 hours. */
+  modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** Filter replica(s) by their name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Skip the specified number of replica(s) from the beginning of the result set. Only supported on keyword search. */
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** The sort order for query results. */
+  orderBy?: InputMaybe<OrderByTypes>;
+  /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
+  relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
+  /** Filter replica(s) by searching for similar text. */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Filter replica(s) by their states. */
+  states?: InputMaybe<Array<EntityState>>;
+  /** Filter by source entity types. */
+  types?: InputMaybe<Array<EntityTypes>>;
+};
+
+/** Represents Git-specific replica properties. */
+export type ReplicaGitProperties = {
+  __typename?: 'ReplicaGitProperties';
+  /** The configured Git branch. */
+  branch?: Maybe<Scalars['String']['output']>;
+  /** The Git branch selection behavior. */
+  branchType?: Maybe<ReplicaBranchTypes>;
+  /** The GitLab project path. */
+  projectPath?: Maybe<Scalars['String']['output']>;
+  /** The GitHub repository name. */
+  repositoryName?: Maybe<Scalars['String']['output']>;
+  /** The GitHub repository owner. */
+  repositoryOwner?: Maybe<Scalars['String']['output']>;
+  /** The resolved Git branch used by the replica. */
+  resolvedBranch?: Maybe<Scalars['String']['output']>;
+  /** The destination path prefix. */
+  targetPath?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Git-specific replica properties. */
+export type ReplicaGitPropertiesInput = {
+  /** The configured Git branch. */
+  branch?: InputMaybe<Scalars['String']['input']>;
+  /** The Git branch selection behavior. */
+  branchType?: InputMaybe<ReplicaBranchTypes>;
+  /** The GitLab project path. */
+  projectPath?: InputMaybe<Scalars['String']['input']>;
+  /** The GitHub repository name. */
+  repositoryName?: InputMaybe<Scalars['String']['input']>;
+  /** The GitHub repository owner. */
+  repositoryOwner?: InputMaybe<Scalars['String']['input']>;
+  /** The destination path prefix. */
+  targetPath?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents an external entity artifact replica. */
+export type ReplicaInput = {
+  /** The external artifact formats to replicate. */
+  artifactTypes: Array<ReplicaArtifactTypes>;
+  /** The default commit message for replica sync runs. */
+  commitMessage?: InputMaybe<Scalars['String']['input']>;
+  /** The outbound connector. */
+  connector: EntityReferenceInput;
+  /** The content-specific replica properties. */
+  content?: InputMaybe<ReplicaContentPropertiesInput>;
+  /** The conversation-specific replica properties. */
+  conversation?: InputMaybe<ReplicaConversationPropertiesInput>;
+  /** The Git-specific replica properties. */
+  git?: InputMaybe<ReplicaGitPropertiesInput>;
+  /** The destination marker slug used for control paths and auto branch names. */
+  markerSlug?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the replica. */
+  name: Scalars['String']['input'];
+  /** The replica schedule policy. */
+  schedulePolicy?: InputMaybe<ReplicaSchedulePolicyInput>;
+  /** Whether destination deletes should be synchronized when previously replicated artifacts no longer match the replica. */
+  synchronizeDeletes?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The source entity type to replicate. */
+  type: EntityTypes;
+};
+
+/** Represents replica query results. */
+export type ReplicaResults = {
+  __typename?: 'ReplicaResults';
+  /** The list of replica query results. */
+  results?: Maybe<Array<Replica>>;
+};
+
+/** Represents a replica scheduling policy. */
+export type ReplicaSchedulePolicy = {
+  __typename?: 'ReplicaSchedulePolicy';
+  /** The replica recurrence type. */
+  recurrenceType?: Maybe<TimedPolicyRecurrenceTypes>;
+  /** If a repeated replica, the interval between reconciliation sweeps. */
+  repeatInterval?: Maybe<Scalars['TimeSpan']['output']>;
+};
+
+/** Represents a replica scheduling policy. */
+export type ReplicaSchedulePolicyInput = {
+  /** The replica recurrence type. */
+  recurrenceType?: InputMaybe<TimedPolicyRecurrenceTypes>;
+  /** If a repeated replica, the interval between reconciliation sweeps. */
+  repeatInterval?: InputMaybe<Scalars['TimeSpan']['input']>;
+};
+
+/** Represents an external entity artifact replica. */
+export type ReplicaUpdateInput = {
+  /** The external artifact formats to replicate. */
+  artifactTypes?: InputMaybe<Array<InputMaybe<ReplicaArtifactTypes>>>;
+  /** The default commit message for replica sync runs. */
+  commitMessage?: InputMaybe<Scalars['String']['input']>;
+  /** The outbound connector. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** The content-specific replica properties. */
+  content?: InputMaybe<ReplicaContentPropertiesInput>;
+  /** The conversation-specific replica properties. */
+  conversation?: InputMaybe<ReplicaConversationPropertiesInput>;
+  /** The Git-specific replica properties. */
+  git?: InputMaybe<ReplicaGitPropertiesInput>;
+  /** The ID of the replica to update. */
+  id: Scalars['ID']['input'];
+  /** The destination marker slug used for control paths and auto branch names. */
+  markerSlug?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the replica. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The replica schedule policy. */
+  schedulePolicy?: InputMaybe<ReplicaSchedulePolicyInput>;
+  /** Whether destination deletes should be synchronized when previously replicated artifacts no longer match the replica. */
+  synchronizeDeletes?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The source entity type to replicate. */
+  type?: InputMaybe<EntityTypes>;
+};
 
 /** Represents Replicate model properties. */
 export type ReplicateModelProperties = {
@@ -27651,6 +28047,13 @@ export type ViewInput = {
   name: Scalars['String']['input'];
   /** Type of view. */
   type?: InputMaybe<ViewTypes>;
+};
+
+/** Represents view query results. */
+export type ViewResults = {
+  __typename?: 'ViewResults';
+  /** The list of view query results. */
+  results?: Maybe<Array<View>>;
 };
 
 /** View type */
@@ -31725,6 +32128,104 @@ export type UpdateProjectMutationVariables = Exact<{
 
 export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject?: { __typename?: 'Project', id: string, name: string } | null };
 
+export type CountReplicasQueryVariables = Exact<{
+  filter?: InputMaybe<ReplicaFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CountReplicasQuery = { __typename?: 'Query', countReplicas?: { __typename?: 'CountResult', count?: any | null } | null };
+
+export type CreateReplicaMutationVariables = Exact<{
+  replica: ReplicaInput;
+}>;
+
+
+export type CreateReplicaMutation = { __typename?: 'Mutation', createReplica?: { __typename?: 'Replica', id: string, name: string, state: EntityState, type?: EntityTypes | null, markerSlug?: string | null, artifactTypes?: Array<ReplicaArtifactTypes | null> | null, synchronizeDeletes?: boolean | null, commitMessage?: string | null, lastReconcileDate?: any | null, nextReconcileDate?: any | null, lastReplicaDate?: any | null, lastRevisionId?: string | null, lastRevisionUri?: string | null, lastErrorCode?: string | null, lastErrorMessage?: string | null, lastFileUpsertCount?: number | null, lastFileDeleteCount?: number | null, lastFileSkipCount?: number | null, lastFileUnchangedCount?: number | null, content?: { __typename?: 'ReplicaContentProperties', filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null, conversation?: { __typename?: 'ReplicaConversationProperties', filter?: { __typename?: 'ConversationCriteria', types?: Array<ConversationTypes> | null, hasCollections?: boolean | null, hasObservations?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, conversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, excludeConversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, agents?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null, git?: { __typename?: 'ReplicaGitProperties', branchType?: ReplicaBranchTypes | null, branch?: string | null, resolvedBranch?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, projectPath?: string | null, targetPath?: string | null } | null, connector: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null, telegram?: { __typename?: 'TelegramChannelProperties', botToken: string, secretToken?: string | null, botUsername?: string | null } | null, whatsApp?: { __typename?: 'WhatsAppChannelProperties', accessToken: string, appSecret?: string | null, phoneNumberId: string, verifyToken?: string | null } | null, googleChat?: { __typename?: 'GoogleChatChannelProperties', credentials: string, projectId?: string | null } | null } | null }, schedulePolicy?: { __typename?: 'ReplicaSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+
+export type DeleteAllReplicasMutationVariables = Exact<{
+  filter?: InputMaybe<ReplicaFilter>;
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DeleteAllReplicasMutation = { __typename?: 'Mutation', deleteAllReplicas?: Array<{ __typename?: 'Replica', id: string, state: EntityState } | null> | null };
+
+export type DeleteReplicaMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteReplicaMutation = { __typename?: 'Mutation', deleteReplica?: { __typename?: 'Replica', id: string, state: EntityState } | null };
+
+export type DeleteReplicasMutationVariables = Exact<{
+  ids: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  isSynchronous?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DeleteReplicasMutation = { __typename?: 'Mutation', deleteReplicas?: Array<{ __typename?: 'Replica', id: string, state: EntityState } | null> | null };
+
+export type DisableReplicaMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DisableReplicaMutation = { __typename?: 'Mutation', disableReplica?: { __typename?: 'Replica', id: string, state: EntityState } | null };
+
+export type EnableReplicaMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type EnableReplicaMutation = { __typename?: 'Mutation', enableReplica?: { __typename?: 'Replica', id: string, state: EntityState } | null };
+
+export type GetReplicaQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetReplicaQuery = { __typename?: 'Query', replica?: { __typename?: 'Replica', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, type?: EntityTypes | null, markerSlug?: string | null, artifactTypes?: Array<ReplicaArtifactTypes | null> | null, synchronizeDeletes?: boolean | null, commitMessage?: string | null, lastReconcileDate?: any | null, nextReconcileDate?: any | null, lastReplicaDate?: any | null, lastRevisionId?: string | null, lastRevisionUri?: string | null, lastErrorCode?: string | null, lastErrorMessage?: string | null, lastFileUpsertCount?: number | null, lastFileDeleteCount?: number | null, lastFileSkipCount?: number | null, lastFileUnchangedCount?: number | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, content?: { __typename?: 'ReplicaContentProperties', filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null, conversation?: { __typename?: 'ReplicaConversationProperties', filter?: { __typename?: 'ConversationCriteria', types?: Array<ConversationTypes> | null, hasCollections?: boolean | null, hasObservations?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, conversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, excludeConversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, agents?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null, git?: { __typename?: 'ReplicaGitProperties', branchType?: ReplicaBranchTypes | null, branch?: string | null, resolvedBranch?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, projectPath?: string | null, targetPath?: string | null } | null, connector: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null, telegram?: { __typename?: 'TelegramChannelProperties', botToken: string, secretToken?: string | null, botUsername?: string | null } | null, whatsApp?: { __typename?: 'WhatsAppChannelProperties', accessToken: string, appSecret?: string | null, phoneNumberId: string, verifyToken?: string | null } | null, googleChat?: { __typename?: 'GoogleChatChannelProperties', credentials: string, projectId?: string | null } | null } | null }, schedulePolicy?: { __typename?: 'ReplicaSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+
+export type QueryReplicasQueryVariables = Exact<{
+  filter?: InputMaybe<ReplicaFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryReplicasQuery = { __typename?: 'Query', replicas?: { __typename?: 'ReplicaResults', results?: Array<{ __typename?: 'Replica', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: EntityTypes | null, markerSlug?: string | null, artifactTypes?: Array<ReplicaArtifactTypes | null> | null, synchronizeDeletes?: boolean | null, commitMessage?: string | null, lastReconcileDate?: any | null, nextReconcileDate?: any | null, lastReplicaDate?: any | null, lastRevisionId?: string | null, lastRevisionUri?: string | null, lastErrorCode?: string | null, lastErrorMessage?: string | null, lastFileUpsertCount?: number | null, lastFileDeleteCount?: number | null, lastFileSkipCount?: number | null, lastFileUnchangedCount?: number | null, owner: { __typename?: 'Owner', id: string }, content?: { __typename?: 'ReplicaContentProperties', filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null, conversation?: { __typename?: 'ReplicaConversationProperties', filter?: { __typename?: 'ConversationCriteria', types?: Array<ConversationTypes> | null, hasCollections?: boolean | null, hasObservations?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, conversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, excludeConversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, agents?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null, git?: { __typename?: 'ReplicaGitProperties', branchType?: ReplicaBranchTypes | null, branch?: string | null, resolvedBranch?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, projectPath?: string | null, targetPath?: string | null } | null, connector: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null, telegram?: { __typename?: 'TelegramChannelProperties', botToken: string, secretToken?: string | null, botUsername?: string | null } | null, whatsApp?: { __typename?: 'WhatsAppChannelProperties', accessToken: string, appSecret?: string | null, phoneNumberId: string, verifyToken?: string | null } | null, googleChat?: { __typename?: 'GoogleChatChannelProperties', credentials: string, projectId?: string | null } | null } | null }, schedulePolicy?: { __typename?: 'ReplicaSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null }> | null } | null };
+
+export type ReplicaExistsQueryVariables = Exact<{
+  filter?: InputMaybe<ReplicaFilter>;
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ReplicaExistsQuery = { __typename?: 'Query', replicaExists?: { __typename?: 'BooleanResult', result?: boolean | null } | null };
+
+export type TriggerReplicaMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type TriggerReplicaMutation = { __typename?: 'Mutation', triggerReplica?: { __typename?: 'Replica', id: string, state: EntityState } | null };
+
+export type UpdateReplicaMutationVariables = Exact<{
+  replica: ReplicaUpdateInput;
+}>;
+
+
+export type UpdateReplicaMutation = { __typename?: 'Mutation', updateReplica?: { __typename?: 'Replica', id: string, name: string, state: EntityState, type?: EntityTypes | null, markerSlug?: string | null, artifactTypes?: Array<ReplicaArtifactTypes | null> | null, synchronizeDeletes?: boolean | null, commitMessage?: string | null, lastReconcileDate?: any | null, nextReconcileDate?: any | null, lastReplicaDate?: any | null, lastRevisionId?: string | null, lastRevisionUri?: string | null, lastErrorCode?: string | null, lastErrorMessage?: string | null, lastFileUpsertCount?: number | null, lastFileDeleteCount?: number | null, lastFileSkipCount?: number | null, lastFileUnchangedCount?: number | null, content?: { __typename?: 'ReplicaContentProperties', filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null, conversation?: { __typename?: 'ReplicaConversationProperties', filter?: { __typename?: 'ConversationCriteria', types?: Array<ConversationTypes> | null, hasCollections?: boolean | null, hasObservations?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, conversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, excludeConversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, agents?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null, git?: { __typename?: 'ReplicaGitProperties', branchType?: ReplicaBranchTypes | null, branch?: string | null, resolvedBranch?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, projectPath?: string | null, targetPath?: string | null } | null, connector: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null, telegram?: { __typename?: 'TelegramChannelProperties', botToken: string, secretToken?: string | null, botUsername?: string | null } | null, whatsApp?: { __typename?: 'WhatsAppChannelProperties', accessToken: string, appSecret?: string | null, phoneNumberId: string, verifyToken?: string | null } | null, googleChat?: { __typename?: 'GoogleChatChannelProperties', credentials: string, projectId?: string | null } | null } | null }, schedulePolicy?: { __typename?: 'ReplicaSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+
+export type UpsertReplicaMutationVariables = Exact<{
+  replica: ReplicaInput;
+}>;
+
+
+export type UpsertReplicaMutation = { __typename?: 'Mutation', upsertReplica?: { __typename?: 'Replica', id: string, name: string, state: EntityState, type?: EntityTypes | null, markerSlug?: string | null, artifactTypes?: Array<ReplicaArtifactTypes | null> | null, synchronizeDeletes?: boolean | null, commitMessage?: string | null, lastReconcileDate?: any | null, nextReconcileDate?: any | null, lastReplicaDate?: any | null, lastRevisionId?: string | null, lastRevisionUri?: string | null, lastErrorCode?: string | null, lastErrorMessage?: string | null, lastFileUpsertCount?: number | null, lastFileDeleteCount?: number | null, lastFileSkipCount?: number | null, lastFileUnchangedCount?: number | null, content?: { __typename?: 'ReplicaContentProperties', filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null } | null, conversation?: { __typename?: 'ReplicaConversationProperties', filter?: { __typename?: 'ConversationCriteria', types?: Array<ConversationTypes> | null, hasCollections?: boolean | null, hasObservations?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, conversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, excludeConversations?: Array<{ __typename?: 'EntityReference', id: string }> | null, agents?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null } | null } | null, git?: { __typename?: 'ReplicaGitProperties', branchType?: ReplicaBranchTypes | null, branch?: string | null, resolvedBranch?: string | null, repositoryOwner?: string | null, repositoryName?: string | null, projectPath?: string | null, targetPath?: string | null } | null, connector: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null, authentication?: { __typename?: 'AuthenticationConnector', type: AuthenticationServiceTypes, token?: string | null, apiKey?: string | null, microsoft?: { __typename?: 'MicrosoftAuthenticationProperties', tenantId: string, clientId: string, clientSecret: string } | null, google?: { __typename?: 'GoogleAuthenticationProperties', clientId: string, clientSecret: string } | null, oauth?: { __typename?: 'OAuthAuthenticationProperties', provider: OAuthProviders, clientId: string, clientSecret: string, refreshToken: string, redirectUri?: string | null, metadata?: string | null } | null, arcade?: { __typename?: 'ArcadeAuthenticationProperties', authorizationId: string, provider: ArcadeProviders, metadata?: string | null } | null } | null, integration?: { __typename?: 'IntegrationConnector', type: IntegrationServiceTypes, uri?: string | null, slack?: { __typename?: 'SlackIntegrationProperties', token: string, channel: string } | null, email?: { __typename?: 'EmailIntegrationProperties', from: string, subject: string, to: Array<string> } | null, twitter?: { __typename?: 'TwitterIntegrationProperties', consumerKey: string, consumerSecret: string, accessTokenKey: string, accessTokenSecret: string } | null, mcp?: { __typename?: 'MCPIntegrationProperties', token?: string | null, type: McpServerTypes } | null } | null, channel?: { __typename?: 'ChannelConnector', type: ChannelServiceTypes, slack?: { __typename?: 'SlackChannelProperties', botToken: string, signingSecret?: string | null, appId?: string | null } | null, teams?: { __typename?: 'TeamsChannelProperties', botId: string, botPassword: string, tenantId?: string | null } | null, discord?: { __typename?: 'DiscordChannelProperties', botToken: string, applicationId?: string | null, publicKey?: string | null } | null, telegram?: { __typename?: 'TelegramChannelProperties', botToken: string, secretToken?: string | null, botUsername?: string | null } | null, whatsApp?: { __typename?: 'WhatsAppChannelProperties', accessToken: string, appSecret?: string | null, phoneNumberId: string, verifyToken?: string | null } | null, googleChat?: { __typename?: 'GoogleChatChannelProperties', credentials: string, projectId?: string | null } | null } | null }, schedulePolicy?: { __typename?: 'ReplicaSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null } | null } | null };
+
 export type CountReposQueryVariables = Exact<{
   filter?: InputMaybe<RepoFilter>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
@@ -32179,7 +32680,7 @@ export type QueryViewsQueryVariables = Exact<{
 }>;
 
 
-export type QueryViewsQuery = { __typename?: 'Query', views?: { __typename?: 'QueryResults', results?: Array<{ __typename?: 'View', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: ViewTypes | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
+export type QueryViewsQuery = { __typename?: 'Query', views?: { __typename?: 'ViewResults', results?: Array<{ __typename?: 'View', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, type?: ViewTypes | null, owner: { __typename?: 'Owner', id: string }, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null }> | null } | null };
 
 export type UpdateViewMutationVariables = Exact<{
   view: ViewUpdateInput;

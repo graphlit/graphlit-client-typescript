@@ -268,7 +268,6 @@ export interface RunAgentResult {
   conversationId: string;
   status: HarnessStatus;
   finalMessage: string;
-  taskCompleteSummary?: string;
   turns: number;
   totalToolCalls: number;
   wallClockMs: number;
