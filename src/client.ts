@@ -11488,7 +11488,10 @@ class Graphlit {
 
         // 9. Build TurnResult
         const turnDuration = Date.now() - turnStart;
-        const taskCompleteThisTurn = loopResult.toolCallNames.includes("task_complete");
+        const taskCompleteInfo = this.detectTaskCompleteInMessages(
+          loopResult.intermediateMessages,
+        );
+        const taskCompleteThisTurn = taskCompleteInfo.called;
         const turnToolNames = [...new Set(loopResult.toolCallNames)].sort();
 
         const turnResult: TurnResult = {
@@ -11522,10 +11525,7 @@ class Graphlit {
 
         // a. task_complete called?
         if (taskCompleteThisTurn) {
-          // Extract summary from task_complete arguments
-          taskCompleteSummary = this.extractTaskCompleteSummary(
-            loopResult.intermediateMessages,
-          );
+          taskCompleteSummary = taskCompleteInfo.summary;
           status = "completed";
           break;
         }
@@ -11755,7 +11755,7 @@ class Graphlit {
         toolCallCount: toolNames.length,
         durationMs:
           computePersistedToolRoundDurationMs(assistantMsg.toolCalls) ?? 0,
-        taskComplete: toolNames.includes("task_complete"),
+        taskComplete: this.detectTaskComplete(assistantMsg.toolCalls).called,
         errors: toolErrors.length > 0 ? toolErrors : undefined,
       });
     }
@@ -11764,26 +11764,91 @@ class Graphlit {
   }
 
   /**
-   * Extract task_complete summary from intermediate messages.
+   * Detect whether task_complete was invoked in a single list of tool calls.
+   *
+   * Recognizes two invocation shapes:
+   *   1. Direct — a tool call whose `name` is `"task_complete"`.
+   *   2. Wrapped — a tool call whose arguments JSON has shape
+   *      `{ tool: "task_complete", parameters: { summary?, ... } }`. This is
+   *      the common pattern used by dynamic-toolset clients that expose a
+   *      single meta-executor (often named `execute_tool`) at the top level
+   *      and route every underlying tool through it.
+   *
+   * Detection is invocation-agnostic: whether the model called task_complete
+   * directly or via a meta-executor, the harness treats the turn as complete
+   * and surfaces the provided summary. Callers that only register a direct
+   * top-level task_complete still work — the wrapped path is simply inert
+   * when no meta-executor is in use.
    */
-  private extractTaskCompleteSummary(
-    messages: Types.ConversationMessageInput[],
-  ): string | undefined {
-    for (const msg of messages) {
-      if (msg.toolCalls) {
-        for (const tc of msg.toolCalls) {
-          if (tc && tc.name === "task_complete" && tc.arguments) {
-            try {
-              const args = JSON.parse(tc.arguments) as Record<string, unknown>;
-              return (args.summary as string) ?? undefined;
-            } catch {
-              return undefined;
+  private detectTaskComplete(
+    toolCalls:
+      | ReadonlyArray<
+          | {
+              name?: string | null;
+              arguments?: string | null;
             }
+          | null
+          | undefined
+        >
+      | null
+      | undefined,
+  ): { called: boolean; summary?: string } {
+    if (!toolCalls) return { called: false };
+
+    for (const tc of toolCalls) {
+      if (!tc) continue;
+
+      // Direct invocation
+      if (tc.name === "task_complete") {
+        if (!tc.arguments) return { called: true };
+        try {
+          const args = JSON.parse(tc.arguments) as Record<string, unknown>;
+          return {
+            called: true,
+            summary:
+              typeof args.summary === "string" ? args.summary : undefined,
+          };
+        } catch {
+          return { called: true };
+        }
+      }
+
+      // Meta-executor wrapping (e.g. execute_tool({ tool: "task_complete", parameters: {...} }))
+      if (tc.arguments) {
+        try {
+          const args = JSON.parse(tc.arguments) as Record<string, unknown>;
+          if (args.tool === "task_complete") {
+            const params =
+              (args.parameters as Record<string, unknown> | undefined) ?? {};
+            return {
+              called: true,
+              summary:
+                typeof params.summary === "string" ? params.summary : undefined,
+            };
           }
+        } catch {
+          // Not JSON — skip
         }
       }
     }
-    return undefined;
+
+    return { called: false };
+  }
+
+  /**
+   * Scan a list of messages for a task_complete invocation. Returns the first
+   * match found across all tool calls in all messages. Convenience wrapper
+   * over `detectTaskComplete` for the streamAgent loop, which works with
+   * `intermediateMessages` rather than a single tool-call list.
+   */
+  private detectTaskCompleteInMessages(
+    messages: Types.ConversationMessageInput[],
+  ): { called: boolean; summary?: string } {
+    for (const msg of messages) {
+      const result = this.detectTaskComplete(msg.toolCalls);
+      if (result.called) return result;
+    }
+    return { called: false };
   }
 
   /**
