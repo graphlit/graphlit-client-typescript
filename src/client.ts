@@ -10705,7 +10705,24 @@ class Graphlit {
       // Add assistant message with tool calls to conversation. This is done
       // before terminal task_complete detection so the outer runAgent loop can
       // still observe the completion signal in intermediateMessages.
-      const roundToolCalls = toolCalls.map(normalizeToolCallForExecution);
+      const taskCompleteRound = this.detectTaskComplete(toolCalls);
+      const taskCompleteFallbackMessage = taskCompleteRound
+        ? this.extractTaskCompleteFinalMessage(toolCalls)
+        : undefined;
+
+      if (!roundMessage.trim() && taskCompleteFallbackMessage) {
+        roundMessage = taskCompleteFallbackMessage;
+        fullMessage = taskCompleteFallbackMessage;
+        finalAssistantMessage = taskCompleteFallbackMessage.trim();
+      }
+
+      const roundToolCalls = toolCalls
+        .map(normalizeToolCallForExecution)
+        .map((toolCall) =>
+          taskCompleteRound
+            ? this.sanitizeTaskCompleteFinalMessage(toolCall)
+            : toolCall,
+        );
 
       const assistantMessage: Types.ConversationMessage = {
         __typename: "ConversationMessage" as const,
@@ -10745,7 +10762,7 @@ class Graphlit {
       // task_complete is terminal. Do not invoke its handler and feed an ack
       // back to the model; that extra round can produce trailing filler which
       // overwrites finalAssistantMessage.
-      if (this.detectTaskComplete(roundToolCalls)) {
+      if (taskCompleteRound) {
         const terminalAt = nowIsoString();
         for (const toolCall of roundToolCalls) {
           if (this.isTaskCompleteToolCall(toolCall)) {
@@ -12110,6 +12127,133 @@ class Graphlit {
     }
 
     return false;
+  }
+
+  private parseTaskCompleteArguments(
+    toolCall:
+      | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+      | null
+      | undefined,
+  ):
+    | {
+        direct: true;
+        args: Record<string, unknown>;
+      }
+    | {
+        direct: false;
+        args: Record<string, unknown>;
+        parameters: Record<string, unknown>;
+      }
+    | undefined {
+    if (!toolCall) return undefined;
+
+    let args: Record<string, unknown> = {};
+    if (toolCall.arguments) {
+      try {
+        const parsed = JSON.parse(toolCall.arguments) as unknown;
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          args = parsed as Record<string, unknown>;
+        }
+      } catch {
+        // Leave malformed JSON alone; task_complete itself may be direct.
+      }
+    }
+
+    if (toolCall.name === "task_complete") {
+      return { direct: true, args };
+    }
+
+    if (args.tool !== "task_complete") return undefined;
+
+    const rawParameters = args.parameters;
+    const parameters =
+      rawParameters &&
+      typeof rawParameters === "object" &&
+      !Array.isArray(rawParameters)
+        ? (rawParameters as Record<string, unknown>)
+        : {};
+
+    return { direct: false, args, parameters };
+  }
+
+  private extractTaskCompleteFinalMessage(
+    toolCalls:
+      | ReadonlyArray<
+          | {
+              name?: string | null;
+              arguments?: string | null;
+            }
+          | null
+          | undefined
+        >
+      | null
+      | undefined,
+  ): string | undefined {
+    if (!toolCalls) return undefined;
+
+    for (const toolCall of toolCalls) {
+      const taskCompleteArgs = this.parseTaskCompleteArguments(toolCall);
+      if (!taskCompleteArgs) continue;
+
+      const finalMessage = taskCompleteArgs.direct
+        ? taskCompleteArgs.args.final_message
+        : taskCompleteArgs.parameters.final_message;
+
+      if (typeof finalMessage === "string" && finalMessage.trim()) {
+        return finalMessage.trim();
+      }
+    }
+
+    return undefined;
+  }
+
+  private sanitizeTaskCompleteFinalMessage(
+    toolCall: Types.ConversationToolCall,
+  ): Types.ConversationToolCall {
+    const taskCompleteArgs = this.parseTaskCompleteArguments(toolCall);
+    if (!taskCompleteArgs) return toolCall;
+
+    if (taskCompleteArgs.direct) {
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          taskCompleteArgs.args,
+          "final_message",
+        )
+      ) {
+        return toolCall;
+      }
+
+      const sanitizedArgs = { ...taskCompleteArgs.args };
+      delete sanitizedArgs.final_message;
+
+      return {
+        ...toolCall,
+        arguments: JSON.stringify(sanitizedArgs),
+      };
+    }
+
+    if (
+      !Object.prototype.hasOwnProperty.call(
+        taskCompleteArgs.parameters,
+        "final_message",
+      )
+    ) {
+      return toolCall;
+    }
+
+    const sanitizedParameters = { ...taskCompleteArgs.parameters };
+    delete sanitizedParameters.final_message;
+
+    return {
+      ...toolCall,
+      arguments: JSON.stringify({
+        ...taskCompleteArgs.args,
+        parameters: sanitizedParameters,
+      }),
+    };
   }
 
   /**

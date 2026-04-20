@@ -231,4 +231,113 @@ describe("Task Complete Finalization", () => {
       uiAdapter.dispose();
     }
   });
+
+  it("executeStreamingLoop preserves legacy final_message from wrapped task_complete without executing it", async () => {
+    const client = new Graphlit({ token: "test-token" });
+    client.setOpenAIClient({});
+
+    const uiAdapter = new UIEventAdapter(() => {}, "conv-1");
+    const executeToolHandler = vi
+      .fn()
+      .mockResolvedValue("Task completion acknowledged.");
+    const streamWithOpenAISpy = vi
+      .spyOn(client as any, "streamWithOpenAI")
+      .mockImplementation(
+        async (
+          _specification: Types.Specification,
+          _messages: unknown,
+          _tools: Types.ToolDefinitionInput[] | undefined,
+          _uiAdapter: UIEventAdapter,
+          onComplete: (
+            message: string,
+            toolCalls: Types.ConversationToolCall[],
+          ) => void,
+        ) => {
+          onComplete("", [
+            {
+              __typename: "ConversationToolCall",
+              id: "toolu_1",
+              name: "execute_tool",
+              arguments: JSON.stringify({
+                tool: "task_complete",
+                parameters: {
+                  final_message: "Legacy answer from stale prompt.",
+                },
+              }),
+            },
+          ]);
+        },
+      );
+
+    try {
+      const result = await (client as any).executeStreamingLoop({
+        conversationId: "conv-1",
+        specification: TEST_SPEC,
+        messages: [
+          {
+            __typename: "ConversationMessage",
+            role: Types.ConversationRoleTypes.User,
+            message: "Finish the task",
+            timestamp: new Date().toISOString(),
+          },
+        ],
+        tools: [
+          {
+            name: "execute_tool",
+            description: "Execute one underlying tool.",
+            schema: JSON.stringify({
+              type: "object",
+              properties: {
+                tool: { type: "string" },
+                parameters: { type: "object" },
+              },
+            }),
+          },
+        ],
+        toolHandlers: {
+          execute_tool: executeToolHandler,
+        },
+        uiAdapter,
+        budgetTracker: undefined,
+        contextStrategy: {
+          toolResultTokenLimit: 8192,
+          toolRoundLimit: 10,
+          rebudgetThreshold: 0.75,
+        },
+        maxRounds: 4,
+        abortSignal: undefined,
+      });
+
+      expect(streamWithOpenAISpy).toHaveBeenCalledTimes(1);
+      expect(executeToolHandler).not.toHaveBeenCalled();
+      expect(result.finalAssistantMessage).toBe(
+        "Legacy answer from stale prompt.",
+      );
+      expect(result.fullMessage).toBe("Legacy answer from stale prompt.");
+      expect(result.toolCallNames).toEqual(["execute_tool"]);
+      expect(result.intermediateMessages).toHaveLength(1);
+      expect(result.intermediateMessages[0].message).toBe(
+        "Legacy answer from stale prompt.",
+      );
+
+      const persistedToolCall = result.intermediateMessages[0].toolCalls?.[0];
+      expect(persistedToolCall?.name).toBe("execute_tool");
+      expect(persistedToolCall?.status).toBe(
+        Types.ToolExecutionStatus.Completed,
+      );
+
+      const persistedArguments = JSON.parse(
+        persistedToolCall?.arguments ?? "{}",
+      ) as {
+        tool?: string;
+        parameters?: {
+          final_message?: string;
+        };
+      };
+      expect(persistedArguments.tool).toBe("task_complete");
+      expect(persistedArguments.parameters?.final_message).toBeUndefined();
+    } finally {
+      uiAdapter.dispose();
+    }
+  });
 });
