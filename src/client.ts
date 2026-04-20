@@ -11285,23 +11285,34 @@ class Graphlit {
 
       // Build tools list with task_complete prepended.
       //
-      // task_complete is a bare completion signal — it takes no arguments.
-      // The agent's user-facing answer MUST be in its final assistant message
-      // (the `fullMessage` / `finalAssistantMessage` on the turn result); this
-      // tool only marks the run as done.
+      // task_complete's optional `final_message` parameter is the explicit
+      // commitment of the agent's user-facing answer. When provided, it
+      // becomes the persisted assistant message for that turn AND the run's
+      // `finalMessage`, overriding any prose the model wrote around the call.
       //
-      // Earlier versions had a `summary` field. That consistently caused the
-      // model to stuff its answer into the tool argument and then write a
-      // useless prose message ("answer delivered above") — the user would see
-      // the empty prose, not the answer. Removing the field eliminates the
-      // hiding place.
+      // An earlier version used a `summary` field. The name encouraged
+      // truncated summarization — the model would stuff a short summary into
+      // the arg and emit useless prose like "answer delivered above". The
+      // field name `final_message` and description below are explicit: this
+      // IS the full answer, not a summary, and it replaces surrounding prose.
+      //
+      // If the model omits `final_message`, the SDK falls back to the last
+      // turn whose assistant text was substantive AND did not itself call
+      // task_complete — so a throwaway completion turn can't overwrite the
+      // real answer in a prior turn.
       const taskCompleteTool: Types.ToolDefinitionInput = {
         name: "task_complete",
         description:
-          "Signal that you have completed the assigned task. Your full answer must already be in your assistant message BEFORE calling this — that prose is what the user sees. This tool takes no arguments; it only ends the run.",
+          "Signal that you have completed the assigned task. Provide your complete, final user-facing answer as `final_message` — full prose, not a summary. That string becomes the assistant message the user sees; do not also emit the answer as plain text around this call. Calling this tool ends the run.",
         schema: JSON.stringify({
           type: "object",
-          properties: {},
+          properties: {
+            final_message: {
+              type: "string",
+              description:
+                "Your complete, final answer to the user as full prose. Replaces any assistant text written around this tool call.",
+            },
+          },
         }),
       };
 
@@ -11643,9 +11654,42 @@ class Graphlit {
           uiAdapter.dispose();
         }
 
-        // 8. Complete conversation (persist turn)
-        const trimmedMessage = loopResult.finalAssistantMessage;
-        if (trimmedMessage) {
+        // 8. Detect task_complete and extract its optional `final_message`
+        // arg BEFORE persistence. When provided, it replaces the turn's
+        // assistant prose as the canonical answer — see the task_complete
+        // tool schema above.
+        const taskCompleteThisTurn = this.detectTaskCompleteInMessages(
+          loopResult.intermediateMessages,
+        );
+        const taskCompleteFinalMessage = taskCompleteThisTurn
+          ? this.extractTaskCompleteFinalMessageFromMessages(
+              loopResult.intermediateMessages,
+            )
+          : undefined;
+
+        // Resolve the assistant message to persist for this turn:
+        //   - task_complete({final_message}) → final_message (authoritative)
+        //   - task_complete() with no arg, prior substantive answer exists →
+        //     drop the turn's prose so throwaway text like "delivered above"
+        //     doesn't pollute chat history
+        //   - task_complete() with no arg, no prior answer → keep the prose
+        //     (single-shot completion case)
+        //   - normal turn → keep the prose
+        let assistantMessageToPersist: string;
+        if (taskCompleteThisTurn) {
+          if (taskCompleteFinalMessage) {
+            assistantMessageToPersist = taskCompleteFinalMessage;
+          } else if (finalMessage) {
+            assistantMessageToPersist = "";
+          } else {
+            assistantMessageToPersist = loopResult.finalAssistantMessage;
+          }
+        } else {
+          assistantMessageToPersist = loopResult.finalAssistantMessage;
+        }
+
+        // 8b. Complete conversation (persist turn)
+        if (assistantMessageToPersist) {
           const completionTime = uiAdapter.getCompletionTime();
           const ttft = uiAdapter.getTTFT();
           const throughput = uiAdapter.getThroughput();
@@ -11665,7 +11709,7 @@ class Graphlit {
           if (loopResult.lastRoundReasoning) {
             const completionInput: Types.ConversationMessageInput = {
               role: Types.ConversationRoleTypes.Assistant,
-              message: trimmedMessage,
+              message: assistantMessageToPersist,
               timestamp: new Date().toISOString(),
               thinkingContent: loopResult.lastRoundReasoning.content,
             };
@@ -11680,7 +11724,7 @@ class Graphlit {
           }
 
           await this.completeConversation(
-            trimmedMessage,
+            assistantMessageToPersist,
             conversationId,
             millisecondsToTimeSpan(completionTime),
             millisecondsToTimeSpan(ttft),
@@ -11699,15 +11743,12 @@ class Graphlit {
 
         // 9. Build TurnResult
         const turnDuration = Date.now() - turnStart;
-        const taskCompleteThisTurn = this.detectTaskCompleteInMessages(
-          loopResult.intermediateMessages,
-        );
         const turnToolNames = [...new Set(loopResult.toolCallNames)].sort();
 
         const turnResult: TurnResult = {
           turnNumber: turn,
           prompt: currentPrompt,
-          responseText: loopResult.fullMessage,
+          responseText: taskCompleteFinalMessage || loopResult.fullMessage,
           toolCalls: turnToolNames,
           toolCallCount: loopResult.toolCallCount,
           durationMs: turnDuration,
@@ -11725,7 +11766,23 @@ class Graphlit {
         lastTurnUsage = undefined;
         turnResults.push(turnResult);
         totalToolCalls += loopResult.toolCallCount;
-        finalMessage = loopResult.finalAssistantMessage || loopResult.fullMessage;
+        // Update finalMessage with priority:
+        //   - task_complete({final_message}) → authoritative
+        //   - task_complete() without arg → keep prior finalMessage (avoids
+        //     throwaway completion-turn prose overwriting a real answer)
+        //   - normal turn → this turn's assistant text
+        if (taskCompleteThisTurn) {
+          if (taskCompleteFinalMessage) {
+            finalMessage = taskCompleteFinalMessage;
+          } else if (!finalMessage) {
+            // No prior answer — this turn's prose is all we have
+            finalMessage =
+              loopResult.finalAssistantMessage || loopResult.fullMessage;
+          }
+        } else {
+          finalMessage =
+            loopResult.finalAssistantMessage || loopResult.fullMessage;
+        }
         lastContextWindow = loopResult.contextWindow;
 
         // 10. Notify callback
@@ -12037,6 +12094,71 @@ class Graphlit {
       if (this.detectTaskComplete(msg.toolCalls)) return true;
     }
     return false;
+  }
+
+  /**
+   * Extract the `final_message` argument from a task_complete invocation
+   * within a list of tool calls. Handles both direct invocation and
+   * meta-executor wrapping (mirrors `detectTaskComplete`).
+   *
+   * Returns undefined if task_complete was not called, the arg is missing,
+   * or the arg is not a non-empty string.
+   */
+  private extractTaskCompleteFinalMessage(
+    toolCalls:
+      | ReadonlyArray<
+        | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+        | null
+        | undefined
+      >
+      | null
+      | undefined,
+  ): string | undefined {
+    if (!toolCalls) return undefined;
+
+    for (const tc of toolCalls) {
+      if (!tc?.arguments) continue;
+
+      let args: Record<string, unknown>;
+      try {
+        args = JSON.parse(tc.arguments) as Record<string, unknown>;
+      } catch {
+        continue;
+      }
+
+      // Direct invocation: args ARE the task_complete params
+      if (tc.name === "task_complete") {
+        const fm = args.final_message;
+        if (typeof fm === "string" && fm.trim().length > 0) return fm;
+        continue;
+      }
+
+      // Meta-executor wrapping: { tool: "task_complete", parameters: {...} }
+      if (args.tool === "task_complete") {
+        const params = args.parameters as Record<string, unknown> | undefined;
+        const fm = params?.final_message;
+        if (typeof fm === "string" && fm.trim().length > 0) return fm;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Scan a list of messages for a task_complete invocation's `final_message`
+   * arg. Convenience wrapper over `extractTaskCompleteFinalMessage`.
+   */
+  private extractTaskCompleteFinalMessageFromMessages(
+    messages: Types.ConversationMessageInput[],
+  ): string | undefined {
+    for (const msg of messages) {
+      const fm = this.extractTaskCompleteFinalMessage(msg.toolCalls);
+      if (fm) return fm;
+    }
+    return undefined;
   }
 
   /**
