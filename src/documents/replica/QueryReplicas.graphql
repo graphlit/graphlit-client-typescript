@@ -167,6 +167,7 @@ query QueryReplicas($filter: ReplicaFilter, $correlationId: String) {
             clientId
             clientSecret
             refreshToken
+            accessToken
             redirectUri
             metadata
           }

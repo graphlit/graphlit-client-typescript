@@ -168,6 +168,7 @@ query GetReplica($id: ID!, $correlationId: String) {
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }

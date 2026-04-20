@@ -1899,6 +1899,7 @@ export const GetConnector = gql`
         clientId
         clientSecret
         refreshToken
+        accessToken
         redirectUri
         metadata
       }
@@ -1999,6 +2000,7 @@ export const QueryConnectors = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -10892,6 +10894,17 @@ export const GetFeed = gql`
       identifiers
       type
     }
+    evernote {
+      readLimit
+      type
+      connector {
+        id
+      }
+      query
+      tagGuids
+      includeResources
+      includeInactive
+    }
     confluence {
       readLimit
       authenticationType
@@ -11983,6 +11996,17 @@ export const QueryFeeds = gql`
         }
         identifiers
         type
+      }
+      evernote {
+        readLimit
+        type
+        connector {
+          id
+        }
+        query
+        tagGuids
+        includeResources
+        includeInactive
       }
       confluence {
         readLimit
@@ -18002,6 +18026,7 @@ export const CreateReplica = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -18305,6 +18330,7 @@ export const GetReplica = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -18563,6 +18589,7 @@ export const QueryReplicas = gql`
             clientId
             clientSecret
             refreshToken
+            accessToken
             redirectUri
             metadata
           }
@@ -18830,6 +18857,7 @@ export const UpdateReplica = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -19081,6 +19109,7 @@ export const UpsertReplica = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -20625,6 +20654,7 @@ export const GetUser = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -20754,6 +20784,7 @@ export const GetUserByIdentifier = gql`
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
@@ -20884,6 +20915,7 @@ export const QueryUsers = gql`
             clientId
             clientSecret
             refreshToken
+            accessToken
             redirectUri
             metadata
           }

@@ -160,6 +160,7 @@ mutation UpdateReplica($replica: ReplicaUpdateInput!) {
           clientId
           clientSecret
           refreshToken
+          accessToken
           redirectUri
           metadata
         }
