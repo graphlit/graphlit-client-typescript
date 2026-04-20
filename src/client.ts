@@ -10759,24 +10759,6 @@ class Graphlit {
         budgetTracker.addMessage("", assistantTokens);
       }
 
-      // task_complete is terminal. Do not invoke its handler and feed an ack
-      // back to the model; that extra round can produce trailing filler which
-      // overwrites finalAssistantMessage.
-      if (taskCompleteRound) {
-        const terminalAt = nowIsoString();
-        for (const toolCall of roundToolCalls) {
-          if (this.isTaskCompleteToolCall(toolCall)) {
-            toolCall.startedAt = toolCall.startedAt ?? terminalAt;
-            toolCall.completedAt = toolCall.completedAt ?? terminalAt;
-            toolCall.durationMs = toolCall.durationMs ?? 0;
-            toolCall.firstStatusAt =
-              toolCall.firstStatusAt ?? toolCall.startedAt;
-            toolCall.status = Types.ToolExecutionStatus.Completed;
-          }
-        }
-        break;
-      }
-
       // Execute tools and prepare for next round
       if (toolHandlers) {
         type StreamingToolExecutionResult = {
@@ -11164,6 +11146,13 @@ class Graphlit {
                 message != null,
             );
         }
+      }
+
+      // task_complete is terminal, but it still needs a tool result persisted
+      // immediately after its tool_use for provider history validity. Execute
+      // it normally above, then stop before asking the model for another round.
+      if (taskCompleteRound) {
+        break;
       }
 
       // Emit context window usage after each tool round

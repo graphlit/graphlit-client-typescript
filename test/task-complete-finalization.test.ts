@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
+import { formatMessagesForAnthropic } from "../src/streaming/llm-formatters";
 import { UIEventAdapter } from "../src/streaming/ui-event-adapter";
 import type { StreamingLoopResult } from "../src/types/agent";
 
@@ -142,7 +143,7 @@ describe("Task Complete Finalization", () => {
     expect(result.status).toBe("completed");
   });
 
-  it("executeStreamingLoop stops on task_complete without invoking its handler or starting a filler round", async () => {
+  it("executeStreamingLoop executes task_complete, persists its tool result, and stops before a filler round", async () => {
     const client = new Graphlit({ token: "test-token" });
     client.setOpenAIClient({});
 
@@ -208,13 +209,18 @@ describe("Task Complete Finalization", () => {
       });
 
       expect(streamWithOpenAISpy).toHaveBeenCalledTimes(1);
-      expect(taskCompleteHandler).not.toHaveBeenCalled();
+      expect(taskCompleteHandler).toHaveBeenCalledTimes(1);
+      expect(taskCompleteHandler).toHaveBeenCalledWith(
+        {},
+        expect.any(Object),
+        undefined,
+      );
       expect(result.finalAssistantMessage).toBe(
         "This is the real final answer.",
       );
       expect(result.fullMessage).toBe("This is the real final answer.");
       expect(result.toolCallCount).toBe(1);
-      expect(result.intermediateMessages).toHaveLength(1);
+      expect(result.intermediateMessages).toHaveLength(2);
       expect(result.intermediateMessages[0].role).toBe(
         Types.ConversationRoleTypes.Assistant,
       );
@@ -227,12 +233,35 @@ describe("Task Complete Finalization", () => {
       expect(result.intermediateMessages[0].toolCalls?.[0]?.status).toBe(
         Types.ToolExecutionStatus.Completed,
       );
+      expect(result.intermediateMessages[1].role).toBe(
+        Types.ConversationRoleTypes.Tool,
+      );
+      expect(result.intermediateMessages[1].toolCallId).toBe("toolu_1");
+      expect(result.intermediateMessages[1].message).toBe(
+        "Task completion acknowledged.",
+      );
+
+      const anthropicMessages = formatMessagesForAnthropic(
+        result.intermediateMessages as Types.ConversationMessage[],
+      ).messages;
+      expect(anthropicMessages[0].role).toBe("assistant");
+      expect(
+        Array.isArray(anthropicMessages[0].content)
+          ? anthropicMessages[0].content.map((part) => part.type)
+          : [],
+      ).toContain("tool_use");
+      expect(anthropicMessages[1].role).toBe("user");
+      expect(
+        Array.isArray(anthropicMessages[1].content)
+          ? anthropicMessages[1].content[0]?.type
+          : undefined,
+      ).toBe("tool_result");
     } finally {
       uiAdapter.dispose();
     }
   });
 
-  it("executeStreamingLoop preserves legacy final_message from wrapped task_complete without executing it", async () => {
+  it("executeStreamingLoop preserves legacy final_message from wrapped task_complete while still persisting a tool result", async () => {
     const client = new Graphlit({ token: "test-token" });
     client.setOpenAIClient({});
 
@@ -309,13 +338,21 @@ describe("Task Complete Finalization", () => {
       });
 
       expect(streamWithOpenAISpy).toHaveBeenCalledTimes(1);
-      expect(executeToolHandler).not.toHaveBeenCalled();
+      expect(executeToolHandler).toHaveBeenCalledTimes(1);
+      expect(executeToolHandler).toHaveBeenCalledWith(
+        {
+          tool: "task_complete",
+          parameters: {},
+        },
+        expect.any(Object),
+        undefined,
+      );
       expect(result.finalAssistantMessage).toBe(
         "Legacy answer from stale prompt.",
       );
       expect(result.fullMessage).toBe("Legacy answer from stale prompt.");
       expect(result.toolCallNames).toEqual(["execute_tool"]);
-      expect(result.intermediateMessages).toHaveLength(1);
+      expect(result.intermediateMessages).toHaveLength(2);
       expect(result.intermediateMessages[0].message).toBe(
         "Legacy answer from stale prompt.",
       );
@@ -336,6 +373,13 @@ describe("Task Complete Finalization", () => {
       };
       expect(persistedArguments.tool).toBe("task_complete");
       expect(persistedArguments.parameters?.final_message).toBeUndefined();
+      expect(result.intermediateMessages[1].role).toBe(
+        Types.ConversationRoleTypes.Tool,
+      );
+      expect(result.intermediateMessages[1].toolCallId).toBe("toolu_1");
+      expect(result.intermediateMessages[1].message).toBe(
+        "Task completion acknowledged.",
+      );
     } finally {
       uiAdapter.dispose();
     }
