@@ -11701,9 +11701,17 @@ class Graphlit {
             return `PT${ms / 1000}S`;
           };
 
+          // Sanitize task_complete's final_message arg before persistence —
+          // the content is already saved as the turn's assistant text, so
+          // keeping it in the tool-call arguments would double-store it.
+          // The tool call record itself stays as a completion marker.
+          const sanitizedIntermediates = taskCompleteThisTurn
+            ? this.sanitizeTaskCompletePayload(loopResult.intermediateMessages)
+            : loopResult.intermediateMessages;
+
           let turnMessageInputs: Types.ConversationMessageInput[] | undefined =
-            loopResult.intermediateMessages.length > 0
-              ? loopResult.intermediateMessages
+            sanitizedIntermediates.length > 0
+              ? sanitizedIntermediates
               : undefined;
 
           if (loopResult.lastRoundReasoning) {
@@ -12159,6 +12167,63 @@ class Graphlit {
       if (fm) return fm;
     }
     return undefined;
+  }
+
+  /**
+   * Sanitize task_complete's `final_message` payload out of persisted
+   * intermediate messages. The tool call record (name, id, timing, ordering)
+   * is preserved as a completion marker, but its `final_message` arg is
+   * stripped because that content is already stored as the turn's assistant
+   * text via `completion`. Keeping the tool call without the payload yields
+   * the same storage win as full removal while preserving the trace.
+   *
+   * Handles both direct and meta-executor (`execute_tool({tool: ...})`)
+   * invocations, matching `detectTaskComplete`.
+   */
+  private sanitizeTaskCompletePayload(
+    messages: Types.ConversationMessageInput[],
+  ): Types.ConversationMessageInput[] {
+    return messages.map((msg) => {
+      if (!msg.toolCalls || msg.toolCalls.length === 0) return msg;
+
+      let mutated = false;
+      const sanitizedToolCalls = msg.toolCalls.map((tc) => {
+        if (!tc || !tc.arguments) return tc;
+
+        let args: Record<string, unknown>;
+        try {
+          args = JSON.parse(tc.arguments) as Record<string, unknown>;
+        } catch {
+          return tc;
+        }
+
+        // Direct invocation: args ARE the task_complete params
+        if (tc.name === "task_complete" && "final_message" in args) {
+          const { final_message: _dropped, ...rest } = args;
+          void _dropped;
+          mutated = true;
+          return { ...tc, arguments: JSON.stringify(rest) };
+        }
+
+        // Meta-executor wrapping: { tool: "task_complete", parameters: {...} }
+        if (args.tool === "task_complete") {
+          const params = args.parameters as Record<string, unknown> | undefined;
+          if (params && "final_message" in params) {
+            const { final_message: _dropped, ...restParams } = params;
+            void _dropped;
+            mutated = true;
+            return {
+              ...tc,
+              arguments: JSON.stringify({ ...args, parameters: restParams }),
+            };
+          }
+        }
+
+        return tc;
+      });
+
+      return mutated ? { ...msg, toolCalls: sanitizedToolCalls } : msg;
+    });
   }
 
   /**
