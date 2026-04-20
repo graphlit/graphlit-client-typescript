@@ -119,9 +119,7 @@ function nowIsoString(): string {
   return new Date().toISOString();
 }
 
-function toTerminalToolStatus(
-  error?: string,
-): Types.ToolExecutionStatus {
+function toTerminalToolStatus(error?: string): Types.ToolExecutionStatus {
   return error
     ? Types.ToolExecutionStatus.Failed
     : Types.ToolExecutionStatus.Completed;
@@ -550,7 +548,7 @@ class Graphlit {
       if (!isValidGuid(this.organizationId)) {
         throw new Error(
           `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -561,7 +559,7 @@ class Graphlit {
       if (!isValidGuid(this.environmentId)) {
         throw new Error(
           `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -574,7 +572,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -4076,7 +4074,6 @@ class Graphlit {
     >(Documents.QuerySlackUsers, { properties: properties });
   }
 
-
   /**
    * Queries Linear projects.
    * @param properties - The Linear project query properties.
@@ -4629,9 +4626,7 @@ class Graphlit {
    * @param id - The ID of the replica to delete.
    * @returns The deleted replica.
    */
-  public async deleteReplica(
-    id: string,
-  ): Promise<Types.DeleteReplicaMutation> {
+  public async deleteReplica(id: string): Promise<Types.DeleteReplicaMutation> {
     return this.mutateAndCheckError<
       Types.DeleteReplicaMutation,
       Types.DeleteReplicaMutationVariables
@@ -4695,9 +4690,7 @@ class Graphlit {
    * @param id - The ID of the replica to enable.
    * @returns The enabled replica.
    */
-  public async enableReplica(
-    id: string,
-  ): Promise<Types.EnableReplicaMutation> {
+  public async enableReplica(id: string): Promise<Types.EnableReplicaMutation> {
     return this.mutateAndCheckError<
       Types.EnableReplicaMutation,
       Types.EnableReplicaMutationVariables
@@ -4805,8 +4798,10 @@ class Graphlit {
     skill: Types.SkillInput,
     correlationId?: string,
   ): Promise<Types.CreateSkillMutation> {
-    return this.mutateAndCheckError<Types.CreateSkillMutation, Types.CreateSkillMutationVariables>(
-      Documents.CreateSkill, { skill: skill, correlationId: correlationId });
+    return this.mutateAndCheckError<
+      Types.CreateSkillMutation,
+      Types.CreateSkillMutationVariables
+    >(Documents.CreateSkill, { skill: skill, correlationId: correlationId });
   }
 
   /**
@@ -4814,9 +4809,13 @@ class Graphlit {
    * @param skill - The skill to update.
    * @returns The updated skill.
    */
-  public async updateSkill(skill: Types.SkillUpdateInput): Promise<Types.UpdateSkillMutation> {
-    return this.mutateAndCheckError<Types.UpdateSkillMutation, Types.UpdateSkillMutationVariables>(
-      Documents.UpdateSkill, { skill: skill });
+  public async updateSkill(
+    skill: Types.SkillUpdateInput,
+  ): Promise<Types.UpdateSkillMutation> {
+    return this.mutateAndCheckError<
+      Types.UpdateSkillMutation,
+      Types.UpdateSkillMutationVariables
+    >(Documents.UpdateSkill, { skill: skill });
   }
 
   /**
@@ -4824,9 +4823,13 @@ class Graphlit {
    * @param skill - The skill to create or update.
    * @returns The created or updated skill.
    */
-  public async upsertSkill(skill: Types.SkillInput): Promise<Types.UpsertSkillMutation> {
-    return this.mutateAndCheckError<Types.UpsertSkillMutation, Types.UpsertSkillMutationVariables>(
-      Documents.UpsertSkill, { skill: skill });
+  public async upsertSkill(
+    skill: Types.SkillInput,
+  ): Promise<Types.UpsertSkillMutation> {
+    return this.mutateAndCheckError<
+      Types.UpsertSkillMutation,
+      Types.UpsertSkillMutationVariables
+    >(Documents.UpsertSkill, { skill: skill });
   }
 
   /**
@@ -4835,8 +4838,10 @@ class Graphlit {
    * @returns The deleted skill.
    */
   public async deleteSkill(id: string): Promise<Types.DeleteSkillMutation> {
-    return this.mutateAndCheckError<Types.DeleteSkillMutation, Types.DeleteSkillMutationVariables>(
-      Documents.DeleteSkill, { id: id });
+    return this.mutateAndCheckError<
+      Types.DeleteSkillMutation,
+      Types.DeleteSkillMutationVariables
+    >(Documents.DeleteSkill, { id: id });
   }
 
   /**
@@ -4845,9 +4850,14 @@ class Graphlit {
    * @param isSynchronous - Whether this mutation is synchronous.
    * @returns The deleted skills.
    */
-  public async deleteSkills(ids: string[], isSynchronous?: boolean): Promise<Types.DeleteSkillsMutation> {
-    return this.mutateAndCheckError<Types.DeleteSkillsMutation, Types.DeleteSkillsMutationVariables>(
-      Documents.DeleteSkills, { ids: ids, isSynchronous: isSynchronous });
+  public async deleteSkills(
+    ids: string[],
+    isSynchronous?: boolean,
+  ): Promise<Types.DeleteSkillsMutation> {
+    return this.mutateAndCheckError<
+      Types.DeleteSkillsMutation,
+      Types.DeleteSkillsMutationVariables
+    >(Documents.DeleteSkills, { ids: ids, isSynchronous: isSynchronous });
   }
 
   /**
@@ -4858,10 +4868,18 @@ class Graphlit {
    * @returns The result of the deletion.
    */
   public async deleteAllSkills(
-    filter?: Types.SkillFilter, isSynchronous?: boolean, correlationId?: string,
+    filter?: Types.SkillFilter,
+    isSynchronous?: boolean,
+    correlationId?: string,
   ): Promise<Types.DeleteAllSkillsMutation> {
-    return this.mutateAndCheckError<Types.DeleteAllSkillsMutation, Types.DeleteAllSkillsMutationVariables>(
-      Documents.DeleteAllSkills, { filter: filter, isSynchronous: isSynchronous, correlationId: correlationId });
+    return this.mutateAndCheckError<
+      Types.DeleteAllSkillsMutation,
+      Types.DeleteAllSkillsMutationVariables
+    >(Documents.DeleteAllSkills, {
+      filter: filter,
+      isSynchronous: isSynchronous,
+      correlationId: correlationId,
+    });
   }
 
   /**
@@ -4870,8 +4888,10 @@ class Graphlit {
    * @returns The enabled skill.
    */
   public async enableSkill(id: string): Promise<Types.EnableSkillMutation> {
-    return this.mutateAndCheckError<Types.EnableSkillMutation, Types.EnableSkillMutationVariables>(
-      Documents.EnableSkill, { id: id });
+    return this.mutateAndCheckError<
+      Types.EnableSkillMutation,
+      Types.EnableSkillMutationVariables
+    >(Documents.EnableSkill, { id: id });
   }
 
   /**
@@ -4880,8 +4900,10 @@ class Graphlit {
    * @returns The disabled skill.
    */
   public async disableSkill(id: string): Promise<Types.DisableSkillMutation> {
-    return this.mutateAndCheckError<Types.DisableSkillMutation, Types.DisableSkillMutationVariables>(
-      Documents.DisableSkill, { id: id });
+    return this.mutateAndCheckError<
+      Types.DisableSkillMutation,
+      Types.DisableSkillMutationVariables
+    >(Documents.DisableSkill, { id: id });
   }
 
   /**
@@ -4890,9 +4912,14 @@ class Graphlit {
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The skill.
    */
-  public async getSkill(id: string, correlationId?: string): Promise<Types.GetSkillQuery> {
-    return this.queryAndCheckError<Types.GetSkillQuery, Types.GetSkillQueryVariables>(
-      Documents.GetSkill, { id: id, correlationId: correlationId });
+  public async getSkill(
+    id: string,
+    correlationId?: string,
+  ): Promise<Types.GetSkillQuery> {
+    return this.queryAndCheckError<
+      Types.GetSkillQuery,
+      Types.GetSkillQueryVariables
+    >(Documents.GetSkill, { id: id, correlationId: correlationId });
   }
 
   /**
@@ -4901,9 +4928,14 @@ class Graphlit {
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The skills.
    */
-  public async querySkills(filter?: Types.SkillFilter, correlationId?: string): Promise<Types.QuerySkillsQuery> {
-    return this.queryAndCheckError<Types.QuerySkillsQuery, Types.QuerySkillsQueryVariables>(
-      Documents.QuerySkills, { filter: filter, correlationId: correlationId });
+  public async querySkills(
+    filter?: Types.SkillFilter,
+    correlationId?: string,
+  ): Promise<Types.QuerySkillsQuery> {
+    return this.queryAndCheckError<
+      Types.QuerySkillsQuery,
+      Types.QuerySkillsQueryVariables
+    >(Documents.QuerySkills, { filter: filter, correlationId: correlationId });
   }
 
   /**
@@ -4912,9 +4944,14 @@ class Graphlit {
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The count of skills.
    */
-  public async countSkills(filter?: Types.SkillFilter, correlationId?: string): Promise<Types.CountSkillsQuery> {
-    return this.queryAndCheckError<Types.CountSkillsQuery, Types.CountSkillsQueryVariables>(
-      Documents.CountSkills, { filter: filter, correlationId: correlationId });
+  public async countSkills(
+    filter?: Types.SkillFilter,
+    correlationId?: string,
+  ): Promise<Types.CountSkillsQuery> {
+    return this.queryAndCheckError<
+      Types.CountSkillsQuery,
+      Types.CountSkillsQueryVariables
+    >(Documents.CountSkills, { filter: filter, correlationId: correlationId });
   }
 
   /**
@@ -4924,10 +4961,16 @@ class Graphlit {
    * @returns The updated collections.
    */
   public async addSkillsToCollections(
-    skills: Types.EntityReferenceInput[], collections: Types.EntityReferenceInput[],
+    skills: Types.EntityReferenceInput[],
+    collections: Types.EntityReferenceInput[],
   ): Promise<Types.AddSkillsToCollectionsMutation> {
-    return this.mutateAndCheckError<Types.AddSkillsToCollectionsMutation, Types.AddSkillsToCollectionsMutationVariables>(
-      Documents.AddSkillsToCollections, { skills: skills, collections: collections });
+    return this.mutateAndCheckError<
+      Types.AddSkillsToCollectionsMutation,
+      Types.AddSkillsToCollectionsMutationVariables
+    >(Documents.AddSkillsToCollections, {
+      skills: skills,
+      collections: collections,
+    });
   }
 
   /**
@@ -4937,10 +4980,16 @@ class Graphlit {
    * @returns The updated collection.
    */
   public async removeSkillsFromCollection(
-    skills: Types.EntityReferenceInput[], collection: Types.EntityReferenceInput,
+    skills: Types.EntityReferenceInput[],
+    collection: Types.EntityReferenceInput,
   ): Promise<Types.RemoveSkillsFromCollectionMutation> {
-    return this.mutateAndCheckError<Types.RemoveSkillsFromCollectionMutation, Types.RemoveSkillsFromCollectionMutationVariables>(
-      Documents.RemoveSkillsFromCollection, { skills: skills, collection: collection });
+    return this.mutateAndCheckError<
+      Types.RemoveSkillsFromCollectionMutation,
+      Types.RemoveSkillsFromCollectionMutationVariables
+    >(Documents.RemoveSkillsFromCollection, {
+      skills: skills,
+      collection: collection,
+    });
   }
 
   /**
@@ -9257,11 +9306,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-            promptTokens: 0, // We don't have this breakdown from the API
-            completionTokens: totalTokens,
-            totalTokens: totalTokens,
-            model: currentMessage?.model || undefined,
-          }
+              promptTokens: 0, // We don't have this breakdown from the API
+              completionTokens: totalTokens,
+              totalTokens: totalTokens,
+              model: currentMessage?.model || undefined,
+            }
           : undefined;
 
       return {
@@ -9324,7 +9373,7 @@ class Graphlit {
     // permanently block the queue for this conversation.
     // Check the abort signal before starting work so ESC while queued is instant.
     const next = previous
-      .catch(() => { })
+      .catch(() => {})
       .then(() => {
         if (abortSignal?.aborted) throw new Error("Operation aborted");
         return work();
@@ -9383,7 +9432,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = specification?.id
         ? ((await this.getSpecification(specification.id))
-          .specification as Types.Specification)
+            .specification as Types.Specification)
         : undefined;
 
       // Fail fast if a specification was requested but not found
@@ -9488,9 +9537,13 @@ class Graphlit {
             }
 
             // Emit tool events if there were tool calls
-            if (promptResult.toolResults && promptResult.toolResults.length > 0) {
+            if (
+              promptResult.toolResults &&
+              promptResult.toolResults.length > 0
+            ) {
               for (const toolResult of promptResult.toolResults) {
-                const toolCall = buildConversationToolCallFromResult(toolResult);
+                const toolCall =
+                  buildConversationToolCallFromResult(toolResult);
                 onEvent({
                   type: "tool_update",
                   toolCall,
@@ -9589,8 +9642,7 @@ class Graphlit {
           error instanceof Error ? error.message : "Streaming failed";
         // ProviderError.retryable means the error is transient (5xx, network)
         // even though our built-in retries were exhausted, the caller may retry.
-        const recoverable =
-          error instanceof ProviderError && error.retryable;
+        const recoverable = error instanceof ProviderError && error.retryable;
 
         if (uiAdapter) {
           uiAdapter.emitError(errorMessage, recoverable);
@@ -9914,10 +9966,7 @@ class Graphlit {
           completionInput.thinkingSignature =
             loopResult.lastRoundReasoning.signature;
         }
-        finalMessageInputs = [
-          ...(finalMessageInputs || []),
-          completionInput,
-        ];
+        finalMessageInputs = [...(finalMessageInputs || []), completionInput];
       }
 
       const completeResponse = await this.completeConversation(
@@ -9963,7 +10012,11 @@ class Graphlit {
       toolHandlers,
       uiAdapter,
       budgetTracker,
-      contextStrategy: { toolResultTokenLimit, toolRoundLimit, rebudgetThreshold },
+      contextStrategy: {
+        toolResultTokenLimit,
+        toolRoundLimit,
+        rebudgetThreshold,
+      },
       maxRounds,
       abortSignal,
       useResponsesApi,
@@ -10011,9 +10064,9 @@ class Graphlit {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
         `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
-        `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
-        `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
-        `rebudgetThreshold=${rebudgetThreshold}`,
+          `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
+          `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
+          `rebudgetThreshold=${rebudgetThreshold}`,
       );
     }
 
@@ -10060,7 +10113,7 @@ class Graphlit {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `📊 [Context Management] Windowed tool rounds: dropped ${droppedRounds} round(s), ` +
-                `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
+                  `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
               );
             }
           }
@@ -10096,7 +10149,9 @@ class Graphlit {
             console.log(
               `\n🔀 [Streaming Decision] Service: ${serviceType}, Round: ${currentRound}${providerAttempt > 0 ? `, Retry: ${providerAttempt}` : ""}`,
             );
-            console.log(`   OpenAI available: ${!!(OpenAI || this.openaiClient)}`);
+            console.log(
+              `   OpenAI available: ${!!(OpenAI || this.openaiClient)}`,
+            );
             console.log(
               `   Anthropic available: ${!!(Anthropic || this.anthropicClient)}`,
             );
@@ -10118,7 +10173,8 @@ class Graphlit {
               if (!openAIResponsesState) {
                 openAIResponsesState = {
                   instructions: extractInstructionsForOpenAIResponses(messages),
-                  initialInput: formatMessagesForOpenAIResponsesInitialRound(messages),
+                  initialInput:
+                    formatMessagesForOpenAIResponsesInitialRound(messages),
                   continuationItems: [],
                 };
               }
@@ -10137,7 +10193,7 @@ class Graphlit {
                 uiAdapter,
                 abortSignal,
                 openAIResponsesState,
-                (currentRound === 0 && tools?.length) ? "required" : undefined,
+                currentRound === 0 && tools?.length ? "required" : undefined,
               );
               roundMessage = responsesResult.message;
               toolCalls = responsesResult.toolCalls;
@@ -10327,7 +10383,9 @@ class Graphlit {
               );
             }
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING_MESSAGES) {
-              console.log(`🔍 [Cohere] Sending ${messages.length} messages to LLM`);
+              console.log(
+                `🔍 [Cohere] Sending ${messages.length} messages to LLM`,
+              );
             }
             await this.streamWithCohere(
               specification,
@@ -10362,7 +10420,15 @@ class Graphlit {
 
             // ALWAYS log when there's a tool-related issue for debugging
             const hasToolCalls = mistralMessages.some(
-              (m) => "tool_calls" in m && Array.isArray((m as unknown as Record<string, unknown>).tool_calls) && ((m as unknown as Record<string, unknown>).tool_calls as unknown[]).length > 0,
+              (m) =>
+                "tool_calls" in m &&
+                Array.isArray(
+                  (m as unknown as Record<string, unknown>).tool_calls,
+                ) &&
+                (
+                  (m as unknown as Record<string, unknown>)
+                    .tool_calls as unknown[]
+                ).length > 0,
             );
             const hasToolResponses = mistralMessages.some(
               (m) => m.role === "tool",
@@ -10386,7 +10452,8 @@ class Graphlit {
               // Count tool calls and responses
               const toolCallCount = mistralMessages.reduce(
                 (count: number, m) => {
-                  const calls = (m as unknown as Record<string, unknown>).tool_calls;
+                  const calls = (m as unknown as Record<string, unknown>)
+                    .tool_calls;
                   return count + (Array.isArray(calls) ? calls.length : 0);
                 },
                 0,
@@ -10544,8 +10611,12 @@ class Graphlit {
               console.log(
                 `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`,
               );
-              console.log(`   Falling back to non-streaming promptConversation`);
-              console.log(`   This should NOT happen if clients are properly set!`);
+              console.log(
+                `   Falling back to non-streaming promptConversation`,
+              );
+              console.log(
+                `   This should NOT happen if clients are properly set!`,
+              );
             }
             await this.fallbackToNonStreaming(
               config.messages[config.messages.length - 1]?.message || "",
@@ -10573,17 +10644,13 @@ class Graphlit {
 
           const isRetryable =
             retryError instanceof ProviderError && retryError.retryable;
-          if (
-            !isRetryable ||
-            providerAttempt >= DEFAULT_PROVIDER_RETRIES
-          ) {
+          if (!isRetryable || providerAttempt >= DEFAULT_PROVIDER_RETRIES) {
             throw retryError;
           }
 
           // Exponential backoff with jitter
           const delay = Math.min(
-            PROVIDER_RETRY_BASE_DELAY_MS *
-            Math.pow(2, providerAttempt),
+            PROVIDER_RETRY_BASE_DELAY_MS * Math.pow(2, providerAttempt),
             PROVIDER_RETRY_MAX_DELAY_MS,
           );
           const jitter = Math.random() * delay * 0.1;
@@ -10598,9 +10665,7 @@ class Graphlit {
           // Reset adapter to pre-round state so partial tokens are cleared
           uiAdapter.resetForRetry(preRoundMessage);
 
-          await new Promise((resolve) =>
-            setTimeout(resolve, totalDelay),
-          );
+          await new Promise((resolve) => setTimeout(resolve, totalDelay));
         }
       } // end retry for-loop
 
@@ -10626,57 +10691,77 @@ class Graphlit {
         break;
       }
 
-      // Execute tools and prepare for next round
-      if (toolHandlers && toolCalls.length > 0) {
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+      if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `\n🔧 [executeStreamingLoop] Round ${currentRound}: Processing ${toolCalls.length} tool calls`,
+        );
+        toolCalls.forEach((tc, idx) => {
           console.log(
-            `\n🔧 [executeStreamingLoop] Round ${currentRound}: Processing ${toolCalls.length} tool calls`,
+            `  ${idx + 1}. ${tc.name} (${tc.id}) - Args length: ${tc.arguments.length}`,
           );
-          toolCalls.forEach((tc, idx) => {
-            console.log(
-              `  ${idx + 1}. ${tc.name} (${tc.id}) - Args length: ${tc.arguments.length}`,
-            );
-          });
+        });
+      }
+
+      // Add assistant message with tool calls to conversation. This is done
+      // before terminal task_complete detection so the outer runAgent loop can
+      // still observe the completion signal in intermediateMessages.
+      const roundToolCalls = toolCalls.map(normalizeToolCallForExecution);
+
+      const assistantMessage: Types.ConversationMessage = {
+        __typename: "ConversationMessage" as const,
+        role: Types.ConversationRoleTypes.Assistant,
+        message: roundMessage,
+        toolCalls: roundToolCalls,
+        timestamp: new Date().toISOString(),
+      };
+
+      if (roundReasoning) {
+        assistantMessage.thinkingContent = roundReasoning.content;
+        if (roundReasoning.signature) {
+          assistantMessage.thinkingSignature = roundReasoning.signature;
         }
+        reasoningByMessageIndex.set(messages.length, roundReasoning);
+      }
 
-        // Add assistant message with tool calls to conversation
-        const roundToolCalls = toolCalls.map(normalizeToolCallForExecution);
+      messages.push(assistantMessage);
 
-        const assistantMessage: Types.ConversationMessage = {
-          __typename: "ConversationMessage" as const,
-          role: Types.ConversationRoleTypes.Assistant,
-          message: roundMessage,
-          toolCalls: roundToolCalls,
-          timestamp: new Date().toISOString(),
-        };
+      // Track tool names for stuck detection
+      for (const tc of roundToolCalls) {
+        toolCallNames.push(tc.name);
+      }
+      totalToolCallCount += roundToolCalls.length;
 
-        if (roundReasoning) {
-          assistantMessage.thinkingContent = roundReasoning.content;
-          if (roundReasoning.signature) {
-            assistantMessage.thinkingSignature = roundReasoning.signature;
+      // Track assistant message in budget
+      if (budgetTracker) {
+        const assistantTokens =
+          estimateTokens(roundMessage) +
+          roundToolCalls.reduce(
+            (sum, tc) => sum + estimateTokens(tc.arguments),
+            0,
+          );
+        budgetTracker.addMessage("", assistantTokens);
+      }
+
+      // task_complete is terminal. Do not invoke its handler and feed an ack
+      // back to the model; that extra round can produce trailing filler which
+      // overwrites finalAssistantMessage.
+      if (this.detectTaskComplete(roundToolCalls)) {
+        const terminalAt = nowIsoString();
+        for (const toolCall of roundToolCalls) {
+          if (this.isTaskCompleteToolCall(toolCall)) {
+            toolCall.startedAt = toolCall.startedAt ?? terminalAt;
+            toolCall.completedAt = toolCall.completedAt ?? terminalAt;
+            toolCall.durationMs = toolCall.durationMs ?? 0;
+            toolCall.firstStatusAt =
+              toolCall.firstStatusAt ?? toolCall.startedAt;
+            toolCall.status = Types.ToolExecutionStatus.Completed;
           }
-          reasoningByMessageIndex.set(messages.length, roundReasoning);
         }
+        break;
+      }
 
-        messages.push(assistantMessage);
-
-        // Track tool names for stuck detection
-        for (const tc of roundToolCalls) {
-          toolCallNames.push(tc.name);
-        }
-        totalToolCallCount += roundToolCalls.length;
-
-        // Track assistant message in budget
-        if (budgetTracker) {
-          const assistantTokens =
-            estimateTokens(roundMessage) +
-            roundToolCalls.reduce(
-              (sum, tc) => sum + estimateTokens(tc.arguments),
-              0,
-            );
-          budgetTracker.addMessage("", assistantTokens);
-        }
-
+      // Execute tools and prepare for next round
+      if (toolHandlers) {
         type StreamingToolExecutionResult = {
           index: number;
           toolMessage: Types.ConversationMessage;
@@ -10705,7 +10790,8 @@ class Graphlit {
             toolCall.completedAt = terminalAt;
             toolCall.durationMs = 0;
             toolCall.failedAt = terminalAt;
-            toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+            toolCall.firstStatusAt =
+              toolCall.firstStatusAt ?? toolCall.startedAt;
             toolCall.status = Types.ToolExecutionStatus.Failed;
 
             uiAdapter.handleEvent({
@@ -10805,9 +10891,7 @@ class Graphlit {
                       `Successfully fixed truncated JSON for ${toolCall.name}`,
                     );
                   } catch (fixError) {
-                    console.error(
-                      `Failed to fix truncated JSON: ${fixError}`,
-                    );
+                    console.error(`Failed to fix truncated JSON: ${fixError}`);
                   }
                 }
               }
@@ -10833,7 +10917,8 @@ class Graphlit {
                 toolCall.completedAt = terminalAt;
                 toolCall.durationMs = 0;
                 toolCall.failedAt = terminalAt;
-                toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+                toolCall.firstStatusAt =
+                  toolCall.firstStatusAt ?? toolCall.startedAt;
                 toolCall.status = Types.ToolExecutionStatus.Failed;
 
                 uiAdapter.handleEvent({
@@ -10872,7 +10957,8 @@ class Graphlit {
             const executionStartMs = Date.now();
             const executionStartedAt = new Date(executionStartMs).toISOString();
             toolCall.startedAt = executionStartedAt;
-            toolCall.firstStatusAt = toolCall.firstStatusAt ?? executionStartedAt;
+            toolCall.firstStatusAt =
+              toolCall.firstStatusAt ?? executionStartedAt;
 
             uiAdapter.handleEvent({
               type: "tool_call_executing",
@@ -10926,7 +11012,7 @@ class Graphlit {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-                  `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
                 );
               }
             }
@@ -10957,10 +11043,11 @@ class Graphlit {
             toolCall.durationMs = Math.max(
               0,
               new Date(completedAt).getTime() -
-              new Date(toolCall.startedAt).getTime(),
+                new Date(toolCall.startedAt).getTime(),
             );
             toolCall.failedAt = completedAt;
-            toolCall.firstStatusAt = toolCall.firstStatusAt ?? toolCall.startedAt;
+            toolCall.firstStatusAt =
+              toolCall.firstStatusAt ?? toolCall.startedAt;
             toolCall.status = Types.ToolExecutionStatus.Failed;
 
             uiAdapter.handleEvent({
@@ -11056,10 +11143,10 @@ class Graphlit {
           openAIResponsesPendingToolMessages = toolExecutionResults
             .map((executionResult) => executionResult?.toolMessage)
             .filter(
-              (message): message is Types.ConversationMessage => message != null,
+              (message): message is Types.ConversationMessage =>
+                message != null,
             );
         }
-
       }
 
       // Emit context window usage after each tool round
@@ -11085,9 +11172,7 @@ class Graphlit {
         if (msg.toolCallId) input.toolCallId = msg.toolCallId;
         if (msg.toolCalls) {
           input.toolCalls = msg.toolCalls
-            .filter(
-              (tc): tc is Types.ConversationToolCall => tc !== null,
-            )
+            .filter((tc): tc is Types.ConversationToolCall => tc !== null)
             .map((tc) => ({
               id: tc.id,
               name: tc.name,
@@ -11170,7 +11255,12 @@ class Graphlit {
     let resolvedAgentId = agentId ?? "";
 
     // Accumulate token usage across all turns from conversation_completed events
-    let accumulatedUsage: { promptTokens: number; completionTokens: number; totalTokens: number; model?: string } = {
+    let accumulatedUsage: {
+      promptTokens: number;
+      completionTokens: number;
+      totalTokens: number;
+      model?: string;
+    } = {
       promptTokens: 0,
       completionTokens: 0,
       totalTokens: 0,
@@ -11179,7 +11269,7 @@ class Graphlit {
 
     // Wrap onEvent to capture per-turn usage from conversation_completed events
     const wrappedOnEvent = (event: AgentStreamEvent) => {
-      if (event.type === 'conversation_completed' && event.usage) {
+      if (event.type === "conversation_completed" && event.usage) {
         const u = event.usage;
         lastTurnUsage = {
           promptTokens: u.promptTokens || 0,
@@ -11208,7 +11298,8 @@ class Graphlit {
           turnResults,
           totalToolCalls,
           wallClockMs: Date.now() - runStart,
-          usage: accumulatedUsage.totalTokens > 0 ? accumulatedUsage : undefined,
+          usage:
+            accumulatedUsage.totalTokens > 0 ? accumulatedUsage : undefined,
         });
       }
 
@@ -11218,7 +11309,10 @@ class Graphlit {
       let agentScratchpad: string | undefined;
 
       if (agentId) {
-        const agentResponse = await this.getAgent(agentId, options?.correlationId);
+        const agentResponse = await this.getAgent(
+          agentId,
+          options?.correlationId,
+        );
         const agent = agentResponse.agent;
         if (!agent) {
           throw new Error(`Agent not found: ${agentId}`);
@@ -11256,7 +11350,8 @@ class Graphlit {
 
       // Get full specification for streaming support check and complexity classification
       const fullSpec = agentSpec?.id
-        ? ((await this.getSpecification(agentSpec.id)).specification as Types.Specification)
+        ? ((await this.getSpecification(agentSpec.id))
+            .specification as Types.Specification)
         : undefined;
 
       // Initialize evaluator and stuck detector
@@ -11275,8 +11370,17 @@ class Graphlit {
         const { multiplier } = await evaluator.classifyComplexity(
           prompt,
           (classPrompt, text, classTools) =>
-            this.extractText(classPrompt, text, classTools, undefined, undefined, options?.correlationId)
-              .then((r) => r.extractText as Array<Types.ExtractCompletion | null> | null),
+            this.extractText(
+              classPrompt,
+              text,
+              classTools,
+              undefined,
+              undefined,
+              options?.correlationId,
+            ).then(
+              (r) =>
+                r.extractText as Array<Types.ExtractCompletion | null> | null,
+            ),
         );
         if (multiplier > 1.0) {
           evaluator.adjustBudget(multiplier);
@@ -11285,34 +11389,30 @@ class Graphlit {
 
       // Build tools list with task_complete prepended.
       //
-      // task_complete's optional `final_message` parameter is the explicit
-      // commitment of the agent's user-facing answer. When provided, it
-      // becomes the persisted assistant message for that turn AND the run's
-      // `finalMessage`, overriding any prose the model wrote around the call.
+      // task_complete is a bare completion signal — it takes no arguments.
+      // The agent's user-facing answer MUST be in its final assistant message
+      // (the `fullMessage` / `finalAssistantMessage` on the turn result); this
+      // tool only marks the run as done.
       //
-      // An earlier version used a `summary` field. The name encouraged
-      // truncated summarization — the model would stuff a short summary into
-      // the arg and emit useless prose like "answer delivered above". The
-      // field name `final_message` and description below are explicit: this
-      // IS the full answer, not a summary, and it replaces surrounding prose.
+      // The streaming loop treats task_complete as TERMINAL: when a round's
+      // tool calls include task_complete, the loop breaks immediately without
+      // invoking the handler or starting another round. That prevents the
+      // model from emitting trailing filler ("delivered above", "see the
+      // response") after the tool-call ack, which would otherwise overwrite
+      // the real answer in `finalAssistantMessage`.
       //
-      // If the model omits `final_message`, the SDK falls back to the last
-      // turn whose assistant text was substantive AND did not itself call
-      // task_complete — so a throwaway completion turn can't overwrite the
-      // real answer in a prior turn.
+      // Earlier versions had a `summary` field. That consistently caused the
+      // model to stuff its answer into the tool argument and then write a
+      // useless prose message ("answer delivered above") — the user would see
+      // the empty prose, not the answer. Removing the field eliminates the
+      // hiding place.
       const taskCompleteTool: Types.ToolDefinitionInput = {
         name: "task_complete",
         description:
-          "Signal that you have completed the assigned task. Provide your complete, final user-facing answer as `final_message` — full prose, not a summary. That string becomes the assistant message the user sees; do not also emit the answer as plain text around this call. Calling this tool ends the run.",
+          "Signal that you have completed the assigned task. Your full answer must already be in your assistant message BEFORE calling this — that prose is what the user sees. This tool takes no arguments; it only ends the run.",
         schema: JSON.stringify({
           type: "object",
-          properties: {
-            final_message: {
-              type: "string",
-              description:
-                "Your complete, final answer to the user as full prose. Replaces any assistant text written around this tool call.",
-            },
-          },
+          properties: {},
         }),
       };
 
@@ -11377,11 +11477,7 @@ class Graphlit {
       let cachedTokenLimit: number | undefined;
       let cachedCompletionTokenLimit: number | undefined;
 
-      for (
-        let turn = 0;
-        turn < evaluator.adjustedMaxTurns;
-        turn++
-      ) {
+      for (let turn = 0; turn < evaluator.adjustedMaxTurns; turn++) {
         // 1. Check abort
         if (abortSignal?.aborted) {
           status = "cancelled";
@@ -11399,9 +11495,10 @@ class Graphlit {
         const turnsRemaining = evaluator.adjustedMaxTurns - turn;
         const contextWindowPercent = lastContextWindow?.percentage;
         const turnsUsed = turn;
-        const turnsUsedPercent = evaluator.adjustedMaxTurns > 0
-          ? turnsUsed / evaluator.adjustedMaxTurns
-          : 0;
+        const turnsUsedPercent =
+          evaluator.adjustedMaxTurns > 0
+            ? turnsUsed / evaluator.adjustedMaxTurns
+            : 0;
         const needsSummarization =
           contextWindowPercent !== undefined &&
           contextWindowPercent > 70 &&
@@ -11427,9 +11524,10 @@ class Graphlit {
         pendingStuckIntervention = undefined;
 
         // Merge caller-provided instructions with harness instructions
-        const mergedInstructions = [options?.instructions, turnInstructions]
-          .filter(Boolean)
-          .join("\n\n") || undefined;
+        const mergedInstructions =
+          [options?.instructions, turnInstructions]
+            .filter(Boolean)
+            .join("\n\n") || undefined;
 
         // 4. Budget warning callback
         if (options?.onBudgetWarning && turnsRemaining <= windDownTurns * 2) {
@@ -11540,8 +11638,7 @@ class Graphlit {
                   messageToAdd.toolCallResponse =
                     historyMessage.toolCallResponse;
                 if (historyMessage.thinkingContent)
-                  messageToAdd.thinkingContent =
-                    historyMessage.thinkingContent;
+                  messageToAdd.thinkingContent = historyMessage.thinkingContent;
                 if (historyMessage.thinkingSignature)
                   messageToAdd.thinkingSignature =
                     historyMessage.thinkingSignature;
@@ -11553,8 +11650,7 @@ class Graphlit {
               __typename: "ConversationMessage" as const,
               role: formattedMessage.role || Types.ConversationRoleTypes.User,
               message: formattedMessage.message,
-              timestamp:
-                formattedMessage.timestamp || new Date().toISOString(),
+              timestamp: formattedMessage.timestamp || new Date().toISOString(),
             });
           }
 
@@ -11654,42 +11750,16 @@ class Graphlit {
           uiAdapter.dispose();
         }
 
-        // 8. Detect task_complete and extract its optional `final_message`
-        // arg BEFORE persistence. When provided, it replaces the turn's
-        // assistant prose as the canonical answer — see the task_complete
-        // tool schema above.
+        // 8. Detect task_complete before persistence. The streaming loop
+        // records the terminal assistant/tool-call round, but does not execute
+        // the completion handler or start a follow-up filler round.
         const taskCompleteThisTurn = this.detectTaskCompleteInMessages(
           loopResult.intermediateMessages,
         );
-        const taskCompleteFinalMessage = taskCompleteThisTurn
-          ? this.extractTaskCompleteFinalMessageFromMessages(
-              loopResult.intermediateMessages,
-            )
-          : undefined;
-
-        // Resolve the assistant message to persist for this turn:
-        //   - task_complete({final_message}) → final_message (authoritative)
-        //   - task_complete() with no arg, prior substantive answer exists →
-        //     drop the turn's prose so throwaway text like "delivered above"
-        //     doesn't pollute chat history
-        //   - task_complete() with no arg, no prior answer → keep the prose
-        //     (single-shot completion case)
-        //   - normal turn → keep the prose
-        let assistantMessageToPersist: string;
-        if (taskCompleteThisTurn) {
-          if (taskCompleteFinalMessage) {
-            assistantMessageToPersist = taskCompleteFinalMessage;
-          } else if (finalMessage) {
-            assistantMessageToPersist = "";
-          } else {
-            assistantMessageToPersist = loopResult.finalAssistantMessage;
-          }
-        } else {
-          assistantMessageToPersist = loopResult.finalAssistantMessage;
-        }
+        const trimmedMessage = loopResult.finalAssistantMessage;
 
         // 8b. Complete conversation (persist turn)
-        if (assistantMessageToPersist) {
+        if (trimmedMessage) {
           const completionTime = uiAdapter.getCompletionTime();
           const ttft = uiAdapter.getTTFT();
           const throughput = uiAdapter.getThroughput();
@@ -11701,23 +11771,15 @@ class Graphlit {
             return `PT${ms / 1000}S`;
           };
 
-          // Sanitize task_complete's final_message arg before persistence —
-          // the content is already saved as the turn's assistant text, so
-          // keeping it in the tool-call arguments would double-store it.
-          // The tool call record itself stays as a completion marker.
-          const sanitizedIntermediates = taskCompleteThisTurn
-            ? this.sanitizeTaskCompletePayload(loopResult.intermediateMessages)
-            : loopResult.intermediateMessages;
-
           let turnMessageInputs: Types.ConversationMessageInput[] | undefined =
-            sanitizedIntermediates.length > 0
-              ? sanitizedIntermediates
+            loopResult.intermediateMessages.length > 0
+              ? loopResult.intermediateMessages
               : undefined;
 
           if (loopResult.lastRoundReasoning) {
             const completionInput: Types.ConversationMessageInput = {
               role: Types.ConversationRoleTypes.Assistant,
-              message: assistantMessageToPersist,
+              message: trimmedMessage,
               timestamp: new Date().toISOString(),
               thinkingContent: loopResult.lastRoundReasoning.content,
             };
@@ -11725,14 +11787,11 @@ class Graphlit {
               completionInput.thinkingSignature =
                 loopResult.lastRoundReasoning.signature;
             }
-            turnMessageInputs = [
-              ...(turnMessageInputs || []),
-              completionInput,
-            ];
+            turnMessageInputs = [...(turnMessageInputs || []), completionInput];
           }
 
           await this.completeConversation(
-            assistantMessageToPersist,
+            trimmedMessage,
             conversationId,
             millisecondsToTimeSpan(completionTime),
             millisecondsToTimeSpan(ttft),
@@ -11756,7 +11815,7 @@ class Graphlit {
         const turnResult: TurnResult = {
           turnNumber: turn,
           prompt: currentPrompt,
-          responseText: taskCompleteFinalMessage || loopResult.fullMessage,
+          responseText: loopResult.fullMessage,
           toolCalls: turnToolNames,
           toolCallCount: loopResult.toolCallCount,
           durationMs: turnDuration,
@@ -11766,31 +11825,15 @@ class Graphlit {
             loopResult.contextActions.length > 0
               ? loopResult.contextActions
               : undefined,
-          errors:
-            loopResult.errors.length > 0 ? loopResult.errors : undefined,
+          errors: loopResult.errors.length > 0 ? loopResult.errors : undefined,
           usage: lastTurnUsage,
         };
         // Reset per-turn usage for next turn
         lastTurnUsage = undefined;
         turnResults.push(turnResult);
         totalToolCalls += loopResult.toolCallCount;
-        // Update finalMessage with priority:
-        //   - task_complete({final_message}) → authoritative
-        //   - task_complete() without arg → keep prior finalMessage (avoids
-        //     throwaway completion-turn prose overwriting a real answer)
-        //   - normal turn → this turn's assistant text
-        if (taskCompleteThisTurn) {
-          if (taskCompleteFinalMessage) {
-            finalMessage = taskCompleteFinalMessage;
-          } else if (!finalMessage) {
-            // No prior answer — this turn's prose is all we have
-            finalMessage =
-              loopResult.finalAssistantMessage || loopResult.fullMessage;
-          }
-        } else {
-          finalMessage =
-            loopResult.finalAssistantMessage || loopResult.fullMessage;
-        }
+        finalMessage =
+          loopResult.finalAssistantMessage || loopResult.fullMessage;
         lastContextWindow = loopResult.contextWindow;
 
         // 10. Notify callback
@@ -11907,8 +11950,7 @@ class Graphlit {
         status = "cancelled";
       } else {
         status = "error";
-        errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
+        errorMessage = error instanceof Error ? error.message : "Unknown error";
       }
 
       return this.buildRunAgentResult({
@@ -12040,6 +12082,37 @@ class Graphlit {
   }
 
   /**
+   * Detect whether one tool call is a task_complete invocation, either
+   * directly or through a meta-executor such as execute_tool.
+   */
+  private isTaskCompleteToolCall(
+    toolCall:
+      | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+      | null
+      | undefined,
+  ): boolean {
+    if (!toolCall) return false;
+
+    // Direct invocation
+    if (toolCall.name === "task_complete") return true;
+
+    // Meta-executor wrapping (e.g. execute_tool({ tool: "task_complete", parameters: {...} }))
+    if (toolCall.arguments) {
+      try {
+        const args = JSON.parse(toolCall.arguments) as Record<string, unknown>;
+        return args.tool === "task_complete";
+      } catch {
+        // Not JSON — skip
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Detect whether task_complete was invoked in a single list of tool calls.
    *
    * Recognizes two invocation shapes:
@@ -12058,33 +12131,20 @@ class Graphlit {
   private detectTaskComplete(
     toolCalls:
       | ReadonlyArray<
-        | {
-          name?: string | null;
-          arguments?: string | null;
-        }
-        | null
-        | undefined
-      >
+          | {
+              name?: string | null;
+              arguments?: string | null;
+            }
+          | null
+          | undefined
+        >
       | null
       | undefined,
   ): boolean {
     if (!toolCalls) return false;
 
     for (const tc of toolCalls) {
-      if (!tc) continue;
-
-      // Direct invocation
-      if (tc.name === "task_complete") return true;
-
-      // Meta-executor wrapping (e.g. execute_tool({ tool: "task_complete", parameters: {...} }))
-      if (tc.arguments) {
-        try {
-          const args = JSON.parse(tc.arguments) as Record<string, unknown>;
-          if (args.tool === "task_complete") return true;
-        } catch {
-          // Not JSON — skip
-        }
-      }
+      if (this.isTaskCompleteToolCall(tc)) return true;
     }
 
     return false;
@@ -12102,128 +12162,6 @@ class Graphlit {
       if (this.detectTaskComplete(msg.toolCalls)) return true;
     }
     return false;
-  }
-
-  /**
-   * Extract the `final_message` argument from a task_complete invocation
-   * within a list of tool calls. Handles both direct invocation and
-   * meta-executor wrapping (mirrors `detectTaskComplete`).
-   *
-   * Returns undefined if task_complete was not called, the arg is missing,
-   * or the arg is not a non-empty string.
-   */
-  private extractTaskCompleteFinalMessage(
-    toolCalls:
-      | ReadonlyArray<
-        | {
-          name?: string | null;
-          arguments?: string | null;
-        }
-        | null
-        | undefined
-      >
-      | null
-      | undefined,
-  ): string | undefined {
-    if (!toolCalls) return undefined;
-
-    for (const tc of toolCalls) {
-      if (!tc?.arguments) continue;
-
-      let args: Record<string, unknown>;
-      try {
-        args = JSON.parse(tc.arguments) as Record<string, unknown>;
-      } catch {
-        continue;
-      }
-
-      // Direct invocation: args ARE the task_complete params
-      if (tc.name === "task_complete") {
-        const fm = args.final_message;
-        if (typeof fm === "string" && fm.trim().length > 0) return fm;
-        continue;
-      }
-
-      // Meta-executor wrapping: { tool: "task_complete", parameters: {...} }
-      if (args.tool === "task_complete") {
-        const params = args.parameters as Record<string, unknown> | undefined;
-        const fm = params?.final_message;
-        if (typeof fm === "string" && fm.trim().length > 0) return fm;
-      }
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Scan a list of messages for a task_complete invocation's `final_message`
-   * arg. Convenience wrapper over `extractTaskCompleteFinalMessage`.
-   */
-  private extractTaskCompleteFinalMessageFromMessages(
-    messages: Types.ConversationMessageInput[],
-  ): string | undefined {
-    for (const msg of messages) {
-      const fm = this.extractTaskCompleteFinalMessage(msg.toolCalls);
-      if (fm) return fm;
-    }
-    return undefined;
-  }
-
-  /**
-   * Sanitize task_complete's `final_message` payload out of persisted
-   * intermediate messages. The tool call record (name, id, timing, ordering)
-   * is preserved as a completion marker, but its `final_message` arg is
-   * stripped because that content is already stored as the turn's assistant
-   * text via `completion`. Keeping the tool call without the payload yields
-   * the same storage win as full removal while preserving the trace.
-   *
-   * Handles both direct and meta-executor (`execute_tool({tool: ...})`)
-   * invocations, matching `detectTaskComplete`.
-   */
-  private sanitizeTaskCompletePayload(
-    messages: Types.ConversationMessageInput[],
-  ): Types.ConversationMessageInput[] {
-    return messages.map((msg) => {
-      if (!msg.toolCalls || msg.toolCalls.length === 0) return msg;
-
-      let mutated = false;
-      const sanitizedToolCalls = msg.toolCalls.map((tc) => {
-        if (!tc || !tc.arguments) return tc;
-
-        let args: Record<string, unknown>;
-        try {
-          args = JSON.parse(tc.arguments) as Record<string, unknown>;
-        } catch {
-          return tc;
-        }
-
-        // Direct invocation: args ARE the task_complete params
-        if (tc.name === "task_complete" && "final_message" in args) {
-          const { final_message: _dropped, ...rest } = args;
-          void _dropped;
-          mutated = true;
-          return { ...tc, arguments: JSON.stringify(rest) };
-        }
-
-        // Meta-executor wrapping: { tool: "task_complete", parameters: {...} }
-        if (args.tool === "task_complete") {
-          const params = args.parameters as Record<string, unknown> | undefined;
-          if (params && "final_message" in params) {
-            const { final_message: _dropped, ...restParams } = params;
-            void _dropped;
-            mutated = true;
-            return {
-              ...tc,
-              arguments: JSON.stringify({ ...args, parameters: restParams }),
-            };
-          }
-        }
-
-        return tc;
-      });
-
-      return mutated ? { ...msg, toolCalls: sanitizedToolCalls } : msg;
-    });
   }
 
   /**
@@ -12539,13 +12477,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000,
-        })
+            apiKey: process.env.OPENAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000,
+          })
         : (() => {
-          throw new Error("OpenAI module not available");
-        })());
+            throw new Error("OpenAI module not available");
+          })());
 
     const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
     const toolDefinitions: OpenAIResponsesToolDefinition[] | undefined =
@@ -12557,7 +12495,8 @@ class Graphlit {
       continuationItems: [],
     };
 
-    const functionCallOutputs = buildResponsesFunctionCallOutputItems(toolMessages);
+    const functionCallOutputs =
+      buildResponsesFunctionCallOutputItems(toolMessages);
 
     const input: OpenAIResponsesInputItem[] = [
       ...baseState.initialInput,
@@ -12620,13 +12559,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.OPENAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("OpenAI module not available");
-        })());
+            throw new Error("OpenAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -12682,13 +12621,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-          apiKey: process.env.ANTHROPIC_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.ANTHROPIC_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Anthropic module not available");
-        })());
+            throw new Error("Anthropic module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -12793,8 +12732,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-          throw new Error("Google GenerativeAI module not available");
-        })());
+            throw new Error("Google GenerativeAI module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -12854,8 +12793,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-          throw new Error("Groq module not available");
-        })());
+            throw new Error("Groq module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -12900,13 +12839,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-          apiKey: process.env.CEREBRAS_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            apiKey: process.env.CEREBRAS_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : (() => {
-          throw new Error("Cerebras module not available");
-        })());
+            throw new Error("Cerebras module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -12954,8 +12893,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-            throw new Error("Cohere module not available");
-          })());
+              throw new Error("Cohere module not available");
+            })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13000,29 +12939,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-          const apiKey = process.env.MISTRAL_API_KEY;
-          if (!apiKey) {
-            throw new Error(
-              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-            );
-          }
-          return new Mistral({
-            apiKey,
-            retryConfig: {
-              strategy: "backoff",
-              backoff: {
-                initialInterval: 1000,
-                maxInterval: 60000,
-                exponent: 2,
-                maxElapsedTime: 300000, // 5 minutes
+            const apiKey = process.env.MISTRAL_API_KEY;
+            if (!apiKey) {
+              throw new Error(
+                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+              );
+            }
+            return new Mistral({
+              apiKey,
+              retryConfig: {
+                strategy: "backoff",
+                backoff: {
+                  initialInterval: 1000,
+                  maxInterval: 60000,
+                  exponent: 2,
+                  maxElapsedTime: 300000, // 5 minutes
+                },
+                retryConnectionErrors: true,
               },
-              retryConnectionErrors: true,
-            },
-          });
-        })()
+            });
+          })()
         : (() => {
-          throw new Error("Mistral module not available");
-        })());
+            throw new Error("Mistral module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13068,11 +13007,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-          region: process.env.AWS_REGION || "us-east-2",
-        })
+            region: process.env.AWS_REGION || "us-east-2",
+          })
         : (() => {
-          throw new Error("Bedrock module not available");
-        })());
+            throw new Error("Bedrock module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13118,11 +13057,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.deepseek.com",
-          apiKey: process.env.DEEPSEEK_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.deepseek.com",
+            apiKey: process.env.DEEPSEEK_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!deepseekClient) {
@@ -13169,11 +13108,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-          baseURL: "https://api.x.ai/v1",
-          apiKey: process.env.XAI_API_KEY || "",
-          maxRetries: 3,
-          timeout: 60000, // 60 seconds
-        })
+            baseURL: "https://api.x.ai/v1",
+            apiKey: process.env.XAI_API_KEY || "",
+            maxRetries: 3,
+            timeout: 60000, // 60 seconds
+          })
         : null);
 
     if (!xaiClient) {
@@ -13224,7 +13163,9 @@ class Graphlit {
           throw new Error(`No handler found for tool: ${toolCall.name}`);
         }
 
-        parsedArguments = toolCall.arguments ? JSON.parse(toolCall.arguments) : {};
+        parsedArguments = toolCall.arguments
+          ? JSON.parse(toolCall.arguments)
+          : {};
 
         // Add timeout for individual tool calls (30 seconds)
         const toolTimeout = new Promise((_, reject) =>
@@ -13274,7 +13215,7 @@ class Graphlit {
       ) {
         console.log(
           `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-          `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
+            `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
         );
       }
 
