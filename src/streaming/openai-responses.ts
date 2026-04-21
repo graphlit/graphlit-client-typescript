@@ -15,6 +15,7 @@ import type {
   OpenAIResponsesInputItem,
   OpenAIResponsesToolDefinition,
 } from "./llm-formatters.js";
+import { createHash } from "node:crypto";
 
 export interface OpenAIResponsesRoundResult {
   message: string;
@@ -44,6 +45,10 @@ function toToolCallId(
   outputIndex: number,
 ): string {
   return item.call_id || item.id || `fc_${Date.now()}_${outputIndex}`;
+}
+
+function shortHash(value: string): string {
+  return createHash("sha256").update(value).digest("hex").slice(0, 16);
 }
 
 export async function streamWithOpenAIResponses(
@@ -146,6 +151,16 @@ export async function streamWithOpenAIResponses(
 
     if (instructions?.trim()) {
       request.instructions = instructions.trim();
+    }
+
+    if (specification.id) {
+      request.prompt_cache_key = `spec:${specification.id}:${shortHash(
+        JSON.stringify({
+          instructions: request.instructions,
+          tools,
+          model: modelName,
+        }),
+      )}`;
     }
 
     // GPT-5.4+: temperature/top_p are only supported with reasoning effort "none".

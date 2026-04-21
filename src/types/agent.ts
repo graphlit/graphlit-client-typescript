@@ -121,6 +121,8 @@ export interface StreamAgentOptions {
   scratchpad?: string;
   /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
   skills?: EntityReferenceInput[];
+  /** Stable, caller-supplied system-channel content to append after the specification system prompt. */
+  additionalSystemInstructions?: string;
 }
 
 // Tool call result
@@ -146,6 +148,14 @@ export interface UsageInfo {
   totalTokens: number;
   cost?: number;
   model?: string;
+  /** Provider-reported cached input tokens, when available. */
+  cachedInputTokens?: number;
+  /** Anthropic cache-write tokens, when available. */
+  cacheCreationInputTokens?: number;
+  /** Anthropic cache-read tokens, when available. */
+  cacheReadInputTokens?: number;
+  /** Provider-specific usage details. */
+  metadata?: Record<string, unknown>;
 }
 
 // Agent error
@@ -251,6 +261,8 @@ export interface RunAgentOptions {
 
   /** Skill references to inject into the agent's context window. Retrieved via querySkills, passed by reference. */
   skills?: EntityReferenceInput[];
+  /** Stable, caller-supplied system-channel content to append after the specification system prompt. */
+  additionalSystemInstructions?: string;
 }
 
 /** Quality assessment scores from LLM-as-judge post-run evaluation. */
@@ -309,6 +321,7 @@ export interface StreamingLoopConfig {
   persona?: EntityReferenceInput;
   mimeType?: string;
   data?: string;
+  additionalSystemInstructions?: string;
 }
 
 /** Result returned from executeStreamingLoop. */

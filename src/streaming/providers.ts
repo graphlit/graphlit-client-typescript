@@ -9,6 +9,7 @@ import * as Types from "../generated/graphql-types.js";
 import {
   OpenAIMessage,
   AnthropicMessage,
+  AnthropicSystemBlock,
   GoogleMessage,
   CohereMessage,
   MistralMessage,
@@ -24,6 +25,7 @@ import {
   extractRequestId,
 } from "../types/internal.js";
 import { ReasoningMetadata } from "../types/ui-events.js";
+import { createHash } from "node:crypto";
 
 // Import Cohere SDK types for proper typing
 import type { Cohere } from "cohere-ai";
@@ -111,6 +113,68 @@ function cleanSchemaForGoogle(schema: any): any {
   return cleaned;
 }
 
+export interface GooglePromptCache {
+  entries: Map<string, string>;
+  maxEntries?: number;
+}
+
+function shortHash(value: string): string {
+  return createHash("sha256").update(value).digest("hex").slice(0, 16);
+}
+
+function stablePromptCacheKey(
+  specification: Specification,
+  stablePrefix: unknown,
+): string | undefined {
+  if (specification.serviceType !== Types.ModelServiceTypes.OpenAi) {
+    return undefined;
+  }
+
+  const specId = specification.id;
+  if (!specId) {
+    return undefined;
+  }
+
+  return `spec:${specId}:${shortHash(JSON.stringify(stablePrefix ?? ""))}`;
+}
+
+function trimGooglePromptCache(cache: GooglePromptCache): void {
+  const maxEntries = cache.maxEntries ?? 100;
+  while (cache.entries.size > maxEntries) {
+    const oldestKey = cache.entries.keys().next().value;
+    if (!oldestKey) {
+      break;
+    }
+    cache.entries.delete(oldestKey);
+  }
+}
+
+function isGoogleCachedContentNotFound(error: unknown): boolean {
+  const candidate = error as {
+    status?: number;
+    statusCode?: number;
+    code?: number | string;
+    message?: string;
+  };
+  const status = candidate?.status ?? candidate?.statusCode ?? candidate?.code;
+  return (
+    status === 404 ||
+    status === "404" ||
+    /cached content.*not found|not found.*cached content/i.test(
+      candidate?.message || "",
+    )
+  );
+}
+
+function getGoogleSystemInstructionParts(
+  systemPrompt: string | string[] | undefined,
+): string[] {
+  const prompts = Array.isArray(systemPrompt) ? systemPrompt : [systemPrompt];
+  return prompts
+    .map((prompt) => prompt?.trim() || "")
+    .filter((prompt) => prompt.length > 0);
+}
+
 /**
  * Stream with OpenAI SDK
  */
@@ -186,6 +250,17 @@ export async function streamWithOpenAI(
       temperature: specification.openAI?.temperature,
       //top_p: specification.openAI?.probability,
     };
+
+    const promptCacheKey = stablePromptCacheKey(specification, {
+      system: messages
+        .filter((message) => message.role === "system")
+        .map((message) => message.content),
+      tools,
+      model: modelName,
+    });
+    if (promptCacheKey) {
+      streamConfig.prompt_cache_key = promptCacheKey;
+    }
 
     // Only add max_completion_tokens if it's defined
     if (specification.openAI?.completionTokenLimit) {
@@ -595,7 +670,7 @@ type AnthropicClient = import("@anthropic-ai/sdk").default;
 export async function streamWithAnthropic(
   specification: Specification,
   messages: AnthropicMessage[],
-  systemPrompt: string | undefined,
+  systemPrompt: AnthropicSystemBlock[] | undefined,
   tools: ToolDefinitionInput[] | undefined,
   anthropicClient: AnthropicClient, // Properly typed Anthropic client
   onEvent: (event: StreamEvent) => void,
@@ -695,7 +770,7 @@ export async function streamWithAnthropic(
       }
     }
 
-    if (systemPrompt) {
+    if (systemPrompt?.length) {
       streamConfig.system = systemPrompt;
     }
 
@@ -706,6 +781,10 @@ export async function streamWithAnthropic(
         description: tool.description,
         input_schema: tool.schema ? JSON.parse(tool.schema) : {},
       }));
+      streamConfig.tools[streamConfig.tools.length - 1] = {
+        ...streamConfig.tools[streamConfig.tools.length - 1],
+        cache_control: { type: "ephemeral" },
+      };
     }
 
     // Check if this is a 1M context model (beta flag, same underlying model ID)
@@ -1347,9 +1426,10 @@ export async function streamWithAnthropic(
 export async function streamWithGoogle(
   specification: Specification,
   messages: GoogleMessage[],
-  systemPrompt: string | undefined,
+  systemPrompt: string | string[] | undefined,
   tools: ToolDefinitionInput[] | undefined,
   googleClient: any, // Google GenerativeAI client instance
+  promptCache: GooglePromptCache | undefined,
   onEvent: (event: StreamEvent) => void,
   onComplete: (
     message: string,
@@ -1519,17 +1599,93 @@ export async function streamWithGoogle(
       ...generationConfig,
     };
 
-    // Add tools to config if provided
-    if (googleTools) {
+    const systemInstructionParts = getGoogleSystemInstructionParts(systemPrompt);
+
+    const stableCacheKey =
+      promptCache && systemInstructionParts.length > 0
+        ? shortHash(
+            JSON.stringify({
+              model: modelName,
+              systemInstructionParts,
+              tools,
+            }),
+          )
+        : undefined;
+    let cachedContentName = stableCacheKey
+      ? promptCache?.entries.get(stableCacheKey)
+      : undefined;
+
+    if (!cachedContentName && stableCacheKey && promptCache) {
+      try {
+        const created = await googleClient.caches.create({
+          model: modelName,
+          config: {
+            systemInstruction: {
+              parts: systemInstructionParts.map((text) => ({ text })),
+            },
+            ...(googleTools ? { tools: googleTools } : {}),
+            ttl: "300s",
+          },
+        });
+        cachedContentName = created?.name;
+        if (cachedContentName) {
+          promptCache.entries.set(stableCacheKey, cachedContentName);
+          trimGooglePromptCache(promptCache);
+        }
+      } catch (error) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.warn(
+            `[Google] Prompt cache creation failed; continuing uncached:`,
+            error,
+          );
+        }
+      }
+    }
+
+    if (cachedContentName) {
+      config.cachedContent = cachedContentName;
+    } else if (systemInstructionParts.length > 0) {
+      config.systemInstruction = {
+        parts: systemInstructionParts.map((text) => ({ text })),
+      };
+    }
+
+    // Add tools to config if provided and not already attached to cachedContent.
+    if (googleTools && !cachedContentName) {
       config.tools = googleTools;
     }
 
-    // Call generateContentStream with conversation history
-    const streamResponse = await googleClient.models.generateContentStream({
-      model: modelName,
-      contents: contents, // Full conversation history
-      config: config,
-    });
+    const createStreamResponse = () =>
+      googleClient.models.generateContentStream({
+        model: modelName,
+        contents: contents, // Full conversation history
+        config: config,
+      });
+
+    let streamResponse: any;
+    try {
+      streamResponse = await createStreamResponse();
+    } catch (error) {
+      if (
+        cachedContentName &&
+        stableCacheKey &&
+        isGoogleCachedContentNotFound(error)
+      ) {
+        promptCache?.entries.delete(stableCacheKey);
+        delete config.cachedContent;
+        if (systemInstructionParts.length > 0) {
+          config.systemInstruction = {
+            parts: systemInstructionParts.map((text) => ({ text })),
+          };
+        }
+        if (googleTools) {
+          config.tools = googleTools;
+        }
+        streamResponse = await createStreamResponse();
+      } else {
+        throw error;
+      }
+    }
 
     // Track last chunk for usage metadata
     let lastChunk: any = null;
@@ -1887,6 +2043,8 @@ export async function streamWithGoogle(
           prompt_tokens: lastChunk.usageMetadata.promptTokenCount,
           completion_tokens: lastChunk.usageMetadata.candidatesTokenCount,
           total_tokens: lastChunk.usageMetadata.totalTokenCount,
+          cachedContentTokenCount:
+            lastChunk.usageMetadata.cachedContentTokenCount,
         };
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
           console.log(`[Google] Usage data captured:`, usageData);

@@ -113,6 +113,12 @@ export interface AnthropicMessage {
       }>;
 }
 
+export interface AnthropicSystemBlock {
+  type: "text";
+  text: string;
+  cache_control?: { type: "ephemeral" };
+}
+
 /**
  * Google message format
  */
@@ -392,14 +398,20 @@ export function formatMessagesForOpenAI(
 export function extractInstructionsForOpenAIResponses(
   messages: ConversationMessage[],
 ): string | undefined {
-  const systemMessages = messages
-    .filter((message) => message.role === ConversationRoleTypes.System)
-    .map((message) => message.message?.trim() || "")
-    .filter((message) => message.length > 0);
+  const systemMessages = extractSystemInstructionParts(messages);
 
   return systemMessages.length > 0
     ? systemMessages.join("\n\n")
     : undefined;
+}
+
+export function extractSystemInstructionParts(
+  messages: ConversationMessage[],
+): string[] {
+  return messages
+    .filter((message) => message.role === ConversationRoleTypes.System)
+    .map((message) => message.message?.trim() || "")
+    .filter((message) => message.length > 0);
 }
 
 // Remap tool call IDs to Responses API format (must start with 'fc_')
@@ -569,10 +581,10 @@ export function formatToolsForOpenAIResponses(
  * Format GraphQL conversation messages for Anthropic SDK
  */
 export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
-  system?: string;
+  system?: AnthropicSystemBlock[];
   messages: AnthropicMessage[];
 } {
-  let systemPrompt: string | undefined;
+  const systemBlocks: AnthropicSystemBlock[] = [];
   const formattedMessages: AnthropicMessage[] = [];
 
   for (const message of messages) {
@@ -588,7 +600,10 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
 
     switch (message.role) {
       case ConversationRoleTypes.System:
-        systemPrompt = trimmedMessage;
+        systemBlocks.push({
+          type: "text",
+          text: trimmedMessage,
+        });
         break;
 
       case ConversationRoleTypes.Assistant:
@@ -778,7 +793,16 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
     }
   }
 
-  const result = { system: systemPrompt, messages: formattedMessages };
+  if (systemBlocks.length > 0) {
+    systemBlocks[systemBlocks.length - 1].cache_control = {
+      type: "ephemeral",
+    };
+  }
+
+  const result = {
+    system: systemBlocks.length > 0 ? systemBlocks : undefined,
+    messages: formattedMessages,
+  };
   return result;
 }
 
@@ -803,11 +827,8 @@ export function formatMessagesForGoogle(
 
     switch (message.role) {
       case ConversationRoleTypes.System:
-        // Google handles system prompts differently, usually as part of the first user message
-        formattedMessages.push({
-          role: "user",
-          parts: [{ text: trimmedMessage }],
-        });
+        // Google receives system prompts via config.systemInstruction or
+        // CachedContent; don't duplicate them as user-visible content.
         break;
 
       case ConversationRoleTypes.Assistant:

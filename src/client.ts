@@ -66,6 +66,7 @@ import {
   formatMessagesForOpenAI,
   formatMessagesForOpenAIResponsesInitialRound,
   extractInstructionsForOpenAIResponses,
+  extractSystemInstructionParts,
   buildResponsesFunctionCallOutputItems,
   formatToolsForOpenAIResponses,
   formatMessagesForAnthropic,
@@ -76,6 +77,7 @@ import {
   OpenAIResponsesInputItem,
   OpenAIResponsesToolDefinition,
   AnthropicMessage,
+  AnthropicSystemBlock,
   GoogleMessage,
   CohereMessage,
   MistralMessage,
@@ -96,6 +98,7 @@ import {
   streamWithBedrock,
   streamWithDeepseek,
   streamWithXai,
+  GooglePromptCache,
 } from "./streaming/providers.js";
 // Optional imports for streaming LLM clients
 // These are peer dependencies and may not be installed
@@ -170,6 +173,30 @@ function buildConversationToolCallFromResult(
     failedAt: toolResult.failedAt,
     firstStatusAt: toolResult.startedAt,
   };
+}
+
+function appendSystemMessages(
+  messages: Types.ConversationMessage[],
+  systemPrompt?: string | null,
+  additionalSystemInstructions?: string,
+): void {
+  if (systemPrompt?.trim()) {
+    messages.push({
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.System,
+      message: systemPrompt,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  if (additionalSystemInstructions?.trim()) {
+    messages.push({
+      __typename: "ConversationMessage" as const,
+      role: Types.ConversationRoleTypes.System,
+      message: additionalSystemInstructions,
+      timestamp: new Date().toISOString(),
+    });
+  }
 }
 
 function computePersistedToolRoundDurationMs(
@@ -465,6 +492,10 @@ class Graphlit {
   // Serializes streamAgent calls per conversation to prevent race conditions
   // when a user sends a second message before the first response completes.
   private readonly conversationQueues = new Map<string, Promise<void>>();
+  private readonly googlePromptCache: GooglePromptCache = {
+    entries: new Map<string, string>(),
+    maxEntries: 100,
+  };
 
   constructor(
     organizationIdOrOptions?: string | GraphlitClientOptions,
@@ -9402,6 +9433,7 @@ class Graphlit {
    * @param augmentedFilter - Optional filter to force specific content into LLM context
    * @param correlationId - Optional correlation ID for tracking
    * @param persona - Optional persona to use
+   * @param additionalSystemInstructions - Stable system-channel instructions appended after specification.systemPrompt
    * @throws Error if streaming is not supported
    */
   public async streamAgent(
@@ -9418,9 +9450,12 @@ class Graphlit {
     augmentedFilter?: Types.ContentCriteriaInput,
     correlationId?: string,
     persona?: Types.EntityReferenceInput,
+    additionalSystemInstructions?: string,
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
+    const cacheableSystemInstructions =
+      additionalSystemInstructions ?? options?.additionalSystemInstructions;
     let uiAdapter: UIEventAdapter | undefined;
 
     // Check if already aborted
@@ -9623,6 +9658,7 @@ class Graphlit {
             options?.instructions,
             options?.scratchpad,
             options?.skills,
+            cacheableSystemInstructions,
           );
         },
         abortSignal,
@@ -9690,6 +9726,7 @@ class Graphlit {
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
+    additionalSystemInstructions?: string,
   ): Promise<void> {
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
@@ -9790,15 +9827,11 @@ class Graphlit {
     // Build message array with conversation history
     let messages: Types.ConversationMessage[] = [];
 
-    // Add system prompt if specified
-    if (specification.systemPrompt) {
-      messages.push({
-        __typename: "ConversationMessage" as const,
-        role: Types.ConversationRoleTypes.System,
-        message: specification.systemPrompt,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    appendSystemMessages(
+      messages,
+      specification.systemPrompt,
+      additionalSystemInstructions,
+    );
 
     // Use the full conversation history from formatConversation if available
     if (conversationHistory && conversationHistory.length > 0) {
@@ -9927,6 +9960,7 @@ class Graphlit {
       persona,
       mimeType,
       data,
+      additionalSystemInstructions,
     });
 
     // Complete the conversation and get token count
@@ -10024,6 +10058,7 @@ class Graphlit {
       data,
       correlationId,
       persona,
+      additionalSystemInstructions,
     } = config;
 
     let messages = config.messages;
@@ -10285,7 +10320,7 @@ class Graphlit {
             await this.streamWithGoogle(
               specification,
               googleMessages,
-              undefined,
+              extractSystemInstructionParts(messages),
               tools,
               uiAdapter,
               (message, calls, usage, reasoning) => {
@@ -11266,6 +11301,9 @@ class Graphlit {
       completionTokens: number;
       totalTokens: number;
       model?: string;
+      cachedInputTokens?: number;
+      cacheCreationInputTokens?: number;
+      cacheReadInputTokens?: number;
     } = {
       promptTokens: 0,
       completionTokens: 0,
@@ -11282,10 +11320,23 @@ class Graphlit {
           completionTokens: u.completionTokens || 0,
           totalTokens: u.totalTokens || 0,
           model: u.model,
+          cachedInputTokens: u.cachedInputTokens,
+          cacheCreationInputTokens: u.cacheCreationInputTokens,
+          cacheReadInputTokens: u.cacheReadInputTokens,
+          metadata: u.metadata,
         };
         accumulatedUsage.promptTokens += lastTurnUsage.promptTokens;
         accumulatedUsage.completionTokens += lastTurnUsage.completionTokens;
         accumulatedUsage.totalTokens += lastTurnUsage.totalTokens;
+        accumulatedUsage.cachedInputTokens =
+          (accumulatedUsage.cachedInputTokens || 0) +
+          (lastTurnUsage.cachedInputTokens || 0);
+        accumulatedUsage.cacheCreationInputTokens =
+          (accumulatedUsage.cacheCreationInputTokens || 0) +
+          (lastTurnUsage.cacheCreationInputTokens || 0);
+        accumulatedUsage.cacheReadInputTokens =
+          (accumulatedUsage.cacheReadInputTokens || 0) +
+          (lastTurnUsage.cacheReadInputTokens || 0);
         if (lastTurnUsage.model) accumulatedUsage.model = lastTurnUsage.model;
       }
       onEvent(event);
@@ -11563,6 +11614,7 @@ class Graphlit {
             fullSpec,
             turnResults,
             currentPrompt,
+            options?.additionalSystemInstructions,
           );
           loopMessages = bareMessages;
 
@@ -11611,14 +11663,11 @@ class Graphlit {
           // Build messages from format response
           loopMessages = [];
 
-          if (fullSpec?.systemPrompt) {
-            loopMessages.push({
-              __typename: "ConversationMessage" as const,
-              role: Types.ConversationRoleTypes.System,
-              message: fullSpec.systemPrompt,
-              timestamp: new Date().toISOString(),
-            });
-          }
+          appendSystemMessages(
+            loopMessages,
+            fullSpec?.systemPrompt,
+            options?.additionalSystemInstructions,
+          );
 
           if (conversationHistory && conversationHistory.length > 0) {
             for (const historyMessage of conversationHistory) {
@@ -11751,6 +11800,7 @@ class Graphlit {
             useResponsesApi: options?.useResponsesApi,
             correlationId: options?.correlationId,
             persona: options?.persona,
+            additionalSystemInstructions: options?.additionalSystemInstructions,
           });
         } finally {
           uiAdapter.dispose();
@@ -11982,17 +12032,15 @@ class Graphlit {
     specification: Types.Specification | undefined,
     turnResults: TurnResult[],
     currentPrompt: string,
+    additionalSystemInstructions?: string,
   ): Types.ConversationMessage[] {
     const messages: Types.ConversationMessage[] = [];
 
-    if (specification?.systemPrompt) {
-      messages.push({
-        __typename: "ConversationMessage" as const,
-        role: Types.ConversationRoleTypes.System,
-        message: specification.systemPrompt,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    appendSystemMessages(
+      messages,
+      specification?.systemPrompt,
+      additionalSystemInstructions,
+    );
 
     // Add turn history as user/assistant pairs
     for (const turn of turnResults) {
@@ -12733,7 +12781,7 @@ class Graphlit {
   private async streamWithAnthropic(
     specification: Types.Specification,
     messages: AnthropicMessage[],
-    systemPrompt: string | undefined,
+    systemPrompt: AnthropicSystemBlock[] | undefined,
     tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
     onComplete: (
@@ -12843,7 +12891,7 @@ class Graphlit {
   private async streamWithGoogle(
     specification: Types.Specification,
     messages: GoogleMessage[],
-    systemPrompt: string | undefined,
+    systemPrompt: string[] | undefined,
     tools: Types.ToolDefinitionInput[] | undefined,
     uiAdapter: UIEventAdapter,
     onComplete: (
@@ -12892,6 +12940,7 @@ class Graphlit {
       systemPrompt,
       tools,
       googleClient,
+      this.googlePromptCache,
       (event) => uiAdapter.handleEvent(event),
       onComplete,
       abortSignal,

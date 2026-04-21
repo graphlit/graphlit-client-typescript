@@ -150,6 +150,10 @@ export type AgentStreamEvent =
         totalTokens: number; // Total tokens (prompt + completion)
         model?: string; // Model identifier from provider
         provider?: string; // Provider name (OpenAI, Groq, etc.)
+        cachedInputTokens?: number; // Cached prompt/input tokens reported by provider
+        cacheCreationInputTokens?: number; // Anthropic cache-write input tokens
+        cacheReadInputTokens?: number; // Anthropic cache-read input tokens
+        metadata?: Record<string, unknown>; // Provider-specific usage details
       };
     }
   | {

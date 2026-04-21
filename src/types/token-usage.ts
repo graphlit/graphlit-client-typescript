@@ -17,6 +17,15 @@ export interface TokenUsage {
   /** Provider name (OpenAI, Anthropic, etc.) */
   provider?: string;
 
+  /** Provider-reported cached prompt/input tokens, when available */
+  cachedInputTokens?: number;
+
+  /** Anthropic cache-write input tokens, when available */
+  cacheCreationInputTokens?: number;
+
+  /** Anthropic cache-read input tokens, when available */
+  cacheReadInputTokens?: number;
+
   /** Additional provider-specific usage data */
   metadata?: Record<string, any>;
 }

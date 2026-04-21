@@ -65,6 +65,19 @@ export class UIEventAdapter {
   private hasToolCallsInProgress: boolean = false;
   private hadToolCallsBeforeResume: boolean = false;
 
+  private getCachedInputTokens(): number | undefined {
+    return (
+      this.usageData?.prompt_tokens_details?.cached_tokens ??
+      this.usageData?.input_tokens_details?.cached_tokens ??
+      this.usageData?.cached_tokens ??
+      this.usageData?.cachedTokens ??
+      this.usageData?.cached_content_tokens ??
+      this.usageData?.cachedContentTokenCount ??
+      this.usageData?.cache_read_input_tokens ??
+      this.usageData?.cacheReadInputTokens
+    );
+  }
+
   constructor(
     private onEvent: (event: AgentStreamEvent) => void,
     conversationId: string,
@@ -699,6 +712,14 @@ export class UIEventAdapter {
 
     // Add native provider usage data if available
     if (this.usageData) {
+      const cachedInputTokens = this.getCachedInputTokens();
+      const cacheCreationInputTokens =
+        this.usageData.cache_creation_input_tokens ??
+        this.usageData.cacheCreationInputTokens;
+      const cacheReadInputTokens =
+        this.usageData.cache_read_input_tokens ??
+        this.usageData.cacheReadInputTokens;
+
       event.usage = {
         promptTokens:
           this.usageData.prompt_tokens ||
@@ -718,6 +739,10 @@ export class UIEventAdapter {
           0,
         model: this.model,
         provider: this.modelService,
+        cachedInputTokens,
+        cacheCreationInputTokens,
+        cacheReadInputTokens,
+        metadata: this.usageData,
       };
     }
 
