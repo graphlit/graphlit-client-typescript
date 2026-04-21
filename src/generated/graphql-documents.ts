@@ -1144,6 +1144,12 @@ export const GetAlert = gql`
           id
         }
         size
+        quality
+        width
+        height
+        outputFormat
+        compression
+        moderation
       }
       googleImage {
         model
@@ -1348,6 +1354,12 @@ export const QueryAlerts = gql`
             id
           }
           size
+          quality
+          width
+          height
+          outputFormat
+          compression
+          moderation
         }
         googleImage {
           model
