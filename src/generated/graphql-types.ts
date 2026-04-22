@@ -25020,8 +25020,6 @@ export type Replica = {
 export enum ReplicaArtifactTypes {
   /** Markdown artifact */
   Markdown = 'MARKDOWN',
-  /** Master file artifact */
-  Master = 'MASTER',
   /** WebVTT transcript artifact */
   WebVtt = 'WEB_VTT'
 }
