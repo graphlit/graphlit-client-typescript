@@ -3806,7 +3806,11 @@ class Graphlit {
    * @param connector - The publishing connector to use.
    * @param name - The name of the published conversation, optional.
    * @param workflow - The workflow to use, optional.
+   * @param publishPrompt - The prompt for publishing, optional.
+   * @param publishSpecification - The LLM specification for publishing, optional.
+   * @param includeDetails - Whether to include details in publishing, optional.
    * @param isSynchronous - Whether this mutation is synchronous.
+   * @param collections - The collections to add the published conversation to, optional.
    * @param correlationId - The tenant correlation identifier, optional.
    * @returns The published conversation.
    */
@@ -3815,7 +3819,11 @@ class Graphlit {
     connector: Types.ContentPublishingConnectorInput,
     name?: string,
     workflow?: Types.EntityReferenceInput,
+    publishPrompt?: string,
+    publishSpecification?: Types.EntityReferenceInput,
+    includeDetails?: boolean,
     isSynchronous?: boolean,
+    collections?: Types.EntityReferenceInput[],
     correlationId?: string,
   ): Promise<Types.PublishConversationMutation> {
     return this.mutateAndCheckError<
@@ -3826,7 +3834,11 @@ class Graphlit {
       connector: connector,
       name: name,
       workflow: workflow,
+      publishPrompt: publishPrompt,
+      publishSpecification: publishSpecification,
+      includeDetails: includeDetails,
       isSynchronous: isSynchronous,
+      collections: collections,
       correlationId: correlationId,
     });
   }

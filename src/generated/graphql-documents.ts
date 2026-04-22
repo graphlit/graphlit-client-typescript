@@ -7941,13 +7941,17 @@ export const PromptConversation = gql`
 }
     `;
 export const PublishConversation = gql`
-    mutation PublishConversation($id: ID!, $connector: ContentPublishingConnectorInput!, $name: String, $isSynchronous: Boolean, $workflow: EntityReferenceInput, $correlationId: String) {
+    mutation PublishConversation($id: ID!, $connector: ContentPublishingConnectorInput!, $name: String, $workflow: EntityReferenceInput, $publishPrompt: String, $publishSpecification: EntityReferenceInput, $includeDetails: Boolean, $isSynchronous: Boolean, $collections: [EntityReferenceInput!], $correlationId: String) {
   publishConversation(
     id: $id
     connector: $connector
     name: $name
-    isSynchronous: $isSynchronous
     workflow: $workflow
+    publishPrompt: $publishPrompt
+    publishSpecification: $publishSpecification
+    includeDetails: $includeDetails
+    isSynchronous: $isSynchronous
+    collections: $collections
     correlationId: $correlationId
   ) {
     contents {
@@ -18028,90 +18032,6 @@ export const CreateReplica = gql`
       name
       state
       type
-      authentication {
-        type
-        token
-        apiKey
-        microsoft {
-          tenantId
-          clientId
-          clientSecret
-        }
-        google {
-          clientId
-          clientSecret
-        }
-        oauth {
-          provider
-          clientId
-          clientSecret
-          refreshToken
-          accessToken
-          redirectUri
-          metadata
-        }
-        arcade {
-          authorizationId
-          provider
-          metadata
-        }
-      }
-      integration {
-        type
-        uri
-        slack {
-          token
-          channel
-        }
-        email {
-          from
-          subject
-          to
-        }
-        twitter {
-          consumerKey
-          consumerSecret
-          accessTokenKey
-          accessTokenSecret
-        }
-        mcp {
-          token
-          type
-        }
-      }
-      channel {
-        type
-        slack {
-          botToken
-          signingSecret
-          appId
-        }
-        teams {
-          botId
-          botPassword
-          tenantId
-        }
-        discord {
-          botToken
-          applicationId
-          publicKey
-        }
-        telegram {
-          botToken
-          secretToken
-          botUsername
-        }
-        whatsApp {
-          accessToken
-          appSecret
-          phoneNumberId
-          verifyToken
-        }
-        googleChat {
-          credentials
-          projectId
-        }
-      }
     }
     markerSlug
     artifactTypes
@@ -18332,90 +18252,6 @@ export const GetReplica = gql`
       name
       state
       type
-      authentication {
-        type
-        token
-        apiKey
-        microsoft {
-          tenantId
-          clientId
-          clientSecret
-        }
-        google {
-          clientId
-          clientSecret
-        }
-        oauth {
-          provider
-          clientId
-          clientSecret
-          refreshToken
-          accessToken
-          redirectUri
-          metadata
-        }
-        arcade {
-          authorizationId
-          provider
-          metadata
-        }
-      }
-      integration {
-        type
-        uri
-        slack {
-          token
-          channel
-        }
-        email {
-          from
-          subject
-          to
-        }
-        twitter {
-          consumerKey
-          consumerSecret
-          accessTokenKey
-          accessTokenSecret
-        }
-        mcp {
-          token
-          type
-        }
-      }
-      channel {
-        type
-        slack {
-          botToken
-          signingSecret
-          appId
-        }
-        teams {
-          botId
-          botPassword
-          tenantId
-        }
-        discord {
-          botToken
-          applicationId
-          publicKey
-        }
-        telegram {
-          botToken
-          secretToken
-          botUsername
-        }
-        whatsApp {
-          accessToken
-          appSecret
-          phoneNumberId
-          verifyToken
-        }
-        googleChat {
-          credentials
-          projectId
-        }
-      }
     }
     markerSlug
     artifactTypes
@@ -18591,90 +18427,6 @@ export const QueryReplicas = gql`
         name
         state
         type
-        authentication {
-          type
-          token
-          apiKey
-          microsoft {
-            tenantId
-            clientId
-            clientSecret
-          }
-          google {
-            clientId
-            clientSecret
-          }
-          oauth {
-            provider
-            clientId
-            clientSecret
-            refreshToken
-            accessToken
-            redirectUri
-            metadata
-          }
-          arcade {
-            authorizationId
-            provider
-            metadata
-          }
-        }
-        integration {
-          type
-          uri
-          slack {
-            token
-            channel
-          }
-          email {
-            from
-            subject
-            to
-          }
-          twitter {
-            consumerKey
-            consumerSecret
-            accessTokenKey
-            accessTokenSecret
-          }
-          mcp {
-            token
-            type
-          }
-        }
-        channel {
-          type
-          slack {
-            botToken
-            signingSecret
-            appId
-          }
-          teams {
-            botId
-            botPassword
-            tenantId
-          }
-          discord {
-            botToken
-            applicationId
-            publicKey
-          }
-          telegram {
-            botToken
-            secretToken
-            botUsername
-          }
-          whatsApp {
-            accessToken
-            appSecret
-            phoneNumberId
-            verifyToken
-          }
-          googleChat {
-            credentials
-            projectId
-          }
-        }
       }
       markerSlug
       artifactTypes
@@ -18859,90 +18611,6 @@ export const UpdateReplica = gql`
       name
       state
       type
-      authentication {
-        type
-        token
-        apiKey
-        microsoft {
-          tenantId
-          clientId
-          clientSecret
-        }
-        google {
-          clientId
-          clientSecret
-        }
-        oauth {
-          provider
-          clientId
-          clientSecret
-          refreshToken
-          accessToken
-          redirectUri
-          metadata
-        }
-        arcade {
-          authorizationId
-          provider
-          metadata
-        }
-      }
-      integration {
-        type
-        uri
-        slack {
-          token
-          channel
-        }
-        email {
-          from
-          subject
-          to
-        }
-        twitter {
-          consumerKey
-          consumerSecret
-          accessTokenKey
-          accessTokenSecret
-        }
-        mcp {
-          token
-          type
-        }
-      }
-      channel {
-        type
-        slack {
-          botToken
-          signingSecret
-          appId
-        }
-        teams {
-          botId
-          botPassword
-          tenantId
-        }
-        discord {
-          botToken
-          applicationId
-          publicKey
-        }
-        telegram {
-          botToken
-          secretToken
-          botUsername
-        }
-        whatsApp {
-          accessToken
-          appSecret
-          phoneNumberId
-          verifyToken
-        }
-        googleChat {
-          credentials
-          projectId
-        }
-      }
     }
     markerSlug
     artifactTypes
@@ -19111,90 +18779,6 @@ export const UpsertReplica = gql`
       name
       state
       type
-      authentication {
-        type
-        token
-        apiKey
-        microsoft {
-          tenantId
-          clientId
-          clientSecret
-        }
-        google {
-          clientId
-          clientSecret
-        }
-        oauth {
-          provider
-          clientId
-          clientSecret
-          refreshToken
-          accessToken
-          redirectUri
-          metadata
-        }
-        arcade {
-          authorizationId
-          provider
-          metadata
-        }
-      }
-      integration {
-        type
-        uri
-        slack {
-          token
-          channel
-        }
-        email {
-          from
-          subject
-          to
-        }
-        twitter {
-          consumerKey
-          consumerSecret
-          accessTokenKey
-          accessTokenSecret
-        }
-        mcp {
-          token
-          type
-        }
-      }
-      channel {
-        type
-        slack {
-          botToken
-          signingSecret
-          appId
-        }
-        teams {
-          botId
-          botPassword
-          tenantId
-        }
-        discord {
-          botToken
-          applicationId
-          publicKey
-        }
-        telegram {
-          botToken
-          secretToken
-          botUsername
-        }
-        whatsApp {
-          accessToken
-          appSecret
-          phoneNumberId
-          verifyToken
-        }
-        googleChat {
-          credentials
-          projectId
-        }
-      }
     }
     markerSlug
     artifactTypes

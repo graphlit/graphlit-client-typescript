@@ -1407,7 +1407,11 @@ await graphlit.publishConversation(
   connector: Types.ContentPublishingConnectorInput,
   name?: string,
   workflow?: Types.EntityReferenceInput,
+  publishPrompt?: string,
+  publishSpecification?: Types.EntityReferenceInput,
+  includeDetails?: boolean,
   isSynchronous?: boolean,
+  collections?: Types.EntityReferenceInput[],
   correlationId?: string,
 ): Promise<Types.PublishConversationMutation>
 ```
