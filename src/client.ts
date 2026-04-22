@@ -10099,9 +10099,7 @@ class Graphlit {
     const toolCallNames: string[] = [];
     const errors: string[] = [];
     let totalToolCallCount = 0;
-
-    // Sidecar map for reasoning metadata
-    const reasoningByMessageIndex = new Map<number, ReasoningMetadata>();
+    const persistedIntermediateMessages: Types.ConversationMessage[] = [];
 
     // Artifact collector for tool handlers
     const pendingArtifacts: Promise<{ id: string } | undefined>[] = [];
@@ -10121,7 +10119,6 @@ class Graphlit {
         (OPENAI_RESPONSES_AUTO_ROUTING_ENABLED && useResponsesApi !== false)) &&
       serviceType === Types.ModelServiceTypes.OpenAi &&
       isOpenAIResponsesEligibleModel(specification);
-    const toolMessagesStartIndex = messages.length;
     let lastRoundReasoning: ReasoningMetadata | undefined;
     let openAIResponsesState: OpenAIResponsesInvocationState | undefined;
     let openAIResponsesPendingToolMessages: Types.ConversationMessage[] = [];
@@ -10802,10 +10799,10 @@ class Graphlit {
         if (roundReasoning.signature) {
           assistantMessage.thinkingSignature = roundReasoning.signature;
         }
-        reasoningByMessageIndex.set(messages.length, roundReasoning);
       }
 
       messages.push(assistantMessage);
+      persistedIntermediateMessages.push(assistantMessage);
 
       // Track tool names for stuck detection
       for (const tc of roundToolCalls) {
@@ -11193,6 +11190,7 @@ class Graphlit {
           }
 
           messages.push(executionResult.toolMessage);
+          persistedIntermediateMessages.push(executionResult.toolMessage);
 
           if (executionResult.errorEntry) {
             errors.push(executionResult.errorEntry);
@@ -11232,7 +11230,7 @@ class Graphlit {
     }
 
     // Build intermediate messages for completeConversation
-    const intermediateMessages = messages.slice(toolMessagesStartIndex);
+    const intermediateMessages = persistedIntermediateMessages;
     const messageInputs: Types.ConversationMessageInput[] =
       intermediateMessages.map((msg, idx) => {
         const input: Types.ConversationMessageInput = {
@@ -11257,12 +11255,10 @@ class Graphlit {
             }));
         }
 
-        const absoluteIndex = toolMessagesStartIndex + idx;
-        const reasoning = reasoningByMessageIndex.get(absoluteIndex);
-        if (reasoning) {
-          input.thinkingContent = reasoning.content;
-          if (reasoning.signature) {
-            input.thinkingSignature = reasoning.signature;
+        if (msg.thinkingContent) {
+          input.thinkingContent = msg.thinkingContent;
+          if (msg.thinkingSignature) {
+            input.thinkingSignature = msg.thinkingSignature;
           }
         }
 
