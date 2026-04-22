@@ -10001,7 +10001,13 @@ class Graphlit {
           ? loopResult.intermediateMessages
           : undefined;
 
-      if (loopResult.lastRoundReasoning) {
+      const finalInputMessage =
+        finalMessageInputs?.[finalMessageInputs.length - 1];
+      const finalMessageAlreadyIncluded =
+        finalInputMessage?.role === Types.ConversationRoleTypes.Assistant &&
+        finalInputMessage.message?.trim() === trimmedMessage;
+
+      if (loopResult.lastRoundReasoning && !finalMessageAlreadyIncluded) {
         const completionInput: Types.ConversationMessageInput = {
           role: Types.ConversationRoleTypes.Assistant,
           message: trimmedMessage,
@@ -11844,7 +11850,24 @@ class Graphlit {
               ? loopResult.intermediateMessages
               : undefined;
 
-          if (loopResult.lastRoundReasoning) {
+          if (useBareContinuation) {
+            turnMessageInputs = [
+              {
+                role: Types.ConversationRoleTypes.User,
+                message: currentPrompt,
+                timestamp: new Date().toISOString(),
+              },
+              ...(turnMessageInputs || []),
+            ];
+          }
+
+          const finalInputMessage =
+            turnMessageInputs?.[turnMessageInputs.length - 1];
+          const finalMessageAlreadyIncluded =
+            finalInputMessage?.role === Types.ConversationRoleTypes.Assistant &&
+            finalInputMessage.message?.trim() === trimmedMessage;
+
+          if (loopResult.lastRoundReasoning && !finalMessageAlreadyIncluded) {
             const completionInput: Types.ConversationMessageInput = {
               role: Types.ConversationRoleTypes.Assistant,
               message: trimmedMessage,
