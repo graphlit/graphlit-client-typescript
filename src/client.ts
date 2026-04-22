@@ -4703,6 +4703,18 @@ class Graphlit {
   }
 
   /**
+   * Clears a replica.
+   * @param id - The ID of the replica to clear.
+   * @returns The cleared replica.
+   */
+  public async clearReplica(id: string): Promise<Types.ClearReplicaMutation> {
+    return this.mutateAndCheckError<
+      Types.ClearReplicaMutation,
+      Types.ClearReplicaMutationVariables
+    >(Documents.ClearReplica, { id: id });
+  }
+
+  /**
    * Triggers a replica to run immediately.
    * @param id - The ID of the replica to trigger.
    * @returns The triggered replica.

@@ -17868,6 +17868,14 @@ export const UpdateProject = gql`
   }
 }
     `;
+export const ClearReplica = gql`
+    mutation ClearReplica($id: ID!) {
+  clearReplica(id: $id) {
+    id
+    state
+  }
+}
+    `;
 export const CountReplicas = gql`
     query CountReplicas($filter: ReplicaFilter, $correlationId: String) {
   countReplicas(filter: $filter, correlationId: $correlationId) {

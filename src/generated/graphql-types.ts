@@ -17306,6 +17306,8 @@ export type Mutation = {
   classifyText?: Maybe<Array<Scalars['String']['output']>>;
   /** Clears an existing conversation. */
   clearConversation?: Maybe<Conversation>;
+  /** Clears a replica's sync state. */
+  clearReplica?: Maybe<Replica>;
   /** Closes an existing collection. */
   closeCollection?: Maybe<Collection>;
   /** Closes an existing conversation. */
@@ -17973,6 +17975,11 @@ export type MutationClassifyTextArgs = {
 
 
 export type MutationClearConversationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationClearReplicaArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -32328,6 +32335,13 @@ export type UpdateProjectMutationVariables = Exact<{
 
 
 export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject?: { __typename?: 'Project', id: string, name: string } | null };
+
+export type ClearReplicaMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type ClearReplicaMutation = { __typename?: 'Mutation', clearReplica?: { __typename?: 'Replica', id: string, state: EntityState } | null };
 
 export type CountReplicasQueryVariables = Exact<{
   filter?: InputMaybe<ReplicaFilter>;
