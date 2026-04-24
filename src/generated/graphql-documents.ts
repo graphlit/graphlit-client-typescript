@@ -2092,6 +2092,16 @@ export const UpdateConnector = gql`
   }
 }
     `;
+export const UpsertConnector = gql`
+    mutation UpsertConnector($connector: ConnectorInput!) {
+  upsertConnector(connector: $connector) {
+    id
+    name
+    state
+    type
+  }
+}
+    `;
 export const AddContentLabel = gql`
     mutation AddContentLabel($id: ID!, $label: String!) {
   addContentLabel(id: $id, label: $label) {

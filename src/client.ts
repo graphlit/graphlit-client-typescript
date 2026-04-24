@@ -5258,16 +5258,19 @@ class Graphlit {
     >(Documents.UpdateConnector, { connector: connector });
   }
 
-  /*
+  /**
+   * Creates or updates a connector.
+   * @param connector - The connector to create or update.
+   * @returns The created or updated connector.
+   */
   public async upsertConnector(
-    connector: Types.ConnectorInput
+    connector: Types.ConnectorInput,
   ): Promise<Types.UpsertConnectorMutation> {
     return this.mutateAndCheckError<
       Types.UpsertConnectorMutation,
-      { connector: Types.ConnectorInput }
+      Types.UpsertConnectorMutationVariables
     >(Documents.UpsertConnector, { connector: connector });
   }
-  */
 
   /**
    * Deletes a connector.

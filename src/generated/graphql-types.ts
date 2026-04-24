@@ -3636,7 +3636,7 @@ export type Content = {
   links?: Maybe<Array<LinkReference>>;
   /** The geo-location of the content. */
   location?: Maybe<Point>;
-  /** The content text formatted as Markdown. Returns the persisted frontmatter-aware Markdown export when available, and otherwise falls back to on-demand export. Export is bounded by stored token count. */
+  /** The content text formatted as Markdown. Returns the persisted Markdown body when available, and otherwise falls back to on-demand export. Export is bounded by stored token count. */
   markdown?: Maybe<Scalars['String']['output']>;
   /** The persisted Markdown export URI of the content. This references the frontmatter-aware Markdown file written under the content folder. */
   markdownUri?: Maybe<Scalars['URL']['output']>;
@@ -17880,6 +17880,8 @@ export type Mutation = {
   upsertAlert?: Maybe<Alert>;
   /** Upserts a category. */
   upsertCategory?: Maybe<Category>;
+  /** Upserts a connector. */
+  upsertConnector?: Maybe<Connector>;
   /** Upserts an emotion. */
   upsertEmotion?: Maybe<Emotion>;
   /** Upserts a label. */
@@ -19754,6 +19756,11 @@ export type MutationUpsertAlertArgs = {
 export type MutationUpsertCategoryArgs = {
   category: CategoryInput;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpsertConnectorArgs = {
+  connector: ConnectorInput;
 };
 
 
@@ -29408,6 +29415,13 @@ export type UpdateConnectorMutationVariables = Exact<{
 
 
 export type UpdateConnectorMutation = { __typename?: 'Mutation', updateConnector?: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null } | null };
+
+export type UpsertConnectorMutationVariables = Exact<{
+  connector: ConnectorInput;
+}>;
+
+
+export type UpsertConnectorMutation = { __typename?: 'Mutation', upsertConnector?: { __typename?: 'Connector', id: string, name: string, state: EntityState, type?: ConnectorTypes | null } | null };
 
 export type AddContentLabelMutationVariables = Exact<{
   id: Scalars['ID']['input'];
