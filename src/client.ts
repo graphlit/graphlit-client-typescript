@@ -20,6 +20,7 @@ import type {
   NormalizedCacheObject,
 } from "@apollo/client/core/index.js";
 
+import gql from "graphql-tag";
 import { DocumentNode, GraphQLFormattedError } from "graphql";
 import { attachPartialErrors } from "./partial-errors.js";
 import * as Types from "./generated/graphql-types.js";
@@ -117,6 +118,149 @@ let BedrockRuntimeClient:
   | typeof import("@aws-sdk/client-bedrock-runtime").BedrockRuntimeClient
   | undefined;
 let Cerebras: typeof import("@cerebras/cerebras_cloud_sdk").default | undefined;
+
+type ConversationFlowEntityReference = {
+  id: string;
+  name?: string | null;
+};
+
+export type GetConversationFlowQueryVariables = {
+  id: string;
+  correlationId?: string | null;
+};
+
+export type GetConversationFlowQuery = {
+  conversation?: {
+    id: string;
+    name: string;
+    creationDate: string;
+    modifiedDate?: string | null;
+    state: string;
+    correlationId?: string | null;
+    type?: string | null;
+    transcriptUri?: string | null;
+    messageCount?: number | null;
+    turnCount?: number | null;
+    agent?: ConversationFlowEntityReference | null;
+    persona?: ConversationFlowEntityReference | null;
+    specification?: ConversationFlowEntityReference | null;
+    parent?: ConversationFlowEntityReference | null;
+    children?: Array<ConversationFlowEntityReference | null> | null;
+    turns?: Array<{
+      index?: number | null;
+      tokens?: number | null;
+      timestamp?: string | null;
+      text?: string | null;
+      relevance?: number | null;
+      summary?: string | null;
+      messages?: Array<{
+        role: string;
+        author?: string | null;
+        message?: string | null;
+        tokens?: number | null;
+        throughput?: number | null;
+        ttft?: string | null;
+        completionTime?: string | null;
+        timestamp?: string | null;
+        modelService?: string | null;
+        model?: string | null;
+        data?: string | null;
+        mimeType?: string | null;
+        toolCallId?: string | null;
+        toolCallResponse?: string | null;
+        thinkingContent?: string | null;
+        thinkingSignature?: string | null;
+        toolCalls?: Array<{
+          id: string;
+          name: string;
+          arguments: string;
+          startedAt?: string | null;
+          completedAt?: string | null;
+          durationMs?: number | null;
+          status?: string | null;
+          failedAt?: string | null;
+          firstStatusAt?: string | null;
+        } | null> | null;
+      } | null> | null;
+    } | null> | null;
+  } | null;
+};
+
+// Special-purpose lightweight conversation query for agent-flow visualization.
+// This is hand-written instead of generated so UI clients can avoid fetching
+// heavy citation/content/artifact fields without changing codegen templates.
+const GetConversationFlow = gql`
+  query GetConversationFlow($id: ID!, $correlationId: String) {
+    conversation(id: $id, correlationId: $correlationId) {
+      id
+      name
+      creationDate
+      modifiedDate
+      state
+      correlationId
+      type
+      transcriptUri
+      turns {
+        index
+        messages {
+          role
+          author
+          message
+          toolCalls {
+            id
+            name
+            arguments
+            startedAt
+            completedAt
+            durationMs
+            status
+            failedAt
+            firstStatusAt
+          }
+          tokens
+          throughput
+          ttft
+          completionTime
+          timestamp
+          modelService
+          model
+          data
+          mimeType
+          toolCallId
+          toolCallResponse
+          thinkingContent
+          thinkingSignature
+        }
+        tokens
+        timestamp
+        text
+        relevance
+        summary
+      }
+      messageCount
+      turnCount
+      agent {
+        id
+      }
+      persona {
+        id
+        name
+      }
+      specification {
+        id
+        name
+      }
+      parent {
+        id
+        name
+      }
+      children {
+        id
+        name
+      }
+    }
+  }
+`;
 
 function nowIsoString(): string {
   return new Date().toISOString();
@@ -3261,6 +3405,22 @@ class Graphlit {
       Types.GetConversationQuery,
       Types.GetConversationQueryVariables
     >(Documents.GetConversation, { id: id });
+  }
+
+  /**
+   * Lookup a conversation with only fields needed by flow visualizations.
+   * @param id - ID of the conversation.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The lightweight conversation flow payload.
+   */
+  public async getConversationFlow(
+    id: string,
+    correlationId?: string,
+  ): Promise<GetConversationFlowQuery> {
+    return this.queryAndCheckError<
+      GetConversationFlowQuery,
+      GetConversationFlowQueryVariables
+    >(GetConversationFlow, { id: id, correlationId: correlationId });
   }
 
   /**
