@@ -10380,6 +10380,38 @@ export const GetFeed = gql`
       }
       readLimit
     }
+    skill {
+      type
+      isRecursive
+      allowedPaths
+      excludedPaths
+      github {
+        authenticationType
+        uri
+        repositoryOwner
+        repositoryName
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
+      gitlab {
+        authenticationType
+        projectPath
+        branch
+        clientId
+        clientSecret
+        refreshToken
+        personalAccessToken
+        connector {
+          id
+        }
+      }
+      readLimit
+    }
     email {
       type
       includeAttachments
@@ -11456,6 +11488,38 @@ export const QueryFeeds = gql`
             id
           }
         }
+        github {
+          authenticationType
+          uri
+          repositoryOwner
+          repositoryName
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
+        gitlab {
+          authenticationType
+          projectPath
+          branch
+          clientId
+          clientSecret
+          refreshToken
+          personalAccessToken
+          connector {
+            id
+          }
+        }
+        readLimit
+      }
+      skill {
+        type
+        isRecursive
+        allowedPaths
+        excludedPaths
         github {
           authenticationType
           uri
@@ -19158,6 +19222,10 @@ export const GetSkill = gql`
     correlationId
     text
     skillOwner
+    feed {
+      id
+      name
+    }
     arguments {
       name
       description
@@ -19188,6 +19256,10 @@ export const QuerySkills = gql`
       correlationId
       text
       skillOwner
+      feed {
+        id
+        name
+      }
       arguments {
         name
         description

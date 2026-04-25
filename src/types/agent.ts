@@ -123,6 +123,8 @@ export interface StreamAgentOptions {
   skills?: EntityReferenceInput[];
   /** Stable, caller-supplied system-channel content to append after the specification system prompt. */
   additionalSystemInstructions?: string;
+  /** Ordered fallback specifications to try for native streaming after retryable provider failures. */
+  fallbacks?: EntityReferenceInput[];
 }
 
 // Tool call result
@@ -224,7 +226,6 @@ export interface RunAgentOptions {
   // Agent configuration
   persona?: EntityReferenceInput;
   augmentedFilter?: ContentCriteriaInput;
-  fallbacks?: EntityReferenceInput[];
 
   // Budget overrides
   maxTurns?: number; // default: 25
@@ -322,6 +323,7 @@ export interface StreamingLoopConfig {
   mimeType?: string;
   data?: string;
   additionalSystemInstructions?: string;
+  fallbackSpecifications?: Specification[];
 }
 
 /** Result returned from executeStreamingLoop. */
@@ -336,4 +338,5 @@ export interface StreamingLoopResult {
   reasoning?: ReasoningMetadata;
   intermediateMessages: ConversationMessageInput[];
   lastRoundReasoning?: ReasoningMetadata;
+  usedSpecification?: Specification;
 }

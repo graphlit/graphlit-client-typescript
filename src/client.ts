@@ -343,6 +343,73 @@ function appendSystemMessages(
   }
 }
 
+function toEntityReferenceInput(
+  reference?: { id?: string | null } | null,
+): Types.EntityReferenceInput | undefined {
+  return reference?.id ? { id: reference.id } : undefined;
+}
+
+function uniqueEntityReferences(
+  references: Array<Types.EntityReferenceInput | undefined | null>,
+): Types.EntityReferenceInput[] {
+  const seen = new Set<string>();
+  const unique: Types.EntityReferenceInput[] = [];
+
+  for (const reference of references) {
+    if (!reference?.id || seen.has(reference.id)) {
+      continue;
+    }
+
+    seen.add(reference.id);
+    unique.push({ id: reference.id });
+  }
+
+  return unique;
+}
+
+function uniqueSpecifications(
+  specifications: Array<Types.Specification | undefined | null>,
+): Types.Specification[] {
+  const seen = new Set<string>();
+  const unique: Types.Specification[] = [];
+
+  for (const specification of specifications) {
+    if (!specification?.id || seen.has(specification.id)) {
+      continue;
+    }
+
+    seen.add(specification.id);
+    unique.push(specification);
+  }
+
+  return unique;
+}
+
+function rebuildMessagesForSpecification(
+  messages: Types.ConversationMessage[],
+  specification: Types.Specification,
+  additionalSystemInstructions?: string,
+): Types.ConversationMessage[] {
+  const rebuilt: Types.ConversationMessage[] = [];
+  let firstNonSystemIndex = 0;
+
+  while (
+    firstNonSystemIndex < messages.length &&
+    messages[firstNonSystemIndex].role === Types.ConversationRoleTypes.System
+  ) {
+    firstNonSystemIndex++;
+  }
+
+  appendSystemMessages(
+    rebuilt,
+    specification.systemPrompt,
+    additionalSystemInstructions,
+  );
+  rebuilt.push(...messages.slice(firstNonSystemIndex));
+
+  return rebuilt;
+}
+
 function computePersistedToolRoundDurationMs(
   toolCalls?: Array<Types.ConversationToolCall | null> | null,
 ): number | undefined {
@@ -9605,6 +9672,24 @@ class Graphlit {
     return next;
   }
 
+  private async resolveSpecificationReferences(
+    references?: Array<Types.EntityReferenceInput | undefined | null>,
+  ): Promise<Types.Specification[]> {
+    const uniqueReferences = uniqueEntityReferences(references ?? []);
+    const specifications: Types.Specification[] = [];
+
+    for (const reference of uniqueReferences) {
+      const response = await this.getSpecification(reference.id);
+      const specification = response.specification as Types.Specification;
+      if (!specification) {
+        throw new Error(`Specification [${reference.id}] not found.`);
+      }
+      specifications.push(specification);
+    }
+
+    return specifications;
+  }
+
   /**
    * Execute an agent with streaming response
    * @param prompt - The user prompt
@@ -9651,16 +9736,50 @@ class Graphlit {
     }
 
     try {
+      let actualConversationId = conversationId;
+      let existingConversation:
+        | NonNullable<Types.GetConversationQuery["conversation"]>
+        | undefined;
+
+      if (
+        actualConversationId &&
+        specification?.id &&
+        !options?.fallbacks?.length
+      ) {
+        existingConversation = (await this.getConversation(actualConversationId))
+          .conversation as
+          | NonNullable<Types.GetConversationQuery["conversation"]>
+          | undefined;
+      }
+
+      const effectiveSpecification = specification;
+      const conversationFallbacks =
+        existingConversation?.fallbacks
+          ?.map((fallback) => toEntityReferenceInput(fallback))
+          .filter(
+            (
+              fallback,
+            ): fallback is Types.EntityReferenceInput => fallback != null,
+          ) ?? [];
+      const fallbackReferences = uniqueEntityReferences(
+        options?.fallbacks?.length ? options.fallbacks : conversationFallbacks,
+      );
+
       // Get full specification if needed
-      const fullSpec = specification?.id
-        ? ((await this.getSpecification(specification.id))
+      const fullSpec = effectiveSpecification?.id
+        ? ((await this.getSpecification(effectiveSpecification.id))
             .specification as Types.Specification)
         : undefined;
+      const fallbackSpecs = await this.resolveSpecificationReferences(
+        fallbackReferences.filter(
+          (fallback) => fallback.id !== effectiveSpecification?.id,
+        ),
+      );
 
       // Fail fast if a specification was requested but not found
-      if (specification?.id && !fullSpec) {
+      if (effectiveSpecification?.id && !fullSpec) {
         throw new Error(
-          `Specification [${specification.id}] not found. Cannot fall back to promptAgent.`,
+          `Specification [${effectiveSpecification.id}] not found. Cannot fall back to promptAgent.`,
         );
       }
 
@@ -9677,12 +9796,14 @@ class Graphlit {
       }
 
       // Ensure conversation exists first (before streaming check)
-      let actualConversationId = conversationId;
       if (!actualConversationId) {
         const createResponse = await this.createConversation(
           {
             name: `Streaming agent conversation`,
-            specification: specification,
+            specification: effectiveSpecification,
+            ...(fallbackReferences.length > 0 && {
+              fallbacks: fallbackReferences,
+            }),
             tools: tools,
             filter: contentFilter,
             augmentedFilter: augmentedFilter,
@@ -9710,7 +9831,14 @@ class Graphlit {
         async () => {
           // Check streaming support - fallback to promptAgent if not supported
           // Also fall back when no specification is provided (can't route to provider locally)
-          if (!fullSpec || !this.supportsStreaming(fullSpec, tools)) {
+          const hasStreamingSpecification =
+            !!fullSpec &&
+            (this.supportsStreaming(fullSpec, tools) ||
+              fallbackSpecs.some((fallbackSpec) =>
+                this.supportsStreaming(fallbackSpec, tools),
+              ));
+
+          if (!fullSpec || !hasStreamingSpecification) {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `\n⚠️ [streamAgent] ${!fullSpec ? "No specification provided" : "Streaming not supported"}, falling back to promptAgent with same conversation`,
@@ -9721,7 +9849,7 @@ class Graphlit {
             const promptResult = await this.promptAgent(
               prompt,
               actualConversationId, // Preserve conversation
-              specification,
+              effectiveSpecification,
               tools,
               toolHandlers,
               {
@@ -9808,9 +9936,20 @@ class Graphlit {
           }
 
           // Create UI event adapter with model information
-          const modelName = fullSpec ? getModelName(fullSpec) : undefined;
-          const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
-          const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
+          const initialStreamingSpec = this.supportsStreaming(fullSpec, tools)
+            ? fullSpec
+            : fallbackSpecs.find((fallbackSpec) =>
+                this.supportsStreaming(fallbackSpec, tools),
+              ) || fullSpec;
+          const modelName = initialStreamingSpec
+            ? getModelName(initialStreamingSpec)
+            : undefined;
+          const modelEnum = initialStreamingSpec
+            ? getModelEnum(initialStreamingSpec)
+            : undefined;
+          const serviceType = initialStreamingSpec
+            ? getServiceType(initialStreamingSpec)
+            : undefined;
 
           uiAdapter = new UIEventAdapter(
             onEvent as (event: AgentStreamEvent) => void,
@@ -9846,6 +9985,7 @@ class Graphlit {
             options?.scratchpad,
             options?.skills,
             cacheableSystemInstructions,
+            fallbackSpecs,
           );
         },
         abortSignal,
@@ -9914,6 +10054,7 @@ class Graphlit {
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
     additionalSystemInstructions?: string,
+    fallbackSpecifications?: Types.Specification[],
   ): Promise<void> {
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
@@ -10148,6 +10289,7 @@ class Graphlit {
       mimeType,
       data,
       additionalSystemInstructions,
+      fallbackSpecifications,
     });
 
     // Complete the conversation and get token count
@@ -10234,7 +10376,7 @@ class Graphlit {
   ): Promise<StreamingLoopResult> {
     const {
       conversationId,
-      specification,
+      specification: initialSpecification,
       tools,
       toolHandlers,
       uiAdapter,
@@ -10252,9 +10394,22 @@ class Graphlit {
       correlationId,
       persona,
       additionalSystemInstructions,
+      fallbackSpecifications,
     } = config;
 
     let messages = config.messages;
+    let specification = initialSpecification;
+    const streamingSpecifications = uniqueSpecifications([
+      initialSpecification,
+      ...(fallbackSpecifications ?? []),
+    ]);
+    let currentSpecificationIndex = 0;
+    let serviceType = getServiceType(specification);
+    let useOpenAIResponses =
+      (useResponsesApi === true ||
+        (OPENAI_RESPONSES_AUTO_ROUTING_ENABLED && useResponsesApi !== false)) &&
+      serviceType === Types.ModelServiceTypes.OpenAi &&
+      isOpenAIResponsesEligibleModel(specification);
     let currentRound = 0;
     let fullMessage = "";
     let finalAssistantMessage = "";
@@ -10276,15 +10431,60 @@ class Graphlit {
       },
     };
 
-    const serviceType = getServiceType(specification);
-    const useOpenAIResponses =
-      (useResponsesApi === true ||
-        (OPENAI_RESPONSES_AUTO_ROUTING_ENABLED && useResponsesApi !== false)) &&
-      serviceType === Types.ModelServiceTypes.OpenAi &&
-      isOpenAIResponsesEligibleModel(specification);
     let lastRoundReasoning: ReasoningMetadata | undefined;
     let openAIResponsesState: OpenAIResponsesInvocationState | undefined;
     let openAIResponsesPendingToolMessages: Types.ConversationMessage[] = [];
+
+    const selectNextStreamingSpecification = (reason: string): boolean => {
+      for (
+        let candidateIndex = currentSpecificationIndex + 1;
+        candidateIndex < streamingSpecifications.length;
+        candidateIndex++
+      ) {
+        const candidate = streamingSpecifications[candidateIndex];
+
+        if (!this.supportsStreaming(candidate, tools)) {
+          if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+            console.log(
+              `\n⚠️ [Failover] Skipping fallback specification ${candidate.name} (${candidate.id}) because native streaming is not available`,
+            );
+          }
+          continue;
+        }
+
+        currentSpecificationIndex = candidateIndex;
+        specification = candidate;
+        serviceType = getServiceType(specification);
+        useOpenAIResponses =
+          (useResponsesApi === true ||
+            (OPENAI_RESPONSES_AUTO_ROUTING_ENABLED &&
+              useResponsesApi !== false)) &&
+          serviceType === Types.ModelServiceTypes.OpenAi &&
+          isOpenAIResponsesEligibleModel(specification);
+        messages = rebuildMessagesForSpecification(
+          messages,
+          specification,
+          additionalSystemInstructions,
+        );
+        openAIResponsesState = undefined;
+        openAIResponsesPendingToolMessages = [];
+        uiAdapter.setModelInfo({
+          model: getModelEnum(specification),
+          modelName: getModelName(specification),
+          modelService: getServiceType(specification),
+        });
+
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            `\n🔁 [Failover] Switching streaming provider after ${reason} | Spec: ${specification.name} (${specification.id}) | Service: ${serviceType}`,
+          );
+        }
+
+        return true;
+      }
+
+      return false;
+    };
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
@@ -10831,10 +11031,21 @@ class Graphlit {
               );
             }
           } else {
+            const unsupportedServiceType = serviceType;
+            if (
+              selectNextStreamingSpecification(
+                `no native streaming available for ${unsupportedServiceType}`,
+              )
+            ) {
+              uiAdapter.resetForRetry(preRoundMessage);
+              providerAttempt = -1;
+              continue;
+            }
+
             // Fallback to non-streaming
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
-                `\n⚠️  [Fallback] No native streaming available for ${serviceType} (Round ${currentRound})`,
+                `\n⚠️  [Fallback] No native streaming available for ${unsupportedServiceType} (Round ${currentRound})`,
               );
               console.log(
                 `   Falling back to non-streaming promptConversation`,
@@ -10869,6 +11080,20 @@ class Graphlit {
 
           const isRetryable =
             retryError instanceof ProviderError && retryError.retryable;
+          if (
+            isRetryable &&
+            providerAttempt >= DEFAULT_PROVIDER_RETRIES &&
+            selectNextStreamingSpecification(
+              `${(retryError as ProviderError).provider} retry exhaustion: ${
+                (retryError as ProviderError).message
+              }`,
+            )
+          ) {
+            uiAdapter.resetForRetry(preRoundMessage);
+            providerAttempt = -1;
+            continue;
+          }
+
           if (!isRetryable || providerAttempt >= DEFAULT_PROVIDER_RETRIES) {
             throw retryError;
           }
@@ -11439,6 +11664,7 @@ class Graphlit {
       reasoning: lastRoundReasoning,
       intermediateMessages: messageInputs,
       lastRoundReasoning,
+      usedSpecification: specification,
     };
   }
 
@@ -11599,6 +11825,8 @@ class Graphlit {
         ? ((await this.getSpecification(agentSpec.id))
             .specification as Types.Specification)
         : undefined;
+      let activeFullSpec = fullSpec;
+      let fallbackReferences: Types.EntityReferenceInput[] = [];
 
       // Initialize evaluator and stuck detector
       const evaluator = new TurnEvaluator({
@@ -11687,7 +11915,6 @@ class Graphlit {
             filter: agentFilter,
             persona: options?.persona,
             augmentedFilter: options?.augmentedFilter,
-            fallbacks: options?.fallbacks,
           },
           options?.correlationId,
         );
@@ -11699,6 +11926,15 @@ class Graphlit {
         // Resume: reconstruct TurnResults from conversation history so the
         // stuck detector has full context from prior turns.
         const convResponse = await this.getConversation(conversationId);
+        fallbackReferences = uniqueEntityReferences(
+          convResponse.conversation?.fallbacks
+            ?.map((fallback) => toEntityReferenceInput(fallback))
+            .filter(
+              (
+                fallback,
+              ): fallback is Types.EntityReferenceInput => fallback != null,
+            ) ?? [],
+        );
         const existingMessages = convResponse.conversation?.messages;
         if (existingMessages && existingMessages.length > 0) {
           const resumedTurns = this.reconstructTurnResults(
@@ -11712,6 +11948,10 @@ class Graphlit {
           }
         }
       }
+
+      const fallbackSpecs = await this.resolveSpecificationReferences(
+        fallbackReferences.filter((fallback) => fallback.id !== fullSpec?.id),
+      );
 
       // ── Phase 2: The Loop ──────────────────────────────────────────────
 
@@ -11800,7 +12040,7 @@ class Graphlit {
           // Build message from last turn's context
           // The messages array is rebuilt from the conversation state
           const bareMessages = this.buildBareMessages(
-            fullSpec,
+            activeFullSpec,
             turnResults,
             currentPrompt,
             options?.additionalSystemInstructions,
@@ -11822,7 +12062,7 @@ class Graphlit {
           const formatResponse = await this.formatConversation(
             turn === 0 ? prompt : "Continue.",
             conversationId,
-            agentSpec,
+            activeFullSpec ? { id: activeFullSpec.id } : agentSpec,
             allTools,
             undefined,
             true,
@@ -11854,7 +12094,7 @@ class Graphlit {
 
           appendSystemMessages(
             loopMessages,
-            fullSpec?.systemPrompt,
+            activeFullSpec?.systemPrompt,
             options?.additionalSystemInstructions,
           );
 
@@ -11927,9 +12167,15 @@ class Graphlit {
         }
 
         // 6. Create UI adapter for this turn
-        const modelName = fullSpec ? getModelName(fullSpec) : undefined;
-        const modelEnum = fullSpec ? getModelEnum(fullSpec) : undefined;
-        const serviceType = fullSpec ? getServiceType(fullSpec) : undefined;
+        const modelName = activeFullSpec
+          ? getModelName(activeFullSpec)
+          : undefined;
+        const modelEnum = activeFullSpec
+          ? getModelEnum(activeFullSpec)
+          : undefined;
+        const serviceType = activeFullSpec
+          ? getServiceType(activeFullSpec)
+          : undefined;
 
         const uiAdapter = new UIEventAdapter(
           (event: AgentStreamEvent) => {
@@ -11955,7 +12201,7 @@ class Graphlit {
 
         // Resolve context strategy
         const callerStrategy = options?.contextStrategy ?? {};
-        const serverStrategy = fullSpec?.strategy;
+        const serverStrategy = activeFullSpec?.strategy;
         const mergedStrategy = {
           toolResultTokenLimit:
             callerStrategy.toolResultTokenLimit ??
@@ -11977,7 +12223,7 @@ class Graphlit {
         try {
           loopResult = await this.executeStreamingLoop({
             conversationId,
-            specification: fullSpec!,
+            specification: activeFullSpec!,
             messages: loopMessages,
             tools: allTools,
             toolHandlers: allToolHandlers,
@@ -11990,9 +12236,14 @@ class Graphlit {
             correlationId: options?.correlationId,
             persona: options?.persona,
             additionalSystemInstructions: options?.additionalSystemInstructions,
+            fallbackSpecifications: fallbackSpecs,
           });
         } finally {
           uiAdapter.dispose();
+        }
+
+        if (loopResult.usedSpecification) {
+          activeFullSpec = loopResult.usedSpecification;
         }
 
         // 8. Detect task_complete before persistence. The streaming loop

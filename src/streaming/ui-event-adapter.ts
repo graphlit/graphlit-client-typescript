@@ -106,6 +106,16 @@ export class UIEventAdapter {
     }
   }
 
+  public setModelInfo(options: {
+    model?: string;
+    modelName?: string;
+    modelService?: string;
+  }): void {
+    this.model = options.model;
+    this.modelName = options.modelName;
+    this.modelService = options.modelService;
+  }
+
   /**
    * Process a raw streaming event and emit appropriate UI events
    */
