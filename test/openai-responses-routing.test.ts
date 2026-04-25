@@ -303,7 +303,7 @@ describe("OpenAI Responses routing", () => {
       });
       expect(openAISpy.mock.calls[0][1][0]).toMatchObject({
         role: "system",
-        message: fallbackSpec.systemPrompt,
+        content: fallbackSpec.systemPrompt,
       });
       expect(result.finalAssistantMessage).toBe("fallback path");
       expect(result.usedSpecification?.id).toBe(fallbackSpec.id);
