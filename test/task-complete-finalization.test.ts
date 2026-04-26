@@ -47,6 +47,12 @@ describe("Task Complete Finalization", () => {
     vi.spyOn(client as any, "getSpecification").mockResolvedValue({
       specification: TEST_SPEC,
     });
+    vi.spyOn(client, "getConversation").mockResolvedValue({
+      conversation: {
+        id: "conv-1",
+        fallbacks: [],
+      },
+    } as Types.GetConversationQuery);
     vi.spyOn(client as any, "supportsStreaming").mockReturnValue(true);
     vi.spyOn(client as any, "formatConversation").mockResolvedValue({
       formatConversation: {

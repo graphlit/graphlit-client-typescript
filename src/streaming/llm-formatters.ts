@@ -119,6 +119,24 @@ export interface AnthropicSystemBlock {
   cache_control?: { type: "ephemeral" };
 }
 
+type AnthropicToolResultContent =
+  | string
+  | Array<{
+      type: "text" | "image";
+      text?: string;
+      source?: {
+        type: "base64";
+        media_type: string;
+        data: string;
+      };
+    }>;
+
+type AnthropicToolResultBlock = {
+  type: "tool_result";
+  tool_use_id: string;
+  content: AnthropicToolResultContent;
+};
+
 /**
  * Google message format
  */
@@ -283,6 +301,63 @@ function parseBedrockToolResult(message: string): Array<{
   }
 
   return [{ text: message }];
+}
+
+function parseToolCallInput(argumentsJson: string | null | undefined): unknown {
+  if (!argumentsJson) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(argumentsJson);
+  } catch {
+    return {};
+  }
+}
+
+function getConsecutiveToolMessages(
+  messages: ConversationMessage[],
+  startIndex: number,
+): ConversationMessage[] {
+  const toolMessages: ConversationMessage[] = [];
+
+  for (let i = startIndex; i < messages.length; i++) {
+    const message = messages[i];
+
+    if (message.role !== ConversationRoleTypes.Tool) {
+      break;
+    }
+
+    toolMessages.push(message);
+  }
+
+  return toolMessages;
+}
+
+function formatAnthropicToolResultBlocks(
+  toolMessages: ConversationMessage[],
+  allowedToolUseIds?: Set<string>,
+): AnthropicToolResultBlock[] {
+  const blocks: AnthropicToolResultBlock[] = [];
+
+  for (const message of toolMessages) {
+    const toolUseId = message.toolCallId || "";
+
+    if (
+      !toolUseId ||
+      (allowedToolUseIds && !allowedToolUseIds.has(toolUseId))
+    ) {
+      continue;
+    }
+
+    blocks.push({
+      type: "tool_result",
+      tool_use_id: toolUseId,
+      content: parseMultimodalToolResult(message.message?.trim() || ""),
+    });
+  }
+
+  return blocks;
 }
 
 /**
@@ -587,7 +662,9 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
   const systemBlocks: AnthropicSystemBlock[] = [];
   const formattedMessages: AnthropicMessage[] = [];
 
-  for (const message of messages) {
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+
     if (!message.role) continue;
 
     // Allow messages with tool calls even if they have no text content
@@ -606,7 +683,7 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
         });
         break;
 
-      case ConversationRoleTypes.Assistant:
+      case ConversationRoleTypes.Assistant: {
         const content: any[] = [];
 
         if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -709,41 +786,73 @@ export function formatMessagesForAnthropic(messages: ConversationMessage[]): {
           );
         }
 
-        // Add tool uses if present
-        if (message.toolCalls && message.toolCalls.length > 0) {
-          for (const toolCall of message.toolCalls) {
-            if (toolCall) {
-              content.push({
-                type: "tool_use",
-                id: toolCall.id,
-                name: toolCall.name,
-                input: toolCall.arguments ? JSON.parse(toolCall.arguments) : {},
-              });
-            }
-          }
+        const toolCalls =
+          message.toolCalls?.filter(
+            (toolCall): toolCall is ConversationToolCall => toolCall !== null,
+          ) ?? [];
+        const followingToolMessages =
+          toolCalls.length > 0
+            ? getConsecutiveToolMessages(messages, i + 1)
+            : [];
+        const followingToolUseIds = new Set(
+          followingToolMessages
+            .map((toolMessage) => toolMessage.toolCallId || "")
+            .filter((toolCallId) => toolCallId.length > 0),
+        );
+        const matchedToolCalls =
+          followingToolMessages.length > 0
+            ? toolCalls.filter((toolCall) =>
+                followingToolUseIds.has(toolCall.id),
+              )
+            : [];
+        const matchedToolUseIds = new Set(
+          matchedToolCalls.map((toolCall) => toolCall.id),
+        );
+
+        // Anthropic requires every historical tool_use to be followed
+        // immediately by matching tool_result blocks in the next user message.
+        // If persisted history is missing a result, preserve assistant text but
+        // omit the orphaned tool_use so future turns can still continue.
+        for (const toolCall of matchedToolCalls) {
+          content.push({
+            type: "tool_use",
+            id: toolCall.id,
+            name: toolCall.name,
+            input: parseToolCallInput(toolCall.arguments),
+          });
         }
 
-        formattedMessages.push({
-          role: "assistant",
-          content,
-        });
+        if (content.length > 0) {
+          formattedMessages.push({
+            role: "assistant",
+            content,
+          });
+        }
+
+        if (followingToolMessages.length > 0) {
+          const toolResultBlocks = formatAnthropicToolResultBlocks(
+            followingToolMessages,
+            matchedToolUseIds,
+          );
+
+          if (toolResultBlocks.length > 0) {
+            formattedMessages.push({
+              role: "user",
+              content: toolResultBlocks,
+            });
+          }
+
+          i += followingToolMessages.length;
+        }
+
         break;
+      }
 
       case ConversationRoleTypes.Tool:
-        // Anthropic expects tool responses as user messages with tool_result content blocks
-        // Check if the message contains MCP-style multimodal content (e.g., images from code execution)
-        const toolResultContent = parseMultimodalToolResult(trimmedMessage);
-
-        formattedMessages.push({
-          role: "user",
-          content: [
-            {
-              type: "tool_result",
-              tool_use_id: message.toolCallId || "",
-              content: toolResultContent,
-            },
-          ],
-        });
+        // Tool results are emitted while processing the preceding assistant
+        // message so all results for a multi-tool round can share one
+        // Anthropic user message. Orphaned tool rows are skipped here because
+        // Anthropic rejects tool_result blocks without a preceding tool_use.
         break;
 
       default: // User messages
