@@ -3160,8 +3160,36 @@ export const GetContent = gql`
       validAt
       invalidAt
       state
+      kind
       category
       confidence
+      evidence {
+        type
+        entity {
+          id
+        }
+        text
+        confidence
+        citations {
+          sourceType
+          source {
+            id
+          }
+          uri
+          title
+          index
+          text
+          metadata
+          relevance
+          confidence
+          startOffset
+          endOffset
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+      }
     }
     workflow {
       id
@@ -4058,8 +4086,36 @@ export const LookupContents = gql`
         validAt
         invalidAt
         state
+        kind
         category
         confidence
+        evidence {
+          type
+          entity {
+            id
+          }
+          text
+          confidence
+          citations {
+            sourceType
+            source {
+              id
+            }
+            uri
+            title
+            index
+            text
+            metadata
+            relevance
+            confidence
+            startOffset
+            endOffset
+            startTime
+            endTime
+            pageNumber
+            frameNumber
+          }
+        }
       }
       workflow {
         id
@@ -4277,12 +4333,6 @@ export const PublishSkills = gql`
       name
       state
       identifier
-      skillOwner
-      arguments {
-        name
-        description
-        required
-      }
       text
     }
   }
@@ -7440,8 +7490,36 @@ export const GetConversation = gql`
       validAt
       invalidAt
       state
+      kind
       category
       confidence
+      evidence {
+        type
+        entity {
+          id
+        }
+        text
+        confidence
+        citations {
+          sourceType
+          source {
+            id
+          }
+          uri
+          title
+          index
+          text
+          metadata
+          relevance
+          confidence
+          startOffset
+          endOffset
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+      }
     }
     summary
     parent {
@@ -8698,8 +8776,36 @@ export const RetrieveFacts = gql`
           name
         }
         sourceType
+        kind
         category
         confidence
+        evidence {
+          type
+          entity {
+            id
+          }
+          text
+          confidence
+          citations {
+            sourceType
+            source {
+              id
+            }
+            uri
+            title
+            index
+            text
+            metadata
+            relevance
+            confidence
+            startOffset
+            endOffset
+            startTime
+            endTime
+            pageNumber
+            frameNumber
+          }
+        }
       }
       relevance
       content {
@@ -10064,8 +10170,36 @@ export const GetFact = gql`
       name
     }
     sourceType
+    kind
     category
     confidence
+    evidence {
+      type
+      entity {
+        id
+      }
+      text
+      confidence
+      citations {
+        sourceType
+        source {
+          id
+        }
+        uri
+        title
+        index
+        text
+        metadata
+        relevance
+        confidence
+        startOffset
+        endOffset
+        startTime
+        endTime
+        pageNumber
+        frameNumber
+      }
+    }
   }
 }
     `;
@@ -10121,8 +10255,36 @@ export const QueryFacts = gql`
         name
       }
       sourceType
+      kind
       category
       confidence
+      evidence {
+        type
+        entity {
+          id
+        }
+        text
+        confidence
+        citations {
+          sourceType
+          source {
+            id
+          }
+          uri
+          title
+          index
+          text
+          metadata
+          relevance
+          confidence
+          startOffset
+          endOffset
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+      }
     }
   }
 }
@@ -10179,8 +10341,36 @@ export const QueryFactsClusters = gql`
         name
       }
       sourceType
+      kind
       category
       confidence
+      evidence {
+        type
+        entity {
+          id
+        }
+        text
+        confidence
+        citations {
+          sourceType
+          source {
+            id
+          }
+          uri
+          title
+          index
+          text
+          metadata
+          relevance
+          confidence
+          startOffset
+          endOffset
+          startTime
+          endTime
+          pageNumber
+          frameNumber
+        }
+      }
     }
     clusters {
       entities {
@@ -19194,12 +19384,6 @@ export const CreateSkill = gql`
     name
     state
     identifier
-    skillOwner
-    arguments {
-      name
-      description
-      required
-    }
   }
 }
     `;
@@ -19263,7 +19447,7 @@ export const GetSkill = gql`
     }
     description
     identifier
-    correlationId
+    uri
     text
     skillOwner
     feed {
@@ -19297,7 +19481,7 @@ export const QuerySkills = gql`
       state
       description
       identifier
-      correlationId
+      uri
       text
       skillOwner
       feed {
@@ -19324,12 +19508,6 @@ export const UpdateSkill = gql`
     name
     state
     identifier
-    skillOwner
-    arguments {
-      name
-      description
-      required
-    }
   }
 }
     `;
@@ -19340,12 +19518,6 @@ export const UpsertSkill = gql`
     name
     state
     identifier
-    skillOwner
-    arguments {
-      name
-      description
-      required
-    }
   }
 }
     `;
