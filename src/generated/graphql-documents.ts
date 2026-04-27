@@ -323,20 +323,30 @@ export const GetAgent = gql`
     targets {
       connector {
         type
+        operation
+        kind
         notion {
+          pageId
+          pageUri
           parentPageId
           databaseId
           title
         }
         googleDrive {
+          fileId
+          fileUri
           folderId
           fileName
         }
         oneDrive {
+          fileId
+          fileUri
           folderId
           fileName
         }
         confluence {
+          pageId
+          pageUri
           spaceId
           parentPageId
           title
@@ -379,6 +389,8 @@ export const GetAgent = gql`
           title
         }
         googleCalendar {
+          eventId
+          eventUri
           calendarId
           summary
           startDateTime
@@ -388,6 +400,8 @@ export const GetAgent = gql`
           attendees
         }
         microsoftCalendar {
+          eventId
+          eventUri
           calendarId
           subject
           startDateTime
@@ -398,6 +412,8 @@ export const GetAgent = gql`
           isOnlineMeeting
         }
         linear {
+          issueId
+          issueUri
           teamId
           title
           priority
@@ -407,6 +423,8 @@ export const GetAgent = gql`
           projectId
         }
         jira {
+          issueKey
+          issueUri
           projectKey
           issueType
           summary
@@ -416,10 +434,14 @@ export const GetAgent = gql`
           status
         }
         googleDocs {
+          documentId
+          documentUri
           folderId
           title
         }
         microsoftWord {
+          fileId
+          fileUri
           folderId
           fileName
         }
@@ -735,20 +757,30 @@ export const QueryAgents = gql`
       targets {
         connector {
           type
+          operation
+          kind
           notion {
+            pageId
+            pageUri
             parentPageId
             databaseId
             title
           }
           googleDrive {
+            fileId
+            fileUri
             folderId
             fileName
           }
           oneDrive {
+            fileId
+            fileUri
             folderId
             fileName
           }
           confluence {
+            pageId
+            pageUri
             spaceId
             parentPageId
             title
@@ -791,6 +823,8 @@ export const QueryAgents = gql`
             title
           }
           googleCalendar {
+            eventId
+            eventUri
             calendarId
             summary
             startDateTime
@@ -800,6 +834,8 @@ export const QueryAgents = gql`
             attendees
           }
           microsoftCalendar {
+            eventId
+            eventUri
             calendarId
             subject
             startDateTime
@@ -810,6 +846,8 @@ export const QueryAgents = gql`
             isOnlineMeeting
           }
           linear {
+            issueId
+            issueUri
             teamId
             title
             priority
@@ -819,6 +857,8 @@ export const QueryAgents = gql`
             projectId
           }
           jira {
+            issueKey
+            issueUri
             projectKey
             issueType
             summary
@@ -828,10 +868,14 @@ export const QueryAgents = gql`
             status
           }
           googleDocs {
+            documentId
+            documentUri
             folderId
             title
           }
           microsoftWord {
+            fileId
+            fileUri
             folderId
             fileName
           }

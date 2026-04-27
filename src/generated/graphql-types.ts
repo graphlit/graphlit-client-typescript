@@ -1222,14 +1222,6 @@ export type AttioDistributionProperties = {
   parentObject: Scalars['String']['output'];
   /** The record ID the note belongs to. */
   parentRecordId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The note title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -1240,14 +1232,6 @@ export type AttioDistributionPropertiesInput = {
   parentObject: Scalars['String']['input'];
   /** The record ID the note belongs to. */
   parentRecordId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The note title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1409,14 +1393,6 @@ export type AttioTasksDistributionProperties = {
   linkedObjectType?: Maybe<Scalars['String']['output']>;
   /** The record ID to link the task to. */
   linkedRecordId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The task title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -1431,14 +1407,6 @@ export type AttioTasksDistributionPropertiesInput = {
   linkedObjectType?: InputMaybe<Scalars['String']['input']>;
   /** The record ID to link the task to. */
   linkedRecordId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The task title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3256,36 +3224,28 @@ export enum ConfluenceAuthenticationTypes {
 /** Represents the Confluence distribution properties. */
 export type ConfluenceDistributionProperties = {
   __typename?: 'ConfluenceDistributionProperties';
+  /** The Confluence page ID. */
+  pageId?: Maybe<Scalars['String']['output']>;
+  /** The Confluence page URI. */
+  pageUri?: Maybe<Scalars['String']['output']>;
   /** The parent page ID for nesting. */
   parentPageId?: Maybe<Scalars['String']['output']>;
   /** The Confluence space ID. */
   spaceId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The page title. */
   title?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the Confluence distribution properties. */
 export type ConfluenceDistributionPropertiesInput = {
+  /** The Confluence page ID. */
+  pageId?: InputMaybe<Scalars['String']['input']>;
+  /** The Confluence page URI. */
+  pageUri?: InputMaybe<Scalars['String']['input']>;
   /** The parent page ID for nesting. */
   parentPageId?: InputMaybe<Scalars['String']['input']>;
   /** The Confluence space ID. */
   spaceId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5822,14 +5782,6 @@ export type DiscordDistributionProperties = {
   __typename?: 'DiscordDistributionProperties';
   /** The Discord channel or DM ID. */
   channelId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The thread ID to reply to. */
   threadId?: Maybe<Scalars['String']['output']>;
 };
@@ -5838,14 +5790,6 @@ export type DiscordDistributionProperties = {
 export type DiscordDistributionPropertiesInput = {
   /** The Discord channel or DM ID. */
   channelId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The thread ID to reply to. */
   threadId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5942,6 +5886,8 @@ export type DistributionConnector = {
   hubSpot?: Maybe<HubSpotDistributionProperties>;
   /** The specific properties for Jira distribution. */
   jira?: Maybe<JiraDistributionProperties>;
+  /** The requested write kind. */
+  kind?: Maybe<DistributionTargetKindTypes>;
   /** The specific properties for Linear distribution. */
   linear?: Maybe<LinearDistributionProperties>;
   /** The specific properties for Microsoft Calendar distribution. */
@@ -5956,6 +5902,8 @@ export type DistributionConnector = {
   notion?: Maybe<NotionDistributionProperties>;
   /** The specific properties for OneDrive distribution. */
   oneDrive?: Maybe<OneDriveDistributionProperties>;
+  /** The requested write operation. */
+  operation?: Maybe<DistributionTargetOperationTypes>;
   /** The specific properties for Salesforce distribution. */
   salesforce?: Maybe<SalesforceDistributionProperties>;
   /** The specific properties for SharePoint distribution. */
@@ -5994,6 +5942,8 @@ export type DistributionConnectorInput = {
   hubSpot?: InputMaybe<HubSpotDistributionPropertiesInput>;
   /** The specific properties for Jira distribution. */
   jira?: InputMaybe<JiraDistributionPropertiesInput>;
+  /** The requested write kind. */
+  kind?: InputMaybe<DistributionTargetKindTypes>;
   /** The specific properties for Linear distribution. */
   linear?: InputMaybe<LinearDistributionPropertiesInput>;
   /** The specific properties for Microsoft Calendar distribution. */
@@ -6008,6 +5958,8 @@ export type DistributionConnectorInput = {
   notion?: InputMaybe<NotionDistributionPropertiesInput>;
   /** The specific properties for OneDrive distribution. */
   oneDrive?: InputMaybe<OneDriveDistributionPropertiesInput>;
+  /** The requested write operation. */
+  operation?: InputMaybe<DistributionTargetOperationTypes>;
   /** The specific properties for Salesforce distribution. */
   salesforce?: InputMaybe<SalesforceDistributionPropertiesInput>;
   /** The specific properties for SharePoint distribution. */
@@ -6112,7 +6064,7 @@ export type DistributionTargetInput = {
   connector: DistributionConnectorInput;
 };
 
-/** Distribution target kind type */
+/** Distribution kind type */
 export enum DistributionTargetKindTypes {
   /** Write to the primary body or content of the target resource. */
   Body = 'BODY',
@@ -6120,7 +6072,7 @@ export enum DistributionTargetKindTypes {
   Comment = 'COMMENT'
 }
 
-/** Distribution target operation type */
+/** Distribution operation type */
 export enum DistributionTargetOperationTypes {
   /** Append to an existing target body. */
   Append = 'APPEND',
@@ -7943,12 +7895,16 @@ export type Fact = {
   conversation?: Maybe<Conversation>;
   /** The creation date of the fact. */
   creationDate: Scalars['DateTime']['output'];
+  /** The evidence used to support this fact. */
+  evidence?: Maybe<Array<Maybe<FactEvidence>>>;
   /** The feeds that discovered this fact. */
   feeds?: Maybe<Array<Maybe<Feed>>>;
   /** The ID of the fact. */
   id: Scalars['ID']['output'];
   /** The date/time when this fact became invalid. */
   invalidAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The fact kind. */
+  kind?: Maybe<Scalars['String']['output']>;
   /** The entities mentioned in this fact. */
   mentions?: Maybe<Array<Maybe<MentionReference>>>;
   /** The modified date of the fact. */
@@ -8032,6 +7988,130 @@ export enum FactCategory {
   Relationship = 'RELATIONSHIP'
 }
 
+/** Represents a fact citation. */
+export type FactCitation = {
+  __typename?: 'FactCitation';
+  /** The confidence score for the citation (0.0 to 1.0). */
+  confidence?: Maybe<Scalars['Float']['output']>;
+  /** The citation end character offset. */
+  endOffset?: Maybe<Scalars['Int']['output']>;
+  /** The citation end time, within the referenced audio or video content. */
+  endTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The citation frame number, within the referenced image content. */
+  frameNumber?: Maybe<Scalars['Int']['output']>;
+  /** The citation index. */
+  index?: Maybe<Scalars['Int']['output']>;
+  /** The citation metadata. */
+  metadata?: Maybe<Scalars['String']['output']>;
+  /** The citation page number, within the referenced content. */
+  pageNumber?: Maybe<Scalars['Int']['output']>;
+  /** The relevance score for the citation. */
+  relevance?: Maybe<Scalars['Float']['output']>;
+  /** The content or conversation cited by this citation. */
+  source?: Maybe<EntityReference>;
+  /** The citation source type. */
+  sourceType?: Maybe<FactCitationSourceTypes>;
+  /** The citation start character offset. */
+  startOffset?: Maybe<Scalars['Int']['output']>;
+  /** The citation start time, within the referenced audio or video content. */
+  startTime?: Maybe<Scalars['TimeSpan']['output']>;
+  /** The citation text. */
+  text?: Maybe<Scalars['String']['output']>;
+  /** The citation title. */
+  title?: Maybe<Scalars['String']['output']>;
+  /** The citation URI. */
+  uri?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents a fact citation. */
+export type FactCitationInput = {
+  /** The confidence score for the citation (0.0 to 1.0). */
+  confidence?: InputMaybe<Scalars['Float']['input']>;
+  /** The citation end character offset. */
+  endOffset?: InputMaybe<Scalars['Int']['input']>;
+  /** The citation end time, within the referenced audio or video content. */
+  endTime?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** The citation frame number, within the referenced image content. */
+  frameNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** The citation index. */
+  index?: InputMaybe<Scalars['Int']['input']>;
+  /** The citation metadata. */
+  metadata?: InputMaybe<Scalars['String']['input']>;
+  /** The citation page number, within the referenced content. */
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** The relevance score for the citation. */
+  relevance?: InputMaybe<Scalars['Float']['input']>;
+  /** The content or conversation cited by this citation. */
+  source?: InputMaybe<EntityReferenceInput>;
+  /** The citation source type. */
+  sourceType?: InputMaybe<FactCitationSourceTypes>;
+  /** The citation start character offset. */
+  startOffset?: InputMaybe<Scalars['Int']['input']>;
+  /** The citation start time, within the referenced audio or video content. */
+  startTime?: InputMaybe<Scalars['TimeSpan']['input']>;
+  /** The citation text. */
+  text?: InputMaybe<Scalars['String']['input']>;
+  /** The citation title. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** The citation URI. */
+  uri?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The source type for a fact citation. */
+export enum FactCitationSourceTypes {
+  /** Content citation source. */
+  Content = 'CONTENT',
+  /** Conversation citation source. */
+  Conversation = 'CONVERSATION'
+}
+
+/** Represents evidence supporting a fact. */
+export type FactEvidence = {
+  __typename?: 'FactEvidence';
+  /** The citations within the evidence. */
+  citations?: Maybe<Array<Maybe<FactCitation>>>;
+  /** The confidence score for the evidence (0.0 to 1.0). */
+  confidence?: Maybe<Scalars['Float']['output']>;
+  /** The content, conversation, or fact used as evidence. */
+  entity?: Maybe<EntityReference>;
+  /** The evidence text. */
+  text?: Maybe<Scalars['String']['output']>;
+  /** The evidence type. */
+  type?: Maybe<FactEvidenceTypes>;
+};
+
+/** Represents a filter for fact evidence. */
+export type FactEvidenceFilter = {
+  /** Filter by evidence entity. */
+  entity?: InputMaybe<EntityReferenceFilter>;
+  /** Filter by evidence type. */
+  type?: InputMaybe<FactEvidenceTypes>;
+};
+
+/** Represents evidence supporting a fact. */
+export type FactEvidenceInput = {
+  /** The citations within the evidence. */
+  citations?: InputMaybe<Array<InputMaybe<FactCitationInput>>>;
+  /** The confidence score for the evidence (0.0 to 1.0). */
+  confidence?: InputMaybe<Scalars['Float']['input']>;
+  /** The content, conversation, or fact used as evidence. */
+  entity: EntityReferenceInput;
+  /** The evidence text. */
+  text?: InputMaybe<Scalars['String']['input']>;
+  /** The evidence type. */
+  type: FactEvidenceTypes;
+};
+
+/** The type of resource used as evidence for a fact. */
+export enum FactEvidenceTypes {
+  /** Content evidence. */
+  Content = 'CONTENT',
+  /** Conversation evidence. */
+  Conversation = 'CONVERSATION',
+  /** Fact evidence. */
+  Fact = 'FACT'
+}
+
 /** Represents a filter for facts. */
 export type FactFilter = {
   /** Filter by fact categories. */
@@ -8048,6 +8128,8 @@ export type FactFilter = {
   direction?: InputMaybe<OrderDirectionTypes>;
   /** Whether to disable inheritance from project to owner, upon fact retrieval. Defaults to False. */
   disableInheritance?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by evidence resources. Multiple evidence filters use AND logic (all must match). */
+  evidence?: InputMaybe<Array<InputMaybe<FactEvidenceFilter>>>;
   /** Filter by specific facts. */
   facts?: InputMaybe<Array<InputMaybe<EntityReferenceFilter>>>;
   /** Filter by feeds that discovered the fact. */
@@ -8106,10 +8188,16 @@ export type FactInput = {
   content?: InputMaybe<EntityReferenceInput>;
   /** The conversation to which this fact belongs. */
   conversation?: InputMaybe<EntityReferenceInput>;
+  /** The evidence used to support this fact. */
+  evidence?: InputMaybe<Array<InputMaybe<FactEvidenceInput>>>;
   /** The feeds that discovered this fact. */
   feeds?: InputMaybe<Array<InputMaybe<EntityReferenceInput>>>;
   /** The date/time when this fact became invalid. */
   invalidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The fact kind. */
+  kind?: InputMaybe<Scalars['String']['input']>;
+  /** The entities mentioned in this fact. */
+  mentions?: InputMaybe<Array<InputMaybe<MentionReferenceInput>>>;
   /** The persona to which this fact belongs. */
   persona?: InputMaybe<EntityReferenceInput>;
   /** The fact assertion text. */
@@ -8159,10 +8247,20 @@ export type FactStrategyUpdateInput = {
 
 /** Represents a fact. */
 export type FactUpdateInput = {
+  /** The ordered assertions within this fact trace. */
+  assertions?: InputMaybe<Array<InputMaybe<FactAssertionInput>>>;
+  /** The category of the fact for decision trace classification. */
+  category?: InputMaybe<FactCategory>;
+  /** The confidence score of the fact extraction (0.0 to 1.0). */
+  confidence?: InputMaybe<Scalars['Float']['input']>;
+  /** The evidence used to support this fact. */
+  evidence?: InputMaybe<Array<InputMaybe<FactEvidenceInput>>>;
   /** The ID of the fact to update. */
   id: Scalars['ID']['input'];
   /** The date/time when this fact became invalid. */
   invalidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The fact kind. */
+  kind?: InputMaybe<Scalars['String']['input']>;
   /** The fact assertion text. */
   text?: InputMaybe<Scalars['String']['input']>;
   /** The date/time when this fact became valid. */
@@ -9236,14 +9334,6 @@ export type GitHubDistributionProperties = {
   repositoryName: Scalars['String']['output'];
   /** The repository owner (org or user). */
   repositoryOwner: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The issue title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -9260,14 +9350,6 @@ export type GitHubDistributionPropertiesInput = {
   repositoryName: Scalars['String']['input'];
   /** The repository owner (org or user). */
   repositoryOwner: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9717,14 +9799,6 @@ export type GitLabDistributionProperties = {
   milestone?: Maybe<Scalars['Int']['output']>;
   /** The GitLab project path. */
   projectPath: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The issue title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -9739,14 +9813,6 @@ export type GitLabDistributionPropertiesInput = {
   milestone?: InputMaybe<Scalars['Int']['input']>;
   /** The GitLab project path. */
   projectPath: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10077,14 +10143,6 @@ export type GmailDistributionProperties = {
   isDraft?: Maybe<Scalars['Boolean']['output']>;
   /** The email subject line. */
   subject: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['output']>;
 };
@@ -10103,14 +10161,6 @@ export type GmailDistributionPropertiesInput = {
   isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['input']>;
 };
@@ -10146,20 +10196,16 @@ export type GoogleCalendarDistributionProperties = {
   calendarId?: Maybe<Scalars['String']['output']>;
   /** The event end date and time. */
   endDateTime?: Maybe<Scalars['DateTime']['output']>;
+  /** The Google Calendar event ID. */
+  eventId?: Maybe<Scalars['String']['output']>;
+  /** The Google Calendar event URI. */
+  eventUri?: Maybe<Scalars['String']['output']>;
   /** The event location. */
   location?: Maybe<Scalars['String']['output']>;
   /** The event start date and time. */
   startDateTime?: Maybe<Scalars['DateTime']['output']>;
   /** The event title. */
   summary?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The IANA time zone. */
   timeZone?: Maybe<Scalars['String']['output']>;
 };
@@ -10172,20 +10218,16 @@ export type GoogleCalendarDistributionPropertiesInput = {
   calendarId?: InputMaybe<Scalars['String']['input']>;
   /** The event end date and time. */
   endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The Google Calendar event ID. */
+  eventId?: InputMaybe<Scalars['String']['input']>;
+  /** The Google Calendar event URI. */
+  eventUri?: InputMaybe<Scalars['String']['input']>;
   /** The event location. */
   location?: InputMaybe<Scalars['String']['input']>;
   /** The event start date and time. */
   startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event title. */
   summary?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The IANA time zone. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10355,32 +10397,24 @@ export type GoogleContactsCrmFeedPropertiesUpdateInput = {
 /** Represents the Google Docs distribution properties. */
 export type GoogleDocsDistributionProperties = {
   __typename?: 'GoogleDocsDistributionProperties';
+  /** The Google Docs document ID. */
+  documentId?: Maybe<Scalars['String']['output']>;
+  /** The Google Docs document URI. */
+  documentUri?: Maybe<Scalars['String']['output']>;
   /** The Google Drive folder ID to create the doc in. */
   folderId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The document title. */
   title?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the Google Docs distribution properties. */
 export type GoogleDocsDistributionPropertiesInput = {
+  /** The Google Docs document ID. */
+  documentId?: InputMaybe<Scalars['String']['input']>;
+  /** The Google Docs document URI. */
+  documentUri?: InputMaybe<Scalars['String']['input']>;
   /** The Google Drive folder ID to create the doc in. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The document title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10398,34 +10432,26 @@ export enum GoogleDriveAuthenticationTypes {
 /** Represents the Google Drive distribution properties. */
 export type GoogleDriveDistributionProperties = {
   __typename?: 'GoogleDriveDistributionProperties';
+  /** The Google Drive file ID. */
+  fileId?: Maybe<Scalars['String']['output']>;
   /** The override filename. */
   fileName?: Maybe<Scalars['String']['output']>;
+  /** The Google Drive file URI. */
+  fileUri?: Maybe<Scalars['String']['output']>;
   /** The target folder ID. */
   folderId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the Google Drive distribution properties. */
 export type GoogleDriveDistributionPropertiesInput = {
+  /** The Google Drive file ID. */
+  fileId?: InputMaybe<Scalars['String']['input']>;
   /** The override filename. */
   fileName?: InputMaybe<Scalars['String']['input']>;
+  /** The Google Drive file URI. */
+  fileUri?: InputMaybe<Scalars['String']['input']>;
   /** The target folder ID. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a Google Drive shared drive. */
@@ -11638,14 +11664,6 @@ export type HubSpotDistributionProperties = {
   objectId: Scalars['String']['output'];
   /** The CRM object type. */
   objectType: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the HubSpot distribution properties. */
@@ -11654,14 +11672,6 @@ export type HubSpotDistributionPropertiesInput = {
   objectId: Scalars['String']['input'];
   /** The CRM object type. */
   objectType: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum HubSpotFeedAuthenticationTypes {
@@ -13188,8 +13198,12 @@ export type JiraDistributionProperties = {
   __typename?: 'JiraDistributionProperties';
   /** The assignee account ID. */
   assigneeId?: Maybe<Scalars['String']['output']>;
+  /** The Jira issue key. */
+  issueKey?: Maybe<Scalars['String']['output']>;
   /** The issue type name. */
   issueType?: Maybe<Scalars['String']['output']>;
+  /** The Jira issue URI. */
+  issueUri?: Maybe<Scalars['String']['output']>;
   /** The label strings. */
   labels?: Maybe<Array<Scalars['String']['output']>>;
   /** The priority name. */
@@ -13200,22 +13214,18 @@ export type JiraDistributionProperties = {
   status?: Maybe<Scalars['String']['output']>;
   /** The issue title. */
   summary?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the Jira distribution properties. */
 export type JiraDistributionPropertiesInput = {
   /** The assignee account ID. */
   assigneeId?: InputMaybe<Scalars['String']['input']>;
+  /** The Jira issue key. */
+  issueKey?: InputMaybe<Scalars['String']['input']>;
   /** The issue type name. */
   issueType?: InputMaybe<Scalars['String']['input']>;
+  /** The Jira issue URI. */
+  issueUri?: InputMaybe<Scalars['String']['input']>;
   /** The label strings. */
   labels?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The priority name. */
@@ -13226,14 +13236,6 @@ export type JiraDistributionPropertiesInput = {
   status?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
   summary?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Jira Epics feed properties. */
@@ -13517,6 +13519,10 @@ export type LinearDistributionProperties = {
   __typename?: 'LinearDistributionProperties';
   /** The assignee user ID. */
   assigneeId?: Maybe<Scalars['String']['output']>;
+  /** The Linear issue ID. */
+  issueId?: Maybe<Scalars['String']['output']>;
+  /** The Linear issue URI. */
+  issueUri?: Maybe<Scalars['String']['output']>;
   /** The label IDs. */
   labelIds?: Maybe<Array<Scalars['String']['output']>>;
   /** The issue priority, from 0 (none) to 4 (urgent). */
@@ -13525,14 +13531,6 @@ export type LinearDistributionProperties = {
   projectId?: Maybe<Scalars['String']['output']>;
   /** The workflow state ID. */
   stateId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The Linear team UUID. */
   teamId?: Maybe<Scalars['String']['output']>;
   /** The issue title. */
@@ -13543,6 +13541,10 @@ export type LinearDistributionProperties = {
 export type LinearDistributionPropertiesInput = {
   /** The assignee user ID. */
   assigneeId?: InputMaybe<Scalars['String']['input']>;
+  /** The Linear issue ID. */
+  issueId?: InputMaybe<Scalars['String']['input']>;
+  /** The Linear issue URI. */
+  issueUri?: InputMaybe<Scalars['String']['input']>;
   /** The label IDs. */
   labelIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The issue priority, from 0 (none) to 4 (urgent). */
@@ -13551,14 +13553,6 @@ export type LinearDistributionPropertiesInput = {
   projectId?: InputMaybe<Scalars['String']['input']>;
   /** The workflow state ID. */
   stateId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Linear team UUID. */
   teamId?: InputMaybe<Scalars['String']['input']>;
   /** The issue title. */
@@ -16369,6 +16363,10 @@ export type MicrosoftCalendarDistributionProperties = {
   calendarId?: Maybe<Scalars['String']['output']>;
   /** The event end date and time. */
   endDateTime?: Maybe<Scalars['DateTime']['output']>;
+  /** The Microsoft Calendar event ID. */
+  eventId?: Maybe<Scalars['String']['output']>;
+  /** The Microsoft Calendar event URI. */
+  eventUri?: Maybe<Scalars['String']['output']>;
   /** Whether to create a Teams meeting link. */
   isOnlineMeeting?: Maybe<Scalars['Boolean']['output']>;
   /** The event location. */
@@ -16377,14 +16375,6 @@ export type MicrosoftCalendarDistributionProperties = {
   startDateTime?: Maybe<Scalars['DateTime']['output']>;
   /** The event title. */
   subject?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The Windows time zone name. */
   timeZone?: Maybe<Scalars['String']['output']>;
 };
@@ -16397,6 +16387,10 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   calendarId?: InputMaybe<Scalars['String']['input']>;
   /** The event end date and time. */
   endDateTime?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The Microsoft Calendar event ID. */
+  eventId?: InputMaybe<Scalars['String']['input']>;
+  /** The Microsoft Calendar event URI. */
+  eventUri?: InputMaybe<Scalars['String']['input']>;
   /** Whether to create a Teams meeting link. */
   isOnlineMeeting?: InputMaybe<Scalars['Boolean']['input']>;
   /** The event location. */
@@ -16405,14 +16399,6 @@ export type MicrosoftCalendarDistributionPropertiesInput = {
   startDateTime?: InputMaybe<Scalars['DateTime']['input']>;
   /** The event title. */
   subject?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Windows time zone name. */
   timeZone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -16686,14 +16672,6 @@ export type MicrosoftOutlookDistributionProperties = {
   isDraft?: Maybe<Scalars['Boolean']['output']>;
   /** The email subject line. */
   subject: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['output']>;
 };
@@ -16714,14 +16692,6 @@ export type MicrosoftOutlookDistributionPropertiesInput = {
   isDraft?: InputMaybe<Scalars['Boolean']['input']>;
   /** The email subject line. */
   subject: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The recipient email addresses. */
   to: Array<Scalars['String']['input']>;
 };
@@ -16766,14 +16736,6 @@ export type MicrosoftTeamsDistributionProperties = {
   __typename?: 'MicrosoftTeamsDistributionProperties';
   /** The channel ID within the team. */
   channelId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The Teams team ID. */
   teamId: Scalars['String']['output'];
   /** The thread message ID to reply to. */
@@ -16784,14 +16746,6 @@ export type MicrosoftTeamsDistributionProperties = {
 export type MicrosoftTeamsDistributionPropertiesInput = {
   /** The channel ID within the team. */
   channelId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The Teams team ID. */
   teamId: Scalars['String']['input'];
   /** The thread message ID to reply to. */
@@ -16916,34 +16870,26 @@ export type MicrosoftTeamsTeamsInput = {
 /** Represents the Microsoft Word distribution properties. */
 export type MicrosoftWordDistributionProperties = {
   __typename?: 'MicrosoftWordDistributionProperties';
+  /** The Microsoft Word file ID. */
+  fileId?: Maybe<Scalars['String']['output']>;
   /** The override filename. */
   fileName?: Maybe<Scalars['String']['output']>;
+  /** The Microsoft Word file URI. */
+  fileUri?: Maybe<Scalars['String']['output']>;
   /** The OneDrive/SharePoint folder ID to create the doc in. */
   folderId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the Microsoft Word distribution properties. */
 export type MicrosoftWordDistributionPropertiesInput = {
+  /** The Microsoft Word file ID. */
+  fileId?: InputMaybe<Scalars['String']['input']>;
   /** The override filename. */
   fileName?: InputMaybe<Scalars['String']['input']>;
+  /** The Microsoft Word file URI. */
+  fileUri?: InputMaybe<Scalars['String']['input']>;
   /** The OneDrive/SharePoint folder ID to create the doc in. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents the Mistral document preparation properties. */
@@ -17758,8 +17704,6 @@ export type Mutation = {
   removeSkillsFromCollection?: Maybe<Collection>;
   /** Research contents via web research based on provided filter criteria. */
   researchContents?: Maybe<StringResult>;
-  /** Resets project credits and re-enables limited entities. */
-  resetProjectCredits?: Maybe<Project>;
   /** Resets user credits and re-enables limited entities for the user. */
   resetUserCredits?: Maybe<User>;
   /** Resolves duplicate entities into a single primary entity using LLM reasoning. Returns clusters of suggested groupings if resolution is not executed. */
@@ -19869,16 +19813,12 @@ export type NotionDistributionProperties = {
   __typename?: 'NotionDistributionProperties';
   /** The Notion database ID to create entry in. */
   databaseId?: Maybe<Scalars['String']['output']>;
+  /** The Notion page ID. */
+  pageId?: Maybe<Scalars['String']['output']>;
+  /** The Notion page URI. */
+  pageUri?: Maybe<Scalars['String']['output']>;
   /** The Notion page ID to create child page under. */
   parentPageId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The page title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -19887,16 +19827,12 @@ export type NotionDistributionProperties = {
 export type NotionDistributionPropertiesInput = {
   /** The Notion database ID to create entry in. */
   databaseId?: InputMaybe<Scalars['String']['input']>;
+  /** The Notion page ID. */
+  pageId?: InputMaybe<Scalars['String']['input']>;
+  /** The Notion page URI. */
+  pageUri?: InputMaybe<Scalars['String']['input']>;
   /** The Notion page ID to create child page under. */
   parentPageId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -20386,34 +20322,26 @@ export enum OneDriveAuthenticationTypes {
 /** Represents the OneDrive distribution properties. */
 export type OneDriveDistributionProperties = {
   __typename?: 'OneDriveDistributionProperties';
+  /** The OneDrive file ID. */
+  fileId?: Maybe<Scalars['String']['output']>;
   /** The override filename. */
   fileName?: Maybe<Scalars['String']['output']>;
+  /** The OneDrive file URI. */
+  fileUri?: Maybe<Scalars['String']['output']>;
   /** The target folder ID. */
   folderId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the OneDrive distribution properties. */
 export type OneDriveDistributionPropertiesInput = {
+  /** The OneDrive file ID. */
+  fileId?: InputMaybe<Scalars['String']['input']>;
   /** The override filename. */
   fileName?: InputMaybe<Scalars['String']['input']>;
+  /** The OneDrive file URI. */
+  fileUri?: InputMaybe<Scalars['String']['input']>;
   /** The target folder ID. */
   folderId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents OneDrive properties. */
@@ -25802,14 +25730,6 @@ export type SalesforceDistributionProperties = {
   objectId: Scalars['String']['output'];
   /** The Salesforce object type. */
   objectType: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The note title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -25820,14 +25740,6 @@ export type SalesforceDistributionPropertiesInput = {
   objectId: Scalars['String']['input'];
   /** The Salesforce object type. */
   objectType: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The note title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26093,14 +26005,6 @@ export type SharePointDistributionProperties = {
   __typename?: 'SharePointDistributionProperties';
   /** The SharePoint site ID. */
   siteId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The page title. */
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -26109,14 +26013,6 @@ export type SharePointDistributionProperties = {
 export type SharePointDistributionPropertiesInput = {
   /** The SharePoint site ID. */
   siteId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The page title. */
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26685,14 +26581,6 @@ export type SlackDistributionProperties = {
   __typename?: 'SlackDistributionProperties';
   /** The channel or DM ID. */
   channelId: Scalars['String']['output'];
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
   /** The thread timestamp for replying to a thread. */
   threadTs?: Maybe<Scalars['String']['output']>;
 };
@@ -26701,14 +26589,6 @@ export type SlackDistributionProperties = {
 export type SlackDistributionPropertiesInput = {
   /** The channel or DM ID. */
   channelId: Scalars['String']['input'];
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
   /** The thread timestamp for replying to a thread. */
   threadTs?: InputMaybe<Scalars['String']['input']>;
 };
@@ -27932,28 +27812,12 @@ export type TwitterDistributionProperties = {
   __typename?: 'TwitterDistributionProperties';
   /** The tweet ID to reply to. */
   replyToTweetId?: Maybe<Scalars['String']['output']>;
-  /** The target resource identifier. */
-  targetIdentifier?: Maybe<Scalars['String']['output']>;
-  /** The target write kind. */
-  targetKind?: Maybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: Maybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents the X/Twitter distribution properties. */
 export type TwitterDistributionPropertiesInput = {
   /** The tweet ID to reply to. */
   replyToTweetId?: InputMaybe<Scalars['String']['input']>;
-  /** The target resource identifier. */
-  targetIdentifier?: InputMaybe<Scalars['String']['input']>;
-  /** The target write kind. */
-  targetKind?: InputMaybe<DistributionTargetKindTypes>;
-  /** The requested target write operation. */
-  targetOperation?: InputMaybe<DistributionTargetOperationTypes>;
-  /** The target resource URI. */
-  targetUri?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents Twitter feed properties. */
@@ -29121,7 +28985,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, notion?: { __typename?: 'NotionDistributionProperties', parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', teamId: string, channelId: string, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', teamId: string, channelId: string, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -29129,7 +28993,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, notion?: { __typename?: 'NotionDistributionProperties', parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', teamId: string, channelId: string, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', teamId: string, channelId: string, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
