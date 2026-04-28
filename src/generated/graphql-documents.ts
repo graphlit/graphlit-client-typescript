@@ -459,6 +459,8 @@ export const GetAgent = gql`
           threadId
         }
         twitter {
+          postId
+          postUri
           replyToTweetId
         }
         github {
@@ -893,6 +895,8 @@ export const QueryAgents = gql`
             threadId
           }
           twitter {
+            postId
+            postUri
             replyToTweetId
           }
           github {
@@ -18326,6 +18330,25 @@ export const CreateReplica = gql`
         observationMode
       }
     }
+    skill {
+      filter {
+        skillOwners
+        skills {
+          id
+        }
+        excludeSkills {
+          id
+        }
+        feeds {
+          id
+        }
+        hasFeeds
+        collections {
+          id
+        }
+        hasCollections
+      }
+    }
     git {
       branchType
       branch
@@ -18546,6 +18569,25 @@ export const GetReplica = gql`
         observationMode
       }
     }
+    skill {
+      filter {
+        skillOwners
+        skills {
+          id
+        }
+        excludeSkills {
+          id
+        }
+        feeds {
+          id
+        }
+        hasFeeds
+        collections {
+          id
+        }
+        hasCollections
+      }
+    }
     git {
       branchType
       branch
@@ -18719,6 +18761,25 @@ export const QueryReplicas = gql`
           hasObservations
           collectionMode
           observationMode
+        }
+      }
+      skill {
+        filter {
+          skillOwners
+          skills {
+            id
+          }
+          excludeSkills {
+            id
+          }
+          feeds {
+            id
+          }
+          hasFeeds
+          collections {
+            id
+          }
+          hasCollections
         }
       }
       git {
@@ -18905,6 +18966,25 @@ export const UpdateReplica = gql`
         observationMode
       }
     }
+    skill {
+      filter {
+        skillOwners
+        skills {
+          id
+        }
+        excludeSkills {
+          id
+        }
+        feeds {
+          id
+        }
+        hasFeeds
+        collections {
+          id
+        }
+        hasCollections
+      }
+    }
     git {
       branchType
       branch
@@ -19071,6 +19151,25 @@ export const UpsertReplica = gql`
         hasObservations
         collectionMode
         observationMode
+      }
+    }
+    skill {
+      filter {
+        skillOwners
+        skills {
+          id
+        }
+        excludeSkills {
+          id
+        }
+        feeds {
+          id
+        }
+        hasFeeds
+        collections {
+          id
+        }
+        hasCollections
       }
     }
     git {
