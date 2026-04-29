@@ -454,6 +454,7 @@ export const GetAgent = gql`
           threadId
         }
         microsoftTeams {
+          chatId
           teamId
           channelId
           threadId
@@ -890,6 +891,7 @@ export const QueryAgents = gql`
             threadId
           }
           microsoftTeams {
+            chatId
             teamId
             channelId
             threadId
