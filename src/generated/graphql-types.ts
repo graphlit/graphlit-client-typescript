@@ -16731,42 +16731,6 @@ export type MicrosoftTeamsChannelsInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents a Microsoft Teams chat. */
-export type MicrosoftTeamsChatResult = {
-  __typename?: 'MicrosoftTeamsChatResult';
-  /** The Microsoft Teams chat identifier. */
-  chatId?: Maybe<Scalars['ID']['output']>;
-  /** The Microsoft Teams chat name. */
-  chatName?: Maybe<Scalars['String']['output']>;
-  /** The Microsoft Teams chat type. */
-  chatType?: Maybe<Scalars['String']['output']>;
-  /** The Microsoft Teams chat member names. */
-  memberNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  /** The Microsoft Teams chat URL. */
-  webUrl?: Maybe<Scalars['String']['output']>;
-};
-
-/** Represents Microsoft Teams chats. */
-export type MicrosoftTeamsChatResults = {
-  __typename?: 'MicrosoftTeamsChatResults';
-  /** The Microsoft Teams chats. */
-  results?: Maybe<Array<Maybe<MicrosoftTeamsChatResult>>>;
-};
-
-/** Represents Microsoft Teams chats properties. */
-export type MicrosoftTeamsChatsInput = {
-  /** Microsoft Teams authentication type, defaults to User. */
-  authenticationType?: InputMaybe<MicrosoftTeamsAuthenticationTypes>;
-  /** Microsoft Teams client identifier, requires User authentication type. */
-  clientId?: InputMaybe<Scalars['String']['input']>;
-  /** Microsoft Teams client secret, requires User authentication type. */
-  clientSecret?: InputMaybe<Scalars['String']['input']>;
-  /** The authentication connector reference. */
-  connector?: InputMaybe<EntityReferenceInput>;
-  /** Microsoft Teams refresh token, requires User authentication type. */
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** Represents the Microsoft Teams distribution properties. */
 export type MicrosoftTeamsDistributionProperties = {
   __typename?: 'MicrosoftTeamsDistributionProperties';
@@ -23409,8 +23373,6 @@ export type Query = {
   microsoftCalendars?: Maybe<CalendarResults>;
   /** Retrieves available Microsoft Teams team channels. */
   microsoftTeamsChannels?: Maybe<MicrosoftTeamsChannelResults>;
-  /** Retrieves available Microsoft Teams chats. */
-  microsoftTeamsChats?: Maybe<MicrosoftTeamsChatResults>;
   /** Retrieves available Microsoft Teams teams. */
   microsoftTeamsTeams?: Maybe<MicrosoftTeamsTeamResults>;
   /** Retrieves available LLMs, embedding models and reranker models. */
@@ -24328,11 +24290,6 @@ export type QueryMicrosoftCalendarsArgs = {
 export type QueryMicrosoftTeamsChannelsArgs = {
   properties: MicrosoftTeamsChannelsInput;
   teamId: Scalars['ID']['input'];
-};
-
-
-export type QueryMicrosoftTeamsChatsArgs = {
-  properties: MicrosoftTeamsChatsInput;
 };
 
 
