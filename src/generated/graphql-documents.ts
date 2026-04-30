@@ -433,6 +433,39 @@ export const GetAgent = gql`
           labels
           status
         }
+        zendesk {
+          ticketId
+          ticketUri
+          subdomain
+          subject
+          priority
+          status
+          type
+          assigneeId
+          groupId
+          tags
+          visibility
+        }
+        intercom {
+          ticketId
+          ticketUri
+          ticketTypeId
+          contactId
+          contactExternalId
+          contactEmail
+          conversationToLinkId
+          companyId
+          adminId
+          title
+          stateId
+          state
+          assigneeId
+          teamId
+          tagIds
+          visibility
+          isShared
+          skipNotifications
+        }
         googleDocs {
           documentId
           documentUri
@@ -873,6 +906,39 @@ export const QueryAgents = gql`
             assigneeId
             labels
             status
+          }
+          zendesk {
+            ticketId
+            ticketUri
+            subdomain
+            subject
+            priority
+            status
+            type
+            assigneeId
+            groupId
+            tags
+            visibility
+          }
+          intercom {
+            ticketId
+            ticketUri
+            ticketTypeId
+            contactId
+            contactExternalId
+            contactEmail
+            conversationToLinkId
+            companyId
+            adminId
+            title
+            stateId
+            state
+            assigneeId
+            teamId
+            tagIds
+            visibility
+            isShared
+            skipNotifications
           }
           googleDocs {
             documentId
