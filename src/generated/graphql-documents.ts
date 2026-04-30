@@ -479,6 +479,10 @@ export const GetAgent = gql`
           assignees
           milestone
         }
+        linkedIn {
+          postType
+          visibility
+        }
         attioTasks {
           title
           assignees
@@ -915,6 +919,10 @@ export const QueryAgents = gql`
             labels
             assignees
             milestone
+          }
+          linkedIn {
+            postType
+            visibility
           }
           attioTasks {
             title
