@@ -12278,10 +12278,48 @@ export enum IntegrationServiceTypes {
   WebHook = 'WEB_HOOK'
 }
 
+/** Represents an Intercom admin. */
+export type IntercomAdminResult = {
+  __typename?: 'IntercomAdminResult';
+  /** The admin email. */
+  email?: Maybe<Scalars['String']['output']>;
+  /** The Intercom admin identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The admin name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom admins. */
+export type IntercomAdminResults = {
+  __typename?: 'IntercomAdminResults';
+  /** The Intercom admins. */
+  results?: Maybe<Array<Maybe<IntercomAdminResult>>>;
+};
+
 export enum IntercomAuthenticationTypes {
   AccessToken = 'ACCESS_TOKEN',
   Connector = 'CONNECTOR'
 }
+
+/** Represents an Intercom contact. */
+export type IntercomContactResult = {
+  __typename?: 'IntercomContactResult';
+  /** The contact email. */
+  email?: Maybe<Scalars['String']['output']>;
+  /** The external contact identifier. */
+  externalId?: Maybe<Scalars['String']['output']>;
+  /** The Intercom contact identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The contact name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom contacts. */
+export type IntercomContactResults = {
+  __typename?: 'IntercomContactResults';
+  /** The Intercom contacts. */
+  results?: Maybe<Array<Maybe<IntercomContactResult>>>;
+};
 
 export enum IntercomConversationsAuthenticationTypes {
   AccessToken = 'ACCESS_TOKEN',
@@ -12507,6 +12545,74 @@ export enum IntercomIssueAuthenticationTypes {
   AccessToken = 'ACCESS_TOKEN',
   Connector = 'CONNECTOR'
 }
+
+/** Represents an Intercom tag. */
+export type IntercomTagResult = {
+  __typename?: 'IntercomTagResult';
+  /** The Intercom tag identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Intercom tag name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom tags. */
+export type IntercomTagResults = {
+  __typename?: 'IntercomTagResults';
+  /** The Intercom tags. */
+  results?: Maybe<Array<Maybe<IntercomTagResult>>>;
+};
+
+/** Represents an Intercom team. */
+export type IntercomTeamResult = {
+  __typename?: 'IntercomTeamResult';
+  /** The Intercom team identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Intercom team name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom teams. */
+export type IntercomTeamResults = {
+  __typename?: 'IntercomTeamResults';
+  /** The Intercom teams. */
+  results?: Maybe<Array<Maybe<IntercomTeamResult>>>;
+};
+
+/** Represents an Intercom ticket state. */
+export type IntercomTicketStateResult = {
+  __typename?: 'IntercomTicketStateResult';
+  /** The Intercom ticket state identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Intercom ticket state name. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The Intercom ticket state type. */
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom ticket states. */
+export type IntercomTicketStateResults = {
+  __typename?: 'IntercomTicketStateResults';
+  /** The Intercom ticket states. */
+  results?: Maybe<Array<Maybe<IntercomTicketStateResult>>>;
+};
+
+/** Represents an Intercom ticket type. */
+export type IntercomTicketTypeResult = {
+  __typename?: 'IntercomTicketTypeResult';
+  /** The Intercom ticket type description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The Intercom ticket type identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Intercom ticket type name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Intercom ticket types. */
+export type IntercomTicketTypeResults = {
+  __typename?: 'IntercomTicketTypeResults';
+  /** The Intercom ticket types. */
+  results?: Maybe<Array<Maybe<IntercomTicketTypeResult>>>;
+};
 
 /** Represents Intercom Tickets feed properties. */
 export type IntercomTicketsFeedProperties = {
@@ -13297,6 +13403,8 @@ export type JiraDistributionProperties = {
   __typename?: 'JiraDistributionProperties';
   /** The assignee account ID. */
   assigneeId?: Maybe<Scalars['String']['output']>;
+  /** The Atlassian cloud identifier. */
+  cloudId?: Maybe<Scalars['String']['output']>;
   /** The Jira issue key. */
   issueKey?: Maybe<Scalars['String']['output']>;
   /** The issue type name. */
@@ -13319,6 +13427,8 @@ export type JiraDistributionProperties = {
 export type JiraDistributionPropertiesInput = {
   /** The assignee account ID. */
   assigneeId?: InputMaybe<Scalars['String']['input']>;
+  /** The Atlassian cloud identifier. */
+  cloudId?: InputMaybe<Scalars['String']['input']>;
   /** The Jira issue key. */
   issueKey?: InputMaybe<Scalars['String']['input']>;
   /** The issue type name. */
@@ -13413,6 +13523,42 @@ export type JiraEpicsFeedPropertiesUpdateInput = {
   /** Jira API token. */
   token?: InputMaybe<Scalars['String']['input']>;
   /** Jira URI. */
+  uri?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Jira issue type. */
+export type JiraIssueTypeResult = {
+  __typename?: 'JiraIssueTypeResult';
+  /** The Jira issue type description. */
+  description?: Maybe<Scalars['String']['output']>;
+  /** The Jira issue type identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Jira issue type name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Jira issue types. */
+export type JiraIssueTypeResults = {
+  __typename?: 'JiraIssueTypeResults';
+  /** The Jira issue types. */
+  results?: Maybe<Array<Maybe<JiraIssueTypeResult>>>;
+};
+
+/** Represents Jira issue type query properties. */
+export type JiraIssueTypesInput = {
+  /** Authentication type, defaults to Token. */
+  authenticationType?: InputMaybe<JiraAuthenticationTypes>;
+  /** Atlassian cloud identifier, for Connector authentication. */
+  cloudId?: InputMaybe<Scalars['String']['input']>;
+  /** Authentication connector reference, for Connector authentication. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Atlassian account email address, for Token authentication. */
+  emailAddress?: InputMaybe<Scalars['String']['input']>;
+  /** Atlassian Jira project key. */
+  project: Scalars['String']['input'];
+  /** Atlassian API token, for Token authentication. */
+  token?: InputMaybe<Scalars['String']['input']>;
+  /** Atlassian Jira URI, for Token authentication. */
   uri?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -13762,8 +13908,64 @@ export type LinearInitiativesFeedPropertiesUpdateInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Linear project. */
+export type LinearProjectResult = {
+  __typename?: 'LinearProjectResult';
+  /** The Linear project identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Linear project name. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The Linear team identifier linked to the project. */
+  teamId?: Maybe<Scalars['ID']['output']>;
+  /** The Linear team key linked to the project. */
+  teamKey?: Maybe<Scalars['String']['output']>;
+  /** The Linear team name linked to the project. */
+  teamName?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Linear projects. */
+export type LinearProjectResults = {
+  __typename?: 'LinearProjectResults';
+  /** The Linear projects. */
+  results?: Maybe<Array<Maybe<LinearProjectResult>>>;
+};
+
 /** Represents Linear projects properties. */
 export type LinearProjectsInput = {
+  /** Linear authentication type, defaults to ApiKey. */
+  authenticationType?: InputMaybe<LinearAuthenticationTypes>;
+  /** Linear OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Linear OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Linear API key. */
+  key?: InputMaybe<Scalars['String']['input']>;
+  /** Linear OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Linear team. */
+export type LinearTeamResult = {
+  __typename?: 'LinearTeamResult';
+  /** The Linear team identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Linear team key. */
+  key?: Maybe<Scalars['String']['output']>;
+  /** The Linear team name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Linear teams. */
+export type LinearTeamResults = {
+  __typename?: 'LinearTeamResults';
+  /** The Linear teams. */
+  results?: Maybe<Array<Maybe<LinearTeamResult>>>;
+};
+
+/** Represents Linear team query properties. */
+export type LinearTeamsInput = {
   /** Linear authentication type, defaults to ApiKey. */
   authenticationType?: InputMaybe<LinearAuthenticationTypes>;
   /** Linear OAuth2 client identifier. */
@@ -23419,6 +23621,18 @@ export type Query = {
   gustoDepartments?: Maybe<HrisOptionResults>;
   /** Retrieves available Gusto locations for a company. */
   gustoLocations?: Maybe<GustoLocationResults>;
+  /** Retrieves available Intercom admins. */
+  intercomAdmins?: Maybe<IntercomAdminResults>;
+  /** Retrieves available Intercom contacts. */
+  intercomContacts?: Maybe<IntercomContactResults>;
+  /** Retrieves available Intercom tags. */
+  intercomTags?: Maybe<IntercomTagResults>;
+  /** Retrieves available Intercom teams. */
+  intercomTeams?: Maybe<IntercomTeamResults>;
+  /** Retrieves available Intercom ticket states. */
+  intercomTicketStates?: Maybe<IntercomTicketStateResults>;
+  /** Retrieves available Intercom ticket types. */
+  intercomTicketTypes?: Maybe<IntercomTicketTypeResults>;
   /** Lookup a investment given its ID. */
   investment?: Maybe<Investment>;
   /** Lookup a investment fund given its ID. */
@@ -23431,6 +23645,8 @@ export type Query = {
   isContentDone?: Maybe<BooleanResult>;
   /** Returns if all the contents ingested from a feed have finished (or errored). */
   isFeedDone?: Maybe<BooleanResult>;
+  /** Retrieves available Jira issue types for a project. */
+  jiraIssueTypes?: Maybe<JiraIssueTypeResults>;
   /** Retrieves available Jira projects. */
   jiraProjects?: Maybe<JiraProjectResults>;
   /** Lookup a label given its ID. */
@@ -23438,7 +23654,9 @@ export type Query = {
   /** Retrieves labels based on the provided filter criteria. */
   labels?: Maybe<LabelResults>;
   /** Retrieves available Linear projects. */
-  linearProjects?: Maybe<StringResults>;
+  linearProjects?: Maybe<LinearProjectResults>;
+  /** Retrieves available Linear teams. */
+  linearTeams?: Maybe<LinearTeamResults>;
   /** Looks up companies by name, domain, or LinkedIn URL. */
   lookupCompanies?: Maybe<CompanyLookupResults>;
   /** Lookup multiple contents given their IDs. */
@@ -23603,6 +23821,10 @@ export type Query = {
   workflowExists?: Maybe<BooleanResult>;
   /** Retrieves workflows based on the provided filter criteria. */
   workflows?: Maybe<WorkflowResults>;
+  /** Retrieves available Zendesk groups. */
+  zendeskGroups?: Maybe<ZendeskGroupResults>;
+  /** Retrieves available Zendesk users. */
+  zendeskUsers?: Maybe<ZendeskUserResults>;
 };
 
 
@@ -24146,6 +24368,43 @@ export type QueryGustoLocationsArgs = {
 };
 
 
+export type QueryIntercomAdminsArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIntercomContactsArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIntercomTagsArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIntercomTeamsArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIntercomTicketStatesArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+  ticketTypeId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIntercomTicketTypesArgs = {
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryInvestmentArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -24186,6 +24445,11 @@ export type QueryIsFeedDoneArgs = {
 };
 
 
+export type QueryJiraIssueTypesArgs = {
+  properties: JiraIssueTypesInput;
+};
+
+
 export type QueryJiraProjectsArgs = {
   properties: JiraProjectsInput;
 };
@@ -24206,6 +24470,11 @@ export type QueryLabelsArgs = {
 
 export type QueryLinearProjectsArgs = {
   properties: LinearProjectsInput;
+};
+
+
+export type QueryLinearTeamsArgs = {
+  properties: LinearTeamsInput;
 };
 
 
@@ -24737,6 +25006,18 @@ export type QueryWorkflowExistsArgs = {
 export type QueryWorkflowsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<WorkflowFilter>;
+};
+
+
+export type QueryZendeskGroupsArgs = {
+  properties: ZendeskDiscoveryInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryZendeskUsersArgs = {
+  properties: ZendeskDiscoveryInput;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Quiver Image model type */
@@ -28935,6 +29216,24 @@ export enum ZendeskAuthenticationTypes {
   Connector = 'CONNECTOR'
 }
 
+/** Represents Zendesk discovery query properties. */
+export type ZendeskDiscoveryInput = {
+  /** Zendesk access token. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Zendesk authentication type. */
+  authenticationType?: InputMaybe<ZendeskIssueAuthenticationTypes>;
+  /** Zendesk OAuth2 client identifier. */
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  /** Zendesk OAuth2 client secret. */
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Connector reference for credential retrieval. */
+  connector?: InputMaybe<EntityReferenceInput>;
+  /** Zendesk OAuth2 refresh token. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Zendesk subdomain, defaults from connector metadata when available. */
+  subdomain?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** Represents the Zendesk distribution properties. */
 export type ZendeskDistributionProperties = {
   __typename?: 'ZendeskDistributionProperties';
@@ -29049,6 +29348,22 @@ export type ZendeskFeedPropertiesUpdateInput = {
   subdomain?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents a Zendesk group. */
+export type ZendeskGroupResult = {
+  __typename?: 'ZendeskGroupResult';
+  /** The Zendesk group identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Zendesk group name. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Zendesk groups. */
+export type ZendeskGroupResults = {
+  __typename?: 'ZendeskGroupResults';
+  /** The Zendesk groups. */
+  results?: Maybe<Array<Maybe<ZendeskGroupResult>>>;
+};
+
 export enum ZendeskIssueAuthenticationTypes {
   AccessToken = 'ACCESS_TOKEN',
   Connector = 'CONNECTOR'
@@ -29107,6 +29422,26 @@ export type ZendeskTicketsFeedPropertiesUpdateInput = {
   refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Zendesk subdomain. */
   subdomain?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents a Zendesk user. */
+export type ZendeskUserResult = {
+  __typename?: 'ZendeskUserResult';
+  /** The Zendesk user email. */
+  email?: Maybe<Scalars['String']['output']>;
+  /** The Zendesk user identifier. */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The Zendesk user name. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The Zendesk user role. */
+  role?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents Zendesk users. */
+export type ZendeskUserResults = {
+  __typename?: 'ZendeskUserResults';
+  /** The Zendesk users. */
+  results?: Maybe<Array<Maybe<ZendeskUserResult>>>;
 };
 
 /** Zoom authentication type */
@@ -29238,7 +29573,7 @@ export type GetAgentQueryVariables = Exact<{
 }>;
 
 
-export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, zendesk?: { __typename?: 'ZendeskDistributionProperties', ticketId?: string | null, ticketUri?: string | null, subdomain?: string | null, subject?: string | null, priority?: string | null, status?: string | null, type?: string | null, assigneeId?: string | null, groupId?: string | null, tags?: Array<string> | null, visibility?: string | null } | null, intercom?: { __typename?: 'IntercomDistributionProperties', ticketId?: string | null, ticketUri?: string | null, ticketTypeId?: string | null, contactId?: string | null, contactExternalId?: string | null, contactEmail?: string | null, conversationToLinkId?: string | null, companyId?: string | null, adminId?: string | null, title?: string | null, stateId?: string | null, state?: string | null, assigneeId?: string | null, teamId?: string | null, tagIds?: Array<string> | null, visibility?: string | null, isShared?: boolean | null, skipNotifications?: boolean | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', chatId?: string | null, teamId?: string | null, channelId?: string | null, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', postId?: string | null, postUri?: string | null, replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, linkedIn?: { __typename?: 'LinkedInDistributionProperties', postType?: LinkedInPostTypes | null, visibility?: string | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null } | null };
+export type GetAgentQuery = { __typename?: 'Query', agent?: { __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, user?: { __typename?: 'EntityReference', id: string } | null, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, cloudId?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, zendesk?: { __typename?: 'ZendeskDistributionProperties', ticketId?: string | null, ticketUri?: string | null, subdomain?: string | null, subject?: string | null, priority?: string | null, status?: string | null, type?: string | null, assigneeId?: string | null, groupId?: string | null, tags?: Array<string> | null, visibility?: string | null } | null, intercom?: { __typename?: 'IntercomDistributionProperties', ticketId?: string | null, ticketUri?: string | null, ticketTypeId?: string | null, contactId?: string | null, contactExternalId?: string | null, contactEmail?: string | null, conversationToLinkId?: string | null, companyId?: string | null, adminId?: string | null, title?: string | null, stateId?: string | null, state?: string | null, assigneeId?: string | null, teamId?: string | null, tagIds?: Array<string> | null, visibility?: string | null, isShared?: boolean | null, skipNotifications?: boolean | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', chatId?: string | null, teamId?: string | null, channelId?: string | null, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', postId?: string | null, postUri?: string | null, replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, linkedIn?: { __typename?: 'LinkedInDistributionProperties', postType?: LinkedInPostTypes | null, visibility?: string | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null } | null };
 
 export type QueryAgentsQueryVariables = Exact<{
   filter?: InputMaybe<AgentFilter>;
@@ -29246,7 +29581,7 @@ export type QueryAgentsQueryVariables = Exact<{
 }>;
 
 
-export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, zendesk?: { __typename?: 'ZendeskDistributionProperties', ticketId?: string | null, ticketUri?: string | null, subdomain?: string | null, subject?: string | null, priority?: string | null, status?: string | null, type?: string | null, assigneeId?: string | null, groupId?: string | null, tags?: Array<string> | null, visibility?: string | null } | null, intercom?: { __typename?: 'IntercomDistributionProperties', ticketId?: string | null, ticketUri?: string | null, ticketTypeId?: string | null, contactId?: string | null, contactExternalId?: string | null, contactEmail?: string | null, conversationToLinkId?: string | null, companyId?: string | null, adminId?: string | null, title?: string | null, stateId?: string | null, state?: string | null, assigneeId?: string | null, teamId?: string | null, tagIds?: Array<string> | null, visibility?: string | null, isShared?: boolean | null, skipNotifications?: boolean | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', chatId?: string | null, teamId?: string | null, channelId?: string | null, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', postId?: string | null, postUri?: string | null, replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, linkedIn?: { __typename?: 'LinkedInDistributionProperties', postType?: LinkedInPostTypes | null, visibility?: string | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null }> | null } | null };
+export type QueryAgentsQuery = { __typename?: 'Query', agents?: { __typename?: 'AgentResults', results?: Array<{ __typename?: 'Agent', id: string, name: string, creationDate: any, modifiedDate?: any | null, relevance?: number | null, state: EntityState, correlationId?: string | null, type: AgentTypes, mode: AgentModes, description?: string | null, timeout?: any | null, prompt?: string | null, scratchpad?: string | null, focus?: string | null, researchDepth?: AgentResearchDepths | null, callbackUri?: any | null, owner: { __typename?: 'Owner', id: string }, specification?: { __typename?: 'Specification', id: string, name: string } | null, persona?: { __typename?: 'Persona', id: string, name: string } | null, trigger?: { __typename?: 'AgentTriggerFilter', types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null } | null, filter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, augmentedFilter?: { __typename?: 'ContentCriteria', inLast?: any | null, inNext?: any | null, createdInLast?: any | null, types?: Array<ContentTypes> | null, fileTypes?: Array<FileTypes> | null, formats?: Array<string> | null, fileExtensions?: Array<string> | null, hasObservations?: boolean | null, hasFeeds?: boolean | null, hasCollections?: boolean | null, hasWorkflows?: boolean | null, collectionMode?: FilterMode | null, observationMode?: FilterMode | null, dateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, creationDateRange?: { __typename?: 'DateRange', from?: any | null, to?: any | null } | null, fileSizeRange?: { __typename?: 'Int64Range', from?: any | null, to?: any | null } | null, similarContents?: Array<{ __typename?: 'EntityReference', id: string }> | null, contents?: Array<{ __typename?: 'EntityReference', id: string }> | null, feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null, or?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null, and?: Array<{ __typename?: 'ContentCriteriaLevel', feeds?: Array<{ __typename?: 'EntityReference', id: string }> | null, workflows?: Array<{ __typename?: 'EntityReference', id: string }> | null, collections?: Array<{ __typename?: 'EntityReference', id: string }> | null, users?: Array<{ __typename?: 'EntityReference', id: string }> | null, observations?: Array<{ __typename?: 'ObservationCriteria', type: ObservableTypes, states?: Array<EntityState> | null, observable: { __typename?: 'EntityReference', id: string } }> | null }> | null } | null, schedulePolicy?: { __typename?: 'AgentSchedulePolicy', recurrenceType?: TimedPolicyRecurrenceTypes | null, repeatInterval?: any | null, cron?: string | null, timeZoneId?: string | null } | null, heartbeat?: { __typename?: 'AgentHeartbeatProperties', enabled: boolean, frequencyMinutes: number, offHoursFrequencyMinutes?: number | null, activeHoursStart: string, activeHoursEnd: string, activeDays: Array<number>, timezone: string, probeThresholds?: { __typename?: 'AgentHeartbeatProbeThresholds', newContentMin?: number | null, volumeSpikeMultiplier?: number | null } | null } | null, channels?: Array<{ __typename?: 'AgentChannel', type: AgentChannelTypes, identifier: string, instructions?: string | null, label?: string | null }> | null, rules?: Array<{ __typename?: 'PromptClassificationRule', then?: string | null, if?: string | null }> | null, commands?: Array<{ __typename?: 'AgentCommand', keyword: string, name: string, description?: string | null, type: AgentCommandActionTypes, template: string, enabled: boolean }> | null, targets?: Array<{ __typename?: 'DistributionTarget', connector: { __typename?: 'DistributionConnector', type: DistributionServiceTypes, operation?: DistributionTargetOperationTypes | null, kind?: DistributionTargetKindTypes | null, notion?: { __typename?: 'NotionDistributionProperties', pageId?: string | null, pageUri?: string | null, parentPageId?: string | null, databaseId?: string | null, title?: string | null } | null, googleDrive?: { __typename?: 'GoogleDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, oneDrive?: { __typename?: 'OneDriveDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, confluence?: { __typename?: 'ConfluenceDistributionProperties', pageId?: string | null, pageUri?: string | null, spaceId: string, parentPageId?: string | null, title?: string | null } | null, slack?: { __typename?: 'SlackDistributionProperties', channelId: string, threadTs?: string | null } | null, gmail?: { __typename?: 'GmailDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, microsoftOutlook?: { __typename?: 'MicrosoftOutlookDistributionProperties', to: Array<string>, subject: string, cc?: Array<string> | null, bcc?: Array<string> | null, importance?: string | null, isDraft?: boolean | null, inReplyToMessageId?: string | null, forwardFromMessageId?: string | null } | null, hubSpot?: { __typename?: 'HubSpotDistributionProperties', objectType: string, objectId: string } | null, salesforce?: { __typename?: 'SalesforceDistributionProperties', objectType: string, objectId: string, title?: string | null } | null, attio?: { __typename?: 'AttioDistributionProperties', parentObject: string, parentRecordId: string, title?: string | null } | null, googleCalendar?: { __typename?: 'GoogleCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, summary?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null } | null, microsoftCalendar?: { __typename?: 'MicrosoftCalendarDistributionProperties', eventId?: string | null, eventUri?: string | null, calendarId?: string | null, subject?: string | null, startDateTime?: any | null, endDateTime?: any | null, timeZone?: string | null, location?: string | null, attendees?: Array<string> | null, isOnlineMeeting?: boolean | null } | null, linear?: { __typename?: 'LinearDistributionProperties', issueId?: string | null, issueUri?: string | null, teamId?: string | null, title?: string | null, priority?: number | null, stateId?: string | null, assigneeId?: string | null, labelIds?: Array<string> | null, projectId?: string | null } | null, jira?: { __typename?: 'JiraDistributionProperties', issueKey?: string | null, issueUri?: string | null, projectKey?: string | null, cloudId?: string | null, issueType?: string | null, summary?: string | null, priority?: string | null, assigneeId?: string | null, labels?: Array<string> | null, status?: string | null } | null, zendesk?: { __typename?: 'ZendeskDistributionProperties', ticketId?: string | null, ticketUri?: string | null, subdomain?: string | null, subject?: string | null, priority?: string | null, status?: string | null, type?: string | null, assigneeId?: string | null, groupId?: string | null, tags?: Array<string> | null, visibility?: string | null } | null, intercom?: { __typename?: 'IntercomDistributionProperties', ticketId?: string | null, ticketUri?: string | null, ticketTypeId?: string | null, contactId?: string | null, contactExternalId?: string | null, contactEmail?: string | null, conversationToLinkId?: string | null, companyId?: string | null, adminId?: string | null, title?: string | null, stateId?: string | null, state?: string | null, assigneeId?: string | null, teamId?: string | null, tagIds?: Array<string> | null, visibility?: string | null, isShared?: boolean | null, skipNotifications?: boolean | null } | null, googleDocs?: { __typename?: 'GoogleDocsDistributionProperties', documentId?: string | null, documentUri?: string | null, folderId?: string | null, title?: string | null } | null, microsoftWord?: { __typename?: 'MicrosoftWordDistributionProperties', fileId?: string | null, fileUri?: string | null, folderId?: string | null, fileName?: string | null } | null, sharePoint?: { __typename?: 'SharePointDistributionProperties', siteId: string, title?: string | null } | null, discord?: { __typename?: 'DiscordDistributionProperties', channelId: string, threadId?: string | null } | null, microsoftTeams?: { __typename?: 'MicrosoftTeamsDistributionProperties', chatId?: string | null, teamId?: string | null, channelId?: string | null, threadId?: string | null } | null, twitter?: { __typename?: 'TwitterDistributionProperties', postId?: string | null, postUri?: string | null, replyToTweetId?: string | null } | null, github?: { __typename?: 'GitHubDistributionProperties', repositoryOwner: string, repositoryName: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, gitlab?: { __typename?: 'GitLabDistributionProperties', projectPath: string, title?: string | null, labels?: Array<string> | null, assignees?: Array<string> | null, milestone?: number | null } | null, linkedIn?: { __typename?: 'LinkedInDistributionProperties', postType?: LinkedInPostTypes | null, visibility?: string | null } | null, attioTasks?: { __typename?: 'AttioTasksDistributionProperties', title?: string | null, assignees?: Array<string> | null, linkedRecordId?: string | null, linkedObjectType?: string | null, deadline?: any | null } | null }, authentication?: { __typename?: 'EntityReference', id: string } | null }> | null }> | null } | null };
 
 export type UpdateAgentMutationVariables = Exact<{
   agent: AgentUpdateInput;
@@ -30964,6 +31299,62 @@ export type QueryGustoLocationsQueryVariables = Exact<{
 
 export type QueryGustoLocationsQuery = { __typename?: 'Query', gustoLocations?: { __typename?: 'GustoLocationResults', results?: Array<{ __typename?: 'GustoLocationResult', identifier?: string | null, street1?: string | null, street2?: string | null, city?: string | null, state?: string | null, zip?: string | null, country?: string | null } | null> | null } | null };
 
+export type QueryIntercomAdminsQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomAdminsQuery = { __typename?: 'Query', intercomAdmins?: { __typename?: 'IntercomAdminResults', results?: Array<{ __typename?: 'IntercomAdminResult', id?: string | null, name?: string | null, email?: string | null } | null> | null } | null };
+
+export type QueryIntercomContactsQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomContactsQuery = { __typename?: 'Query', intercomContacts?: { __typename?: 'IntercomContactResults', results?: Array<{ __typename?: 'IntercomContactResult', id?: string | null, externalId?: string | null, name?: string | null, email?: string | null } | null> | null } | null };
+
+export type QueryIntercomTagsQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomTagsQuery = { __typename?: 'Query', intercomTags?: { __typename?: 'IntercomTagResults', results?: Array<{ __typename?: 'IntercomTagResult', id?: string | null, name?: string | null } | null> | null } | null };
+
+export type QueryIntercomTeamsQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomTeamsQuery = { __typename?: 'Query', intercomTeams?: { __typename?: 'IntercomTeamResults', results?: Array<{ __typename?: 'IntercomTeamResult', id?: string | null, name?: string | null } | null> | null } | null };
+
+export type QueryIntercomTicketStatesQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  ticketTypeId?: InputMaybe<Scalars['String']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomTicketStatesQuery = { __typename?: 'Query', intercomTicketStates?: { __typename?: 'IntercomTicketStateResults', results?: Array<{ __typename?: 'IntercomTicketStateResult', id?: string | null, name?: string | null, type?: string | null } | null> | null } | null };
+
+export type QueryIntercomTicketTypesQueryVariables = Exact<{
+  properties: IntercomTicketsFeedPropertiesInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryIntercomTicketTypesQuery = { __typename?: 'Query', intercomTicketTypes?: { __typename?: 'IntercomTicketTypeResults', results?: Array<{ __typename?: 'IntercomTicketTypeResult', id?: string | null, name?: string | null, description?: string | null } | null> | null } | null };
+
+export type QueryJiraIssueTypesQueryVariables = Exact<{
+  properties: JiraIssueTypesInput;
+}>;
+
+
+export type QueryJiraIssueTypesQuery = { __typename?: 'Query', jiraIssueTypes?: { __typename?: 'JiraIssueTypeResults', results?: Array<{ __typename?: 'JiraIssueTypeResult', id?: string | null, name?: string | null, description?: string | null } | null> | null } | null };
+
 export type QueryJiraProjectsQueryVariables = Exact<{
   properties: JiraProjectsInput;
 }>;
@@ -30976,7 +31367,14 @@ export type QueryLinearProjectsQueryVariables = Exact<{
 }>;
 
 
-export type QueryLinearProjectsQuery = { __typename?: 'Query', linearProjects?: { __typename?: 'StringResults', results?: Array<string> | null } | null };
+export type QueryLinearProjectsQuery = { __typename?: 'Query', linearProjects?: { __typename?: 'LinearProjectResults', results?: Array<{ __typename?: 'LinearProjectResult', id?: string | null, name?: string | null, teamId?: string | null, teamKey?: string | null, teamName?: string | null } | null> | null } | null };
+
+export type QueryLinearTeamsQueryVariables = Exact<{
+  properties: LinearTeamsInput;
+}>;
+
+
+export type QueryLinearTeamsQuery = { __typename?: 'Query', linearTeams?: { __typename?: 'LinearTeamResults', results?: Array<{ __typename?: 'LinearTeamResult', id?: string | null, key?: string | null, name?: string | null } | null> | null } | null };
 
 export type QueryMicrosoftCalendarsQueryVariables = Exact<{
   properties: MicrosoftCalendarsInput;
@@ -31059,6 +31457,22 @@ export type QuerySlackUsersQueryVariables = Exact<{
 
 
 export type QuerySlackUsersQuery = { __typename?: 'Query', slackUsers?: { __typename?: 'SlackUserResults', results?: Array<{ __typename?: 'SlackUser', userId: string, displayName: string, realName?: string | null, email?: string | null } | null> | null } | null };
+
+export type QueryZendeskGroupsQueryVariables = Exact<{
+  properties: ZendeskDiscoveryInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryZendeskGroupsQuery = { __typename?: 'Query', zendeskGroups?: { __typename?: 'ZendeskGroupResults', results?: Array<{ __typename?: 'ZendeskGroupResult', id?: string | null, name?: string | null } | null> | null } | null };
+
+export type QueryZendeskUsersQueryVariables = Exact<{
+  properties: ZendeskDiscoveryInput;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type QueryZendeskUsersQuery = { __typename?: 'Query', zendeskUsers?: { __typename?: 'ZendeskUserResults', results?: Array<{ __typename?: 'ZendeskUserResult', id?: string | null, name?: string | null, email?: string | null, role?: string | null } | null> | null } | null };
 
 export type TriggerFeedMutationVariables = Exact<{
   id: Scalars['ID']['input'];

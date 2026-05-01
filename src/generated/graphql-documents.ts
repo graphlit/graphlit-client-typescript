@@ -426,6 +426,7 @@ export const GetAgent = gql`
           issueKey
           issueUri
           projectKey
+          cloudId
           issueType
           summary
           priority
@@ -900,6 +901,7 @@ export const QueryAgents = gql`
             issueKey
             issueUri
             projectKey
+            cloudId
             issueType
             summary
             priority
@@ -12749,6 +12751,86 @@ export const QueryGustoLocations = gql`
   }
 }
     `;
+export const QueryIntercomAdmins = gql`
+    query QueryIntercomAdmins($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
+  intercomAdmins(properties: $properties, query: $query) {
+    results {
+      id
+      name
+      email
+    }
+  }
+}
+    `;
+export const QueryIntercomContacts = gql`
+    query QueryIntercomContacts($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
+  intercomContacts(properties: $properties, query: $query) {
+    results {
+      id
+      externalId
+      name
+      email
+    }
+  }
+}
+    `;
+export const QueryIntercomTags = gql`
+    query QueryIntercomTags($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
+  intercomTags(properties: $properties, query: $query) {
+    results {
+      id
+      name
+    }
+  }
+}
+    `;
+export const QueryIntercomTeams = gql`
+    query QueryIntercomTeams($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
+  intercomTeams(properties: $properties, query: $query) {
+    results {
+      id
+      name
+    }
+  }
+}
+    `;
+export const QueryIntercomTicketStates = gql`
+    query QueryIntercomTicketStates($properties: IntercomTicketsFeedPropertiesInput!, $ticketTypeId: String, $query: String) {
+  intercomTicketStates(
+    properties: $properties
+    ticketTypeId: $ticketTypeId
+    query: $query
+  ) {
+    results {
+      id
+      name
+      type
+    }
+  }
+}
+    `;
+export const QueryIntercomTicketTypes = gql`
+    query QueryIntercomTicketTypes($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
+  intercomTicketTypes(properties: $properties, query: $query) {
+    results {
+      id
+      name
+      description
+    }
+  }
+}
+    `;
+export const QueryJiraIssueTypes = gql`
+    query QueryJiraIssueTypes($properties: JiraIssueTypesInput!) {
+  jiraIssueTypes(properties: $properties) {
+    results {
+      id
+      name
+      description
+    }
+  }
+}
+    `;
 export const QueryJiraProjects = gql`
     query QueryJiraProjects($properties: JiraProjectsInput!) {
   jiraProjects(properties: $properties) {
@@ -12763,7 +12845,24 @@ export const QueryJiraProjects = gql`
 export const QueryLinearProjects = gql`
     query QueryLinearProjects($properties: LinearProjectsInput!) {
   linearProjects(properties: $properties) {
-    results
+    results {
+      id
+      name
+      teamId
+      teamKey
+      teamName
+    }
+  }
+}
+    `;
+export const QueryLinearTeams = gql`
+    query QueryLinearTeams($properties: LinearTeamsInput!) {
+  linearTeams(properties: $properties) {
+    results {
+      id
+      key
+      name
+    }
   }
 }
     `;
@@ -12879,6 +12978,28 @@ export const QuerySlackUsers = gql`
       displayName
       realName
       email
+    }
+  }
+}
+    `;
+export const QueryZendeskGroups = gql`
+    query QueryZendeskGroups($properties: ZendeskDiscoveryInput!, $query: String) {
+  zendeskGroups(properties: $properties, query: $query) {
+    results {
+      id
+      name
+    }
+  }
+}
+    `;
+export const QueryZendeskUsers = gql`
+    query QueryZendeskUsers($properties: ZendeskDiscoveryInput!, $query: String) {
+  zendeskUsers(properties: $properties, query: $query) {
+    results {
+      id
+      name
+      email
+      role
     }
   }
 }

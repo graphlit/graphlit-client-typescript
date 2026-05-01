@@ -4345,6 +4345,20 @@ class Graphlit {
   }
 
   /**
+   * Queries Linear teams.
+   * @param properties - The Linear team query properties.
+   * @returns The Linear teams.
+   */
+  public async queryLinearTeams(
+    properties: Types.LinearTeamsInput,
+  ): Promise<Types.QueryLinearTeamsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryLinearTeamsQuery,
+      Types.QueryLinearTeamsQueryVariables
+    >(Documents.QueryLinearTeams, { properties: properties });
+  }
+
+  /**
    * Queries Linear projects.
    * @param properties - The Linear project query properties.
    * @returns The Linear projects.
@@ -4548,6 +4562,175 @@ class Graphlit {
       Types.QueryJiraProjectsQuery,
       Types.QueryJiraProjectsQueryVariables
     >(Documents.QueryJiraProjects, { properties: properties });
+  }
+
+  /**
+   * Queries Jira issue types.
+   * @param properties - The Jira issue type query properties.
+   * @returns The Jira issue types.
+   */
+  public async queryJiraIssueTypes(
+    properties: Types.JiraIssueTypesInput,
+  ): Promise<Types.QueryJiraIssueTypesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryJiraIssueTypesQuery,
+      Types.QueryJiraIssueTypesQueryVariables
+    >(Documents.QueryJiraIssueTypes, { properties: properties });
+  }
+
+  /**
+   * Queries Zendesk groups.
+   * @param properties - The Zendesk discovery query properties.
+   * @param query - The search query, optional.
+   * @returns The Zendesk groups.
+   */
+  public async queryZendeskGroups(
+    properties: Types.ZendeskDiscoveryInput,
+    query?: string,
+  ): Promise<Types.QueryZendeskGroupsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryZendeskGroupsQuery,
+      Types.QueryZendeskGroupsQueryVariables
+    >(Documents.QueryZendeskGroups, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Zendesk users.
+   * @param properties - The Zendesk discovery query properties.
+   * @param query - The search query, optional.
+   * @returns The Zendesk users.
+   */
+  public async queryZendeskUsers(
+    properties: Types.ZendeskDiscoveryInput,
+    query?: string,
+  ): Promise<Types.QueryZendeskUsersQuery> {
+    return this.queryAndCheckError<
+      Types.QueryZendeskUsersQuery,
+      Types.QueryZendeskUsersQueryVariables
+    >(Documents.QueryZendeskUsers, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom admins.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param query - The search query, optional.
+   * @returns The Intercom admins.
+   */
+  public async queryIntercomAdmins(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    query?: string,
+  ): Promise<Types.QueryIntercomAdminsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomAdminsQuery,
+      Types.QueryIntercomAdminsQueryVariables
+    >(Documents.QueryIntercomAdmins, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom contacts.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param query - The search query, optional.
+   * @returns The Intercom contacts.
+   */
+  public async queryIntercomContacts(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    query?: string,
+  ): Promise<Types.QueryIntercomContactsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomContactsQuery,
+      Types.QueryIntercomContactsQueryVariables
+    >(Documents.QueryIntercomContacts, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom tags.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param query - The search query, optional.
+   * @returns The Intercom tags.
+   */
+  public async queryIntercomTags(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    query?: string,
+  ): Promise<Types.QueryIntercomTagsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomTagsQuery,
+      Types.QueryIntercomTagsQueryVariables
+    >(Documents.QueryIntercomTags, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom teams.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param query - The search query, optional.
+   * @returns The Intercom teams.
+   */
+  public async queryIntercomTeams(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    query?: string,
+  ): Promise<Types.QueryIntercomTeamsQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomTeamsQuery,
+      Types.QueryIntercomTeamsQueryVariables
+    >(Documents.QueryIntercomTeams, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom ticket types.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param query - The search query, optional.
+   * @returns The Intercom ticket types.
+   */
+  public async queryIntercomTicketTypes(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    query?: string,
+  ): Promise<Types.QueryIntercomTicketTypesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomTicketTypesQuery,
+      Types.QueryIntercomTicketTypesQueryVariables
+    >(Documents.QueryIntercomTicketTypes, {
+      properties: properties,
+      query: query,
+    });
+  }
+
+  /**
+   * Queries Intercom ticket states.
+   * @param properties - The Intercom ticket feed query properties.
+   * @param ticketTypeId - The ticket type ID, optional.
+   * @param query - The search query, optional.
+   * @returns The Intercom ticket states.
+   */
+  public async queryIntercomTicketStates(
+    properties: Types.IntercomTicketsFeedPropertiesInput,
+    ticketTypeId?: string,
+    query?: string,
+  ): Promise<Types.QueryIntercomTicketStatesQuery> {
+    return this.queryAndCheckError<
+      Types.QueryIntercomTicketStatesQuery,
+      Types.QueryIntercomTicketStatesQueryVariables
+    >(Documents.QueryIntercomTicketStates, {
+      properties: properties,
+      ticketTypeId: ticketTypeId,
+      query: query,
+    });
   }
 
   /**
