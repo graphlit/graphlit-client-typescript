@@ -417,9 +417,9 @@ export const GetAgent = gql`
           teamId
           title
           priority
-          stateId
-          assigneeId
-          labelIds
+          state
+          assignee
+          labels
           projectId
         }
         jira {
@@ -430,7 +430,7 @@ export const GetAgent = gql`
           issueType
           summary
           priority
-          assigneeId
+          assignee
           labels
           status
         }
@@ -442,7 +442,7 @@ export const GetAgent = gql`
           priority
           status
           type
-          assigneeId
+          assignee
           groupId
           tags
           visibility
@@ -450,19 +450,15 @@ export const GetAgent = gql`
         intercom {
           ticketId
           ticketUri
-          ticketTypeId
-          contactId
-          contactExternalId
-          contactEmail
+          ticketType
+          requesterEmail
           conversationToLinkId
           companyId
-          adminId
           title
-          stateId
           state
-          assigneeId
+          assignee
           teamId
-          tagIds
+          tags
           visibility
           isShared
           skipNotifications
@@ -892,9 +888,9 @@ export const QueryAgents = gql`
             teamId
             title
             priority
-            stateId
-            assigneeId
-            labelIds
+            state
+            assignee
+            labels
             projectId
           }
           jira {
@@ -905,7 +901,7 @@ export const QueryAgents = gql`
             issueType
             summary
             priority
-            assigneeId
+            assignee
             labels
             status
           }
@@ -917,7 +913,7 @@ export const QueryAgents = gql`
             priority
             status
             type
-            assigneeId
+            assignee
             groupId
             tags
             visibility
@@ -925,19 +921,15 @@ export const QueryAgents = gql`
           intercom {
             ticketId
             ticketUri
-            ticketTypeId
-            contactId
-            contactExternalId
-            contactEmail
+            ticketType
+            requesterEmail
             conversationToLinkId
             companyId
-            adminId
             title
-            stateId
             state
-            assigneeId
+            assignee
             teamId
-            tagIds
+            tags
             visibility
             isShared
             skipNotifications
@@ -12751,71 +12743,12 @@ export const QueryGustoLocations = gql`
   }
 }
     `;
-export const QueryIntercomAdmins = gql`
-    query QueryIntercomAdmins($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
-  intercomAdmins(properties: $properties, query: $query) {
-    results {
-      id
-      name
-      email
-    }
-  }
-}
-    `;
-export const QueryIntercomContacts = gql`
-    query QueryIntercomContacts($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
-  intercomContacts(properties: $properties, query: $query) {
-    results {
-      id
-      externalId
-      name
-      email
-    }
-  }
-}
-    `;
-export const QueryIntercomTags = gql`
-    query QueryIntercomTags($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
-  intercomTags(properties: $properties, query: $query) {
-    results {
-      id
-      name
-    }
-  }
-}
-    `;
 export const QueryIntercomTeams = gql`
     query QueryIntercomTeams($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
   intercomTeams(properties: $properties, query: $query) {
     results {
       id
       name
-    }
-  }
-}
-    `;
-export const QueryIntercomTicketStates = gql`
-    query QueryIntercomTicketStates($properties: IntercomTicketsFeedPropertiesInput!, $ticketTypeId: String, $query: String) {
-  intercomTicketStates(
-    properties: $properties
-    ticketTypeId: $ticketTypeId
-    query: $query
-  ) {
-    results {
-      id
-      name
-      type
-    }
-  }
-}
-    `;
-export const QueryIntercomTicketTypes = gql`
-    query QueryIntercomTicketTypes($properties: IntercomTicketsFeedPropertiesInput!, $query: String) {
-  intercomTicketTypes(properties: $properties, query: $query) {
-    results {
-      id
-      name
-      description
     }
   }
 }

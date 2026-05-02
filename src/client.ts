@@ -790,7 +790,7 @@ class Graphlit {
       if (!isValidGuid(this.organizationId)) {
         throw new Error(
           `Invalid organization ID format. Expected a valid GUID, but received: '${this.organizationId}'. ` +
-            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -801,7 +801,7 @@ class Graphlit {
       if (!isValidGuid(this.environmentId)) {
         throw new Error(
           `Invalid environment ID format. Expected a valid GUID, but received: '${this.environmentId}'. ` +
-            "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         );
       }
 
@@ -814,7 +814,7 @@ class Graphlit {
     if (this.userId && !isValidGuid(this.userId)) {
       throw new Error(
         `Invalid user ID format. Expected a valid GUID, but received: '${this.userId}'. ` +
-          "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "A valid GUID should be in the format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       );
     }
 
@@ -4617,63 +4617,6 @@ class Graphlit {
   }
 
   /**
-   * Queries Intercom admins.
-   * @param properties - The Intercom ticket feed query properties.
-   * @param query - The search query, optional.
-   * @returns The Intercom admins.
-   */
-  public async queryIntercomAdmins(
-    properties: Types.IntercomTicketsFeedPropertiesInput,
-    query?: string,
-  ): Promise<Types.QueryIntercomAdminsQuery> {
-    return this.queryAndCheckError<
-      Types.QueryIntercomAdminsQuery,
-      Types.QueryIntercomAdminsQueryVariables
-    >(Documents.QueryIntercomAdmins, {
-      properties: properties,
-      query: query,
-    });
-  }
-
-  /**
-   * Queries Intercom contacts.
-   * @param properties - The Intercom ticket feed query properties.
-   * @param query - The search query, optional.
-   * @returns The Intercom contacts.
-   */
-  public async queryIntercomContacts(
-    properties: Types.IntercomTicketsFeedPropertiesInput,
-    query?: string,
-  ): Promise<Types.QueryIntercomContactsQuery> {
-    return this.queryAndCheckError<
-      Types.QueryIntercomContactsQuery,
-      Types.QueryIntercomContactsQueryVariables
-    >(Documents.QueryIntercomContacts, {
-      properties: properties,
-      query: query,
-    });
-  }
-
-  /**
-   * Queries Intercom tags.
-   * @param properties - The Intercom ticket feed query properties.
-   * @param query - The search query, optional.
-   * @returns The Intercom tags.
-   */
-  public async queryIntercomTags(
-    properties: Types.IntercomTicketsFeedPropertiesInput,
-    query?: string,
-  ): Promise<Types.QueryIntercomTagsQuery> {
-    return this.queryAndCheckError<
-      Types.QueryIntercomTagsQuery,
-      Types.QueryIntercomTagsQueryVariables
-    >(Documents.QueryIntercomTags, {
-      properties: properties,
-      query: query,
-    });
-  }
-
-  /**
    * Queries Intercom teams.
    * @param properties - The Intercom ticket feed query properties.
    * @param query - The search query, optional.
@@ -4688,47 +4631,6 @@ class Graphlit {
       Types.QueryIntercomTeamsQueryVariables
     >(Documents.QueryIntercomTeams, {
       properties: properties,
-      query: query,
-    });
-  }
-
-  /**
-   * Queries Intercom ticket types.
-   * @param properties - The Intercom ticket feed query properties.
-   * @param query - The search query, optional.
-   * @returns The Intercom ticket types.
-   */
-  public async queryIntercomTicketTypes(
-    properties: Types.IntercomTicketsFeedPropertiesInput,
-    query?: string,
-  ): Promise<Types.QueryIntercomTicketTypesQuery> {
-    return this.queryAndCheckError<
-      Types.QueryIntercomTicketTypesQuery,
-      Types.QueryIntercomTicketTypesQueryVariables
-    >(Documents.QueryIntercomTicketTypes, {
-      properties: properties,
-      query: query,
-    });
-  }
-
-  /**
-   * Queries Intercom ticket states.
-   * @param properties - The Intercom ticket feed query properties.
-   * @param ticketTypeId - The ticket type ID, optional.
-   * @param query - The search query, optional.
-   * @returns The Intercom ticket states.
-   */
-  public async queryIntercomTicketStates(
-    properties: Types.IntercomTicketsFeedPropertiesInput,
-    ticketTypeId?: string,
-    query?: string,
-  ): Promise<Types.QueryIntercomTicketStatesQuery> {
-    return this.queryAndCheckError<
-      Types.QueryIntercomTicketStatesQuery,
-      Types.QueryIntercomTicketStatesQueryVariables
-    >(Documents.QueryIntercomTicketStates, {
-      properties: properties,
-      ticketTypeId: ticketTypeId,
       query: query,
     });
   }
@@ -9774,11 +9676,11 @@ class Graphlit {
       const usage: UsageInfo | undefined =
         totalTokens > 0
           ? {
-              promptTokens: 0, // We don't have this breakdown from the API
-              completionTokens: totalTokens,
-              totalTokens: totalTokens,
-              model: currentMessage?.model || undefined,
-            }
+            promptTokens: 0, // We don't have this breakdown from the API
+            completionTokens: totalTokens,
+            totalTokens: totalTokens,
+            model: currentMessage?.model || undefined,
+          }
           : undefined;
 
       return {
@@ -9841,7 +9743,7 @@ class Graphlit {
     // permanently block the queue for this conversation.
     // Check the abort signal before starting work so ESC while queued is instant.
     const next = previous
-      .catch(() => {})
+      .catch(() => { })
       .then(() => {
         if (abortSignal?.aborted) throw new Error("Operation aborted");
         return work();
@@ -9951,7 +9853,7 @@ class Graphlit {
       // Get full specification if needed
       const fullSpec = effectiveSpecification?.id
         ? ((await this.getSpecification(effectiveSpecification.id))
-            .specification as Types.Specification)
+          .specification as Types.Specification)
         : undefined;
       const fallbackSpecs = await this.resolveSpecificationReferences(
         fallbackReferences.filter(
@@ -10122,8 +10024,8 @@ class Graphlit {
           const initialStreamingSpec = this.supportsStreaming(fullSpec, tools)
             ? fullSpec
             : fallbackSpecs.find((fallbackSpec) =>
-                this.supportsStreaming(fallbackSpec, tools),
-              ) || fullSpec;
+              this.supportsStreaming(fallbackSpec, tools),
+            ) || fullSpec;
           const modelName = initialStreamingSpec
             ? getModelName(initialStreamingSpec)
             : undefined;
@@ -10672,9 +10574,9 @@ class Graphlit {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING && budgetTracker) {
       console.log(
         `📊 [Context Management] Initialized budget tracker: ${budgetTracker.usagePercent}% used, ` +
-          `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
-          `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
-          `rebudgetThreshold=${rebudgetThreshold}`,
+        `${budgetTracker.remaining.toLocaleString()} tokens remaining. ` +
+        `Strategy: toolResultLimit=${toolResultTokenLimit}, toolRoundLimit=${toolRoundLimit}, ` +
+        `rebudgetThreshold=${rebudgetThreshold}`,
       );
     }
 
@@ -10721,7 +10623,7 @@ class Graphlit {
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
                 `📊 [Context Management] Windowed tool rounds: dropped ${droppedRounds} round(s), ` +
-                  `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
+                `budget ${beforeUsage}% → ${afterUsage}% (${messages.length} messages)`,
               );
             }
           }
@@ -11267,8 +11169,7 @@ class Graphlit {
             isRetryable &&
             providerAttempt >= DEFAULT_PROVIDER_RETRIES &&
             selectNextStreamingSpecification(
-              `${(retryError as ProviderError).provider} retry exhaustion: ${
-                (retryError as ProviderError).message
+              `${(retryError as ProviderError).provider} retry exhaustion: ${(retryError as ProviderError).message
               }`,
             )
           ) {
@@ -11644,7 +11545,7 @@ class Graphlit {
               if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
                 console.log(
                   `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-                    `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
+                  `${estimateTokens(rawResult)} → ${estimateTokens(truncatedResult)} tokens`,
                 );
               }
             }
@@ -11675,7 +11576,7 @@ class Graphlit {
             toolCall.durationMs = Math.max(
               0,
               new Date(completedAt).getTime() -
-                new Date(toolCall.startedAt).getTime(),
+              new Date(toolCall.startedAt).getTime(),
             );
             toolCall.failedAt = completedAt;
             toolCall.firstStatusAt =
@@ -12006,7 +11907,7 @@ class Graphlit {
       // Get full specification for streaming support check and complexity classification
       const fullSpec = agentSpec?.id
         ? ((await this.getSpecification(agentSpec.id))
-            .specification as Types.Specification)
+          .specification as Types.Specification)
         : undefined;
       let activeFullSpec = fullSpec;
       let fallbackReferences: Types.EntityReferenceInput[] = [];
@@ -12782,9 +12683,9 @@ class Graphlit {
   private isTaskCompleteToolCall(
     toolCall:
       | {
-          name?: string | null;
-          arguments?: string | null;
-        }
+        name?: string | null;
+        arguments?: string | null;
+      }
       | null
       | undefined,
   ): boolean {
@@ -12809,21 +12710,21 @@ class Graphlit {
   private parseTaskCompleteArguments(
     toolCall:
       | {
-          name?: string | null;
-          arguments?: string | null;
-        }
+        name?: string | null;
+        arguments?: string | null;
+      }
       | null
       | undefined,
   ):
     | {
-        direct: true;
-        args: Record<string, unknown>;
-      }
+      direct: true;
+      args: Record<string, unknown>;
+    }
     | {
-        direct: false;
-        args: Record<string, unknown>;
-        parameters: Record<string, unknown>;
-      }
+      direct: false;
+      args: Record<string, unknown>;
+      parameters: Record<string, unknown>;
+    }
     | undefined {
     if (!toolCall) return undefined;
 
@@ -12848,8 +12749,8 @@ class Graphlit {
     const rawParameters = args.parameters;
     const parameters =
       rawParameters &&
-      typeof rawParameters === "object" &&
-      !Array.isArray(rawParameters)
+        typeof rawParameters === "object" &&
+        !Array.isArray(rawParameters)
         ? (rawParameters as Record<string, unknown>)
         : {};
 
@@ -12859,13 +12760,13 @@ class Graphlit {
   private extractTaskCompleteFinalMessage(
     toolCalls:
       | ReadonlyArray<
-          | {
-              name?: string | null;
-              arguments?: string | null;
-            }
-          | null
-          | undefined
-        >
+        | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+        | null
+        | undefined
+      >
       | null
       | undefined,
   ): string | undefined {
@@ -12952,13 +12853,13 @@ class Graphlit {
   private detectTaskComplete(
     toolCalls:
       | ReadonlyArray<
-          | {
-              name?: string | null;
-              arguments?: string | null;
-            }
-          | null
-          | undefined
-        >
+        | {
+          name?: string | null;
+          arguments?: string | null;
+        }
+        | null
+        | undefined
+      >
       | null
       | undefined,
   ): boolean {
@@ -13298,13 +13199,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000,
-          })
+          apiKey: process.env.OPENAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000,
+        })
         : (() => {
-            throw new Error("OpenAI module not available");
-          })());
+          throw new Error("OpenAI module not available");
+        })());
 
     const reasoningEffort = specification.openAI?.reasoningEffort || undefined;
     const toolDefinitions: OpenAIResponsesToolDefinition[] | undefined =
@@ -13380,13 +13281,13 @@ class Graphlit {
       this.openaiClient ||
       (OpenAI
         ? new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.OPENAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("OpenAI module not available");
-          })());
+          throw new Error("OpenAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13442,13 +13343,13 @@ class Graphlit {
       this.anthropicClient ||
       (Anthropic
         ? new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.ANTHROPIC_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Anthropic module not available");
-          })());
+          throw new Error("Anthropic module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13553,8 +13454,8 @@ class Graphlit {
       (GoogleGenAI
         ? new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY || "" })
         : (() => {
-            throw new Error("Google GenerativeAI module not available");
-          })());
+          throw new Error("Google GenerativeAI module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13615,8 +13516,8 @@ class Graphlit {
       (Groq
         ? new Groq({ apiKey: process.env.GROQ_API_KEY || "" })
         : (() => {
-            throw new Error("Groq module not available");
-          })());
+          throw new Error("Groq module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13661,13 +13562,13 @@ class Graphlit {
       this.cerebrasClient ||
       (Cerebras
         ? new Cerebras({
-            apiKey: process.env.CEREBRAS_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          apiKey: process.env.CEREBRAS_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : (() => {
-            throw new Error("Cerebras module not available");
-          })());
+          throw new Error("Cerebras module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13715,8 +13616,8 @@ class Graphlit {
         : CohereClient
           ? new CohereClient({ token: process.env.COHERE_API_KEY || "" })
           : (() => {
-              throw new Error("Cohere module not available");
-            })());
+            throw new Error("Cohere module not available");
+          })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13761,29 +13662,29 @@ class Graphlit {
       this.mistralClient ||
       (Mistral
         ? (() => {
-            const apiKey = process.env.MISTRAL_API_KEY;
-            if (!apiKey) {
-              throw new Error(
-                "MISTRAL_API_KEY environment variable is required for Mistral streaming",
-              );
-            }
-            return new Mistral({
-              apiKey,
-              retryConfig: {
-                strategy: "backoff",
-                backoff: {
-                  initialInterval: 1000,
-                  maxInterval: 60000,
-                  exponent: 2,
-                  maxElapsedTime: 300000, // 5 minutes
-                },
-                retryConnectionErrors: true,
+          const apiKey = process.env.MISTRAL_API_KEY;
+          if (!apiKey) {
+            throw new Error(
+              "MISTRAL_API_KEY environment variable is required for Mistral streaming",
+            );
+          }
+          return new Mistral({
+            apiKey,
+            retryConfig: {
+              strategy: "backoff",
+              backoff: {
+                initialInterval: 1000,
+                maxInterval: 60000,
+                exponent: 2,
+                maxElapsedTime: 300000, // 5 minutes
               },
-            });
-          })()
+              retryConnectionErrors: true,
+            },
+          });
+        })()
         : (() => {
-            throw new Error("Mistral module not available");
-          })());
+          throw new Error("Mistral module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13829,11 +13730,11 @@ class Graphlit {
       this.bedrockClient ||
       (BedrockRuntimeClient
         ? new BedrockRuntimeClient({
-            region: process.env.AWS_REGION || "us-east-2",
-          })
+          region: process.env.AWS_REGION || "us-east-2",
+        })
         : (() => {
-            throw new Error("Bedrock module not available");
-          })());
+          throw new Error("Bedrock module not available");
+        })());
 
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
@@ -13879,11 +13780,11 @@ class Graphlit {
       this.deepseekClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.deepseek.com",
-            apiKey: process.env.DEEPSEEK_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.deepseek.com",
+          apiKey: process.env.DEEPSEEK_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!deepseekClient) {
@@ -13930,11 +13831,11 @@ class Graphlit {
       this.xaiClient ||
       (OpenAI
         ? new OpenAI({
-            baseURL: "https://api.x.ai/v1",
-            apiKey: process.env.XAI_API_KEY || "",
-            maxRetries: 3,
-            timeout: 60000, // 60 seconds
-          })
+          baseURL: "https://api.x.ai/v1",
+          apiKey: process.env.XAI_API_KEY || "",
+          maxRetries: 3,
+          timeout: 60000, // 60 seconds
+        })
         : null);
 
     if (!xaiClient) {
@@ -14037,7 +13938,7 @@ class Graphlit {
       ) {
         console.log(
           `📊 [Context Management] Truncated tool result for ${toolCall.name}: ` +
-            `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
+          `${estimateTokens(rawContent)} → ${estimateTokens(content)} tokens (promptAgent path)`,
         );
       }
 
