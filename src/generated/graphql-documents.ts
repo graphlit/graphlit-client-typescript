@@ -309,6 +309,7 @@ export const GetAgent = gql`
       label
     }
     rules {
+      state
       then
       if
     }
@@ -780,6 +781,7 @@ export const QueryAgents = gql`
         label
       }
       rules {
+        state
         then
         if
       }
@@ -22359,19 +22361,21 @@ export const CreateWorkflow = gql`
       jobs {
         connector {
           type
-          contentType
-          fileType
+          contentTypes
+          fileTypes
           model {
             specification {
               id
             }
             rules {
+              state
               then
               if
             }
           }
           regex {
             rules {
+              state
               then
               type
               path
@@ -22665,19 +22669,21 @@ export const GetWorkflow = gql`
       jobs {
         connector {
           type
-          contentType
-          fileType
+          contentTypes
+          fileTypes
           model {
             specification {
               id
             }
             rules {
+              state
               then
               if
             }
           }
           regex {
             rules {
+              state
               then
               type
               path
@@ -22942,19 +22948,21 @@ export const QueryWorkflows = gql`
         jobs {
           connector {
             type
-            contentType
-            fileType
+            contentTypes
+            fileTypes
             model {
               specification {
                 id
               }
               rules {
+                state
                 then
                 if
               }
             }
             regex {
               rules {
+                state
                 then
                 type
                 path
@@ -23213,19 +23221,21 @@ export const UpdateWorkflow = gql`
       jobs {
         connector {
           type
-          contentType
-          fileType
+          contentTypes
+          fileTypes
           model {
             specification {
               id
             }
             rules {
+              state
               then
               if
             }
           }
           regex {
             rules {
+              state
               then
               type
               path
@@ -23483,19 +23493,21 @@ export const UpsertWorkflow = gql`
       jobs {
         connector {
           type
-          contentType
-          fileType
+          contentTypes
+          fileTypes
           model {
             specification {
               id
             }
             rules {
+              state
               then
               if
             }
           }
           regex {
             rules {
+              state
               then
               type
               path
