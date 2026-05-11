@@ -61,6 +61,8 @@ const OPENAI_MODEL_MAP: Record<string, string> = {
   [Types.OpenAiModels.Gpt54Mini_400K_20260317]: "gpt-5.4-mini-2026-03-17",
   [Types.OpenAiModels.Gpt54Nano_400K]: "gpt-5.4-nano",
   [Types.OpenAiModels.Gpt54Nano_400K_20260317]: "gpt-5.4-nano-2026-03-17",
+  [Types.OpenAiModels.Gpt55_1024K]: "gpt-5.5",
+  [Types.OpenAiModels.Gpt55_1024K_20260423]: "gpt-5.5-2026-04-23",
 
   // O1 models
   [Types.OpenAiModels.O1_200K]: "o1",
@@ -88,6 +90,8 @@ const OPENAI_RESPONSES_MODEL_ENUMS = new Set<string>([
   Types.OpenAiModels.Gpt54Mini_400K_20260317,
   Types.OpenAiModels.Gpt54Nano_400K,
   Types.OpenAiModels.Gpt54Nano_400K_20260317,
+  Types.OpenAiModels.Gpt55_1024K,
+  Types.OpenAiModels.Gpt55_1024K_20260423,
 ]);
 
 // Anthropic model mappings
