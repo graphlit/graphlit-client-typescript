@@ -21970,14 +21970,20 @@ export type PersonaFilter = {
   modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter persona(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of persona(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
   relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter persona(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter persona(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
   /** Filter by persona type. */
@@ -26830,16 +26836,20 @@ export type SkillFilter = {
   modifiedInLast?: InputMaybe<Scalars['TimeSpan']['input']>;
   /** Filter skill(s) by their name. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** When using similarity search, the number of similar items to be returned. Defaults to 100. */
+  numberSimilar?: InputMaybe<Scalars['Int']['input']>;
   /** Skip the specified number of skill(s) from the beginning of the result set. Only supported on keyword search. */
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** The sort order for query results. */
   orderBy?: InputMaybe<OrderByTypes>;
+  /** The query syntax for the search text. Defaults to Simple. */
+  queryType?: InputMaybe<SearchQueryTypes>;
   /** The relevance score threshold for vector and hybrid search. Results below this threshold will be filtered out. Hybrid search defaults to 0.006. Vector search defaults to 0.54, or 0.78 for OpenAI Ada-002, or 0.61 for Google embedding models. Not applicable to keyword search. */
   relevanceThreshold?: InputMaybe<Scalars['Float']['input']>;
   /** Filter skill(s) by searching for similar text. */
   search?: InputMaybe<Scalars['String']['input']>;
-  /** Filter by skill owners. */
-  skillOwners?: InputMaybe<Array<EntityOwners>>;
+  /** The type of search to be used. Defaults to Vector. */
+  searchType?: InputMaybe<SearchTypes>;
   /** Filter skill(s) by their states. */
   states?: InputMaybe<Array<EntityState>>;
 };
