@@ -10878,7 +10878,7 @@ await graphlit.streamAgent(
 `Custom, Gemini_2_5FlashImagePreview, Gemini_3ProImagePreview`
 
 ### GoogleModels
-`Custom, Embedding_004, Gemini_1_5Flash, Gemini_1_5Flash_001, Gemini_1_5Flash_002, Gemini_1_5Flash_8B, Gemini_1_5Flash_8B_001, Gemini_1_5Pro, Gemini_1_5Pro_001, Gemini_1_5Pro_002, Gemini_2_0Flash, Gemini_2_0Flash_001, Gemini_2_0FlashExperimental, Gemini_2_0FlashThinkingExperimental, Gemini_2_0ProExperimental, Gemini_2_5Flash, Gemini_2_5FlashLite, Gemini_2_5FlashPreview, Gemini_2_5Pro, Gemini_2_5ProExperimental, Gemini_2_5ProPreview, Gemini_3_1ProPreview, Gemini_3FlashPreview, Gemini_3ProPreview, GeminiEmbedding_001, GeminiFlashLatest, GeminiFlashLiteLatest`
+`Custom, Embedding_004, Gemini_1_5Flash, Gemini_1_5Flash_001, Gemini_1_5Flash_002, Gemini_1_5Flash_8B, Gemini_1_5Flash_8B_001, Gemini_1_5Pro, Gemini_1_5Pro_001, Gemini_1_5Pro_002, Gemini_2_0Flash, Gemini_2_0Flash_001, Gemini_2_0FlashExperimental, Gemini_2_0FlashThinkingExperimental, Gemini_2_0ProExperimental, Gemini_2_5Flash, Gemini_2_5FlashLite, Gemini_2_5FlashPreview, Gemini_2_5Pro, Gemini_2_5ProExperimental, Gemini_2_5ProPreview, Gemini_3_1ProPreview, Gemini_3_5Flash, Gemini_3FlashPreview, Gemini_3ProPreview, GeminiEmbedding_001, GeminiFlashLatest, GeminiFlashLiteLatest`
 
 ### GoogleThinkingLevels
 `High, Low, Medium, Minimal`

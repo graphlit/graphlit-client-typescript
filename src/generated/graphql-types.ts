@@ -10979,6 +10979,8 @@ export enum GoogleModels {
   Gemini_3_1FlashLitePreview = 'GEMINI_3_1_FLASH_LITE_PREVIEW',
   /** Gemini 3.1 Pro (Preview) */
   Gemini_3_1ProPreview = 'GEMINI_3_1_PRO_PREVIEW',
+  /** Gemini 3.5 Flash */
+  Gemini_3_5Flash = 'GEMINI_3_5_FLASH',
   /** Gemini 3 Flash (Preview) */
   Gemini_3FlashPreview = 'GEMINI_3_FLASH_PREVIEW',
   /** Gemini 3 Pro (Preview) */
