@@ -23588,7 +23588,7 @@ export type Query = {
   lookupPersons?: Maybe<PersonLookupResults>;
   /** Lookup usage records given tenant correlation identifier. */
   lookupUsage?: Maybe<Array<Maybe<ProjectUsageRecord>>>;
-  /** Enumerates the web pages at or beneath the provided URL using web sitemap. */
+  /** Enumerates the web pages at or beneath the provided URL using web sitemap, or files in a Git repository. */
   mapWeb?: Maybe<UriResults>;
   /** Lookup a medical condition given its ID. */
   medicalCondition?: Maybe<MedicalCondition>;
@@ -24408,6 +24408,7 @@ export type QueryLookupUsageArgs = {
 export type QueryMapWebArgs = {
   allowedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   correlationId?: InputMaybe<Scalars['String']['input']>;
+  durationLimit?: InputMaybe<Scalars['TimeSpan']['input']>;
   excludedPaths?: InputMaybe<Array<Scalars['String']['input']>>;
   uri: Scalars['URL']['input'];
 };
@@ -26263,6 +26264,8 @@ export enum SearchServiceTypes {
   Exa = 'EXA',
   /** Exa Code context search service */
   ExaCode = 'EXA_CODE',
+  /** Job listings search service, via Crustdata */
+  Jobs = 'JOBS',
   /** LinkedIn search service, via Crustdata */
   LinkedIn = 'LINKED_IN',
   /** Parallel search feed service */
