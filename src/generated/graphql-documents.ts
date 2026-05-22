@@ -530,7 +530,7 @@ export const GetAgent = gql`
     prompt
     scratchpad
     focus
-    researchDepth
+    effort
     callbackUri
   }
 }
@@ -1002,7 +1002,7 @@ export const QueryAgents = gql`
       prompt
       scratchpad
       focus
-      researchDepth
+      effort
       callbackUri
     }
   }
