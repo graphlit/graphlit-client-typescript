@@ -6638,7 +6638,7 @@ export const DeleteConversations = gql`
 }
     `;
 export const FormatConversation = gql`
-    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $correlationId: String, $instructions: String, $scratchpad: String, $skills: [EntityReferenceInput!]) {
+    mutation FormatConversation($prompt: String!, $id: ID, $specification: EntityReferenceInput, $persona: EntityReferenceInput, $tools: [ToolDefinitionInput!], $systemPrompt: String, $includeDetails: Boolean, $timestamp: DateTime, $correlationId: String, $instructions: String, $scratchpad: String, $skills: [EntityReferenceInput!]) {
   formatConversation(
     prompt: $prompt
     id: $id
@@ -6647,6 +6647,7 @@ export const FormatConversation = gql`
     tools: $tools
     systemPrompt: $systemPrompt
     includeDetails: $includeDetails
+    timestamp: $timestamp
     correlationId: $correlationId
     instructions: $instructions
     scratchpad: $scratchpad

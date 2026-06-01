@@ -266,6 +266,13 @@ function nowIsoString(): string {
   return new Date().toISOString();
 }
 
+function normalizeDateTimeInput(
+  value?: Date | string | null,
+): Types.Scalars["DateTime"]["input"] | undefined {
+  if (!value) return undefined;
+  return value instanceof Date ? value.toISOString() : value;
+}
+
 function toTerminalToolStatus(error?: string): Types.ToolExecutionStatus {
   return error
     ? Types.ToolExecutionStatus.Failed
@@ -3850,6 +3857,7 @@ class Graphlit {
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
+    timestamp?: Types.Scalars["DateTime"]["input"],
   ): Promise<Types.FormatConversationMutation> {
     return this.mutateAndCheckError<
       Types.FormatConversationMutation,
@@ -3862,6 +3870,7 @@ class Graphlit {
       tools: tools,
       systemPrompt: systemPrompt,
       includeDetails: includeDetails,
+      timestamp: timestamp,
       correlationId: correlationId,
       instructions: instructions,
       scratchpad: scratchpad,
@@ -9811,6 +9820,7 @@ class Graphlit {
   ): Promise<void> {
     const maxRounds = options?.maxToolRounds || DEFAULT_MAX_TOOL_ROUNDS;
     const abortSignal = options?.abortSignal;
+    const promptTimestamp = normalizeDateTimeInput(options?.promptTimestamp);
     const cacheableSystemInstructions =
       additionalSystemInstructions ?? options?.additionalSystemInstructions;
     let uiAdapter: UIEventAdapter | undefined;
@@ -10069,6 +10079,7 @@ class Graphlit {
             options?.instructions,
             options?.scratchpad,
             options?.skills,
+            promptTimestamp,
             cacheableSystemInstructions,
             fallbackSpecs,
           );
@@ -10138,6 +10149,7 @@ class Graphlit {
     instructions?: string,
     scratchpad?: string,
     skills?: Types.EntityReferenceInput[],
+    promptTimestamp?: Types.Scalars["DateTime"]["input"],
     additionalSystemInstructions?: string,
     fallbackSpecifications?: Types.Specification[],
   ): Promise<void> {
@@ -10174,6 +10186,7 @@ class Graphlit {
       instructions,
       scratchpad,
       skills,
+      promptTimestamp,
     );
 
     const formattedMessage = formatResponse.formatConversation?.message;
@@ -11777,6 +11790,9 @@ class Graphlit {
   ): Promise<RunAgentResult> {
     const runStart = Date.now();
     const abortSignal = options?.abortSignal;
+    const initialPromptTimestamp = normalizeDateTimeInput(
+      options?.promptTimestamp,
+    );
 
     // Budget defaults
     const maxTurns = options?.maxTurns ?? 25;
@@ -12155,6 +12171,7 @@ class Graphlit {
             mergedInstructions,
             agentScratchpad,
             options?.skills,
+            turn === 0 ? initialPromptTimestamp : undefined,
           );
 
           const formattedMessage = formatResponse.formatConversation?.message;

@@ -109,6 +109,8 @@ export interface AgentResult {
 export interface StreamAgentOptions {
   maxToolRounds?: number; // default: 100
   abortSignal?: AbortSignal;
+  /** Explicit timestamp for the initial user prompt, preserved into formatConversation. */
+  promptTimestamp?: Date | string;
   smoothingEnabled?: boolean; // default: true
   chunkingStrategy?: "character" | "word" | "sentence"; // default: 'word'
   smoothingDelay?: number; // default: 30ms
@@ -218,6 +220,7 @@ export interface StuckEvaluation {
 export interface RunAgentOptions {
   // Conversation
   conversationId?: string;
+  promptTimestamp?: Date | string;
 
   // Tools
   tools?: ToolDefinitionInput[];
