@@ -29,6 +29,7 @@ import {
   getServiceType,
   getModelName,
   getModelEnum,
+  isAnthropicAdaptiveThinkingOnlyModel,
   isOpenAIResponsesEligibleModel,
 } from "./model-mapping.js";
 import {
@@ -660,7 +661,7 @@ function isValidGuid(guid: string | undefined): boolean {
 /**
  * Map Graphlit AnthropicEffortLevels to the string values accepted by the
  * Anthropic Messages API `output_config.effort` parameter (adaptive thinking).
- * Used for Claude 4.7 Opus, which replaces `thinking.budget_tokens` with
+ * Used for Claude Opus 4.7/4.8, which replace `thinking.budget_tokens` with
  * `thinking.type = "adaptive"` + `output_config.effort`.
  */
 function mapAnthropicEffort(
@@ -13415,8 +13416,8 @@ class Graphlit {
     if (specification.serviceType === Types.ModelServiceTypes.Anthropic) {
       const anthropic = specification.anthropic;
       if (anthropic?.enableThinking) {
-        // Claude 4.7 Opus only supports adaptive thinking with output_config.effort
-        if (anthropic.model === Types.AnthropicModels.Claude_4_7Opus) {
+        // Claude Opus 4.7/4.8 only support adaptive thinking with output_config.effort
+        if (isAnthropicAdaptiveThinkingOnlyModel(specification)) {
           return {
             type: "adaptive",
             effort: mapAnthropicEffort(anthropic.effort),

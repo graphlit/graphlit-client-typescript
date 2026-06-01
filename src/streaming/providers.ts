@@ -15,7 +15,10 @@ import {
   MistralMessage,
   BedrockMessage,
 } from "./llm-formatters.js";
-import { getModelName } from "../model-mapping.js";
+import {
+  getModelName,
+  isAnthropicAdaptiveThinkingOnlyModel,
+} from "../model-mapping.js";
 import {
   StreamEvent,
   ProviderError,
@@ -746,11 +749,12 @@ export async function streamWithAnthropic(
         specification.anthropic?.completionTokenLimit || defaultMaxTokens,
     };
 
-    // Handle temperature based on thinking configuration and model
-    // Claude 4.7 Opus (adaptive thinking) does not accept sampling parameters at all.
+    // Claude Opus 4.7/4.8 do not accept non-default sampling parameters at all.
     const isAdaptiveThinking = thinkingConfig?.type === "adaptive";
+    const isAdaptiveThinkingOnlyModel =
+      isAnthropicAdaptiveThinkingOnlyModel(specification);
 
-    if (thinkingConfig && !isAdaptiveThinking) {
+    if (thinkingConfig && !isAdaptiveThinking && !isAdaptiveThinkingOnlyModel) {
       // When legacy thinking budget is enabled, temperature must be 1
       streamConfig.temperature = 1;
 
@@ -759,7 +763,7 @@ export async function streamWithAnthropic(
           `🧠 [Anthropic] Setting temperature to 1 (required for extended thinking)`,
         );
       }
-    } else if (!isAdaptiveThinking) {
+    } else if (!isAdaptiveThinkingOnlyModel && !isAdaptiveThinking) {
       // Only add temperature if it's defined and valid for non-thinking requests
       if (
         specification.anthropic?.temperature !== undefined &&
@@ -797,7 +801,7 @@ export async function streamWithAnthropic(
     // Add thinking config if provided
     if (thinkingConfig) {
       if (thinkingConfig.type === "adaptive") {
-        // Claude 4.7 Opus: adaptive thinking, effort controls depth via output_config
+        // Claude Opus 4.7/4.8: adaptive thinking, effort controls depth via output_config
         streamConfig.thinking = { type: "adaptive" };
         if (thinkingConfig.effort) {
           streamConfig.output_config = { effort: thinkingConfig.effort };
