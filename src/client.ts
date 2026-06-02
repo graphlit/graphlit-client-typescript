@@ -683,6 +683,26 @@ function mapAnthropicEffort(
   }
 }
 
+function supportsAnthropicThinkingDisplay(
+  specification: Types.Specification,
+): boolean {
+  if (specification.serviceType !== Types.ModelServiceTypes.Anthropic) {
+    return false;
+  }
+
+  const modelName = getModelName(specification);
+  if (!modelName) {
+    return false;
+  }
+
+  return (
+    modelName.startsWith("claude-opus-4") ||
+    modelName.startsWith("claude-sonnet-4") ||
+    modelName.startsWith("claude-haiku-4") ||
+    modelName === "claude-mythos-preview"
+  );
+}
+
 // Define the Graphlit class
 class Graphlit {
   public client: ApolloClient<NormalizedCacheObject> | undefined;
@@ -13409,23 +13429,37 @@ class Graphlit {
   private getThinkingConfig(
     specification: Types.Specification,
   ):
-    | { type: "enabled"; budget_tokens: number }
-    | { type: "adaptive"; effort?: "low" | "medium" | "high" | "xhigh" }
+    | {
+        type: "enabled";
+        budget_tokens: number;
+        display?: "summarized";
+      }
+    | {
+        type: "adaptive";
+        effort?: "low" | "medium" | "high" | "xhigh";
+        display?: "summarized";
+      }
     | undefined {
     // Check Anthropic specifications
     if (specification.serviceType === Types.ModelServiceTypes.Anthropic) {
       const anthropic = specification.anthropic;
       if (anthropic?.enableThinking) {
+        const display = supportsAnthropicThinkingDisplay(specification)
+          ? "summarized"
+          : undefined;
+
         // Claude Opus 4.7/4.8 only support adaptive thinking with output_config.effort
         if (isAnthropicAdaptiveThinkingOnlyModel(specification)) {
           return {
             type: "adaptive",
             effort: mapAnthropicEffort(anthropic.effort),
+            display,
           };
         }
         return {
           type: "enabled",
           budget_tokens: anthropic.thinkingTokenLimit || 10000,
+          display,
         };
       }
     }

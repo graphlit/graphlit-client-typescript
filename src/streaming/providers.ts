@@ -685,8 +685,16 @@ export async function streamWithAnthropic(
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?:
-    | { type: "enabled"; budget_tokens: number }
-    | { type: "adaptive"; effort?: "low" | "medium" | "high" | "xhigh" },
+    | {
+        type: "enabled";
+        budget_tokens: number;
+        display?: "summarized";
+      }
+    | {
+        type: "adaptive";
+        effort?: "low" | "medium" | "high" | "xhigh";
+        display?: "summarized";
+      },
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -802,7 +810,9 @@ export async function streamWithAnthropic(
     if (thinkingConfig) {
       if (thinkingConfig.type === "adaptive") {
         // Claude Opus 4.7/4.8: adaptive thinking, effort controls depth via output_config
-        streamConfig.thinking = { type: "adaptive" };
+        streamConfig.thinking = thinkingConfig.display
+          ? { type: "adaptive", display: thinkingConfig.display }
+          : { type: "adaptive" };
         if (thinkingConfig.effort) {
           streamConfig.output_config = { effort: thinkingConfig.effort };
         }
