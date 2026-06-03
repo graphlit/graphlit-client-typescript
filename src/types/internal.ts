@@ -140,6 +140,62 @@ export function isRetryableServerError(error: any): boolean {
 }
 
 /**
+ * Extract an HTTP status code from common Apollo/network error shapes.
+ */
+export function getErrorStatusCode(error: any): number | undefined {
+  if (!error || typeof error !== "object") return undefined;
+
+  const status =
+    typeof error.status === "number"
+      ? error.status
+      : typeof error.statusCode === "number"
+        ? error.statusCode
+        : undefined;
+  if (typeof status === "number") return status;
+
+  const responseStatus =
+    typeof error.response?.status === "number"
+      ? error.response.status
+      : undefined;
+  if (typeof responseStatus === "number") return responseStatus;
+
+  return (
+    getErrorStatusCode(error.networkError) ?? getErrorStatusCode(error.cause)
+  );
+}
+
+/**
+ * Detect retryable GraphQL transport errors from Apollo RetryLink.
+ *
+ * RetryLink can receive either:
+ * - an ApolloError with `networkError`
+ * - a raw HttpLink `ServerError` with `statusCode` / `response.status`
+ * - a nested network/cause error from undici/fetch
+ */
+export function isRetryableGraphQLTransportError(
+  error: any,
+  retryableStatusCodes: number[] = [429, 500, 502, 503, 504],
+): boolean {
+  if (!error) return false;
+
+  const statusCode = getErrorStatusCode(error);
+  if (typeof statusCode === "number") {
+    return retryableStatusCodes.includes(statusCode);
+  }
+
+  if (Array.isArray(error.graphQLErrors) && error.graphQLErrors.length > 0) {
+    return false;
+  }
+
+  return (
+    !!error.networkError ||
+    isNetworkError(error) ||
+    isRetryableServerError(error) ||
+    isRetryableGraphQLTransportError(error.cause, retryableStatusCodes)
+  );
+}
+
+/**
  * Detect rate-limit / overloaded errors across providers.
  */
 export function isRateLimitError(error: any): boolean {

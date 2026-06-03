@@ -62,7 +62,10 @@ import {
   DEFAULT_CONTEXT_STRATEGY,
 } from "./helpers/context-management.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
-import { ProviderError } from "./types/internal.js";
+import {
+  isRetryableGraphQLTransportError,
+  ProviderError,
+} from "./types/internal.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
   formatMessagesForOpenAI,
@@ -866,7 +869,11 @@ class Graphlit {
 
   public refreshClient() {
     this.client = undefined;
-    this.generateToken();
+
+    if (this.jwtSecret) {
+      this.generateToken();
+    }
+
     this.setupApolloClient();
   }
 
@@ -887,37 +894,22 @@ class Graphlit {
         retryIf: (error: any, _operation: any) => {
           // Check if we should retry this error
           if (!error) return false;
+          const shouldRetry = isRetryableGraphQLTransportError(
+            error,
+            this.retryConfig.retryableStatusCodes,
+          );
 
-          // Check for network errors
-          const hasNetworkError = !!error.networkError;
-          if (!hasNetworkError) return false;
-
-          // Get status code from different possible locations
-          const statusCode =
-            error.networkError?.statusCode ||
-            error.networkError?.response?.status ||
-            error.statusCode;
-
-          // Check if status code is retryable
-          if (statusCode && this.retryConfig.retryableStatusCodes) {
-            const shouldRetry =
-              this.retryConfig.retryableStatusCodes.includes(statusCode);
-
-            // Call onRetry callback if provided
-            if (
-              shouldRetry &&
-              this.retryConfig.onRetry &&
-              _operation.getContext().retryCount !== undefined
-            ) {
-              const attempt = _operation.getContext().retryCount + 1;
-              this.retryConfig.onRetry(attempt, error, _operation);
-            }
-
-            return shouldRetry;
+          // Call onRetry callback if provided
+          if (
+            shouldRetry &&
+            this.retryConfig.onRetry &&
+            _operation.getContext().retryCount !== undefined
+          ) {
+            const attempt = _operation.getContext().retryCount + 1;
+            this.retryConfig.onRetry(attempt, error, _operation);
           }
 
-          // Default: retry on network errors without specific status codes
-          return true;
+          return shouldRetry;
         },
       },
     });
