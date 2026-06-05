@@ -11816,12 +11816,14 @@ class Graphlit {
     const turnResults: TurnResult[] = [];
     let totalToolCalls = 0;
     let status: RunAgentResult["status"] = "completed";
+    let completionReason: RunAgentResult["completionReason"] | undefined;
     let finalMessage = "";
     let stuckPattern: string | undefined;
     let errorMessage: string | undefined;
     let lastContextWindow: ContextWindowUsage | undefined;
     let conversationId = options?.conversationId ?? "";
     let resolvedAgentId = agentId ?? "";
+    let resumedTurnCount = 0;
 
     // Accumulate token usage across all turns from conversation_completed events
     let accumulatedUsage: {
@@ -12061,6 +12063,8 @@ class Graphlit {
           }
         }
       }
+
+      resumedTurnCount = turnResults.length;
 
       const fallbackSpecs = await this.resolveSpecificationReferences(
         fallbackReferences.filter((fallback) => fallback.id !== fullSpec?.id),
@@ -12366,6 +12370,10 @@ class Graphlit {
         const taskCompleteThisTurn = this.detectTaskCompleteInMessages(
           loopResult.intermediateMessages,
         );
+        const terminalTextThisTurn = this.detectTerminalTextCompletion(
+          loopResult,
+          options?.completionMode,
+        );
         const trimmedMessage = loopResult.finalAssistantMessage;
 
         // 8b. Complete conversation (persist turn)
@@ -12447,6 +12455,11 @@ class Graphlit {
           toolCallCount: loopResult.toolCallCount,
           durationMs: turnDuration,
           taskComplete: taskCompleteThisTurn,
+          completionReason: taskCompleteThisTurn
+            ? "task_complete"
+            : terminalTextThisTurn
+              ? "terminal_text"
+              : undefined,
           contextWindowUsage: loopResult.contextWindow,
           contextActions:
             loopResult.contextActions.length > 0
@@ -12468,9 +12481,10 @@ class Graphlit {
 
         // 11. Evaluate turn
 
-        // a. task_complete called?
-        if (taskCompleteThisTurn) {
+        // a. Terminal completion reached?
+        if (turnResult.completionReason) {
           status = "completed";
+          completionReason = turnResult.completionReason;
           break;
         }
 
@@ -12527,10 +12541,12 @@ class Graphlit {
       // status defaults to "completed", so we need a positive signal that
       // task_complete was actually called — otherwise hitting the turn cap
       // looks like success.
-      const taskCompleteWasCalled = turnResults.some((t) => t.taskComplete);
+      const runCompletedNaturally = turnResults.slice(resumedTurnCount).some(
+        (t) => t.taskComplete || t.completionReason === "terminal_text",
+      );
       if (
         status === "completed" &&
-        !taskCompleteWasCalled &&
+        !runCompletedNaturally &&
         turnResults.length >= evaluator.adjustedMaxTurns
       ) {
         status = "budget_exhausted";
@@ -12559,6 +12575,7 @@ class Graphlit {
         conversationId,
         status,
         finalMessage,
+        completionReason,
         turnResults,
         totalToolCalls,
         wallClockMs,
@@ -12585,6 +12602,7 @@ class Graphlit {
         conversationId,
         status,
         finalMessage,
+        completionReason,
         turnResults,
         totalToolCalls,
         wallClockMs: Date.now() - runStart,
@@ -12677,8 +12695,9 @@ class Graphlit {
         }
       }
 
-      // Check tool response messages for errors
+      // Check tool response messages for errors and locate the next user turn.
       const toolErrors: string[] = [];
+      let nextUserMsg: Types.ConversationMessage | undefined;
       for (let j = i + 1; j < messages.length; j++) {
         const respMsg = messages[j];
         if (respMsg.role === Types.ConversationRoleTypes.Tool) {
@@ -12686,9 +12705,12 @@ class Graphlit {
             toolErrors.push(respMsg.message);
           }
         } else if (respMsg.role === Types.ConversationRoleTypes.User) {
+          nextUserMsg = respMsg;
           break; // Next turn
         }
       }
+
+      const taskComplete = this.detectTaskComplete(assistantMsg.toolCalls);
 
       results.push({
         turnNumber: turnNumber++,
@@ -12698,7 +12720,13 @@ class Graphlit {
         toolCallCount: toolNames.length,
         durationMs:
           computePersistedToolRoundDurationMs(assistantMsg.toolCalls) ?? 0,
-        taskComplete: this.detectTaskComplete(assistantMsg.toolCalls),
+        taskComplete,
+        completionReason: taskComplete
+          ? "task_complete"
+          : this.detectPersistedTurnCompletionReason(
+            assistantMsg,
+            nextUserMsg,
+          ),
         errors: toolErrors.length > 0 ? toolErrors : undefined,
       });
     }
@@ -12917,6 +12945,56 @@ class Graphlit {
   }
 
   /**
+   * Treat a non-empty text-only turn as terminal when the caller explicitly
+   * opts into interactive completion semantics.
+   */
+  private detectTerminalTextCompletion(
+    loopResult: StreamingLoopResult,
+    completionMode: RunAgentOptions["completionMode"] | undefined,
+  ): boolean {
+    if (completionMode !== "allow_terminal_text") {
+      return false;
+    }
+
+    if (loopResult.toolCallCount !== 0) {
+      return false;
+    }
+
+    if (loopResult.errors.length > 0) {
+      return false;
+    }
+
+    return loopResult.finalAssistantMessage.trim().length > 0;
+  }
+
+  /**
+   * Reconstruct terminal-text completion across resumed conversations. A
+   * text-only assistant turn is considered terminal if it was not followed by
+   * the harness' synthetic bare continuation prompt.
+   */
+  private detectPersistedTurnCompletionReason(
+    assistantMessage: Types.ConversationMessage,
+    nextMessage: Types.ConversationMessage | undefined,
+  ): TurnResult["completionReason"] | undefined {
+    if ((assistantMessage.message || "").trim().length === 0) {
+      return undefined;
+    }
+
+    if ((assistantMessage.toolCalls?.length ?? 0) > 0) {
+      return undefined;
+    }
+
+    if (
+      nextMessage?.role === Types.ConversationRoleTypes.User &&
+      (nextMessage.message || "").trim() === "Continue."
+    ) {
+      return undefined;
+    }
+
+    return "terminal_text";
+  }
+
+  /**
    * Run LLM-as-judge quality assessment on a completed agent run.
    */
   private async runQualityAssessment(
@@ -13016,6 +13094,7 @@ class Graphlit {
     conversationId: string;
     status: RunAgentResult["status"];
     finalMessage: string;
+    completionReason?: RunAgentResult["completionReason"];
     turnResults: TurnResult[];
     totalToolCalls: number;
     wallClockMs: number;
@@ -13030,6 +13109,7 @@ class Graphlit {
       conversationId: params.conversationId,
       status: params.status,
       finalMessage: params.finalMessage,
+      completionReason: params.completionReason,
       turns: params.turnResults.length,
       totalToolCalls: params.totalToolCalls,
       wallClockMs: params.wallClockMs,

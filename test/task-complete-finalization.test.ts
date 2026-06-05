@@ -36,6 +36,17 @@ const TASK_COMPLETE_LOOP_RESULT: StreamingLoopResult = {
   lastRoundReasoning: undefined,
 };
 
+const TERMINAL_TEXT_LOOP_RESULT: StreamingLoopResult = {
+  fullMessage: "READY",
+  finalAssistantMessage: "READY",
+  toolCallCount: 0,
+  toolCallNames: [],
+  errors: [],
+  contextActions: [],
+  intermediateMessages: [],
+  lastRoundReasoning: undefined,
+};
+
 describe("Task Complete Finalization", () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -147,6 +158,139 @@ describe("Task Complete Finalization", () => {
     );
     expect(result.finalMessage).toBe("Hello! How can I help you today?");
     expect(result.status).toBe("completed");
+    expect(result.completionReason).toBe("task_complete");
+  });
+
+  it("runAgent completes on a non-empty text-only turn when terminal text completion is enabled", async () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    vi.spyOn(client, "createAgent").mockResolvedValue({
+      createAgent: { id: "agent-1" },
+    } as Types.CreateAgentMutation);
+    vi.spyOn(client, "createConversation").mockResolvedValue({
+      createConversation: { id: "conv-1" },
+    } as Types.CreateConversationMutation);
+    vi.spyOn(client as any, "formatConversation").mockResolvedValue({
+      formatConversation: {
+        message: {
+          role: Types.ConversationRoleTypes.User,
+          message: "say ready",
+          timestamp: "2026-04-03T16:16:03.000Z",
+        },
+      },
+    });
+    const executeStreamingLoopSpy = vi
+      .spyOn(client as any, "executeStreamingLoop")
+      .mockResolvedValue(TERMINAL_TEXT_LOOP_RESULT);
+    vi.spyOn(client, "completeConversation").mockResolvedValue({
+      completeConversation: {
+        message: {
+          tokens: 42,
+        },
+      },
+    } as Types.CompleteConversationMutation);
+
+    const result = await client.runAgent(
+      "say ready",
+      () => {},
+      undefined,
+      undefined,
+      {
+        maxTurns: 3,
+        completionMode: "allow_terminal_text",
+      },
+    );
+
+    expect(executeStreamingLoopSpy).toHaveBeenCalledTimes(1);
+    expect(result.status).toBe("completed");
+    expect(result.finalMessage).toBe("READY");
+    expect(result.completionReason).toBe("terminal_text");
+    expect(result.turnResults).toHaveLength(1);
+    expect(result.turnResults[0]?.completionReason).toBe("terminal_text");
+  });
+
+  it("runAgent preserves Continue. turns by default after a text-only response", async () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    vi.spyOn(client, "createAgent").mockResolvedValue({
+      createAgent: { id: "agent-1" },
+    } as Types.CreateAgentMutation);
+    vi.spyOn(client, "createConversation").mockResolvedValue({
+      createConversation: { id: "conv-1" },
+    } as Types.CreateConversationMutation);
+    const formatConversationSpy = vi
+      .spyOn(client as any, "formatConversation")
+      .mockImplementation(async (prompt: string) => ({
+        formatConversation: {
+          message: {
+            role: Types.ConversationRoleTypes.User,
+            message: prompt,
+            timestamp: "2026-04-03T16:16:03.000Z",
+          },
+        },
+      }));
+    const executeStreamingLoopSpy = vi
+      .spyOn(client as any, "executeStreamingLoop")
+      .mockResolvedValueOnce(TERMINAL_TEXT_LOOP_RESULT)
+      .mockResolvedValueOnce(TASK_COMPLETE_LOOP_RESULT);
+    vi.spyOn(client, "completeConversation").mockResolvedValue({
+      completeConversation: {
+        message: {
+          tokens: 42,
+        },
+      },
+    } as Types.CompleteConversationMutation);
+
+    const result = await client.runAgent(
+      "say ready",
+      () => {},
+      undefined,
+      undefined,
+      { maxTurns: 3 },
+    );
+
+    expect(executeStreamingLoopSpy).toHaveBeenCalledTimes(2);
+    expect(formatConversationSpy).toHaveBeenCalledTimes(2);
+    expect(formatConversationSpy.mock.calls[1]?.[0]).toBe("Continue.");
+    expect(result.status).toBe("completed");
+    expect(result.completionReason).toBe("task_complete");
+    expect(result.turnResults[0]?.completionReason).toBeUndefined();
+    expect(result.turnResults[1]?.completionReason).toBe("task_complete");
+  });
+
+  it("reconstructTurnResults marks prior text-only terminal turns when they were not followed by Continue.", () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    const turns = (client as any).reconstructTurnResults([
+      {
+        __typename: "ConversationMessage",
+        role: Types.ConversationRoleTypes.User,
+        message: "First task",
+        timestamp: "2026-04-03T16:16:03.000Z",
+      },
+      {
+        __typename: "ConversationMessage",
+        role: Types.ConversationRoleTypes.Assistant,
+        message: "READY",
+        timestamp: "2026-04-03T16:16:04.000Z",
+      },
+      {
+        __typename: "ConversationMessage",
+        role: Types.ConversationRoleTypes.User,
+        message: "Second task",
+        timestamp: "2026-04-03T16:16:05.000Z",
+      },
+      {
+        __typename: "ConversationMessage",
+        role: Types.ConversationRoleTypes.Assistant,
+        message: "DONE",
+        timestamp: "2026-04-03T16:16:06.000Z",
+      },
+    ] as Types.ConversationMessage[]);
+
+    expect(turns).toHaveLength(2);
+    expect(turns[0]?.completionReason).toBe("terminal_text");
+    expect(turns[1]?.completionReason).toBe("terminal_text");
   });
 
   it("executeStreamingLoop executes task_complete, persists its tool result, and stops before a filler round", async () => {

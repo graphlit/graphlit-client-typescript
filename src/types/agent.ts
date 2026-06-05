@@ -182,6 +182,14 @@ export type HarnessStatus =
   | "error"
   | "cancelled";
 
+/** How a runAgent execution reached terminal completion. */
+export type RunCompletionReason = "task_complete" | "terminal_text";
+
+/** Policy controlling when text-only turns should be treated as terminal. */
+export type RunCompletionMode =
+  | "task_complete_only"
+  | "allow_terminal_text";
+
 /** Per-turn data captured by the harness. */
 export interface TurnResult {
   turnNumber: number;
@@ -191,6 +199,7 @@ export interface TurnResult {
   toolCallCount: number;
   durationMs: number;
   taskComplete?: boolean;
+  completionReason?: RunCompletionReason;
   contextWindowUsage?: ContextWindowUsage;
   contextActions?: ContextManagementAction[];
   errors?: string[];
@@ -235,6 +244,9 @@ export interface RunAgentOptions {
   maxWallClockMs?: number; // default: 300000 (5 minutes)
   maxToolCalls?: number; // default: 100
   windDownTurns?: number; // default: 2
+
+  // Completion policy
+  completionMode?: RunCompletionMode;
 
   // Callbacks
   onTurnComplete?: (turn: TurnResult) => void;
@@ -284,6 +296,7 @@ export interface RunAgentResult {
   conversationId: string;
   status: HarnessStatus;
   finalMessage: string;
+  completionReason?: RunCompletionReason;
   turns: number;
   totalToolCalls: number;
   wallClockMs: number;

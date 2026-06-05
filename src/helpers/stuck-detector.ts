@@ -46,7 +46,7 @@ const STUCK_WINDOW = 5; // Number of recent turns to examine
 const REPEAT_THRESHOLD = 3; // Minimum identical occurrences to detect a pattern
 const SIMILARITY_THRESHOLD = 0.9; // Trigram similarity threshold for "same" response
 const CONSECUTIVE_ERROR_THRESHOLD = 3; // Consecutive all-error turns
-const CONSECUTIVE_EMPTY_THRESHOLD = 2; // Consecutive empty (no tool, no task_complete) turns
+const CONSECUTIVE_EMPTY_THRESHOLD = 2; // Consecutive empty non-terminal turns
 
 /**
  * Stateful detector that tracks patterns across harness turns and identifies
@@ -79,7 +79,9 @@ export class StuckDetector {
       (turn.errors?.length ?? 0) >= turn.toolCallCount;
     this.errorHistory.push(allErrors);
 
-    if (turn.toolCallCount === 0 && !turn.taskComplete) {
+    const turnCompleted = turn.taskComplete || turn.completionReason != null;
+
+    if (turn.toolCallCount === 0 && !turnCompleted) {
       this.emptyTurnCount++;
     } else {
       this.emptyTurnCount = 0;
@@ -127,7 +129,7 @@ export class StuckDetector {
       }
     }
 
-    // 4. Empty turns — 2+ consecutive turns with 0 tool calls and no task_complete
+    // 4. Empty turns — 2+ consecutive turns with 0 tool calls and no terminal completion
     if (this.emptyTurnCount >= CONSECUTIVE_EMPTY_THRESHOLD) {
       return this.strike("empty_turns");
     }
