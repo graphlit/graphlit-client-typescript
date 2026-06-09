@@ -664,7 +664,7 @@ function isValidGuid(guid: string | undefined): boolean {
 /**
  * Map Graphlit AnthropicEffortLevels to the string values accepted by the
  * Anthropic Messages API `output_config.effort` parameter (adaptive thinking).
- * Used for Claude Opus 4.7/4.8, which replace `thinking.budget_tokens` with
+ * Used for Anthropic models that replace `thinking.budget_tokens` with
  * `thinking.type = "adaptive"` + `output_config.effort`.
  */
 function mapAnthropicEffort(
@@ -702,6 +702,7 @@ function supportsAnthropicThinkingDisplay(
     modelName.startsWith("claude-opus-4") ||
     modelName.startsWith("claude-sonnet-4") ||
     modelName.startsWith("claude-haiku-4") ||
+    modelName === "claude-fable-5" ||
     modelName === "claude-mythos-preview"
   );
 }
@@ -13520,7 +13521,7 @@ class Graphlit {
           ? "summarized"
           : undefined;
 
-        // Claude Opus 4.7/4.8 only support adaptive thinking with output_config.effort
+        // Some Anthropic models only support adaptive thinking with output_config.effort
         if (isAnthropicAdaptiveThinkingOnlyModel(specification)) {
           return {
             type: "adaptive",

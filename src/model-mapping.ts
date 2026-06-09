@@ -153,6 +153,9 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   // Claude 4.7+ models (1M context is native to the model, no beta header required)
   [Types.AnthropicModels.Claude_4_7Opus]: "claude-opus-4-7",
   [Types.AnthropicModels.Claude_4_8Opus]: "claude-opus-4-8",
+
+  // Claude Fable models
+  [Types.AnthropicModels.Claude_5Fable]: "claude-fable-5",
 };
 
 // Google model mappings
@@ -429,7 +432,7 @@ export function getModelEnum(specification: any): string | undefined {
 }
 
 /**
- * Check whether an Anthropic specification targets an Opus model that only
+ * Check whether an Anthropic specification targets a model that only
  * supports adaptive thinking and rejects non-default sampling parameters.
  */
 export function isAnthropicAdaptiveThinkingOnlyModel(
@@ -442,13 +445,18 @@ export function isAnthropicAdaptiveThinkingOnlyModel(
   const modelEnum = getModelEnum(specification);
   if (
     modelEnum === Types.AnthropicModels.Claude_4_7Opus ||
-    modelEnum === Types.AnthropicModels.Claude_4_8Opus
+    modelEnum === Types.AnthropicModels.Claude_4_8Opus ||
+    modelEnum === Types.AnthropicModels.Claude_5Fable
   ) {
     return true;
   }
 
   const modelName = getModelName(specification);
-  return modelName === "claude-opus-4-7" || modelName === "claude-opus-4-8";
+  return (
+    modelName === "claude-opus-4-7" ||
+    modelName === "claude-opus-4-8" ||
+    modelName === "claude-fable-5"
+  );
 }
 
 /**

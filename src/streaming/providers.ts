@@ -757,7 +757,7 @@ export async function streamWithAnthropic(
         specification.anthropic?.completionTokenLimit || defaultMaxTokens,
     };
 
-    // Claude Opus 4.7/4.8 do not accept non-default sampling parameters at all.
+    // Adaptive-thinking-only Anthropic models do not accept non-default sampling parameters.
     const isAdaptiveThinking = thinkingConfig?.type === "adaptive";
     const isAdaptiveThinkingOnlyModel =
       isAnthropicAdaptiveThinkingOnlyModel(specification);
@@ -809,7 +809,7 @@ export async function streamWithAnthropic(
     // Add thinking config if provided
     if (thinkingConfig) {
       if (thinkingConfig.type === "adaptive") {
-        // Claude Opus 4.7/4.8: adaptive thinking, effort controls depth via output_config
+        // Adaptive thinking models use effort to control depth via output_config
         streamConfig.thinking = thinkingConfig.display
           ? { type: "adaptive", display: thinkingConfig.display }
           : { type: "adaptive" };

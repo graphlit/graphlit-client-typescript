@@ -891,6 +891,8 @@ export enum AnthropicModels {
   Claude_4Sonnet = 'CLAUDE_4_SONNET',
   /** Claude 4 Sonnet (05-14-2025 version) */
   Claude_4Sonnet_20250514 = 'CLAUDE_4_SONNET_20250514',
+  /** Claude Fable 5 (Latest) */
+  Claude_5Fable = 'CLAUDE_5_FABLE',
   /** @deprecated Use Claude 4.5 Haiku instead. */
   ClaudeInstant_1 = 'CLAUDE_INSTANT_1',
   /** @deprecated Use Claude 4.5 Haiku instead. */

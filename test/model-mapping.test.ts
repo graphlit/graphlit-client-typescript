@@ -24,7 +24,16 @@ describe("model mapping", () => {
     ).toBe("claude-opus-4-8");
   });
 
-  it("detects adaptive-thinking-only Anthropic Opus models", () => {
+  it("maps Claude Fable 5 to the Anthropic model name", () => {
+    expect(
+      getModelName({
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { model: Types.AnthropicModels.Claude_5Fable },
+      }),
+    ).toBe("claude-fable-5");
+  });
+
+  it("detects adaptive-thinking-only Anthropic models", () => {
     expect(
       isAnthropicAdaptiveThinkingOnlyModel({
         serviceType: Types.ModelServiceTypes.Anthropic,
@@ -42,7 +51,21 @@ describe("model mapping", () => {
     expect(
       isAnthropicAdaptiveThinkingOnlyModel({
         serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { model: Types.AnthropicModels.Claude_5Fable },
+      }),
+    ).toBe(true);
+
+    expect(
+      isAnthropicAdaptiveThinkingOnlyModel({
+        serviceType: Types.ModelServiceTypes.Anthropic,
         anthropic: { modelName: "claude-opus-4-8" },
+      }),
+    ).toBe(true);
+
+    expect(
+      isAnthropicAdaptiveThinkingOnlyModel({
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { modelName: "claude-fable-5" },
       }),
     ).toBe(true);
 

@@ -3,7 +3,7 @@ import { Graphlit } from "../src/client";
 import * as Types from "../src/generated/graphql-types";
 import { streamWithAnthropic } from "../src/streaming/providers";
 
-describe("Anthropic Opus 4.8 streaming", () => {
+describe("Anthropic adaptive thinking streaming", () => {
   it("uses adaptive thinking config for Claude Opus 4.8", () => {
     const client = new Graphlit({ token: "test-token" });
 
@@ -19,6 +19,25 @@ describe("Anthropic Opus 4.8 streaming", () => {
     expect(thinkingConfig).toEqual({
       type: "adaptive",
       effort: "high",
+      display: "summarized",
+    });
+  });
+
+  it("uses adaptive thinking config for Claude Fable 5", () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    const thinkingConfig = (client as any).getThinkingConfig({
+      serviceType: Types.ModelServiceTypes.Anthropic,
+      anthropic: {
+        model: Types.AnthropicModels.Claude_5Fable,
+        enableThinking: true,
+        effort: Types.AnthropicEffortLevels.XHigh,
+      },
+    });
+
+    expect(thinkingConfig).toEqual({
+      type: "adaptive",
+      effort: "xhigh",
       display: "summarized",
     });
   });
@@ -62,7 +81,7 @@ describe("Anthropic Opus 4.8 streaming", () => {
 
   it("omits temperature for Claude Opus 4.8 streaming requests", async () => {
     const create = vi.fn().mockResolvedValue({
-      async *[Symbol.asyncIterator]() {},
+      async *[Symbol.asyncIterator]() { },
     });
     const onComplete = vi.fn();
 
@@ -79,7 +98,7 @@ describe("Anthropic Opus 4.8 streaming", () => {
       undefined,
       undefined,
       { messages: { create } } as any,
-      () => {},
+      () => { },
       onComplete,
     );
 
@@ -94,9 +113,43 @@ describe("Anthropic Opus 4.8 streaming", () => {
     expect(onComplete).toHaveBeenCalledWith("", [], null, undefined);
   });
 
+  it("omits temperature for Claude Fable 5 streaming requests", async () => {
+    const create = vi.fn().mockResolvedValue({
+      async *[Symbol.asyncIterator]() { },
+    });
+    const onComplete = vi.fn();
+
+    await streamWithAnthropic(
+      {
+        name: "Claude Fable 5",
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: {
+          modelName: "claude-fable-5",
+          temperature: 0.2,
+        },
+      } as Types.Specification,
+      [{ role: "user", content: "Hello" }] as any,
+      undefined,
+      undefined,
+      { messages: { create } } as any,
+      () => { },
+      onComplete,
+    );
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0]?.[0]).toMatchObject({
+      model: "claude-fable-5",
+      messages: [{ role: "user", content: "Hello" }],
+      max_tokens: 8192,
+      stream: true,
+    });
+    expect(create.mock.calls[0]?.[0]).not.toHaveProperty("temperature");
+    expect(onComplete).toHaveBeenCalledWith("", [], null, undefined);
+  });
+
   it("passes summarized display through Anthropic adaptive thinking requests", async () => {
     const create = vi.fn().mockResolvedValue({
-      async *[Symbol.asyncIterator]() {},
+      async *[Symbol.asyncIterator]() { },
     });
 
     await streamWithAnthropic(
@@ -111,7 +164,7 @@ describe("Anthropic Opus 4.8 streaming", () => {
       undefined,
       undefined,
       { messages: { create } } as any,
-      () => {},
+      () => { },
       vi.fn(),
       undefined,
       {
