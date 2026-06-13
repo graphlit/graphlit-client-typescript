@@ -42,6 +42,7 @@ export type StreamEvent =
     }
   | {
       type: "complete";
+      isFinal?: boolean;
       messageId?: string;
       conversationId?: string;
       tokens?: number;

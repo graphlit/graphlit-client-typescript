@@ -65,6 +65,7 @@ import { AgentStreamEvent } from "./types/ui-events.js";
 import {
   isRetryableGraphQLTransportError,
   ProviderError,
+  StreamEvent,
 } from "./types/internal.js";
 import { UIEventAdapter } from "./streaming/ui-event-adapter.js";
 import {
@@ -9909,6 +9910,7 @@ class Graphlit {
         const createResponse = await this.createConversation(
           {
             name: `Streaming agent conversation`,
+            type: Types.ConversationTypes.Agent,
             specification: effectiveSpecification,
             ...(fallbackReferences.length > 0 && {
               fallbacks: fallbackReferences,
@@ -13284,6 +13286,15 @@ class Graphlit {
     }
   }
 
+  private handleProviderStreamEvent(
+    uiAdapter: UIEventAdapter,
+    event: StreamEvent,
+  ): void {
+    uiAdapter.handleEvent(
+      event.type === "complete" ? { ...event, isFinal: false } : event,
+    );
+  }
+
   /**
    * Stream with OpenAI client
    */
@@ -13344,7 +13355,7 @@ class Graphlit {
         input,
         toolDefinitions,
         openaiClient,
-        (event) => uiAdapter.handleEvent(event),
+        (event) => this.handleProviderStreamEvent(uiAdapter, event),
         abortSignal,
         reasoningEffort,
         toolChoice,
@@ -13420,7 +13431,7 @@ class Graphlit {
       messages,
       tools,
       openaiClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
       reasoningEffort,
@@ -13489,7 +13500,7 @@ class Graphlit {
       systemPrompt,
       tools,
       anthropicClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
       thinkingConfig,
@@ -13607,7 +13618,7 @@ class Graphlit {
       tools,
       googleClient,
       this.googlePromptCache,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
       thinkingConfig,
@@ -13655,7 +13666,7 @@ class Graphlit {
       messages,
       tools,
       groqClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13706,7 +13717,7 @@ class Graphlit {
       messages,
       tools,
       cerebrasClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13755,7 +13766,7 @@ class Graphlit {
       messages,
       tools,
       cohereClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13822,7 +13833,7 @@ class Graphlit {
       messages,
       tools,
       mistralClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13873,7 +13884,7 @@ class Graphlit {
       systemPrompt,
       tools,
       bedrockClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13927,7 +13938,7 @@ class Graphlit {
       messages,
       tools,
       deepseekClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );
@@ -13978,7 +13989,7 @@ class Graphlit {
       messages,
       tools,
       xaiClient,
-      (event) => uiAdapter.handleEvent(event),
+      (event) => this.handleProviderStreamEvent(uiAdapter, event),
       onComplete,
       abortSignal,
     );

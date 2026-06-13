@@ -64,6 +64,7 @@ export class UIEventAdapter {
   private usageData?: any;
   private hasToolCallsInProgress: boolean = false;
   private hadToolCallsBeforeResume: boolean = false;
+  private lastMessageUpdateText?: string;
 
   private getCachedInputTokens(): number | undefined {
     return (
@@ -154,7 +155,7 @@ export class UIEventAdapter {
         break;
 
       case "complete":
-        this.handleComplete(event.tokens);
+        this.handleComplete(event.tokens, event.isFinal !== false);
         break;
 
       case "error":
@@ -200,6 +201,7 @@ export class UIEventAdapter {
     this.lastTokenTime = 0;
     this.tokenCount = 0;
     this.tokenDelays = [];
+    this.lastMessageUpdateText = undefined;
 
     // Reset reasoning state so stale thinking from a prior round doesn't leak
     this.reasoningContent = "";
@@ -539,7 +541,7 @@ export class UIEventAdapter {
     }
   }
 
-  private handleComplete(tokens?: number): void {
+  private handleComplete(tokens?: number, isFinal: boolean = true): void {
     if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       console.log(
         `🔚 [UIEventAdapter] Handle complete - Active tool calls: ${this.activeToolCalls.size}`,
@@ -587,15 +589,21 @@ export class UIEventAdapter {
       }
     }
 
-    // Emit a final message_update with the complete text so that consumers
-    // relying on message_update events (e.g. SSE forwarding) receive the
-    // fully-flushed content before the stream closes. Without this, the
-    // last message_update still contains the pre-flush truncated text.
-    if (this.currentMessage.length > 0) {
-      this.emitMessageUpdate(false);
+    // Emit an update with the complete text so that consumers relying on
+    // message_update events (e.g. SSE forwarding) receive fully-flushed
+    // content before the provider round closes. Provider-round completions
+    // are not terminal; the outer client emits the final completion after
+    // completeConversation persists the turn.
+    const shouldEmitMessageUpdate =
+      this.currentMessage.length > 0 &&
+      this.lastMessageUpdateText !== this.currentMessage;
+    if (shouldEmitMessageUpdate) {
+      this.emitMessageUpdate(!isFinal);
     }
 
-    this.isStreaming = false;
+    if (isFinal) {
+      this.isStreaming = false;
+    }
 
     // Create final message with metadata
     const finalMessage: StreamingConversationMessage = {
@@ -612,33 +620,9 @@ export class UIEventAdapter {
       modelService: this.modelService as any,
     };
 
-    // Add final timing metadata
-    if (this.streamStartTime > 0) {
-      const totalTime = Date.now() - this.streamStartTime;
-
-      // Final throughput (chars/second) - includes entire duration
-      finalMessage.throughput =
-        totalTime > 0
-          ? Math.round((this.currentMessage.length / totalTime) * 1000)
-          : 0;
-
-      // Total completion time in seconds
-      finalMessage.completionTime = totalTime / 1000;
-
-      // Add time to first token if we have it (useful metric)
-      if (this.firstTokenTime > 0) {
-        const ttft = this.firstTokenTime - this.streamStartTime;
-        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-          console.log(
-            `⏱️ [UIEventAdapter] TTFT: ${ttft}ms | Total: ${totalTime}ms | Throughput: ${finalMessage.throughput} chars/s`,
-          );
-        }
-      }
-    }
-
     // Build final metrics
     const completionTime = Date.now();
-    const finalMetrics: any = {
+    const calculatedMetrics: any = {
       totalTime:
         this.streamStartTime > 0 ? completionTime - this.streamStartTime : 0,
       conversationDuration:
@@ -649,36 +633,64 @@ export class UIEventAdapter {
 
     // Add TTFT if we have it
     if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
-      finalMetrics.ttft = this.firstTokenTime - this.streamStartTime;
+      calculatedMetrics.ttft = this.firstTokenTime - this.streamStartTime;
     }
 
     // Add token counts
     if (this.tokenCount > 0) {
-      finalMetrics.tokenCount = this.tokenCount; // Streaming chunks
+      calculatedMetrics.tokenCount = this.tokenCount; // Streaming chunks
     }
     if (tokens) {
-      finalMetrics.llmTokens = tokens; // Actual LLM tokens used
+      calculatedMetrics.llmTokens = tokens; // Actual LLM tokens used
     }
 
     // Calculate average token delay
     if (this.tokenDelays.length > 0) {
       const avgDelay =
         this.tokenDelays.reduce((a, b) => a + b, 0) / this.tokenDelays.length;
-      finalMetrics.avgTokenDelay = Math.round(avgDelay);
+      calculatedMetrics.avgTokenDelay = Math.round(avgDelay);
     }
 
     // Calculate streaming throughput (excludes TTFT)
     if (this.firstTokenTime > 0 && this.streamStartTime > 0) {
       const streamingTime = completionTime - this.firstTokenTime;
       if (streamingTime > 0) {
-        finalMetrics.streamingThroughput = Math.round(
+        calculatedMetrics.streamingThroughput = Math.round(
           (this.currentMessage.length / streamingTime) * 1000,
+        );
+      }
+    }
+
+    const finalMetrics: any =
+      isFinal && this.finalMetrics
+        ? { ...this.finalMetrics }
+        : calculatedMetrics;
+    if (tokens) {
+      finalMetrics.llmTokens = tokens;
+    }
+
+    // Add final timing metadata. If a provider-round completion already
+    // captured LLM timing, reuse it so persistence latency doesn't inflate
+    // the public completion metrics.
+    if (finalMetrics.totalTime > 0) {
+      finalMessage.throughput = Math.round(
+        (this.currentMessage.length / finalMetrics.totalTime) * 1000,
+      );
+      finalMessage.completionTime = finalMetrics.totalTime / 1000;
+
+      if (this.firstTokenTime > 0 && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+        console.log(
+          `⏱️ [UIEventAdapter] TTFT: ${finalMetrics.ttft}ms | Total: ${finalMetrics.totalTime}ms | Throughput: ${finalMessage.throughput} chars/s`,
         );
       }
     }
 
     // Store final metrics for later retrieval
     this.finalMetrics = finalMetrics;
+
+    if (!isFinal) {
+      return;
+    }
 
     // Check if there are tool calls that haven't been executed yet
     const hasPendingToolCalls = Array.from(this.activeToolCalls.values()).some(
@@ -948,6 +960,7 @@ export class UIEventAdapter {
       event.reasoning = reasoning;
     }
 
+    this.lastMessageUpdateText = this.currentMessage;
     this.emitUIEvent(event);
   }
 
