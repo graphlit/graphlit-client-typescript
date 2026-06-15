@@ -70,6 +70,7 @@ export class UIEventAdapter {
     return (
       this.usageData?.prompt_tokens_details?.cached_tokens ??
       this.usageData?.input_tokens_details?.cached_tokens ??
+      this.usageData?.cachedInputTokens ??
       this.usageData?.cached_tokens ??
       this.usageData?.cachedTokens ??
       this.usageData?.cached_content_tokens ??
@@ -741,30 +742,45 @@ export class UIEventAdapter {
       const cacheReadInputTokens =
         this.usageData.cache_read_input_tokens ??
         this.usageData.cacheReadInputTokens;
+      const metadata =
+        this.usageData.metadata &&
+          (this.usageData.promptTokens !== undefined ||
+            this.usageData.totalTokens !== undefined)
+          ? this.usageData.metadata
+          : this.usageData;
+      const isAggregateUsage = Array.isArray(this.usageData.rounds);
+      const providerPromptTokens =
+        this.usageData.prompt_tokens ??
+        this.usageData.promptTokens ??
+        this.usageData.input_tokens ??
+        0;
+      const completionTokens =
+        this.usageData.completion_tokens ??
+        this.usageData.completionTokens ??
+        this.usageData.output_tokens ??
+        0;
+      const additiveCacheInputTokens = isAggregateUsage
+        ? 0
+        : (cacheCreationInputTokens ?? 0) + (cacheReadInputTokens ?? 0);
+      const promptTokens = providerPromptTokens + additiveCacheInputTokens;
+      const reportedTotalTokens =
+        this.usageData.total_tokens ?? this.usageData.totalTokens;
+      const totalTokens =
+        additiveCacheInputTokens > 0
+          ? promptTokens + completionTokens
+          : (reportedTotalTokens ?? promptTokens + completionTokens);
 
       event.usage = {
-        promptTokens:
-          this.usageData.prompt_tokens ||
-          this.usageData.promptTokens ||
-          this.usageData.input_tokens ||
-          0,
-        completionTokens:
-          this.usageData.completion_tokens ||
-          this.usageData.completionTokens ||
-          this.usageData.output_tokens ||
-          0,
-        totalTokens:
-          this.usageData.total_tokens ||
-          this.usageData.totalTokens ||
-          (this.usageData.input_tokens || 0) +
-            (this.usageData.output_tokens || 0) ||
-          0,
-        model: this.model,
-        provider: this.modelService,
+        promptTokens,
+        completionTokens,
+        totalTokens,
+        model: this.usageData.model ?? this.model,
+        provider: this.usageData.provider ?? this.modelService,
         cachedInputTokens,
         cacheCreationInputTokens,
         cacheReadInputTokens,
-        metadata: this.usageData,
+        rounds: this.usageData.rounds,
+        metadata,
       };
     }
 

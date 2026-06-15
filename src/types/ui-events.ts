@@ -3,6 +3,7 @@ import {
   ConversationToolCall,
 } from "../generated/graphql-types.js";
 import { ContextManagementAction } from "./agent.js";
+import type { UsageRoundInfo } from "./agent.js";
 
 /**
  * Tool execution status for streaming
@@ -145,14 +146,15 @@ export type AgentStreamEvent =
         remainingTokens: number; // Tokens available
       };
       usage?: {
-        promptTokens: number; // Input tokens from native provider
+        promptTokens: number; // Input tokens, including separately reported cache write/read tokens
         completionTokens: number; // Output tokens from native provider
-        totalTokens: number; // Total tokens (prompt + completion)
+        totalTokens: number; // Total tokens (prompt + completion; prompt includes cache write/read)
         model?: string; // Model identifier from provider
         provider?: string; // Provider name (OpenAI, Groq, etc.)
         cachedInputTokens?: number; // Cached prompt/input tokens reported by provider
         cacheCreationInputTokens?: number; // Anthropic cache-write input tokens
         cacheReadInputTokens?: number; // Anthropic cache-read input tokens
+        rounds?: UsageRoundInfo[]; // Provider rounds included in this aggregate
         metadata?: Record<string, unknown>; // Provider-specific usage details
       };
     }

@@ -145,10 +145,29 @@ export interface ToolCallResult {
   duration?: number; // milliseconds
 }
 
-// Usage information
-export interface UsageInfo {
+// Usage information for a single provider round inside a streaming turn.
+export interface UsageRoundInfo {
+  round: number;
+  /** Prompt/input tokens for this provider round, including separately reported cache write/read tokens. */
   promptTokens: number;
   completionTokens: number;
+  /** Prompt + completion tokens for this provider round. Prompt tokens include cache write/read tokens. */
+  totalTokens: number;
+  model?: string;
+  provider?: string;
+  cachedInputTokens?: number;
+  cacheCreationInputTokens?: number;
+  cacheReadInputTokens?: number;
+  /** Provider-specific usage details for this round. */
+  metadata?: Record<string, unknown>;
+}
+
+// Usage information
+export interface UsageInfo {
+  /** Prompt/input tokens, including separately reported cache write/read tokens. */
+  promptTokens: number;
+  completionTokens: number;
+  /** Prompt + completion tokens. Prompt tokens include cache write/read tokens. */
   totalTokens: number;
   cost?: number;
   model?: string;
@@ -160,6 +179,8 @@ export interface UsageInfo {
   cacheReadInputTokens?: number;
   /** Provider-specific usage details. */
   metadata?: Record<string, unknown>;
+  /** Provider rounds included in this aggregate, when streaming used tools. */
+  rounds?: UsageRoundInfo[];
 }
 
 // Agent error
@@ -355,4 +376,5 @@ export interface StreamingLoopResult {
   intermediateMessages: ConversationMessageInput[];
   lastRoundReasoning?: ReasoningMetadata;
   usedSpecification?: Specification;
+  usage?: UsageInfo;
 }

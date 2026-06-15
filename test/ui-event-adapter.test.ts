@@ -83,4 +83,124 @@ describe("UIEventAdapter completion handling", () => {
       adapter.dispose();
     }
   });
+
+  it("emits aggregate streaming usage with provider round details", () => {
+    const events: AgentStreamEvent[] = [];
+    const adapter = new UIEventAdapter((event) => events.push(event), "conv-2", {
+      smoothingEnabled: false,
+      model: "CLAUDE_4_8_OPUS",
+      modelName: "claude-opus-4-8",
+      modelService: "ANTHROPIC",
+    });
+
+    try {
+      adapter.handleEvent({
+        type: "start",
+        conversationId: "conv-2",
+      });
+      adapter.setUsageData({
+        promptTokens: 300,
+        completionTokens: 75,
+        totalTokens: 375,
+        model: "claude-opus-4-8",
+        provider: "ANTHROPIC",
+        cachedInputTokens: 50,
+        cacheCreationInputTokens: 20,
+        cacheReadInputTokens: 30,
+        rounds: [
+          {
+            round: 0,
+            promptTokens: 100,
+            completionTokens: 25,
+            totalTokens: 125,
+            provider: "ANTHROPIC",
+          },
+          {
+            round: 1,
+            promptTokens: 200,
+            completionTokens: 50,
+            totalTokens: 250,
+            provider: "ANTHROPIC",
+          },
+        ],
+        metadata: {
+          providerRounds: [],
+        },
+      });
+      adapter.handleEvent({
+        type: "token",
+        token: "Done.",
+      });
+      adapter.handleEvent({
+        type: "complete",
+        tokens: 5,
+      });
+
+      const completed = conversationCompletedEvents(events);
+      expect(completed).toHaveLength(1);
+      expect(completed[0].usage).toMatchObject({
+        promptTokens: 300,
+        completionTokens: 75,
+        totalTokens: 375,
+        model: "claude-opus-4-8",
+        provider: "ANTHROPIC",
+        cachedInputTokens: 50,
+        cacheCreationInputTokens: 20,
+        cacheReadInputTokens: 30,
+      });
+      expect(completed[0].usage?.rounds).toHaveLength(2);
+      expect(completed[0].usage?.rounds?.[1]).toMatchObject({
+        round: 1,
+        promptTokens: 200,
+        completionTokens: 50,
+        totalTokens: 250,
+      });
+    } finally {
+      adapter.dispose();
+    }
+  });
+
+  it("includes Anthropic cache write and read tokens in raw usage totals", () => {
+    const events: AgentStreamEvent[] = [];
+    const adapter = new UIEventAdapter((event) => events.push(event), "conv-3", {
+      smoothingEnabled: false,
+      model: "CLAUDE_4_8_OPUS",
+      modelName: "claude-opus-4-8",
+      modelService: "ANTHROPIC",
+    });
+
+    try {
+      adapter.handleEvent({
+        type: "start",
+        conversationId: "conv-3",
+      });
+      adapter.setUsageData({
+        input_tokens: 100,
+        output_tokens: 25,
+        cache_creation_input_tokens: 40,
+        cache_read_input_tokens: 60,
+      });
+      adapter.handleEvent({
+        type: "token",
+        token: "Done.",
+      });
+      adapter.handleEvent({
+        type: "complete",
+        tokens: 5,
+      });
+
+      const completed = conversationCompletedEvents(events);
+      expect(completed).toHaveLength(1);
+      expect(completed[0].usage).toMatchObject({
+        promptTokens: 200,
+        completionTokens: 25,
+        totalTokens: 225,
+        cachedInputTokens: 60,
+        cacheCreationInputTokens: 40,
+        cacheReadInputTokens: 60,
+      });
+    } finally {
+      adapter.dispose();
+    }
+  });
 });

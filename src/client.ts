@@ -43,6 +43,7 @@ import {
   ToolHandler,
   AgentMetrics,
   UsageInfo,
+  UsageRoundInfo,
   RunAgentOptions,
   RunAgentResult,
   TurnResult,
@@ -582,6 +583,118 @@ const PROVIDER_RETRY_BASE_DELAY_MS = 1000;
 /** Cap on the backoff delay in ms. */
 const PROVIDER_RETRY_MAX_DELAY_MS = 30_000;
 
+type ProviderUsageData = Record<string, unknown>;
+
+function usageNumber(...values: unknown[]): number | undefined {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function normalizeUsageRound(
+  usage: unknown,
+  round: number,
+  specification: Types.Specification,
+): UsageRoundInfo | undefined {
+  if (!usage || typeof usage !== "object") {
+    return undefined;
+  }
+
+  const data = usage as ProviderUsageData;
+  const providerPromptTokens =
+    usageNumber(
+      data.prompt_tokens,
+      data.promptTokens,
+      data.input_tokens,
+      data.inputTokens,
+    ) ?? 0;
+  const completionTokens =
+    usageNumber(
+      data.completion_tokens,
+      data.completionTokens,
+      data.output_tokens,
+      data.outputTokens,
+    ) ?? 0;
+
+  const cacheCreationInputTokens = usageNumber(
+    data.cache_creation_input_tokens,
+    data.cacheCreationInputTokens,
+  );
+  const cacheReadInputTokens = usageNumber(
+    data.cache_read_input_tokens,
+    data.cacheReadInputTokens,
+  );
+  const cacheInputTokens =
+    (cacheCreationInputTokens ?? 0) + (cacheReadInputTokens ?? 0);
+  const promptTokens = providerPromptTokens + cacheInputTokens;
+  const reportedTotalTokens = usageNumber(data.total_tokens, data.totalTokens);
+  const totalTokens =
+    cacheInputTokens > 0
+      ? promptTokens + completionTokens
+      : (reportedTotalTokens ?? promptTokens + completionTokens);
+
+  if (promptTokens === 0 && completionTokens === 0 && totalTokens === 0) {
+    return undefined;
+  }
+
+  const promptTokenDetails = data.prompt_tokens_details as
+    | ProviderUsageData
+    | undefined;
+  const inputTokenDetails = data.input_tokens_details as
+    | ProviderUsageData
+    | undefined;
+
+  return {
+    round,
+    promptTokens,
+    completionTokens,
+    totalTokens,
+    model:
+      typeof data.model === "string" ? data.model : getModelName(specification),
+    provider: getServiceType(specification),
+    cachedInputTokens: usageNumber(
+      promptTokenDetails?.cached_tokens,
+      inputTokenDetails?.cached_tokens,
+      data.cached_tokens,
+      data.cachedTokens,
+      data.cached_content_tokens,
+      data.cachedContentTokenCount,
+      data.cache_read_input_tokens,
+      data.cacheReadInputTokens,
+    ),
+    cacheCreationInputTokens,
+    cacheReadInputTokens,
+    metadata: data,
+  };
+}
+
+function addUsageRound(accumulated: UsageInfo, round: UsageRoundInfo): void {
+  accumulated.promptTokens += round.promptTokens;
+  accumulated.completionTokens += round.completionTokens;
+  accumulated.totalTokens += round.totalTokens;
+  accumulated.model = round.model ?? accumulated.model;
+  if (round.cachedInputTokens !== undefined) {
+    accumulated.cachedInputTokens =
+      (accumulated.cachedInputTokens ?? 0) + round.cachedInputTokens;
+  }
+  if (round.cacheCreationInputTokens !== undefined) {
+    accumulated.cacheCreationInputTokens =
+      (accumulated.cacheCreationInputTokens ?? 0) +
+      round.cacheCreationInputTokens;
+  }
+  if (round.cacheReadInputTokens !== undefined) {
+    accumulated.cacheReadInputTokens =
+      (accumulated.cacheReadInputTokens ?? 0) + round.cacheReadInputTokens;
+  }
+  accumulated.rounds = [...(accumulated.rounds ?? []), round];
+  accumulated.metadata = {
+    providerRounds: accumulated.rounds,
+  };
+}
+
 // Smooth streaming buffer implementation
 
 // Helper to create smooth event handler
@@ -596,6 +709,7 @@ export type {
   StreamAgentOptions,
   ToolCallResult,
   UsageInfo,
+  UsageRoundInfo,
   AgentError,
   RunAgentOptions,
   RunAgentResult,
@@ -10473,6 +10587,10 @@ class Graphlit {
       }
     }
 
+    if (loopResult.usage) {
+      uiAdapter.setUsageData(loopResult.usage);
+    }
+
     // Emit completion event with token count
     uiAdapter.handleEvent({
       type: "complete",
@@ -10532,6 +10650,11 @@ class Graphlit {
     const errors: string[] = [];
     let totalToolCallCount = 0;
     const persistedIntermediateMessages: Types.ConversationMessage[] = [];
+    const accumulatedUsage: UsageInfo = {
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+    };
 
     // Artifact collector for tool handlers
     const pendingArtifacts: Promise<{ id: string } | undefined>[] = [];
@@ -10667,6 +10790,7 @@ class Graphlit {
       let toolCalls: Types.ConversationToolCall[] = [];
       let roundMessage = "";
       let roundReasoning: ReasoningMetadata | undefined;
+      let roundUsage: unknown;
 
       // Snapshot the adapter's message before this round so we can restore on retry
       const preRoundMessage = uiAdapter.snapshotMessage();
@@ -10682,6 +10806,7 @@ class Graphlit {
         toolCalls = [];
         roundMessage = "";
         roundReasoning = undefined;
+        roundUsage = undefined;
 
         try {
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -10738,6 +10863,7 @@ class Graphlit {
               toolCalls = responsesResult.toolCalls;
               openAIResponsesState = responsesResult.state;
               if (responsesResult.usage) {
+                roundUsage = responsesResult.usage;
                 uiAdapter.setUsageData(responsesResult.usage);
               }
               openAIResponsesPendingToolMessages = [];
@@ -10758,6 +10884,7 @@ class Graphlit {
                   toolCalls = calls;
                   roundReasoning = reasoning;
                   if (usage) {
+                    roundUsage = usage;
                     uiAdapter.setUsageData(usage);
                   }
                 },
@@ -10796,6 +10923,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -10832,6 +10960,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -10867,6 +10996,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -10902,6 +11032,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -10936,6 +11067,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -11027,6 +11159,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -11064,6 +11197,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -11099,6 +11233,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -11134,6 +11269,7 @@ class Graphlit {
                 toolCalls = calls;
                 roundReasoning = reasoning;
                 if (usage) {
+                  roundUsage = usage;
                   uiAdapter.setUsageData(usage);
                 }
               },
@@ -11235,6 +11371,15 @@ class Graphlit {
       // If the fallback path was used, break out of the main while loop
       if (usedFallback) {
         break;
+      }
+
+      const normalizedRoundUsage = normalizeUsageRound(
+        roundUsage,
+        currentRound,
+        specification,
+      );
+      if (normalizedRoundUsage) {
+        addUsageRound(accumulatedUsage, normalizedRoundUsage);
       }
 
       // Update the full message and capture reasoning for persistence
@@ -11778,6 +11923,10 @@ class Graphlit {
       intermediateMessages: messageInputs,
       lastRoundReasoning,
       usedSpecification: specification,
+      usage:
+        (accumulatedUsage.rounds?.length ?? 0) > 0
+          ? accumulatedUsage
+          : undefined,
     };
   }
 
