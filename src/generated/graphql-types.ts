@@ -19627,11 +19627,13 @@ export type MutationResolveEntityArgs = {
 export type MutationRestartAllContentsArgs = {
   correlationId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<ContentFilter>;
+  workflow?: InputMaybe<EntityReferenceInput>;
 };
 
 
 export type MutationRestartContentArgs = {
   id: Scalars['ID']['input'];
+  workflow?: InputMaybe<EntityReferenceInput>;
 };
 
 
@@ -30347,8 +30349,17 @@ export type ResearchContentsMutationVariables = Exact<{
 
 export type ResearchContentsMutation = { __typename?: 'Mutation', researchContents?: { __typename?: 'StringResult', result?: string | null } | null };
 
+export type RestartAllContentsMutationVariables = Exact<{
+  filter: ContentFilter;
+  workflow?: InputMaybe<EntityReferenceInput>;
+}>;
+
+
+export type RestartAllContentsMutation = { __typename?: 'Mutation', restartAllContents?: Array<{ __typename?: 'Content', id: string, state: EntityState } | null> | null };
+
 export type RestartContentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
+  workflow?: InputMaybe<EntityReferenceInput>;
 }>;
 
 

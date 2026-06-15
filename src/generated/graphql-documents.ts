@@ -5521,9 +5521,17 @@ export const ResearchContents = gql`
   }
 }
     `;
+export const RestartAllContents = gql`
+    mutation RestartAllContents($filter: ContentFilter!, $workflow: EntityReferenceInput) {
+  restartAllContents(filter: $filter, workflow: $workflow) {
+    id
+    state
+  }
+}
+    `;
 export const RestartContent = gql`
-    mutation RestartContent($id: ID!) {
-  restartContent(id: $id) {
+    mutation RestartContent($id: ID!, $workflow: EntityReferenceInput) {
+  restartContent(id: $id, workflow: $workflow) {
     id
     state
   }

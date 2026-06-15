@@ -2904,15 +2904,17 @@ class Graphlit {
   /**
    * Restarts content processing.
    * @param id - The ID of the content to restart.
+   * @param workflow - The workflow to use for processing, optional.
    * @returns The restarted content.
    */
   public async restartContent(
     id: string,
+    workflow?: Types.EntityReferenceInput,
   ): Promise<Types.RestartContentMutation> {
     return this.mutateAndCheckError<
       Types.RestartContentMutation,
       Types.RestartContentMutationVariables
-    >(Documents.RestartContent, { id: id });
+    >(Documents.RestartContent, { id: id, workflow: workflow });
   }
 
   /**
