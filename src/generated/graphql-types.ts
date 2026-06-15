@@ -17934,6 +17934,8 @@ export type Mutation = {
   ingestTextBatch?: Maybe<Array<Maybe<Content>>>;
   /** Ingests content by URI. Supports files and webpages. */
   ingestUri?: Maybe<Content>;
+  /** Inspects a webpage by URI and returns Markdown without ingesting it. */
+  inspectPage?: Maybe<StringResult>;
   /** Matches an extracted observable entity to a known entity from a list of candidates using LLM reasoning. */
   matchEntity?: Maybe<MatchEntityResult>;
   /** Opens an existing collection. */
@@ -19422,6 +19424,12 @@ export type MutationIngestUriArgs = {
   observations?: InputMaybe<Array<ObservationReferenceInput>>;
   uri: Scalars['URL']['input'];
   workflow?: InputMaybe<EntityReferenceInput>;
+};
+
+
+export type MutationInspectPageArgs = {
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  uri: Scalars['URL']['input'];
 };
 
 
@@ -30181,6 +30189,14 @@ export type IngestUriMutationVariables = Exact<{
 
 
 export type IngestUriMutation = { __typename?: 'Mutation', ingestUri?: { __typename?: 'Content', id: string, name: string, state: EntityState, type?: ContentTypes | null, fileType?: FileTypes | null, mimeType?: string | null, uri?: any | null, identifier?: string | null, collections?: Array<{ __typename?: 'Collection', id: string, name: string } | null> | null, observations?: Array<{ __typename?: 'Observation', id: string, type: ObservableTypes, relatedType?: ObservableTypes | null, relation?: string | null, state: EntityState, observable: { __typename?: 'NamedEntityReference', id: string, name?: string | null }, related?: { __typename?: 'NamedEntityReference', id: string, name?: string | null } | null, occurrences?: Array<{ __typename?: 'ObservationOccurrence', type?: OccurrenceTypes | null, confidence?: number | null, startTime?: any | null, endTime?: any | null, pageIndex?: number | null, turnIndex?: number | null, boundingBox?: { __typename?: 'BoundingBox', left?: number | null, top?: number | null, width?: number | null, height?: number | null } | null } | null> | null } | null> | null } | null };
+
+export type InspectPageMutationVariables = Exact<{
+  uri: Scalars['URL']['input'];
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type InspectPageMutation = { __typename?: 'Mutation', inspectPage?: { __typename?: 'StringResult', result?: string | null } | null };
 
 export type IsContentDoneQueryVariables = Exact<{
   id: Scalars['ID']['input'];

@@ -3714,6 +3714,13 @@ export const IngestUri = gql`
   }
 }
     `;
+export const InspectPage = gql`
+    mutation InspectPage($uri: URL!, $correlationId: String) {
+  inspectPage(uri: $uri, correlationId: $correlationId) {
+    result
+  }
+}
+    `;
 export const IsContentDone = gql`
     query IsContentDone($id: ID!) {
   isContentDone(id: $id) {

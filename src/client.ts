@@ -2524,6 +2524,25 @@ class Graphlit {
   }
 
   /**
+   * Inspects a web page.
+   * @param uri - The URI of the web page to inspect.
+   * @param correlationId - The tenant correlation identifier, optional.
+   * @returns The inspected page result.
+   */
+  public async inspectPage(
+    uri: string,
+    correlationId?: string,
+  ): Promise<Types.InspectPageMutation> {
+    return this.mutateAndCheckError<
+      Types.InspectPageMutation,
+      Types.InspectPageMutationVariables
+    >(Documents.InspectPage, {
+      uri: uri,
+      correlationId: correlationId,
+    });
+  }
+
+  /**
    * Ingests a batch of text contents.
    * @param batch - The batch of text contents to ingest.
    * @param textType - The type of text (plain, markdown, HTML).
