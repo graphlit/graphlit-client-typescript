@@ -18231,6 +18231,8 @@ export const LookupUsage = gql`
     fileType
     modelService
     modelName
+    requestedServiceTier
+    actualServiceTier
     processorName
     promptTokens
     completionTokens
@@ -18314,6 +18316,8 @@ export const QueryUsage = gql`
     fileType
     modelService
     modelName
+    requestedServiceTier
+    actualServiceTier
     processorName
     promptTokens
     completionTokens
@@ -20135,6 +20139,7 @@ export const GetSpecification = gql`
       chunkTokenLimit
       detailLevel
       reasoningEffort
+      serviceTier
     }
     azureOpenAI {
       tokenLimit
@@ -20168,6 +20173,7 @@ export const GetSpecification = gql`
       enableThinking
       thinkingTokenLimit
       effort
+      serviceTier
     }
     google {
       tokenLimit
@@ -20181,6 +20187,7 @@ export const GetSpecification = gql`
       enableThinking
       thinkingTokenLimit
       thinkingLevel
+      serviceTier
     }
     replicate {
       tokenLimit
@@ -20551,6 +20558,7 @@ export const QuerySpecifications = gql`
         chunkTokenLimit
         detailLevel
         reasoningEffort
+        serviceTier
       }
       azureOpenAI {
         tokenLimit
@@ -20584,6 +20592,7 @@ export const QuerySpecifications = gql`
         enableThinking
         thinkingTokenLimit
         effort
+        serviceTier
       }
       google {
         tokenLimit
@@ -20597,6 +20606,7 @@ export const QuerySpecifications = gql`
         enableThinking
         thinkingTokenLimit
         thinkingLevel
+        serviceTier
       }
       replicate {
         tokenLimit
