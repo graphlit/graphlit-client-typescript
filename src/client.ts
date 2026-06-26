@@ -62,7 +62,16 @@ import {
   estimateTokens,
   DEFAULT_CONTEXT_STRATEGY,
 } from "./helpers/context-management.js";
-import { normalizeToolVisibilityResult } from "./helpers/tool-visibility.js";
+import {
+  assertRequiredToolChoiceConfig,
+  deriveProviderToolChoicePolicy,
+  normalizeToolVisibilityResult,
+  toAnthropicToolChoice,
+  toGoogleToolConfig,
+  toOpenAIChatToolChoice,
+  toOpenAIResponsesToolChoice,
+  validateRequiredToolChoice,
+} from "./helpers/tool-visibility.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import {
   isRetryableGraphQLTransportError,
@@ -10867,6 +10876,9 @@ class Graphlit {
         }),
       );
       visibleToolsForCurrentRound = toolVisibility.tools;
+      const providerToolChoicePolicy =
+        deriveProviderToolChoicePolicy(toolVisibility);
+      assertRequiredToolChoiceConfig(toolVisibility);
 
       let toolCalls: Types.ConversationToolCall[] = [];
       let roundMessage = "";
@@ -10938,9 +10950,10 @@ class Graphlit {
                 uiAdapter,
                 abortSignal,
                 openAIResponsesState,
-                currentRound === 0 && visibleToolsForCurrentRound?.length
-                  ? "required"
-                  : undefined,
+                toOpenAIResponsesToolChoice(providerToolChoicePolicy) ??
+                  (currentRound === 0 && visibleToolsForCurrentRound?.length
+                    ? "required"
+                    : undefined),
               );
               roundMessage = responsesResult.message;
               toolCalls = responsesResult.toolCalls;
@@ -10972,6 +10985,7 @@ class Graphlit {
                   }
                 },
                 abortSignal,
+                toOpenAIChatToolChoice(providerToolChoicePolicy),
               );
             }
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -11011,6 +11025,7 @@ class Graphlit {
                 }
               },
               abortSignal,
+              toAnthropicToolChoice(providerToolChoicePolicy),
             );
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
@@ -11048,6 +11063,7 @@ class Graphlit {
                 }
               },
               abortSignal,
+              toGoogleToolConfig(providerToolChoicePolicy),
             );
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
@@ -11406,6 +11422,8 @@ class Graphlit {
             }
             usedFallback = true;
           }
+
+          validateRequiredToolChoice(toolVisibility, toolCalls);
 
           // Provider call succeeded - exit retry loop
           break;
@@ -13562,7 +13580,7 @@ class Graphlit {
     uiAdapter: UIEventAdapter,
     abortSignal?: AbortSignal,
     state?: OpenAIResponsesInvocationState,
-    toolChoice?: "auto" | "required" | "none",
+    toolChoice?: unknown,
   ): Promise<{
     message: string;
     toolCalls: Types.ConversationToolCall[];
@@ -13648,6 +13666,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: unknown,
   ): Promise<void> {
     // Check if we have either the OpenAI module or a provided client
     if (!OpenAI && !this.openaiClient) {
@@ -13691,6 +13710,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       reasoningEffort,
+      toolChoice,
     );
   }
 
@@ -13710,6 +13730,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolChoice?: unknown,
   ): Promise<void> {
     // Check if we have either the Anthropic module or a provided client
     if (!Anthropic && !this.anthropicClient) {
@@ -13760,6 +13781,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
+      toolChoice,
     );
   }
 
@@ -13834,6 +13856,7 @@ class Graphlit {
       reasoning?: ReasoningMetadata,
     ) => void,
     abortSignal?: AbortSignal,
+    toolConfig?: unknown,
   ): Promise<void> {
     // Check if we have either the Google module or a provided client
     if (!GoogleGenAI && !this.googleClient) {
@@ -13878,6 +13901,7 @@ class Graphlit {
       onComplete,
       abortSignal,
       thinkingConfig,
+      toolConfig,
     );
   }
 

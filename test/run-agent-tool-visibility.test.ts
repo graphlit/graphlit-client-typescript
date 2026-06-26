@@ -1,6 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { normalizeToolVisibilityResult } from "../src/helpers/tool-visibility";
-import type { ToolDefinitionInput } from "../src/generated/graphql-types";
+import {
+  RequiredToolChoiceError,
+  assertRequiredToolChoiceConfig,
+  deriveProviderToolChoicePolicy,
+  normalizeToolVisibilityResult,
+  toAnthropicToolChoice,
+  toGoogleToolConfig,
+  toOpenAIChatToolChoice,
+  toOpenAIResponsesToolChoice,
+  validateRequiredToolChoice,
+} from "../src/helpers/tool-visibility";
+import type {
+  ConversationToolCall,
+  ToolDefinitionInput,
+} from "../src/generated/graphql-types";
 import type {
   RunAgentOptions,
   StreamAgentOptions,
@@ -14,6 +27,12 @@ const makeTool = (name: string): ToolDefinitionInput => ({
     type: "object",
     properties: {},
   }),
+});
+
+const makeToolCall = (name: string): ConversationToolCall => ({
+  id: `call-${name}`,
+  name,
+  arguments: "{}",
 });
 
 describe("agent tool visibility", () => {
@@ -67,5 +86,95 @@ describe("agent tool visibility", () => {
 
     expect(runOptions.resolveTools).toBe(resolver);
     expect(streamOptions.resolveTools).toBe(resolver);
+  });
+
+  it("derives provider tool choice policy from required visibility", () => {
+    const visibility = normalizeToolVisibilityResult([], {
+      tools: [makeTool("analyze_prompt")],
+      requireTool: true,
+      requiredToolName: "analyze_prompt",
+    });
+
+    expect(deriveProviderToolChoicePolicy(visibility)).toEqual({
+      requireTool: true,
+      requiredToolName: "analyze_prompt",
+    });
+  });
+
+  it("rejects required tool visibility with no visible tools", () => {
+    expect(() =>
+      assertRequiredToolChoiceConfig({ tools: [], requireTool: true }),
+    ).toThrow(RequiredToolChoiceError);
+  });
+
+  it("rejects required tool names that are not visible", () => {
+    expect(() =>
+      assertRequiredToolChoiceConfig({
+        tools: [makeTool("search_tools")],
+        requireTool: true,
+        requiredToolName: "analyze_prompt",
+      }),
+    ).toThrow(RequiredToolChoiceError);
+  });
+
+  it("rejects terminal text when a tool is required", () => {
+    expect(() =>
+      validateRequiredToolChoice(
+        { tools: [makeTool("analyze_prompt")], requireTool: true },
+        [],
+      ),
+    ).toThrow(RequiredToolChoiceError);
+  });
+
+  it("rejects the wrong returned tool when a specific tool is required", () => {
+    expect(() =>
+      validateRequiredToolChoice(
+        {
+          tools: [makeTool("analyze_prompt")],
+          requireTool: true,
+          requiredToolName: "analyze_prompt",
+        },
+        [makeToolCall("search_tools")],
+      ),
+    ).toThrow(RequiredToolChoiceError);
+  });
+
+  it("accepts the required returned tool", () => {
+    expect(() =>
+      validateRequiredToolChoice(
+        {
+          tools: [makeTool("analyze_prompt")],
+          requireTool: true,
+          requiredToolName: "analyze_prompt",
+        },
+        [makeToolCall("analyze_prompt")],
+      ),
+    ).not.toThrow();
+  });
+
+  it("maps required tool policy to provider tool-choice shapes", () => {
+    const policy = {
+      requireTool: true,
+      requiredToolName: "analyze_prompt",
+    };
+
+    expect(toOpenAIChatToolChoice(policy)).toEqual({
+      type: "function",
+      function: { name: "analyze_prompt" },
+    });
+    expect(toOpenAIResponsesToolChoice(policy)).toEqual({
+      type: "function",
+      name: "analyze_prompt",
+    });
+    expect(toAnthropicToolChoice(policy)).toEqual({
+      type: "tool",
+      name: "analyze_prompt",
+    });
+    expect(toGoogleToolConfig(policy)).toEqual({
+      functionCallingConfig: {
+        mode: "ANY",
+        allowedFunctionNames: ["analyze_prompt"],
+      },
+    });
   });
 });

@@ -195,6 +195,7 @@ export async function streamWithOpenAI(
   ) => void,
   abortSignal?: AbortSignal,
   reasoningEffort?: string, // OpenAI reasoning effort level (low, medium, high)
+  toolChoice?: unknown,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -281,6 +282,9 @@ export async function streamWithOpenAI(
           parameters: tool.schema ? JSON.parse(tool.schema) : {},
         },
       }));
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     // Add reasoning effort for o1 models
@@ -695,6 +699,7 @@ export async function streamWithAnthropic(
         effort?: "low" | "medium" | "high" | "xhigh";
         display?: "summarized";
       },
+  toolChoice?: unknown,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -797,6 +802,9 @@ export async function streamWithAnthropic(
         ...streamConfig.tools[streamConfig.tools.length - 1],
         cache_control: { type: "ephemeral" },
       };
+      if (toolChoice) {
+        streamConfig.tool_choice = toolChoice;
+      }
     }
 
     // Check if this is a 1M context model (beta flag, same underlying model ID)
@@ -1453,6 +1461,7 @@ export async function streamWithGoogle(
   ) => void,
   abortSignal?: AbortSignal,
   thinkingConfig?: { type: "enabled"; budget_tokens: number },
+  toolConfig?: unknown,
 ): Promise<void> {
   let fullMessage = "";
   let toolCalls: ConversationToolCall[] = [];
@@ -1611,6 +1620,7 @@ export async function streamWithGoogle(
     // Build the config object for the new SDK
     const config: any = {
       ...generationConfig,
+      ...(toolConfig ? { toolConfig } : {}),
     };
 
     const systemInstructionParts = getGoogleSystemInstructionParts(systemPrompt);

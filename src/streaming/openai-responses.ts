@@ -60,7 +60,7 @@ export async function streamWithOpenAIResponses(
   onEvent: (event: StreamEvent) => void,
   abortSignal?: AbortSignal,
   reasoningEffort?: string,
-  toolChoice?: "auto" | "required" | "none",
+  toolChoice?: unknown,
 ): Promise<OpenAIResponsesRoundResult> {
   let fullMessage = "";
   let tokenCount = 0;
@@ -179,7 +179,7 @@ export async function streamWithOpenAIResponses(
 
     if (tools?.length) {
       request.tools = tools;
-      request.tool_choice = toolChoice || "auto";
+      request.tool_choice = toolChoice ?? "auto";
     } else if (toolChoice === "none") {
       request.tool_choice = "none";
     }
