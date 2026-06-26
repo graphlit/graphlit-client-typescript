@@ -290,6 +290,7 @@ export interface RunAgentOptions {
 
   // Completion policy
   completionMode?: RunCompletionMode;
+  continuationPrompt?: string; // default: "Continue."
 
   // Callbacks
   onTurnComplete?: (turn: TurnResult) => void;

@@ -12066,6 +12066,7 @@ class Graphlit {
     const maxWallClockMs = options?.maxWallClockMs ?? 300_000;
     const maxToolCalls = options?.maxToolCalls ?? 100;
     const windDownTurns = options?.windDownTurns ?? 2;
+    const continuationPrompt = options?.continuationPrompt?.trim() || "Continue.";
 
     const turnResults: TurnResult[] = [];
     let totalToolCalls = 0;
@@ -12308,6 +12309,7 @@ class Graphlit {
         if (existingMessages && existingMessages.length > 0) {
           const resumedTurns = this.reconstructTurnResults(
             existingMessages as Types.ConversationMessage[],
+            continuationPrompt,
           );
           stuckDetector.initializeFromHistory(resumedTurns);
           // Carry forward the turn count and tool call total
@@ -12448,7 +12450,7 @@ class Graphlit {
           const formatTools = formatToolVisibility.tools;
 
           const formatResponse = await this.formatConversation(
-            turn === 0 ? prompt : "Continue.",
+            turn === 0 ? prompt : continuationPrompt,
             conversationId,
             activeFullSpec ? { id: activeFullSpec.id } : agentSpec,
             formatTools,
@@ -12811,7 +12813,7 @@ class Graphlit {
         }
 
         // f. Set next prompt
-        currentPrompt = "Continue.";
+        currentPrompt = continuationPrompt;
       }
 
       // If we exited the loop without an explicit status change, check budget.
@@ -12945,6 +12947,7 @@ class Graphlit {
    */
   private reconstructTurnResults(
     messages: Types.ConversationMessage[],
+    continuationPrompt = "Continue.",
   ): TurnResult[] {
     const results: TurnResult[] = [];
     let turnNumber = 0;
@@ -13003,6 +13006,7 @@ class Graphlit {
           : this.detectPersistedTurnCompletionReason(
             assistantMsg,
             nextUserMsg,
+            continuationPrompt,
           ),
         errors: toolErrors.length > 0 ? toolErrors : undefined,
       });
@@ -13252,6 +13256,7 @@ class Graphlit {
   private detectPersistedTurnCompletionReason(
     assistantMessage: Types.ConversationMessage,
     nextMessage: Types.ConversationMessage | undefined,
+    continuationPrompt = "Continue.",
   ): TurnResult["completionReason"] | undefined {
     if ((assistantMessage.message || "").trim().length === 0) {
       return undefined;
@@ -13263,7 +13268,7 @@ class Graphlit {
 
     if (
       nextMessage?.role === Types.ConversationRoleTypes.User &&
-      (nextMessage.message || "").trim() === "Continue."
+      (nextMessage.message || "").trim() === continuationPrompt
     ) {
       return undefined;
     }
