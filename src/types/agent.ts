@@ -25,6 +25,26 @@ export type ToolHandler = (
   abortSignal?: AbortSignal,
 ) => Promise<any>;
 
+export interface ToolVisibilityContext {
+  phase: "format" | "provider";
+  turn: number;
+  round: number;
+  tools: ToolDefinitionInput[];
+  messages: ConversationMessage[];
+  toolCallCount: number;
+  previousToolCallNames: string[];
+}
+
+export interface ToolVisibilityResult {
+  tools?: ToolDefinitionInput[];
+  requireTool?: boolean;
+  requiredToolName?: string;
+}
+
+export type ToolVisibilityResolver = (
+  context: ToolVisibilityContext,
+) => ToolDefinitionInput[] | ToolVisibilityResult | undefined;
+
 // Context strategy for managing token budgets during agentic tool loops.
 // These values can also be driven by the server-side ConversationStrategy on the specification.
 export interface ContextStrategy {
@@ -127,6 +147,7 @@ export interface StreamAgentOptions {
   additionalSystemInstructions?: string;
   /** Ordered fallback specifications to try for native streaming after retryable provider failures. */
   fallbacks?: EntityReferenceInput[];
+  resolveTools?: ToolVisibilityResolver;
 }
 
 // Tool call result
@@ -255,6 +276,7 @@ export interface RunAgentOptions {
   // Tools
   tools?: ToolDefinitionInput[];
   toolHandlers?: Record<string, ToolHandler>;
+  resolveTools?: ToolVisibilityResolver;
 
   // Agent configuration
   persona?: EntityReferenceInput;
@@ -361,6 +383,10 @@ export interface StreamingLoopConfig {
   data?: string;
   additionalSystemInstructions?: string;
   fallbackSpecifications?: Specification[];
+  resolveTools?: ToolVisibilityResolver;
+  turnNumber?: number;
+  initialToolCallCount?: number;
+  initialPreviousToolCallNames?: string[];
 }
 
 /** Result returned from executeStreamingLoop. */

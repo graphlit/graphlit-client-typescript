@@ -62,6 +62,7 @@ import {
   estimateTokens,
   DEFAULT_CONTEXT_STRATEGY,
 } from "./helpers/context-management.js";
+import { normalizeToolVisibilityResult } from "./helpers/tool-visibility.js";
 import { AgentStreamEvent } from "./types/ui-events.js";
 import {
   isRetryableGraphQLTransportError,
@@ -717,6 +718,9 @@ export type {
   BudgetSnapshot,
   HarnessStatus,
   QualityAssessment,
+  ToolVisibilityContext,
+  ToolVisibilityResult,
+  ToolVisibilityResolver,
 } from "./types/agent.js";
 
 // Re-export context management utilities
@@ -10075,13 +10079,27 @@ class Graphlit {
       await this.enqueueForConversation(
         actualConversationId,
         async () => {
+          const initialToolVisibility = normalizeToolVisibilityResult(
+            tools,
+            options?.resolveTools?.({
+              phase: "format",
+              turn: 0,
+              round: 0,
+              tools: tools ?? [],
+              messages: [],
+              toolCallCount: 0,
+              previousToolCallNames: [],
+            }),
+          );
+          const initialVisibleTools = initialToolVisibility.tools;
+
           // Check streaming support - fallback to promptAgent if not supported
           // Also fall back when no specification is provided (can't route to provider locally)
           const hasStreamingSpecification =
             !!fullSpec &&
-            (this.supportsStreaming(fullSpec, tools) ||
+            (this.supportsStreaming(fullSpec, initialVisibleTools) ||
               fallbackSpecs.some((fallbackSpec) =>
-                this.supportsStreaming(fallbackSpec, tools),
+                this.supportsStreaming(fallbackSpec, initialVisibleTools),
               ));
 
           if (!fullSpec || !hasStreamingSpecification) {
@@ -10096,7 +10114,7 @@ class Graphlit {
               prompt,
               actualConversationId, // Preserve conversation
               effectiveSpecification,
-              tools,
+              initialVisibleTools,
               toolHandlers,
               {
                 maxToolRounds: maxRounds,
@@ -10182,10 +10200,13 @@ class Graphlit {
           }
 
           // Create UI event adapter with model information
-          const initialStreamingSpec = this.supportsStreaming(fullSpec, tools)
+          const initialStreamingSpec = this.supportsStreaming(
+            fullSpec,
+            initialVisibleTools,
+          )
             ? fullSpec
             : fallbackSpecs.find((fallbackSpec) =>
-              this.supportsStreaming(fallbackSpec, tools),
+              this.supportsStreaming(fallbackSpec, initialVisibleTools),
             ) || fullSpec;
           const modelName = initialStreamingSpec
             ? getModelName(initialStreamingSpec)
@@ -10233,6 +10254,7 @@ class Graphlit {
             promptTimestamp,
             cacheableSystemInstructions,
             fallbackSpecs,
+            options?.resolveTools,
           );
         },
         abortSignal,
@@ -10303,6 +10325,7 @@ class Graphlit {
     promptTimestamp?: Types.Scalars["DateTime"]["input"],
     additionalSystemInstructions?: string,
     fallbackSpecifications?: Types.Specification[],
+    resolveTools?: StreamAgentOptions["resolveTools"],
   ): Promise<void> {
     // Collects artifact content IDs from tool handlers (e.g. code_execution).
     // Handlers register async ingestion promises; we await all of them before
@@ -10325,11 +10348,25 @@ class Graphlit {
     });
 
     // Format conversation once at the beginning
+    const formatToolVisibility = normalizeToolVisibilityResult(
+      tools,
+      resolveTools?.({
+        phase: "format",
+        turn: 0,
+        round: 0,
+        tools: tools ?? [],
+        messages: [],
+        toolCallCount: 0,
+        previousToolCallNames: [],
+      }),
+    );
+    const formatTools = formatToolVisibility.tools;
+
     const formatResponse = await this.formatConversation(
       prompt,
       conversationId,
       { id: specification.id },
-      tools,
+      formatTools,
       undefined,
       true,
       correlationId,
@@ -10539,6 +10576,10 @@ class Graphlit {
       data,
       additionalSystemInstructions,
       fallbackSpecifications,
+      resolveTools,
+      turnNumber: 0,
+      initialToolCallCount: 0,
+      initialPreviousToolCallNames: [],
     });
 
     // Complete the conversation and get token count
@@ -10692,6 +10733,7 @@ class Graphlit {
     let lastRoundReasoning: ReasoningMetadata | undefined;
     let openAIResponsesState: OpenAIResponsesInvocationState | undefined;
     let openAIResponsesPendingToolMessages: Types.ConversationMessage[] = [];
+    let visibleToolsForCurrentRound = tools;
 
     const selectNextStreamingSpecification = (reason: string): boolean => {
       for (
@@ -10701,7 +10743,7 @@ class Graphlit {
       ) {
         const candidate = streamingSpecifications[candidateIndex];
 
-        if (!this.supportsStreaming(candidate, tools)) {
+        if (!this.supportsStreaming(candidate, visibleToolsForCurrentRound)) {
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
               `\n⚠️ [Failover] Skipping fallback specification ${candidate.name} (${candidate.id}) because native streaming is not available`,
@@ -10808,6 +10850,24 @@ class Graphlit {
         }
       }
 
+      const toolVisibility = normalizeToolVisibilityResult(
+        tools,
+        config.resolveTools?.({
+          phase: "provider",
+          turn: config.turnNumber ?? 0,
+          round: currentRound,
+          tools: tools ?? [],
+          messages,
+          toolCallCount:
+            (config.initialToolCallCount ?? 0) + totalToolCallCount,
+          previousToolCallNames: [
+            ...(config.initialPreviousToolCallNames ?? []),
+            ...toolCallNames,
+          ],
+        }),
+      );
+      visibleToolsForCurrentRound = toolVisibility.tools;
+
       let toolCalls: Types.ConversationToolCall[] = [];
       let roundMessage = "";
       let roundReasoning: ReasoningMetadata | undefined;
@@ -10874,11 +10934,13 @@ class Graphlit {
                 specification,
                 messages,
                 openAIResponsesPendingToolMessages,
-                tools,
+                visibleToolsForCurrentRound,
                 uiAdapter,
                 abortSignal,
                 openAIResponsesState,
-                currentRound === 0 && tools?.length ? "required" : undefined,
+                currentRound === 0 && visibleToolsForCurrentRound?.length
+                  ? "required"
+                  : undefined,
               );
               roundMessage = responsesResult.message;
               toolCalls = responsesResult.toolCalls;
@@ -10898,7 +10960,7 @@ class Graphlit {
               await this.streamWithOpenAI(
                 specification,
                 openaiMessages,
-                tools,
+                visibleToolsForCurrentRound,
                 uiAdapter,
                 (message, calls, usage, reasoning) => {
                   roundMessage = message;
@@ -10937,7 +10999,7 @@ class Graphlit {
               specification,
               anthropicMessages,
               system,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -10974,7 +11036,7 @@ class Graphlit {
               specification,
               googleMessages,
               extractSystemInstructionParts(messages),
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11010,7 +11072,7 @@ class Graphlit {
             await this.streamWithGroq(
               specification,
               groqMessages,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11046,7 +11108,7 @@ class Graphlit {
             await this.streamWithCerebras(
               specification,
               cerebrasMessages,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11081,7 +11143,7 @@ class Graphlit {
             await this.streamWithCohere(
               specification,
               messages,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11162,7 +11224,8 @@ class Graphlit {
               }
             }
 
-            const shouldPassTools = toolResponseCount === 0 ? tools : undefined;
+            const shouldPassTools =
+              toolResponseCount === 0 ? visibleToolsForCurrentRound : undefined;
 
             if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
               console.log(
@@ -11211,7 +11274,7 @@ class Graphlit {
               specification,
               bedrockMessages,
               system,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11247,7 +11310,7 @@ class Graphlit {
             await this.streamWithDeepseek(
               specification,
               deepseekMessages,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11283,7 +11346,7 @@ class Graphlit {
             await this.streamWithXai(
               specification,
               xaiMessages,
-              tools,
+              visibleToolsForCurrentRound,
               uiAdapter,
               (message, calls, usage, reasoning) => {
                 roundMessage = message;
@@ -11329,7 +11392,7 @@ class Graphlit {
               config.messages[config.messages.length - 1]?.message || "",
               conversationId,
               specification,
-              tools,
+              visibleToolsForCurrentRound,
               mimeType,
               data,
               uiAdapter,
@@ -12349,11 +12412,28 @@ class Graphlit {
           );
         } else {
           // Formatted path: call formatConversation
+          const previousToolCallNames = turnResults.flatMap(
+            (t) => t.toolCalls,
+          );
+          const formatToolVisibility = normalizeToolVisibilityResult(
+            allTools,
+            options?.resolveTools?.({
+              phase: "format",
+              turn,
+              round: 0,
+              tools: allTools,
+              messages: [],
+              toolCallCount: totalToolCalls,
+              previousToolCallNames,
+            }),
+          );
+          const formatTools = formatToolVisibility.tools;
+
           const formatResponse = await this.formatConversation(
             turn === 0 ? prompt : "Continue.",
             conversationId,
             activeFullSpec ? { id: activeFullSpec.id } : agentSpec,
-            allTools,
+            formatTools,
             undefined,
             true,
             options?.correlationId,
@@ -12528,6 +12608,12 @@ class Graphlit {
             persona: options?.persona,
             additionalSystemInstructions: options?.additionalSystemInstructions,
             fallbackSpecifications: fallbackSpecs,
+            resolveTools: options?.resolveTools,
+            turnNumber: turn,
+            initialToolCallCount: totalToolCalls,
+            initialPreviousToolCallNames: turnResults.flatMap(
+              (t) => t.toolCalls,
+            ),
           });
         } finally {
           uiAdapter.dispose();
