@@ -53,6 +53,19 @@ import {
   StreamingLoopResult,
   ContextWindowUsage,
 } from "./types/agent.js";
+
+class StreamingLoopPartialError extends Error {
+  public readonly originalError: unknown;
+  public readonly partialResult: StreamingLoopResult;
+
+  constructor(error: unknown, partialResult: StreamingLoopResult) {
+    super(error instanceof Error ? error.message : String(error));
+    this.name = "StreamingLoopPartialError";
+    this.originalError = error;
+    this.partialResult = partialResult;
+  }
+}
+
 import { StuckDetector } from "./helpers/stuck-detector.js";
 import { TurnEvaluator } from "./helpers/turn-evaluator.js";
 import {
@@ -10567,34 +10580,56 @@ class Graphlit {
     };
 
     // Run the streaming loop
-    const loopResult = await this.executeStreamingLoop({
-      conversationId,
-      specification,
-      messages,
-      tools,
-      toolHandlers,
-      uiAdapter,
-      budgetTracker,
-      contextStrategy: mergedStrategy,
-      maxRounds,
-      abortSignal,
-      useResponsesApi,
-      correlationId,
-      persona,
-      mimeType,
-      data,
-      additionalSystemInstructions,
-      fallbackSpecifications,
-      resolveTools,
-      turnNumber: 0,
-      initialToolCallCount: 0,
-      initialPreviousToolCallNames: [],
-    });
+    let loopResult: StreamingLoopResult;
+    let loopOriginalError: unknown;
+    let loopErrorMessage: string | undefined;
+    try {
+      loopResult = await this.executeStreamingLoop({
+        conversationId,
+        specification,
+        messages,
+        tools,
+        toolHandlers,
+        uiAdapter,
+        budgetTracker,
+        contextStrategy: mergedStrategy,
+        maxRounds,
+        abortSignal,
+        useResponsesApi,
+        correlationId,
+        persona,
+        mimeType,
+        data,
+        additionalSystemInstructions,
+        fallbackSpecifications,
+        resolveTools,
+        turnNumber: 0,
+        initialToolCallCount: 0,
+        initialPreviousToolCallNames: [],
+      });
+    } catch (loopError) {
+      if (loopError instanceof StreamingLoopPartialError) {
+        loopResult = loopError.partialResult;
+        loopOriginalError = loopError.originalError;
+        loopErrorMessage =
+          loopError.originalError instanceof Error
+            ? loopError.originalError.message
+            : String(loopError.originalError);
+      } else {
+        throw loopError;
+      }
+    }
 
     // Complete the conversation and get token count
     let finalTokens: number | undefined;
     const trimmedMessage = loopResult.finalAssistantMessage;
-    if (trimmedMessage) {
+    const shouldPersistTurn =
+      trimmedMessage ||
+      (loopErrorMessage && loopResult.intermediateMessages.length > 0);
+    if (shouldPersistTurn) {
+      const completionMessage =
+        trimmedMessage ||
+        `Agent run failed after partial tool execution: ${loopErrorMessage ?? "Unknown error"}`;
       // Calculate metrics for completeConversation
       const completionTime = uiAdapter.getCompletionTime();
       const ttft = uiAdapter.getTTFT();
@@ -10621,12 +10656,16 @@ class Graphlit {
         finalMessageInputs?.[finalMessageInputs.length - 1];
       const finalMessageAlreadyIncluded =
         finalInputMessage?.role === Types.ConversationRoleTypes.Assistant &&
-        finalInputMessage.message?.trim() === trimmedMessage;
+        finalInputMessage.message?.trim() === completionMessage;
 
-      if (loopResult.lastRoundReasoning && !finalMessageAlreadyIncluded) {
+      if (
+        trimmedMessage &&
+        loopResult.lastRoundReasoning &&
+        !finalMessageAlreadyIncluded
+      ) {
         const completionInput: Types.ConversationMessageInput = {
           role: Types.ConversationRoleTypes.Assistant,
-          message: trimmedMessage,
+          message: completionMessage,
           timestamp: new Date().toISOString(),
           thinkingContent: loopResult.lastRoundReasoning.content,
         };
@@ -10638,7 +10677,7 @@ class Graphlit {
       }
 
       const completeResponse = await this.completeConversation(
-        trimmedMessage,
+        completionMessage,
         conversationId,
         millisecondsToTimeSpan(completionTime),
         millisecondsToTimeSpan(ttft),
@@ -10656,6 +10695,10 @@ class Graphlit {
           `📊 [completeConversation] Tokens used: ${finalTokens || "unknown"}`,
         );
       }
+    }
+
+    if (loopOriginalError) {
+      throw loopOriginalError;
     }
 
     if (loopResult.usage) {
@@ -10743,6 +10786,67 @@ class Graphlit {
     let openAIResponsesState: OpenAIResponsesInvocationState | undefined;
     let openAIResponsesPendingToolMessages: Types.ConversationMessage[] = [];
     let visibleToolsForCurrentRound = tools;
+
+    const buildIntermediateMessageInputs =
+      (): Types.ConversationMessageInput[] =>
+        persistedIntermediateMessages.map((msg) => {
+          const input: Types.ConversationMessageInput = {
+            role: msg.role,
+            message: msg.message,
+            timestamp: msg.timestamp,
+          };
+          if (msg.toolCallId) input.toolCallId = msg.toolCallId;
+          if (msg.toolCalls) {
+            input.toolCalls = msg.toolCalls
+              .filter((tc): tc is Types.ConversationToolCall => tc !== null)
+              .map((tc) => ({
+                id: tc.id,
+                name: tc.name,
+                arguments: tc.arguments,
+                startedAt: tc.startedAt,
+                completedAt: tc.completedAt,
+                durationMs: tc.durationMs,
+                status: tc.status,
+                failedAt: tc.failedAt,
+                firstStatusAt: tc.firstStatusAt,
+              }));
+          }
+
+          if (msg.thinkingContent) {
+            input.thinkingContent = msg.thinkingContent;
+            if (msg.thinkingSignature) {
+              input.thinkingSignature = msg.thinkingSignature;
+            }
+          }
+
+          return input;
+        });
+
+    const buildLoopResult = (): StreamingLoopResult => ({
+      fullMessage,
+      finalAssistantMessage,
+      toolCallCount: totalToolCallCount,
+      toolCallNames,
+      errors,
+      contextWindow: budgetTracker?.getUsageSnapshot(),
+      contextActions,
+      reasoning: lastRoundReasoning,
+      intermediateMessages: buildIntermediateMessageInputs(),
+      lastRoundReasoning,
+      usedSpecification: specification,
+      usage:
+        (accumulatedUsage.rounds?.length ?? 0) > 0
+          ? accumulatedUsage
+          : undefined,
+    });
+
+    const throwWithPartialResult = (error: unknown): never => {
+      if (persistedIntermediateMessages.length > 0) {
+        throw new StreamingLoopPartialError(error, buildLoopResult());
+      }
+
+      throw error;
+    };
 
     const selectNextStreamingSpecification = (reason: string): boolean => {
       for (
@@ -11446,7 +11550,7 @@ class Graphlit {
           }
 
           if (!isRetryable || providerAttempt >= DEFAULT_PROVIDER_RETRIES) {
-            throw retryError;
+            throwWithPartialResult(retryError);
           }
 
           // Exponential backoff with jitter
@@ -11456,10 +11560,11 @@ class Graphlit {
           );
           const jitter = Math.random() * delay * 0.1;
           const totalDelay = Math.round(delay + jitter);
+          const providerError = retryError as ProviderError;
 
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
             console.log(
-              `\n🔄 [Retry] ${(retryError as ProviderError).provider} error (attempt ${providerAttempt + 1}/${DEFAULT_PROVIDER_RETRIES}): ${retryError.message}. Retrying in ${totalDelay}ms...`,
+              `\n🔄 [Retry] ${providerError.provider} error (attempt ${providerAttempt + 1}/${DEFAULT_PROVIDER_RETRIES}): ${providerError.message}. Retrying in ${totalDelay}ms...`,
             );
           }
 
@@ -11977,59 +12082,7 @@ class Graphlit {
       currentRound++;
     }
 
-    // Build intermediate messages for completeConversation
-    const intermediateMessages = persistedIntermediateMessages;
-    const messageInputs: Types.ConversationMessageInput[] =
-      intermediateMessages.map((msg, idx) => {
-        const input: Types.ConversationMessageInput = {
-          role: msg.role,
-          message: msg.message,
-          timestamp: msg.timestamp,
-        };
-        if (msg.toolCallId) input.toolCallId = msg.toolCallId;
-        if (msg.toolCalls) {
-          input.toolCalls = msg.toolCalls
-            .filter((tc): tc is Types.ConversationToolCall => tc !== null)
-            .map((tc) => ({
-              id: tc.id,
-              name: tc.name,
-              arguments: tc.arguments,
-              startedAt: tc.startedAt,
-              completedAt: tc.completedAt,
-              durationMs: tc.durationMs,
-              status: tc.status,
-              failedAt: tc.failedAt,
-              firstStatusAt: tc.firstStatusAt,
-            }));
-        }
-
-        if (msg.thinkingContent) {
-          input.thinkingContent = msg.thinkingContent;
-          if (msg.thinkingSignature) {
-            input.thinkingSignature = msg.thinkingSignature;
-          }
-        }
-
-        return input;
-      });
-
-    return {
-      fullMessage,
-      finalAssistantMessage,
-      toolCallCount: totalToolCallCount,
-      toolCallNames,
-      errors,
-      contextWindow: budgetTracker?.getUsageSnapshot(),
-      contextActions,
-      reasoning: lastRoundReasoning,
-      intermediateMessages: messageInputs,
-      lastRoundReasoning,
-      usedSpecification: specification,
-      usage:
-        (accumulatedUsage.rounds?.length ?? 0) > 0
-          ? accumulatedUsage
-          : undefined,
-    };
+    return buildLoopResult();
   }
 
   // ────────────────────────────────────────────────────────────────────────────
@@ -12611,6 +12664,7 @@ class Graphlit {
         // 7. Execute streaming loop for this turn
         const turnStart = Date.now();
         let loopResult: StreamingLoopResult;
+        let loopErrorMessage: string | undefined;
         try {
           loopResult = await this.executeStreamingLoop({
             conversationId,
@@ -12635,6 +12689,16 @@ class Graphlit {
               (t) => t.toolCalls,
             ),
           });
+        } catch (loopError) {
+          if (loopError instanceof StreamingLoopPartialError) {
+            loopResult = loopError.partialResult;
+            loopErrorMessage =
+              loopError.originalError instanceof Error
+                ? loopError.originalError.message
+                : String(loopError.originalError);
+          } else {
+            throw loopError;
+          }
         } finally {
           uiAdapter.dispose();
         }
@@ -12654,9 +12718,15 @@ class Graphlit {
           options?.completionMode,
         );
         const trimmedMessage = loopResult.finalAssistantMessage;
+        const shouldPersistTurn =
+          trimmedMessage ||
+          (loopErrorMessage && loopResult.intermediateMessages.length > 0);
 
         // 8b. Complete conversation (persist turn)
-        if (trimmedMessage) {
+        if (shouldPersistTurn) {
+          const completionMessage =
+            trimmedMessage ||
+            `Agent run failed after partial tool execution: ${loopErrorMessage ?? "Unknown error"}`;
           const completionTime = uiAdapter.getCompletionTime();
           const ttft = uiAdapter.getTTFT();
           const throughput = uiAdapter.getThroughput();
@@ -12688,12 +12758,16 @@ class Graphlit {
             turnMessageInputs?.[turnMessageInputs.length - 1];
           const finalMessageAlreadyIncluded =
             finalInputMessage?.role === Types.ConversationRoleTypes.Assistant &&
-            finalInputMessage.message?.trim() === trimmedMessage;
+            finalInputMessage.message?.trim() === completionMessage;
 
-          if (loopResult.lastRoundReasoning && !finalMessageAlreadyIncluded) {
+          if (
+            trimmedMessage &&
+            loopResult.lastRoundReasoning &&
+            !finalMessageAlreadyIncluded
+          ) {
             const completionInput: Types.ConversationMessageInput = {
               role: Types.ConversationRoleTypes.Assistant,
-              message: trimmedMessage,
+              message: completionMessage,
               timestamp: new Date().toISOString(),
               thinkingContent: loopResult.lastRoundReasoning.content,
             };
@@ -12705,7 +12779,7 @@ class Graphlit {
           }
 
           await this.completeConversation(
-            trimmedMessage,
+            completionMessage,
             conversationId,
             millisecondsToTimeSpan(completionTime),
             millisecondsToTimeSpan(ttft),
@@ -12725,6 +12799,10 @@ class Graphlit {
         // 9. Build TurnResult
         const turnDuration = Date.now() - turnStart;
         const turnToolNames = [...new Set(loopResult.toolCallNames)].sort();
+        const turnErrors = [
+          ...loopResult.errors,
+          ...(loopErrorMessage ? [loopErrorMessage] : []),
+        ];
 
         const turnResult: TurnResult = {
           turnNumber: turn,
@@ -12744,7 +12822,7 @@ class Graphlit {
             loopResult.contextActions.length > 0
               ? loopResult.contextActions
               : undefined,
-          errors: loopResult.errors.length > 0 ? loopResult.errors : undefined,
+          errors: turnErrors.length > 0 ? turnErrors : undefined,
           usage: lastTurnUsage,
         };
         // Reset per-turn usage for next turn
@@ -12759,6 +12837,12 @@ class Graphlit {
         options?.onTurnComplete?.(turnResult);
 
         // 11. Evaluate turn
+
+        if (loopErrorMessage) {
+          status = "error";
+          errorMessage = loopErrorMessage;
+          break;
+        }
 
         // a. Terminal completion reached?
         if (turnResult.completionReason) {
