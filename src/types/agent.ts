@@ -395,6 +395,15 @@ export interface StreamingLoopResult {
   fullMessage: string;
   finalAssistantMessage: string;
   toolCallCount: number;
+  /**
+   * True when the streaming loop terminated because a round produced no tool
+   * calls — i.e. the model voluntarily stopped with a text response — as opposed
+   * to hitting the round cap, erroring out, falling back to non-streaming, or
+   * stopping on task_complete. This is the correct signal for terminal-text
+   * completion; `toolCallCount` is cumulative over the turn and must not be used
+   * for that decision.
+   */
+  endedOnToolFreeRound: boolean;
   toolCallNames: string[];
   errors: string[];
   contextWindow?: ContextWindowUsage;

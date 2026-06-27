@@ -10776,6 +10776,7 @@ class Graphlit {
     const toolCallNames: string[] = [];
     const errors: string[] = [];
     let totalToolCallCount = 0;
+    let endedOnToolFreeRound = false;
     const persistedIntermediateMessages: Types.ConversationMessage[] = [];
     const accumulatedUsage: UsageInfo = {
       promptTokens: 0,
@@ -10839,6 +10840,7 @@ class Graphlit {
       fullMessage,
       finalAssistantMessage,
       toolCallCount: totalToolCallCount,
+      endedOnToolFreeRound,
       toolCallNames,
       errors,
       contextWindow: budgetTracker?.getUsageSnapshot(),
@@ -11635,8 +11637,11 @@ class Graphlit {
         throw new Error("Operation aborted");
       }
 
-      // If no tool calls, we're done
+      // If no tool calls, we're done. Record that the loop terminated on a
+      // tool-free round so terminal-text completion can be recognized (the
+      // cumulative toolCallCount is ≥1 for any turn that used a tool first).
       if (!toolCalls || toolCalls.length === 0) {
+        endedOnToolFreeRound = true;
         break;
       }
 
@@ -13355,7 +13360,7 @@ class Graphlit {
       return false;
     }
 
-    if (loopResult.toolCallCount !== 0) {
+    if (!loopResult.endedOnToolFreeRound) {
       return false;
     }
 

@@ -16,6 +16,7 @@ const TASK_COMPLETE_LOOP_RESULT: StreamingLoopResult = {
   fullMessage: "",
   finalAssistantMessage: "Hello! How can I help you today?",
   toolCallCount: 1,
+  endedOnToolFreeRound: false,
   toolCallNames: ["task_complete"],
   errors: [],
   contextActions: [],
@@ -40,7 +41,37 @@ const TERMINAL_TEXT_LOOP_RESULT: StreamingLoopResult = {
   fullMessage: "READY",
   finalAssistantMessage: "READY",
   toolCallCount: 0,
+  endedOnToolFreeRound: true,
   toolCallNames: [],
+  errors: [],
+  contextActions: [],
+  intermediateMessages: [],
+  lastRoundReasoning: undefined,
+};
+
+// A turn that used tools (analyze_prompt + execute_tool) and THEN ended with a
+// tool-free text round — the real shape of a working agent answering. This is the
+// case the cumulative-toolCallCount guard wrongly rejected.
+const TOOL_THEN_TEXT_TERMINAL_RESULT: StreamingLoopResult = {
+  fullMessage: "READY\nCODE_EXECUTION_STDOUT_OK=391",
+  finalAssistantMessage: "READY\nCODE_EXECUTION_STDOUT_OK=391",
+  toolCallCount: 2,
+  endedOnToolFreeRound: true,
+  toolCallNames: ["analyze_prompt", "execute_tool"],
+  errors: [],
+  contextActions: [],
+  intermediateMessages: [],
+  lastRoundReasoning: undefined,
+};
+
+// A turn that used tools and was still calling tools when the loop stopped (e.g.
+// hit the round cap) — must NOT be treated as terminal text.
+const TOOL_THEN_ROUNDCAP_RESULT: StreamingLoopResult = {
+  fullMessage: "Working on it…",
+  finalAssistantMessage: "Working on it…",
+  toolCallCount: 2,
+  endedOnToolFreeRound: false,
+  toolCallNames: ["analyze_prompt", "execute_tool"],
   errors: [],
   contextActions: [],
   intermediateMessages: [],
@@ -207,6 +238,91 @@ describe("Task Complete Finalization", () => {
     expect(result.completionReason).toBe("terminal_text");
     expect(result.turnResults).toHaveLength(1);
     expect(result.turnResults[0]?.completionReason).toBe("terminal_text");
+  });
+
+  it("runAgent completes via terminal text after a tool-using turn that ends in text", async () => {
+    // Regression for the cumulative-toolCallCount bug: a turn that called tools
+    // (toolCallCount > 0) and then answered with a tool-free round must be
+    // recognized as terminal — no spurious continuation.
+    const client = new Graphlit({ token: "test-token" });
+
+    vi.spyOn(client, "createAgent").mockResolvedValue({
+      createAgent: { id: "agent-1" },
+    } as Types.CreateAgentMutation);
+    vi.spyOn(client, "createConversation").mockResolvedValue({
+      createConversation: { id: "conv-1" },
+    } as Types.CreateConversationMutation);
+    vi.spyOn(client as any, "formatConversation").mockResolvedValue({
+      formatConversation: {
+        message: {
+          role: Types.ConversationRoleTypes.User,
+          message: "compute it",
+          timestamp: "2026-04-03T16:16:03.000Z",
+        },
+      },
+    });
+    const executeStreamingLoopSpy = vi
+      .spyOn(client as any, "executeStreamingLoop")
+      .mockResolvedValue(TOOL_THEN_TEXT_TERMINAL_RESULT);
+    vi.spyOn(client, "completeConversation").mockResolvedValue({
+      completeConversation: { message: { tokens: 42 } },
+    } as Types.CompleteConversationMutation);
+
+    const result = await client.runAgent(
+      "compute it",
+      () => {},
+      undefined,
+      undefined,
+      { maxTurns: 3, completionMode: "allow_terminal_text" },
+    );
+
+    expect(executeStreamingLoopSpy).toHaveBeenCalledTimes(1);
+    expect(result.status).toBe("completed");
+    expect(result.completionReason).toBe("terminal_text");
+    expect(result.finalMessage).toBe("READY\nCODE_EXECUTION_STDOUT_OK=391");
+    expect(result.turnResults[0]?.completionReason).toBe("terminal_text");
+  });
+
+  it("runAgent does not complete via terminal text when the final round still had tool calls", async () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    vi.spyOn(client, "createAgent").mockResolvedValue({
+      createAgent: { id: "agent-1" },
+    } as Types.CreateAgentMutation);
+    vi.spyOn(client, "createConversation").mockResolvedValue({
+      createConversation: { id: "conv-1" },
+    } as Types.CreateConversationMutation);
+    vi.spyOn(client as any, "formatConversation").mockImplementation(
+      async (prompt: string) => ({
+        formatConversation: {
+          message: {
+            role: Types.ConversationRoleTypes.User,
+            message: prompt,
+            timestamp: "2026-04-03T16:16:03.000Z",
+          },
+        },
+      }),
+    );
+    const executeStreamingLoopSpy = vi
+      .spyOn(client as any, "executeStreamingLoop")
+      .mockResolvedValueOnce(TOOL_THEN_ROUNDCAP_RESULT)
+      .mockResolvedValueOnce(TASK_COMPLETE_LOOP_RESULT);
+    vi.spyOn(client, "completeConversation").mockResolvedValue({
+      completeConversation: { message: { tokens: 42 } },
+    } as Types.CompleteConversationMutation);
+
+    const result = await client.runAgent(
+      "do work",
+      () => {},
+      undefined,
+      undefined,
+      { maxTurns: 3, completionMode: "allow_terminal_text" },
+    );
+
+    // Still calling tools when the loop stopped → not terminal text → continues.
+    expect(executeStreamingLoopSpy).toHaveBeenCalledTimes(2);
+    expect(result.turnResults[0]?.completionReason).toBeUndefined();
+    expect(result.completionReason).toBe("task_complete");
   });
 
   it("runAgent preserves Continue. turns by default after a text-only response", async () => {
