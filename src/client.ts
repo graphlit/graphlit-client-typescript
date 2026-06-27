@@ -13350,7 +13350,9 @@ class Graphlit {
 
   /**
    * Treat a non-empty text-only turn as terminal when the caller explicitly
-   * opts into interactive completion semantics.
+   * opts into interactive completion semantics. Tool errors from earlier rounds
+   * are diagnostics the model may recover from; hard streaming failures are
+   * surfaced separately through loopErrorMessage and still fail the run.
    */
   private detectTerminalTextCompletion(
     loopResult: StreamingLoopResult,
@@ -13361,10 +13363,6 @@ class Graphlit {
     }
 
     if (!loopResult.endedOnToolFreeRound) {
-      return false;
-    }
-
-    if (loopResult.errors.length > 0) {
       return false;
     }
 

@@ -64,6 +64,23 @@ const TOOL_THEN_TEXT_TERMINAL_RESULT: StreamingLoopResult = {
   lastRoundReasoning: undefined,
 };
 
+// A turn where an earlier tool call failed, the model recovered, and the final
+// round was text-only. Prior tool errors should remain visible in the result,
+// but they must not force an unnecessary Continue turn after recovery.
+const RECOVERED_TOOL_ERROR_TERMINAL_RESULT: StreamingLoopResult = {
+  fullMessage: "READY\nCODE_EXECUTION_FAILURE_EXPLAINED",
+  finalAssistantMessage: "READY\nCODE_EXECUTION_FAILURE_EXPLAINED",
+  toolCallCount: 2,
+  endedOnToolFreeRound: true,
+  toolCallNames: ["analyze_prompt", "execute_tool"],
+  errors: [
+    "Error: Code execution failed (exit code 1): ModuleNotFoundError",
+  ],
+  contextActions: [],
+  intermediateMessages: [],
+  lastRoundReasoning: undefined,
+};
+
 // A turn that used tools and was still calling tools when the loop stopped (e.g.
 // hit the round cap) — must NOT be treated as terminal text.
 const TOOL_THEN_ROUNDCAP_RESULT: StreamingLoopResult = {
@@ -281,6 +298,54 @@ describe("Task Complete Finalization", () => {
     expect(result.completionReason).toBe("terminal_text");
     expect(result.finalMessage).toBe("READY\nCODE_EXECUTION_STDOUT_OK=391");
     expect(result.turnResults[0]?.completionReason).toBe("terminal_text");
+  });
+
+  it("runAgent completes via terminal text after a recovered tool error", async () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    vi.spyOn(client, "createAgent").mockResolvedValue({
+      createAgent: { id: "agent-1" },
+    } as Types.CreateAgentMutation);
+    vi.spyOn(client, "createConversation").mockResolvedValue({
+      createConversation: { id: "conv-1" },
+    } as Types.CreateConversationMutation);
+    const formatConversationSpy = vi
+      .spyOn(client as any, "formatConversation")
+      .mockResolvedValue({
+        formatConversation: {
+          message: {
+            role: Types.ConversationRoleTypes.User,
+            message: "observe and explain the failure",
+            timestamp: "2026-04-03T16:16:03.000Z",
+          },
+        },
+      });
+    const executeStreamingLoopSpy = vi
+      .spyOn(client as any, "executeStreamingLoop")
+      .mockResolvedValue(RECOVERED_TOOL_ERROR_TERMINAL_RESULT);
+    vi.spyOn(client, "completeConversation").mockResolvedValue({
+      completeConversation: { message: { tokens: 42 } },
+    } as Types.CompleteConversationMutation);
+
+    const result = await client.runAgent(
+      "observe and explain the failure",
+      () => {},
+      undefined,
+      undefined,
+      { maxTurns: 3, completionMode: "allow_terminal_text" },
+    );
+
+    expect(executeStreamingLoopSpy).toHaveBeenCalledTimes(1);
+    expect(formatConversationSpy).toHaveBeenCalledTimes(1);
+    expect(result.status).toBe("completed");
+    expect(result.completionReason).toBe("terminal_text");
+    expect(result.finalMessage).toBe(
+      "READY\nCODE_EXECUTION_FAILURE_EXPLAINED",
+    );
+    expect(result.turnResults[0]?.completionReason).toBe("terminal_text");
+    expect(result.turnResults[0]?.errors).toEqual(
+      RECOVERED_TOOL_ERROR_TERMINAL_RESULT.errors,
+    );
   });
 
   it("runAgent does not complete via terminal text when the final round still had tool calls", async () => {
