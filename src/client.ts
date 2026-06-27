@@ -79,6 +79,7 @@ import {
   assertRequiredToolChoiceConfig,
   deriveProviderToolChoicePolicy,
   normalizeToolVisibilityResult,
+  RequiredToolChoiceError,
   toAnthropicToolChoice,
   toGoogleToolConfig,
   toOpenAIChatToolChoice,
@@ -330,6 +331,18 @@ type OpenAIResponsesInvocationState = {
   initialInput: OpenAIResponsesInputItem[];
   continuationItems: OpenAIResponsesInputItem[];
 };
+
+function cloneOpenAIResponsesInvocationState(
+  state: OpenAIResponsesInvocationState | undefined,
+): OpenAIResponsesInvocationState | undefined {
+  if (!state) return undefined;
+
+  return {
+    instructions: state.instructions,
+    initialInput: [...state.initialInput],
+    continuationItems: [...state.continuationItems],
+  };
+}
 
 // Default eligible OpenAI GPT-5.4+ models to Responses. Explicit
 // `useResponsesApi: false` still forces legacy Chat Completions.
@@ -11004,6 +11017,8 @@ class Graphlit {
         roundMessage = "";
         roundReasoning = undefined;
         roundUsage = undefined;
+        const preAttemptOpenAIResponsesState =
+          cloneOpenAIResponsesInvocationState(openAIResponsesState);
 
         try {
           if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
@@ -11054,10 +11069,7 @@ class Graphlit {
                 uiAdapter,
                 abortSignal,
                 openAIResponsesState,
-                toOpenAIResponsesToolChoice(providerToolChoicePolicy) ??
-                  (currentRound === 0 && visibleToolsForCurrentRound?.length
-                    ? "required"
-                    : undefined),
+                toOpenAIResponsesToolChoice(providerToolChoicePolicy),
               );
               roundMessage = responsesResult.message;
               toolCalls = responsesResult.toolCalls;
@@ -11534,6 +11546,25 @@ class Graphlit {
         } catch (retryError) {
           if (abortSignal?.aborted) throw retryError;
 
+          if (retryError instanceof RequiredToolChoiceError) {
+            if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+              console.log(
+                `\n🔁 [Required Tool] ${retryError.message} Re-asking round ${currentRound} with the same visibility policy (attempt ${providerAttempt + 1}/${DEFAULT_PROVIDER_RETRIES + 1}).`,
+              );
+            }
+
+            uiAdapter.resetForRetry(preRoundMessage);
+            openAIResponsesState = cloneOpenAIResponsesInvocationState(
+              preAttemptOpenAIResponsesState,
+            );
+
+            if (providerAttempt >= DEFAULT_PROVIDER_RETRIES) {
+              throwWithPartialResult(retryError);
+            }
+
+            continue;
+          }
+
           const isRetryable =
             retryError instanceof ProviderError && retryError.retryable;
           if (
@@ -11570,6 +11601,9 @@ class Graphlit {
 
           // Reset adapter to pre-round state so partial tokens are cleared
           uiAdapter.resetForRetry(preRoundMessage);
+          openAIResponsesState = cloneOpenAIResponsesInvocationState(
+            preAttemptOpenAIResponsesState,
+          );
 
           await new Promise((resolve) => setTimeout(resolve, totalDelay));
         }

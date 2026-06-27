@@ -802,7 +802,13 @@ export async function streamWithAnthropic(
         ...streamConfig.tools[streamConfig.tools.length - 1],
         cache_control: { type: "ephemeral" },
       };
-      if (toolChoice) {
+      if (toolChoice && thinkingConfig) {
+        if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
+          console.log(
+            "🧠 [Anthropic] Skipping native tool_choice because thinking is enabled; required tool policy will be validated after the response.",
+          );
+        }
+      } else if (toolChoice) {
         streamConfig.tool_choice = toolChoice;
       }
     }
