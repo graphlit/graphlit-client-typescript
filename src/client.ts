@@ -13879,8 +13879,23 @@ class Graphlit {
       );
     }
 
-    // Get thinking configuration from specification
-    const thinkingConfig = this.getThinkingConfig(specification);
+    // Get thinking configuration from specification. Anthropic rejects native
+    // tool_choice when thinking is enabled, but required tool rounds must be
+    // deterministic. For those rounds, temporarily suppress thinking so the
+    // provider can enforce the requested tool natively; normal thinking resumes
+    // on subsequent non-forced rounds.
+    const configuredThinkingConfig = this.getThinkingConfig(specification);
+    const thinkingConfig = toolChoice ? undefined : configuredThinkingConfig;
+
+    if (
+      toolChoice &&
+      configuredThinkingConfig &&
+      process.env.DEBUG_GRAPHLIT_SDK_STREAMING
+    ) {
+      console.log(
+        "🧠 [Graphlit SDK] Anthropic thinking disabled for required tool_choice round",
+      );
+    }
 
     if (thinkingConfig && process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
       if (thinkingConfig.type === "adaptive") {
