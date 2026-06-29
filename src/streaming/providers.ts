@@ -80,45 +80,27 @@ function simplifySchemaForGroq(schema: any): string {
   return JSON.stringify(simplified);
 }
 
-/**
- * Clean schema for Google Gemini by removing unsupported fields
- */
-function cleanSchemaForGoogle(schema: any): any {
-  if (typeof schema !== "object" || schema === null) {
-    return schema;
-  }
-
-  if (Array.isArray(schema)) {
-    return schema.map((item) => cleanSchemaForGoogle(item));
-  }
-
-  const cleaned: any = {};
-  for (const [key, value] of Object.entries(schema)) {
-    // Skip fields that Google doesn't support
-    if (key === "$schema" || key === "additionalProperties") {
-      continue;
-    }
-
-    // Handle format field for string types - Google only supports 'enum' and 'date-time'
-    if (key === "format" && typeof value === "string") {
-      // Only keep supported formats
-      if (value === "enum" || value === "date-time") {
-        cleaned[key] = value;
-      }
-      // Skip unsupported formats like "date", "time", "email", etc.
-      continue;
-    }
-
-    // Recursively clean nested objects
-    cleaned[key] = cleanSchemaForGoogle(value);
-  }
-
-  return cleaned;
-}
-
 export interface GooglePromptCache {
   entries: Map<string, string>;
   maxEntries?: number;
+}
+
+export function buildGoogleTools(
+  tools: ToolDefinitionInput[] | undefined,
+): any[] | undefined {
+  if (!tools || tools.length === 0) {
+    return undefined;
+  }
+
+  return [
+    {
+      functionDeclarations: tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        parametersJsonSchema: tool.schema ? JSON.parse(tool.schema) : {},
+      })),
+    },
+  ];
 }
 
 function shortHash(value: string): string {
@@ -1539,43 +1521,7 @@ export async function streamWithGoogle(
       streamConfig.system = systemPrompt;
     }
 
-    // Add tools if provided
-    if (tools && tools.length > 0) {
-      streamConfig.tools = tools.map((tool) => ({
-        name: tool.name,
-        description: tool.description,
-        input_schema: tool.schema ? JSON.parse(tool.schema) : {},
-      }));
-    }
-
-    // Configure tools for Google - expects a single array of function declarations
-    const googleTools =
-      tools && tools.length > 0
-        ? [
-            {
-              functionDeclarations: tools.map((tool) => {
-                const rawSchema = tool.schema ? JSON.parse(tool.schema) : {};
-                const cleanedSchema = cleanSchemaForGoogle(rawSchema);
-
-                if (process.env.DEBUG_GRAPHLIT_SDK_STREAMING) {
-                  const hadCleanup =
-                    JSON.stringify(rawSchema) !== JSON.stringify(cleanedSchema);
-                  if (hadCleanup) {
-                    console.log(
-                      `[Google] Cleaned schema for tool ${tool.name} - removed unsupported fields`,
-                    );
-                  }
-                }
-
-                return {
-                  name: tool.name,
-                  description: tool.description,
-                  parameters: cleanedSchema,
-                };
-              }),
-            },
-          ]
-        : undefined;
+    const googleTools = buildGoogleTools(tools);
 
     // Add thinking configuration if provided
     // Note: Google's thinking API is still in preview and may require specific model support
