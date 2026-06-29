@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import * as Types from "../src/generated/graphql-types";
-import {
-  buildGoogleTools,
-  streamWithGoogle,
-} from "../src/streaming/providers";
+import { buildGoogleTools, streamWithGoogle } from "../src/streaming/providers";
 import type { StreamEvent } from "../src/types/internal";
 
 async function* makeGoogleStream(chunks: any[]) {
@@ -157,8 +154,7 @@ describe("Google JSON Schema tools", () => {
     );
 
     const request = googleClient.models.generateContentStream.mock.calls[0][0];
-    const functionDeclaration =
-      request.config.tools[0].functionDeclarations[0];
+    const functionDeclaration = request.config.tools[0].functionDeclarations[0];
 
     expectJsonSchemaFunctionDeclaration(functionDeclaration);
     expect(onComplete).toHaveBeenCalledWith(
@@ -174,6 +170,118 @@ describe("Google JSON Schema tools", () => {
     );
     expect(events).toContainEqual({ type: "token", token: "Done." });
     expect(events).toContainEqual({ type: "complete", tokens: 1 });
+  });
+
+  // Google rejects any GenerateContent request that combines `cachedContent`
+  // with request-level `system_instruction`, `tools`, or `tool_config`:
+  //   "CachedContent can not be used with GenerateContent request setting
+  //    system_instruction, tools or tool_config."
+  // A forced tool choice is a per-round directive, so those rounds must bypass
+  // the cache and send everything inline.
+  const FORCED_TOOL_CONFIG = {
+    functionCallingConfig: {
+      mode: "ANY",
+      allowedFunctionNames: ["analyze_prompt"],
+    },
+  };
+
+  it("never combines cachedContent with a request-level tool config", async () => {
+    const googleClient = {
+      caches: {
+        create: vi.fn().mockResolvedValue({ name: "cachedContents/test" }),
+      },
+      models: {
+        generateContentStream: vi.fn().mockResolvedValue(
+          makeGoogleStream([
+            {
+              candidates: [{ content: { parts: [{ text: "ok" }] } }],
+            },
+          ]),
+        ),
+      },
+    };
+
+    await streamWithGoogle(
+      TEST_SPEC,
+      [{ role: "user", parts: [{ text: "Use the tool." }] }],
+      ["System prompt"],
+      TEST_TOOLS,
+      googleClient,
+      { entries: new Map() },
+      vi.fn(),
+      vi.fn(),
+      undefined, // abortSignal
+      undefined, // thinkingConfig
+      FORCED_TOOL_CONFIG,
+    );
+
+    // Forced-tool rounds must skip the cache entirely.
+    expect(googleClient.caches.create).not.toHaveBeenCalled();
+
+    const request = googleClient.models.generateContentStream.mock.calls[0][0];
+    expect(request.config.cachedContent).toBeUndefined();
+    // System instruction, tools, and tool config are sent inline instead.
+    expect(request.config.toolConfig).toEqual(FORCED_TOOL_CONFIG);
+    expect(request.config.tools).toBeDefined();
+    expect(request.config.systemInstruction).toBeDefined();
+  });
+
+  it("uses cachedContent only on rounds without a forced tool choice", async () => {
+    const googleClient = {
+      caches: {
+        create: vi.fn().mockResolvedValue({ name: "cachedContents/test" }),
+      },
+      models: {
+        generateContentStream: vi.fn().mockResolvedValue(
+          makeGoogleStream([
+            {
+              candidates: [{ content: { parts: [{ text: "ok" }] } }],
+            },
+          ]),
+        ),
+      },
+    };
+    const promptCache = { entries: new Map<string, string>() };
+
+    // Round 1 forces a tool choice -> inline request, no cache.
+    await streamWithGoogle(
+      TEST_SPEC,
+      [{ role: "user", parts: [{ text: "Use the tool." }] }],
+      ["System prompt"],
+      TEST_TOOLS,
+      googleClient,
+      promptCache,
+      vi.fn(),
+      vi.fn(),
+      undefined,
+      undefined,
+      FORCED_TOOL_CONFIG,
+    );
+
+    expect(googleClient.caches.create).not.toHaveBeenCalled();
+    const round1 = googleClient.models.generateContentStream.mock.calls[0][0];
+    expect(round1.config.cachedContent).toBeUndefined();
+    expect(round1.config.toolConfig).toEqual(FORCED_TOOL_CONFIG);
+
+    // Round 2 has no forced tool choice -> create and use the cache, and never
+    // send system instruction / tools / tool config at request level.
+    await streamWithGoogle(
+      TEST_SPEC,
+      [{ role: "user", parts: [{ text: "Continue." }] }],
+      ["System prompt"],
+      TEST_TOOLS,
+      googleClient,
+      promptCache,
+      vi.fn(),
+      vi.fn(),
+    );
+
+    expect(googleClient.caches.create).toHaveBeenCalledTimes(1);
+    const round2 = googleClient.models.generateContentStream.mock.calls[1][0];
+    expect(round2.config.cachedContent).toBe("cachedContents/test");
+    expect(round2.config.toolConfig).toBeUndefined();
+    expect(round2.config.tools).toBeUndefined();
+    expect(round2.config.systemInstruction).toBeUndefined();
   });
 
   it("uses parametersJsonSchema when creating cached content with tools", async () => {

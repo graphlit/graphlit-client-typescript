@@ -1572,21 +1572,31 @@ export async function streamWithGoogle(
     // Build the config object for the new SDK
     const config: any = {
       ...generationConfig,
-      ...(toolConfig ? { toolConfig } : {}),
     };
 
-    const systemInstructionParts = getGoogleSystemInstructionParts(systemPrompt);
+    const systemInstructionParts =
+      getGoogleSystemInstructionParts(systemPrompt);
 
-    const stableCacheKey =
-      promptCache && systemInstructionParts.length > 0
-        ? shortHash(
-            JSON.stringify({
-              model: modelName,
-              systemInstructionParts,
-              tools,
-            }),
-          )
-        : undefined;
+    // Google rejects any GenerateContent request that combines `cachedContent`
+    // with request-level `system_instruction`, `tools`, or `tool_config`:
+    //   "CachedContent can not be used with GenerateContent request setting
+    //    system_instruction, tools or tool_config."
+    // A forced tool choice (`toolConfig`) is a per-round directive — it cannot be
+    // baked into the shared cache without breaking reuse across rounds — so when
+    // it is present we skip the cache entirely and send the system instruction,
+    // tools, and tool config inline instead.
+    const canUseCache =
+      !!promptCache && systemInstructionParts.length > 0 && !toolConfig;
+
+    const stableCacheKey = canUseCache
+      ? shortHash(
+          JSON.stringify({
+            model: modelName,
+            systemInstructionParts,
+            tools,
+          }),
+        )
+      : undefined;
     let cachedContentName = stableCacheKey
       ? promptCache?.entries.get(stableCacheKey)
       : undefined;
@@ -1619,16 +1629,21 @@ export async function streamWithGoogle(
     }
 
     if (cachedContentName) {
+      // System instruction, tools, and tool config live inside the cache; sending
+      // any of them at request level alongside `cachedContent` is a 400 from Google.
       config.cachedContent = cachedContentName;
-    } else if (systemInstructionParts.length > 0) {
-      config.systemInstruction = {
-        parts: systemInstructionParts.map((text) => ({ text })),
-      };
-    }
-
-    // Add tools to config if provided and not already attached to cachedContent.
-    if (googleTools && !cachedContentName) {
-      config.tools = googleTools;
+    } else {
+      if (systemInstructionParts.length > 0) {
+        config.systemInstruction = {
+          parts: systemInstructionParts.map((text) => ({ text })),
+        };
+      }
+      if (googleTools) {
+        config.tools = googleTools;
+      }
+      if (toolConfig) {
+        config.toolConfig = toolConfig;
+      }
     }
 
     const createStreamResponse = () =>
