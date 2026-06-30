@@ -6,6 +6,8 @@ import * as Types from "./generated/graphql-types.js";
  * to actual model names used by LLM SDKs
  */
 
+const CLAUDE_SONNET_5_MODEL_NAME = "claude-sonnet-5";
+
 // OpenAI model mappings
 const OPENAI_MODEL_MAP: Record<string, string> = {
   // GPT-4 Turbo models
@@ -156,6 +158,9 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
 
   // Claude Fable models
   [Types.AnthropicModels.Claude_5Fable]: "claude-fable-5",
+
+  // Claude 5 models
+  [Types.AnthropicModels.Claude_5Sonnet]: CLAUDE_SONNET_5_MODEL_NAME,
 };
 
 // Google model mappings
@@ -446,7 +451,8 @@ export function isAnthropicAdaptiveThinkingOnlyModel(
   if (
     modelEnum === Types.AnthropicModels.Claude_4_7Opus ||
     modelEnum === Types.AnthropicModels.Claude_4_8Opus ||
-    modelEnum === Types.AnthropicModels.Claude_5Fable
+    modelEnum === Types.AnthropicModels.Claude_5Fable ||
+    modelEnum === Types.AnthropicModels.Claude_5Sonnet
   ) {
     return true;
   }
@@ -455,7 +461,8 @@ export function isAnthropicAdaptiveThinkingOnlyModel(
   return (
     modelName === "claude-opus-4-7" ||
     modelName === "claude-opus-4-8" ||
-    modelName === "claude-fable-5"
+    modelName === "claude-fable-5" ||
+    modelName === CLAUDE_SONNET_5_MODEL_NAME
   );
 }
 

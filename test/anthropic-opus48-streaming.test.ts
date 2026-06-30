@@ -42,6 +42,25 @@ describe("Anthropic adaptive thinking streaming", () => {
     });
   });
 
+  it("uses adaptive thinking config for Claude Sonnet 5", () => {
+    const client = new Graphlit({ token: "test-token" });
+
+    const thinkingConfig = (client as any).getThinkingConfig({
+      serviceType: Types.ModelServiceTypes.Anthropic,
+      anthropic: {
+        model: Types.AnthropicModels.Claude_5Sonnet,
+        enableThinking: true,
+        effort: Types.AnthropicEffortLevels.High,
+      },
+    });
+
+    expect(thinkingConfig).toEqual({
+      type: "adaptive",
+      effort: "high",
+      display: "summarized",
+    });
+  });
+
   it("adds summarized display for Claude 4 manual thinking models", () => {
     const client = new Graphlit({ token: "test-token" });
 
@@ -139,6 +158,40 @@ describe("Anthropic adaptive thinking streaming", () => {
     expect(create).toHaveBeenCalledTimes(1);
     expect(create.mock.calls[0]?.[0]).toMatchObject({
       model: "claude-fable-5",
+      messages: [{ role: "user", content: "Hello" }],
+      max_tokens: 8192,
+      stream: true,
+    });
+    expect(create.mock.calls[0]?.[0]).not.toHaveProperty("temperature");
+    expect(onComplete).toHaveBeenCalledWith("", [], null, undefined);
+  });
+
+  it("omits temperature for Claude Sonnet 5 streaming requests", async () => {
+    const create = vi.fn().mockResolvedValue({
+      async *[Symbol.asyncIterator]() { },
+    });
+    const onComplete = vi.fn();
+
+    await streamWithAnthropic(
+      {
+        name: "Claude Sonnet 5",
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: {
+          modelName: "claude-sonnet-5",
+          temperature: 0.2,
+        },
+      } as Types.Specification,
+      [{ role: "user", content: "Hello" }] as any,
+      undefined,
+      undefined,
+      { messages: { create } } as any,
+      () => { },
+      onComplete,
+    );
+
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0]?.[0]).toMatchObject({
+      model: "claude-sonnet-5",
       messages: [{ role: "user", content: "Hello" }],
       max_tokens: 8192,
       stream: true,

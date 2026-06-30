@@ -557,7 +557,7 @@ The Graphlit SDK supports real-time streaming responses from 9 different LLM pro
 | Provider        | Models                                        | SDK Required                      | API Key             |
 | --------------- | --------------------------------------------- | --------------------------------- | ------------------- |
 | **OpenAI**      | GPT-5.4, GPT-4.1, GPT-4o, O1, O3, O4          | `openai`                          | `OPENAI_API_KEY`    |
-| **Anthropic**   | Claude Fable 5, Claude 4, Claude 3.x          | `@anthropic-ai/sdk`               | `ANTHROPIC_API_KEY` |
+| **Anthropic**   | Claude Sonnet 5, Claude Fable 5, Claude 4, Claude 3.x | `@anthropic-ai/sdk`               | `ANTHROPIC_API_KEY` |
 | **Google**      | Gemini 1.5, Gemini 2.0, Gemini 2.5            | `@google/genai`                   | `GOOGLE_API_KEY`    |
 | **Groq**        | Llama 4, Llama 3.3, Mixtral, Deepseek R1      | `groq-sdk`                        | `GROQ_API_KEY`      |
 | **Cerebras**    | Llama 3.3, Llama 3.1                          | `openai`                          | `CEREBRAS_API_KEY`  |

@@ -131,6 +131,23 @@ export const TEST_MODELS: TestModelConfig[] = [
 
   // Anthropic Models
   {
+    name: "Anthropic Claude Sonnet 5",
+    config: {
+      name: "Test Anthropic Claude Sonnet 5",
+      type: Types.SpecificationTypes.Completion,
+      serviceType: Types.ModelServiceTypes.Anthropic,
+      anthropic: {
+        model: Types.AnthropicModels.Claude_5Sonnet,
+        enableThinking: true,
+        effort: Types.AnthropicEffortLevels.High,
+      },
+      retrievalStrategy: {
+        type: Types.RetrievalStrategyTypes.Section,
+        disableFallback: true,
+      },
+    },
+  },
+  {
     name: "Anthropic Claude Fable 5",
     config: {
       name: "Test Anthropic Claude Fable 5",

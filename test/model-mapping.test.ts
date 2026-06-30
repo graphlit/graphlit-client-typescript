@@ -33,6 +33,15 @@ describe("model mapping", () => {
     ).toBe("claude-fable-5");
   });
 
+  it("maps Claude Sonnet 5 to the Anthropic model name", () => {
+    expect(
+      getModelName({
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { model: Types.AnthropicModels.Claude_5Sonnet },
+      }),
+    ).toBe("claude-sonnet-5");
+  });
+
   it("detects adaptive-thinking-only Anthropic models", () => {
     expect(
       isAnthropicAdaptiveThinkingOnlyModel({
@@ -58,6 +67,13 @@ describe("model mapping", () => {
     expect(
       isAnthropicAdaptiveThinkingOnlyModel({
         serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { model: Types.AnthropicModels.Claude_5Sonnet },
+      }),
+    ).toBe(true);
+
+    expect(
+      isAnthropicAdaptiveThinkingOnlyModel({
+        serviceType: Types.ModelServiceTypes.Anthropic,
         anthropic: { modelName: "claude-opus-4-8" },
       }),
     ).toBe(true);
@@ -66,6 +82,13 @@ describe("model mapping", () => {
       isAnthropicAdaptiveThinkingOnlyModel({
         serviceType: Types.ModelServiceTypes.Anthropic,
         anthropic: { modelName: "claude-fable-5" },
+      }),
+    ).toBe(true);
+
+    expect(
+      isAnthropicAdaptiveThinkingOnlyModel({
+        serviceType: Types.ModelServiceTypes.Anthropic,
+        anthropic: { modelName: "claude-sonnet-5" },
       }),
     ).toBe(true);
 

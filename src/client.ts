@@ -857,6 +857,7 @@ function supportsAnthropicThinkingDisplay(
     modelName.startsWith("claude-sonnet-4") ||
     modelName.startsWith("claude-haiku-4") ||
     modelName === "claude-fable-5" ||
+    modelName === "claude-sonnet-5" ||
     modelName === "claude-mythos-preview"
   );
 }
