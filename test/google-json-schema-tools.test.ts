@@ -9,6 +9,10 @@ async function* makeGoogleStream(chunks: any[]) {
   }
 }
 
+function snapshotRequest(request: any) {
+  return JSON.parse(JSON.stringify(request));
+}
+
 const TEST_SPEC = {
   __typename: "Specification",
   id: "google-spec-1",
@@ -329,5 +333,188 @@ describe("Google JSON Schema tools", () => {
         }),
       }),
     );
+  });
+
+  it("retries once inline when cachedContent returns Google's 403 not found shape", async () => {
+    const googleCachedContent403 = {
+      error: {
+        message:
+          '{\n  "error": {\n    "code": 403,\n    "message": "CachedContent not found (or permission denied)",\n    "status": "PERMISSION_DENIED"\n  }\n}\n',
+        code: 403,
+        status: "Forbidden",
+      },
+      code: 403,
+      status: 403,
+      message:
+        '{\n  "error": {\n    "code": 403,\n    "message": "CachedContent not found (or permission denied)",\n    "status": "PERMISSION_DENIED"\n  }\n}\n',
+    };
+    const generateRequests: any[] = [];
+    const onComplete = vi.fn();
+    const googleClient = {
+      caches: {
+        create: vi.fn().mockResolvedValue({ name: "cachedContents/stale" }),
+      },
+      models: {
+        generateContentStream: vi.fn().mockImplementation((request: any) => {
+          generateRequests.push(snapshotRequest(request));
+          if (generateRequests.length === 1) {
+            return Promise.reject(googleCachedContent403);
+          }
+
+          return Promise.resolve(
+            makeGoogleStream([
+              {
+                candidates: [
+                  {
+                    content: {
+                      parts: [{ text: "Recovered." }],
+                    },
+                  },
+                ],
+                usageMetadata: {
+                  promptTokenCount: 2,
+                  candidatesTokenCount: 1,
+                  totalTokenCount: 3,
+                },
+              },
+            ]),
+          );
+        }),
+      },
+    };
+    const promptCache = { entries: new Map<string, string>() };
+
+    await streamWithGoogle(
+      TEST_SPEC,
+      [{ role: "user", parts: [{ text: "Continue after the tool." }] }],
+      ["System prompt"],
+      TEST_TOOLS,
+      googleClient,
+      promptCache,
+      vi.fn(),
+      onComplete,
+    );
+
+    expect(googleClient.caches.create).toHaveBeenCalledTimes(1);
+    expect(googleClient.models.generateContentStream).toHaveBeenCalledTimes(2);
+
+    expect(generateRequests[0].config.cachedContent).toBe(
+      "cachedContents/stale",
+    );
+    expect(generateRequests[0].config.systemInstruction).toBeUndefined();
+    expect(generateRequests[0].config.tools).toBeUndefined();
+
+    expect(generateRequests[1].config.cachedContent).toBeUndefined();
+    expect(generateRequests[1].config.systemInstruction).toEqual({
+      parts: [{ text: "System prompt" }],
+    });
+    expectJsonSchemaFunctionDeclaration(
+      generateRequests[1].config.tools[0].functionDeclarations[0],
+    );
+    expect(promptCache.entries.size).toBe(0);
+    expect(onComplete).toHaveBeenCalledWith(
+      "Recovered.",
+      [],
+      {
+        prompt_tokens: 2,
+        completion_tokens: 1,
+        total_tokens: 3,
+        cachedContentTokenCount: undefined,
+      },
+      undefined,
+    );
+  });
+
+  it("does not retry unrelated Google 403 errors", async () => {
+    const authError = {
+      code: 403,
+      status: "Forbidden",
+      message: "API key is not authorized for this model",
+    };
+    const generateRequests: any[] = [];
+    const googleClient = {
+      caches: {
+        create: vi.fn().mockResolvedValue({ name: "cachedContents/test" }),
+      },
+      models: {
+        generateContentStream: vi.fn().mockImplementation((request: any) => {
+          generateRequests.push(snapshotRequest(request));
+          return Promise.reject(authError);
+        }),
+      },
+    };
+    const promptCache = { entries: new Map<string, string>() };
+
+    await expect(
+      streamWithGoogle(
+        TEST_SPEC,
+        [{ role: "user", parts: [{ text: "Continue." }] }],
+        ["System prompt"],
+        TEST_TOOLS,
+        googleClient,
+        promptCache,
+        vi.fn(),
+        vi.fn(),
+      ),
+    ).rejects.toBe(authError);
+
+    expect(googleClient.models.generateContentStream).toHaveBeenCalledTimes(1);
+    expect(generateRequests[0].config.cachedContent).toBe(
+      "cachedContents/test",
+    );
+    expect(promptCache.entries.size).toBe(1);
+  });
+
+  it("keeps retrying once for Google 404 cached content errors", async () => {
+    const generateRequests: any[] = [];
+    const googleClient = {
+      caches: {
+        create: vi.fn().mockResolvedValue({ name: "cachedContents/stale" }),
+      },
+      models: {
+        generateContentStream: vi.fn().mockImplementation((request: any) => {
+          generateRequests.push(snapshotRequest(request));
+          if (generateRequests.length === 1) {
+            return Promise.reject({
+              status: 404,
+              message: "CachedContent not found",
+            });
+          }
+
+          return Promise.resolve(
+            makeGoogleStream([
+              {
+                candidates: [
+                  {
+                    content: {
+                      parts: [{ text: "Recovered from 404." }],
+                    },
+                  },
+                ],
+              },
+            ]),
+          );
+        }),
+      },
+    };
+
+    await streamWithGoogle(
+      TEST_SPEC,
+      [{ role: "user", parts: [{ text: "Continue." }] }],
+      ["System prompt"],
+      TEST_TOOLS,
+      googleClient,
+      { entries: new Map() },
+      vi.fn(),
+      vi.fn(),
+    );
+
+    expect(googleClient.models.generateContentStream).toHaveBeenCalledTimes(2);
+    expect(generateRequests[0].config.cachedContent).toBe(
+      "cachedContents/stale",
+    );
+    expect(generateRequests[1].config.cachedContent).toBeUndefined();
+    expect(generateRequests[1].config.systemInstruction).toBeDefined();
+    expect(generateRequests[1].config.tools).toBeDefined();
   });
 });

@@ -134,20 +134,136 @@ function trimGooglePromptCache(cache: GooglePromptCache): void {
   }
 }
 
-function isGoogleCachedContentNotFound(error: unknown): boolean {
-  const candidate = error as {
-    status?: number;
-    statusCode?: number;
-    code?: number | string;
-    message?: string;
+function collectGoogleErrorDetails(error: unknown): {
+  statuses: Set<string>;
+  text: string;
+} {
+  const statuses = new Set<string>();
+  const texts: string[] = [];
+  const seen = new Set<object>();
+
+  const addText = (value: string | number): void => {
+    const text = String(value).trim();
+    if (text.length > 0) {
+      texts.push(text);
+    }
   };
-  const status = candidate?.status ?? candidate?.statusCode ?? candidate?.code;
+
+  const addStatus = (value: unknown): void => {
+    if (typeof value === "string" || typeof value === "number") {
+      const status = String(value).trim();
+      if (status.length > 0) {
+        statuses.add(status);
+        texts.push(status);
+      }
+    }
+  };
+
+  const visit = (value: unknown, depth = 0): void => {
+    if (value == null || depth > 5) {
+      return;
+    }
+
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed.length === 0) {
+        return;
+      }
+
+      texts.push(trimmed);
+      if (
+        (trimmed.startsWith("{") && trimmed.endsWith("}")) ||
+        (trimmed.startsWith("[") && trimmed.endsWith("]"))
+      ) {
+        try {
+          visit(JSON.parse(trimmed), depth + 1);
+        } catch {
+          // Keep the original string when it only looks like JSON.
+        }
+      }
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+      for (const item of value) {
+        visit(item, depth + 1);
+      }
+      return;
+    }
+
+    if (typeof value !== "object") {
+      return;
+    }
+
+    if (seen.has(value)) {
+      return;
+    }
+    seen.add(value);
+
+    const record = value as Record<string, unknown>;
+    for (const key of ["status", "statusCode", "code"]) {
+      addStatus(record[key]);
+    }
+
+    for (const key of [
+      "message",
+      "status",
+      "statusText",
+      "code",
+      "error",
+      "errors",
+      "details",
+      "cause",
+      "response",
+      "body",
+    ]) {
+      const child = record[key];
+      if (typeof child === "number") {
+        addText(child);
+      } else {
+        visit(child, depth + 1);
+      }
+    }
+  };
+
+  visit(error);
+
+  return {
+    statuses,
+    text: texts.join("\n"),
+  };
+}
+
+function isGoogleCachedContentNotFound(error: unknown): boolean {
+  const { statuses, text } = collectGoogleErrorDetails(error);
+  const normalizedStatuses = new Set(
+    [...statuses].map((status) => status.toLowerCase()),
+  );
+
+  const hasStatus = (...expected: string[]): boolean =>
+    expected.some((status) => normalizedStatuses.has(status.toLowerCase()));
+
+  const mentionsCachedContent = /\bcached[\s_-]*content\b/i.test(text);
+  const saysNotFound = /not[_\s-]*found/i.test(text);
+  const saysPermissionDenied =
+    /permission[_\s-]*denied/i.test(text) || /forbidden/i.test(text);
+
+  if (hasStatus("404", "not_found")) {
+    return true;
+  }
+
+  if (mentionsCachedContent && saysNotFound) {
+    return true;
+  }
+
   return (
-    status === 404 ||
-    status === "404" ||
-    /cached content.*not found|not found.*cached content/i.test(
-      candidate?.message || "",
-    )
+    mentionsCachedContent &&
+    saysPermissionDenied &&
+    hasStatus("403", "permission_denied", "forbidden")
   );
 }
 
